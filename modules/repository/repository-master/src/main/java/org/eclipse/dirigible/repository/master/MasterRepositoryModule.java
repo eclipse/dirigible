@@ -30,10 +30,15 @@ import org.slf4j.LoggerFactory;
  */
 public class MasterRepositoryModule extends AbstractDirigibleModule {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MasterRepositoryModule.class);
 
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Master Repository Module";
 
+	/**
+	 * Configure.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
@@ -111,6 +116,11 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 		return zipMasterRepository;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
@@ -120,6 +130,11 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 		return MODULE_NAME;
 	}
 	
+	/**
+	 * Gets the priority.
+	 *
+	 * @return the priority
+	 */
 	@Override
 	public int getPriority() {
 		return PRIORITY_REPOSITORY;

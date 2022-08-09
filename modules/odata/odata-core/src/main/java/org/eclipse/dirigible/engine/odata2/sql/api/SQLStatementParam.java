@@ -15,31 +15,74 @@ import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.core.edm.EdmNull;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 
+/**
+ * The Class SQLStatementParam.
+ */
 public class SQLStatementParam {
 
+    /** The value. */
     private final Object value;
+    
+    /** The edm type. */
     private final EdmType edmType;
+    
+    /** The column info. */
     private final EdmTableBinding.ColumnInfo columnInfo;
 
+    /**
+     * The Enum TemporalType.
+     */
     public enum TemporalType {
-        DATE, TIME, TIMESTAMP
+        
+        /** The date. */
+        DATE, 
+ /** The time. */
+ TIME, 
+ /** The timestamp. */
+ TIMESTAMP
     }
+    
+    /**
+     * Instantiates a new SQL statement param.
+     *
+     * @param value the value
+     * @param edmProperty the edm property
+     * @param columnInfo the column info
+     * @throws EdmException the edm exception
+     */
     public SQLStatementParam(Object value, EdmProperty edmProperty, EdmTableBinding.ColumnInfo columnInfo) throws EdmException {
         this.value = value;
         this.edmType = edmProperty.getType();
         this.columnInfo = columnInfo;
     }
 
+    /**
+     * Instantiates a new SQL statement param.
+     *
+     * @param value the value
+     * @param edmType the edm type
+     * @param columnInfo the column info
+     */
     public SQLStatementParam(Object value, EdmType edmType, EdmTableBinding.ColumnInfo columnInfo) {
         this.value = value;
         this.edmType = edmType;
         this.columnInfo = columnInfo;
     }
 
+    /**
+     * Checks if is temporal type.
+     *
+     * @return true, if is temporal type
+     */
     public boolean isTemporalType() {
         return getTemporalType() != null;
     }
 
+    /**
+     * Gets the temporal type.
+     *
+     * @return the temporal type
+     */
     public TemporalType getTemporalType() {
         EdmType edmType = getEdmType();
         if (EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance().equals(edmType)) {
@@ -53,6 +96,11 @@ public class SQLStatementParam {
         }
     }
 
+    /**
+     * Gets the edm simple kind.
+     *
+     * @return the edm simple kind
+     */
     public EdmSimpleTypeKind getEdmSimpleKind(){
         if(EdmSimpleTypeKind.String.getEdmSimpleTypeInstance().equals(edmType)){
             return EdmSimpleTypeKind.String;
@@ -109,18 +157,39 @@ public class SQLStatementParam {
         throw new IllegalStateException("Unexpected EdmType - " + edmType);
     }
 
+    /**
+     * Gets the edm type.
+     *
+     * @return the edm type
+     */
     public EdmType getEdmType() {
         return edmType;
     }
 
+    /**
+     * Gets the sql type.
+     *
+     * @return the sql type
+     */
     public String getSqlType() {
         return columnInfo == null ? null: columnInfo.getJdbcType();
     }
 
+    /**
+     * Gets the sql column name.
+     *
+     * @return the sql column name
+     */
     public String getSqlColumnName() {
         return columnInfo == null ? null: columnInfo.getColumnName();
     }
 
+    /**
+     * Gets the value.
+     *
+     * @param <T> the generic type
+     * @return the value
+     */
     @SuppressWarnings("unchecked")
     public <T> T getValue() {
         return (T) value;

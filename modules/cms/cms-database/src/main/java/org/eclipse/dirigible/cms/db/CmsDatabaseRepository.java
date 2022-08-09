@@ -47,21 +47,28 @@ import org.slf4j.LoggerFactory;
  */
 public class CmsDatabaseRepository implements IRepository {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CmsDatabaseRepository.class);
 
 	/** The Constant TYPE. */
 	public static final String TYPE = "database";
 
+	/** The Constant PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL. */
 	private static final String PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL = "Provided Zip Input Stream cannot be null.";
 
+	/** The Constant PROVIDED_ZIP_DATA_CANNOT_BE_NULL. */
 	private static final String PROVIDED_ZIP_DATA_CANNOT_BE_NULL = "Provided Zip Data cannot be null.";
 
+	/** The database repository dao. */
 	private CmisDatabaseRepositoryDao databaseRepositoryDao;
 
+	/** The repository searcher. */
 	private RepositorySearcher repositorySearcher;
 	
+	/** The parameters. */
 	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<>());
 	
+	/** The last modified. */
 	private final AtomicLong lastModified = new AtomicLong(0);
 
 	/**
@@ -78,12 +85,17 @@ public class CmsDatabaseRepository implements IRepository {
 		lastModified.set(System.currentTimeMillis());
 	}
 
+	/**
+	 * Gets the repository dao.
+	 *
+	 * @return the repository dao
+	 */
 	public CmisDatabaseRepositoryDao getRepositoryDao() {
 		return this.databaseRepositoryDao;
 	}
 
 	/**
-	 * Initializes the Database Repository
+	 * Initializes the Database Repository.
 	 */
 	@Override
 	public void initialize() {
@@ -91,6 +103,11 @@ public class CmsDatabaseRepository implements IRepository {
 		logger.trace(this.getClass().getCanonicalName() + " module initialized.");
 	}
 
+	/**
+	 * Gets the root.
+	 *
+	 * @return the root
+	 */
 	@Override
 	public ICollection getRoot() {
 		logger.trace("entering getRoot"); //$NON-NLS-1$
@@ -100,6 +117,12 @@ public class CmsDatabaseRepository implements IRepository {
 		return dbCollection;
 	}
 
+	/**
+	 * Gets the collection.
+	 *
+	 * @param path the path
+	 * @return the collection
+	 */
 	@Override
 	public ICollection getCollection(String path) {
 		logger.trace("entering getCollection"); //$NON-NLS-1$
@@ -109,6 +132,13 @@ public class CmsDatabaseRepository implements IRepository {
 		return dbCollection;
 	}
 
+	/**
+	 * Checks for collection.
+	 *
+	 * @param path the path
+	 * @return true, if successful
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	@Override
 	public boolean hasCollection(String path) throws RepositoryReadException {
 		logger.trace("entering hasCollection"); //$NON-NLS-1$
@@ -119,6 +149,12 @@ public class CmsDatabaseRepository implements IRepository {
 		return result;
 	}
 
+	/**
+	 * Gets the resource.
+	 *
+	 * @param path the path
+	 * @return the resource
+	 */
 	@Override
 	public IResource getResource(String path) {
 		logger.trace("entering getResource"); //$NON-NLS-1$
@@ -128,6 +164,13 @@ public class CmsDatabaseRepository implements IRepository {
 		return dbResource;
 	}
 
+	/**
+	 * Checks for resource.
+	 *
+	 * @param path the path
+	 * @return true, if successful
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	@Override
 	public boolean hasResource(String path) throws RepositoryReadException {
 		logger.trace("entering hasResource"); //$NON-NLS-1$
@@ -138,6 +181,13 @@ public class CmsDatabaseRepository implements IRepository {
 		return result;
 	}
 
+	/**
+	 * Creates the collection.
+	 *
+	 * @param path the path
+	 * @return the i collection
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	@Override
 	public ICollection createCollection(String path) throws RepositoryWriteException {
 		logger.trace("entering createCollection"); //$NON-NLS-1$
@@ -148,6 +198,12 @@ public class CmsDatabaseRepository implements IRepository {
 		return dbCollection;
 	}
 
+	/**
+	 * Removes the collection.
+	 *
+	 * @param path the path
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	@Override
 	public void removeCollection(String path) throws RepositoryWriteException {
 		logger.trace("entering removeCollection"); //$NON-NLS-1$
@@ -157,6 +213,13 @@ public class CmsDatabaseRepository implements IRepository {
 		logger.trace("exiting removeCollection"); //$NON-NLS-1$
 	}
 
+	/**
+	 * Creates the resource.
+	 *
+	 * @param path the path
+	 * @return the i resource
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	@Override
 	public IResource createResource(String path) throws RepositoryWriteException {
 		logger.trace("entering createResource"); //$NON-NLS-1$
@@ -167,6 +230,14 @@ public class CmsDatabaseRepository implements IRepository {
 		return dbResource;
 	}
 
+	/**
+	 * Creates the resource.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 * @return the i resource
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	@Override
 	public IResource createResource(String path, byte[] content) throws RepositoryWriteException {
 		logger.trace("entering createResource with Content"); //$NON-NLS-1$
@@ -177,11 +248,32 @@ public class CmsDatabaseRepository implements IRepository {
 		return dbResource;
 	}
 
+	/**
+	 * Creates the resource.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 * @param isBinary the is binary
+	 * @param contentType the content type
+	 * @return the i resource
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	@Override
 	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {
 		return createResource(path, content, isBinary, contentType, false);
 	}
 
+	/**
+	 * Creates the resource.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 * @param isBinary the is binary
+	 * @param contentType the content type
+	 * @param override the override
+	 * @return the i resource
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	@Override
 	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override)
 			throws RepositoryWriteException {
@@ -196,6 +288,12 @@ public class CmsDatabaseRepository implements IRepository {
 		return resource;
 	}
 
+	/**
+	 * Removes the resource.
+	 *
+	 * @param path the path
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	@Override
 	public void removeResource(String path) throws RepositoryWriteException {
 		logger.trace("entering removeResource"); //$NON-NLS-1$
@@ -205,21 +303,48 @@ public class CmsDatabaseRepository implements IRepository {
 		logger.trace("exiting removeResource"); //$NON-NLS-1$
 	}
 
+	/**
+	 * Dispose.
+	 */
 	@Override
 	public void dispose() {
 		databaseRepositoryDao.dispose();
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param zipInputStream the zip input stream
+	 * @param relativeRoot the relative root
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	@Override
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot) throws RepositoryImportException {
 		importZip(zipInputStream, relativeRoot, false);
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param zipInputStream the zip input stream
+	 * @param relativeRoot the relative root
+	 * @param override the override
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	@Override
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override) throws RepositoryImportException {
 		importZip(zipInputStream, relativeRoot, false, false);
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param zipInputStream the zip input stream
+	 * @param relativeRoot the relative root
+	 * @param override the override
+	 * @param excludeRootFolderName the exclude root folder name
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	@Override
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName)
 			throws RepositoryImportException {
@@ -230,16 +355,41 @@ public class CmsDatabaseRepository implements IRepository {
 		RepositoryZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param data the data
+	 * @param relativeRoot the relative root
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	@Override
 	public void importZip(byte[] data, String relativeRoot) throws RepositoryImportException {
 		importZip(data, relativeRoot, false);
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param data the data
+	 * @param relativeRoot the relative root
+	 * @param override the override
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	@Override
 	public void importZip(byte[] data, String relativeRoot, boolean override) throws RepositoryImportException {
 		importZip(data, relativeRoot, false, false, null);
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param data the data
+	 * @param relativeRoot the relative root
+	 * @param override the override
+	 * @param excludeRootFolderName the exclude root folder name
+	 * @param filter the filter
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	@Override
 	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter)
 			throws RepositoryImportException {
@@ -251,31 +401,78 @@ public class CmsDatabaseRepository implements IRepository {
 				filter);
 	}
 
+	/**
+	 * Export zip.
+	 *
+	 * @param relativeRoots the relative roots
+	 * @return the byte[]
+	 * @throws RepositoryExportException the repository export exception
+	 */
 	@Override
 	public byte[] exportZip(List<String> relativeRoots) throws RepositoryExportException {
 		return RepositoryZipExporter.exportZip(this, relativeRoots);
 	}
 
+	/**
+	 * Export zip.
+	 *
+	 * @param relativeRoot the relative root
+	 * @param inclusive the inclusive
+	 * @return the byte[]
+	 * @throws RepositoryExportException the repository export exception
+	 */
 	@Override
 	public byte[] exportZip(String relativeRoot, boolean inclusive) throws RepositoryExportException {
 		return RepositoryZipExporter.exportZip(this, relativeRoot, inclusive);
 	}
 
+	/**
+	 * Search name.
+	 *
+	 * @param parameter the parameter
+	 * @param caseInsensitive the case insensitive
+	 * @return the list
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	@Override
 	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		return databaseRepositoryDao.searchName(parameter, caseInsensitive);
 	}
 
+	/**
+	 * Search name.
+	 *
+	 * @param root the root
+	 * @param parameter the parameter
+	 * @param caseInsensitive the case insensitive
+	 * @return the list
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	@Override
 	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		return databaseRepositoryDao.searchName(root, parameter, caseInsensitive);
 	}
 
+	/**
+	 * Search path.
+	 *
+	 * @param parameter the parameter
+	 * @param caseInsensitive the case insensitive
+	 * @return the list
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	@Override
 	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		return databaseRepositoryDao.searchPath(parameter, caseInsensitive);
 	}
 
+	/**
+	 * Search text.
+	 *
+	 * @param parameter the parameter
+	 * @return the list
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	@Override
 	public List<IEntity> searchText(String parameter) throws RepositorySearchException {
 		List<IEntity> entities = new ArrayList<IEntity>();
@@ -286,11 +483,22 @@ public class CmsDatabaseRepository implements IRepository {
 		return entities;
 	}
 
+	/**
+	 * Search refresh.
+	 *
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	@Override
 	public void searchRefresh() throws RepositorySearchException {
 		repositorySearcher.forceReindex();
 	}
 
+	/**
+	 * Gets the all resource paths.
+	 *
+	 * @return the all resource paths
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	@Override
 	public List<String> getAllResourcePaths() throws RepositoryReadException {
 		try {
@@ -300,6 +508,12 @@ public class CmsDatabaseRepository implements IRepository {
 		}
 	}
 	
+	/**
+	 * Gets the parameter.
+	 *
+	 * @param key the key
+	 * @return the parameter
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepository#getParameter(java.lang.String)
 	 */
@@ -308,30 +522,68 @@ public class CmsDatabaseRepository implements IRepository {
 		return parameters.get(key);
 	}
 	
+	/**
+	 * Sets the parameter.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 */
 	protected void setParameter(String key, String value) {
 		parameters.put(key, value);
 	}
 
+	/**
+	 * Checks if is linking paths supported.
+	 *
+	 * @return true, if is linking paths supported
+	 */
 	@Override
 	public boolean isLinkingPathsSupported() {
 		return false;
 	}
 
+	/**
+	 * Link path.
+	 *
+	 * @param repositoryPath the repository path
+	 * @param filePath the file path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public void linkPath(String repositoryPath, String filePath) throws IOException {
 		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
 	}
 
+	/**
+	 * Delete linked path.
+	 *
+	 * @param repositoryPath the repository path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public void deleteLinkedPath(String repositoryPath) throws IOException {
 		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
 	}
 
+	/**
+	 * Checks if is linked path.
+	 *
+	 * @param repositoryPath the repository path
+	 * @return true, if is linked path
+	 */
 	@Override
 	public boolean isLinkedPath(String repositoryPath) {
 		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
 	}
 	
+	/**
+	 * Find.
+	 *
+	 * @param path the path
+	 * @param pattern the pattern
+	 * @return the list
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	@Override
 	public List<String> find(String path, String pattern) throws RepositorySearchException {
 		List<String> result = new ArrayList<String>();
@@ -339,11 +591,21 @@ public class CmsDatabaseRepository implements IRepository {
 		return result;
 	}
 	
+	/**
+	 * Gets the last modified.
+	 *
+	 * @return the last modified
+	 */
 	@Override
 	public long getLastModified() {
 		return lastModified.get();
 	}
 	
+	/**
+	 * Sets the last modified.
+	 *
+	 * @param time the new last modified
+	 */
 	protected void setLastModified(long time) {
 		lastModified.set(time);
 	}

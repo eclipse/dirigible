@@ -11,35 +11,45 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
-import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Answers;
-import org.mockito.Mock;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
+/**
+ * The Class FunctionTest.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class FunctionTest {
 
+    /** The mock connection. */
     @Mock
     private Connection mockConnection;
 
+    /** The mock database meta data. */
     @Mock
     private DatabaseMetaData mockDatabaseMetaData;
 
+    /** The mock result set. */
     @Mock
     private ResultSet mockResultSet;
 
+    /**
+     * Check if function exist.
+     *
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void checkIfFunctionExist() throws SQLException {
         String funcName = "\"namespace.path::MyFunction\"";
@@ -51,6 +61,11 @@ public class FunctionTest {
         assertTrue(exist);
     }
 
+    /**
+     * Check if function does not exist.
+     *
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void checkIfFunctionDoesNotExist() throws SQLException {
         String funcName = "\"namespace.path::MyFunction\"";

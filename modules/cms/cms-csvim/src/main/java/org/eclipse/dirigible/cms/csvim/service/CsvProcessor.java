@@ -44,20 +44,34 @@ import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class CsvProcessor.
+ */
 public class CsvProcessor {
 	
+	/** The Constant MODULE. */
 	private static final String MODULE = "dirigible-cms-csv";
 
+	/** The Constant ARTEFACT_TYPE_CSV. */
 	private static final String ARTEFACT_TYPE_CSV = new CsvSynchronizationArtefactType().getId();
 
+	/** The Constant ERROR_TYPE_PROCESSOR. */
 	private static final String ERROR_TYPE_PROCESSOR = "PROCESSOR";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CsvProcessor.class);
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The database metadata util. */
 	private DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
@@ -65,6 +79,13 @@ public class CsvProcessor {
 		return dataSource;
 	}
 
+	/**
+	 * Insert.
+	 *
+	 * @param csvRecordDefinitions the csv record definitions
+	 * @param csvFileDefinition the csv file definition
+	 * @throws SQLException the SQL exception
+	 */
 	public void insert(List<CsvRecordDefinition> csvRecordDefinitions, CsvFileDefinition csvFileDefinition) throws SQLException {
 		String tableName = csvRecordDefinitions.get(0).getTableMetadataModel().getTableName();
 		String schemaName = csvRecordDefinitions.get(0).getTableMetadataModel().getSchemaName();
@@ -92,6 +113,13 @@ public class CsvProcessor {
 		}
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @param csvRecordDefinitions the csv record definitions
+	 * @param csvFileDefinition the csv file definition
+	 * @throws SQLException the SQL exception
+	 */
 	public void update(List<CsvRecordDefinition> csvRecordDefinitions, CsvFileDefinition csvFileDefinition) throws SQLException {
 		String tableName = csvRecordDefinitions.get(0).getTableMetadataModel().getTableName();
 		String schemaName = csvRecordDefinitions.get(0).getTableMetadataModel().getSchemaName();
@@ -131,6 +159,13 @@ public class CsvProcessor {
 		}
 	}
 
+	/**
+	 * Delete all.
+	 *
+	 * @param ids the ids
+	 * @param tableName the table name
+	 * @throws SQLException the SQL exception
+	 */
 	public void deleteAll(List<String> ids, String tableName) throws SQLException {
 		if (ids.isEmpty()) {
 			return;
@@ -150,6 +185,13 @@ public class CsvProcessor {
 		}
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @param id the id
+	 * @param tableName the table name
+	 * @throws SQLException the SQL exception
+	 */
 	public void delete(String id, String tableName) throws SQLException {
 		if (StringUtils.isEmpty(id) || StringUtils.isEmpty(tableName)) {
 			return;
@@ -168,6 +210,14 @@ public class CsvProcessor {
 		}
 	}
 
+	/**
+	 * Populate insert prepared statement values.
+	 *
+	 * @param csvRecordDefinition the csv record definition
+	 * @param tableColumns the table columns
+	 * @param statement the statement
+	 * @throws SQLException the SQL exception
+	 */
 	private void populateInsertPreparedStatementValues(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns, PreparedStatement statement) throws SQLException {
 		if (csvRecordDefinition.getHeaderNames().size() > 0) {
 			insertCsvWithHeader(csvRecordDefinition, tableColumns, statement);
@@ -176,6 +226,14 @@ public class CsvProcessor {
 		}
 	}
 
+	/**
+	 * Insert csv with header.
+	 *
+	 * @param csvRecordDefinition the csv record definition
+	 * @param tableColumns the table columns
+	 * @param statement the statement
+	 * @throws SQLException the SQL exception
+	 */
 	private void insertCsvWithHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns, PreparedStatement statement) throws SQLException {
 		for (int i = 0; i < tableColumns.size(); i++) {
 			String columnName = tableColumns.get(i).getName();
@@ -185,6 +243,14 @@ public class CsvProcessor {
 		}
 	}
 
+	/**
+	 * Insert csv without header.
+	 *
+	 * @param csvRecordDefinition the csv record definition
+	 * @param tableColumns the table columns
+	 * @param statement the statement
+	 * @throws SQLException the SQL exception
+	 */
 	private void insertCsvWithoutHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns, PreparedStatement statement) throws SQLException {
 		for (int i = 0; i < csvRecordDefinition.getCsvRecord().size(); i++) {
 			String value = csvRecordDefinition.getCsvRecord().get(i);
@@ -194,6 +260,14 @@ public class CsvProcessor {
 		}
 	}
 
+	/**
+	 * Execute update prepared statement.
+	 *
+	 * @param csvRecordDefinition the csv record definition
+	 * @param tableColumns the table columns
+	 * @param statement the statement
+	 * @throws SQLException the SQL exception
+	 */
 	private void executeUpdatePreparedStatement(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns,
 			PreparedStatement statement) throws SQLException {
 		if (csvRecordDefinition.getHeaderNames().size() > 0) {
@@ -205,6 +279,14 @@ public class CsvProcessor {
 		statement.execute();
 	}
 
+	/**
+	 * Update csv with header.
+	 *
+	 * @param csvRecordDefinition the csv record definition
+	 * @param tableColumns the table columns
+	 * @param statement the statement
+	 * @throws SQLException the SQL exception
+	 */
 	private void updateCsvWithHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns, PreparedStatement statement) throws SQLException {
 		CSVRecord csvRecord = csvRecordDefinition.getCsvRecord();
 
@@ -222,6 +304,14 @@ public class CsvProcessor {
 		setValue(statement, lastStatementPlaceholderIndex, pkColumnType, csvRecordDefinition.getCsvRecordPkValue());
 	}
 
+	/**
+	 * Update csv without header.
+	 *
+	 * @param csvRecordDefinition the csv record definition
+	 * @param tableColumns the table columns
+	 * @param statement the statement
+	 * @throws SQLException the SQL exception
+	 */
 	private void updateCsvWithoutHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns, PreparedStatement statement) throws SQLException {
 		CSVRecord csvRecord = csvRecordDefinition.getCsvRecord();
 		for (int i = 1; i < csvRecord.size(); i++) {
@@ -235,6 +325,16 @@ public class CsvProcessor {
 		setValue(statement, lastStatementPlaceholderIndex, pkColumnType, csvRecord.get(0));
 	}
 
+	/**
+	 * Sets the prepared statement value.
+	 *
+	 * @param distinguishEmptyFromNull the distinguish empty from null
+	 * @param statement the statement
+	 * @param i the i
+	 * @param value the value
+	 * @param columnType the column type
+	 * @throws SQLException the SQL exception
+	 */
 	private void setPreparedStatementValue(Boolean distinguishEmptyFromNull, PreparedStatement statement, int i,
 			String value, int columnType) throws SQLException {
 		if (!StringUtils.isEmpty(value)) {
@@ -306,6 +406,12 @@ public class CsvProcessor {
 		}
 	}
 
+	/**
+	 * Sanitize.
+	 *
+	 * @param value the value
+	 * @return the string
+	 */
 	private String sanitize(String value) {
 		if (value != null && value.startsWith("\"") && value.endsWith("\"")) {
 			value = value.substring(1, value.length() - 1);
@@ -316,6 +422,12 @@ public class CsvProcessor {
 		return value != null ? value.trim() : null;
 	}
 
+	/**
+	 * Numberize.
+	 *
+	 * @param value the value
+	 * @return the string
+	 */
 	private String numberize(String value) {
 		if (StringUtils.isEmpty(value)) {
 			value = "0";
@@ -324,7 +436,12 @@ public class CsvProcessor {
 	}
 	
 	/**
-	 * Use to log errors from artifact processing
+	 * Use to log errors from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
 	 */
 	private static void logProcessorErrors(String errorMessage, String errorType, String location, String artifactType) {
 		try {

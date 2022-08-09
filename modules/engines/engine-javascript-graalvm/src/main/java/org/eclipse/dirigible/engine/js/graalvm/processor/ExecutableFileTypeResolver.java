@@ -11,7 +11,18 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.processor;
 
+/**
+ * The Class ExecutableFileTypeResolver.
+ */
 public class ExecutableFileTypeResolver {
+    
+    /**
+     * Resolve file type.
+     *
+     * @param moduleOrCode the module or code
+     * @param isCommonJsModule the is common js module
+     * @return the executable file type
+     */
     ExecutableFileType resolveFileType(String moduleOrCode, boolean isCommonJsModule) {
         if (moduleOrCode.endsWith(".mjs")) {
             return ExecutableFileType.JAVASCRIPT_ESM;

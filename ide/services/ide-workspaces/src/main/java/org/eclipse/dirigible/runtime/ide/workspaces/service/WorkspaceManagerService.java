@@ -58,31 +58,48 @@ import io.swagger.annotations.Authorization;
         @ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error")})
 public class WorkspaceManagerService extends AbstractRestService implements IRestService {
 
+    /** The Constant ERROR_PATH_DOES_NOT_EXISTS. */
     private static final String ERROR_PATH_DOES_NOT_EXISTS = "Path does not exists.";
 
+    /** The Constant ERROR_INVALID_PROJECT_NAME. */
     private static final String ERROR_INVALID_PROJECT_NAME = "Invalid project name";
 
+    /** The Constant ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER. */
     private static final String ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER = "Target path points to a non-existing folder";
 
+    /** The Constant ERROR_TARGET_WORKSPACE_IS_EMPTY. */
     private static final String ERROR_TARGET_WORKSPACE_IS_EMPTY = "Target workspace is empty";
 
+    /** The Constant ERROR_TARGET_PATH_IS_EMPTY. */
     private static final String ERROR_TARGET_PATH_IS_EMPTY = "Target path is empty";
 
+    /** The Constant ERROR_SOURCE_WORKSPACE_IS_EMPTY. */
     private static final String ERROR_SOURCE_WORKSPACE_IS_EMPTY = "Source workspace is empty";
 
+    /** The Constant ERROR_SOURCE_PATH_IS_EMPTY. */
     private static final String ERROR_SOURCE_PATH_IS_EMPTY = "Source path is empty";
 
+    /** The Constant ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST. */
     private static final String ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST = "Source and Target paths and workspaces have to be present in the body of the request";
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(WorkspaceManagerService.class);
 
+    /** The processor. */
     private WorkspaceProcessor processor = new WorkspaceProcessor();
 
+    /** The publisher processor. */
     private PublisherProcessor publisherProcessor = new PublisherProcessor();
 
+    /** The response. */
     @Context
     private HttpServletResponse response;
 
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -163,16 +180,13 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
     }
 
     /**
+     * Copy selection of nodes.
      *
-     * Copy selection of nodes
-     *
-     * @param currentWorkspace
-     * @param content
-     * @param request
-     * @return
-     * @throws URISyntaxException
-     * @throws UnsupportedEncodingException
-     * @throws DecoderException
+     * @param currentWorkspace the current workspace
+     * @param content the content
+     * @param request the request
+     * @return the response
+     * @throws Exception the exception
      */
     @POST
     @Path("{workspace}/copySelection")
@@ -404,6 +418,11 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
         return createErrorResponseBadRequest(ERROR_INVALID_PROJECT_NAME);
     }
 
+    /**
+     * Gets the logger.
+     *
+     * @return the logger
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

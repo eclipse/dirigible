@@ -26,10 +26,21 @@ import org.eclipse.dirigible.cms.csvim.definition.CsvFileDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class CsvimDefinitionsTopologicalSorter.
+ */
 public class CsvimDefinitionsTopologicalSorter {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CsvimDefinitionsTopologicalSorter.class);
 
+	/**
+	 * Sort.
+	 *
+	 * @param csvFileDefinitions the csv file definitions
+	 * @param sortedConfigurationDefinitions the sorted configuration definitions
+	 * @param connection the connection
+	 */
 	public static void sort(List<CsvFileDefinition> csvFileDefinitions,
 			List<CsvFileDefinition> sortedConfigurationDefinitions, Connection connection) {
 		Map<String, CsvFileDefinition> mappedCsvFileDefinititions = new HashMap<>();
@@ -58,6 +69,17 @@ public class CsvimDefinitionsTopologicalSorter {
 		}
 	}
 
+	/**
+	 * Visit csv file definition.
+	 *
+	 * @param csvFileDefinition the csv file definition
+	 * @param visitedCsvFileDefinitions the visited csv file definitions
+	 * @param sortedCsvFileDefinitions the sorted csv file definitions
+	 * @param metaData the meta data
+	 * @param mappedCsvFileDefinititions the mapped csv file definititions
+	 * @param cyclingDependencySet the cycling dependency set
+	 * @throws SQLException the SQL exception
+	 */
 	private static void visitCsvFileDefinition(CsvFileDefinition csvFileDefinition,
 			Set<CsvFileDefinition> visitedCsvFileDefinitions,
 			List<CsvFileDefinition> sortedCsvFileDefinitions, DatabaseMetaData metaData,

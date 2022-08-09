@@ -27,14 +27,19 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.flowable.engine.impl.el.FixedValue;
 import org.springframework.beans.BeanUtils;
 
+/**
+ * The Class DirigibleCallDelegate.
+ */
 public class DirigibleCallDelegate implements JavaDelegate {
 
+    /** The handler. */
     private FixedValue handler;
 
+    /** The type. */
     private FixedValue type;
 
     /**
-     * Getter for the handler attribute
+     * Getter for the handler attribute.
      *
      * @return the handler
      */
@@ -43,7 +48,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
     }
 
     /**
-     * Setter of the handler attribute
+     * Setter of the handler attribute.
      *
      * @param handler the handler
      */
@@ -52,7 +57,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
     }
 
     /**
-     * Getter for the engine attribute
+     * Getter for the engine attribute.
      *
      * @return the type
      */
@@ -61,7 +66,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
     }
 
     /**
-     * Setter of the engine attribute
+     * Setter of the engine attribute.
      *
      * @param type the type
      */
@@ -69,6 +74,11 @@ public class DirigibleCallDelegate implements JavaDelegate {
         this.type = type;
     }
 
+    /**
+     * Execute.
+     *
+     * @param execution the execution
+     */
     @Override
     public void execute(DelegateExecution execution) {
 
@@ -91,6 +101,12 @@ public class DirigibleCallDelegate implements JavaDelegate {
         }
     }
 
+    /**
+     * Execute JS handler.
+     *
+     * @param context the context
+     * @return the object
+     */
     private Object executeJSHandler(Map<Object, Object> context) {
         ResourcePath resourcePath = AbstractScriptExecutor.generateResourcePath(handler.getExpressionText(), new String[]{".mjs/", ".js/"});
 
@@ -101,6 +117,13 @@ public class DirigibleCallDelegate implements JavaDelegate {
         return executeES6ModuleMethod(resourcePath, context);
     }
 
+    /**
+     * Execute ES 6 module method.
+     *
+     * @param resourcePath the resource path
+     * @param context the context
+     * @return the object
+     */
     private Object executeES6ModuleMethod(ResourcePath resourcePath, Map<Object, Object> context) {
         String module = resourcePath.getModule();
         String member = resourcePath.getPath();

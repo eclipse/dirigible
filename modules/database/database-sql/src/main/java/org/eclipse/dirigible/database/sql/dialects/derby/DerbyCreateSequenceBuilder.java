@@ -31,6 +31,11 @@ public class DerbyCreateSequenceBuilder extends CreateSequenceBuilder {
 		super(dialect, sequence);
 	}
 
+	/**
+	 * Generate start.
+	 *
+	 * @param sql the sql
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see

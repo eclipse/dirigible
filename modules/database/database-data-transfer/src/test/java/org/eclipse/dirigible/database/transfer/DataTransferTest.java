@@ -29,6 +29,9 @@ import org.eclipse.dirigible.database.transfer.manager.DataTransferManager;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * The Class DataTransferTest.
+ */
 public class DataTransferTest {
 	
 	/** The source data source. */
@@ -56,12 +59,10 @@ public class DataTransferTest {
 	
 	
 	/**
-	 * Transfer data
+	 * Transfer data.
 	 *
-	 * @throws SQLException
-	 *             the SQL exception
-	 * @throws DataTransferException
-	 *             the DataTransferException exception
+	 * @throws SQLException             the SQL exception
+	 * @throws DataTransferException             the DataTransferException exception
 	 */
 	@Test
 	public void transferData() throws SQLException, DataTransferException {
@@ -77,6 +78,11 @@ public class DataTransferTest {
 		assertTrue(checkResults());
 	}
 
+	/**
+	 * Prepare source database.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	private void prepareSourceDatabase() throws SQLException {
 		try (Connection connection = sourceDS.getConnection()) {
 			try (Statement stmt = connection.createStatement()) {
@@ -108,6 +114,12 @@ public class DataTransferTest {
 		}
 	}
 	
+	/**
+	 * Check results.
+	 *
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	private boolean checkResults() throws SQLException {
 		try (Connection connection = targetDS.getConnection()) {
 			try (Statement stmt = connection.createStatement()) {

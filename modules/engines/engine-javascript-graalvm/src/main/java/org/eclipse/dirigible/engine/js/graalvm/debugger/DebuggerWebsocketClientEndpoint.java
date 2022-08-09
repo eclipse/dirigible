@@ -28,17 +28,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
  
 /**
- * Debugger Websocket Proxy Client
- * 
+ * Debugger Websocket Proxy Client.
  */
 @ClientEndpoint
 public class DebuggerWebsocketClientEndpoint {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DebuggerWebsocketClientEndpoint.class);
 	
+	/** The session. */
 	private Session session = null;
+    
+    /** The message handler. */
     private MessageHandler messageHandler;
  
+    /**
+     * Instantiates a new debugger websocket client endpoint.
+     *
+     * @param endpointURI the endpoint URI
+     */
     public DebuggerWebsocketClientEndpoint(URI endpointURI) {
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
@@ -48,6 +56,11 @@ public class DebuggerWebsocketClientEndpoint {
         }
     }
     
+    /**
+     * Gets the session.
+     *
+     * @return the session
+     */
     public Session getSession() {
 		return session;
 	}
@@ -96,8 +109,8 @@ public class DebuggerWebsocketClientEndpoint {
     }
  
     /**
-     * Register message handler
-     * 
+     * Register message handler.
+     *
      * @param messageHandler the message handler
      */
     public void addMessageHandler(MessageHandler messageHandler) {
@@ -124,6 +137,13 @@ public class DebuggerWebsocketClientEndpoint {
      * 
      */
     public static interface MessageHandler {
+        
+        /**
+         * Handle message.
+         *
+         * @param message the message
+         * @throws IOException Signals that an I/O exception has occurred.
+         */
         public void handleMessage(ByteBuffer message) throws IOException;
     }
 }

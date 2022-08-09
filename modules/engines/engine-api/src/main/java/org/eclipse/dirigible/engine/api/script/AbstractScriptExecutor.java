@@ -15,8 +15,6 @@ import java.io.InputStream;
 
 import org.eclipse.dirigible.engine.api.resource.AbstractResourceExecutor;
 import org.eclipse.dirigible.engine.api.resource.ResourcePath;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryException;
 
 /**
@@ -24,6 +22,14 @@ import org.eclipse.dirigible.repository.api.RepositoryException;
  */
 public abstract class AbstractScriptExecutor extends AbstractResourceExecutor implements IScriptEngineExecutor {
 
+	/**
+	 * Retrieve module.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @return the module
+	 * @throws RepositoryException the repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#retrieveModule(java.lang.String,
@@ -34,6 +40,15 @@ public abstract class AbstractScriptExecutor extends AbstractResourceExecutor im
 		return retrieveModule(root, module, null);
 	}
 
+	/**
+	 * Retrieve module.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @param extension the extension
+	 * @return the module
+	 * @throws RepositoryException the repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#retrieveModule(java.lang.String,
@@ -86,24 +101,25 @@ public abstract class AbstractScriptExecutor extends AbstractResourceExecutor im
 	}
 	
 	/**
-	 * Exists module
-	 * 
+	 * Exists module.
+	 *
 	 * @param root the root path
 	 * @param module the module path
 	 * @return true if module exists
-	 * @throws RepositoryException
+	 * @throws RepositoryException the repository exception
 	 */
 	public boolean existsModule(String root, String module) throws RepositoryException {
 		return existsModule(root, module, null);
 	}
+	
 	/**
-	 * Exists module
-	 * 
+	 * Exists module.
+	 *
 	 * @param root the root path
 	 * @param module the module path
 	 * @param extension the extension or null
 	 * @return true if module exists
-	 * @throws RepositoryException
+	 * @throws RepositoryException the repository exception
 	 */
 	public boolean existsModule(String root, String module, String extension) throws RepositoryException {
 		if (super.existResource(root, module, extension)) {

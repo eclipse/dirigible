@@ -55,6 +55,9 @@ import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
+/**
+ * The Class AbstractSQLProcessorTest.
+ */
 /*
  * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
@@ -68,12 +71,21 @@ import liquibase.resource.ClassLoaderResourceAccessor;
  */
 public abstract class AbstractSQLProcessorTest {
 
+    /** The ds. */
     protected DataSource ds;
 
+    /** The edm. */
     protected AnnotationEdmProvider edm;
 
+    /** The sf. */
     protected OData2TestServiceFactory sf;
 
+    /**
+     * Setup.
+     *
+     * @throws ODataException the o data exception
+     * @throws SQLException the SQL exception
+     */
     @Before
     public void setup() throws ODataException, SQLException {
         ds = createDataSource();
@@ -85,6 +97,12 @@ public abstract class AbstractSQLProcessorTest {
         initLiquibase(ds);
     }
 
+	/**
+	 * Inits the liquibase.
+	 *
+	 * @param ds the ds
+	 * @throws SQLException the SQL exception
+	 */
 	private void initLiquibase(DataSource ds) throws SQLException {
 		try (Connection connection = ds.getConnection()) {
 			Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
@@ -97,12 +115,25 @@ public abstract class AbstractSQLProcessorTest {
 		}
 	}
 
+	/**
+	 * Gets the changelog location.
+	 *
+	 * @return the changelog location
+	 */
 	protected String getChangelogLocation() {
 		return "liquibase/changelog.xml";
 	}
 
+	/**
+	 * Gets the o data entities.
+	 *
+	 * @return the o data entities
+	 */
 	protected abstract Class<?>[] getODataEntities();
 
+    /**
+     * Clear db.
+     */
     @After
     public void clearDb() {
         try (Connection c = ds.getConnection()) {
@@ -114,6 +145,11 @@ public abstract class AbstractSQLProcessorTest {
         }
     }
 
+    /**
+     * Creates the data source.
+     *
+     * @return the data source
+     */
     public DataSource createDataSource() {
         JdbcDataSource ds = new JdbcDataSource();
         ds.setURL("jdbc:h2:mem:odata2;JMX=TRUE;DB_CLOSE_DELAY=-1");
@@ -122,10 +158,24 @@ public abstract class AbstractSQLProcessorTest {
     }
 
 
+    /**
+     * Load resource.
+     *
+     * @param fileName the file name
+     * @return the string
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected String loadResource(String fileName) throws IOException {
 		return IOUtils.toString(AbstractSQLProcessorTest.class.getResourceAsStream(fileName), Charset.defaultCharset());
 	}
 
+    /**
+     * Modifying request builder.
+     *
+     * @param sf the sf
+     * @param content the content
+     * @return the o data 2 request builder
+     */
     OData2RequestBuilder modifyingRequestBuilder(ODataServiceFactory sf, String content) {
         OData2RequestBuilder builder = new OData2RequestBuilder() {
             @Override
@@ -140,20 +190,41 @@ public abstract class AbstractSQLProcessorTest {
         return builder.serviceFactory(sf);
     }
 
+    /**
+     * The Class DelegateServletInputStream.
+     */
     class DelegateServletInputStream extends ServletInputStream {
 
+        /** The delegate. */
         private final InputStream delegate;
 
+        /** The finished. */
         private boolean finished = false;
 
+        /**
+         * Instantiates a new delegate servlet input stream.
+         *
+         * @param sourceStream the source stream
+         */
         public DelegateServletInputStream(InputStream sourceStream) {
             this.delegate = sourceStream;
         }
 
+        /**
+         * Gets the source stream.
+         *
+         * @return the source stream
+         */
         public final InputStream getSourceStream() {
             return this.delegate;
         }
 
+        /**
+         * Read.
+         *
+         * @return the int
+         * @throws IOException Signals that an I/O exception has occurred.
+         */
         @Override
         public int read() throws IOException {
             int data = this.delegate.read();
@@ -163,43 +234,95 @@ public abstract class AbstractSQLProcessorTest {
             return data;
         }
 
+        /**
+         * Available.
+         *
+         * @return the int
+         * @throws IOException Signals that an I/O exception has occurred.
+         */
         @Override
         public int available() throws IOException {
             return this.delegate.available();
         }
 
+        /**
+         * Close.
+         *
+         * @throws IOException Signals that an I/O exception has occurred.
+         */
         @Override
         public void close() throws IOException {
             super.close();
             this.delegate.close();
         }
 
+        /**
+         * Checks if is finished.
+         *
+         * @return true, if is finished
+         */
         @Override
         public boolean isFinished() {
             return this.finished;
         }
 
+        /**
+         * Checks if is ready.
+         *
+         * @return true, if is ready
+         */
         @Override
         public boolean isReady() {
             return true;
         }
 
+        /**
+         * Sets the read listener.
+         *
+         * @param readListener the new read listener
+         */
         @Override
         public void setReadListener(ReadListener readListener) {
         }
 
     }
 
+    /**
+     * Retrieve O data feed.
+     *
+     * @param response the response
+     * @param entitySetName the entity set name
+     * @return the o data feed
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ODataException the o data exception
+     */
     protected ODataFeed retrieveODataFeed(final Response response, final String entitySetName) throws IOException, ODataException {
         EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
         return OData2TestUtils.retrieveODataFeedFromResponse(response, entitySet);
     }
 
+    /**
+     * Retrieve O data entry.
+     *
+     * @param response the response
+     * @param entitySetName the entity set name
+     * @return the o data entry
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ODataException the o data exception
+     */
     protected ODataEntry retrieveODataEntry(final Response response, final String entitySetName) throws IOException, ODataException {
         EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
         return OData2TestUtils.retrieveODataEntryFromResponse(response, entitySet);
     }
 
+    /**
+     * Assert car has price.
+     *
+     * @param segment the segment
+     * @param expectedPrice the expected price
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ODataException the o data exception
+     */
     public void assertCarHasPrice(String segment, double expectedPrice) throws IOException, ODataException {
         Response existingCar = OData2RequestBuilder.createRequest(sf) //
                 .segments(segment) //

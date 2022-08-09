@@ -38,17 +38,21 @@ import org.slf4j.LoggerFactory;
 @ServerEndpoint(value = "/websockets/v4/ide/debugger/{path}")
 public class DebuggerWebsocketService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DebuggerWebsocketService.class);
 
+	/** The open sessions. */
 	private static Map<String, Session> OPEN_SESSIONS = new ConcurrentHashMap<String, Session>();
+	
+	/** The session to client. */
 	private static Map<String, DebuggerWebsocketClientEndpoint> SESSION_TO_CLIENT = new ConcurrentHashMap<String, DebuggerWebsocketClientEndpoint>();
 	
 	
 	/**
 	 * On open callback.
 	 *
-	 * @param session
-	 *            the session
+	 * @param session            the session
+	 * @param path the path
 	 */
 	@OnOpen
 	public void onOpen(Session session, @PathParam("path") final String path) {
@@ -126,11 +130,12 @@ public class DebuggerWebsocketService {
 	}
 
 	/**
-	 * Start the WebSocket proxy
-	 * 
+	 * Start the WebSocket proxy.
+	 *
 	 * @param session the source session
-	 * @param port the port for the client
-	 * @throws URISyntaxException 
+	 * @param path the path
+	 * @return the debugger websocket client endpoint
+	 * @throws URISyntaxException the URI syntax exception
 	 */
 	private DebuggerWebsocketClientEndpoint startClientWebsocket(Session session, String path) throws URISyntaxException {
 		

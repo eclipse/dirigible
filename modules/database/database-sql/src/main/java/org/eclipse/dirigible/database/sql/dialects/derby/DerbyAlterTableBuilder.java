@@ -16,8 +16,12 @@ import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class DerbyAlterTableBuilder.
+ */
 public class DerbyAlterTableBuilder extends AlterTableBuilder {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DerbyAlterTableBuilder.class);
 
     /**
@@ -30,6 +34,11 @@ public class DerbyAlterTableBuilder extends AlterTableBuilder {
         super(dialect, table);
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     @Override
     public String generate() {
 

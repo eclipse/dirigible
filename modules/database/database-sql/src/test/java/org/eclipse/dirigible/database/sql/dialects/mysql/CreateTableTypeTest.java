@@ -15,6 +15,9 @@ import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
+/**
+ * The Class CreateTableTypeTest.
+ */
 public class CreateTableTypeTest {
 
     /**

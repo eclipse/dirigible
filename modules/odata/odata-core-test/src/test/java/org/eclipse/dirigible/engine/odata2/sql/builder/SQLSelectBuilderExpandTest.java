@@ -33,12 +33,25 @@ import java.util.Map;
 import static java.util.Collections.EMPTY_MAP;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * The Class SQLSelectBuilderExpandTest.
+ */
 public class SQLSelectBuilderExpandTest {
 
+    /** The provider. */
     AnnotationEdmProvider provider;
+    
+    /** The uri parser. */
     UriParser uriParser;
+    
+    /** The builder. */
     SQLQueryBuilder builder;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         Class<?>[] classes = { //
@@ -55,6 +68,11 @@ public class SQLSelectBuilderExpandTest {
         builder = new SQLQueryBuilder(tableMappingProvider);
     }
 
+    /**
+     * Test expand one to many association.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testExpandOneToManyAssociation() throws Exception {
@@ -75,6 +93,11 @@ public class SQLSelectBuilderExpandTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test expand one to many association with composed key.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testExpandOneToManyAssociationWithComposedKey() throws Exception {
@@ -93,6 +116,11 @@ public class SQLSelectBuilderExpandTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test expand zero or one association with composed key.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testExpandZeroOrOneAssociationWithComposedKey() throws Exception {
@@ -113,6 +141,11 @@ public class SQLSelectBuilderExpandTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test expand zero or one association.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testExpandZeroOrOneAssociation() throws Exception {
@@ -131,6 +164,11 @@ public class SQLSelectBuilderExpandTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test expand with two path segments.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testExpandWithTwoPathSegments() throws Exception {
@@ -150,6 +188,11 @@ public class SQLSelectBuilderExpandTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test expand with two path segments with composed key.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testExpandWithTwoPathSegmentsWithComposedKey() throws Exception {
@@ -195,6 +238,11 @@ public class SQLSelectBuilderExpandTest {
     //        assertEquals(expected, q.buildSelect(context));
     //    }
 
+    /**
+     * Test expand with filter and select.
+     *
+     * @throws Exception the exception
+     */
     //    @Test
     public void testExpandWithFilterAndSelect() throws Exception {
         Map<String, String> params = new HashMap<>();
@@ -221,6 +269,11 @@ public class SQLSelectBuilderExpandTest {
     //    @Ignore // This pattern should be enabled, see sample application
     // http://services.odata.org/OData/OData.svc/Categories?$select=Products/*,ID&$expand=Products
     // BTW: Even if OData spec 2.0 does not inhibit this, sample app throws an error
+    /**
+     * Test expand with filter and select with star.
+     *
+     * @throws Exception the exception
+     */
     // if navigation properties in $select are not expanded as well, though.
     @SuppressWarnings("unchecked")
     public void testExpandWithFilterAndSelectWithStar() throws Exception {

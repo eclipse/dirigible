@@ -21,10 +21,13 @@ import org.slf4j.LoggerFactory;
  */
 public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CreateSynonymBuilder.class);
 
+	/** The synonym. */
 	private String synonym = null;
 	
+	/** The source. */
 	private String source = null;
 
 
@@ -54,6 +57,11 @@ public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 		return this;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

@@ -53,14 +53,27 @@ import org.junit.Test;
 import liquibase.resource.AbstractResourceAccessor;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
+/**
+ * The Class ODataSQLInterceptorTest.
+ */
 public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
 
+	/**
+	 * Gets the o data entities.
+	 *
+	 * @return the o data entities
+	 */
 	@Override
 	protected Class<?>[] getODataEntities() {
 		Class<?> [] classes = {Car.class, Driver.class, Owner.class, Address.class};
 		return classes;
 	}
 
+    /**
+     * Test SQL interceptor read entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSQLInterceptorReadEntity() throws Exception {
         sf.addInterceptors(Collections.singletonList(new SQLInterceptor(){
@@ -91,6 +104,11 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
     }
 
 
+    /**
+     * Test SQL interceptor create entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSQLInterceptorCreateEntity() throws Exception {
         sf.addInterceptors(Collections.singletonList(new SQLInterceptor(){
@@ -136,6 +154,11 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
     }
 
 
+    /**
+     * Test SQL interceptor delete entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSQLInterceptorDeleteEntity() throws Exception {
         sf.addInterceptors(Collections.singletonList(new SQLInterceptor(){
@@ -164,6 +187,11 @@ public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
         assertEquals(200, getDeletedCar.getStatus());
     }
 
+    /**
+     * Test SQL interceptor patch entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSQLInterceptorPatchEntity() throws Exception {
         sf.addInterceptors(Collections.singletonList(new SQLInterceptor(){

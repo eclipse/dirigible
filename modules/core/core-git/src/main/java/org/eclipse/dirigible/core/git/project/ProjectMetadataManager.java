@@ -25,7 +25,7 @@ import org.eclipse.dirigible.core.workspace.api.IWorkspace;
  */
 public class ProjectMetadataManager {
 
-	/** The default branch */
+	/**  The default branch. */
 	public static final String BRANCH_MASTER = "master"; //$NON-NLS-1$
 	
 	/**

@@ -34,13 +34,31 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * The Class SQLJoinClauseTest.
+ */
 public class SQLJoinClauseTest {
+    
+    /** The provider. */
     AnnotationEdmProvider provider;
+    
+    /** The edm. */
     EdmImplProv edm;
+    
+    /** The builder. */
     SQLQueryBuilder builder;
+    
+    /** The context. */
     SQLContext context;
+    
+    /** The table mapping provider. */
     EdmTableBindingProvider tableMappingProvider;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         Class<?>[] classes = { //
@@ -55,16 +73,33 @@ public class SQLJoinClauseTest {
         context = new SQLContext();
     }
 
+    /**
+     * Test simple join with case sensitive names.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSimpleJoinWithCaseSensitiveNames() throws Exception {
         testSimpleJoin(true, "LEFT JOIN \"MPLHEADER\" AS \"T0\" ON \"T0\".\"ID\" = \"T1\".\"HEADER_ID\"");
     }
 
+    /**
+     * Test simple join with no case sensitive names.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSimpleJoinWithNoCaseSensitiveNames() throws Exception {
         testSimpleJoin(false, "LEFT JOIN MPLHEADER AS T0 ON T0.ID = T1.HEADER_ID");
     }
 
+    /**
+     * Test simple join.
+     *
+     * @param caseSensitiveNames the case sensitive names
+     * @param expectedJoinStatement the expected join statement
+     * @throws Exception the exception
+     */
     public void testSimpleJoin(boolean caseSensitiveNames, String expectedJoinStatement) throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", String.valueOf(caseSensitiveNames));
         EdmEntityType mpl = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
@@ -80,6 +115,11 @@ public class SQLJoinClauseTest {
 
     }
 
+    /**
+     * Test simple join flipped because of mapping.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSimpleJoinFlippedBecauseOfMapping() throws Exception {
         EdmEntityType mpl = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
@@ -91,6 +131,11 @@ public class SQLJoinClauseTest {
         assertEquals("LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 ON T0.HEADER_ID = T1.ID", join.evaluate(context));
     }
 
+    /**
+     * Test no need for join from and to are the same.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testNoNeedForJoin_fromAndToAreTheSame() throws Exception {
         EdmEntityType from = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
@@ -99,6 +144,9 @@ public class SQLJoinClauseTest {
         assertEquals("", join.evaluate(context));
     }
 
+    /**
+     * Test surround with double quotes no need.
+     */
     @Test
     public void testSurroundWithDoubleQuotes_noNeed() {
         SQLJoinClause join = createJoinClouse();
@@ -107,6 +155,9 @@ public class SQLJoinClauseTest {
         assertEquals("Unexpected escaped/surrounded with double quotes value", TABLE_NAME, surroundedValue);
     }
 
+    /**
+     * Test surround with double quotes.
+     */
     @Test
     public void testSurroundWithDoubleQuotes() {
         SQLJoinClause join = createJoinClouse();
@@ -116,6 +167,11 @@ public class SQLJoinClauseTest {
         assertEquals("Unexpected escaped/surrounded with double quotes value", exoectedValue, surroundedValue);
     }
 
+    /**
+     * Creates the join clouse.
+     *
+     * @return the SQL join clause
+     */
     private SQLJoinClause createJoinClouse() {
         EdmEntityType entityType1 = Mockito.mock(EdmEntityType.class);
         EdmEntityType entityType2 = Mockito.mock(EdmEntityType.class);

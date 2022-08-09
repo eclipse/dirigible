@@ -18,6 +18,7 @@ import org.eclipse.dirigible.database.api.DatabaseException;
  */
 public class H2DatabaseException extends DatabaseException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2161860568272479874L;
 
 	/**

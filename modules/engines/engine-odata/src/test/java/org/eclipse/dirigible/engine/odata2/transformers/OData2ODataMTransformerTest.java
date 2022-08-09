@@ -37,15 +37,26 @@ import java.util.Collections;
 import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.when;
 
+/**
+ * The Class OData2ODataMTransformerTest.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
 
+    /** The db metadata util. */
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private DBMetadataUtil dbMetadataUtil;
 
+    /** The default table metadata provider. */
     @InjectMocks
     private DefaultTableMetadataProvider defaultTableMetadataProvider;
 
+    /**
+     * Test transform orders.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformOrders() throws IOException, SQLException {
         String orders = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/orders/Orders.odata"), Charset.defaultCharset());
@@ -94,6 +105,12 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
     }
 
+    /**
+     * Test transform orders case sensitive.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformOrdersCaseSensitive() throws IOException, SQLException {
         String orders = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/orderscs/Orders.odata"), Charset.defaultCharset());
@@ -142,6 +159,12 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
     }
 
+    /**
+     * Test transform entity property.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformEntityProperty() throws IOException, SQLException {
         ODataDefinition definition = OData2ODataTransformerTestUtil.loadData_testTransformEntityProperty(dbMetadataUtil);
@@ -193,6 +216,12 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entity1, entity2, entity3}, transformed);
     }
 
+    /**
+     * Test transform entity with parameters when hana calculation view.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformEntityWithParametersWhenHanaCalculationView() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithParameters.odata"), Charset.defaultCharset());
@@ -220,6 +249,12 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entityEmployee}, actualResult);
     }
 
+    /**
+     * Test transform with composite primary key and properties.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformWithCompositePrimaryKeyAndProperties() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/Employee.odata"), Charset.defaultCharset());
@@ -269,6 +304,12 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entityEmployee, phoneEntity}, actualResult);
     }
 
+    /**
+     * Test many to many mapping table transformation.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testManyToManyMappingTableTransformation() throws IOException, SQLException {
         String users = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/users/Users.odata"), Charset.defaultCharset());
@@ -324,6 +365,12 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entityUser, entityGroup}, transformed);
     }
 
+    /**
+     * Test view transformation.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testViewTransformation() throws IOException, SQLException {
         String view = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/view/View.odata"), Charset.defaultCharset());
@@ -350,6 +397,12 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entityView}, transformed);
     }
 
+    /**
+     * Test aggregations transformation.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testAggregationsTransformation() throws IOException, SQLException {
         String customer = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/customer/Customer.odata"), Charset.defaultCharset());

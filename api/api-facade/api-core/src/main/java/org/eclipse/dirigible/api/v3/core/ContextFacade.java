@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ContextFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ContextFacade.class);
 
 	/**

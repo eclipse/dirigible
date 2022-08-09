@@ -29,27 +29,54 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * The Class DBMetadataUtil.
+ */
 public class DBMetadataUtil {
 
+    /** The Constant DIRIGIBLE_GENERATE_PRETTY_NAMES. */
     public static final String DIRIGIBLE_GENERATE_PRETTY_NAMES = "DIRIGIBLE_GENERATE_PRETTY_NAMES";
 
+    /** The Constant IS_CASE_SENSETIVE. */
     private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
+    /** The data source. */
     private DataSource dataSource = null;
 
+    /** The Constant JDBC_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_COLUMN_NAME_PROPERTY = "COLUMN_NAME";
+    
+    /** The Constant JDBC_COLUMN_TYPE_PROPERTY. */
     public static final String JDBC_COLUMN_TYPE_PROPERTY = "TYPE_NAME";
+    
+    /** The Constant JDBC_COLUMN_NULLABLE_PROPERTY. */
     public static final String JDBC_COLUMN_NULLABLE_PROPERTY = "NULLABLE";
+    
+    /** The Constant JDBC_COLUMN_SIZE_PROPERTY. */
     public static final String JDBC_COLUMN_SIZE_PROPERTY = "COLUMN_SIZE";
+    
+    /** The Constant JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY. */
     public static final String JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY = "DECIMAL_DIGITS";
     
+    /** The Constant JDBC_FK_TABLE_NAME_PROPERTY. */
     public static final String JDBC_FK_TABLE_NAME_PROPERTY = "FKTABLE_NAME";
+    
+    /** The Constant JDBC_FK_NAME_PROPERTY. */
     public static final String JDBC_FK_NAME_PROPERTY = "FK_NAME";
+    
+    /** The Constant JDBC_PK_NAME_PROPERTY. */
     public static final String JDBC_PK_NAME_PROPERTY = "PK_NAME";
+    
+    /** The Constant JDBC_PK_TABLE_NAME_PROPERTY. */
     public static final String JDBC_PK_TABLE_NAME_PROPERTY = "PKTABLE_NAME";
+    
+    /** The Constant JDBC_FK_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_FK_COLUMN_NAME_PROPERTY = "FKCOLUMN_NAME";
+    
+    /** The Constant JDBC_PK_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_PK_COLUMN_NAME_PROPERTY = "PKCOLUMN_NAME";
     
+    /** The Constant SQL_TO_ODATA_EDM_TYPES. */
     private static final Map<String, String> SQL_TO_ODATA_EDM_TYPES = new HashMap<>();
 
     static {
@@ -87,6 +114,11 @@ public class DBMetadataUtil {
         SQL_TO_ODATA_EDM_TYPES.put("ALPHANUM", "Edm.String");
     }
     
+    /**
+     * Gets the data source.
+     *
+     * @return the data source
+     */
     protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
@@ -94,10 +126,25 @@ public class DBMetadataUtil {
 		return dataSource;
 	}
 
+    /**
+     * Gets the table metadata.
+     *
+     * @param tableName the table name
+     * @return the table metadata
+     * @throws SQLException the SQL exception
+     */
     public PersistenceTableModel getTableMetadata(String tableName) throws SQLException {
         return getTableMetadata(tableName, null);
     }
 
+    /**
+     * Gets the table metadata.
+     *
+     * @param tableName the table name
+     * @param schemaName the schema name
+     * @return the table metadata
+     * @throws SQLException the SQL exception
+     */
     public PersistenceTableModel getTableMetadata(String tableName, String schemaName) throws SQLException {
         PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>());
         try (Connection connection = getDataSource().getConnection()) {
@@ -118,6 +165,16 @@ public class DBMetadataUtil {
         return tableMetadata;
     }
 
+    /**
+     * Gets the foreign keys.
+     *
+     * @param databaseMetadata the database metadata
+     * @param connection the connection
+     * @param artifactName the artifact name
+     * @param schemaName the schema name
+     * @return the foreign keys
+     * @throws SQLException the SQL exception
+     */
     private List<PersistenceTableRelationModel> getForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, String artifactName, String schemaName) throws SQLException {
         ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schemaName, normalizeTableName(artifactName));
         if (!foreignKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
@@ -142,6 +199,12 @@ public class DBMetadataUtil {
         return foreignKeysModel;
     }
 
+    /**
+     * Convert sql type to odata edm type.
+     *
+     * @param sqlType the sql type
+     * @return the string
+     */
     public String convertSqlTypeToOdataEdmType(String sqlType) {
         String edmColumnType = SQL_TO_ODATA_EDM_TYPES.get(sqlType.toUpperCase());
         if(null != edmColumnType) {
@@ -151,6 +214,16 @@ public class DBMetadataUtil {
         throw new IllegalArgumentException("SQL Type [" + sqlType + "] is not supported.");
     }
 
+    /**
+     * Gets the primary keys.
+     *
+     * @param databaseMetadata the database metadata
+     * @param connection the connection
+     * @param artifactName the artifact name
+     * @param schemaName the schema name
+     * @return the primary keys
+     * @throws SQLException the SQL exception
+     */
     private List<String> getPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, String artifactName, String schemaName) throws SQLException {
         ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schemaName, normalizeTableName(artifactName));
         if (!primaryKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
@@ -166,6 +239,16 @@ public class DBMetadataUtil {
         return primaryKeyColumns;
     }
 
+    /**
+     * Gets the columns.
+     *
+     * @param databaseMetadata the database metadata
+     * @param connection the connection
+     * @param artifactName the artifact name
+     * @param schemaPattern the schema pattern
+     * @return the columns
+     * @throws SQLException the SQL exception
+     */
     private List<PersistenceTableColumnModel> getColumns(DatabaseMetaData databaseMetadata, Connection connection, String artifactName, String schemaPattern) throws SQLException {
         ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(artifactName), null);
         if (!columns.isBeforeFirst() && !IS_CASE_SENSETIVE) {
@@ -190,6 +273,14 @@ public class DBMetadataUtil {
         return tableColumnModels;
     }
 
+    /**
+     * Gets the property name from db column name.
+     *
+     * @param DbColumnName the db column name
+     * @param oDataProperties the o data properties
+     * @param prettyPrint the pretty print
+     * @return the property name from db column name
+     */
     public static String getPropertyNameFromDbColumnName(String DbColumnName, List<ODataProperty> oDataProperties, boolean prettyPrint) {
         for (ODataProperty next : oDataProperties) {
             if (DbColumnName.equals(next.getColumn())) {
@@ -199,6 +290,13 @@ public class DBMetadataUtil {
         return prettyPrint ? addCorrectFormatting(DbColumnName) : DbColumnName;
     }
 
+    /**
+     * Checks if is prop column valid DB column.
+     *
+     * @param propColumn the prop column
+     * @param dbColumns the db columns
+     * @return true, if is prop column valid DB column
+     */
     public static boolean isPropColumnValidDBColumn(String propColumn, List<PersistenceTableColumnModel> dbColumns) {
         for (PersistenceTableColumnModel next : dbColumns) {
             if (next.getName().equals(propColumn)) {
@@ -208,6 +306,13 @@ public class DBMetadataUtil {
         return false;
     }
 
+    /**
+     * Checks if is nullable.
+     *
+     * @param column the column
+     * @param properties the properties
+     * @return true, if is nullable
+     */
     public static boolean isNullable(PersistenceTableColumnModel column, List<ODataProperty> properties) {
         String columnName = column.getName();
         for (ODataProperty next : properties) {
@@ -218,6 +323,13 @@ public class DBMetadataUtil {
         return column.isNullable();
     }
 
+    /**
+     * Gets the type.
+     *
+     * @param column the column
+     * @param properties the properties
+     * @return the type
+     */
     public static String getType(PersistenceTableColumnModel column, List<ODataProperty> properties) {
         String columnName = column.getName();
         for (ODataProperty next : properties) {
@@ -230,10 +342,22 @@ public class DBMetadataUtil {
         return column.getType();
     }
 
+    /**
+     * Adds the correct formatting.
+     *
+     * @param columnName the column name
+     * @return the string
+     */
     public static String addCorrectFormatting(String columnName) {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, columnName);
     }
 
+    /**
+     * Normalize table name.
+     *
+     * @param table the table
+     * @return the string
+     */
     public static String normalizeTableName(String table) {
         if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
             table = table.substring(1, table.length() - 1);
@@ -241,6 +365,16 @@ public class DBMetadataUtil {
         return table;
     }
 
+    /**
+     * Gets the artifact type.
+     *
+     * @param databaseMetadata the database metadata
+     * @param connection the connection
+     * @param artifactName the artifact name
+     * @param schemaPattern the schema pattern
+     * @return the artifact type
+     * @throws SQLException the SQL exception
+     */
     public String getArtifactType(DatabaseMetaData databaseMetadata, Connection connection, String artifactName, String schemaPattern) throws SQLException {
         ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(artifactName), null);
         if (!tables.isBeforeFirst() && !IS_CASE_SENSETIVE) {
@@ -263,6 +397,14 @@ public class DBMetadataUtil {
         return getArtifactSchema(artifactName, new String[]{ISqlKeywords.METADATA_TABLE, ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW});
     }
 
+    /**
+     * Gets the artifact schema.
+     *
+     * @param artifactName the artifact name
+     * @param types the types
+     * @return the artifact schema
+     * @throws SQLException the SQL exception
+     */
     public String getArtifactSchema(String artifactName, String[] types) throws SQLException {
         try (Connection connection = getDataSource().getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();

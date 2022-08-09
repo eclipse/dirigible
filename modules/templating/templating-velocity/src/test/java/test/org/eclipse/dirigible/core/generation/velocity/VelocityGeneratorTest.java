@@ -21,8 +21,16 @@ import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
 import org.eclipse.dirigible.core.generation.velocity.VelocityGenerationEngine;
 import org.junit.Test;
 
+/**
+ * The Class VelocityGeneratorTest.
+ */
 public class VelocityGeneratorTest {
 	
+	/**
+	 * Generate.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void generate() throws IOException {
 		IGenerationEngine generationEngine = new VelocityGenerationEngine();

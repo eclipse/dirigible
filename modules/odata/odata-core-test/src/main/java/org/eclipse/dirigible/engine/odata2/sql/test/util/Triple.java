@@ -14,20 +14,29 @@ package org.eclipse.dirigible.engine.odata2.sql.test.util;
 import java.io.Serializable;
 
 /**
- * Triple
+ * Triple.
  *
  * @param <T> T
  * @param <U> U
  * @param <V> V
  */
 public class Triple<T, U, V> implements Serializable {
+    
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 8719382431393826469L;
 
+    /** The first. */
     private final T first;
+    
+    /** The second. */
     private final U second;
+    
+    /** The third. */
     private final V third;
 
     /**
+     * Instantiates a new triple.
+     *
      * @param a a
      * @param b b
      * @param c c
@@ -39,6 +48,8 @@ public class Triple<T, U, V> implements Serializable {
     }
 
     /**
+     * Gets the first.
+     *
      * @return T
      */
     public T getFirst() {
@@ -46,6 +57,8 @@ public class Triple<T, U, V> implements Serializable {
     }
 
     /**
+     * Gets the second.
+     *
      * @return U
      */
     public U getSecond() {
@@ -53,12 +66,19 @@ public class Triple<T, U, V> implements Serializable {
     }
 
     /**
+     * Gets the third.
+     *
      * @return V
      */
     public V getThird() {
         return third;
     }
 
+    /**
+     * Hash code.
+     *
+     * @return the int
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -69,6 +89,12 @@ public class Triple<T, U, V> implements Serializable {
         return result;
     }
 
+    /**
+     * Equals.
+     *
+     * @param obj the obj
+     * @return true, if successful
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -96,12 +122,19 @@ public class Triple<T, U, V> implements Serializable {
         return true;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "[" + first + ", " + second + ", " + third + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /**
+     * Creates the.
+     *
      * @param <T> T
      * @param <U> U
      * @param <V> V
@@ -115,6 +148,8 @@ public class Triple<T, U, V> implements Serializable {
     }
 
     /**
+     * Null triple.
+     *
      * @param <T> T
      * @param <U> U
      * @param <V> V
@@ -125,6 +160,7 @@ public class Triple<T, U, V> implements Serializable {
         return (Triple<T, U, V>) NULL_TRIPLE;
     }
 
+    /** The Constant NULL_TRIPLE. */
     @SuppressWarnings("rawtypes")
     public static final Triple NULL_TRIPLE = new Triple<Object, Object, Object>(null, null, null);
 }

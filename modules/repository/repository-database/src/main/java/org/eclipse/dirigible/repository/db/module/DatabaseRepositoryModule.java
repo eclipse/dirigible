@@ -29,12 +29,21 @@ import org.slf4j.LoggerFactory;
  */
 public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseRepositoryModule.class);
 
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Database Repository Module";
+	
+	/** The Constant DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_TYPE. */
 	private static final String DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_TYPE = "DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_TYPE";
+	
+	/** The Constant DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME. */
 	private static final String DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME";
 	
+	/**
+	 * Configure.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
@@ -66,9 +75,9 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 
 	/**
 	 * Creates the instance.
-	 * @param dataSourceName 
-	 * @param dataSourceType2 
 	 *
+	 * @param dataSourceType the data source type
+	 * @param dataSourceName the data source name
 	 * @return the repository
 	 */
 	private DatabaseRepository createInstance(String dataSourceType, String dataSourceName) {
@@ -90,6 +99,11 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 		return databaseRepository;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
@@ -99,6 +113,11 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 		return MODULE_NAME;
 	}
 	
+	/**
+	 * Gets the priority.
+	 *
+	 * @return the priority
+	 */
 	@Override
 	public int getPriority() {
 		return PRIORITY_REPOSITORY;

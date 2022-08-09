@@ -32,18 +32,39 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 
+/**
+ * The Class LogsProcessor.
+ */
 public class LogsProcessor {
 	
+	/** The Constant DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT. */
 	private static final String DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT = "DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT";
+	
+	/** The Constant CATALINA_BASE. */
 	private static final String CATALINA_BASE = "CATALINA_BASE";
+	
+	/** The Constant CATALINA_HOME. */
 	private static final String CATALINA_HOME = "CATALINA_HOME";
+	
+	/** The Constant DEFAULT_LOGS_FOLDER. */
 	private static final String DEFAULT_LOGS_FOLDER = "logs";
+	
+	/** The Constant DEFAULT_LOGS_LOCATION. */
 	private static final String DEFAULT_LOGS_LOCATION = ".." + File.separator +DEFAULT_LOGS_FOLDER;
 	
+	/**
+	 * Instantiates a new logs processor.
+	 */
 	public LogsProcessor() {
 		Configuration.loadModuleConfig("/dirigible-operations.properties");
 	}
 	
+	/**
+	 * List.
+	 *
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public String list() throws IOException {
 		String logsFolder = getLogsLocation();
 		List<String> fileNames = new ArrayList<>();
@@ -58,6 +79,13 @@ public class LogsProcessor {
         return GsonHelper.GSON.toJson(fileNames);
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @param file the file
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public String get(String file) throws IOException {
 		String logsFolder = getLogsLocation();
 		Path path = Paths.get(logsFolder, file);
@@ -73,6 +101,11 @@ public class LogsProcessor {
 		}
 	}
 
+	/**
+	 * Gets the logs location.
+	 *
+	 * @return the logs location
+	 */
 	private String getLogsLocation() {
 		String logsFolder = Configuration.get(DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT);
 		if (logsFolder != null && !logsFolder.equals("")) {
@@ -89,6 +122,11 @@ public class LogsProcessor {
 		return DEFAULT_LOGS_LOCATION;
 	}
 	
+	/**
+	 * List loggers.
+	 *
+	 * @return the object
+	 */
 	public Object listLoggers() {
 		List<LogInfo> result = new ArrayList<LogInfo>();
 		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -100,6 +138,12 @@ public class LogsProcessor {
         return result;
 	}
 
+	/**
+	 * Gets the severity.
+	 *
+	 * @param loggerName the logger name
+	 * @return the severity
+	 */
 	public Object getSeverity(String loggerName) {
 		org.slf4j.Logger logger = LoggerFactory.getLogger(loggerName);
 		if (logger.isTraceEnabled()) {
@@ -117,6 +161,13 @@ public class LogsProcessor {
 		return "Unknown logger: " + loggerName;
 	}
 	
+	/**
+	 * Sets the severity.
+	 *
+	 * @param loggerName the logger name
+	 * @param logLevel the log level
+	 * @return the object
+	 */
 	public Object setSeverity(String loggerName, String logLevel) {
 		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         Logger logger = loggerContext.getLogger(loggerName);

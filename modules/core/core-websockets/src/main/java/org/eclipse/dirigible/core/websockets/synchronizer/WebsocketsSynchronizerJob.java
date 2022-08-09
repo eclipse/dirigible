@@ -19,8 +19,14 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class WebsocketsSynchronizerJob extends AbstractSynchronizerJob {
 
+	/** The websockets synchronizer. */
 	private WebsocketsSynchronizer websocketsSynchronizer = new WebsocketsSynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -30,6 +36,11 @@ public class WebsocketsSynchronizerJob extends AbstractSynchronizerJob {
 		return websocketsSynchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return WebsocketsSynchronizerJobDefinitionProvider.WEBSOCKETS_SYNCHRONIZER_JOB;

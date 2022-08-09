@@ -11,17 +11,26 @@
  */
 package org.eclipse.dirigible.cms.internal;
 
+/**
+ * The Class RepositoryInfo.
+ */
 public class RepositoryInfo {
 
+	/** The session. */
 	private CmisSession session;
 
+	/**
+	 * Instantiates a new repository info.
+	 *
+	 * @param session the session
+	 */
 	public RepositoryInfo(CmisSession session) {
 		super();
 		this.session = session;
 	}
 
 	/**
-	 * Returns the ID of the CMIS repository
+	 * Returns the ID of the CMIS repository.
 	 *
 	 * @return the Id
 	 */
@@ -30,7 +39,7 @@ public class RepositoryInfo {
 	}
 
 	/**
-	 * Returns the Name of the CMIS repository
+	 * Returns the Name of the CMIS repository.
 	 *
 	 * @return the Name
 	 */

@@ -22,6 +22,11 @@ public class SecuritySynchronizerJob extends AbstractSynchronizerJob {
 	/** The security synchronizer. */
 	private SecuritySynchronizer securitySynchronizer = new SecuritySynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -31,6 +36,11 @@ public class SecuritySynchronizerJob extends AbstractSynchronizerJob {
 		return securitySynchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return SecuritySynchronizerJobDefinitionProvider.SECURITY_ROLES_AND_ACCESS_SYNCHRONIZER_JOB;

@@ -25,8 +25,14 @@ import org.slf4j.LoggerFactory;
 @Provider
 public class ScriptingDependencyExceptionHandler extends AbstractExceptionHandler<ScriptingDependencyException> {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ScriptingDependencyExceptionHandler.class);
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getType()
@@ -36,6 +42,11 @@ public class ScriptingDependencyExceptionHandler extends AbstractExceptionHandle
 		return ScriptingDependencyExceptionHandler.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getLogger()
@@ -45,6 +56,12 @@ public class ScriptingDependencyExceptionHandler extends AbstractExceptionHandle
 		return logger;
 	}
 
+	/**
+	 * Gets the response status.
+	 *
+	 * @param exception the exception
+	 * @return the response status
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseStatus(java.lang.Throwable)
@@ -54,6 +71,12 @@ public class ScriptingDependencyExceptionHandler extends AbstractExceptionHandle
 		return Status.INTERNAL_SERVER_ERROR;
 	}
 
+	/**
+	 * Gets the response message.
+	 *
+	 * @param exception the exception
+	 * @return the response message
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseMessage(java.lang.Throwable)

@@ -33,11 +33,23 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 
 import java.util.*;
 
+/**
+ * The Class OData2Utils.
+ */
 public class OData2Utils {
 
+    /**
+     * Instantiates a new o data 2 utils.
+     */
     private OData2Utils() {
     }
 
+    /**
+     * Fqn.
+     *
+     * @param type the type
+     * @return the string
+     */
     public static String fqn(EdmType type) {
         try {
             return fqn(type.getNamespace(), type.getName());
@@ -46,6 +58,13 @@ public class OData2Utils {
         }
     }
 
+    /**
+     * Fqn.
+     *
+     * @param ns the ns
+     * @param name the name
+     * @return the string
+     */
     public static String fqn(String ns, String name) {
         return ns + "." + name;
     }
@@ -85,6 +104,15 @@ public class OData2Utils {
         return nextLink;
     }
 
+    /**
+     * Gets the inline entry key value.
+     *
+     * @param values the values
+     * @param inlineEntry the inline entry
+     * @param inlinEntityKey the inlin entity key
+     * @return the inline entry key value
+     * @throws EdmException the edm exception
+     */
     public static String getInlineEntryKeyValue(Map<String, Object> values, EdmTyped inlineEntry, EdmProperty inlinEntityKey) throws EdmException {
         if (inlineEntry.getType() instanceof EdmEntityType) {
             Object inlineEntryData = values.get(inlineEntry.getName());
@@ -106,6 +134,12 @@ public class OData2Utils {
         throw new OData2Exception("Invalid inline entity: required is EntityType for " + inlineEntry.getName(), HttpStatusCodes.BAD_REQUEST);
     }
 
+    /**
+     * Percent encode next link.
+     *
+     * @param link the link
+     * @return the string
+     */
     static String percentEncodeNextLink(final String link) {
         if (link == null) {
             return null;
@@ -113,10 +147,24 @@ public class OData2Utils {
         return link.replaceAll("\\$skiptoken=.+?(?:&|$)", "").replaceAll("\\$skip=.+?(?:&|$)", "").replaceFirst("(?:\\?|&)$", ""); // Remove potentially trailing "?" or "&" left over from remove actions
     }
 
+    /**
+     * Checks for expand.
+     *
+     * @param info the info
+     * @return true, if successful
+     */
     public static boolean hasExpand(UriInfo info) {
         return hasExpand(info.getExpand());
     }
 
+    /**
+     * Checks if is empty.
+     *
+     * @param entityType the entity type
+     * @param entityData the entity data
+     * @return true, if is empty
+     * @throws ODataException the o data exception
+     */
     public static boolean isEmpty(EdmEntityType entityType, Map<String, Object> entityData) throws ODataException {
         final List<String> keyPropertyNames = entityType.getKeyPropertyNames();
         boolean allKeysNull = true;
@@ -133,11 +181,25 @@ public class OData2Utils {
         return allKeysNull;
     }
 
+    /**
+     * Checks for expand.
+     *
+     * @param expand the expand
+     * @return true, if successful
+     */
     public static boolean hasExpand(List<ArrayList<NavigationPropertySegment>> expand) {
         return expand != null && !expand.isEmpty();
     }
 
 
+    /**
+     * Checks if is order by entity in expand.
+     *
+     * @param orderExpression the order expression
+     * @param uriInfo the uri info
+     * @return true, if is order by entity in expand
+     * @throws EdmException the edm exception
+     */
     public static boolean isOrderByEntityInExpand(OrderExpression orderExpression, UriInfo uriInfo) throws EdmException {
         MemberExpression memberExpression = (MemberExpression) orderExpression.getExpression();
         CommonExpression pathExpression = memberExpression.getPath();
@@ -156,6 +218,12 @@ public class OData2Utils {
         return false;
     }
 
+    /**
+     * Gets the tenant name from context.
+     *
+     * @param context the context
+     * @return the tenant name from context
+     */
     public static String getTenantNameFromContext(ODataContext context) {
         ODataContext parentContext = context.getBatchParentContext();
         if (parentContext != null) {
@@ -168,6 +236,13 @@ public class OData2Utils {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param propertyValue1 the property value 1
+     * @param propertyValue2 the property value 2
+     * @return true, if successful
+     */
     private static boolean equals(Object propertyValue1, Object propertyValue2) {
         if (propertyValue1 == propertyValue2)
             return true;
@@ -178,6 +253,12 @@ public class OData2Utils {
         return propertyValue1.equals(propertyValue2);
     }
 
+    /**
+     * Gets the status code for exception.
+     *
+     * @param e the e
+     * @return the status code for exception
+     */
     public static HttpStatusCodes getStatusCodeForException(Exception e) {
         HttpStatusCodes codeOnFailedRequest = HttpStatusCodes.INTERNAL_SERVER_ERROR;
         if (e instanceof OData2Exception) {
@@ -199,6 +280,12 @@ public class OData2Utils {
         return codeOnFailedRequest;
     }
 
+    /**
+     * Determine status code.
+     *
+     * @param ode the ode
+     * @return the http status codes
+     */
     private static HttpStatusCodes determineStatusCode(ODataException ode) {
         HttpStatusCodes codeOnFailedRequest = HttpStatusCodes.INTERNAL_SERVER_ERROR;
         if (ode.isCausedByHttpException()) {
@@ -211,6 +298,12 @@ public class OData2Utils {
         return codeOnFailedRequest;
     }
 
+    /**
+     * No content response.
+     *
+     * @param contentType the content type
+     * @return the o data response
+     */
     public static ODataResponse noContentResponse(String contentType) {
         ODataErrorContext errorContext = new ODataErrorContext();
         errorContext.setContentType(contentType);
@@ -221,6 +314,14 @@ public class OData2Utils {
         return EntityProvider.writeErrorDocument(errorContext);
     }
 
+    /**
+     * Gets the key predicate value by property name.
+     *
+     * @param propertyName the property name
+     * @param keyPredicates the key predicates
+     * @return the key predicate value by property name
+     * @throws EdmException the edm exception
+     */
     public static String getKeyPredicateValueByPropertyName(String propertyName, List<KeyPredicate> keyPredicates) throws EdmException {
         String keyPredicateValue = "";
         for (KeyPredicate keyPredicate : keyPredicates) {
@@ -231,6 +332,15 @@ public class OData2Utils {
         return keyPredicateValue;
     }
 
+    /**
+     * Checks if is property parameter.
+     *
+     * @param property the property
+     * @param query the query
+     * @param entityType the entity type
+     * @return true, if is property parameter
+     * @throws EdmException the edm exception
+     */
     public static boolean isPropertyParameter(EdmProperty property, SQLSelectBuilder query, EdmStructuralType entityType) throws EdmException {
         boolean isParameter = false;
         List<String> sqlTableParameters = query.getSQLTableParameters(entityType);

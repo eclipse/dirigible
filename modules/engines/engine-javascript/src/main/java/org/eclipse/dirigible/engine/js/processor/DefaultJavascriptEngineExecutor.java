@@ -29,12 +29,20 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor implements IJavascriptEngineExecutor {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DefaultJavascriptEngineExecutor.class);
 
+	/** The Constant JAVASCRIPT_ENGINE_EXECUTORS. */
 	private static final ServiceLoader<IJavascriptEngineExecutor> JAVASCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IJavascriptEngineExecutor.class);
 	
+	/** The Constant ENGINE_NAME. */
 	public static final String ENGINE_NAME = "Default JavaScript Engine";
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#getType()
@@ -44,6 +52,11 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		return JAVASCRIPT_TYPE_DEFAULT;
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()
@@ -53,6 +66,14 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		return ENGINE_NAME;
 	}
 
+	/**
+	 * Execute service module.
+	 *
+	 * @param module the module
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceModule(java.lang.String,
@@ -64,6 +85,14 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		return engine.executeServiceModule(module, executionContext);
 	}
 
+	/**
+	 * Execute service code.
+	 *
+	 * @param code the code
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceCode(java.lang.String,
@@ -75,18 +104,40 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		return engine.executeServiceCode(code, executionContext);
 	}
 
+	/**
+	 * Eval code.
+	 *
+	 * @param code the code
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	@Override
 	public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
 		IJavascriptEngineExecutor engine = getJavascriptEngine();
 		return engine.evalCode(code, executionContext);
 	}
 
+	/**
+	 * Eval module.
+	 *
+	 * @param module the module
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	@Override
 	public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 		IJavascriptEngineExecutor engine = getJavascriptEngine();
 		return engine.evalModule(module, executionContext);
 	}
 
+	/**
+	 * Gets the javascript engine.
+	 *
+	 * @return the javascript engine
+	 * @throws ScriptingException the scripting exception
+	 */
 	private IJavascriptEngineExecutor getJavascriptEngine() throws ScriptingException {
 
 		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_GRAALVM);
@@ -115,6 +166,15 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		return null;
 	}
 
+	/**
+	 * Execute method from module.
+	 *
+	 * @param module the module
+	 * @param memberClass the member class
+	 * @param memberClassMethod the member class method
+	 * @param executionContext the execution context
+	 * @return the object
+	 */
 	@Override
 	public Object executeMethodFromModule(String module, String memberClass, String memberClassMethod, Map<Object, Object> executionContext) {
 		IJavascriptEngineExecutor engine = getJavascriptEngine();

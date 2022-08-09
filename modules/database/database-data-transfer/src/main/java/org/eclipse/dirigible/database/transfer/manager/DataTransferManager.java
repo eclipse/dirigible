@@ -38,21 +38,45 @@ import org.eclipse.dirigible.database.transfer.callbacks.DummyDataTransferCallba
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class DataTransferManager.
+ */
 public class DataTransferManager {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataTransferManager.class);
 	
+	/** The Constant DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE. */
 	private static final String DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE = "DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE";
+	
+	/** The Constant DEFAULT_BATCH_SIZE. */
 	private static final String DEFAULT_BATCH_SIZE = "1000";
 	
+	/** The batch size. */
 	private static int BATCH_SIZE = 1000; 
 	
+	/**
+	 * Transfer.
+	 *
+	 * @param definition the definition
+	 * @param handler the handler
+	 * @throws DataTransferException the data transfer exception
+	 */
 	public static final void transfer(DataTransferDefinition definition, IDataTransferCallbackHandler handler) throws DataTransferException {
 		DataSource source = DatabaseModule.getDataSource(definition.getSource().getType(), definition.getSource().getName());
 		DataSource target = DatabaseModule.getDataSource(definition.getTarget().getType(), definition.getTarget().getName());
 		transfer(source,  target, definition.getConfiguration(), handler);
 	}
 	
+	/**
+	 * Transfer.
+	 *
+	 * @param source the source
+	 * @param target the target
+	 * @param configuration the configuration
+	 * @param handler the handler
+	 * @throws DataTransferException the data transfer exception
+	 */
 	public static final void transfer(DataSource source, DataSource target, DataTransferConfiguration configuration, IDataTransferCallbackHandler handler) throws DataTransferException {
 		
 		if (handler == null) {
@@ -98,6 +122,13 @@ public class DataTransferManager {
 		
 	}
 	
+	/**
+	 * Sort tables.
+	 *
+	 * @param tables the tables
+	 * @param handler the handler
+	 * @return the list
+	 */
 	private static List<PersistenceTableModel> sortTables(List<PersistenceTableModel> tables, IDataTransferCallbackHandler handler) {
 		
 		handler.sortingStarted(tables);
@@ -126,6 +157,14 @@ public class DataTransferManager {
 		return result;
 	}
 
+	/**
+	 * Transfer data.
+	 *
+	 * @param tables the tables
+	 * @param sourceConnection the source connection
+	 * @param targetConnection the target connection
+	 * @param handler the handler
+	 */
 	private static void transferData(List<PersistenceTableModel> tables, Connection sourceConnection, Connection targetConnection, IDataTransferCallbackHandler handler) {
 		
 		handler.dataTransferStarted();

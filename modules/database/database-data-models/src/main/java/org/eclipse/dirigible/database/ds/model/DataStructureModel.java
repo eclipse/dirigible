@@ -29,25 +29,32 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 @Table(name = "DIRIGIBLE_DATA_STRUCTURES")
 public class DataStructureModel implements IArtefactDefinition {
 
+	/** The location. */
 	@Id
 	@Column(name = "DS_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
+	/** The name. */
 	@Column(name = "DS_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String name;
 
+	/** The type. */
 	@Column(name = "DS_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 20)
 	private String type;
 
+	/** The hash. */
 	@Column(name = "DS_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 
+	/** The created by. */
 	@Column(name = "DS_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "DS_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
+	/** The dependencies. */
 	@Transient
 	private List<DataStructureDependencyModel> dependencies = new ArrayList<DataStructureDependencyModel>();
 
@@ -190,6 +197,11 @@ public class DataStructureModel implements IArtefactDefinition {
 		return GsonHelper.GSON.toJson(this);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -200,6 +212,11 @@ public class DataStructureModel implements IArtefactDefinition {
 		return toJson();
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -216,6 +233,12 @@ public class DataStructureModel implements IArtefactDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -264,11 +287,21 @@ public class DataStructureModel implements IArtefactDefinition {
 		return true;
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getName();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();

@@ -22,33 +22,38 @@ import javax.persistence.Table;
 @Table(name = "DIRIGIBLE_SYNCHRONIZER_STATE_LOG")
 public class SynchronizerStateLogDefinition {
 
+	/** The id. */
 	@Id
 	@GeneratedValue
 	@Column(name = "SYNCHRONIZER_LOG_ID", columnDefinition = "BIGINT", nullable = false, length = 255)
 	private long id;
 	
+	/** The name. */
 	@Column(name = "SYNCHRONIZER_LOG_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String name;
 
+	/** The state. */
 	@Column(name = "SYNCHRONIZER_LOG_STATE", columnDefinition = "INTEGER", nullable = false)
 	private int state;
 
+	/** The message. */
 	@Column(name = "SYNCHRONIZER_LOG_MESSAGE", columnDefinition = "VARCHAR", nullable = false, length = 2000)
 	private String message = "";
 
+	/** The timestamp. */
 	@Column(name = "SYNCHRONIZER_LOG_TIMESTAMP", columnDefinition = "BIGINT", nullable = false)
 	private long timestamp;
 	
 	/**
-	 * Empty constructor
+	 * Empty constructor.
 	 */
 	public SynchronizerStateLogDefinition() {
 		super();
 	}
 	
 	/**
-	 * Fields constructor
-	 * 
+	 * Fields constructor.
+	 *
 	 * @param name the name of the synchronizer
 	 * @param state the current state
 	 * @param message the message if any
@@ -63,6 +68,8 @@ public class SynchronizerStateLogDefinition {
 	}
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public long getId() {
@@ -70,6 +77,8 @@ public class SynchronizerStateLogDefinition {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(long id) {
@@ -77,6 +86,8 @@ public class SynchronizerStateLogDefinition {
 	}
 	
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -84,6 +95,8 @@ public class SynchronizerStateLogDefinition {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -91,6 +104,8 @@ public class SynchronizerStateLogDefinition {
 	}
 
 	/**
+	 * Gets the state.
+	 *
 	 * @return the state
 	 */
 	public int getState() {
@@ -98,6 +113,8 @@ public class SynchronizerStateLogDefinition {
 	}
 
 	/**
+	 * Sets the state.
+	 *
 	 * @param state the state to set
 	 */
 	public void setState(int state) {
@@ -105,6 +122,8 @@ public class SynchronizerStateLogDefinition {
 	}
 
 	/**
+	 * Gets the message.
+	 *
 	 * @return the message
 	 */
 	public String getMessage() {
@@ -112,6 +131,8 @@ public class SynchronizerStateLogDefinition {
 	}
 
 	/**
+	 * Sets the message.
+	 *
 	 * @param message the message to set
 	 */
 	public void setMessage(String message) {
@@ -119,6 +140,8 @@ public class SynchronizerStateLogDefinition {
 	}
 
 	/**
+	 * Gets the timestamp.
+	 *
 	 * @return the timestamp
 	 */
 	public long getTimestamp() {
@@ -126,6 +149,8 @@ public class SynchronizerStateLogDefinition {
 	}
 
 	/**
+	 * Sets the timestamp.
+	 *
 	 * @param timestamp the timestamp to set
 	 */
 	public void setTimestamp(long timestamp) {

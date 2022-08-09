@@ -32,8 +32,10 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceManagerGeneratedValueIdentityTest extends AbstractPersistenceManagerTest {
 
+	/** The Constant SUPPORTED_DIALECTS. */
 	static final List<String> SUPPORTED_DIALECTS = Arrays.asList("sybase", "h2", "derby", "hana");
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceManagerGeneratedValueIdentityTest.class);
 
 	/**
@@ -78,14 +80,33 @@ public class PersistenceManagerGeneratedValueIdentityTest extends AbstractPersis
 		}
 	}
 
+	/**
+	 * Creates the table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void createTableForPojo(Connection connection, PersistenceManager<Offer> persistenceManager) {
 		persistenceManager.tableCreate(connection, Offer.class);
 	}
 
+	/**
+	 * Exists table.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @return true, if successful
+	 */
 	private boolean existsTable(Connection connection, PersistenceManager<Offer> persistenceManager) {
 		return persistenceManager.tableExists(connection, Offer.class);
 	}
 
+	/**
+	 * Insert pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertPojo(Connection connection, PersistenceManager<Offer> persistenceManager) {
 		Offer offer = new Offer();
 		offer.setSubject("Subject 1");
@@ -93,18 +114,36 @@ public class PersistenceManagerGeneratedValueIdentityTest extends AbstractPersis
 		assertNotEquals(0, offer.getId());
 	}
 
+	/**
+	 * Insert second pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertSecondPojo(Connection connection, PersistenceManager<Offer> persistenceManager) {
 		Offer offer = new Offer();
 		offer.setSubject("Subject 2");
 		persistenceManager.insert(connection, offer);
 	}
 
+	/**
+	 * Insert third pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertThirdPojo(Connection connection, PersistenceManager<Offer> persistenceManager) {
 		Offer offer = new Offer();
 		offer.setSubject("Subject 3");
 		persistenceManager.insert(connection, offer);
 	}
 
+	/**
+	 * Find all pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void findAllPojo(Connection connection, PersistenceManager<Offer> persistenceManager) {
 		List<Offer> list = persistenceManager.findAll(connection, Offer.class);
 
@@ -118,6 +157,12 @@ public class PersistenceManagerGeneratedValueIdentityTest extends AbstractPersis
 
 	}
 
+	/**
+	 * Drop table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void dropTableForPojo(Connection connection, PersistenceManager<Offer> persistenceManager) {
 		persistenceManager.tableDrop(connection, Offer.class);
 	}

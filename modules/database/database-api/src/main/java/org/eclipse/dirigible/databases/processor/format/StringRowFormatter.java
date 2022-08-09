@@ -21,8 +21,10 @@ import java.util.List;
  */
 public class StringRowFormatter implements RowFormatter<String> {
 
+	/** The Constant VALUE_NULL. */
 	private static final String VALUE_NULL = "[NULL]";
 
+	/** The Constant VALUE_BINARY. */
 	private static final String VALUE_BINARY = "[BINARY]";
 
 	/** The Constant BINARY_TYPES. */
@@ -31,6 +33,15 @@ public class StringRowFormatter implements RowFormatter<String> {
 			java.sql.Types.LONGVARBINARY, java.sql.Types.NCLOB, java.sql.Types.NULL, java.sql.Types.OTHER, java.sql.Types.REF, java.sql.Types.SQLXML,
 			java.sql.Types.STRUCT, java.sql.Types.VARBINARY };
 
+	/**
+	 * Write.
+	 *
+	 * @param columnDescriptors the column descriptors
+	 * @param resultSetMetaData the result set meta data
+	 * @param resultSet the result set
+	 * @return the string
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.databases.processor.format.RowFormatter#write(java.util.List,

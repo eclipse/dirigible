@@ -16,8 +16,10 @@ package org.eclipse.dirigible.cms.db;
  */
 public class CmsDatabaseFileVersion extends CmsDatabaseFile {
 
+	/** The version. */
 	private int version;
 
+	/** The bytes. */
 	private byte[] bytes;
 
 	/**
@@ -40,6 +42,12 @@ public class CmsDatabaseFileVersion extends CmsDatabaseFile {
 		this.bytes = bytes;
 	}
 
+	/**
+	 * Gets the data.
+	 *
+	 * @return the data
+	 * @throws CmsDatabaseRepositoryException the cms database repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.local.LocalFile#getData()

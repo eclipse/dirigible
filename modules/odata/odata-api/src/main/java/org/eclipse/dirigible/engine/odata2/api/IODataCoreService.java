@@ -267,8 +267,8 @@ public interface IODataCoreService extends ICoreService {
 	public ODataDefinition parseOData(String contentPath, String data);
 
 	/**
-	 * Getter for the OData entity
-	 * 
+	 * Getter for the OData entity.
+	 *
 	 * @param location the location
 	 * @return ODataDefinition
 	 * @throws ODataException in case of an error
@@ -276,8 +276,8 @@ public interface IODataCoreService extends ICoreService {
 	public ODataDefinition getOData(String location) throws ODataException;
 
 	/**
-	 * Update the OData entity
-	 * 
+	 * Update the OData entity.
+	 *
 	 * @param location the location
 	 * @param namespace the namespace
 	 * @param hash the hash
@@ -286,15 +286,16 @@ public interface IODataCoreService extends ICoreService {
 	public void updateOData(String location, String namespace, String hash) throws ODataException;
 
 	/**
-	 * Get all the OData entities
+	 * Get all the OData entities.
+	 *
 	 * @return the list of the OData entities
 	 * @throws ODataException in case of an error
 	 */
 	public List<ODataDefinition> getODatas() throws ODataException;
 
 	/**
-	 * Whether OData entity exists already or not
-	 * 
+	 * Whether OData entity exists already or not.
+	 *
 	 * @param location the OData entity location
 	 * @return true if exists and false otherwise
 	 * @throws ODataException in case of an error
@@ -302,8 +303,8 @@ public interface IODataCoreService extends ICoreService {
 	public boolean existsOData(String location) throws ODataException;
 
 	/**
-	 * Create the OData entity
-	 * 
+	 * Create the OData entity.
+	 *
 	 * @param location the location
 	 * @param namespace the namespace
 	 * @param hash the hash
@@ -317,8 +318,8 @@ public interface IODataCoreService extends ICoreService {
 	// Handler
 
 	/**
-	 * Creates the handler
-	 * 
+	 * Creates the handler.
+	 *
 	 * @param location the location
 	 * @param namespace the namespace
 	 * @param name the name
@@ -331,8 +332,8 @@ public interface IODataCoreService extends ICoreService {
 	public ODataHandlerDefinition createHandler(String location, String namespace, String name, String method, String type, String handler) throws ODataException;
 
 	/**
-	 * Gets the handler
-	 * 
+	 * Gets the handler.
+	 *
 	 * @param location the location
 	 * @param namespace the namespace
 	 * @param name the name
@@ -344,8 +345,8 @@ public interface IODataCoreService extends ICoreService {
 	public ODataHandlerDefinition getHandler(String location, String namespace, String name, String method, String type) throws ODataException;
 	
 	/**
-	 * Gets the handlers
-	 * 
+	 * Gets the handlers.
+	 *
 	 * @param namespace the namespace
 	 * @param name the name
 	 * @param method the method
@@ -356,8 +357,8 @@ public interface IODataCoreService extends ICoreService {
 	public List<ODataHandlerDefinition> getHandlers(String namespace, String name, String method, String type) throws ODataException;
 
 	/**
-	 * Exists handler
-	 * 
+	 * Exists handler.
+	 *
 	 * @param namespace the namespace
 	 * @param name the name
 	 * @param method the method
@@ -368,8 +369,8 @@ public interface IODataCoreService extends ICoreService {
 	public boolean existsHandler(String namespace, String name,  String method, String type) throws ODataException;
 
 	/**
-	 * Removes the handler
-	 * 
+	 * Removes the handler.
+	 *
 	 * @param location the location
 	 * @param namespace the namespace
 	 * @param name the name
@@ -380,16 +381,16 @@ public interface IODataCoreService extends ICoreService {
 	public void removeHandler(String location, String namespace, String name, String method, String type) throws ODataException;
 	
 	/**
-	 * Removes the handlers
-	 * 
+	 * Removes the handlers.
+	 *
 	 * @param location the location
 	 * @throws ODataException in case of an error
 	 */
 	public void removeHandlers(String location) throws ODataException;
 
 	/**
-	 * Update handler
-	 * 
+	 * Update handler.
+	 *
 	 * @param location the location
 	 * @param namespace the namespace
 	 * @param name the name
@@ -414,8 +415,8 @@ public interface IODataCoreService extends ICoreService {
 	// Overall
 	
 	/**
-	 * Generates the EDMX Metadata
-	 * 
+	 * Generates the EDMX Metadata.
+	 *
 	 * @return the metadata
 	 * @throws ODataException in case of an error
 	 */

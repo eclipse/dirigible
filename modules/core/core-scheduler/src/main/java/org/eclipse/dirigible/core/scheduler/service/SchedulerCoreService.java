@@ -57,18 +57,29 @@ import org.slf4j.LoggerFactory;
  */
 public class SchedulerCoreService implements ISchedulerCoreService, ICleanupService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerCoreService.class);
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The job persistence manager. */
 	private PersistenceManager<JobDefinition> jobPersistenceManager = new PersistenceManager<JobDefinition>();
 	
+	/** The job log persistence manager. */
 	private PersistenceManager<JobLogDefinition> jobLogPersistenceManager = new PersistenceManager<JobLogDefinition>();
 	
+	/** The job parameter persistence manager. */
 	private PersistenceManager<JobParameterDefinition> jobParameterPersistenceManager = new PersistenceManager<JobParameterDefinition>();
 
+	/** The job email persistence manager. */
 	private PersistenceManager<JobEmailDefinition> jobEmailPersistenceManager = new PersistenceManager<JobEmailDefinition>();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -76,58 +87,115 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return dataSource;
 	}
 	
+	/** The Constant DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD. */
 	private static final String DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD = "DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_SENDER. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SENDER = "DIRIGIBLE_SCHEDULER_EMAIL_SENDER";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS = "DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR = "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL = "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL";
 
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ENABLE. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ENABLE = "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ENABLE";
 
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_DISABLE. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_DISABLE = "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_DISABLE";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR = "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL = "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL";
 
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ENABLE. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ENABLE = "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ENABLE";
 
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_DISABLE. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_DISABLE = "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_DISABLE";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME = "DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST = "DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT. */
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT = "DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT";
 	
+	/** The logs retantion in hours. */
 	private static int logsRetantionInHours = 24*7;
+	
+	/** The email sender. */
 	private static String emailSender = null;
+	
+	/** The email recipients line. */
 	private static String emailRecipientsLine = null; 
+	
+	/** The email recipients. */
 	private static String[] emailRecipients = null;
+	
+	/** The email subject error. */
 	private static String emailSubjectError = null;
+	
+	/** The email subject normal. */
 	private static String emailSubjectNormal = null;
 
+	/** The email subject enable. */
 	private static String emailSubjectEnable = null;
 
+	/** The email subject disable. */
 	private static String emailSubjectDisable = null;
+	
+	/** The email template error. */
 	private static String emailTemplateError = null;
+	
+	/** The email template normal. */
 	private static String emailTemplateNormal = null;
 
+	/** The email template enable. */
 	private static String emailTemplateEnable = null;
 
+	/** The email template disable. */
 	private static String emailTemplateDisable = null;
+	
+	/** The email url scheme. */
 	private static String emailUrlScheme = null;
+	
+	/** The email url host. */
 	private static String emailUrlHost = null;
+	
+	/** The email url port. */
 	private static String emailUrlPort = null;
 	
+	/** The Constant DEFAULT_EMAIL_SUBJECT_ERROR. */
 	private static final String DEFAULT_EMAIL_SUBJECT_ERROR = "Job execution failed: [%s]";
+	
+	/** The Constant DEFAULT_EMAIL_SUBJECT_NORMAL. */
 	private static final String DEFAULT_EMAIL_SUBJECT_NORMAL = "Job execution is back to normal: [%s]";
 
+	/** The Constant DEFAULT_EMAIL_SUBJECT_ENABLE. */
 	private static final String DEFAULT_EMAIL_SUBJECT_ENABLE = "Job execution has been enabled: [%s]";
 
+	/** The Constant DEFAULT_EMAIL_SUBJECT_DISABLE. */
 	private static final String DEFAULT_EMAIL_SUBJECT_DISABLE = "Job execution has been disabled: [%s]";
 
+	/** The Constant EMAIL_TEMPLATE_ERROR. */
 	private static final String EMAIL_TEMPLATE_ERROR = "/job/templates/template-error.txt";
 
+	/** The Constant EMAIL_TEMPLATE_NORMAL. */
 	private static final String EMAIL_TEMPLATE_NORMAL = "/job/templates/template-normal.txt";
 
+	/** The Constant EMAIL_TEMPLATE_ENABLE. */
 	private static final String EMAIL_TEMPLATE_ENABLE = "/job/templates/template-enable.txt";
 
+	/** The Constant EMAIL_TEMPLATE_DISABLE. */
 	private static final String EMAIL_TEMPLATE_DISABLE = "/job/templates/template-disable.txt";
 	
 	static {
@@ -168,6 +236,21 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 
 	// Jobs
 
+	/**
+	 * Creates the job.
+	 *
+	 * @param name the name
+	 * @param group the group
+	 * @param clazz the clazz
+	 * @param handler the handler
+	 * @param engine the engine
+	 * @param description the description
+	 * @param expression the expression
+	 * @param singleton the singleton
+	 * @param parameters the parameters
+	 * @return the job definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#createJob(java.lang.String, java.lang.String,
@@ -194,6 +277,13 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return createOrUpdateJob(jobDefinition);
 	}
 
+	/**
+	 * Creates the or update job.
+	 *
+	 * @param jobDefinition the job definition
+	 * @return the job definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -238,6 +328,12 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Creates the or update parameters.
+	 *
+	 * @param connection the connection
+	 * @param jobDefinition the job definition
+	 */
 	private void createOrUpdateParameters(Connection connection, JobDefinition jobDefinition) {
 		for (JobParameterDefinition parameter : jobDefinition.getParameters()) {
 			JobParameterDefinition existingParameter = jobParameterPersistenceManager.find(connection, JobParameterDefinition.class, parameter.getId());
@@ -265,6 +361,13 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Gets the job.
+	 *
+	 * @param name the name
+	 * @return the job
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#getJob(java.lang.String)
@@ -297,6 +400,12 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Removes the job.
+	 *
+	 * @param name the name
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#removeJob(java.lang.String)
@@ -318,6 +427,20 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Update job.
+	 *
+	 * @param name the name
+	 * @param group the group
+	 * @param clazz the clazz
+	 * @param handler the handler
+	 * @param engine the engine
+	 * @param description the description
+	 * @param expression the expression
+	 * @param singleton the singleton
+	 * @param parameters the parameters
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#updateJob(java.lang.String, java.lang.String,
@@ -341,6 +464,12 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		createOrUpdateJob(jobDefinition);
 	}
 
+	/**
+	 * Gets the jobs.
+	 *
+	 * @return the jobs
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#getJobs()
@@ -362,6 +491,13 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Exists job.
+	 *
+	 * @param name the name
+	 * @return true, if successful
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#existsJob(java.lang.String)
@@ -371,6 +507,12 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return getJob(name) != null;
 	}
 
+	/**
+	 * Parses the job.
+	 *
+	 * @param json the json
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#parseJob(java.lang.String)
@@ -386,6 +528,12 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return jobDefinition;
 	}
 
+	/**
+	 * Parses the job.
+	 *
+	 * @param content the content
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#parseJob(byte[])
@@ -398,6 +546,12 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return jobDefinition;
 	}
 
+	/**
+	 * Serialize job.
+	 *
+	 * @param jobDefinition the job definition
+	 * @return the string
+	 */
 	@Override
 	public String serializeJob(JobDefinition jobDefinition) {
 		return GsonHelper.GSON.toJson(jobDefinition);
@@ -406,6 +560,14 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	// Job Log
 	
 
+	/**
+	 * Job triggered.
+	 *
+	 * @param name the name
+	 * @param handler the handler
+	 * @return the job log definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobTriggered(java.lang.String, java.lang.String)
@@ -420,6 +582,16 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return registerJobLog(jobLogDefinition);
 	}
 
+	/**
+	 * Job finished.
+	 *
+	 * @param name the name
+	 * @param handler the handler
+	 * @param triggeredId the triggered id
+	 * @param triggeredAt the triggered at
+	 * @return the job log definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobFinished(java.lang.String, java.lang.String,
@@ -448,6 +620,17 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return jobLogDefinition;
 	}
 	
+	/**
+	 * Job failed.
+	 *
+	 * @param name the name
+	 * @param handler the handler
+	 * @param triggeredId the triggered id
+	 * @param triggeredAt the triggered at
+	 * @param message the message
+	 * @return the job log definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobFailed(java.lang.String, java.lang.String,
@@ -477,6 +660,15 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return jobLogDefinition;
 	}
 	
+	/**
+	 * Job logged.
+	 *
+	 * @param name the name
+	 * @param handler the handler
+	 * @param message the message
+	 * @return the job log definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobLogged(java.lang.String, java.lang.String, java.lang.String)
@@ -486,6 +678,15 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return jobLogged(name, handler, message, JobLogDefinition.JOB_LOG_STATUS_LOGGED);
 	}
 	
+	/**
+	 * Job logged error.
+	 *
+	 * @param name the name
+	 * @param handler the handler
+	 * @param message the message
+	 * @return the job log definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobLoggedError(java.lang.String, java.lang.String, java.lang.String)
@@ -495,6 +696,15 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return jobLogged(name, handler, message, JobLogDefinition.JOB_LOG_STATUS_ERROR);
 	}
 	
+	/**
+	 * Job logged warning.
+	 *
+	 * @param name the name
+	 * @param handler the handler
+	 * @param message the message
+	 * @return the job log definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobLoggedWarning(java.lang.String, java.lang.String, java.lang.String)
@@ -504,6 +714,15 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return jobLogged(name, handler, message, JobLogDefinition.JOB_LOG_STATUS_WARN);
 	}
 	
+	/**
+	 * Job logged info.
+	 *
+	 * @param name the name
+	 * @param handler the handler
+	 * @param message the message
+	 * @return the job log definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobLoggedInfo(java.lang.String, java.lang.String, java.lang.String)
@@ -513,6 +732,16 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return jobLogged(name, handler, message, JobLogDefinition.JOB_LOG_STATUS_INFO);
 	}
 	
+	/**
+	 * Job logged.
+	 *
+	 * @param name the name
+	 * @param handler the handler
+	 * @param message the message
+	 * @param severity the severity
+	 * @return the job log definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	private JobLogDefinition jobLogged(String name, String handler, String message, short severity) throws SchedulerException {
 		JobLogDefinition jobLogDefinition = new JobLogDefinition();
 		jobLogDefinition.setName(name);
@@ -523,6 +752,13 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return registerJobLog(jobLogDefinition);
 	}
 	
+	/**
+	 * Register job log.
+	 *
+	 * @param jobLogDefinition the job log definition
+	 * @return the job log definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	private JobLogDefinition registerJobLog(JobLogDefinition jobLogDefinition) throws SchedulerException {
 		try {
 			try (Connection connection = getDataSource().getConnection()) {
@@ -534,6 +770,13 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 	
+	/**
+	 * Gets the job logs.
+	 *
+	 * @param name the name
+	 * @return the job logs
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#getJobLogs(java.lang.String)
@@ -552,6 +795,12 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 	
+	/**
+	 * Clear job logs.
+	 *
+	 * @param name the name
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#clearJobLogs()
@@ -571,6 +820,11 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 	
+	/**
+	 * Delete old job logs.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#deleteOldJobLogs()
@@ -590,6 +844,9 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Cleanup.
+	 */
 	@Override
 	public void cleanup() {
 		try {
@@ -599,6 +856,13 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 	
+	/**
+	 * Gets the job parameters.
+	 *
+	 * @param name the name
+	 * @return the job parameters
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#getJobParameters(java.lang.String)
@@ -617,6 +881,14 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 	
+	/**
+	 * Prepare email.
+	 *
+	 * @param jobDefinition the job definition
+	 * @param templateLocation the template location
+	 * @param defaultLocation the default location
+	 * @return the string
+	 */
 	private String prepareEmail(JobDefinition jobDefinition, String templateLocation, String defaultLocation) {
 		RegistryResourceExecutor registryResourceExecutor = new RegistryResourceExecutor();
 		byte[] template = registryResourceExecutor.getRegistryContent(templateLocation);
@@ -643,6 +915,13 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 	
+	/**
+	 * Send email.
+	 *
+	 * @param jobDefinition the job definition
+	 * @param emailSubject the email subject
+	 * @param emailContent the email content
+	 */
 	private void sendEmail(JobDefinition jobDefinition, String emailSubject, String emailContent) {
 		try {
 			
@@ -678,6 +957,13 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		
 	}
 
+	/**
+	 * Gets the job emails.
+	 *
+	 * @param name the name
+	 * @return the job emails
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#getJobEmails(java.lang.String)
@@ -695,6 +981,13 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Adds the job email.
+	 *
+	 * @param name the name
+	 * @param email the email
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#addJobEmail(java.lang.String, java.lang.String)
@@ -718,6 +1011,12 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Removes the job email.
+	 *
+	 * @param id the id
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#removeJobEmail(java.lang.Long)

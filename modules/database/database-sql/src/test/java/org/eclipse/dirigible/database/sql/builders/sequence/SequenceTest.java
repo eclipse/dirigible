@@ -18,7 +18,6 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SequenceTest.
  */
@@ -38,6 +37,9 @@ public class SequenceTest {
 		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
 	}
 
+	/**
+	 * Alter sequence.
+	 */
 	@Test
 	public void alterSequence(){
 		String sql = SqlFactory.getDefault()

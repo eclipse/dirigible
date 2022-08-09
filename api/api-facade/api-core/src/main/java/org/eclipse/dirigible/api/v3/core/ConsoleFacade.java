@@ -12,10 +12,11 @@
 package org.eclipse.dirigible.api.v3.core;
 
 /**
- * The ConsoleFacade is used for debug purposes to trace messages into the standard outputs
+ * The ConsoleFacade is used for debug purposes to trace messages into the standard outputs.
  */
 public class ConsoleFacade {
 
+	/** The Constant console. */
 	private static final Console console = new Console();
 
 	/**

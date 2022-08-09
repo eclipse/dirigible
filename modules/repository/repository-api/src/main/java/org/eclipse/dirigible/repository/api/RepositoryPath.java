@@ -21,8 +21,10 @@ import java.util.StringTokenizer;
  */
 public class RepositoryPath {
 
+	/** The path. */
 	private String path;
 
+	/** The segments. */
 	private final String[] segments;
 
 	/**
@@ -111,6 +113,11 @@ public class RepositoryPath {
 		return new RepositoryPath(newSegments);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -150,6 +157,12 @@ public class RepositoryPath {
 		return path;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -169,6 +182,11 @@ public class RepositoryPath {
 		return getPath().equals(other.getPath());
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

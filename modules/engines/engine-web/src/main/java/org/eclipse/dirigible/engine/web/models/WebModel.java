@@ -27,25 +27,32 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 @Table(name = "DIRIGIBLE_WEB")
 public class WebModel implements IArtefactDefinition {
 
+	/** The location. */
 	@Id
 	@Column(name = "WEB_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
+	/** The guid. */
 	@Column(name = "WEB_GUID", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String guid;
 	
+	/** The exposed. */
 	@Column(name = "WEB_EXPOSED", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	private String exposed;
 
+	/** The hash. */
 	@Column(name = "WEB_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 
+	/** The created by. */
 	@Column(name = "WEB_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "WEB_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
+	/** The exposes. */
 	@Transient
 	private String[] exposes;
 
@@ -208,6 +215,11 @@ public class WebModel implements IArtefactDefinition {
 		return GsonHelper.GSON.toJson(this);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -218,6 +230,11 @@ public class WebModel implements IArtefactDefinition {
 		return toJson();
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -233,6 +250,12 @@ public class WebModel implements IArtefactDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -274,11 +297,21 @@ public class WebModel implements IArtefactDefinition {
 		return true;
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getGuid();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();

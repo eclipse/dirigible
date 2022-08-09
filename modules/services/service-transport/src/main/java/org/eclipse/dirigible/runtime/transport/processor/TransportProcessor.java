@@ -30,10 +30,17 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
  */
 public class TransportProcessor {
 
+	/** The workspaces core service. */
 	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 	
+	/** The repository. */
 	private IRepository repository = null;
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -54,12 +61,13 @@ public class TransportProcessor {
 	}
 
 	/**
-	 * Import files from zip to folder
+	 * Import files from zip to folder.
 	 *
-	 * @param workspaceName
-	 * @param projectName
-	 * @param pathInProject
-	 * @param content
+	 * @param workspaceName the workspace name
+	 * @param projectName the project name
+	 * @param pathInProject the path in project
+	 * @param content the content
+	 * @param override the override
 	 */
 	public void importZipToPath(String workspaceName, String projectName, String pathInProject, byte[] content, Boolean override) {
 		if (override == null) override = true;
@@ -69,17 +77,35 @@ public class TransportProcessor {
 		getRepository().importZip(content, importPath, override, false, null);
 	}
   
+	/**
+	 * Import project in path.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 */
 	public void importProjectInPath(String path, InputStream content) {
 		ICollection importedZipFolder = getOrCreateCollection(path);
 		String importedZipFolderPath = importedZipFolder.getPath();
 		importProject(importedZipFolderPath, content);
 	}
 
+	/**
+	 * Import project.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 */
 	private void importProject(String path, InputStream content) {
 		ZipInputStream str = new ZipInputStream(content);
 		getRepository().importZip(str, path, true);
 	}
 
+	/**
+	 * Gets the or create collection.
+	 *
+	 * @param path the path
+	 * @return the or create collection
+	 */
 	private ICollection getOrCreateCollection(String path) {
 		ICollection repositoryRootCollection = getRepository().getRoot();
 		ICollection importedZipFolder = repositoryRootCollection.getCollection(path);
@@ -122,6 +148,8 @@ public class TransportProcessor {
 	 * @param project the project
 	 * @param folder the project
 	 * @return the byte[]
+	 * @throws UnsupportedEncodingException the unsupported encoding exception
+	 * @throws DecoderException the decoder exception
 	 */
 	public byte[] exportFolder(String workspace, String project, String folder) throws  UnsupportedEncodingException, DecoderException {
 		IWorkspace workspaceApi = getWorkspace(workspace);

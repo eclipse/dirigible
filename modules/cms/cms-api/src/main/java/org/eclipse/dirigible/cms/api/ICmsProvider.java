@@ -12,15 +12,17 @@
 package org.eclipse.dirigible.cms.api;
 
 /**
- * The Content Management System interface implemented by all the CMS providers
- *
+ * The Content Management System interface implemented by all the CMS providers.
  */
 public interface ICmsProvider {
 
+	/** The Constant DIRIGIBLE_CMS_PROVIDER. */
 	public static final String DIRIGIBLE_CMS_PROVIDER = "DIRIGIBLE_CMS_PROVIDER"; //$NON-NLS-1$
 
+	/** The Constant DIRIGIBLE_CMS_PROVIDER_INTERNAL. */
 	public static final String DIRIGIBLE_CMS_PROVIDER_INTERNAL = "internal"; //$NON-NLS-1$
 	
+	/** The Constant DIRIGIBLE_CMS_PROVIDER_DATABASE. */
 	public static final String DIRIGIBLE_CMS_PROVIDER_DATABASE = "database"; //$NON-NLS-1$
 
 	/** The Constant DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER. */
@@ -64,8 +66,8 @@ public interface ICmsProvider {
 	public String getType();
 
 	/**
-	 * Getter for the underlying repository session object
-	 * 
+	 * Getter for the underlying repository session object.
+	 *
 	 * @return the session object
 	 */
 	public Object getSession();

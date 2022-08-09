@@ -16,10 +16,13 @@ package org.eclipse.dirigible.database.ds.model;
  */
 public class DataStructureTableConstraintModel {
 
+	/** The name. */
 	private String name;
 	
+	/** The modifiers. */
 	private String[] modifiers;
 	
+	/** The columns. */
 	private String[] columns;
 
 	/**

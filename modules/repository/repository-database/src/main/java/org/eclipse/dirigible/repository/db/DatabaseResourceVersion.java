@@ -23,12 +23,16 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
  */
 public class DatabaseResourceVersion implements IResourceVersion {
 
+	/** The repository. */
 	private final DatabaseRepository repository;
 
+	/** The path. */
 	private final RepositoryPath path;
 
+	/** The version. */
 	private int version;
 
+	/** The file version. */
 	private DatabaseFileVersion fileVersion;
 
 	/**
@@ -60,6 +64,11 @@ public class DatabaseResourceVersion implements IResourceVersion {
 		return repository;
 	}
 
+	/**
+	 * Gets the path.
+	 *
+	 * @return the path
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getPath()
@@ -69,6 +78,11 @@ public class DatabaseResourceVersion implements IResourceVersion {
 		return this.path.toString();
 	}
 
+	/**
+	 * Gets the version.
+	 *
+	 * @return the version
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getVersion()
@@ -78,6 +92,12 @@ public class DatabaseResourceVersion implements IResourceVersion {
 		return this.version;
 	}
 
+	/**
+	 * Gets the content.
+	 *
+	 * @return the content
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getContent()
@@ -87,6 +107,11 @@ public class DatabaseResourceVersion implements IResourceVersion {
 		return this.fileVersion.getData();
 	}
 
+	/**
+	 * Checks if is binary.
+	 *
+	 * @return true, if is binary
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#isBinary()
@@ -96,6 +121,11 @@ public class DatabaseResourceVersion implements IResourceVersion {
 		return this.fileVersion.isBinary();
 	}
 
+	/**
+	 * Gets the content type.
+	 *
+	 * @return the content type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getContentType()
@@ -105,6 +135,11 @@ public class DatabaseResourceVersion implements IResourceVersion {
 		return this.fileVersion.getContentType();
 	}
 
+	/**
+	 * Gets the created by.
+	 *
+	 * @return the created by
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getCreatedBy()
@@ -114,6 +149,11 @@ public class DatabaseResourceVersion implements IResourceVersion {
 		return this.fileVersion.getCreatedBy();
 	}
 
+	/**
+	 * Gets the created at.
+	 *
+	 * @return the created at
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getCreatedAt()
@@ -123,6 +163,12 @@ public class DatabaseResourceVersion implements IResourceVersion {
 		return this.fileVersion.getCreatedAt();
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -142,6 +188,11 @@ public class DatabaseResourceVersion implements IResourceVersion {
 		return getPath().equals(other.getPath());
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -151,6 +202,12 @@ public class DatabaseResourceVersion implements IResourceVersion {
 		return getPath().hashCode();
 	}
 
+	/**
+	 * Compare to.
+	 *
+	 * @param o the o
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)

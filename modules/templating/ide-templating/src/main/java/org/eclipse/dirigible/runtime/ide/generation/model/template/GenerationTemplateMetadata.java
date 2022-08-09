@@ -18,16 +18,22 @@ import java.util.List;
  */
 public class GenerationTemplateMetadata {
 	
+	/** The id. */
 	private String id;
 	
+	/** The name. */
 	private String name;
 	
+	/** The description. */
 	private String description;
 	
+	/** The model. */
 	private boolean model;
 	
+	/** The sources. */
 	private List<GenerationTemplateMetadataSource> sources;
 	
+	/** The parameters. */
 	private List<GenerationTemplateMetadataParameter> parameters;
 
 	/**
@@ -85,8 +91,8 @@ public class GenerationTemplateMetadata {
 	}
 	
 	/**
-	 * Getter for the model flag
-	 * 
+	 * Getter for the model flag.
+	 *
 	 * @return true if it is model based
 	 */
 	public boolean isModel() {
@@ -94,8 +100,8 @@ public class GenerationTemplateMetadata {
 	}
 	
 	/**
-	 * Sets the model flag
-	 * 
+	 * Sets the model flag.
+	 *
 	 * @param model the flag
 	 */
 	public void setModel(boolean model) {

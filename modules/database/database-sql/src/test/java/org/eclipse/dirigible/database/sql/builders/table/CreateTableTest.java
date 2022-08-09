@@ -11,14 +11,14 @@
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.Modifiers;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class CreateTableTest.
@@ -131,6 +131,9 @@ public class CreateTableTest {
                 sql);
     }
 
+    /**
+     * Creates the table type constraint foreign key with reference schema.
+     */
     @Test
     public void createTableTypeConstraintForeignKeyWithReferenceSchema() {
         String sql = SqlFactory.getDefault().create()
@@ -197,6 +200,9 @@ public class CreateTableTest {
                 sql);
     }
 
+    /**
+     * Creates the table with escaped table name.
+     */
     @Test
     public void createTableWithEscapedTableName() {
         String sql = SqlFactory.getDefault().create()
@@ -211,6 +217,9 @@ public class CreateTableTest {
                 sql);
     }
 
+    /**
+     * Creates the table with escaped table name and schema.
+     */
     @Test
     public void createTableWithEscapedTableNameAndSchema() {
         String sql = SqlFactory.getDefault().create()

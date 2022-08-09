@@ -25,17 +25,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Initializer of the Local Repository form the Master one, if configured
- *
+ * Initializer of the Local Repository form the Master one, if configured.
  */
 public class MasterToRepositoryInitializer {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MasterToRepositoryInitializer.class);
 	
+	/** The master repository. */
 	private IMasterRepository masterRepository = null;
 	
+	/** The repository. */
 	private IRepository repository = null;
 	
+	/**
+	 * Gets the master repository.
+	 *
+	 * @return the master repository
+	 */
 	protected synchronized IMasterRepository getMasterRepository() {
 		if (masterRepository == null) {
 			masterRepository = (IMasterRepository) StaticObjects.get(StaticObjects.MASTER_REPOSITORY);
@@ -43,6 +50,11 @@ public class MasterToRepositoryInitializer {
 		return masterRepository;
 	}
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -51,12 +63,10 @@ public class MasterToRepositoryInitializer {
 	}
 	
 	/**
-	 * Initialize the Repository from the Master Repository, if configured
+	 * Initialize the Repository from the Master Repository, if configured.
 	 *
-	 * @throws SQLException
-	 *             the SQL exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws SQLException             the SQL exception
+	 * @throws IOException             Signals that an I/O exception has occurred.
 	 */
 	public void initialize() throws SQLException, IOException {
 		if (getMasterRepository() != null && getMasterRepository().hasCollection("/")) {
@@ -70,12 +80,26 @@ public class MasterToRepositoryInitializer {
 		}
 	}
 	
+	/**
+	 * Copy repository.
+	 *
+	 * @param sourceRepository the source repository
+	 * @param targetRepository the target repository
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void copyRepository(IMasterRepository sourceRepository, IRepository targetRepository) throws IOException {
 		// Copy from Master to Local
 		ICollection root = sourceRepository.getRoot();
 		copyCollection(root, targetRepository);
 	}
 
+	/**
+	 * Copy collection.
+	 *
+	 * @param parent the parent
+	 * @param targetRepository the target repository
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void copyCollection(ICollection parent, IRepository targetRepository) throws IOException {
 		List<IEntity> entities = parent.getChildren();
 		for (IEntity entity : entities) {

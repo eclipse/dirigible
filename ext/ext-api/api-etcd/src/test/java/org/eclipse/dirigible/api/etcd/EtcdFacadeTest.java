@@ -32,16 +32,31 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+/**
+ * The Class EtcdFacadeTest.
+ */
 public class EtcdFacadeTest {
 
+	/** The Constant etcd. */
 	@RegisterExtension static final EtcdCluster etcd = new EtcdClusterExtension("test-etcd", 1);
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		etcd.start();
 		Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", etcd.clientEndpoints().get(0).toString());
 	}
 
+	/**
+	 * Gets the client.
+	 *
+	 * @return the client
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ExecutionException the execution exception
+	 * @throws InterruptedException the interrupted exception
+	 */
 	@Test
 	public void getClient() throws IOException, ExecutionException, InterruptedException {
 		KV etcdClient = EtcdFacade.getClient();
@@ -63,6 +78,11 @@ public class EtcdFacadeTest {
 		assertTrue(getDelResponse.getKvs().isEmpty());
 	}
 
+	/**
+	 * String to byte sequence.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void stringToByteSequence() throws IOException {
 		String s = "foo";
@@ -72,6 +92,11 @@ public class EtcdFacadeTest {
 		assertEquals(bs.toString(Charsets.UTF_8), s);
 	}
 
+	/**
+	 * Byte array to byte sequence.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void byteArrayToByteSequence() throws IOException {
 		byte[] arr = {100, 100, 100};
@@ -81,6 +106,11 @@ public class EtcdFacadeTest {
 		assertTrue(Arrays.equals(bs.getBytes(), arr));
 	}
 
+	/**
+	 * Byte sequence to string.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void byteSequenceToString() throws IOException {
 		ByteSequence bs = ByteSequence.from("foo", Charsets.UTF_8);

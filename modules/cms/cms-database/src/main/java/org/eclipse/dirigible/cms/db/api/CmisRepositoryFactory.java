@@ -13,8 +13,17 @@ package org.eclipse.dirigible.cms.db.api;
 
 import org.eclipse.dirigible.cms.db.CmsDatabaseRepository;
 
+/**
+ * A factory for creating CmisRepository objects.
+ */
 public class CmisRepositoryFactory {
 
+	/**
+	 * Creates a new CmisRepository object.
+	 *
+	 * @param repository the repository
+	 * @return the cmis repository
+	 */
 	public static CmisRepository createCmisRepository(CmsDatabaseRepository repository) {
 		return new CmisDatabaseRepository(repository);
 	}

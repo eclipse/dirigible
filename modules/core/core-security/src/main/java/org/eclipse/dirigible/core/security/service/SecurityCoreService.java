@@ -42,15 +42,24 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class SecurityCoreService implements ISecurityCoreService {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The roles persistence manager. */
 	private PersistenceManager<RoleDefinition> rolesPersistenceManager = new PersistenceManager<RoleDefinition>();
 
+	/** The access persistence manager. */
 	private PersistenceManager<AccessDefinition> accessPersistenceManager = new PersistenceManager<AccessDefinition>();
 
+	/** The Constant CACHE. */
 	// used by the access security filter to minimize the performance implications on getting the whole list
 	private static final List<AccessDefinition> CACHE = Collections.synchronizedList(new ArrayList<AccessDefinition>());
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -60,6 +69,15 @@ public class SecurityCoreService implements ISecurityCoreService {
 
 	// Roles
 
+	/**
+	 * Creates the role.
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @param description the description
+	 * @return the role definition
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#createRole(java.lang.String, java.lang.String,
@@ -90,6 +108,13 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Gets the role.
+	 *
+	 * @param name the name
+	 * @return the role
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getRole(java.lang.String)
@@ -111,6 +136,13 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Exists role.
+	 *
+	 * @param name the name
+	 * @return true, if successful
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#existsRole(java.lang.String)
@@ -120,6 +152,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		return getRole(name) != null;
 	}
 
+	/**
+	 * Removes the role.
+	 *
+	 * @param name the name
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#removeRole(java.lang.String)
@@ -141,6 +179,14 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Update role.
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @param description the description
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#updateRole(java.lang.String, java.lang.String,
@@ -166,6 +212,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
+	/**
+	 * Delete roles by location.
+	 *
+	 * @param location the location
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#deleteRolesByLocation(java.util.List)
@@ -195,6 +247,11 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
+	/**
+	 * Delete all roles.
+	 *
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#deleteAllRoles(java.util.List)
@@ -223,6 +280,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Gets the roles.
+	 *
+	 * @return the roles
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getRoles()
@@ -244,6 +307,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Parses the roles.
+	 *
+	 * @param json the json
+	 * @return the role definition[]
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#parseRoles(java.lang.String)
@@ -253,6 +322,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		return GsonHelper.GSON.fromJson(json, RoleDefinition[].class);
 	}
 
+	/**
+	 * Parses the roles.
+	 *
+	 * @param json the json
+	 * @return the role definition[]
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#parseRoles(byte[])
@@ -262,6 +337,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), RoleDefinition[].class);
 	}
 
+	/**
+	 * Serialize roles.
+	 *
+	 * @param roles the roles
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -275,6 +356,19 @@ public class SecurityCoreService implements ISecurityCoreService {
 
 	// Access
 
+	/**
+	 * Creates the access definition.
+	 *
+	 * @param location the location
+	 * @param scope the scope
+	 * @param path the path
+	 * @param method the method
+	 * @param role the role
+	 * @param description the description
+	 * @param hash the hash
+	 * @return the access definition
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#createAccessDefinition(java.lang.String,
@@ -311,6 +405,13 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Gets the access definition.
+	 *
+	 * @param id the id
+	 * @return the access definition
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getAccessDefinition(long)
@@ -332,6 +433,16 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Gets the access definition.
+	 *
+	 * @param scope the scope
+	 * @param path the path
+	 * @param method the method
+	 * @param role the role
+	 * @return the access definition
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getAccessDefinition(java.lang.String,
@@ -366,6 +477,16 @@ public class SecurityCoreService implements ISecurityCoreService {
 
 	}
 
+	/**
+	 * Exists access definition.
+	 *
+	 * @param scope the scope
+	 * @param path the path
+	 * @param method the method
+	 * @param role the role
+	 * @return true, if successful
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#existsAccessDefinition(java.lang.String,
@@ -376,6 +497,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		return getAccessDefinition(scope, path, method, role) != null;
 	}
 
+	/**
+	 * Removes the access definition.
+	 *
+	 * @param id the id
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#removeAccessDefinition(long)
@@ -397,6 +524,19 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Update access definition.
+	 *
+	 * @param id the id
+	 * @param location the location
+	 * @param scope the scope
+	 * @param path the path
+	 * @param method the method
+	 * @param role the role
+	 * @param description the description
+	 * @param hash the hash
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#updateAccessDefinition(long, java.lang.String,
@@ -428,6 +568,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
+	/**
+	 * Delete access definitions by location.
+	 *
+	 * @param location the location
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#deleteAccessDefinitionsByLocation(java.util.List)
@@ -457,6 +603,11 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
+	/**
+	 * Delete all access definitions.
+	 *
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#deleteAllAccessDefinitions(java.util.List)
@@ -485,6 +636,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Gets the access definitions.
+	 *
+	 * @return the access definitions
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getAccessDefinitions()
@@ -511,6 +668,14 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Gets the access definitions by path.
+	 *
+	 * @param scope the scope
+	 * @param path the path
+	 * @return the access definitions by path
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getAccessDefinitionsByUri(java.lang.String)
@@ -534,6 +699,15 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Gets the access definitions by path and method.
+	 *
+	 * @param scope the scope
+	 * @param path the path
+	 * @param method the method
+	 * @return the access definitions by path and method
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -559,6 +733,16 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Checks if is access allowed.
+	 *
+	 * @param scope the scope
+	 * @param path the path
+	 * @param method the method
+	 * @param role the role
+	 * @return true, if is access allowed
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#isAccessAllowed(java.lang.String,
@@ -586,6 +770,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/**
+	 * Parses the access definitions.
+	 *
+	 * @param json the json
+	 * @return the list
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#parseAccessDefinitions(java.lang.String)
@@ -596,6 +786,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		return accessArtifact.divide();
 	}
 
+	/**
+	 * Parses the access definitions.
+	 *
+	 * @param json the json
+	 * @return the list
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#parseAccessDefinitions(byte[])
@@ -606,6 +802,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		return accessArtifact.divide();
 	}
 
+	/**
+	 * Serialize access definitions.
+	 *
+	 * @param accessDefinitions the access definitions
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#serializeAccessDefinitions(java.util.List)
@@ -623,6 +825,13 @@ public class SecurityCoreService implements ISecurityCoreService {
 		CACHE.clear();
 	}
 
+	/**
+	 * Drop modified access definitions.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @throws AccessException the access exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#dropModifiedAccessDefinitions(java.util.List)

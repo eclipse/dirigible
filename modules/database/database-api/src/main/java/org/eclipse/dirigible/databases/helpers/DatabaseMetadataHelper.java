@@ -36,70 +36,103 @@ import org.slf4j.LoggerFactory;
  */
 public class DatabaseMetadataHelper {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseMetadataHelper.class);
 
+	/** The Constant SYSTEM_TABLE. */
 	static final String SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
 
+	/** The Constant LOCAL_TEMPORARY. */
 	static final String LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
 
+	/** The Constant GLOBAL_TEMPORARY. */
 	static final String GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
 
+	/** The Constant SYNONYM. */
 	static final String SYNONYM = "SYNONYM"; //$NON-NLS-1$
 
+	/** The Constant ALIAS. */
 	static final String ALIAS = "ALIAS"; //$NON-NLS-1$
 
+	/** The Constant VIEW. */
 	static final String VIEW = "VIEW"; //$NON-NLS-1$
 
+	/** The Constant TABLE. */
 	static final String TABLE = "TABLE"; //$NON-NLS-1$
 
+	/** The Constant TABLE_TYPES. */
 	static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM, GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
 
+	/** The Constant PRCNT. */
 	private static final String PRCNT = "%"; //$NON-NLS-1$
 
+	/** The Constant COLUMN_NAME. */
 	private static final String COLUMN_NAME = "COLUMN_NAME"; //$NON-NLS-1$
 	
+	/** The Constant COLUMN_TYPE. */
 	private static final String COLUMN_TYPE = "COLUMN_TYPE"; //$NON-NLS-1$
 
+	/** The Constant TYPE_NAME. */
 	private static final String TYPE_NAME = "TYPE_NAME"; //$NON-NLS-1$
 
+	/** The Constant COLUMN_SIZE. */
 	private static final String COLUMN_SIZE = "COLUMN_SIZE"; //$NON-NLS-1$
 
+	/** The Constant EMPTY. */
 	private static final String EMPTY = ""; //$NON-NLS-1$
 
+	/** The Constant PK. */
 	private static final String PK = "PK"; //$NON-NLS-1$
 
+	/** The Constant IS_NULLABLE. */
 	private static final String IS_NULLABLE = "IS_NULLABLE"; //$NON-NLS-1$
 
+	/** The Constant INDEX_NAME. */
 	private static final String INDEX_NAME = "INDEX_NAME"; //$NON-NLS-1$
 
+	/** The Constant TYPE_INDEX. */
 	private static final String TYPE_INDEX = "TYPE"; //$NON-NLS-1$
 
+	/** The Constant NON_UNIQUE. */
 	private static final String NON_UNIQUE = "NON_UNIQUE"; //$NON-NLS-1$
 
+	/** The Constant INDEX_QUALIFIER. */
 	private static final String INDEX_QUALIFIER = "INDEX_QUALIFIER"; //$NON-NLS-1$
 
+	/** The Constant ORDINAL_POSITION. */
 	private static final String ORDINAL_POSITION = "ORDINAL_POSITION"; //$NON-NLS-1$
 
+	/** The Constant ASC_OR_DESC. */
 	private static final String ASC_OR_DESC = "ASC_OR_DESC"; //$NON-NLS-1$
 
+	/** The Constant CARDINALITY. */
 	private static final String CARDINALITY = "CARDINALITY"; //$NON-NLS-1$
 
+	/** The Constant PAGES_INDEX. */
 	private static final String PAGES_INDEX = "PAGES"; //$NON-NLS-1$
 
+	/** The Constant FILTER_CONDITION. */
 	private static final String FILTER_CONDITION = "FILTER_CONDITION"; //$NON-NLS-1$
 	
+	/** The Constant PRECISION. */
 	private static final String PRECISION = "PRECISION"; //$NON-NLS-1$
 	
+	/** The Constant LENGTH. */
 	private static final String LENGTH = "LENGTH"; //$NON-NLS-1$
 	
+	/** The Constant SCALE. */
 	private static final String SCALE = "SCALE"; //$NON-NLS-1$
 	
+	/** The Constant RADIX. */
 	private static final String RADIX = "RADIX"; //$NON-NLS-1$
 	
+	/** The Constant NULLABLE. */
 	private static final String NULLABLE = "NULLABLE"; //$NON-NLS-1$
 	
+	/** The Constant REMARKS. */
 	private static final String REMARKS = "REMARKS"; //$NON-NLS-1$
 	
+	/** The Constant DECIMAL_DIGITS. */
 	public static final String DECIMAL_DIGITS = "DECIMAL_DIGITS"; //$NON-NLS-1$
 	
 	
@@ -488,16 +521,12 @@ public class DatabaseMetadataHelper {
 		/**
 		 * On column.
 		 *
-		 * @param name
-		 *            the name
-		 * @param type
-		 *            the type
-		 * @param size
-		 *            the size
-		 * @param isNullable
-		 *            the is nullable
-		 * @param isKey
-		 *            the is key
+		 * @param name            the name
+		 * @param type            the type
+		 * @param size            the size
+		 * @param isNullable            the is nullable
+		 * @param isKey            the is key
+		 * @param scale the scale
 		 */
 		void onColumn(String name, String type, String size, boolean isNullable, boolean isKey, int scale);
 	}
@@ -508,8 +537,8 @@ public class DatabaseMetadataHelper {
 	public interface ProcedureColumnsIteratorCallback {
 
 		/**
-		 * Procedure column callback
-		 * 
+		 * Procedure column callback.
+		 *
 		 * @param name name
 		 * @param kind kind
 		 * @param type type
@@ -529,7 +558,7 @@ public class DatabaseMetadataHelper {
 	public interface FunctionColumnsIteratorCallback {
 
 		/**
-		 * Function column callback
+		 * Function column callback.
 		 *
 		 * @param name name
 		 * @param kind kind
@@ -848,13 +877,11 @@ public class DatabaseMetadataHelper {
 	}
 	
 	/**
-	 * Gets the product name
+	 * Gets the product name.
 	 *
-	 * @param dataSource
-	 *            the data source
+	 * @param dataSource            the data source
 	 * @return the product name
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @throws SQLException             the SQL exception
 	 */
 	public static String getProductName(DataSource dataSource) throws SQLException {
 		Connection connection = null;
@@ -874,8 +901,8 @@ public class DatabaseMetadataHelper {
 	}
 	
 	/**
-	 * Makes necessary formatting if needed
-	 * 
+	 * Makes necessary formatting if needed.
+	 *
 	 * @param table the table name
 	 * @return the formatted table name
 	 */

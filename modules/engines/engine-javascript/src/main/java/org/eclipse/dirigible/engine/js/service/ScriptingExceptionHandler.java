@@ -26,8 +26,14 @@ import org.slf4j.LoggerFactory;
 @Provider
 public class ScriptingExceptionHandler extends AbstractExceptionHandler<ScriptingException> {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ScriptingExceptionHandler.class);
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getType()
@@ -37,6 +43,11 @@ public class ScriptingExceptionHandler extends AbstractExceptionHandler<Scriptin
 		return ScriptingExceptionHandler.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getLogger()
@@ -46,6 +57,12 @@ public class ScriptingExceptionHandler extends AbstractExceptionHandler<Scriptin
 		return logger;
 	}
 
+	/**
+	 * Log error message.
+	 *
+	 * @param logger the logger
+	 * @param exception the exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#logErrorMessage(org.slf4j.Logger, org.eclipse.dirigible.commons.api.scripting.ScriptingException)
@@ -58,6 +75,12 @@ public class ScriptingExceptionHandler extends AbstractExceptionHandler<Scriptin
 		// Do nothing
 	}
 	
+	/**
+	 * Gets the response status.
+	 *
+	 * @param exception the exception
+	 * @return the response status
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseStatus(java.lang.Throwable)
@@ -70,6 +93,12 @@ public class ScriptingExceptionHandler extends AbstractExceptionHandler<Scriptin
 		return Status.INTERNAL_SERVER_ERROR;
 	}
 
+	/**
+	 * Gets the response message.
+	 *
+	 * @param exception the exception
+	 * @return the response message
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseMessage(java.lang.Throwable)

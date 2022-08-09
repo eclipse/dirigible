@@ -53,10 +53,13 @@ public class JobParameterDefinition {
 	@Column(name = "JOBPARAM_CHOICES", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	private String choices = "";
 	
+	/** The value. */
 	@Transient
 	private String value;
 	
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public String getId() {
@@ -64,15 +67,18 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param jobName the jobName to set
 	 * @param name the name to set
-	 *
 	 */
 	public void setId(String jobName, String name) {
 		this.id = "\"" + jobName + "\":\"" + name + "\"";
 	}
 	
 	/**
+	 * Gets the job name.
+	 *
 	 * @return the job name
 	 */
 	public String getJobName() {
@@ -80,6 +86,8 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Sets the job name.
+	 *
 	 * @param jobName the job name to set
 	 */
 	public void setJobName(String jobName) {
@@ -87,6 +95,8 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -94,6 +104,8 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -101,6 +113,8 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Gets the description.
+	 *
 	 * @return the description
 	 */
 	public String getDescription() {
@@ -108,6 +122,8 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Sets the description.
+	 *
 	 * @param description the description to set
 	 */
 	public void setDescription(String description) {
@@ -115,6 +131,8 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -122,6 +140,8 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Sets the type.
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(String type) {
@@ -129,6 +149,8 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Gets the default value.
+	 *
 	 * @return the defaultValue
 	 */
 	public String getDefaultValue() {
@@ -136,6 +158,8 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Sets the default value.
+	 *
 	 * @param defaultValue the defaultValue to set
 	 */
 	public void setDefaultValue(String defaultValue) {
@@ -143,6 +167,8 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Gets the choices.
+	 *
 	 * @return the choices
 	 */
 	public String getChoices() {
@@ -150,17 +176,30 @@ public class JobParameterDefinition {
 	}
 
 	/**
+	 * Sets the choices.
+	 *
 	 * @param choices the choices to set
 	 */
 	public void setChoices(String choices) {
 		this.choices = choices;
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(choices, defaultValue, description, id, jobName, name, type);
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -177,6 +216,8 @@ public class JobParameterDefinition {
 	}
 	
 	/**
+	 * Gets the value.
+	 *
 	 * @return the value
 	 */
 	public String getValue() {
@@ -184,6 +225,8 @@ public class JobParameterDefinition {
 	}
 	
 	/**
+	 * Sets the value.
+	 *
 	 * @param value the value to set
 	 */
 	public void setValue(String value) {

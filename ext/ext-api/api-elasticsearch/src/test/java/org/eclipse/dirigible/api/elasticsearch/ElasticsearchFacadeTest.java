@@ -69,8 +69,7 @@ public class ElasticsearchFacadeTest {
     /**
      * Close opened resources.
      *
-     * @throws Exception
-     *             the exception
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     @After
     public void after() throws IOException {

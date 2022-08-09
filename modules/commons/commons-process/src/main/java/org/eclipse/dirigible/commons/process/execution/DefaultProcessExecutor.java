@@ -23,8 +23,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+/**
+ * The Class DefaultProcessExecutor.
+ */
 public final class DefaultProcessExecutor extends ProcessExecutor<OutputsPair> {
 
+    /**
+     * Execute process.
+     *
+     * @param commandLine the command line
+     * @param executor the executor
+     * @param environmentVariables the environment variables
+     * @return the future
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public Future<ProcessResult<OutputsPair>> executeProcess(CommandLine commandLine, DefaultExecutor executor, Map<String, String> environmentVariables) throws IOException {
         ByteArrayOutputStream stdOut = new ByteArrayOutputStream();

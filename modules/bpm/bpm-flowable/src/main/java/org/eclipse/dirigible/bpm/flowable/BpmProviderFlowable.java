@@ -45,20 +45,39 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
+/**
+ * The Class BpmProviderFlowable.
+ */
 public class BpmProviderFlowable implements IBpmProvider {
 	
+	/** The Constant FILE_EXTENSION_BPMN. */
 	public static final String FILE_EXTENSION_BPMN = ".bpmn";
 	
+	/** The Constant EXTENSION_BPMN20_XML. */
 	private static final String EXTENSION_BPMN20_XML = "bpmn20.xml";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(BpmProviderFlowable.class);
 
+	/** The Constant DIRIGIBLE_FLOWABLE_DATABASE_DRIVER. */
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_DRIVER = "DIRIGIBLE_FLOWABLE_DATABASE_DRIVER";
+	
+	/** The Constant DIRIGIBLE_FLOWABLE_DATABASE_URL. */
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_URL = "DIRIGIBLE_FLOWABLE_DATABASE_URL";
+	
+	/** The Constant DIRIGIBLE_FLOWABLE_DATABASE_USER. */
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_USER = "DIRIGIBLE_FLOWABLE_DATABASE_USER";
+	
+	/** The Constant DIRIGIBLE_FLOWABLE_DATABASE_PASSWORD. */
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_PASSWORD = "DIRIGIBLE_FLOWABLE_DATABASE_PASSWORD";
+	
+	/** The Constant DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME. */
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME";
+	
+	/** The Constant DIRIGIBLE_FLOWABLE_DATABASE_SCHEMA_UPDATE. */
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_SCHEMA_UPDATE = "DIRIGIBLE_FLOWABLE_DATABASE_SCHEMA_UPDATE";
+	
+	/** The Constant DIRIGIBLE_FLOWABLE_USE_SYSTEM_DATASOURCE. */
 	private static final String DIRIGIBLE_FLOWABLE_USE_SYSTEM_DATASOURCE = "DIRIGIBLE_FLOWABLE_USE_SYSTEM_DATASOURCE";
 	
 
@@ -68,24 +87,44 @@ public class BpmProviderFlowable implements IBpmProvider {
 	/** The Constant TYPE. */
 	public static final String TYPE = "internal"; //$NON-NLS-1$
 
+	/** The process engine. */
 	private static ProcessEngine processEngine;
 	
+	/** The repository. */
 	private IRepository repository = null;
 
+	/**
+	 * Instantiates a new bpm provider flowable.
+	 */
 	public BpmProviderFlowable() {
 		Configuration.loadModuleConfig("/dirigible-bpm.properties");
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return NAME;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	@Override
 	public String getType() {
 		return TYPE;
 	}
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -93,6 +132,11 @@ public class BpmProviderFlowable implements IBpmProvider {
 		return repository;
 	}
 
+	/**
+	 * Gets the process engine.
+	 *
+	 * @return the process engine
+	 */
 	@Override
 	public ProcessEngine getProcessEngine() {
 		synchronized (BpmProviderFlowable.class) {
@@ -141,6 +185,12 @@ public class BpmProviderFlowable implements IBpmProvider {
 		return processEngine;
 	}
 
+	/**
+	 * Deploy process.
+	 *
+	 * @param location the location
+	 * @return the string
+	 */
 	@Override
 	public String deployProcess(String location) {
 		logger.debug("Deploying a BPMN process from location: " + location);
@@ -183,12 +233,24 @@ public class BpmProviderFlowable implements IBpmProvider {
 		return deployment.getId();
 	}
 	
+	/**
+	 * Undeploy process.
+	 *
+	 * @param deploymentId the deployment id
+	 */
 	@Override
 	public void undeployProcess(String deploymentId) {
 		RepositoryService repositoryService = getProcessEngine().getRepositoryService();
 		repositoryService.deleteDeployment(deploymentId, true);
 	}
 
+	/**
+	 * Start process.
+	 *
+	 * @param key the key
+	 * @param parameters the parameters
+	 * @return the string
+	 */
 	@Override
 	public String startProcess(String key, String parameters) {
 		logger.debug("Starting a BPMN process by key: " + key);
@@ -210,6 +272,11 @@ public class BpmProviderFlowable implements IBpmProvider {
 		return processInstance.getId();
 	}
 
+	/**
+	 * Gets the tasks.
+	 *
+	 * @return the tasks
+	 */
 	@Override
 	public String getTasks() {
 		List<TaskData> tasksData = new ArrayList<>();
@@ -224,6 +291,12 @@ public class BpmProviderFlowable implements IBpmProvider {
 		return json;
 	}
 
+	/**
+	 * Gets the task variables.
+	 *
+	 * @param taskId the task id
+	 * @return the task variables
+	 */
 	@Override
 	public String getTaskVariables(String taskId) {
 		TaskService taskService = getProcessEngine().getTaskService();
@@ -232,6 +305,12 @@ public class BpmProviderFlowable implements IBpmProvider {
 		return json;
 	}
 
+	/**
+	 * Sets the task variables.
+	 *
+	 * @param taskId the task id
+	 * @param variables the variables
+	 */
 	@Override
 	public void setTaskVariables(String taskId, String variables) {
 		TaskService taskService = getProcessEngine().getTaskService();
@@ -239,6 +318,12 @@ public class BpmProviderFlowable implements IBpmProvider {
 		taskService.setVariables(taskId, processVariables);
 	}
 	
+	/**
+	 * Complete task.
+	 *
+	 * @param taskId the task id
+	 * @param variables the variables
+	 */
 	@Override
 	public void completeTask(String taskId, String variables) {
 		TaskService taskService = getProcessEngine().getTaskService();
@@ -246,18 +331,38 @@ public class BpmProviderFlowable implements IBpmProvider {
 		taskService.complete(taskId, processVariables);
 	}
 
+	/**
+	 * Gets the variable.
+	 *
+	 * @param executionId the execution id
+	 * @param variableName the variable name
+	 * @return the variable
+	 */
 	@Override
 	public Object getVariable(String executionId, String variableName) {
 		RuntimeService runtimeService = getProcessEngine().getRuntimeService();
 		return runtimeService.getVariable(executionId, variableName);
 	}
 	
+	/**
+	 * Sets the variable.
+	 *
+	 * @param executionId the execution id
+	 * @param variableName the variable name
+	 * @param value the value
+	 */
 	@Override
 	public void setVariable(String executionId, String variableName, Object value) {
 		RuntimeService runtimeService = getProcessEngine().getRuntimeService();
 		runtimeService.setVariable(executionId, variableName, value);
 	}
 	
+	/**
+	 * Removes the variable.
+	 *
+	 * @param executionId the execution id
+	 * @param variableName the variable name
+	 */
 	@Override
 	public void removeVariable(String executionId, String variableName) {
 		RuntimeService runtimeService = getProcessEngine().getRuntimeService();

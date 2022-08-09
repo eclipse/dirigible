@@ -75,9 +75,9 @@ public class HexFacade {
 	/**
 	 * Hex decode.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input            the input
 	 * @return the hex decoded output
+	 * @throws DecoderException the decoder exception
 	 */
 	public static final byte[] decodeNative(byte[] input) throws DecoderException {
 		Hex hex = new Hex();

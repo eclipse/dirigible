@@ -23,11 +23,18 @@ import java.util.*;
 import static java.lang.String.format;
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 
+/**
+ * The Class EdmUtils.
+ */
 public final class EdmUtils {
 
+    /**
+     * Instantiates a new edm utils.
+     */
     private EdmUtils() {
     }
 
+    /** The Constant LOG. */
     private static final Logger LOG = LoggerFactory.getLogger(EdmUtils.class);
 
     /**
@@ -53,8 +60,8 @@ public final class EdmUtils {
     }
     
     /**
-     * Get all the properties from the Entity Type
-     * 
+     * Get all the properties from the Entity Type.
+     *
      * @param entityType the type of the entity
      * @return the properties types list
      * @throws EdmException in case of EDM error
@@ -70,6 +77,13 @@ public final class EdmUtils {
         return result;
     }
 
+    /**
+     * Gets the key properties.
+     *
+     * @param navigationEntityProperty the navigation entity property
+     * @return the key properties
+     * @throws EdmException the edm exception
+     */
     public static Collection<EdmProperty> getKeyProperties(EdmNavigationProperty navigationEntityProperty) throws EdmException {
         if (navigationEntityProperty.getType() instanceof EdmEntityType){
             EdmEntityType edmEntityType = (EdmEntityType) navigationEntityProperty.getType();
@@ -124,6 +138,13 @@ public final class EdmUtils {
         return namesOfEdmPropertiesToBePopulated;
     }
 
+    /**
+     * Gets the selected property names.
+     *
+     * @param selectedPropertyNames the selected property names
+     * @return the selected property names
+     * @throws EdmException the edm exception
+     */
     private static Set<String> getSelectedPropertyNames(List<SelectItem> selectedPropertyNames) throws EdmException {
         Set<String> result = new HashSet<>();
         for (SelectItem selectItem : selectedPropertyNames) {
@@ -170,6 +191,13 @@ public final class EdmUtils {
         return value;
     }
 
+    /**
+     * Gets the navigation properties.
+     *
+     * @param target the target
+     * @return the navigation properties
+     * @throws EdmException the edm exception
+     */
     public static List<EdmNavigationProperty> getNavigationProperties(EdmEntityType target) throws EdmException {
         List<EdmNavigationProperty> navigationProperties = new ArrayList<>();
         List<String> navProperties = target.getNavigationPropertyNames();

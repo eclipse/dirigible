@@ -42,12 +42,16 @@ import org.slf4j.LoggerFactory;
 @ServerEndpoint("/websockets/v4/ide/terminal")
 public class TerminalWebsocketService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TerminalWebsocketService.class);
 
+	/** The Constant Ctrl_C. */
 	private static final String Ctrl_C = "^C";
 
+	/** The open sessions. */
 	private static Map<String, Session> OPEN_SESSIONS = new ConcurrentHashMap<String, Session>();
 
+	/** The session to process. */
 	private static Map<String, ProcessRunnable> SESSION_TO_PROCESS = new ConcurrentHashMap<String, ProcessRunnable>();
 
 	/**
@@ -178,14 +182,19 @@ public class TerminalWebsocketService {
 	 */
 	class ProcessRunnable implements Runnable {
 
+		/** The Constant BASH_COMMAND. */
 		private static final String BASH_COMMAND = "bash";
 
+		/** The Constant CMD_COMMAND. */
 		private static final String CMD_COMMAND = "cmd";
 
+		/** The session. */
 		private Session session;
 
+		/** The process. */
 		private Process process;
 
+		/** The keep replying. */
 		private boolean keepReplying = true;
 
 		/**
@@ -207,6 +216,9 @@ public class TerminalWebsocketService {
 			this.session = session;
 		}
 
+		/**
+		 * Run.
+		 */
 		/*
 		 * (non-Javadoc)
 		 * @see java.lang.Runnable#run()

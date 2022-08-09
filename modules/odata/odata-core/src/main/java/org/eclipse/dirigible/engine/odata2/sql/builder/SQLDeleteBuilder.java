@@ -27,35 +27,79 @@ import java.util.Map;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils.*;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
+/**
+ * The Class SQLDeleteBuilder.
+ */
 public class SQLDeleteBuilder extends AbstractQueryBuilder {
+    
+    /** The delete keys column names. */
     private final List<String> deleteKeysColumnNames = new ArrayList<>();
+    
+    /** The delete keys. */
     private Map<String, Object> deleteKeys;
+    
+    /** The target. */
     private EdmEntityType target;
+    
+    /** The table name. */
     private String tableName;
 
+    /**
+     * Instantiates a new SQL delete builder.
+     *
+     * @param tableMappingProvider the table mapping provider
+     */
     public SQLDeleteBuilder(final EdmTableBindingProvider tableMappingProvider) {
         super(tableMappingProvider);
     }
 
+    /**
+     * Gets the target.
+     *
+     * @return the target
+     */
     private EdmEntityType getTarget() {
         return target;
     }
 
+    /**
+     * Delete from.
+     *
+     * @param target the target
+     * @return the SQL delete builder
+     */
     public SQLDeleteBuilder deleteFrom(final EdmEntityType target) {
         grantTableAliasForStructuralTypeInQuery(target);
         this.target = target;
         return this;
     }
 
+    /**
+     * Keys.
+     *
+     * @param deleteKeys the delete keys
+     * @return the SQL delete builder
+     */
     public SQLDeleteBuilder keys(final Map<String, Object> deleteKeys) {
         this.deleteKeys = deleteKeys;
         return this;
     }
 
+    /**
+     * Gets the delete keys.
+     *
+     * @return the delete keys
+     */
     public Map<String, Object> getDeleteKeys() {
         return deleteKeys;
     }
 
+    /**
+     * Builds the from.
+     *
+     * @return the string
+     * @throws EdmException the edm exception
+     */
     protected String buildFrom() throws EdmException {
         grantTableAliasForStructuralTypeInQuery(target);
 
@@ -84,6 +128,11 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
         return buildDeleteFrom();
     }
 
+    /**
+     * Builds the delete from.
+     *
+     * @return the string
+     */
     private String buildDeleteFrom() {
         StringBuilder from = new StringBuilder();
         for (Iterator<String> it = getTablesAliasesForEntitiesInQuery(); it.hasNext(); ) {
@@ -97,11 +146,23 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
         return from.toString();
     }
 
+    /**
+     * Checks if is delete target.
+     *
+     * @param target the target
+     * @return true, if is delete target
+     */
     private boolean isDeleteTarget(final EdmStructuralType target) {
         //always select the entity target
         return fqn(getTarget()).equals(fqn(target));
     }
 
+    /**
+     * Builds the delete where clause on keys.
+     *
+     * @param context the context
+     * @return the string
+     */
     private String buildDeleteWhereClauseOnKeys(final SQLContext context) {
         List<String> deleteKeyExpressions = new ArrayList<>();
         for (String columnName : deleteKeysColumnNames) {
@@ -111,6 +172,12 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
     }
 
 
+    /**
+     * Builds the.
+     *
+     * @param context the context
+     * @return the SQL statement
+     */
     @Override
     public SQLStatement build(final SQLContext context) {
         return new SQLStatement() {
@@ -144,11 +211,23 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
         };
     }
 
+    /**
+     * Sets the table name.
+     *
+     * @param tableName the table name
+     * @return the SQL delete builder
+     */
     public SQLDeleteBuilder setTableName(String tableName) {
         this.tableName = tableName;
         return this;
     }
 
+    /**
+     * Gets the target table name.
+     *
+     * @return the target table name
+     * @throws EdmException the edm exception
+     */
     public String getTargetTableName() throws EdmException {
         return tableName != null ? tableName : buildFrom();
     }

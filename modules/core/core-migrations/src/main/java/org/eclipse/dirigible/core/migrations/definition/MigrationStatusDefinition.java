@@ -25,29 +25,38 @@ import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 @Table(name = "DIRIGIBLE_MIGRATIONS_STATUS")
 public class MigrationStatusDefinition {
 
+	/** The project. */
 	@Id
 	@Column(name = "MIGRATION_STATUS_PROJECT", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String project;
 	
+	/** The major. */
 	@Column(name = "MIGRATION_STATUS_MAJOR", columnDefinition = "INTEGER", nullable = false)
 	private int major;
 	
+	/** The minor. */
 	@Column(name = "MIGRATION_STATUS_MINOR", columnDefinition = "INTEGER", nullable = false)
 	private int minor;
 	
+	/** The micro. */
 	@Column(name = "MIGRATION_STATUS_MICRO", columnDefinition = "INTEGER", nullable = false)
 	private int micro;
 	
+	/** The location. */
 	@Column(name = "MIGRATION_STATUS_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
+	/** The created by. */
 	@Column(name = "MIGRATION_STATUS_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "MIGRATION_STATUS_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
 	/**
+	 * Gets the project.
+	 *
 	 * @return the project
 	 */
 	public String getProject() {
@@ -55,6 +64,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Sets the project.
+	 *
 	 * @param project the project to set
 	 */
 	public void setProject(String project) {
@@ -62,6 +73,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Gets the major.
+	 *
 	 * @return the major
 	 */
 	public int getMajor() {
@@ -69,6 +82,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Sets the major.
+	 *
 	 * @param major the major to set
 	 */
 	public void setMajor(int major) {
@@ -76,6 +91,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Gets the minor.
+	 *
 	 * @return the minor
 	 */
 	public int getMinor() {
@@ -83,6 +100,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Sets the minor.
+	 *
 	 * @param minor the minor to set
 	 */
 	public void setMinor(int minor) {
@@ -90,6 +109,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Gets the micro.
+	 *
 	 * @return the micro
 	 */
 	public int getMicro() {
@@ -97,6 +118,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Sets the micro.
+	 *
 	 * @param micro the micro to set
 	 */
 	public void setMicro(int micro) {
@@ -104,6 +127,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Gets the location.
+	 *
 	 * @return the location
 	 */
 	public String getLocation() {
@@ -111,6 +136,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Sets the location.
+	 *
 	 * @param location the location to set
 	 */
 	public void setLocation(String location) {
@@ -118,6 +145,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Gets the created by.
+	 *
 	 * @return the createdBy
 	 */
 	public String getCreatedBy() {
@@ -125,6 +154,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Sets the created by.
+	 *
 	 * @param createdBy the createdBy to set
 	 */
 	public void setCreatedBy(String createdBy) {
@@ -132,6 +163,8 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Gets the created at.
+	 *
 	 * @return the createdAt
 	 */
 	public Timestamp getCreatedAt() {
@@ -139,12 +172,19 @@ public class MigrationStatusDefinition {
 	}
 
 	/**
+	 * Sets the created at.
+	 *
 	 * @param createdAt the createdAt to set
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -160,6 +200,12 @@ public class MigrationStatusDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

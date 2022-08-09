@@ -13,7 +13,16 @@ package org.eclipse.dirigible.engine.odata2.sql.binding;
 
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 
+/**
+ * The Interface EdmTableBindingProvider.
+ */
 public interface EdmTableBindingProvider {
     
+    /**
+     * Gets the edm table binding.
+     *
+     * @param entityType the entity type
+     * @return the edm table binding
+     */
     public EdmTableBinding getEdmTableBinding(EdmStructuralType entityType);
 }

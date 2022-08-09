@@ -19,8 +19,14 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class BpmSynchronizerJob extends AbstractSynchronizerJob {
 
+	/** The bpm synchronizer. */
 	private BpmSynchronizer bpmSynchronizer = new BpmSynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -30,6 +36,11 @@ public class BpmSynchronizerJob extends AbstractSynchronizerJob {
 		return bpmSynchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()

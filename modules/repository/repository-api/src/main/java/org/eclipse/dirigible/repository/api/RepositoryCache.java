@@ -16,10 +16,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 
+/**
+ * The Class RepositoryCache.
+ */
 public class RepositoryCache implements IRepositoryCache {
 
+	/** The cache. */
 	private static IRepositoryCache cache;
 	
+	/** The Constant ENABLED. */
 	private static final AtomicBoolean ENABLED = new AtomicBoolean(false);
 	
 	static {
@@ -31,6 +36,12 @@ public class RepositoryCache implements IRepositoryCache {
 		ENABLED.set(Boolean.parseBoolean(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.FALSE.toString())));
 	}
 
+	/**
+	 * Gets the.
+	 *
+	 * @param path the path
+	 * @return the byte[]
+	 */
 	@Override
 	public byte[] get(String path) {
 		if (ENABLED.get() && cache != null) {
@@ -39,6 +50,12 @@ public class RepositoryCache implements IRepositoryCache {
 		return null;
 	}
 
+	/**
+	 * Put.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 */
 	@Override
 	public void put(String path, byte[] content) {
 		if (ENABLED.get() && cache != null) {
@@ -46,6 +63,11 @@ public class RepositoryCache implements IRepositoryCache {
 		}
 	}
 
+	/**
+	 * Removes the.
+	 *
+	 * @param path the path
+	 */
 	@Override
 	public void remove(String path) {
 		if (ENABLED.get() && cache != null) {
@@ -53,6 +75,9 @@ public class RepositoryCache implements IRepositoryCache {
 		}
 	}
 
+	/**
+	 * Clear.
+	 */
 	@Override
 	public void clear() {
 		if (ENABLED.get() && cache != null) {
@@ -60,11 +85,17 @@ public class RepositoryCache implements IRepositoryCache {
 		}
 	}
 	
+	/**
+	 * Enable.
+	 */
 	public static void enable() {
 		Configuration.set(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.TRUE.toString());
 		ENABLED.set(true);
 	}
 
+	/**
+	 * Disable.
+	 */
 	public static void disable() {
 		Configuration.set(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.FALSE.toString());
 		ENABLED.set(false);
@@ -73,6 +104,11 @@ public class RepositoryCache implements IRepositoryCache {
 		}
 	}
 	
+	/**
+	 * Checks if is enabled.
+	 *
+	 * @return true, if is enabled
+	 */
 	public static boolean isEnabled() {
 		return ENABLED.get();
 	}

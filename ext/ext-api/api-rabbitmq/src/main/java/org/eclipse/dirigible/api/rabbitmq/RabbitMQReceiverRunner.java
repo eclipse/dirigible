@@ -29,20 +29,43 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
+/**
+ * The Class RabbitMQReceiverRunner.
+ */
 public class RabbitMQReceiverRunner implements Runnable {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RabbitMQReceiverRunner.class);
 
+	/** The Constant DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE. */
 	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage";
+	
+	/** The Constant DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR. */
 	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError";
 
+	/** The connection. */
 	private final Connection connection;
+	
+	/** The channel. */
 	private final Channel channel;
+	
+	/** The queue. */
 	private String queue;
+	
+	/** The handler. */
 	private String handler;
 
+	/** The stopped. */
 	private final AtomicBoolean stopped = new AtomicBoolean(false);
 
+	/**
+	 * Instantiates a new rabbit MQ receiver runner.
+	 *
+	 * @param connection the connection
+	 * @param channel the channel
+	 * @param queue the queue
+	 * @param handler the handler
+	 */
 	public RabbitMQReceiverRunner(Connection connection, Channel channel, String queue, String handler) {
 		this.connection = connection;
 		this.channel = channel;
@@ -51,7 +74,7 @@ public class RabbitMQReceiverRunner implements Runnable {
 	}
 
 	/**
-	 * Start the consumer
+	 * Start the consumer.
 	 */
 	@Override
 	public void run() {
@@ -99,15 +122,15 @@ public class RabbitMQReceiverRunner implements Runnable {
 	}
 
 	/**
-	 * Stop the consumer
+	 * Stop the consumer.
 	 */
 	public void stop() {
 		stopped.set(true);
 	}
 
 	/**
-	 * Create a context map and set the handler
-	 * 
+	 * Create a context map and set the handler.
+	 *
 	 * @return the context map
 	 */
 	private Map<Object, Object> createMessagingContext() {

@@ -11,14 +11,32 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
+/**
+ * The Enum ODataHandlerTypes.
+ */
 public enum ODataHandlerTypes {
 
-    before, after, on, forbid;
+    /** The before. */
+    before, /** The after. */
+ after, /** The on. */
+ on, /** The forbid. */
+ forbid;
 
+    /**
+     * Value.
+     *
+     * @return the string
+     */
     public String value() {
         return name();
     }
 
+    /**
+     * From value.
+     *
+     * @param v the v
+     * @return the o data handler types
+     */
     public static ODataHandlerTypes fromValue(String v) {
         return valueOf(v);
     }

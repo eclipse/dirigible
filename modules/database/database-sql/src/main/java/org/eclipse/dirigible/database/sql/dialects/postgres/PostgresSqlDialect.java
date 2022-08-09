@@ -46,6 +46,7 @@ public class PostgresSqlDialect extends
 	/** The Constant FUNCTION_CURRENT_TIMESTAMP. */
 	public static final String FUNCTION_CURRENT_TIMESTAMP = "current_timestamp"; //$NON-NLS-1$
 	
+	/** The Constant FUNCTIONS. */
 	public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {
 			"abs",
 			"cbrt",
@@ -279,6 +280,11 @@ public class PostgresSqlDialect extends
 			
 			})));
 
+	/**
+	 * Creates the.
+	 *
+	 * @return the postgres create branching builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
@@ -288,6 +294,12 @@ public class PostgresSqlDialect extends
 		return new PostgresCreateBranchingBuilder(this);
 	}
 
+	/**
+	 * Nextval.
+	 *
+	 * @param sequence the sequence
+	 * @return the postgres next value sequence builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
@@ -297,6 +309,11 @@ public class PostgresSqlDialect extends
 		return new PostgresNextValueSequenceBuilder(this, sequence);
 	}
 
+	/**
+	 * Function current date.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentDate()
@@ -306,6 +323,11 @@ public class PostgresSqlDialect extends
 		return FUNCTION_CURRENT_DATE;
 	}
 
+	/**
+	 * Function current time.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTime()
@@ -315,6 +337,11 @@ public class PostgresSqlDialect extends
 		return FUNCTION_CURRENT_TIME;
 	}
 
+	/**
+	 * Function current timestamp.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTimestamp()
@@ -324,6 +351,12 @@ public class PostgresSqlDialect extends
 		return FUNCTION_CURRENT_TIMESTAMP;
 	}
 	
+	/**
+	 * Gets the data type name.
+	 *
+	 * @param dataType the data type
+	 * @return the data type name
+	 */
 	@Override
 	public String getDataTypeName(DataType dataType) {
 		switch (dataType) {
@@ -336,6 +369,14 @@ public class PostgresSqlDialect extends
 		}
 	}
 	
+	/**
+	 * Exists.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
@@ -357,6 +398,11 @@ public class PostgresSqlDialect extends
 		return exists;
 	}
 
+	/**
+	 * Gets the functions names.
+	 *
+	 * @return the functions names
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()

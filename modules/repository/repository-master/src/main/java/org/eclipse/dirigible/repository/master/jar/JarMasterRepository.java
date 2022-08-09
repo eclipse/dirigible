@@ -21,6 +21,7 @@ import org.eclipse.dirigible.repository.local.LocalRepositoryException;
  */
 public class JarMasterRepository extends JarRepository implements IMasterRepository {
 
+	/** The Constant TYPE. */
 	public static final String TYPE = "jar";
 
 	/** The Constant DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH. */
@@ -29,11 +30,9 @@ public class JarMasterRepository extends JarRepository implements IMasterReposit
 	/**
 	 * Instantiates a new jar master repository.
 	 *
-	 * @param zip
-	 *            the zip
-	 * @throws LocalRepositoryException
-	 *             the local repository exception
-	 * @throws IOException 
+	 * @param zip            the zip
+	 * @throws LocalRepositoryException             the local repository exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public JarMasterRepository(String zip) throws LocalRepositoryException, IOException {
 		super(zip);

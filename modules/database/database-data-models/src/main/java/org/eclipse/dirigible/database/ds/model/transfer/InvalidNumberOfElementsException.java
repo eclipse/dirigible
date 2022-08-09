@@ -11,10 +11,19 @@
  */
 package org.eclipse.dirigible.database.ds.model.transfer;
 
+/**
+ * The Class InvalidNumberOfElementsException.
+ */
 public class InvalidNumberOfElementsException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 7313570857943932309L;
 
+	/**
+	 * Instantiates a new invalid number of elements exception.
+	 *
+	 * @param message the message
+	 */
 	public InvalidNumberOfElementsException(String message) {
 		super(message);
 	}

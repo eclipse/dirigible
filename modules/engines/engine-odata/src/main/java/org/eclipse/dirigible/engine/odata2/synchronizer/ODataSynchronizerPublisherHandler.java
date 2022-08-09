@@ -16,8 +16,17 @@ import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.engine.odata2.definition.*;
 
+/**
+ * The Class ODataSynchronizerPublisherHandler.
+ */
 public class ODataSynchronizerPublisherHandler extends MetadataPublisherHandler {
 
+    /**
+     * After unpublish.
+     *
+     * @param location the location
+     * @throws SchedulerException the scheduler exception
+     */
     @Override
     public void afterUnpublish(String location) throws SchedulerException {
         removeMetadata(new PersistenceManager<ODataDefinition>(), "DIRIGIBLE_ODATA", "ODATA_LOCATION", location, true);

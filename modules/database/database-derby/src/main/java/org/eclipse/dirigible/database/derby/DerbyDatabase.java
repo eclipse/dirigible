@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DerbyDatabase extends AbstractDatabase {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DerbyDatabase.class);
 
 	/** The Constant TYPE. */
@@ -78,6 +79,9 @@ public class DerbyDatabase extends AbstractDatabase {
 		logger.debug("Embedded Derby datasource initialized.");
 	}
 
+	/**
+	 * Initialize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#initialize()
@@ -88,6 +92,12 @@ public class DerbyDatabase extends AbstractDatabase {
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @param name the name
+	 * @return the data source
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
@@ -105,6 +115,11 @@ public class DerbyDatabase extends AbstractDatabase {
 		return null;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getName()
@@ -114,6 +129,11 @@ public class DerbyDatabase extends AbstractDatabase {
 		return NAME;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getType()
@@ -179,6 +199,11 @@ public class DerbyDatabase extends AbstractDatabase {
 		return derbyRoot;
 	}
 
+	/**
+	 * Gets the data sources.
+	 *
+	 * @return the data sources
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSources()

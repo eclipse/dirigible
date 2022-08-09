@@ -129,19 +129,17 @@ public interface IFolder extends ICollection {
 	public void deleteFile(String path);
 
 	/**
-	 * Free-text search
+	 * Free-text search.
 	 *
-	 * @param term
-	 *            the term
+	 * @param term            the term
 	 * @return the list of files
 	 */
 	public List<IFile> search(String term);
 	
 	/**
-	 * Find by file name pattern
+	 * Find by file name pattern.
 	 *
-	 * @param pattern
-	 *            the pattern
+	 * @param pattern            the pattern
 	 * @return the list of files
 	 */
 	public List<IFile> find(String pattern);

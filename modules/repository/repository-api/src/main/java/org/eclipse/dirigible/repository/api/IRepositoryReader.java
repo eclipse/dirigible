@@ -86,11 +86,10 @@ public interface IRepositoryReader {
 	public boolean hasResource(String path) throws RepositoryReadException;
 
 	/**
-	 * Returns a list of all the paths pointing to a resource
+	 * Returns a list of all the paths pointing to a resource.
 	 *
 	 * @return a list of all the resources' paths
-	 * @throws RepositoryReadException
-	 *             in case of error
+	 * @throws RepositoryReadException             in case of error
 	 */
 	public List<String> getAllResourcePaths() throws RepositoryReadException;
 

@@ -25,12 +25,23 @@ import org.slf4j.LoggerFactory;
 @Provider
 public class GraalVMJavascriptExceptionHandler extends AbstractExceptionHandler<PolyglotException> {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GraalVMJavascriptExceptionHandler.class);
 	
+	/** The Constant IGNORE_ERROR_MESSAGE. */
 	private static final String IGNORE_ERROR_MESSAGE = "ReferenceError: \"exports\" is not defined";
+	
+	/** The Constant RESPONSE_ERROR_MESSAGE. */
 	private static final String RESPONSE_ERROR_MESSAGE = "It is not an executable JavaScript module";
+	
+	/** The Constant NULL_EXCEPTION_ERROR_MESSAGE. */
 	private static final String NULL_EXCEPTION_ERROR_MESSAGE = "Exception message is null";
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getType()
@@ -40,6 +51,11 @@ public class GraalVMJavascriptExceptionHandler extends AbstractExceptionHandler<
 		return GraalVMJavascriptExceptionHandler.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getLogger()
@@ -49,6 +65,12 @@ public class GraalVMJavascriptExceptionHandler extends AbstractExceptionHandler<
 		return logger;
 	}
 
+	/**
+	 * Gets the response status.
+	 *
+	 * @param exception the exception
+	 * @return the response status
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseStatus(java.lang.Throwable)
@@ -58,6 +80,12 @@ public class GraalVMJavascriptExceptionHandler extends AbstractExceptionHandler<
 		return Status.INTERNAL_SERVER_ERROR;
 	}
 
+	/**
+	 * Gets the response message.
+	 *
+	 * @param exception the exception
+	 * @return the response message
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseMessage(java.lang.Throwable)
@@ -72,6 +100,12 @@ public class GraalVMJavascriptExceptionHandler extends AbstractExceptionHandler<
 		return RESPONSE_ERROR_MESSAGE;
 	}
 
+	/**
+	 * Log error message.
+	 *
+	 * @param logger the logger
+	 * @param exception the exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#logErrorMessage()

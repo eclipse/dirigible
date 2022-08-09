@@ -27,27 +27,30 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 
 /**
- * Utility helping in Database Repository management of the underlying Database
+ * Utility helping in Database Repository management of the underlying Database.
  */
 public class DatabaseRepositoryUtils {
 
+	/** The persistence manager files. */
 	private static PersistenceManager<DatabaseFileDefinition> persistenceManagerFiles = new PersistenceManager<DatabaseFileDefinition>();
+	
+	/** The persistence manager files content. */
 	private static PersistenceManager<DatabaseFileContentDefinition> persistenceManagerFilesContent = new PersistenceManager<DatabaseFileContentDefinition>();
+	
+	/** The persistence manager files versions. */
 	private static PersistenceManager<DatabaseFileVersionDefinition> persistenceManagerFilesVersions = new PersistenceManager<DatabaseFileVersionDefinition>();
 
+	/** The Constant PERCENT. */
 	private static final String PERCENT = "%";
 
 	/**
-	 * @param connection
-	 *            the underlying connection
-	 * @param path
-	 *            the path of the file
-	 * @param content
-	 *            the content
-	 * @param isBinary
-	 *            whether the file is binary
-	 * @param contentType
-	 *            the content type
+	 * Save file.
+	 *
+	 * @param connection            the underlying connection
+	 * @param path            the path of the file
+	 * @param content            the content
+	 * @param isBinary            whether the file is binary
+	 * @param contentType            the content type
 	 */
 	public static void saveFile(Connection connection, String path, byte[] content, boolean isBinary, String contentType) {
 		String username = UserFacade.getName();
@@ -87,12 +90,10 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Gets the file
+	 * Gets the file.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
+	 * @param connection            the connection
+	 * @param path            the path
 	 * @return file definition
 	 */
 	public static DatabaseFileDefinition getFile(Connection connection, String path) {
@@ -100,17 +101,21 @@ public class DatabaseRepositoryUtils {
 		return file;
 	}
 
+	/**
+	 * Extract name.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	private static String extractName(String path) {
 		return path.substring(path.lastIndexOf(IRepository.SEPARATOR) + 1);
 	}
 
 	/**
-	 * Loads a file
+	 * Loads a file.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
+	 * @param connection            the connection
+	 * @param path            the path
 	 * @return the content as byte array
 	 */
 	public static byte[] loadFile(Connection connection, String path) {
@@ -123,14 +128,11 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Moves the file
+	 * Moves the file.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the old path
-	 * @param newPath
-	 *            the new path
+	 * @param connection            the connection
+	 * @param path            the old path
+	 * @param newPath            the new path
 	 */
 	public static void moveFile(Connection connection, String path, String newPath) {
 		persistenceManagerFiles.tableCheck(connection, DatabaseFileDefinition.class);
@@ -160,14 +162,11 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Copy a file
+	 * Copy a file.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the old path
-	 * @param newPath
-	 *            the new path
+	 * @param connection            the connection
+	 * @param path            the old path
+	 * @param newPath            the new path
 	 */
 	public static void copyFile(Connection connection, String path, String newPath) {
 		persistenceManagerFiles.tableCheck(connection, DatabaseFileDefinition.class);
@@ -191,12 +190,10 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Removes a file
+	 * Removes a file.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
+	 * @param connection            the connection
+	 * @param path            the path
 	 */
 	public static void removeFile(Connection connection, String path) {
 		persistenceManagerFiles.tableCheck(connection, DatabaseFileDefinition.class);
@@ -220,12 +217,10 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Creates a folder
+	 * Creates a folder.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
+	 * @param connection            the connection
+	 * @param path            the path
 	 */
 	public static void createFolder(Connection connection, String path) {
 		if (!existsFolder(connection, path)) {
@@ -246,26 +241,21 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Copy a folder
+	 * Copy a folder.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the old path
-	 * @param newPath
-	 *            the new path
+	 * @param connection            the connection
+	 * @param path            the old path
+	 * @param newPath            the new path
 	 */
 	public static void copyFolder(Connection connection, String path, String newPath) {
 		copyFile(connection, path, newPath);
 	}
 
 	/**
-	 * Gets the owner
+	 * Gets the owner.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param workspacePath
-	 *            the path
+	 * @param connection            the connection
+	 * @param workspacePath            the path
 	 * @return the owner name
 	 */
 	public static String getOwner(Connection connection, String workspacePath) {
@@ -274,12 +264,10 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Gets the modified at date
+	 * Gets the modified at date.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param workspacePath
-	 *            the path
+	 * @param connection            the connection
+	 * @param workspacePath            the path
 	 * @return the modification date
 	 */
 	public static Date getModifiedAt(Connection connection, String workspacePath) {
@@ -288,12 +276,10 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Whether the file exists
+	 * Whether the file exists.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
+	 * @param connection            the connection
+	 * @param path            the path
 	 * @return true if exists and false otherwise
 	 */
 	public static boolean existsFile(Connection connection, String path) {
@@ -305,12 +291,10 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Whether the folder exists
+	 * Whether the folder exists.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
+	 * @param connection            the connection
+	 * @param path            the path
 	 * @return true if exists and false otherwise
 	 */
 	public static boolean existsFolder(Connection connection, String path) {
@@ -322,12 +306,10 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Returns the folders' sub-files and sub-folders
+	 * Returns the folders' sub-files and sub-folders.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
+	 * @param connection            the connection
+	 * @param path            the path
 	 * @return the list of definitions
 	 */
 	public static List<DatabaseFileDefinition> findChildren(Connection connection, String path) {
@@ -343,17 +325,13 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Search in name attribute
+	 * Search in name attribute.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param parameter
-	 *            the search term
-	 * @param caseInsensitive
-	 *            whether it is case sensitive
+	 * @param connection            the connection
+	 * @param parameter            the search term
+	 * @param caseInsensitive            whether it is case sensitive
 	 * @return a list of definitions
-	 * @throws SQLException
-	 *             in case of errors
+	 * @throws SQLException             in case of errors
 	 */
 	public static List<DatabaseFileDefinition> searchName(Connection connection, String parameter, boolean caseInsensitive) throws SQLException {
 		persistenceManagerFiles.tableCheck(connection, DatabaseFileDefinition.class);
@@ -366,19 +344,14 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Search in name attribute
+	 * Search in name attribute.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param root
-	 *            the relative root
-	 * @param parameter
-	 *            the search term
-	 * @param caseInsensitive
-	 *            whether it is case sensitive
+	 * @param connection            the connection
+	 * @param root            the relative root
+	 * @param parameter            the search term
+	 * @param caseInsensitive            whether it is case sensitive
 	 * @return a list of definitions
-	 * @throws SQLException
-	 *             in case of errors
+	 * @throws SQLException             in case of errors
 	 */
 	public static List<DatabaseFileDefinition> searchName(Connection connection, String root, String parameter, boolean caseInsensitive)
 			throws SQLException {
@@ -394,17 +367,13 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Search in path attribute
+	 * Search in path attribute.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param parameter
-	 *            the search term
-	 * @param caseInsensitive
-	 *            whether it is case sensitive
+	 * @param connection            the connection
+	 * @param parameter            the search term
+	 * @param caseInsensitive            whether it is case sensitive
 	 * @return a list of definitions
-	 * @throws SQLException
-	 *             in case of errors
+	 * @throws SQLException             in case of errors
 	 */
 	public static List<DatabaseFileDefinition> searchPath(Connection connection, String parameter, boolean caseInsensitive) throws SQLException {
 		persistenceManagerFiles.tableCheck(connection, DatabaseFileDefinition.class);
@@ -417,12 +386,10 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Returns the file versions
+	 * Returns the file versions.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
+	 * @param connection            the connection
+	 * @param path            the path
 	 * @return the list with versions
 	 */
 	public static List<DatabaseFileVersionDefinition> findFileVersions(Connection connection, String path) {
@@ -432,16 +399,12 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Stores a version
+	 * Stores a version.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
-	 * @param version
-	 *            the version
-	 * @param content
-	 *            the content
+	 * @param connection            the connection
+	 * @param path            the path
+	 * @param version            the version
+	 * @param content            the content
 	 */
 	public static void saveFileVersion(Connection connection, String path, int version, byte[] content) {
 		String username = UserFacade.getName();
@@ -460,14 +423,11 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Removes all the file versions
+	 * Removes all the file versions.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
-	 * @throws SQLException
-	 *             in case of an error
+	 * @param connection            the connection
+	 * @param path            the path
+	 * @throws SQLException             in case of an error
 	 */
 	public static void removeFileVersions(Connection connection, String path) throws SQLException {
 		persistenceManagerFilesVersions.tableCheck(connection, DatabaseFileVersionDefinition.class);
@@ -485,15 +445,12 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Returns the last version
+	 * Returns the last version.
 	 *
-	 * @param connection
-	 *            the connections
-	 * @param path
-	 *            the path
+	 * @param connection            the connections
+	 * @param path            the path
 	 * @return the last version
-	 * @throws SQLException
-	 *             in case of an error
+	 * @throws SQLException             in case of an error
 	 */
 	public static int getLastFileVersion(Connection connection, String path) throws SQLException {
 		persistenceManagerFilesVersions.tableCheck(connection, DatabaseFileVersionDefinition.class);
@@ -516,14 +473,11 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Gets a specific version
+	 * Gets a specific version.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param path
-	 *            the path
-	 * @param version
-	 *            the version number
+	 * @param connection            the connection
+	 * @param path            the path
+	 * @param version            the version number
 	 * @return the version definition
 	 */
 	public static DatabaseFileVersionDefinition getFileVersion(Connection connection, String path, int version) {
@@ -539,13 +493,11 @@ public class DatabaseRepositoryUtils {
 	}
 
 	/**
-	 * Returns all the resources' oaths
+	 * Returns all the resources' oaths.
 	 *
-	 * @param connection
-	 *            the connection
+	 * @param connection            the connection
 	 * @return the list of paths
-	 * @throws SQLException
-	 *             in case of an error
+	 * @throws SQLException             in case of an error
 	 */
 	public static List<String> getAllResourcePaths(Connection connection) throws SQLException {
 		List<String> results = new ArrayList<String>();

@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
  */
 public class DropViewBuilder extends AbstractDropSqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DropViewBuilder.class);
 
+	/** The view. */
 	private String view = null;
 
 	/**
@@ -38,6 +40,11 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
 		this.view = view;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
@@ -72,8 +79,8 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
 	}
 	
 	/**
-	 * Getter for the view
-	 * 
+	 * Getter for the view.
+	 *
 	 * @return the view
 	 */
 	public String getView() {

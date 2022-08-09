@@ -122,6 +122,13 @@ public class DataStructureTableTest {
 		}
 	}
 	
+	/**
+	 * Prepare root folder.
+	 *
+	 * @param name the name
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private String prepareRootFolder(String name) throws IOException {
 		File rootFile = new File(name);
 		File parentFile = rootFile.getCanonicalFile().getParentFile();
@@ -339,7 +346,8 @@ public class DataStructureTableTest {
 	
 	/**
 	 * Create the tables with constraints.
-	 * @throws IOException 
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Test
 	public void createTableWithConstraints() throws IOException {
@@ -393,6 +401,14 @@ public class DataStructureTableTest {
 		}
 	}
 
+	/**
+	 * Parses the table definition.
+	 *
+	 * @param definition the definition
+	 * @param name the name
+	 * @return the data structure table model
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private DataStructureTableModel parseTableDefinition(String definition, String name) throws IOException {
 		InputStream in = null;
 		try {
@@ -410,7 +426,8 @@ public class DataStructureTableTest {
 	
 	/**
 	 * Create the tables with constraints.
-	 * @throws IOException 
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Test
 	public void createTableWithConstraintsReverseOrder() throws IOException {

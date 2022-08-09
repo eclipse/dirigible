@@ -67,6 +67,9 @@ public class ConfigurationTest {
 	// 2. System properties (-D...)
 	// 3. Environment properties
 	// 4. Deployment properties
+	/**
+	 * Config precedence test.
+	 */
 	// 5. Module loaded *.properties files
 	@Test
 	public void configPrecedenceTest() {
@@ -95,6 +98,9 @@ public class ConfigurationTest {
 		assertEquals("/my/runtime/path", value);
 	}
 
+	/**
+	 * Config precedence deployment test.
+	 */
 	@Test
 	public void configPrecedenceDeploymentTest() {
 		String property = "DIRIGIBLE_PRODUCT_TYPE";
@@ -118,6 +124,9 @@ public class ConfigurationTest {
 		assertEquals("all-test-updated", value);
 	}
 
+	/**
+	 * Config precedence no env test.
+	 */
 	@Test
 	public void configPrecedenceNoEnvTest() {
 		String property = "TEST_PROPERTY_USERNAME";

@@ -31,6 +31,11 @@ public class MySQLDropSequenceBuilder extends DropSequenceBuilder {
 		super(dialect, sequence);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder#generate()

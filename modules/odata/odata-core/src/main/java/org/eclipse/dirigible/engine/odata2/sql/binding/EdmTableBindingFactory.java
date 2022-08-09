@@ -20,10 +20,21 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
+/**
+ * A factory for creating EdmTableBinding objects.
+ */
 public class EdmTableBindingFactory {
 
+    /** The Constant LOG. */
     private static final Logger LOG = LoggerFactory.getLogger(EdmTableBindingFactory.class);
 
+    /**
+     * Creates a new EdmTableBinding object.
+     *
+     * @param loader the loader
+     * @param resource the resource
+     * @return the edm table binding
+     */
     public EdmTableBinding createTableBinding(ClassLoader loader, String resource) {
         if (loader == null) {
             throw new IllegalArgumentException("No classloader provided. Cannot load table mappings for resource" + resource);
@@ -39,6 +50,12 @@ public class EdmTableBindingFactory {
         }
     }
     
+    /**
+     * Creates a new EdmTableBinding object.
+     *
+     * @param stream the stream
+     * @return the edm table binding
+     */
     public EdmTableBinding createTableBinding(InputStream stream) {
         Map<String, Object> bindingData = loadTableBindings(stream);
         EdmTableBinding mapping = new EdmTableBinding(bindingData);
@@ -46,11 +63,23 @@ public class EdmTableBindingFactory {
     }
 
     
+    /**
+     * Simple name.
+     *
+     * @param fqn the fqn
+     * @return the string
+     */
     public static String simpleName(String fqn) {
         String[] res = fqn.split("\\.");
         return res[res.length - 1];
     }
     
+    /**
+     * Load table bindings.
+     *
+     * @param stream the stream
+     * @return the map
+     */
     @SuppressWarnings("unchecked")
     protected Map<String, Object> loadTableBindings(InputStream stream) {
         try {

@@ -26,8 +26,10 @@ import org.slf4j.LoggerFactory;
  */
 public class ScriptEngineExecutorFactory {
 
+	/** The Constant SCRIPT_ENGINE_EXECUTORS. */
 	private static final ServiceLoader<IScriptEngineExecutor> SCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IScriptEngineExecutor.class);
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ScriptEngineExecutorFactory.class);
 
 	/**
@@ -51,6 +53,11 @@ public class ScriptEngineExecutorFactory {
 		return null;
 	}
 	
+	/**
+	 * Gets the engines types.
+	 *
+	 * @return the engines types
+	 */
 	public static Set<String> getEnginesTypes() {
 		Set<String> engineTypes = new HashSet<String>();
 		for (IScriptEngineExecutor next : SCRIPT_ENGINE_EXECUTORS) {

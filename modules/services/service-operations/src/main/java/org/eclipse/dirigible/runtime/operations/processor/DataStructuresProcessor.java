@@ -18,10 +18,20 @@ import org.eclipse.dirigible.database.ds.api.DataStructuresException;
 import org.eclipse.dirigible.database.ds.model.DataStructureModel;
 import org.eclipse.dirigible.database.ds.service.DataStructuresCoreService;
 
+/**
+ * The Class DataStructuresProcessor.
+ */
 public class DataStructuresProcessor {
 	
+	/** The data structures core service. */
 	private DataStructuresCoreService dataStructuresCoreService = new DataStructuresCoreService();
 	
+	/**
+	 * List.
+	 *
+	 * @return the string
+	 * @throws DataStructuresException the data structures exception
+	 */
 	public String list() throws DataStructuresException {
 		
 		List<DataStructureModel> dataStructures = dataStructuresCoreService.getDataStructures();

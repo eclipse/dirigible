@@ -13,13 +13,27 @@ package org.eclipse.dirigible.database.changelog.artefacts;
 
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizationArtefactType;
 
+/**
+ * The Class ChangelogSynchronizationArtefactType.
+ */
 public class ChangelogSynchronizationArtefactType extends AbstractSynchronizationArtefactType {
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	@Override
 	public String getId() {
 		return "Database Changelog";
 	}
 
+	/**
+	 * Gets the artefact state message.
+	 *
+	 * @param state the state
+	 * @return the artefact state message
+	 */
 	@Override
 	protected String getArtefactStateMessage(ArtefactState state) {
 		switch (state) {

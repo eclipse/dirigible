@@ -16,10 +16,19 @@ import org.graalvm.polyglot.Value;
 import java.nio.file.Path;
 import java.util.HashMap;
 
+/**
+ * The Class DirigibleJavascriptCodeRunner.
+ */
 public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Source, Value> {
 
+    /** The code runner. */
     private final JavascriptCodeRunner<Source, Value> codeRunner;
 
+    /**
+     * Instantiates a new dirigible javascript code runner.
+     *
+     * @param debug the debug
+     */
     public DirigibleJavascriptCodeRunner(boolean debug) {
         Path workingDirectoryPath = getDirigibleWorkingDirectory();
         Path cachePath = workingDirectoryPath.resolve("caches");
@@ -34,26 +43,51 @@ public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Sourc
                 .build();
     }
 
+    /**
+     * Should enable debug.
+     *
+     * @return true, if successful
+     */
     private static boolean shouldEnableDebug() {
         return Configuration.get("DIRIGIBLE_GRAALIUM_ENABLE_DEBUG", Boolean.FALSE.toString()).equals(Boolean.TRUE.toString());
     }
 
+    /**
+     * Gets the dirigible working directory.
+     *
+     * @return the dirigible working directory
+     */
     private Path getDirigibleWorkingDirectory() {
     	IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
         String publicRegistryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
         return Path.of(publicRegistryPath);
     }
 
+    /**
+     * Run.
+     *
+     * @param codeFilePath the code file path
+     * @return the value
+     */
     @Override
     public Value run(Path codeFilePath) {
         return codeRunner.run(codeFilePath);
     }
 
+    /**
+     * Run.
+     *
+     * @param codeSource the code source
+     * @return the value
+     */
     @Override
     public Value run(Source codeSource) {
         return codeRunner.run(codeSource);
     }
 
+    /**
+     * Close.
+     */
     @Override
     public void close() {
         codeRunner.close();

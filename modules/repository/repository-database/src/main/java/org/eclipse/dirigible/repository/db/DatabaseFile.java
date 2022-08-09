@@ -18,8 +18,10 @@ import java.sql.SQLException;
  */
 public class DatabaseFile extends DatabaseObject {
 
+	/** The binary. */
 	private boolean binary = false;
 
+	/** The content type. */
 	private String contentType;
 
 	/**

@@ -43,18 +43,27 @@ import org.slf4j.LoggerFactory;
  */
 public class JobSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(JobSynchronizer.class);
 
+	/** The Constant JOBS_PREDELIVERED. */
 	private static final Map<String, JobDefinition> JOBS_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, JobDefinition>());
 
+	/** The Constant JOBS_SYNCHRONIZED. */
 	private static final List<String> JOBS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The scheduler core service. */
 	private SchedulerCoreService schedulerCoreService = new SchedulerCoreService();
 
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant JOB_ARTEFACT. */
 	private static final JobSynchronizationArtefactType JOB_ARTEFACT = new JobSynchronizationArtefactType();
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -128,6 +137,11 @@ public class JobSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -141,6 +155,12 @@ public class JobSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing Jobs from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -157,6 +177,11 @@ public class JobSynchronizer extends AbstractSynchronizer {
 
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
@@ -181,6 +206,11 @@ public class JobSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done cleaning up Jobs.");
 	}
 
+	/**
+	 * Start jobs.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	private void startJobs() throws SchedulerException {
 		logger.trace("Start Jobs...");
 
@@ -218,10 +248,18 @@ public class JobSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done starting Jobs.");
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		JOBS_SYNCHRONIZED.clear();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Jobs...");
 		// Jobs
@@ -231,6 +269,12 @@ public class JobSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing predelivered Jobs.");
 	}
 
+	/**
+	 * Synchronize job.
+	 *
+	 * @param jobDefinition the job definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeJob(JobDefinition jobDefinition) throws SynchronizationException {
 		try {
 			if (!schedulerCoreService.existsJob(jobDefinition.getName())) {

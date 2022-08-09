@@ -14,8 +14,17 @@ package org.eclipse.dirigible.runtime.anonymous;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 
+/**
+ * The Class AnonymousAccess.
+ */
 public class AnonymousAccess {
 	
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 * @throws ContextException the context exception
+	 */
 	public void setName(String name) throws ContextException {
 		UserFacade.setName(name);
 	}

@@ -26,12 +26,22 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class IDECoreSynchronizer.
+ */
 public class IDECoreSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(IDECoreSynchronizer.class);
 
+	/** The engine. */
 	private IJavascriptEngineExecutor engine  = null;
 	
+	/**
+	 * Gets the engine.
+	 *
+	 * @return the engine
+	 */
 	protected synchronized IJavascriptEngineExecutor getEngine() {
 		if (engine == null) {
 			engine = (IJavascriptEngineExecutor) StaticObjects.get(StaticObjects.JAVASCRIPT_ENGINE);
@@ -39,6 +49,9 @@ public class IDECoreSynchronizer extends AbstractSynchronizer {
 		return engine;
 	}
 
+	/**
+	 * Synchronize.
+	 */
 	@Override
 	public void synchronize() {
 		try {
@@ -64,6 +77,12 @@ public class IDECoreSynchronizer extends AbstractSynchronizer {
 
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
 		// Do nothing

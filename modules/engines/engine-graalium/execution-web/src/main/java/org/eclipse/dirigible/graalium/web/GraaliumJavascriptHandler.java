@@ -8,10 +8,22 @@ import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import java.io.IOException;
 import java.nio.file.Path;
 
+/**
+ * The Class GraaliumJavascriptHandler.
+ */
 public class GraaliumJavascriptHandler implements JavascriptHandler {
 
+    /** The dirigible source provider. */
     private final DirigibleSourceProvider dirigibleSourceProvider = new DirigibleSourceProvider();
 
+    /**
+     * Handle request.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param debug the debug
+     */
     @Override
     public void handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
         try {

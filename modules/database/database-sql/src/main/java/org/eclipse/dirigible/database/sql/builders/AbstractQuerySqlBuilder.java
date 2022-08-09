@@ -119,6 +119,11 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.AbstractSqlBuilder#toString()

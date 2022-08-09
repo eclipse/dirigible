@@ -17,8 +17,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Class OData2ODataHTransformer.
+ */
 public class OData2ODataHTransformer {
 
+    /**
+     * Transform.
+     *
+     * @param model the model
+     * @return the list
+     * @throws SQLException the SQL exception
+     */
     public List<ODataHandlerDefinition> transform(ODataDefinition model) throws SQLException {
 
         List<ODataHandlerDefinition> result = new ArrayList<>();

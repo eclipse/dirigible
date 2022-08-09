@@ -62,8 +62,10 @@ import org.eclipse.jgit.treewalk.filter.PathFilter;
  */
 public class GitConnector implements IGitConnector {
 
+	/** The git. */
 	private final Git git;
 
+	/** The repository. */
 	private Repository repository;
 
 	/**
@@ -79,6 +81,11 @@ public class GitConnector implements IGitConnector {
 		this.git = new Git(repository);
 	}
 
+	/**
+	 * Gets the origin urls.
+	 *
+	 * @return the origin urls
+	 */
 	@Override
 	public ProjectOriginUrls getOriginUrls() {
 		StoredConfig gitConfig = repository.getConfig();
@@ -94,6 +101,13 @@ public class GitConnector implements IGitConnector {
 		return new ProjectOriginUrls(fetchUrl, pushUrl);
 	}
 
+	/**
+	 * Sets the fetch url.
+	 *
+	 * @param fetchUrl the new fetch url
+	 * @throws URISyntaxException the URI syntax exception
+	 * @throws GitAPIException the git API exception
+	 */
 	@Override
 	public void setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException {
 		RemoteUrl remoteGit = new RemoteUrl(repository);
@@ -104,6 +118,13 @@ public class GitConnector implements IGitConnector {
 		remoteGit.call();
 	}
 
+	/**
+	 * Sets the push url.
+	 *
+	 * @param pushUrl the new push url
+	 * @throws URISyntaxException the URI syntax exception
+	 * @throws GitAPIException the git API exception
+	 */
 	@Override
 	public void setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException {
 		RemoteUrl remoteGit = new RemoteUrl(repository);
@@ -132,6 +153,14 @@ public class GitConnector implements IGitConnector {
 		return git;
 	}
 
+	/**
+	 * Adds the.
+	 *
+	 * @param filePattern the file pattern
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws NoFilepatternException the no filepattern exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#add(java.lang.String)
@@ -143,6 +172,14 @@ public class GitConnector implements IGitConnector {
 		addCommand.call();
 	}
 
+	/**
+	 * Adds the deleted.
+	 *
+	 * @param filePattern the file pattern
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws NoFilepatternException the no filepattern exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#addDeleted(java.lang.String)
@@ -155,6 +192,14 @@ public class GitConnector implements IGitConnector {
 	}
 
 
+	/**
+	 * Removes the.
+	 *
+	 * @param path the path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws NoFilepatternException the no filepattern exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#remove(java.lang.String)
@@ -174,6 +219,14 @@ public class GitConnector implements IGitConnector {
 		}
 	}
 
+	/**
+	 * Revert.
+	 *
+	 * @param path the path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws NoFilepatternException the no filepattern exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#revert(java.lang.String)
@@ -188,6 +241,21 @@ public class GitConnector implements IGitConnector {
 
 
 
+	/**
+	 * Commit.
+	 *
+	 * @param message the message
+	 * @param name the name
+	 * @param email the email
+	 * @param all the all
+	 * @throws NoHeadException the no head exception
+	 * @throws NoMessageException the no message exception
+	 * @throws UnmergedPathsException the unmerged paths exception
+	 * @throws ConcurrentRefUpdateException the concurrent ref update exception
+	 * @throws WrongRepositoryStateException the wrong repository state exception
+	 * @throws GitAPIException the git API exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#commit(java.lang.String, java.lang.String, java.lang.String,
@@ -205,6 +273,16 @@ public class GitConnector implements IGitConnector {
 		commitCommand.call();
 	}
 
+	/**
+	 * Creates the branch.
+	 *
+	 * @param name the name
+	 * @param startPoint the start point
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#createBranch(java.lang.String, java.lang.String)
@@ -222,6 +300,17 @@ public class GitConnector implements IGitConnector {
 		createBranchCommand.call();
 	}
 
+	/**
+	 * Checkout.
+	 *
+	 * @param name the name
+	 * @return the ref
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws CheckoutConflictException the checkout conflict exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#checkout(java.lang.String)
@@ -244,6 +333,12 @@ public class GitConnector implements IGitConnector {
 		}
 	}
 
+	/**
+	 * Hard reset.
+	 *
+	 * @throws CheckoutConflictException the checkout conflict exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#hardReset()
@@ -255,6 +350,19 @@ public class GitConnector implements IGitConnector {
 		resetCommand.call();
 	}
 
+	/**
+	 * Pull.
+	 *
+	 * @throws WrongRepositoryStateException the wrong repository state exception
+	 * @throws InvalidConfigurationException the invalid configuration exception
+	 * @throws DetachedHeadException the detached head exception
+	 * @throws InvalidRemoteException the invalid remote exception
+	 * @throws CanceledException the canceled exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws NoHeadException the no head exception
+	 * @throws TransportException the transport exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#pull()
@@ -266,6 +374,21 @@ public class GitConnector implements IGitConnector {
 		pullCommand.call();
 	}
 
+	/**
+	 * Pull.
+	 *
+	 * @param username the username
+	 * @param password the password
+	 * @throws WrongRepositoryStateException the wrong repository state exception
+	 * @throws InvalidConfigurationException the invalid configuration exception
+	 * @throws DetachedHeadException the detached head exception
+	 * @throws InvalidRemoteException the invalid remote exception
+	 * @throws CanceledException the canceled exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws NoHeadException the no head exception
+	 * @throws TransportException the transport exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#pull(java.lang.String, java.lang.String)
@@ -278,6 +401,15 @@ public class GitConnector implements IGitConnector {
 		pullCommand.call();
 	}
 
+	/**
+	 * Push.
+	 *
+	 * @param username the username
+	 * @param password the password
+	 * @throws InvalidRemoteException the invalid remote exception
+	 * @throws TransportException the transport exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#push(java.lang.String, java.lang.String)
@@ -289,6 +421,14 @@ public class GitConnector implements IGitConnector {
 		pushCommand.call();
 	}
 
+	/**
+	 * Rebase.
+	 *
+	 * @param name the name
+	 * @throws NoHeadException the no head exception
+	 * @throws WrongRepositoryStateException the wrong repository state exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#rebase(java.lang.String)
@@ -301,6 +441,13 @@ public class GitConnector implements IGitConnector {
 		rebaseCommand.call();
 	}
 
+	/**
+	 * Status.
+	 *
+	 * @return the status
+	 * @throws NoWorkTreeException the no work tree exception
+	 * @throws GitAPIException the git API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#status()
@@ -310,6 +457,12 @@ public class GitConnector implements IGitConnector {
 		return git.status().call();
 	}
 
+	/**
+	 * Gets the branch.
+	 *
+	 * @return the branch
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#getBranch()
@@ -329,8 +482,15 @@ public class GitConnector implements IGitConnector {
 //		return checkout(branch).getLeaf().getObjectId().getName();
 //	}
 
-	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	/** The Constant format. */
+private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
+	/**
+	 * Gets the local branches.
+	 *
+	 * @return the local branches
+	 * @throws GitConnectorException the git connector exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#getLocalBranches()
@@ -367,6 +527,12 @@ public class GitConnector implements IGitConnector {
 		}
 	}
 
+	/**
+	 * Gets the remote branches.
+	 *
+	 * @return the remote branches
+	 * @throws GitConnectorException the git connector exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#getRemoteBranches()
@@ -400,7 +566,7 @@ public class GitConnector implements IGitConnector {
 	}
 
 	/**
-	 * Returns the short branch name
+	 * Returns the short branch name.
 	 *
 	 * @param branch the branch
 	 * @return the short name
@@ -413,6 +579,12 @@ public class GitConnector implements IGitConnector {
 		return name;
 	}
 
+	/**
+	 * Gets the unstaged changes.
+	 *
+	 * @return the unstaged changes
+	 * @throws GitConnectorException the git connector exception
+	 */
 	@Override
 	public List<GitChangedFile> getUnstagedChanges() throws GitConnectorException {
 		List<GitChangedFile> list = new ArrayList<GitChangedFile>();
@@ -439,6 +611,12 @@ public class GitConnector implements IGitConnector {
 		return list;
 	}
 
+	/**
+	 * Gets the staged changes.
+	 *
+	 * @return the staged changes
+	 * @throws GitConnectorException the git connector exception
+	 */
 	@Override
 	public List<GitChangedFile> getStagedChanges() throws GitConnectorException {
 		List<GitChangedFile> list = new ArrayList<GitChangedFile>();
@@ -465,6 +643,14 @@ public class GitConnector implements IGitConnector {
 		return list;
 	}
 
+	/**
+	 * Gets the file content.
+	 *
+	 * @param path the path
+	 * @param revStr the rev str
+	 * @return the file content
+	 * @throws GitConnectorException the git connector exception
+	 */
 	@Override
 	public String getFileContent(String path, String revStr) throws GitConnectorException {
 		RevWalk revWalk = null;
@@ -509,6 +695,13 @@ public class GitConnector implements IGitConnector {
 		return null;
 	}
 
+	/**
+	 * Gets the history.
+	 *
+	 * @param path the path
+	 * @return the history
+	 * @throws GitConnectorException the git connector exception
+	 */
 	@Override
 	public List<GitCommitInfo> getHistory(String path) throws GitConnectorException {
 		try {

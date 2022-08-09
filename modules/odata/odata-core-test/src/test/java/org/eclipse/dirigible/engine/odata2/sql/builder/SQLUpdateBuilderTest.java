@@ -36,12 +36,25 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * The Class SQLUpdateBuilderTest.
+ */
 public final class SQLUpdateBuilderTest {
 
+    /** The provider. */
     AnnotationEdmProvider provider;
+    
+    /** The edm. */
     EdmImplProv edm;
+    
+    /** The table mapping provider. */
     EdmTableBindingProvider tableMappingProvider;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         Class<?>[] classes = { //
@@ -56,6 +69,11 @@ public final class SQLUpdateBuilderTest {
         tableMappingProvider = new DefaultEdmTableMappingProvider(OData2TestUtils.resources(classes));
     }
 
+    /**
+     * Test update expression.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testUpdateExpression() throws Exception {
         SQLUpdateBuilder update = createUpdateExpression();
@@ -71,6 +89,12 @@ public final class SQLUpdateBuilderTest {
         assertEquals("2", params.get(2).getValue());
     }
 
+    /**
+     * Creates the update expression.
+     *
+     * @return the SQL update builder
+     * @throws ODataException the o data exception
+     */
     private SQLUpdateBuilder createUpdateExpression() throws ODataException {
         EdmEntityType type = edm.getEntityType(Entity4.class.getPackage().getName(), Entity4.class.getSimpleName());
         final Map<String, Object> keys = new HashMap<>();

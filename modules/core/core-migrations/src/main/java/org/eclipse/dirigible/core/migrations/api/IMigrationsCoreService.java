@@ -22,6 +22,7 @@ import org.eclipse.dirigible.core.migrations.definition.MigrationStatusDefinitio
  */
 public interface IMigrationsCoreService extends ICoreService {
 
+	/** The Constant FILE_EXTENSION_MIGRATE. */
 	public static final String FILE_EXTENSION_MIGRATE = ".migrate";
 	
 	

@@ -26,34 +26,68 @@ import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class WebsocketClient.
+ */
 @ClientEndpoint
 public class WebsocketClient {
 	
+	/** The logger. */
 	private static Logger logger = LoggerFactory.getLogger(WebsocketClient.class);
 	
+	/** The handler. */
 	private String handler;
 	
+	/** The engine. */
 	private String engine;
 	
+	/** The session. */
 	private Session session;
 	
+	/**
+	 * Gets the handler.
+	 *
+	 * @return the handler
+	 */
 	public String getHandler() {
 		return handler;
 	}
 	
+	/**
+	 * Gets the engine.
+	 *
+	 * @return the engine
+	 */
 	public String getEngine() {
 		return engine;
 	}
 	
+	/**
+	 * Gets the session.
+	 *
+	 * @return the session
+	 */
 	public Session getSession() {
 		return session;
 	}
 	
+	/**
+	 * Instantiates a new websocket client.
+	 *
+	 * @param handler the handler
+	 * @param engine the engine
+	 */
 	public WebsocketClient(String handler, String engine) {
 		this.handler = handler;
 		this.engine = engine;
 	}
 	
+    /**
+     * On open.
+     *
+     * @param session the session
+     * @throws ScriptingException the scripting exception
+     */
     @OnOpen
     public void onOpen(Session session) throws ScriptingException {
     	this.session = session;
@@ -64,6 +98,12 @@ public class WebsocketClient {
     	ScriptEngineExecutorsManager.executeServiceModule(this.engine, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_OPEN, context);
     }
 
+    /**
+     * Process message.
+     *
+     * @param message the message
+     * @throws ScriptingException the scripting exception
+     */
     @OnMessage
     public void processMessage(String message) throws ScriptingException {
     	Map<Object, Object> context = new HashMap<>();
@@ -73,6 +113,12 @@ public class WebsocketClient {
     	ScriptEngineExecutorsManager.executeServiceModule(this.engine, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE, context);
     }
 
+    /**
+     * Process error.
+     *
+     * @param t the t
+     * @throws ScriptingException the scripting exception
+     */
     @OnError
     public void processError(Throwable t) throws ScriptingException {
     	logger.error(t.getMessage(), t);
@@ -83,6 +129,12 @@ public class WebsocketClient {
     	ScriptEngineExecutorsManager.executeServiceModule(this.engine, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR, context);
     }
     
+    /**
+     * On close.
+     *
+     * @param session the session
+     * @throws ScriptingException the scripting exception
+     */
     @OnClose
     public void onClose(Session session) throws ScriptingException {
     	WebsocketsFacade.CLIENTS.remove(this);

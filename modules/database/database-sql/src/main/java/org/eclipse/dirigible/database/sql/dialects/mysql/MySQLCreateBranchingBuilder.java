@@ -29,6 +29,12 @@ public class MySQLCreateBranchingBuilder extends CreateBranchingBuilder {
         super(dialect);
     }
 
+    /**
+     * Sequence.
+     *
+     * @param sequence the sequence
+     * @return the creates the sequence builder
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
@@ -38,6 +44,12 @@ public class MySQLCreateBranchingBuilder extends CreateBranchingBuilder {
         return new MySQLCreateSequenceBuilder(this.getDialect(), sequence);
     }
 
+    /**
+     * View.
+     *
+     * @param view the view
+     * @return the my SQL create view builder
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)

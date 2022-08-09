@@ -12,14 +12,31 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * The Class GraalJSContextCreator.
+ */
 public class GraalJSContextCreator {
+    
+    /** The Constant JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS. */
     private static final String JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS = "JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS";
+    
+    /** The Constant JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD. */
     private static final String JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD = "JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD";
+    
+    /** The Constant JAVASCRIPT_GRAALVM_ALLOW_IO. */
     private static final String JAVASCRIPT_GRAALVM_ALLOW_IO = "JAVASCRIPT_GRAALVM_ALLOW_IO";
+    
+    /** The Constant JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS. */
     private static final String JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS = "JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS";
 
+    /** The graal host access. */
     private static HostAccess graalHostAccess;
 
+    /**
+     * Instantiates a new graal JS context creator.
+     *
+     * @param typeMaps the type maps
+     */
     @SuppressWarnings("rawtypes")
     public GraalJSContextCreator(List<GraalJSTypeMap> typeMaps) {
         if (graalHostAccess == null) {
@@ -27,6 +44,17 @@ public class GraalJSContextCreator {
         }
     }
 
+    /**
+     * Creates the context.
+     *
+     * @param engine the engine
+     * @param workingDirectoryPath the working directory path
+     * @param downloadableModuleResolver the downloadable module resolver
+     * @param moduleResolvers the module resolvers
+     * @param onBeforeContextCreatedHook the on before context created hook
+     * @param onAfterContextCreatedHook the on after context created hook
+     * @return the context
+     */
     public Context createContext(
             Engine engine,
             Path workingDirectoryPath,
@@ -70,6 +98,12 @@ public class GraalJSContextCreator {
         return context;
     }
 
+    /**
+     * Creates the host access.
+     *
+     * @param typeMaps the type maps
+     * @return the host access
+     */
     @SuppressWarnings("rawtypes")
     private static HostAccess createHostAccess(List<GraalJSTypeMap> typeMaps) {
         HostAccess.Builder hostAccessConfigBuilder = HostAccess.newBuilder(HostAccess.ALL);

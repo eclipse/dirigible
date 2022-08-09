@@ -40,26 +40,20 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
 /**
  * The Default SQL Dialect.
  *
- * @param <SELECT>
- *            the generic type
- * @param <INSERT>
- *            the generic type
- * @param <UPDATE>
- *            the generic type
- * @param <DELETE>
- *            the generic type
- * @param <CREATE>
- *            the generic type
- * @param <DROP>
- *            the generic type
- * @param <NEXT>
- *            the generic type
- * @param <LAST>
- *            the generic type
+ * @param <SELECT>            the generic type
+ * @param <INSERT>            the generic type
+ * @param <UPDATE>            the generic type
+ * @param <DELETE>            the generic type
+ * @param <CREATE>            the generic type
+ * @param <ALTER> the generic type
+ * @param <DROP>            the generic type
+ * @param <NEXT>            the generic type
+ * @param <LAST>            the generic type
  */
 public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
 		implements ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> {
 	
+	/** The Constant FUNCTIONS. */
 	public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {
 			"ascii",
 			"char_length",
@@ -219,6 +213,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 			
 			})));
 
+	/**
+	 * Select.
+	 *
+	 * @return the select
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#select()
@@ -228,6 +227,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return (SELECT) new SelectBuilder(this);
 	}
 
+	/**
+	 * Insert.
+	 *
+	 * @return the insert
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#insert()
@@ -237,6 +241,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return (INSERT) new InsertBuilder(this);
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @return the update
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#update()
@@ -246,6 +255,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return (UPDATE) new UpdateBuilder(this);
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @return the delete
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#delete()
@@ -255,6 +269,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return (DELETE) new DeleteBuilder(this);
 	}
 
+	/**
+	 * Expression.
+	 *
+	 * @return the expression builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#expression()
@@ -264,6 +283,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return new ExpressionBuilder(this);
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @return the creates the
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#create()
@@ -273,6 +297,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return (CREATE) new CreateBranchingBuilder(this);
 	}
 	
+	/**
+	 * Alter.
+	 *
+	 * @return the alter
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#create()
@@ -282,6 +311,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return (ALTER) new AlterBranchingBuilder(this);
 	}
 
+	/**
+	 * Drop.
+	 *
+	 * @return the drop
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#drop()
@@ -291,6 +325,12 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return (DROP) new DropBranchingBuilder(this);
 	}
 
+	/**
+	 * Nextval.
+	 *
+	 * @param sequence the sequence
+	 * @return the next
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#nextval(java.lang.String)
@@ -300,6 +340,12 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return (NEXT) new NextValueSequenceBuilder(this, sequence);
 	}
 
+	/**
+	 * Gets the data type name.
+	 *
+	 * @param dataType the data type
+	 * @return the data type name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getDataTypeName(org.eclipse.dirigible.database.sql.DataType)
@@ -309,6 +355,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return dataType.toString();
 	}
 
+	/**
+	 * Gets the primary key argument.
+	 *
+	 * @return the primary key argument
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getPrimaryKeyArgument()
@@ -318,6 +369,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return KEYWORD_PRIMARY + SPACE + KEYWORD_KEY;
 	}
 
+	/**
+	 * Gets the identity argument.
+	 *
+	 * @return the identity argument
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getPrimaryKeyArgument()
@@ -327,6 +383,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return KEYWORD_IDENTITY;
 	}
 
+	/**
+	 * Gets the not null argument.
+	 *
+	 * @return the not null argument
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getNotNullArgument()
@@ -336,6 +397,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return KEYWORD_NOT + SPACE + KEYWORD_NULL;
 	}
 
+	/**
+	 * Gets the unique argument.
+	 *
+	 * @return the unique argument
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getUniqueArgument()
@@ -345,6 +411,14 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return KEYWORD_UNIQUE;
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
@@ -354,6 +428,15 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return exists(connection, table, DatabaseArtifactTypes.TABLE);
 	}
 	
+	/**
+	 * Exists.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @param type the type
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String, java.lang.int)
@@ -363,6 +446,16 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return exists(connection, null, table, type);
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @param connection the connection
+	 * @param schema the schema
+	 * @param table the table
+	 * @param type the type
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	@Override
 	public boolean exists(Connection connection, String schema, String table, int type) throws SQLException {
 		table = normalizeTableName(table);
@@ -374,6 +467,12 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return false;
 	}
 
+	/**
+	 * Normalize table name.
+	 *
+	 * @param table the table
+	 * @return the string
+	 */
 	public static String normalizeTableName(String table) {
 		if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
 			table = table.substring(1, table.length()-1);
@@ -381,6 +480,14 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return table;
 	}
 
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#count(java.sql.Connection, java.lang.String)
@@ -396,6 +503,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		throw new SQLException("Cannot calculate the count of records of table: " + table);
 	}
 
+	/**
+	 * Checks if is schema filter supported.
+	 *
+	 * @return true, if is schema filter supported
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSchemaFilterSupported()
@@ -405,6 +517,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return false;
 	}
 
+	/**
+	 * Gets the schema filter script.
+	 *
+	 * @return the schema filter script
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getSchemaFilterScript()
@@ -414,6 +531,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return null;
 	}
 
+	/**
+	 * Checks if is catalog for schema.
+	 *
+	 * @return true, if is catalog for schema
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#isCatalogForSchema()
@@ -423,6 +545,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return false;
 	}
 
+	/**
+	 * Function current date.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#functionCurrentDate()
@@ -432,6 +559,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return ISqlKeywords.FUNCTION_CURRENT_DATE;
 	}
 
+	/**
+	 * Function current time.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#functionCurrentTime()
@@ -441,6 +573,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return ISqlKeywords.FUNCTION_CURRENT_TIME;
 	}
 
+	/**
+	 * Function current timestamp.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#functionCurrentTimestamp()
@@ -450,16 +587,33 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return ISqlKeywords.FUNCTION_CURRENT_TIMESTAMP;
 	}
 
+	/**
+	 * Lastval.
+	 *
+	 * @param args the args
+	 * @return the last
+	 */
 	@Override
 	public LAST lastval(String... args) {
 		return (LAST) new LastValueIdentityBuilder(this);
 	}
 
+	/**
+	 * Checks if is sequence supported.
+	 *
+	 * @return true, if is sequence supported
+	 */
 	@Override
 	public boolean isSequenceSupported() {
 		return true;
 	}
 
+	/**
+	 * Gets the database name.
+	 *
+	 * @param connection the connection
+	 * @return the database name
+	 */
 	@Override
 	public String getDatabaseName(Connection connection) {
 		try {
@@ -469,11 +623,21 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		}
 	}
 
+	/**
+	 * Checks if is synonym supported.
+	 *
+	 * @return true, if is synonym supported
+	 */
 	@Override
 	public boolean isSynonymSupported() {
 		return true;
 	}
 	
+	/**
+	 * Gets the functions names.
+	 *
+	 * @return the functions names
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
@@ -483,6 +647,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return FUNCTIONS;
 	}
 
+	/**
+	 * Gets the fuzzy search index.
+	 *
+	 * @return the fuzzy search index
+	 */
 	@Override
 	public String getFuzzySearchIndex() {
 		return " ";

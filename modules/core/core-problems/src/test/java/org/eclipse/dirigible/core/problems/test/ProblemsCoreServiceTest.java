@@ -25,15 +25,27 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * The Class ProblemsCoreServiceTest.
+ */
 public class ProblemsCoreServiceTest extends AbstractDirigibleTest {
 
+    /** The problems core service. */
     private IProblemsCoreService problemsCoreService;
 
+    /**
+     * Sets the up.
+     */
     @Before
     public void setUp() {
         this.problemsCoreService = new ProblemsCoreService();
     }
 
+    /**
+     * Save problem test.
+     *
+     * @throws ProblemsException the problems exception
+     */
     @Test
     public void saveProblemTest() throws ProblemsException {
         problemsCoreService.deleteAll();
@@ -59,6 +71,11 @@ public class ProblemsCoreServiceTest extends AbstractDirigibleTest {
         problemsCoreService.deleteAll();
     }
 
+    /**
+     * Update problem status test.
+     *
+     * @throws ProblemsException the problems exception
+     */
     @Test
     public void updateProblemStatusTest() throws ProblemsException {
         problemsCoreService.deleteAll();
@@ -82,6 +99,11 @@ public class ProblemsCoreServiceTest extends AbstractDirigibleTest {
         problemsCoreService.deleteAll();
     }
 
+    /**
+     * Delete problems by status test.
+     *
+     * @throws ProblemsException the problems exception
+     */
     @Test
     public void deleteProblemsByStatusTest() throws ProblemsException {
         problemsCoreService.deleteAll();

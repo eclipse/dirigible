@@ -40,6 +40,8 @@ public class JobEmailDefinition {
 	private String email;
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public long getId() {
@@ -47,6 +49,8 @@ public class JobEmailDefinition {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(long id) {
@@ -54,6 +58,8 @@ public class JobEmailDefinition {
 	}
 
 	/**
+	 * Gets the job name.
+	 *
 	 * @return the jobName
 	 */
 	public String getJobName() {
@@ -61,6 +67,8 @@ public class JobEmailDefinition {
 	}
 
 	/**
+	 * Sets the job name.
+	 *
 	 * @param jobName the jobName to set
 	 */
 	public void setJobName(String jobName) {
@@ -68,6 +76,8 @@ public class JobEmailDefinition {
 	}
 
 	/**
+	 * Gets the email.
+	 *
 	 * @return the email
 	 */
 	public String getEmail() {
@@ -75,6 +85,8 @@ public class JobEmailDefinition {
 	}
 
 	/**
+	 * Sets the email.
+	 *
 	 * @param email the email to set
 	 */
 	public void setEmail(String email) {
@@ -82,6 +94,12 @@ public class JobEmailDefinition {
 	}
 
 
+	/**
+	 * Equals.
+	 *
+	 * @param object the object
+	 * @return true, if successful
+	 */
 	public boolean equals(Object object) {
 		if (this == object) return true;
 		if (object == null || getClass() != object.getClass()) return false;
@@ -90,6 +108,11 @@ public class JobEmailDefinition {
 		return id == that.id && jobName.equals(that.jobName) && email.equals(that.email);
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	public int hashCode() {
 		return java.util.Objects.hash(super.hashCode(), id, jobName, email);
 	}

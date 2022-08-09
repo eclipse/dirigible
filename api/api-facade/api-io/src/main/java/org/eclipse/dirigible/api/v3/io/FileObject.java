@@ -11,14 +11,27 @@
  */
 package org.eclipse.dirigible.api.v3.io;
 
+/**
+ * The Class FileObject.
+ */
 public class FileObject {
 	
+	/** The name. */
 	private String name;
 	
+	/** The path. */
 	private String path;
 	
+	/** The type. */
 	private String type;
 
+	/**
+	 * Instantiates a new file object.
+	 *
+	 * @param name the name
+	 * @param path the path
+	 * @param type the type
+	 */
 	public FileObject(String name, String path, String type) {
 		super();
 		this.name = name;
@@ -27,6 +40,8 @@ public class FileObject {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -34,6 +49,8 @@ public class FileObject {
 	}
 
 	/**
+	 * Gets the path.
+	 *
 	 * @return the path
 	 */
 	public String getPath() {
@@ -41,6 +58,8 @@ public class FileObject {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {

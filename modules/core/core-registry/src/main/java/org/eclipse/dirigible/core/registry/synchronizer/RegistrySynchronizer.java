@@ -30,17 +30,29 @@ import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class RegistrySynchronizer.
+ */
 public class RegistrySynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RegistrySynchronizer.class);
 
 	/** The Constant DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER. */
 	public static final String DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER = "DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER"; //$NON-NLS-1$
 
+	/** The resource locations. */
 	private Map<String, String> resourceLocations = Collections.synchronizedMap(new HashMap<String, String>());
+	
+	/** The target locations. */
 	private Map<String, Boolean> targetLocations = Collections.synchronizedMap(new HashMap<String, Boolean>());
+	
+	/** The root folder. */
 	private String rootFolder = null;
 
+	/**
+	 * Synchronize.
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
 	 */
@@ -62,6 +74,12 @@ public class RegistrySynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.repository.api.IResource)
 	 */
@@ -73,6 +91,11 @@ public class RegistrySynchronizer extends AbstractSynchronizer {
 		targetLocations.put(targetLocation, true);
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
 	 */
@@ -90,11 +113,10 @@ public class RegistrySynchronizer extends AbstractSynchronizer {
 	/**
 	 * Synchronize registry resources.
 	 *
-	 * @throws SynchronizationException
-	 *             the synchronization exception
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 * @throws RepositoryReadException 
+	 * @throws SynchronizationException             the synchronization exception
+	 * @throws RepositoryReadException the repository read exception
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void synchronizeResources() throws SynchronizationException, RepositoryReadException, FileNotFoundException, IOException {
 		for (Entry<String, String> next : resourceLocations.entrySet()) {

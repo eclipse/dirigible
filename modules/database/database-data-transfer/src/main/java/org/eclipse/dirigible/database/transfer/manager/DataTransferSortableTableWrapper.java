@@ -21,25 +21,47 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelation
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class DataTransferSortableTableWrapper.
+ */
 public class DataTransferSortableTableWrapper implements ITopologicallySortable {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataTransferSortableTableWrapper.class);
 
+	/** The table model. */
 	private PersistenceTableModel tableModel;
 	
+	/** The wrappers. */
 	Map<String, DataTransferSortableTableWrapper> wrappers;
 	
+	/**
+	 * Instantiates a new data transfer sortable table wrapper.
+	 *
+	 * @param tableModel the table model
+	 * @param wrappers the wrappers
+	 */
 	public DataTransferSortableTableWrapper(PersistenceTableModel tableModel, Map<String, DataTransferSortableTableWrapper> wrappers) {
 		this.tableModel = tableModel;
 		this.wrappers = wrappers;
 		this.wrappers.put(getId(), this);
 	}
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	@Override
 	public String getId() {
 		return tableModel.getTableName();
 	}
 
+	/**
+	 * Gets the dependencies.
+	 *
+	 * @return the dependencies
+	 */
 	@Override
 	public List<ITopologicallySortable> getDependencies() {
 		List<ITopologicallySortable> dependencies = new ArrayList<ITopologicallySortable>();
@@ -54,6 +76,11 @@ public class DataTransferSortableTableWrapper implements ITopologicallySortable 
 		return dependencies;
 	}
 	
+	/**
+	 * Gets the table model.
+	 *
+	 * @return the table model
+	 */
 	public PersistenceTableModel getTableModel() {
 		return tableModel;
 	}

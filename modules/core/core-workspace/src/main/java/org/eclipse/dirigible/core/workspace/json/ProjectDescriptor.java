@@ -19,18 +19,25 @@ import java.util.List;
  */
 public class ProjectDescriptor {
 
+	/** The name. */
 	private String name;
 
+	/** The path. */
 	private String path;
 
+	/** The type. */
 	private String type = "project";
 
+	/** The git. */
 	private boolean git;
 
+	/** The git name. */
 	private String gitName;
 
+	/** The folders. */
 	private List<FolderDescriptor> folders = new ArrayList<FolderDescriptor>();
 
+	/** The files. */
 	private List<FileDescriptor> files = new ArrayList<FileDescriptor>();
 
 	/**
@@ -72,7 +79,7 @@ public class ProjectDescriptor {
 	}
 
 	/**
-	 * Get the type
+	 * Get the type.
 	 *
 	 * @return the type
 	 */
@@ -119,7 +126,7 @@ public class ProjectDescriptor {
 	}
 
 	/**
-	 * Is Git enabled
+	 * Is Git enabled.
 	 *
 	 * @return the git
 	 */
@@ -128,7 +135,7 @@ public class ProjectDescriptor {
 	}
 
 	/**
-	 * Set it Git enabled
+	 * Set it Git enabled.
 	 *
 	 * @param git the git to set
 	 */

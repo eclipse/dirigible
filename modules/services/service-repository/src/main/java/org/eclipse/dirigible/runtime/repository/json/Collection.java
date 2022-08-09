@@ -19,16 +19,22 @@ import java.util.List;
  */
 public class Collection {
 
+	/** The Constant TYPE_COLLECTION. */
 	private static final String TYPE_COLLECTION = "collection";
 
+	/** The name. */
 	private String name;
 
+	/** The path. */
 	private String path;
 
+	/** The type. */
 	private String type = TYPE_COLLECTION;
 
+	/** The collections. */
 	private List<Collection> collections = new ArrayList<Collection>();
 
+	/** The resources. */
 	private List<Resource> resources = new ArrayList<Resource>();
 
 	/**

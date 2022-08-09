@@ -18,6 +18,7 @@ import org.eclipse.dirigible.repository.api.RepositoryException;
  */
 public class DatabaseRepositoryException extends RepositoryException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 116149128529374300L;
 
 	/**

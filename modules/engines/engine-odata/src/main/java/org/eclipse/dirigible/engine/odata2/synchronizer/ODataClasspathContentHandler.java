@@ -23,10 +23,18 @@ import org.slf4j.LoggerFactory;
  */
 public class ODataClasspathContentHandler extends AbstractClasspathContentHandler {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ODataClasspathContentHandler.class);
 
+	/** The odata synchronizer. */
 	private ODataSynchronizer odataSynchronizer = new ODataSynchronizer();
 
+	/**
+	 * Checks if is valid.
+	 *
+	 * @param path the path
+	 * @return true, if is valid
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#isValid(java.lang.String)
@@ -50,6 +58,11 @@ public class ODataClasspathContentHandler extends AbstractClasspathContentHandle
 		return false;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#getLogger()

@@ -22,16 +22,38 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+/**
+ * The Class ProcessExecutor.
+ *
+ * @param <TOut> the generic type
+ */
 public abstract class ProcessExecutor<TOut> {
 
+    /**
+     * Creates the with errors redirect.
+     *
+     * @return the process executor
+     */
     public static ProcessExecutor<String> createWithErrorsRedirect() {
         return new ErrorsRedirectProcessExecutor();
     }
 
+    /**
+     * Creates the.
+     *
+     * @return the process executor
+     */
     public static ProcessExecutor<OutputsPair> create() {
         return new DefaultProcessExecutor();
     }
 
+    /**
+     * Execute process.
+     *
+     * @param path the path
+     * @param environmentVariables the environment variables
+     * @return the future
+     */
     public Future<ProcessResult<TOut>> executeProcess(String path, Map<String, String> environmentVariables) {
         try {
             Pair<String, String[]> executableAndArgs = toExecutableAndArgs(path);
@@ -44,6 +66,12 @@ public abstract class ProcessExecutor<TOut> {
         }
     }
 
+    /**
+     * To executable and args.
+     *
+     * @param path the path
+     * @return the pair
+     */
     private static Pair<String, String[]> toExecutableAndArgs(String path) {
         String[] parts = Commandline.translateCommandline(path);
         String executable = parts[0];
@@ -51,8 +79,26 @@ public abstract class ProcessExecutor<TOut> {
         return Pair.of(executable, arguments);
     }
 
+    /**
+     * Execute process.
+     *
+     * @param commandLine the command line
+     * @param executor the executor
+     * @param environmentVariables the environment variables
+     * @return the future
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public abstract Future<ProcessResult<TOut>> executeProcess(CommandLine commandLine, DefaultExecutor executor, Map<String, String> environmentVariables) throws IOException;
 
+    /**
+     * Execute.
+     *
+     * @param executor the executor
+     * @param commandLine the command line
+     * @param environmentVariables the environment variables
+     * @return the process execution future
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected ProcessExecutionFuture execute(DefaultExecutor executor, CommandLine commandLine, Map<String, String> environmentVariables) throws IOException {
         ProcessExecutionFuture processExecutionFuture = new ProcessExecutionFuture();
         executor.execute(commandLine, environmentVariables, processExecutionFuture);

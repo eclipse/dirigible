@@ -23,16 +23,29 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 
+/**
+ * The Class Folder.
+ */
 public class Folder extends CmisObject {
 
+	/** The session. */
 	private CmisSession session;
 
+	/** The internal folder. */
 	private ICollection internalFolder;
 
+	/** The repository. */
 	private IRepository repository;
 
+	/** The root folder. */
 	private boolean rootFolder = false;
 
+	/**
+	 * Instantiates a new folder.
+	 *
+	 * @param session the session
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public Folder(CmisSession session) throws IOException {
 		super(session, IRepository.SEPARATOR);
 		this.session = session;
@@ -41,6 +54,13 @@ public class Folder extends CmisObject {
 		this.rootFolder = true;
 	}
 
+	/**
+	 * Instantiates a new folder.
+	 *
+	 * @param session the session
+	 * @param internalCollection the internal collection
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public Folder(CmisSession session, ICollection internalCollection) throws IOException {
 		super(session, internalCollection.getPath());
 		if (IRepository.SEPARATOR.equals(internalCollection.getPath())) {
@@ -51,6 +71,13 @@ public class Folder extends CmisObject {
 		this.internalFolder = internalCollection;
 	}
 
+	/**
+	 * Instantiates a new folder.
+	 *
+	 * @param session the session
+	 * @param id the id
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public Folder(CmisSession session, String id) throws IOException {
 		super(session, id);
 		id = sanitize(id);
@@ -62,17 +89,27 @@ public class Folder extends CmisObject {
 		this.internalFolder = this.repository.getCollection(id);
 	}
 
+	/**
+	 * Gets the internal folder.
+	 *
+	 * @return the internal folder
+	 */
 	public ICollection getInternalFolder() {
 		return internalFolder;
 	}
 
+	/**
+	 * Checks if is collection.
+	 *
+	 * @return true, if is collection
+	 */
 	@Override
 	protected boolean isCollection() {
 		return true;
 	}
 
 	/**
-	 * Returns the Path of this Folder
+	 * Returns the Path of this Folder.
 	 *
 	 * @return the path
 	 */
@@ -81,13 +118,11 @@ public class Folder extends CmisObject {
 	}
 
 	/**
-	 * Creates a new folder under this Folder
+	 * Creates a new folder under this Folder.
 	 *
-	 * @param properties
-	 *            the properties
+	 * @param properties            the properties
 	 * @return Folder
-	 * @throws IOException
-	 *             IO Exception
+	 * @throws IOException             IO Exception
 	 */
 	public Folder createFolder(Map<String, String> properties) throws IOException {
 		String name = properties.get(CmisConstants.NAME);
@@ -95,17 +130,13 @@ public class Folder extends CmisObject {
 	}
 
 	/**
-	 * Creates a new document under this Folder
+	 * Creates a new document under this Folder.
 	 *
-	 * @param properties
-	 *            the properties
-	 * @param contentStream
-	 *            the content stream
-	 * @param versioningState
-	 *            the version state
+	 * @param properties            the properties
+	 * @param contentStream            the content stream
+	 * @param versioningState            the version state
 	 * @return Document
-	 * @throws IOException
-	 *             IO Exception
+	 * @throws IOException             IO Exception
 	 */
 	public Document createDocument(Map<String, String> properties, ContentStream contentStream,
 			VersioningState versioningState) throws IOException {
@@ -116,6 +147,12 @@ public class Folder extends CmisObject {
 				this.internalFolder.createResource(name, out.toByteArray(), true, contentStream.getMimeType()));
 	}
 
+	/**
+	 * Gets the children.
+	 *
+	 * @return the children
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public List<CmisObject> getChildren() throws IOException {
 		List<CmisObject> children = new ArrayList<CmisObject>();
 		List<ICollection> collections = this.internalFolder.getCollections();
@@ -130,7 +167,7 @@ public class Folder extends CmisObject {
 	}
 
 	/**
-	 * Returns true if this Folder is a root folder and false otherwise
+	 * Returns true if this Folder is a root folder and false otherwise.
 	 *
 	 * @return whether it is a root folder
 	 */
@@ -139,11 +176,10 @@ public class Folder extends CmisObject {
 	}
 
 	/**
-	 * Returns the parent Folder of this Folder
+	 * Returns the parent Folder of this Folder.
 	 *
 	 * @return Folder
-	 * @throws IOException
-	 *             IO Exception
+	 * @throws IOException             IO Exception
 	 */
 	public Folder getFolderParent() throws IOException {
 		if (this.internalFolder.getParent() != null) {

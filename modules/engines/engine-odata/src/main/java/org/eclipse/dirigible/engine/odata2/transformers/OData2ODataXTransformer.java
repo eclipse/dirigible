@@ -24,25 +24,53 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The Class OData2ODataXTransformer.
+ */
 public class OData2ODataXTransformer {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(OData2ODataXTransformer.class);
 
+    /** The Constant TABLE_TYPES. */
     public static final List<String> TABLE_TYPES = List.of(ISqlKeywords.METADATA_TABLE, ISqlKeywords.METADATA_BASE_TABLE);
+    
+    /** The Constant VIEW_TYPES. */
     public static final List<String> VIEW_TYPES = List.of(ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW);
 
+    /** The property name escaper. */
     private final ODataPropertyNameEscaper propertyNameEscaper;
+    
+    /** The table metadata provider. */
     private final ITableMetadataProvider tableMetadataProvider;
 
+    /**
+     * Instantiates a new o data 2 O data X transformer.
+     *
+     * @param tableMetadataProvider the table metadata provider
+     */
     public OData2ODataXTransformer(ITableMetadataProvider tableMetadataProvider) {
         this(tableMetadataProvider, new DefaultPropertyNameEscaper());
     }
 
+    /**
+     * Instantiates a new o data 2 O data X transformer.
+     *
+     * @param tableMetadataProvider the table metadata provider
+     * @param propertyNameEscaper the property name escaper
+     */
     public OData2ODataXTransformer(ITableMetadataProvider tableMetadataProvider, ODataPropertyNameEscaper propertyNameEscaper) {
         this.tableMetadataProvider = tableMetadataProvider;
         this.propertyNameEscaper = propertyNameEscaper;
     }
 
+    /**
+     * Transform.
+     *
+     * @param model the model
+     * @return the string[]
+     * @throws SQLException the SQL exception
+     */
     public String[] transform(ODataDefinition model) throws SQLException {
         String[] result = new String[2];
         StringBuilder buff = new StringBuilder();
@@ -215,6 +243,13 @@ public class OData2ODataXTransformer {
         return result;
     }
 
+    /**
+     * Check if view has exposed original keys from table.
+     *
+     * @param tableMetadata the table metadata
+     * @param entity the entity
+     * @return the list
+     */
     private List<PersistenceTableColumnModel> checkIfViewHasExposedOriginalKeysFromTable(PersistenceTableModel tableMetadata, ODataEntityDefinition entity) {
         return tableMetadata.getColumns().stream().filter(el -> entity.getKeys().stream().anyMatch(x -> x.equals(el.getName()))).collect(Collectors.toList());
     }

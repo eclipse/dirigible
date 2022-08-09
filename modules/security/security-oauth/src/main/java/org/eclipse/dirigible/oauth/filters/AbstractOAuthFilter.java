@@ -30,25 +30,53 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.oauth.utils.OAuthUtils;
 import org.slf4j.Logger;
 
+/**
+ * The Class AbstractOAuthFilter.
+ */
 public abstract class AbstractOAuthFilter implements Filter {
 
-	/**
-	 * The name of the cookie, where is stored the initial request path
-	 */
+	/** The name of the cookie, where is stored the initial request path. */
 	public static final String INITIAL_REQUEST_PATH_COOKIE = "initialRequestPath";
+	
+	/** The Constant SLASH. */
 	private static final String SLASH = "/";
+	
+	/** The Constant IS_OAUTH_AUTHENTICATION_ENABLED. */
 	private static final boolean IS_OAUTH_AUTHENTICATION_ENABLED = Configuration.isOAuthAuthenticationEnabled();
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	protected abstract Logger getLogger();
 
+	/**
+	 * Inits the.
+	 *
+	 * @param filterConfig the filter config
+	 * @throws ServletException the servlet exception
+	 */
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// Do nothing
 	}
 
+	/**
+	 * Destroy.
+	 */
 	public void destroy() {
 		// Do nothing
 	}
 
+	/**
+	 * Do filter.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param chain the chain
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ServletException the servlet exception
+	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		if (IS_OAUTH_AUTHENTICATION_ENABLED) {
@@ -59,20 +87,22 @@ public abstract class AbstractOAuthFilter implements Filter {
 	}
 
 	/**
-	 * Perform OAuth related filtering
-	 * 
-	 * @param request
-	 * @param response
-	 * @param chain
-	 * @throws IOException
-	 * @throws ServletException
+	 * Perform OAuth related filtering.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param chain the chain
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ServletException the servlet exception
 	 */
 	protected abstract void filter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException;
 
 	/**
 	 * Authenticate.
-	 * @throws IOException 
-	 * 
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void authenticate(ServletRequest request, ServletResponse response) throws IOException {
 		String authenticationUrl = OAuthUtils.getAuthenticationUrl();
@@ -80,6 +110,12 @@ public abstract class AbstractOAuthFilter implements Filter {
 		((HttpServletResponse) response).sendRedirect(authenticationUrl);
 	}
 
+	/**
+	 * Sets the request path cookie.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 */
 	protected void setRequestPathCookie(ServletRequest request, ServletResponse response) {
 		boolean found = false;
 		Cookie[] cookies = ((HttpServletRequest) request).getCookies();
@@ -101,6 +137,12 @@ public abstract class AbstractOAuthFilter implements Filter {
 		}
 	}
 
+	/**
+	 * Removes the request path cookie.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 */
 	protected void removeRequestPathCookie(ServletRequest request, ServletResponse response) {
 		((HttpServletResponse) response).addCookie(new Cookie(INITIAL_REQUEST_PATH_COOKIE, null));
 	}
@@ -108,6 +150,10 @@ public abstract class AbstractOAuthFilter implements Filter {
 	/**
 	 * Unauthorized.
 	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param message the message
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@SuppressWarnings("deprecation")
 	protected void unauthorized(ServletRequest request, ServletResponse response, String message) throws IOException {
@@ -127,6 +173,10 @@ public abstract class AbstractOAuthFilter implements Filter {
 	/**
 	 * Forbidden.
 	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param message the message
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@SuppressWarnings("deprecation")
 	protected void forbidden(ServletRequest request, ServletResponse response, String message) throws IOException {

@@ -47,6 +47,11 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 	/** The publish log persistence manager. */
 	private PersistenceManager<PublishLogDefinition> publishLogPersistenceManager = new PersistenceManager<PublishLogDefinition>();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -56,6 +61,15 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 
 	// Publish Request
 
+	/**
+	 * Creates the publish request.
+	 *
+	 * @param workspace the workspace
+	 * @param path the path
+	 * @param registry the registry
+	 * @return the publish request definition
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#createPublishRequest(java.lang.String,
@@ -87,6 +101,15 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 	
+	/**
+	 * Creates the unpublish request.
+	 *
+	 * @param workspace the workspace
+	 * @param path the path
+	 * @param registry the registry
+	 * @return the publish request definition
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#createPublishRequest(java.lang.String,
@@ -119,6 +142,14 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Creates the publish request.
+	 *
+	 * @param workspace the workspace
+	 * @param path the path
+	 * @return the publish request definition
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#createPublishRequest(java.lang.String,
@@ -129,6 +160,14 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		return createPublishRequest(workspace, path, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 	}
 
+	/**
+	 * Creates the unpublish request.
+	 *
+	 * @param workspace the workspace
+	 * @param path the path
+	 * @return the publish request definition
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#createUnpublishRequest(java.lang.String,
@@ -139,6 +178,13 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		return createUnpublishRequest(workspace, path, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 	}
 
+	/**
+	 * Gets the publish request.
+	 *
+	 * @param id the id
+	 * @return the publish request
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishRequest(long)
@@ -160,6 +206,12 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Removes the publish request.
+	 *
+	 * @param id the id
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#removePublishRequest(long)
@@ -181,6 +233,11 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 	
+	/**
+	 * Removes the all publish requests.
+	 *
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#removeAllPublishRequests()
@@ -205,6 +262,12 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Gets the publish requests.
+	 *
+	 * @return the publish requests
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishRequests()
@@ -226,6 +289,11 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 	
+	/**
+	 * Delete old publish requests.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#deleteOldPublishRequests()
@@ -253,6 +321,14 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 
 	// Publish Log
 
+	/**
+	 * Creates the publish log.
+	 *
+	 * @param source the source
+	 * @param target the target
+	 * @return the publish log definition
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#createPublishLog(java.lang.String,
@@ -282,6 +358,13 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Gets the publish log.
+	 *
+	 * @param id the id
+	 * @return the publish log
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishLog(long)
@@ -303,6 +386,12 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Removes the publish log.
+	 *
+	 * @param id the id
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#removePublishLog(long)
@@ -324,6 +413,12 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Gets the publish logs.
+	 *
+	 * @return the publish logs
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishLogs()
@@ -345,6 +440,13 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Gets the publish requests after.
+	 *
+	 * @param timestamp the timestamp
+	 * @return the publish requests after
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishRequestsAfter(java.sql.Timestamp)
@@ -369,6 +471,12 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 
+	/**
+	 * Gets the latest publish log.
+	 *
+	 * @return the latest publish log
+	 * @throws PublisherException the publisher exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getLatestPublishLog()
@@ -406,6 +514,11 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 		}
 	}
 	
+	/**
+	 * Delete old publish logs.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#deleteOldPublishLogs()
@@ -432,6 +545,9 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 	}
 	
 
+	/**
+	 * Cleanup.
+	 */
 	@Override
 	public void cleanup() {
 		try {

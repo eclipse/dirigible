@@ -24,8 +24,10 @@ import org.apache.commons.lang3.ClassUtils;
  */
 public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 
+	/** The limited. */
 	private boolean limited = true;
 	
+	/** The stringify. */
 	private boolean stringify = true;
 
 	/**
@@ -66,6 +68,13 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 		this.stringify = stringify;
 	}
 
+	/**
+	 * Write.
+	 *
+	 * @param resultSet the result set
+	 * @return the string
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.databases.processor.format.ResultSetWriter#write(java.sql.ResultSet)

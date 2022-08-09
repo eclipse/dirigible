@@ -45,26 +45,41 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class DataStructuresCoreService implements IDataStructuresCoreService {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The table persistence manager. */
 	private PersistenceManager<DataStructureTableModel> tablePersistenceManager = new PersistenceManager<DataStructureTableModel>();
 
+	/** The view persistence manager. */
 	private PersistenceManager<DataStructureViewModel> viewPersistenceManager = new PersistenceManager<DataStructureViewModel>();
 
+	/** The replace persistence manager. */
 	private PersistenceManager<DataStructureDataReplaceModel> replacePersistenceManager = new PersistenceManager<DataStructureDataReplaceModel>();
 
+	/** The append persistence manager. */
 	private PersistenceManager<DataStructureDataAppendModel> appendPersistenceManager = new PersistenceManager<DataStructureDataAppendModel>();
 
+	/** The delete persistence manager. */
 	private PersistenceManager<DataStructureDataDeleteModel> deletePersistenceManager = new PersistenceManager<DataStructureDataDeleteModel>();
 
+	/** The update persistence manager. */
 	private PersistenceManager<DataStructureDataUpdateModel> updatePersistenceManager = new PersistenceManager<DataStructureDataUpdateModel>();
 	
+	/** The schema persistence manager. */
 	private PersistenceManager<DataStructureSchemaModel> schemaPersistenceManager = new PersistenceManager<DataStructureSchemaModel>();
 	
+	/** The changelog persistence manager. */
 	private PersistenceManager<DataStructureChangelogModel> changelogPersistenceManager = new PersistenceManager<DataStructureChangelogModel>();
 	
+	/** The data structure persistence manager. */
 	private PersistenceManager<DataStructureModel> dataStructurePersistenceManager = new PersistenceManager<DataStructureModel>();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -74,6 +89,15 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 
 	// Tables
 
+	/**
+	 * Creates the table.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @return the data structure table model
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createTable(java.lang.String,
@@ -105,6 +129,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the table.
+	 *
+	 * @param location the location
+	 * @return the table
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getTable(java.lang.String)
@@ -126,6 +157,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the table by name.
+	 *
+	 * @param name the name
+	 * @return the table by name
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getTableByName(java.lang.String)
@@ -158,6 +196,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Removes the table.
+	 *
+	 * @param location the location
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeTable(java.lang.String)
@@ -179,6 +223,14 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Update table.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#updateTable(java.lang.String,
@@ -204,6 +256,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the tables.
+	 *
+	 * @return the tables
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getTables()
@@ -228,6 +286,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Exists table.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsTable(java.lang.String)
@@ -237,6 +302,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return getTable(location) != null;
 	}
 
+	/**
+	 * Parses the table.
+	 *
+	 * @param json the json
+	 * @return the data structure table model
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseTable(java.lang.String)
@@ -246,6 +317,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return DataStructureModelFactory.parseTable(json);
 	}
 
+	/**
+	 * Parses the table.
+	 *
+	 * @param json the json
+	 * @return the data structure table model
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseTable(byte[])
@@ -257,6 +334,15 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 
 	// Views
 
+	/**
+	 * Creates the view.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @return the data structure view model
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createView(java.lang.String,
@@ -288,6 +374,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the view.
+	 *
+	 * @param location the location
+	 * @return the view
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getView(java.lang.String)
@@ -309,6 +402,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the view by name.
+	 *
+	 * @param name the name
+	 * @return the view by name
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getViewByName(java.lang.String)
@@ -341,6 +441,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Removes the view.
+	 *
+	 * @param location the location
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeView(java.lang.String)
@@ -362,6 +468,14 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Update view.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#updateView(java.lang.String,
@@ -387,6 +501,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the views.
+	 *
+	 * @return the views
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getViews()
@@ -411,6 +531,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Exists view.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsView(java.lang.String)
@@ -420,6 +547,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return getView(location) != null;
 	}
 
+	/**
+	 * Parses the view.
+	 *
+	 * @param json the json
+	 * @return the data structure view model
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseView(java.lang.String)
@@ -429,6 +562,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return DataStructureModelFactory.parseView(json);
 	}
 
+	/**
+	 * Parses the view.
+	 *
+	 * @param json the json
+	 * @return the data structure view model
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseView(byte[])
@@ -438,6 +577,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return DataStructureModelFactory.parseView(json);
 	}
 
+	/**
+	 * Serialize table.
+	 *
+	 * @param tableModel the table model
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -449,6 +594,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return GsonHelper.GSON.toJson(tableModel);
 	}
 
+	/**
+	 * Serialize view.
+	 *
+	 * @param viewModel the view model
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -462,6 +613,15 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 
 	// Replaces
 
+	/**
+	 * Creates the replace.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @return the data structure data replace model
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createReplace(java.lang.String,
@@ -493,6 +653,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the replace.
+	 *
+	 * @param location the location
+	 * @return the replace
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getReplace(java.lang.String)
@@ -514,6 +681,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Removes the replace.
+	 *
+	 * @param location the location
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeReplace(java.lang.String)
@@ -535,6 +708,14 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Update replace.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#updateReplace(java.lang.String,
@@ -560,6 +741,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the replaces.
+	 *
+	 * @return the replaces
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getReplaces()
@@ -584,6 +771,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Exists replace.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsReplace(java.lang.String)
@@ -593,6 +787,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return getReplace(location) != null;
 	}
 
+	/**
+	 * Parses the replace.
+	 *
+	 * @param location the location
+	 * @param data the data
+	 * @return the data structure data replace model
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -606,6 +807,15 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 
 	// Appends
 
+	/**
+	 * Creates the append.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @return the data structure data append model
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createAppend(java.lang.String,
@@ -637,6 +847,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the append.
+	 *
+	 * @param location the location
+	 * @return the append
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getAppend(java.lang.String)
@@ -658,6 +875,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Removes the append.
+	 *
+	 * @param location the location
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeAppend(java.lang.String)
@@ -679,6 +902,14 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Update append.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#updateAppend(java.lang.String,
@@ -704,6 +935,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the appends.
+	 *
+	 * @return the appends
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getAppends()
@@ -728,6 +965,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Parses the append.
+	 *
+	 * @param location the location
+	 * @param data the data
+	 * @return the data structure data append model
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -739,6 +983,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return DataStructureModelFactory.parseAppend(location, data);
 	}
 
+	/**
+	 * Exists append.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsAppend(java.lang.String)
@@ -750,6 +1001,15 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 
 	// Deletes
 
+	/**
+	 * Creates the delete.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @return the data structure data delete model
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createDelete(java.lang.String,
@@ -781,6 +1041,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the delete.
+	 *
+	 * @param location the location
+	 * @return the delete
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getDelete(java.lang.String)
@@ -802,6 +1069,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Removes the delete.
+	 *
+	 * @param location the location
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeDelete(java.lang.String)
@@ -823,6 +1096,14 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Update delete.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#updateDelete(java.lang.String,
@@ -848,6 +1129,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the deletes.
+	 *
+	 * @return the deletes
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getDeletes()
@@ -872,6 +1159,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Exists delete.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsDelete(java.lang.String)
@@ -881,6 +1175,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return getDelete(location) != null;
 	}
 
+	/**
+	 * Parses the delete.
+	 *
+	 * @param location the location
+	 * @param data the data
+	 * @return the data structure data delete model
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -894,6 +1195,15 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 
 	// Updates
 
+	/**
+	 * Creates the update.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @return the data structure data update model
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createUpdate(java.lang.String,
@@ -925,6 +1235,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the update.
+	 *
+	 * @param location the location
+	 * @return the update
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getUpdate(java.lang.String)
@@ -946,6 +1263,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Removes the update.
+	 *
+	 * @param location the location
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeUpdate(java.lang.String)
@@ -967,6 +1290,14 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Update update.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#updateUpdate(java.lang.String,
@@ -992,6 +1323,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the updates.
+	 *
+	 * @return the updates
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getUpdates()
@@ -1016,6 +1353,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Exists update.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsUpdate(java.lang.String)
@@ -1025,6 +1369,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return getUpdate(location) != null;
 	}
 
+	/**
+	 * Parses the update.
+	 *
+	 * @param location the location
+	 * @param data the data
+	 * @return the data structure data update model
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -1048,6 +1399,15 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	
 	// Schemas
 
+	/**
+	 * Creates the schema.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @return the data structure schema model
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createSchema(java.lang.String,
@@ -1079,6 +1439,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the schema.
+	 *
+	 * @param location the location
+	 * @return the schema
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getSchema(java.lang.String)
@@ -1100,6 +1467,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Removes the schema.
+	 *
+	 * @param location the location
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeSchema(java.lang.String)
@@ -1121,6 +1494,14 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Update schema.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#updateSchema(java.lang.String,
@@ -1146,6 +1527,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Gets the schemas.
+	 *
+	 * @return the schemas
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getSchemas()
@@ -1170,6 +1557,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/**
+	 * Exists schema.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsSchema(java.lang.String)
@@ -1179,6 +1573,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		return getSchema(location) != null;
 	}
 
+	/**
+	 * Parses the schema.
+	 *
+	 * @param location the location
+	 * @param content the content
+	 * @return the data structure schema model
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -1189,6 +1590,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	}
 	
 	
+	/**
+	 * Gets the data structures.
+	 *
+	 * @return the data structures
+	 * @throws DataStructuresException the data structures exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getDataStructures(java.lang.String, java.lang.String)
@@ -1214,7 +1621,16 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	
 	// Changelogs
 	
-		/*
+		/**
+	 * Creates the changelog.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param hash the hash
+	 * @return the data structure changelog model
+	 * @throws DataStructuresException the data structures exception
+	 */
+	/*
 		 * (non-Javadoc)
 		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createChangelog(java.lang.String,
 		 * java.lang.String, java.lang.String)
@@ -1245,6 +1661,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			}
 		}
 
+		/**
+		 * Gets the changelog.
+		 *
+		 * @param location the location
+		 * @return the changelog
+		 * @throws DataStructuresException the data structures exception
+		 */
 		/*
 		 * (non-Javadoc)
 		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getChangelog(java.lang.String)
@@ -1266,6 +1689,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			}
 		}
 
+		/**
+		 * Removes the changelog.
+		 *
+		 * @param location the location
+		 * @throws DataStructuresException the data structures exception
+		 */
 		/*
 		 * (non-Javadoc)
 		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeChangelog(java.lang.String)
@@ -1287,6 +1716,14 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			}
 		}
 
+		/**
+		 * Update changelog.
+		 *
+		 * @param location the location
+		 * @param name the name
+		 * @param hash the hash
+		 * @throws DataStructuresException the data structures exception
+		 */
 		/*
 		 * (non-Javadoc)
 		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#ChangelogChangelog(java.lang.String,
@@ -1312,6 +1749,12 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			}
 		}
 
+		/**
+		 * Gets the changelogs.
+		 *
+		 * @return the changelogs
+		 * @throws DataStructuresException the data structures exception
+		 */
 		/*
 		 * (non-Javadoc)
 		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getChangelogs()
@@ -1336,6 +1779,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			}
 		}
 
+		/**
+		 * Exists changelog.
+		 *
+		 * @param location the location
+		 * @return true, if successful
+		 * @throws DataStructuresException the data structures exception
+		 */
 		/*
 		 * (non-Javadoc)
 		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsChangelog(java.lang.String)
@@ -1345,6 +1795,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			return getChangelog(location) != null;
 		}
 
+		/**
+		 * Parses the changelog.
+		 *
+		 * @param location the location
+		 * @param data the data
+		 * @return the data structure changelog model
+		 */
 		/*
 		 * (non-Javadoc)
 		 * @see

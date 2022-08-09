@@ -27,12 +27,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Java facade for working uploading files
+ * Java facade for working uploading files.
  */
 public class HttpUploadFacade implements IScriptingFacade {
 
+	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Upload Facade without a valid Request";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpUploadFacade.class);
 
 	/**

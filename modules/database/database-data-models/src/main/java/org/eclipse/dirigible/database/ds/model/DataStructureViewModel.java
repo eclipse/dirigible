@@ -18,6 +18,7 @@ import javax.persistence.Transient;
  */
 public class DataStructureViewModel extends DataStructureModel {
 
+	/** The query. */
 	@Transient
 	private String query;
 

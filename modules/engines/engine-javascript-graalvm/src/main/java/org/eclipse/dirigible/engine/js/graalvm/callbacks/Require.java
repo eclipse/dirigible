@@ -31,8 +31,16 @@ public class Require {
      * The Constant CODE.
      */
     public static final String CODE = createRequireFunctionCode("require");
+    
+    /** The Constant DIRIGIBLE_REQUIRE_CODE. */
     public static final String DIRIGIBLE_REQUIRE_CODE = createRequireFunctionCode("dirigibleRequire");
 
+    /**
+     * Creates the require function code.
+     *
+     * @param functionName the function name
+     * @return the string
+     */
     private static final String createRequireFunctionCode(String functionName) {
         return "var Require = (function(modulePath) {" //
                 + "	var _loadedModules = {};" //
@@ -80,17 +88,27 @@ public class Require {
                 + "globalThis." + functionName + " = Require();";
     }
 
+    /**
+     * Module code.
+     *
+     * @return the string
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public static final String MODULE_CODE() throws IOException {
         return IOUtils.toString(Require.class.getResourceAsStream("/Module.js"), Charset.defaultCharset());
     }
 
+    /** The Constant MODULE_CREATE_CODE. */
     public static final String MODULE_CREATE_CODE = "let mainModule = createModule(\".\");\n" +
             "mainModule;";
 
+    /** The Constant MODULE_LOAD_CODE. */
     public static final String MODULE_LOAD_CODE = "mainModule.load(MODULE_FILENAME);";
 
+    /** The Constant LOAD_STRING_CODE. */
     public static final String LOAD_STRING_CODE = "mainModule.loadScriptString(SCRIPT_STRING);";
 
+    /** The Constant LOAD_CONSOLE_CODE. */
     public static final String LOAD_CONSOLE_CODE = "let console = {};\n" +
             "console.log = function(message) {\n" +
             "\torg.eclipse.dirigible.api.v3.core.ConsoleFacade.log(stringify(message));\n" +

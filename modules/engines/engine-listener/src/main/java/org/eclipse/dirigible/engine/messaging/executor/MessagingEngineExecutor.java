@@ -13,12 +13,22 @@ package org.eclipse.dirigible.engine.messaging.executor;
 
 import org.eclipse.dirigible.engine.api.IEngineExecutor;
 
+/**
+ * The Class MessagingEngineExecutor.
+ */
 public class MessagingEngineExecutor implements IEngineExecutor {
 	
+	/** The Constant ENGINE_TYPE. */
 	public static final String ENGINE_TYPE = "messaging";
 
+	/** The Constant ENGINE_NAME. */
 	public static final String ENGINE_NAME = "Messaging Engine";
 	
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getType()
@@ -28,6 +38,11 @@ public class MessagingEngineExecutor implements IEngineExecutor {
 		return ENGINE_TYPE;
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()

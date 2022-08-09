@@ -371,7 +371,7 @@ public class SelectRecordTest {
 	}
 	
 	/**
-	 * Select star in case sensitive mode
+	 * Select star in case sensitive mode.
 	 */
 	@Test
 	public void selectStarCaseSensitive() {
@@ -391,7 +391,7 @@ public class SelectRecordTest {
 	}
 	
 	/**
-	 * Select star in case sensitive mode
+	 * Select star in case sensitive mode.
 	 */
 	@Test
 	public void selectStarAndColumnCaseSensitive() {
@@ -412,7 +412,7 @@ public class SelectRecordTest {
 	}
 	
 	/**
-	 * Select count in case sensitive mode
+	 * Select count in case sensitive mode.
 	 */
 	@Test
 	public void selectCountCaseSensitive() {
@@ -432,7 +432,7 @@ public class SelectRecordTest {
 	}
 	
 	/**
-	 * Select column in case sensitive mode
+	 * Select column in case sensitive mode.
 	 */
 	@Test
 	public void selectColumnCaseSensitive() {
@@ -452,7 +452,7 @@ public class SelectRecordTest {
 	}
 	
 	/**
-	 * Select column and where clause in case sensitive mode
+	 * Select column and where clause in case sensitive mode.
 	 */
 	@Test
 	public void selectColumnWithWhereCaseSensitive() {
@@ -473,7 +473,7 @@ public class SelectRecordTest {
 	}
 	
 	/**
-	 * Select column and where clause in case sensitive mode
+	 * Select column and where clause in case sensitive mode.
 	 */
 	@Test
 	public void selectComplexColumnCaseSensitive() {
@@ -493,7 +493,7 @@ public class SelectRecordTest {
 	}
 	
 	/**
-	 * Select column and where clause in case sensitive mode
+	 * Select column and where clause in case sensitive mode.
 	 */
 	@Test
 	public void selectComplexColumnsCaseSensitive() {
@@ -513,7 +513,7 @@ public class SelectRecordTest {
 	}
 
 	/**
-	 * Select count and where clause is in case sensitive mode
+	 * Select count and where clause is in case sensitive mode.
 	 */
 	@Test
 	public void selectArtifactWithNamespaceAndSchemaNameCaseSensitive() {
@@ -532,7 +532,7 @@ public class SelectRecordTest {
 	}
 
 	/**
-	 * Select count and where clause is in case sensitive mode
+	 * Select count and where clause is in case sensitive mode.
 	 */
 	@Test
 	public void selectArtifactWithNamespaceCaseSensitive() {
@@ -551,7 +551,7 @@ public class SelectRecordTest {
 	}
 	
 	/**
-	 * Select column and where clause in case sensitive mode
+	 * Select column and where clause in case sensitive mode.
 	 */
 	@Test
 	public void selectFunctionCaseSensitive() {
@@ -571,7 +571,7 @@ public class SelectRecordTest {
 	}
 	
 	/**
-	 * Select column and where clause in case sensitive mode
+	 * Select column and where clause in case sensitive mode.
 	 */
 	@Test
 	public void selectColumnWithSpecialCharsCaseSensitive() {
@@ -592,7 +592,7 @@ public class SelectRecordTest {
 	}
 	
 	/**
-	 * Select column and where clause in case sensitive mode
+	 * Select column and where clause in case sensitive mode.
 	 */
 	@Test
 	public void selectColumnWithSpecialCharsAndNumbersCaseSensitive() {

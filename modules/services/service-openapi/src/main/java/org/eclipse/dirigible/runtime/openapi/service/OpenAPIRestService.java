@@ -54,8 +54,7 @@ import io.swagger.parser.SwaggerParser;
 import io.swagger.util.Json;
 
 /**
- * OpenAPI descriptor generation service
- *
+ * OpenAPI descriptor generation service.
  */
 @Path("/openapi")
 @RolesAllowed({ "Developer", "Operator" })
@@ -64,12 +63,20 @@ import io.swagger.util.Json;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class OpenAPIRestService extends AbstractRestService implements IRestService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(OpenAPIRestService.class);
 	
+	/** The open API core service. */
 	private OpenAPICoreService openAPICoreService = new OpenAPICoreService();
 	
+	/** The repository. */
 	private IRepository repository = null;
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -77,9 +84,15 @@ public class OpenAPIRestService extends AbstractRestService implements IRestServ
 		return repository;
 	}
 	
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -90,7 +103,7 @@ public class OpenAPIRestService extends AbstractRestService implements IRestServ
 	}
 	
 	/**
-	 * Get the version  information
+	 * Get the version  information.
 	 *
 	 * @return the response
 	 * @throws Exception the scheduler exception
@@ -182,6 +195,11 @@ public class OpenAPIRestService extends AbstractRestService implements IRestServ
 		return Response.ok().entity(swaggerJson).build();
 	}
 	
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

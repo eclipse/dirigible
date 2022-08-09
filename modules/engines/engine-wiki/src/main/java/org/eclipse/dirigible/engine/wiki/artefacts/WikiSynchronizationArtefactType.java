@@ -13,13 +13,27 @@ package org.eclipse.dirigible.engine.wiki.artefacts;
 
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizationArtefactType;
 
+/**
+ * The Class WikiSynchronizationArtefactType.
+ */
 public class WikiSynchronizationArtefactType extends AbstractSynchronizationArtefactType {
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	@Override
 	public String getId() {
 		return "Wiki";
 	}
 
+	/**
+	 * Gets the artefact state message.
+	 *
+	 * @param state the state
+	 * @return the artefact state message
+	 */
 	@Override
 	protected String getArtefactStateMessage(ArtefactState state) {
 		switch (state) {

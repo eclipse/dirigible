@@ -19,12 +19,16 @@ import java.util.List;
  */
 public class DataStructureTableConstraintsModel {
 
+	/** The primary key. */
 	private DataStructureTableConstraintPrimaryKeyModel primaryKey;
 
+	/** The foreign keys. */
 	private List<DataStructureTableConstraintForeignKeyModel> foreignKeys = new ArrayList<DataStructureTableConstraintForeignKeyModel>();
 
+	/** The unique indices. */
 	private List<DataStructureTableConstraintUniqueModel> uniqueIndices = new ArrayList<DataStructureTableConstraintUniqueModel>();
 
+	/** The checks. */
 	private List<DataStructureTableConstraintCheckModel> checks = new ArrayList<DataStructureTableConstraintCheckModel>();
 
 	/**

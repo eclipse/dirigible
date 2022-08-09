@@ -29,22 +29,28 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 @Table(name = "DIRIGIBLE_CSV")
 public class CsvDefinition implements IArtefactDefinition {
 
+	/** The location. */
 	@Id
 	@Column(name = "CSV_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 	
+	/** The hash. */
 	@Column(name = "CSV_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 	
+	/** The imported. */
 	@Column(name = "CSV_IMPORTED", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean imported;
 
+	/** The content. */
 	@Transient
 	private String content;
 
+	/** The created by. */
 	@Column(name = "CSV_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "CSV_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 	
@@ -68,6 +74,8 @@ public class CsvDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the hash.
+	 *
 	 * @return the hash
 	 */
 	public String getHash() {
@@ -75,6 +83,8 @@ public class CsvDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the hash.
+	 *
 	 * @param hash the hash to set
 	 */
 	public void setHash(String hash) {
@@ -82,8 +92,8 @@ public class CsvDefinition implements IArtefactDefinition {
 	}
 	
 	/**
-	 * Getter for imported flag
-	 * 
+	 * Getter for imported flag.
+	 *
 	 * @return whether is imported already
 	 */
 	public boolean getImported() {
@@ -91,8 +101,8 @@ public class CsvDefinition implements IArtefactDefinition {
 	}
 	
 	/**
-	 * Setter for imported flag
-	 * 
+	 * Setter for imported flag.
+	 *
 	 * @param imported the flag
 	 */
 	public void setImported(boolean imported) {
@@ -100,7 +110,7 @@ public class CsvDefinition implements IArtefactDefinition {
 	}
 
 	/**
-	 * Getter for content
+	 * Getter for content.
 	 *
 	 * @return the content
 	 */
@@ -109,7 +119,7 @@ public class CsvDefinition implements IArtefactDefinition {
 	}
 
 	/**
-	 * Setter for content
+	 * Setter for content.
 	 *
 	 * @param content the content
 	 */
@@ -182,6 +192,11 @@ public class CsvDefinition implements IArtefactDefinition {
 		return GsonHelper.GSON.toJson(this, CsvDefinition.class);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -191,21 +206,42 @@ public class CsvDefinition implements IArtefactDefinition {
 		return toJson();
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getLocation();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(hash, location);
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

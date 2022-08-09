@@ -31,6 +31,7 @@ import org.junit.Test;
  */
 public class WebsocketsCoreServiceTest extends AbstractDirigibleTest {
 
+	/** The websockets core service. */
 	private IWebsocketsCoreService websocketsCoreService;
 
 	/**
@@ -66,8 +67,8 @@ public class WebsocketsCoreServiceTest extends AbstractDirigibleTest {
 	/**
 	 * Gets the websocket test.
 	 *
-	 * @throws WebsocketsException
-	 *             the websockets exception
+	 * @return the websocket test
+	 * @throws WebsocketsException             the websockets exception
 	 */
 	@Test
 	public void getWebsocketTest() throws WebsocketsException {
@@ -85,8 +86,8 @@ public class WebsocketsCoreServiceTest extends AbstractDirigibleTest {
 	/**
 	 * Gets the websockets test.
 	 *
-	 * @throws WebsocketsException
-	 *             the websockets exception
+	 * @return the websockets test
+	 * @throws WebsocketsException             the websockets exception
 	 */
 	@Test
 	public void getWebsocketsTest() throws WebsocketsException {

@@ -18,6 +18,7 @@ import com.google.gson.Gson;
  */
 public class ProjectMetadataUtils {
 
+	/** The gson. */
 	private static Gson gson = new Gson();
 
 	/**

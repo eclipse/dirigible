@@ -50,18 +50,25 @@ import org.slf4j.LoggerFactory;
  */
 public class WorkspaceProcessor {
 
+    /** The Constant EXTENSION_PARAMETER_PATH. */
     private static final String EXTENSION_PARAMETER_PATH = "path";
 
+    /** The Constant EXTENSION_PARAMETER_PROJECT. */
     private static final String EXTENSION_PARAMETER_PROJECT = "project";
 
+    /** The Constant EXTENSION_PARAMETER_WORKSPACE. */
     private static final String EXTENSION_PARAMETER_WORKSPACE = "workspace";
 
+    /** The Constant EXTENSION_POINT_IDE_WORKSPACE_ON_SAVE. */
     private static final String EXTENSION_POINT_IDE_WORKSPACE_ON_SAVE = "ide-workspace-on-save";
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(WorkspaceProcessor.class);
 
+    /** The Constant WORKSPACES_SERVICE_PREFIX. */
     private static final String WORKSPACES_SERVICE_PREFIX = "ide/workspaces";
 
+    /** The workspaces core service. */
     private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 
     /**
@@ -155,7 +162,7 @@ public class WorkspaceProcessor {
      *
      * @param workspace the workspace
      * @param project   the project
-     * @throws IOException
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public void deleteProject(String workspace, String project) throws IOException {
         String user = UserFacade.getName();
@@ -640,7 +647,7 @@ public class WorkspaceProcessor {
     // Find
 
     /**
-     * Find files by pattern
+     * Find files by pattern.
      *
      * @param pattern the pattern
      * @return the files list
@@ -657,7 +664,7 @@ public class WorkspaceProcessor {
     }
 
     /**
-     * Find files by pattern within a given workspace
+     * Find files by pattern within a given workspace.
      *
      * @param workspace the workspace
      * @param pattern   the pattern
@@ -669,7 +676,7 @@ public class WorkspaceProcessor {
     }
 
     /**
-     * Triggers the post save file extensions
+     * Triggers the post save file extensions.
      *
      * @param workspace the workspace
      * @param project   the project name
@@ -696,6 +703,14 @@ public class WorkspaceProcessor {
         }
     }
 
+    /**
+     * Link project.
+     *
+     * @param workspace the workspace
+     * @param sourceProject the source project
+     * @param targetPath the target path
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void linkProject(String workspace, String sourceProject, String targetPath) throws IOException {
         IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
         workspaceObject.linkProject(sourceProject, targetPath);
@@ -703,6 +718,13 @@ public class WorkspaceProcessor {
 
     // Other
 
+    /**
+     * Gets the all files folders.
+     *
+     * @param baseFolder the base folder
+     * @param includeBaseFolder the include base folder
+     * @return the all files folders
+     */
     private List<Pair<String, String>> getAllFilesFolders(IFolder baseFolder, Boolean includeBaseFolder) {
         List<Pair<String, String>> allFilesFolders = new ArrayList<>();
         List<IFile> files = baseFolder.getFiles();

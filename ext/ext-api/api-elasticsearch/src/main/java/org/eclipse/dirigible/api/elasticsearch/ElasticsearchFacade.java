@@ -56,6 +56,8 @@ public class ElasticsearchFacade implements IScriptingFacade {
 
     /**
      * Creates a client.
+     *
+     * @return the client
      */
     public static RestHighLevelClient getClient() {
         String clientHostname = Configuration.get(DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME, CLIENT_HOSTNAME);
@@ -75,7 +77,8 @@ public class ElasticsearchFacade implements IScriptingFacade {
      * @param id the document's id
      * @param documentSource the document's source
      * @param xContentType the document source's x-content-type
-     * @throws IOException
+     * @return true, if successful
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static boolean indexDocument(RestHighLevelClient client, String index, String id, String documentSource, String xContentType)
             throws IOException {
@@ -96,7 +99,8 @@ public class ElasticsearchFacade implements IScriptingFacade {
      * @param client the client
      * @param index the index's name
      * @param id the document's id
-     * @throws IOException
+     * @return the document
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static GetResponse getDocument(RestHighLevelClient client, String index, String id) throws IOException {
         GetRequest getRequest = new GetRequest(index, id);
@@ -112,7 +116,8 @@ public class ElasticsearchFacade implements IScriptingFacade {
      * @param client the client
      * @param index the index's name
      * @param id the document's id
-     * @throws IOException
+     * @return true, if successful
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static boolean documentExists(RestHighLevelClient client, String index, String id) throws IOException {
         GetRequest getRequest = new GetRequest(index, id);
@@ -129,7 +134,8 @@ public class ElasticsearchFacade implements IScriptingFacade {
      * @param client the client
      * @param index the index's name
      * @param id the document's id
-     * @throws IOException
+     * @return true, if successful
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static boolean deleteDocument(RestHighLevelClient client, String index, String id) throws IOException {
         DeleteRequest deleteRequest = new DeleteRequest(index, id);
@@ -148,7 +154,8 @@ public class ElasticsearchFacade implements IScriptingFacade {
      *
      * @param client the client
      * @param name the name of the index
-     * @throws IOException
+     * @return true, if successful
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static boolean createIndex(RestHighLevelClient client, String name) throws IOException {
         CreateIndexRequest request = new CreateIndexRequest(name);
@@ -163,7 +170,8 @@ public class ElasticsearchFacade implements IScriptingFacade {
      *
      * @param client the client
      * @param name the name of the index
-     * @throws IOException
+     * @return true, if successful
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static boolean deleteIndex(RestHighLevelClient client, String name) throws IOException {
         DeleteIndexRequest request = new DeleteIndexRequest(name);
@@ -178,7 +186,8 @@ public class ElasticsearchFacade implements IScriptingFacade {
      *
      * @param client the client
      * @param name the name of the index
-     * @throws IOException
+     * @return true, if successful
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static boolean indexExists(RestHighLevelClient client, String name) throws IOException {
         GetIndexRequest request = new GetIndexRequest(name);

@@ -32,15 +32,32 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * The Class SQLSelectBuilderNavigationPropertiesTest.
+ */
 public class SQLSelectBuilderNavigationPropertiesTest {
 
+    /** The Constant SERVER_SIDE_PAGING_DEFAULT_SUFFIX. */
     private static final String SERVER_SIDE_PAGING_DEFAULT_SUFFIX = String.format(" FETCH FIRST %d ROWS ONLY",
             SQLQueryBuilder.DEFAULT_SERVER_PAGING_SIZE);
+    
+    /** The provider. */
     AnnotationEdmProvider provider;
+    
+    /** The uri parser. */
     UriParser uriParser;
+    
+    /** The builder. */
     SQLQueryBuilder builder;
+    
+    /** The context. */
     SQLContext context;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         Class<?>[] classes = { //
@@ -57,10 +74,21 @@ public class SQLSelectBuilderNavigationPropertiesTest {
         context = new SQLContext();
     }
 
+    /**
+     * Creates the path segment.
+     *
+     * @param path the path
+     * @return the o data path segment impl
+     */
     private ODataPathSegmentImpl createPathSegment(final String path) {
         return new ODataPathSegmentImpl(path, Collections.<String, List<String>>emptyMap());
     }
 
+    /**
+     * Test zero to one navigation with filter.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testZeroToOneNavigationWithFilter() throws Exception {
         PathSegment ps1 = createPathSegment("Entities2");
@@ -76,6 +104,11 @@ public class SQLSelectBuilderNavigationPropertiesTest {
     }
 
     //    @Test
+    /**
+     * Test zero to one navigation with select.
+     *
+     * @throws Exception the exception
+     */
     //    @Ignore // TODO This feature is not implemented yet!
     public void testZeroToOneNavigationWithSelect() throws Exception {
         PathSegment ps1 = createPathSegment("Entities2");
@@ -108,6 +141,11 @@ public class SQLSelectBuilderNavigationPropertiesTest {
 
     //    @Test
     //    @Ignore
+    /**
+     * Test one to many navigation with select.
+     *
+     * @throws Exception the exception
+     */
     // TODO This feature is not implemented yet!
     public void testOneToManyNavigationWithSelect() throws Exception {
         PathSegment ps1 = createPathSegment("Entities1");
@@ -124,6 +162,11 @@ public class SQLSelectBuilderNavigationPropertiesTest {
                 q.buildSelect(context));
     }
 
+    /**
+     * Test two step zero to one navigation with filter.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testTwoStepZeroToOneNavigationWithFilter() throws Exception {
         PathSegment ps1 = createPathSegment("Entities3");
@@ -140,6 +183,11 @@ public class SQLSelectBuilderNavigationPropertiesTest {
                 "WHERE T1.STATUS = ? AND T0.DESCRIPTION = ? ORDER BY T0.ID ASC" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
+    /**
+     * Test two step zero to one navigation with filter on complex type.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testTwoStepZeroToOneNavigationWithFilterOnComplexType() throws Exception {
         PathSegment ps1 = createPathSegment("Entities3");

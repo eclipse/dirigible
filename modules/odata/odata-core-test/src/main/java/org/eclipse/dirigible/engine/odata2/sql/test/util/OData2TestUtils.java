@@ -31,11 +31,13 @@ import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 
 /**
- * OData2TestUtils
- *
+ * OData2TestUtils.
  */
 public class OData2TestUtils {
 
+    /**
+     * Instantiates a new o data 2 test utils.
+     */
     private OData2TestUtils() {
     }
 
@@ -152,6 +154,14 @@ public class OData2TestUtils {
         return validateODataEntry(expectedProperties, actualProperties);
     }
 
+    /**
+     * Validate expected entry recursively.
+     *
+     * @param expectedValue the expected value
+     * @param actualValue the actual value
+     * @param key the key
+     * @return the pair
+     */
     @SuppressWarnings("unchecked")
     private static Pair<Boolean, String> validateExpectedEntryRecursively(final Object expectedValue, final Object actualValue,
             final String key) {
@@ -188,6 +198,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Validate O data feed.
+     *
      * @param expectedValueList expected
      * @param actualValueList actual
      * @return Pair
@@ -212,7 +224,9 @@ public class OData2TestUtils {
     }
 
     /**
-     * @param expectedEntrySet expected
+     * Validate O data entry.
+     *
+     * @param expectedProperties the expected properties
      * @param actualProperties actual
      * @return Pair
      */
@@ -228,6 +242,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Fqn.
+     *
      * @param ns the namespace
      * @param name the name
      * @return FQN
@@ -237,6 +253,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Fqn.
+     *
      * @param clazz class
      * @return FQN
      */
@@ -257,6 +275,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Fqns.
+     *
      * @param classes classes
      * @return FQN list
      */
@@ -269,6 +289,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Resources.
+     *
      * @param classes classes
      * @return array
      */
@@ -283,6 +305,8 @@ public class OData2TestUtils {
     
     
     /**
+     * Resource.
+     *
      * @param <T> T
      * @param clazz class
      * @return content
@@ -292,6 +316,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Stream.
+     *
      * @param <T> T
      * @param clazz class
      * @return InputStream

@@ -16,8 +16,10 @@ package org.eclipse.dirigible.repository.db;
  */
 public class DatabaseFileVersion extends DatabaseFile {
 
+	/** The version. */
 	private int version;
 
+	/** The bytes. */
 	private byte[] bytes;
 
 	/**
@@ -40,6 +42,12 @@ public class DatabaseFileVersion extends DatabaseFile {
 		this.bytes = bytes;
 	}
 
+	/**
+	 * Gets the data.
+	 *
+	 * @return the data
+	 * @throws DatabaseRepositoryException the database repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.local.LocalFile#getData()

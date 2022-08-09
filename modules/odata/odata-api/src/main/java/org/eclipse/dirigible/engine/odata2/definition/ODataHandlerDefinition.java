@@ -18,44 +18,53 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
-
 /**
- * The OData Handler Model
+ * The OData Handler Model.
  */
 @Table(name = "DIRIGIBLE_ODATA_HANDLER")
 public class ODataHandlerDefinition {
 	
+	/** The id. */
 	@Id
 	@GeneratedValue
 	@Column(name = "ODATAH_ID", columnDefinition = "BIGINT", nullable = false)
 	private long id;
 	
+	/** The location. */
 	@Column(name = "ODATAH_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 	
+	/** The namespace. */
 	@Column(name = "ODATAH_NAMESPACE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String namespace;
 	
+	/** The name. */
 	@Column(name = "ODATAH_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String name;
 	
+	/** The method. */
 	@Column(name = "ODATAH_METHOD", columnDefinition = "VARCHAR", nullable = false, length = 20)
 	private String method;
 	
+	/** The type. */
 	@Column(name = "ODATAH_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 20)
 	private String type;
 	
+	/** The handler. */
 	@Column(name = "ODATAH_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String handler;
 	
+	/** The created by. */
 	@Column(name = "ODATAH_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "ODATAH_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public long getId() {
@@ -63,6 +72,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(long id) {
@@ -70,6 +81,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Gets the location.
+	 *
 	 * @return the location
 	 */
 	public String getLocation() {
@@ -77,6 +90,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Sets the location.
+	 *
 	 * @param location the location to set
 	 */
 	public void setLocation(String location) {
@@ -84,6 +99,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Gets the namespace.
+	 *
 	 * @return the namespace
 	 */
 	public String getNamespace() {
@@ -91,6 +108,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Sets the namespace.
+	 *
 	 * @param namespace the namespace to set
 	 */
 	public void setNamespace(String namespace) {
@@ -98,6 +117,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -105,6 +126,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -112,6 +135,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Gets the method.
+	 *
 	 * @return the method
 	 */
 	public String getMethod() {
@@ -119,6 +144,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Sets the method.
+	 *
 	 * @param method the method to set
 	 */
 	public void setMethod(String method) {
@@ -126,6 +153,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -133,6 +162,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Sets the type.
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(String type) {
@@ -140,6 +171,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Gets the handler.
+	 *
 	 * @return the handler
 	 */
 	public String getHandler() {
@@ -147,6 +180,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Sets the handler.
+	 *
 	 * @param handler the handler to set
 	 */
 	public void setHandler(String handler) {
@@ -154,6 +189,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Gets the created by.
+	 *
 	 * @return the createdBy
 	 */
 	public String getCreatedBy() {
@@ -161,6 +198,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Sets the created by.
+	 *
 	 * @param createdBy the createdBy to set
 	 */
 	public void setCreatedBy(String createdBy) {
@@ -168,6 +207,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Gets the created at.
+	 *
 	 * @return the createdAt
 	 */
 	public Timestamp getCreatedAt() {
@@ -175,6 +216,8 @@ public class ODataHandlerDefinition {
 	}
 
 	/**
+	 * Sets the created at.
+	 *
 	 * @param createdAt the createdAt to set
 	 */
 	public void setCreatedAt(Timestamp createdAt) {

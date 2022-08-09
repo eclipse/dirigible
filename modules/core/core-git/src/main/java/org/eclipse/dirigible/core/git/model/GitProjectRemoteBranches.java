@@ -15,13 +15,17 @@ import java.util.List;
 
 import org.eclipse.dirigible.core.git.GitBranch;
 
+/**
+ * The Class GitProjectRemoteBranches.
+ */
 public class GitProjectRemoteBranches {
 	
+	/** The remote. */
 	private List<GitBranch> remote;
 
 	/**
-	 * Getter for the remote branches
-	 * 
+	 * Getter for the remote branches.
+	 *
 	 * @return the remote
 	 */
 	public List<GitBranch> getRemote() {
@@ -29,8 +33,8 @@ public class GitProjectRemoteBranches {
 	}
 
 	/**
-	 * Setter for the remote branches
-	 * 
+	 * Setter for the remote branches.
+	 *
 	 * @param remote the remote to set
 	 */
 	public void setRemote(List<GitBranch> remote) {

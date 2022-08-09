@@ -74,14 +74,33 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		}
 	}
 
+	/**
+	 * Creates the table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void createTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		persistenceManager.tableCreate(connection, Customer.class);
 	}
 
+	/**
+	 * Exists table.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @return true, if successful
+	 */
 	private boolean existsTable(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		return persistenceManager.tableExists(connection, Customer.class);
 	}
 
+	/**
+	 * Insert pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = new Customer();
 		customer.setId(1);
@@ -91,6 +110,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		persistenceManager.insert(connection, customer);
 	}
 
+	/**
+	 * Insert second pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertSecondPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = new Customer();
 		customer.setId(2);
@@ -100,11 +125,23 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		persistenceManager.insert(connection, customer);
 	}
 
+	/**
+	 * Find pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void findPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = persistenceManager.find(connection, Customer.class, 1);
 		assertEquals("John", customer.getFirstName());
 	}
 
+	/**
+	 * Find all pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void findAllPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		List<Customer> list = persistenceManager.findAll(connection, Customer.class);
 
@@ -126,6 +163,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	}
 
+	/**
+	 * Query all.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void queryAll(Connection connection, PersistenceManager<Customer> persistenceManager) {
 
 		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").build();
@@ -146,6 +189,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	}
 
+	/**
+	 * Query by name.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void queryByName(Connection connection, PersistenceManager<Customer> persistenceManager) {
 
 		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
@@ -163,6 +212,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	}
 
+	/**
+	 * Query by name var args.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void queryByNameVarArgs(Connection connection, PersistenceManager<Customer> persistenceManager) {
 
 		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
@@ -177,6 +232,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	}
 
+	/**
+	 * Update pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void updatePojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = persistenceManager.find(connection, Customer.class, 1);
 
@@ -196,6 +257,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		assertEquals("Wayne", customer.getLastName());
 	}
 
+	/**
+	 * Delete pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void deletePojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = persistenceManager.find(connection, Customer.class, 1);
 
@@ -206,6 +273,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		assertEquals(1, result);
 	}
 
+	/**
+	 * Delete custom.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void deleteCustom(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = new Customer();
 		customer.setId(3);
@@ -229,6 +302,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		assertNull(customer);
 	}
 
+	/**
+	 * Drop table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void dropTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		persistenceManager.tableDrop(connection, Customer.class);
 	}

@@ -14,13 +14,10 @@ package org.eclipse.dirigible.core.scheduler.api;
 import static java.text.MessageFormat.format;
 
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.eclipse.dirigible.api.v3.http.access.IAccessManager;
 import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
-import org.eclipse.dirigible.commons.api.service.ICleanupService;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.service.SynchronizerCoreService;
@@ -37,16 +34,26 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractSynchronizer implements ISynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractSynchronizer.class);
 
+	/** The repository. */
 	private IRepository repository = null;
 	
+	/** The synchronizer core service. */
 	private SynchronizerCoreService synchronizerCoreService = new SynchronizerCoreService();
 	
+	/** The last synchronized. */
 	private final AtomicLong lastSynchronized = new AtomicLong(0);
 	
+	/** The forced synchronization. */
 	private final AtomicBoolean forcedSynchronization = new AtomicBoolean(false);
 	
+	/**
+	 * Before synchronizing.
+	 *
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean beforeSynchronizing() {
 		if (forcedSynchronization.get() || getLastSynchronized() < getRepository().getLastModified()) {
@@ -55,20 +62,38 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		return false;
 	}
 	
+	/**
+	 * After synchronizing.
+	 */
 	@Override
 	public void afterSynchronizing() {
 		setLastSynchronized(System.currentTimeMillis());
 	}
 	
+	/**
+	 * Sets the forced synchronization.
+	 *
+	 * @param forced the new forced synchronization
+	 */
 	@Override
 	public void setForcedSynchronization(boolean forced) {
 		forcedSynchronization.set(forced);
 	}
 	
+	/**
+	 * Gets the last synchronized.
+	 *
+	 * @return the last synchronized
+	 */
 	public long getLastSynchronized() {
 		return lastSynchronized.get();
 	}
 	
+	/**
+	 * Sets the last synchronized.
+	 *
+	 * @param time the new last synchronized
+	 */
 	protected void setLastSynchronized(long time) {
 		lastSynchronized.set(time);
 	}
@@ -162,6 +187,12 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		}
 	}
 	
+	/**
+	 * Register synchronizer.
+	 *
+	 * @param name the name
+	 * @throws SchedulerException the scheduler exception
+	 */
 	protected void registerSynchronizer(String name) throws SchedulerException {
 		SynchronizerStateDefinition synchronizerStateDefinition = synchronizerCoreService.getSynchronizerState(name);
 		if (synchronizerStateDefinition == null) {
@@ -169,6 +200,12 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		}
 	}
 	
+	/**
+	 * Start synchronization.
+	 *
+	 * @param name the name
+	 * @throws SchedulerException the scheduler exception
+	 */
 	protected void startSynchronization(String name) throws SchedulerException {
 		SynchronizerStateDefinition synchronizerStateDefinition = synchronizerCoreService.getSynchronizerState(name);
 		long currentTimeMillis = System.currentTimeMillis();
@@ -185,6 +222,13 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		}
 	}
 	
+	/**
+	 * Successful synchronization.
+	 *
+	 * @param name the name
+	 * @param message the message
+	 * @throws SchedulerException the scheduler exception
+	 */
 	protected void successfulSynchronization(String name, String message) throws SchedulerException {
 		SynchronizerStateDefinition synchronizerStateDefinition = synchronizerCoreService.getSynchronizerState(name);
 		long currentTimeMillis = System.currentTimeMillis();
@@ -204,6 +248,13 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		}
 	}
 	
+	/**
+	 * Failed synchronization.
+	 *
+	 * @param name the name
+	 * @param message the message
+	 * @throws SchedulerException the scheduler exception
+	 */
 	protected void failedSynchronization(String name, String message) throws SchedulerException {
 		SynchronizerStateDefinition synchronizerStateDefinition = synchronizerCoreService.getSynchronizerState(name);
 		long currentTimeMillis = System.currentTimeMillis();
@@ -225,6 +276,13 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		}
 	}
 	
+	/**
+	 * Checks if is synchronizer successful.
+	 *
+	 * @param name the name
+	 * @return true, if is synchronizer successful
+	 * @throws SchedulerException the scheduler exception
+	 */
 	protected boolean isSynchronizerSuccessful(String name) throws SchedulerException {
 		boolean ignoreDependencies = Boolean.parseBoolean(Configuration.get(ISynchronizer.DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES, "false"));
 		if (ignoreDependencies) {
@@ -238,14 +296,19 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 				&& synchronizerStateDefinition.getState() != ISynchronizerCoreService.STATE_FAILED;
 	}
 	
+	/**
+	 * Checks if is synchronization enabled.
+	 *
+	 * @return true, if is synchronization enabled
+	 */
 	@Override
 	public boolean isSynchronizationEnabled() {
 		return SynchronizerCoreService.isSynchronizationEnabled();
 	}
 
 	/**
-	 * Apply the state
-	 * 
+	 * Apply the state.
+	 *
 	 * @param artefact the artefact
 	 * @param type the type
 	 * @param state the state
@@ -255,8 +318,8 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	}
 
 	/**
-	 * Apply the state
-	 * 
+	 * Apply the state.
+	 *
 	 * @param artefact the artefact
 	 * @param type the type
 	 * @param state the state
@@ -275,6 +338,15 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		}
 	}
 
+	/**
+	 * Check synchronizer state artefact current state.
+	 *
+	 * @param artefactName the artefact name
+	 * @param artefactLocation the artefact location
+	 * @param artefactType the artefact type
+	 * @param artefactState the artefact state
+	 * @param artefactStateMessage the artefact state message
+	 */
 	private void checkSynchronizerStateArtefactCurrentState(String artefactName, String artefactLocation, String artefactType, String artefactState, String artefactStateMessage) {
 		try {
 			if (synchronizerCoreService.existsSynchronizerStateArtefact(artefactName, artefactLocation)) {
@@ -287,6 +359,15 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		}
 	}
 
+	/**
+	 * Apply artefact state.
+	 *
+	 * @param artefactName the artefact name
+	 * @param artefactLocation the artefact location
+	 * @param type the type
+	 * @param state the state
+	 * @param message the message
+	 */
 	public void applyArtefactState(String artefactName, String artefactLocation, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state, String message) {
 		if (artefactName != null && artefactLocation != null && type != null && state != null) {
 			String artefactType = type.getId();
@@ -298,6 +379,13 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		}
 	}
 	
+	/**
+	 * Removes the artefact state.
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public void removeArtefactState(String name, String location) throws SchedulerException {
 		synchronizerCoreService.removeSynchronizerStateArtefact(name, location);
 	}

@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Workspace extends Folder implements IWorkspace {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(Workspace.class);
 
 	/**
@@ -40,6 +41,12 @@ public class Workspace extends Folder implements IWorkspace {
 		super(workspaceCollection);
 	}
 
+	/**
+	 * Creates the project.
+	 *
+	 * @param name the name
+	 * @return the i project
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#createProject(java.lang.String)
@@ -50,6 +57,12 @@ public class Workspace extends Folder implements IWorkspace {
 		return new Project(collection);
 	}
 
+	/**
+	 * Gets the project.
+	 *
+	 * @param name the name
+	 * @return the project
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#getProject(java.lang.String)
@@ -60,6 +73,11 @@ public class Workspace extends Folder implements IWorkspace {
 		return new Project(collection);
 	}
 
+	/**
+	 * Gets the projects.
+	 *
+	 * @return the projects
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#getProjects()
@@ -74,6 +92,11 @@ public class Workspace extends Folder implements IWorkspace {
 		return projects;
 	}
 
+	/**
+	 * Delete project.
+	 *
+	 * @param name the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#deleteProject(java.lang.String)
@@ -93,6 +116,12 @@ public class Workspace extends Folder implements IWorkspace {
 		this.removeCollection(name);
 	}
 
+	/**
+	 * Copy project.
+	 *
+	 * @param sourceProject the source project
+	 * @param targetProject the target project
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#copyProject(java.lang.String, java.lang.String)
@@ -103,6 +132,14 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.copyTo(this.getCollection(targetProject).getPath());
 	}
 
+	/**
+	 * Copy folder.
+	 *
+	 * @param sourceProject the source project
+	 * @param sourceFolderPath the source folder path
+	 * @param targetProject the target project
+	 * @param targetFolderPath the target folder path
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#copyFolder(java.lang.String, java.lang.String,
@@ -114,6 +151,14 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.getCollection(sourceFolderPath).copyTo(this.getCollection(targetProject).getCollection(targetFolderPath).getPath());
 	}
 
+	/**
+	 * Copy file.
+	 *
+	 * @param sourceProject the source project
+	 * @param sourceFilePath the source file path
+	 * @param targetProject the target project
+	 * @param targetFilePath the target file path
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#copyFile(java.lang.String, java.lang.String,
@@ -125,6 +170,12 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.getResource(sourceFilePath).copyTo(this.getCollection(targetProject).getResource(targetFilePath).getPath());
 	}
 
+	/**
+	 * Move project.
+	 *
+	 * @param sourceProject the source project
+	 * @param targetProject the target project
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#moveProject(java.lang.String, java.lang.String)
@@ -135,6 +186,14 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.moveTo(this.getCollection(targetProject).getPath());
 	}
 
+	/**
+	 * Move folder.
+	 *
+	 * @param sourceProject the source project
+	 * @param sourceFolderPath the source folder path
+	 * @param targetProject the target project
+	 * @param targetFolderPath the target folder path
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#moveFolder(java.lang.String, java.lang.String,
@@ -146,6 +205,14 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.getCollection(sourceFolderPath).moveTo(this.getCollection(targetProject).getCollection(targetFolderPath).getPath());
 	}
 
+	/**
+	 * Move file.
+	 *
+	 * @param sourceProject the source project
+	 * @param sourceFilePath the source file path
+	 * @param targetProject the target project
+	 * @param targetFilePath the target file path
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#moveFile(java.lang.String, java.lang.String,
@@ -157,6 +224,13 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.getResource(sourceFilePath).moveTo(this.getCollection(targetProject).getResource(targetFilePath).getPath());
 	}
 
+	/**
+	 * Link project.
+	 *
+	 * @param sourceProject the source project
+	 * @param targetPath the target path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#linkProject(java.lang.String, java.lang.String,

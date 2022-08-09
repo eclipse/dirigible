@@ -42,8 +42,19 @@ import com.google.gson.Gson;
 @Produces(MediaType.APPLICATION_JSON)
 public class GsonMessageBodyHandler<T> implements MessageBodyWriter<T>, MessageBodyReader<T> {
 
+	/** The Constant GSON. */
 	private static final Gson GSON = new Gson();
 
+	/**
+	 * Gets the size.
+	 *
+	 * @param t the t
+	 * @param type the type
+	 * @param genericType the generic type
+	 * @param annotations the annotations
+	 * @param mediaType the media type
+	 * @return the size
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.ws.rs.ext.MessageBodyWriter#getSize(java.lang.Object, java.lang.Class, java.lang.reflect.Type,
@@ -54,6 +65,15 @@ public class GsonMessageBodyHandler<T> implements MessageBodyWriter<T>, MessageB
 		return -1;
 	}
 
+	/**
+	 * Checks if is writeable.
+	 *
+	 * @param type the type
+	 * @param genericType the generic type
+	 * @param annotations the annotations
+	 * @param mediaType the media type
+	 * @return true, if is writeable
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.ws.rs.ext.MessageBodyWriter#isWriteable(java.lang.Class, java.lang.reflect.Type,
@@ -64,6 +84,15 @@ public class GsonMessageBodyHandler<T> implements MessageBodyWriter<T>, MessageB
 		return true;
 	}
 
+	/**
+	 * Checks if is readable.
+	 *
+	 * @param type the type
+	 * @param genericType the generic type
+	 * @param annotations the annotations
+	 * @param mediaType the media type
+	 * @return true, if is readable
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.ws.rs.ext.MessageBodyReader#isReadable(java.lang.Class, java.lang.reflect.Type,
@@ -74,6 +103,19 @@ public class GsonMessageBodyHandler<T> implements MessageBodyWriter<T>, MessageB
 		return true;
 	}
 
+	/**
+	 * Read from.
+	 *
+	 * @param type the type
+	 * @param genericType the generic type
+	 * @param annotations the annotations
+	 * @param mediaType the media type
+	 * @param httpHeaders the http headers
+	 * @param entityStream the entity stream
+	 * @return the t
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws WebApplicationException the web application exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.ws.rs.ext.MessageBodyReader#readFrom(java.lang.Class, java.lang.reflect.Type,
@@ -95,6 +137,19 @@ public class GsonMessageBodyHandler<T> implements MessageBodyWriter<T>, MessageB
 		return type.cast(GSON.fromJson(entityReader, targetType));
 	}
 
+	/**
+	 * Write to.
+	 *
+	 * @param t the t
+	 * @param type the type
+	 * @param genericType the generic type
+	 * @param annotations the annotations
+	 * @param mediaType the media type
+	 * @param httpHeaders the http headers
+	 * @param entityStream the entity stream
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws WebApplicationException the web application exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.ws.rs.ext.MessageBodyWriter#writeTo(java.lang.Object, java.lang.Class, java.lang.reflect.Type,

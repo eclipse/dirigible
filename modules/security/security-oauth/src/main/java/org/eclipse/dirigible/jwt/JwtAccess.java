@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.jwt;
 
+/**
+ * The Class JwtAccess.
+ */
 public class JwtAccess {
 
 	// Marker class

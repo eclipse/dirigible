@@ -29,16 +29,22 @@ import java.util.List;
 import static org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor.DEFAULT_DATA_SOURCE_CONTEXT_KEY;
 
 /**
- * OData2TestServiceFactory
- *
+ * OData2TestServiceFactory.
  */
 public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.ODataServiceFactory {
 
+    /** The ds. */
     private final DataSource ds;
+    
+    /** The edm annotated classes. */
     private final Class<?>[] edmAnnotatedClasses;
+    
+    /** The interceptor list. */
     private final List<SQLInterceptor> interceptorList = new ArrayList<>();
 
     /**
+     * Instantiates a new o data 2 test service factory.
+     *
      * @param ds the data source
      * @param edmAnnotatedClasses the classes
      * @throws ODataException in case of error
@@ -48,6 +54,8 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
     }
 
     /**
+     * Instantiates a new o data 2 test service factory.
+     *
      * @param ds the data source
      * @param interceptorList the interceptor list
      * @param edmAnnotatedClasses the classes
@@ -60,6 +68,8 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
     }
 
     /**
+     * Creates a new OData2TestService object.
+     *
      * @return AnnotationEdmProvider
      * @throws ODataException in case of error
      */
@@ -69,6 +79,8 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
     }
 
     /**
+     * Adds the interceptors.
+     *
      * @param interceptorList the interceptor list
      */
     public void addInterceptors(List<SQLInterceptor> interceptorList){
@@ -76,6 +88,13 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
     }
 
 
+    /**
+     * Creates a new OData2TestService object.
+     *
+     * @param ctx the ctx
+     * @return the o data service
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataService createService(ODataContext ctx) throws ODataException {
         setDefaultDataSource(ctx);
@@ -91,6 +110,8 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
     }
 
     /**
+     * Sets the default data source.
+     *
      * @param ctx the context
      * @throws ODataException in case of error
      */

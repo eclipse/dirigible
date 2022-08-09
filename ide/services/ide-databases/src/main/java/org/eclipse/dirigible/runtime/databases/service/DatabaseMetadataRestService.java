@@ -49,10 +49,13 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class DatabaseMetadataRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseMetadataRestService.class);
 
+	/** The processor. */
 	private DatabaseProcessor processor = new DatabaseProcessor();
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 	
@@ -134,6 +137,11 @@ public class DatabaseMetadataRestService extends AbstractRestService implements 
 		return Response.ok().header("Content-Disposition",  "attachment; filename=\"" + schema + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".schema\"").entity(result).build();
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -143,6 +151,11 @@ public class DatabaseMetadataRestService extends AbstractRestService implements 
 		return DatabaseMetadataRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

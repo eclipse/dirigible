@@ -25,6 +25,7 @@ import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
  */
 public class ExtensionsProcessor {
 
+	/** The extensions core service. */
 	private ExtensionsCoreService extensionsCoreService = new ExtensionsCoreService();
 
 	/**

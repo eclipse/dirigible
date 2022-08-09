@@ -50,26 +50,37 @@ import org.slf4j.LoggerFactory;
  */
 public class CmisDatabaseRepositoryDao {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CmisDatabaseRepositoryDao.class);
 
+	/** The Constant LAST. */
 	private static final String LAST = "last";
 
+	/** The Constant MODIFIED_AT. */
 	private static final String MODIFIED_AT = "modifiedAt";
 
+	/** The Constant MODIFIED_BY. */
 	private static final String MODIFIED_BY = "modifiedBy";
 
+	/** The Constant CREATED_AT. */
 	private static final String CREATED_AT = "createdAt";
 
+	/** The Constant CREATED_BY. */
 	private static final String CREATED_BY = "createdBy";
 
+	/** The Constant OBJECT_TYPE_FOLDER. */
 	static final int OBJECT_TYPE_FOLDER = 0;
 
+	/** The Constant OBJECT_TYPE_DOCUMENT. */
 	static final int OBJECT_TYPE_DOCUMENT = 1;
 
+	/** The Constant OBJECT_TYPE_BINARY. */
 	static final int OBJECT_TYPE_BINARY = 2;
 
+	/** The repository. */
 	private CmsDatabaseRepository repository = (CmsDatabaseRepository) StaticObjects.get(StaticObjects.CMS_DATABASE_REPOSITORY);
 
+	/** The datasource. */
 	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	/**
@@ -153,6 +164,12 @@ public class CmisDatabaseRepositoryDao {
 		}
 	}
 
+	/**
+	 * Ensure folders created.
+	 *
+	 * @param path the path
+	 * @throws SQLException the SQL exception
+	 */
 	private void ensureFoldersCreated(String path) throws SQLException {
 		RepositoryPath fullPath = new RepositoryPath(path).getParentPath();
 		StringBuilder buff = new StringBuilder();
@@ -162,12 +179,24 @@ public class CmisDatabaseRepositoryDao {
 		}
 	}
 
+	/**
+	 * Close connection.
+	 *
+	 * @param connection the connection
+	 * @throws SQLException the SQL exception
+	 */
 	private void closeConnection(Connection connection) throws SQLException {
 		if (connection != null) {
 			connection.close();
 		}
 	}
 
+	/**
+	 * Open connection.
+	 *
+	 * @return the connection
+	 * @throws SQLException the SQL exception
+	 */
 	private Connection openConnection() throws SQLException {
 		return datasource.getConnection();
 	}
@@ -175,14 +204,9 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Creates the version.
 	 *
-	 * @param path
-	 *            the workspace path
-	 * @param content
-	 *            the content
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws SQLException
-	 *             on sql error
+	 * @param path            the workspace path
+	 * @param content            the content
+	 * @throws SQLException             on sql error
 	 */
 	private void createVersion(String path, byte[] content) throws SQLException {
 		Connection connection = null;
@@ -198,12 +222,8 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Removes the versions.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws SQLException
-	 *             sql error
+	 * @param path the path
+	 * @throws SQLException             sql error
 	 */
 	private void removeVersions(String path) throws SQLException {
 		Connection connection = null;
@@ -226,11 +246,9 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Sets the file content.
 	 *
-	 * @param databaseFile
-	 *            the database file
-	 * @param content
-	 *            the content
-	 * @throws SQLException
+	 * @param databaseFile            the database file
+	 * @param content            the content
+	 * @throws SQLException the SQL exception
 	 */
 	public void setFileContent(CmsDatabaseFile databaseFile, byte[] content) throws SQLException {
 		try {
@@ -273,11 +291,9 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Rename file.
 	 *
-	 * @param path
-	 *            the path
-	 * @param newPath
-	 *            the new path
-	 * @throws SQLException
+	 * @param path            the path
+	 * @param newPath            the new path
+	 * @throws SQLException the SQL exception
 	 */
 	public void renameFile(String path, String newPath) throws SQLException {
 		try {
@@ -303,11 +319,9 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Copy file.
 	 *
-	 * @param path
-	 *            the path
-	 * @param newPath
-	 *            the new path
-	 * @throws SQLException
+	 * @param path            the path
+	 * @param newPath            the new path
+	 * @throws SQLException the SQL exception
 	 */
 	public void copyFile(String path, String newPath) throws SQLException {
 		try {
@@ -331,9 +345,8 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Removes the file by path.
 	 *
-	 * @param path
-	 *            the path
-	 * @throws SQLException
+	 * @param path            the path
+	 * @throws SQLException the SQL exception
 	 */
 	public void removeFileByPath(String path) throws SQLException {
 		try {
@@ -353,9 +366,8 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Removes the folder by path.
 	 *
-	 * @param path
-	 *            the path
-	 * @throws SQLException
+	 * @param path            the path
+	 * @throws SQLException the SQL exception
 	 */
 	public void removeFolderByPath(String path) throws SQLException {
 		try {
@@ -375,9 +387,8 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Creates the folder.
 	 *
-	 * @param path
-	 *            the normalize path
-	 * @throws SQLException
+	 * @param path            the normalize path
+	 * @throws SQLException the SQL exception
 	 */
 	public void createFolder(String path) throws SQLException {
 		try {
@@ -396,11 +407,9 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Rename folder.
 	 *
-	 * @param path
-	 *            the path
-	 * @param newPath
-	 *            the new path
-	 * @throws SQLException
+	 * @param path            the path
+	 * @param newPath            the new path
+	 * @throws SQLException the SQL exception
 	 */
 	public void renameFolder(String path, String newPath) throws SQLException {
 		try {
@@ -446,10 +455,9 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Gets the object by path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path            the path
 	 * @return the object by path
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	public CmsDatabaseObject getObjectByPath(String path) throws SQLException {
 		CmsDatabaseObject databaseObject = null;
@@ -498,10 +506,9 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Gets the children by folder.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path            the path
 	 * @return the children by folder
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	public List<CmsDatabaseObject> getChildrenByFolder(String path) throws SQLException {
 		List<CmsDatabaseObject> databaseObjects = new ArrayList<CmsDatabaseObject>();
@@ -526,13 +533,9 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Gets the resource versions by path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path            the path
 	 * @return the resource versions by path
-	 * @throws RepositoryVersioningException
-	 *             the repository versioning exception
-	 * @throws RepositoryVersioningException
-	 *             in case of error
+	 * @throws RepositoryVersioningException             in case of error
 	 */
 	public List<IResourceVersion> getResourceVersionsByPath(String path) throws RepositoryVersioningException {
 		List<IResourceVersion> versions = new ArrayList<IResourceVersion>();
@@ -578,14 +581,11 @@ public class CmisDatabaseRepositoryDao {
 	/**
 	 * Gets the database file version by path.
 	 *
-	 * @param version
-	 *            the version
-	 * @param path
-	 *            the workspace path
+	 * @param version            the version
+	 * @param path            the workspace path
 	 * @return the database file version by path
-	 * @throws RepositoryVersioningException
-	 *             the repository versioning exception
-	 * @throws SQLException
+	 * @throws RepositoryVersioningException             the repository versioning exception
+	 * @throws SQLException the SQL exception
 	 */
 	private CmsDatabaseFileVersion getLocalFileVersionByPath(int version, String path) throws RepositoryVersioningException, SQLException {
 		Connection connection = null;
@@ -618,7 +618,7 @@ public class CmisDatabaseRepositoryDao {
 	}
 
 	/**
-	 * Discposing resources if needed
+	 * Discposing resources if needed.
 	 */
 	public void dispose() {
 		// TODO Auto-generated method stub
@@ -626,7 +626,7 @@ public class CmisDatabaseRepositoryDao {
 	}
 
 	/**
-	 * Clean-up versions older than the given period
+	 * Clean-up versions older than the given period.
 	 */
 	public void cleanupOldVersions() {
 		// TODO Auto-generated method stub
@@ -634,29 +634,23 @@ public class CmisDatabaseRepositoryDao {
 	}
 
 	/**
-	 * Search by name of the resource
+	 * Search by name of the resource.
 	 *
-	 * @param parameter
-	 *            the search term
-	 * @param caseInsensitive
-	 *            whether to be case sensitive
+	 * @param parameter            the search term
+	 * @param caseInsensitive            whether to be case sensitive
 	 * @return list of entities
-	 * @throws RepositorySearchException
-	 *             in case of an error
+	 * @throws RepositorySearchException             in case of an error
 	 */
 	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		return searchName(null, parameter, caseInsensitive);
 	}
 
 	/**
-	 * Search by name of the resource
+	 * Search by name of the resource.
 	 *
-	 * @param root
-	 *            the relative root
-	 * @param parameter
-	 *            the search term
-	 * @param caseInsensitive
-	 *            whether to be case sensitive
+	 * @param root            the relative root
+	 * @param parameter            the search term
+	 * @param caseInsensitive            whether to be case sensitive
 	 * @return list of entities
 	 */
 	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) {
@@ -691,12 +685,10 @@ public class CmisDatabaseRepositoryDao {
 	}
 
 	/**
-	 * Search by the full path of a resource
+	 * Search by the full path of a resource.
 	 *
-	 * @param parameter
-	 *            the search term
-	 * @param caseInsensitive
-	 *            whether to be case sensitive
+	 * @param parameter            the search term
+	 * @param caseInsensitive            whether to be case sensitive
 	 * @return list of entities
 	 */
 	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) {
@@ -725,13 +717,11 @@ public class CmisDatabaseRepositoryDao {
 	}
 
 	/**
-	 * Whether the folder exists
+	 * Whether the folder exists.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path            the path
 	 * @return true if exists and false otherwise
-	 * @throws SQLException
-	 *             in case of an error
+	 * @throws SQLException             in case of an error
 	 */
 	public boolean folderExists(String path) throws SQLException {
 		Connection connection = null;
@@ -744,13 +734,11 @@ public class CmisDatabaseRepositoryDao {
 	}
 
 	/**
-	 * Whether the file exists
-	 * 
-	 * @param path
-	 *            the path
+	 * Whether the file exists.
+	 *
+	 * @param path            the path
 	 * @return true if exists and false otherwise
-	 * @throws SQLException
-	 *             in case of an error
+	 * @throws SQLException             in case of an error
 	 */
 	public boolean fileExists(String path) throws SQLException {
 		Connection connection = null;
@@ -763,11 +751,10 @@ public class CmisDatabaseRepositoryDao {
 	}
 
 	/**
-	 * List all the resources paths
-	 * 
+	 * List all the resources paths.
+	 *
 	 * @return the list
-	 * @throws SQLException
-	 *             in case of an error
+	 * @throws SQLException             in case of an error
 	 */
 	public List<String> getAllResourcePaths() throws SQLException {
 		Connection connection = null;

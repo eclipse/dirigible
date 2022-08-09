@@ -24,8 +24,14 @@ import org.slf4j.LoggerFactory;
 @Provider
 public class GeneralExceptionHandler extends AbstractExceptionHandler<Exception> {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GeneralExceptionHandler.class);
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getType()
@@ -35,6 +41,11 @@ public class GeneralExceptionHandler extends AbstractExceptionHandler<Exception>
 		return GeneralExceptionHandler.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getLogger()
@@ -44,6 +55,12 @@ public class GeneralExceptionHandler extends AbstractExceptionHandler<Exception>
 		return logger;
 	}
 
+	/**
+	 * Gets the response status.
+	 *
+	 * @param exception the exception
+	 * @return the response status
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseStatus(java.lang.Throwable)
@@ -53,6 +70,12 @@ public class GeneralExceptionHandler extends AbstractExceptionHandler<Exception>
 		return Status.INTERNAL_SERVER_ERROR;
 	}
 
+	/**
+	 * Gets the response message.
+	 *
+	 * @param exception the exception
+	 * @return the response message
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseMessage(java.lang.Throwable)

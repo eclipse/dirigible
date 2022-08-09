@@ -38,24 +38,40 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractWebEngineRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant WEB_CACHE. */
 	private static final Cache WEB_CACHE = ResourcesCache.getWebCache();
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractWebEngineRestService.class);
 
+	/** The Constant INDEX_HTML. */
 	private static final String INDEX_HTML = "index.html";
 
+	/** The processor. */
 	private WebEngineProcessor processor = new WebEngineProcessor();
 
+	/** The request. */
 	@Context
 	private HttpServletRequest request;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * Gets the request.
+	 *
+	 * @return the request
+	 */
 	protected HttpServletRequest getRequest() {
 		return request;
 	}
 
+	/**
+	 * Gets the response.
+	 *
+	 * @return the response
+	 */
 	protected HttpServletResponse getResponse() {
 		return response;
 	}
@@ -115,6 +131,11 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 		}
 	}
 
+	/**
+	 * Send resource not modified.
+	 *
+	 * @return the response
+	 */
 	private Response sendResourceNotModified() {
 		return Response
 				.notModified()
@@ -122,6 +143,15 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 				.build();
 	}
 
+	/**
+	 * Send resource.
+	 *
+	 * @param path the path
+	 * @param isBinary the is binary
+	 * @param content the content
+	 * @param contentType the content type
+	 * @return the response
+	 */
 	private Response sendResource(String path, boolean isBinary, byte[] content, String contentType) {
 		String tag = cacheResource(path);
 		Object responseContent = isBinary ? content : new String(content, StandardCharsets.UTF_8);
@@ -133,12 +163,24 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 				.build();
 	}
 
+	/**
+	 * Cache resource.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	private String cacheResource(String path) {
 		String tag = WEB_CACHE.generateTag();
 		WEB_CACHE.setTag(path, tag);
 		return tag;
 	}
 
+	/**
+	 * Checks if is cached.
+	 *
+	 * @param path the path
+	 * @return true, if is cached
+	 */
 	private boolean isCached(String path) {
 		String tag = getTag();
 		String cachedTag = WEB_CACHE.getTag(path);
@@ -146,10 +188,20 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 		
 	}
 
+	/**
+	 * Gets the tag.
+	 *
+	 * @return the tag
+	 */
 	private String getTag() {
 		return getRequest().getHeader("If-None-Match");
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

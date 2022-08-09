@@ -23,8 +23,18 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * The Class TypeScriptCompilerFacade.
+ */
 class TypeScriptCompilerFacade {
 
+    /**
+     * Handle type script file.
+     *
+     * @param relativeProjectFilePath the relative project file path
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws InterruptedException the interrupted exception
+     */
     void handleTypeScriptFile(String relativeProjectFilePath) throws IOException, InterruptedException {
         String projectPath = "/Users/xxxxxx/target/dirigible/repository/root/registry/public/";
         String filePath = projectPath + relativeProjectFilePath;
@@ -35,11 +45,24 @@ class TypeScriptCompilerFacade {
         invalidateCache(fileDirectoryPath);
     }
 
+    /**
+     * Creates the index dts file.
+     *
+     * @param fileDirectoryPath the file directory path
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void createIndexDtsFile(String fileDirectoryPath) throws IOException {
         File indexDtsFile = new File(fileDirectoryPath + "/index.d.ts");
         FileUtils.writeStringToFile(indexDtsFile, "declare const require: any;", StandardCharsets.UTF_8);
     }
 
+    /**
+     * Compile type script file.
+     *
+     * @param filePath the file path
+     * @throws InterruptedException the interrupted exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void compileTypeScriptFile(String filePath) throws InterruptedException, IOException {
         Runtime runtime = Runtime.getRuntime();
         String[] command = new String[]{"tsc index.d.ts ", filePath};
@@ -47,6 +70,11 @@ class TypeScriptCompilerFacade {
         pr.waitFor();
     }
 
+    /**
+     * Invalidate cache.
+     *
+     * @param fileDirectoryPath the file directory path
+     */
     private void invalidateCache(String fileDirectoryPath) {
         Cache<String, byte[]> cache = CaffeineRepositoryCache.getInternalCache();
         List<String> keys = cache.asMap().keySet().stream()

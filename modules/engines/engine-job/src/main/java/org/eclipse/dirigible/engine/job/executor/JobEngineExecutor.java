@@ -13,12 +13,22 @@ package org.eclipse.dirigible.engine.job.executor;
 
 import org.eclipse.dirigible.engine.api.IEngineExecutor;
 
+/**
+ * The Class JobEngineExecutor.
+ */
 public class JobEngineExecutor implements IEngineExecutor {
 	
+	/** The Constant ENGINE_TYPE. */
 	public static final String ENGINE_TYPE = "job";
 	
+	/** The Constant ENGINE_NAME. */
 	public static final String ENGINE_NAME = "Scheduling Job Engine";
 	
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getType()
@@ -28,6 +38,11 @@ public class JobEngineExecutor implements IEngineExecutor {
 		return ENGINE_TYPE;
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()

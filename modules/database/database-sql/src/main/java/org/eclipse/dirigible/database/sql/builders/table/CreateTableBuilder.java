@@ -24,17 +24,24 @@ import java.util.stream.Collectors;
 
 /**
  * The Create Table Builder.
+ *
+ * @param <TABLE_BUILDER> the generic type
  */
 public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extends AbstractTableBuilder<TABLE_BUILDER> {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CreateTableBuilder.class);
 
+    /** The primary key. */
     private CreateTablePrimaryKeyBuilder primaryKey;
 
+    /** The foreign keys. */
     private final List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<>();
 
+    /** The unique indices. */
     private final List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
 
+    /** The checks. */
     private final List<CreateTableCheckBuilder> checks = new ArrayList<>();
 
     /**
@@ -114,6 +121,16 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
         return foreignKey(name, columns, referencedTable, null, referencedColumns);
     }
 
+    /**
+     * Foreign key.
+     *
+     * @param name the name
+     * @param columns the columns
+     * @param referencedTable the referenced table
+     * @param referencedTableSchema the referenced table schema
+     * @param referencedColumns the referenced columns
+     * @return the table builder
+     */
     public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String referencedTableSchema, String[] referencedColumns) {
         logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
                 + ", referencedTableSchema: " + referencedTableSchema + ", referencedColumns: " + Arrays.toString(referencedColumns));
@@ -137,6 +154,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      * @param name              the name
      * @param columns           the columns
      * @param referencedTable   the referenced table
+     * @param referencedTableSchema the referenced table schema
      * @param referencedColumns the referenced columns
      * @return the creates the table builder
      */
@@ -219,6 +237,11 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
         return (TABLE_BUILDER) this;
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

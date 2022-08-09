@@ -21,29 +21,38 @@ import javax.persistence.Table;
 @Table(name = "DIRIGIBLE_SYNCHRONIZER_STATE")
 public class SynchronizerStateDefinition {
 
+	/** The name. */
 	@Id
 	@Column(name = "SYNCHRONIZER_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String name;
 
+	/** The state. */
 	@Column(name = "SYNCHRONIZER_STATE", columnDefinition = "INTEGER", nullable = false)
 	private int state;
 
+	/** The message. */
 	@Column(name = "SYNCHRONIZER_MESSAGE", columnDefinition = "VARCHAR", nullable = false, length = 2000)
 	private String message = "";
 
+	/** The first time triggered. */
 	@Column(name = "SYNCHRONIZER_FIRST_TIME_TRIGGERED", columnDefinition = "BIGINT", nullable = false)
 	private long firstTimeTriggered;
 	
+	/** The first time finished. */
 	@Column(name = "SYNCHRONIZER_FIRST_TIME_FINISHED", columnDefinition = "BIGINT", nullable = false)
 	private long firstTimeFinished;
 	
+	/** The last time triggered. */
 	@Column(name = "SYNCHRONIZER_LAST_TIME_TRIGGERED", columnDefinition = "BIGINT", nullable = false)
 	private long lastTimeTriggered;
 	
+	/** The last time finished. */
 	@Column(name = "SYNCHRONIZER_LAST_TIME_FINISHED", columnDefinition = "BIGINT", nullable = false)
 	private long lastTimeFinished;
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -51,6 +60,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -58,6 +69,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Gets the state.
+	 *
 	 * @return the state
 	 */
 	public int getState() {
@@ -65,6 +78,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Sets the state.
+	 *
 	 * @param state the state to set
 	 */
 	public void setState(int state) {
@@ -72,6 +87,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Gets the message.
+	 *
 	 * @return the message
 	 */
 	public String getMessage() {
@@ -79,6 +96,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Sets the message.
+	 *
 	 * @param message the message to set
 	 */
 	public void setMessage(String message) {
@@ -86,6 +105,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Gets the first time triggered.
+	 *
 	 * @return the firstTimeTriggered
 	 */
 	public long getFirstTimeTriggered() {
@@ -93,6 +114,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Sets the first time triggered.
+	 *
 	 * @param firstTimeTriggered the firstTimeTriggered to set
 	 */
 	public void setFirstTimeTriggered(long firstTimeTriggered) {
@@ -100,6 +123,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Gets the first time finished.
+	 *
 	 * @return the firstTimeFinished
 	 */
 	public long getFirstTimeFinished() {
@@ -107,6 +132,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Sets the first time finished.
+	 *
 	 * @param firstTimeFinished the firstTimeFinished to set
 	 */
 	public void setFirstTimeFinished(long firstTimeFinished) {
@@ -114,6 +141,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Gets the last time triggered.
+	 *
 	 * @return the lastTimeTriggered
 	 */
 	public long getLastTimeTriggered() {
@@ -121,6 +150,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Sets the last time triggered.
+	 *
 	 * @param lastTimeTriggered the lastTimeTriggered to set
 	 */
 	public void setLastTimeTriggered(long lastTimeTriggered) {
@@ -128,6 +159,8 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Gets the last time finished.
+	 *
 	 * @return the lastTimeFinished
 	 */
 	public long getLastTimeFinished() {
@@ -135,12 +168,19 @@ public class SynchronizerStateDefinition {
 	}
 
 	/**
+	 * Sets the last time finished.
+	 *
 	 * @param lastTimeFinished the lastTimeFinished to set
 	 */
 	public void setLastTimeFinished(long lastTimeFinished) {
 		this.lastTimeFinished = lastTimeFinished;
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -149,6 +189,12 @@ public class SynchronizerStateDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -21,12 +21,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class ChangelogSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_CHANGELOG. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_CHANGELOG = "DIRIGIBLE_JOB_EXPRESSION_CHNAGELOG";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_CHANGELOG_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_CHANGELOG_SYNCHRONIZER_JOB = "dirigible-internal-changelog-synchronizer-job";
 	
+	/** The Constant CHANGELOG_SYNCHRONIZER_JOB. */
 	static final String CHANGELOG_SYNCHRONIZER_JOB = "Changelog Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

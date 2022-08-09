@@ -41,19 +41,28 @@ import org.slf4j.LoggerFactory;
  */
 public class WebsocketsSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WebsocketsSynchronizer.class);
 
+	/** The Constant WEBSOCKETS_PREDELIVERED. */
 	private static final Map<String, WebsocketDefinition> WEBSOCKETS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, WebsocketDefinition>());
 
+	/** The Constant WEBSOCKETS_SYNCHRONIZED. */
 	private static final List<String> WEBSOCKETS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The websockets core service. */
 	private WebsocketsCoreService websocketsCoreService = new WebsocketsCoreService();
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant WEBSOCKET_ARTEFACT. */
 	private static final WebsocketSynchronizationArtefactType WEBSOCKET_ARTEFACT = new WebsocketSynchronizationArtefactType();
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -125,10 +134,18 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		WEBSOCKETS_SYNCHRONIZED.clear();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Websockets...");
 		// Websockets
@@ -138,6 +155,12 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing predelivered Websockets.");
 	}
 
+	/**
+	 * Synchronize websocket.
+	 *
+	 * @param websocketDefinition the websocket definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeWebsocket(WebsocketDefinition websocketDefinition) throws SynchronizationException {
 		try {
 			if (!websocketsCoreService.existsWebsocket(websocketDefinition.getLocation())) {
@@ -163,6 +186,11 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -176,6 +204,12 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing Websockets from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -192,6 +226,11 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()

@@ -17,10 +17,21 @@ import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
 
 import java.sql.SQLException;
 
+/**
+ * The Class DefaultTableMetadataProvider.
+ */
 public class DefaultTableMetadataProvider implements ITableMetadataProvider {
 
+    /** The db metadata util. */
     private DBMetadataUtil dbMetadataUtil = new DBMetadataUtil();
 
+    /**
+     * Gets the persistence table model.
+     *
+     * @param oDataEntityDefinition the o data entity definition
+     * @return the persistence table model
+     * @throws SQLException the SQL exception
+     */
     public PersistenceTableModel getPersistenceTableModel(ODataEntityDefinition oDataEntityDefinition) throws SQLException {
         return dbMetadataUtil.getTableMetadata(oDataEntityDefinition.getTable(), dbMetadataUtil.getOdataArtifactTypeSchema(oDataEntityDefinition.getTable()));
     }

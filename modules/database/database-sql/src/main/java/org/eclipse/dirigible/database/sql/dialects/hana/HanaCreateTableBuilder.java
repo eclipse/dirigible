@@ -32,10 +32,19 @@ import java.util.Set;
  */
 public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBuilder> {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HanaCreateTableBuilder.class);
+	
+	/** The Constant DELIMITER. */
 	private static final String DELIMITER = "; ";
+	
+	/** The is column table. */
 	private final boolean isColumnTable;
+	
+	/** The indices. */
 	private final List<CreateTableIndexBuilder> indices = new ArrayList<>();
+	
+	/** The unique indices. */
 	private final List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
 
 	/**
@@ -53,6 +62,11 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 		this.isColumnTable = isColumnTable;
 	}
 
+	/**
+	 * Generate table.
+	 *
+	 * @param sql the sql
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder#generateTable(java.lang.StringBuilder)
@@ -64,6 +78,11 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 				.append(tableName);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String generate() {
 		Table table = buildTable();
@@ -118,7 +137,8 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 	}
 
 	/**
-	 * Generate create statements for indices
+	 * Generate create statements for indices.
+	 *
 	 * @return Collection of create index statements
 	 */
 	protected Collection<String> generateUniqueIndices() {
@@ -161,7 +181,8 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 	}
 
 	/**
-	 * Generate create statements for indices
+	 * Generate create statements for indices.
+	 *
 	 * @return Collection of create index statements
 	 */
 	protected Collection<String> generateIndices() {
@@ -174,7 +195,8 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 	}
 
 	/**
-	 * Generate index create statement
+	 * Generate index create statement.
+	 *
 	 * @param index IndexBuilder
 	 * @return Generated statement
 	 */

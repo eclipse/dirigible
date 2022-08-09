@@ -15,14 +15,29 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * The Class DateValidator.
+ */
 public class DateValidator {
 
+    /** The date formatter. */
     private DateTimeFormatter dateFormatter;
 
+    /**
+     * Instantiates a new date validator.
+     *
+     * @param dateFormatter the date formatter
+     */
     public DateValidator(DateTimeFormatter dateFormatter) {
         this.dateFormatter = dateFormatter;
     }
 
+    /**
+     * Checks if is valid.
+     *
+     * @param dateStr the date str
+     * @return true, if is valid
+     */
     public boolean isValid(String dateStr) {
         try {
             LocalDate.parse(dateStr, this.dateFormatter);

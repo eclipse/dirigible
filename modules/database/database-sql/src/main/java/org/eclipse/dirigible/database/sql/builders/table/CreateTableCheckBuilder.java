@@ -20,8 +20,10 @@ import org.slf4j.LoggerFactory;
  */
 public class CreateTableCheckBuilder extends AbstractCreateTableConstraintBuilder<CreateTableCheckBuilder> {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CreateTableCheckBuilder.class);
 
+	/** The expression. */
 	private String expression;
 
 	/**

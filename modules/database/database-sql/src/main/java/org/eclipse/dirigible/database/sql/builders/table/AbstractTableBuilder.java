@@ -26,14 +26,21 @@ import java.util.stream.Stream;
 
 /**
  * The Create Table Builder.
+ *
+ * @param <TABLE_BUILDER> the generic type
  */
 public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBuilder> extends AbstractCreateSqlBuilder {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(AbstractTableBuilder.class);
+    
+    /** The Constant OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR. */
     private static final String OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR = "Operation not supported for this Database type!";
 
+    /** The table. */
     private final String table;
 
+    /** The columns. */
     private final List<String[]> columns = new ArrayList<>();
 
     /**
@@ -47,26 +54,72 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         this.table = table;
     }
 
+    /**
+     * Unique.
+     *
+     * @param name the name
+     * @param columns the columns
+     * @return the table builder
+     */
     public TABLE_BUILDER unique(String name, String[] columns) {
         throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
 
+    /**
+     * Unique.
+     *
+     * @param name the name
+     * @param columns the columns
+     * @param type the type
+     * @param order the order
+     * @return the table builder
+     */
     public TABLE_BUILDER unique(String name, String[] columns, String type, String order) {
         throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
 
+    /**
+     * Primary key.
+     *
+     * @param name the name
+     * @param columns the columns
+     * @return the table builder
+     */
     public TABLE_BUILDER primaryKey(String name, String[] columns) {
         throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
 
+    /**
+     * Primary key.
+     *
+     * @param columns the columns
+     * @return the table builder
+     */
     public TABLE_BUILDER primaryKey(String[] columns) {
         throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
 
+    /**
+     * Foreign key.
+     *
+     * @param name the name
+     * @param columns the columns
+     * @param referencedTable the referenced table
+     * @param referencedTableSchema the referenced table schema
+     * @param referencedColumns the referenced columns
+     * @return the table builder
+     */
     public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String referencedTableSchema, String[] referencedColumns) {
         throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
 
+    /**
+     * Check.
+     *
+     * @param name the name
+     * @param expression the expression
+     * @return the table builder
+     */
     public TABLE_BUILDER check(String name, String expression) {
         throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
@@ -98,6 +151,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param isNullable   the is nullable
      * @param isUnique     the is unique
      * @param isIdentity   the is identity
+     * @param isFuzzyIndexEnabled the is fuzzy index enabled
      * @param args         the args
      * @return the creates the table builder
      */
@@ -1817,6 +1871,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         }
     }
 
+    /**
+     * Generate columns for alter.
+     *
+     * @param sql the sql
+     */
     protected void generateColumnsForAlter(StringBuilder sql) {
         if (!this.getColumns().isEmpty()) {
             sql.append(traverseColumnsForAlter());
@@ -1836,6 +1895,11 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         return getTraversedColumnsSnippet(isCompositeKey,this.columns);
     }
 
+    /**
+     * Traverse columns for alter.
+     *
+     * @return the string
+     */
     protected String traverseColumnsForAlter(){
         List<String[]> allPrimaryKeys = this.columns.stream()
                                                     .filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
@@ -1866,6 +1930,13 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         return snippet.substring(0, snippet.length() - 2);
     }
 
+    /**
+     * Gets the traversed columns snippet.
+     *
+     * @param isCompositeKey the is composite key
+     * @param columns the columns
+     * @return the traversed columns snippet
+     */
     private String getTraversedColumnsSnippet(boolean isCompositeKey, List<String[]> columns) {
         StringBuilder snippet = new StringBuilder();
         snippet.append(SPACE);

@@ -23,8 +23,12 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
  */
 public class JavascriptModule extends AbstractDirigibleModule {
 
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Javascript Module";
 
+	/**
+	 * Configure.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
@@ -45,6 +49,11 @@ public class JavascriptModule extends AbstractDirigibleModule {
 
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
@@ -54,6 +63,11 @@ public class JavascriptModule extends AbstractDirigibleModule {
 		return MODULE_NAME;
 	}
 
+	/**
+	 * Gets the priority.
+	 *
+	 * @return the priority
+	 */
 	@Override
 	public int getPriority() {
 		return PRIORITY_ENGINE;

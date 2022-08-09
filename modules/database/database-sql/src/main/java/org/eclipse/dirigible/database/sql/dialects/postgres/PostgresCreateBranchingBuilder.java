@@ -29,6 +29,12 @@ public class PostgresCreateBranchingBuilder extends CreateBranchingBuilder {
 		super(dialect);
 	}
 
+	/**
+	 * View.
+	 *
+	 * @param view the view
+	 * @return the postgres create view builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)

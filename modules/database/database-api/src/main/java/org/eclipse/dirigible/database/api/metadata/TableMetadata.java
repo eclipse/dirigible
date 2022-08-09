@@ -25,16 +25,22 @@ import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.IndicesIte
  */
 public class TableMetadata {
 
+	/** The name. */
 	private String name;
 
+	/** The type. */
 	private String type;
 
+	/** The remarks. */
 	private String remarks;
 
+	/** The columns. */
 	private List<ColumnMetadata> columns;
 
+	/** The indices. */
 	private List<IndexMetadata> indices;
 
+	/** The kind. */
 	private String kind = "table";
 
 	/**

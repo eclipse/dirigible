@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractDatabaseLayoutInitializer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDatabaseLayoutInitializer.class);
 
 //	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);

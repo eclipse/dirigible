@@ -11,12 +11,23 @@
  */
 package org.eclipse.dirigible.core.problems.exceptions;
 
+/**
+ * The Class ProblemsException.
+ */
 public class ProblemsException extends Exception {
 
+    /**
+     * Instantiates a new problems exception.
+     */
     public ProblemsException() {
         super();
     }
 
+    /**
+     * Instantiates a new problems exception.
+     *
+     * @param cause the cause
+     */
     public ProblemsException(Throwable cause) {
         super(cause);
     }

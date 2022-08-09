@@ -24,10 +24,13 @@ import org.slf4j.LoggerFactory;
  */
 public class DeleteBuilder extends AbstractQuerySqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DeleteBuilder.class);
 
+	/** The table. */
 	private String table;
 
+	/** The wheres. */
 	private List<String> wheres = new ArrayList<String>();
 
 	/**
@@ -66,6 +69,11 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 		return this;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

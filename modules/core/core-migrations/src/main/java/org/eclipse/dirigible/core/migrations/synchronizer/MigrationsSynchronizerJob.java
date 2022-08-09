@@ -22,6 +22,11 @@ public class MigrationsSynchronizerJob extends AbstractSynchronizerJob {
 	/** The migrations synchronizer. */
 	private MigrationsSynchronizer migrationsSynchronizer = new MigrationsSynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -31,6 +36,11 @@ public class MigrationsSynchronizerJob extends AbstractSynchronizerJob {
 		return migrationsSynchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()

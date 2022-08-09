@@ -13,13 +13,27 @@ package org.eclipse.dirigible.engine.odata2.artefacts;
 
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizationArtefactType;
 
+/**
+ * The Class ODataSynchronizationArtefactType.
+ */
 public class ODataSynchronizationArtefactType extends AbstractSynchronizationArtefactType {
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	@Override
 	public String getId() {
 		return "OData";
 	}
 
+	/**
+	 * Gets the artefact state message.
+	 *
+	 * @param state the state
+	 * @return the artefact state message
+	 */
 	@Override
 	protected String getArtefactStateMessage(ArtefactState state) {
 		switch (state) {

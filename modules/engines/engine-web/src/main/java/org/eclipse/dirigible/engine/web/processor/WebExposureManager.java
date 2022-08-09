@@ -20,11 +20,11 @@ import java.util.Set;
 import org.eclipse.dirigible.repository.api.IRepository;
 
 /**
- * Web Exposer manager class 
- *
+ * Web Exposer manager class .
  */
 public class WebExposureManager {
 	
+	/** The Constant EXPOSABLE_PROJECTS. */
 	private static final Map<String, String[]> EXPOSABLE_PROJECTS = Collections.synchronizedMap(new HashMap<String, String[]>());
 	
 	/**
@@ -38,8 +38,8 @@ public class WebExposureManager {
 	}
 	
 	/**
-	 * Register the project as known for exposures
-	 * 
+	 * Register the project as known for exposures.
+	 *
 	 * @param name the project name
 	 * @param paths the paths within the project to be exposed
 	 */
@@ -48,8 +48,8 @@ public class WebExposureManager {
 	}
 	
 	/**
-	 * Whether a path can be accessed
-	 * 
+	 * Whether a path can be accessed.
+	 *
 	 * @param path the URI
 	 * @return true if it can
 	 */
@@ -97,8 +97,8 @@ public class WebExposureManager {
 	}
 
 	/**
-	 * Getter for all the registered exposable projects
-	 * 
+	 * Getter for all the registered exposable projects.
+	 *
 	 * @return all the registered projects
 	 */
 	public static Set<String> listRegisteredProjects() {
@@ -106,9 +106,9 @@ public class WebExposureManager {
 	}
 
 	/**
-	 * Unregister a project
-	 * 
-	 * @param registeredProject
+	 * Unregister a project.
+	 *
+	 * @param registeredProject the registered project
 	 */
 	public static void unregisterProject(String registeredProject) {
 		EXPOSABLE_PROJECTS.remove(registeredProject);

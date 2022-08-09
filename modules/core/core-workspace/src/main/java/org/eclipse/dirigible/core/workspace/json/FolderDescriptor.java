@@ -19,16 +19,22 @@ import java.util.List;
  */
 public class FolderDescriptor {
 
+	/** The name. */
 	private String name;
 
+	/** The path. */
 	private String path;
 
+	/** The type. */
 	private String type = "folder";
 	
+	/** The status. */
 	private String status;
 
+	/** The folders. */
 	private List<FolderDescriptor> folders = new ArrayList<FolderDescriptor>();
 
+	/** The files. */
 	private List<FileDescriptor> files = new ArrayList<FileDescriptor>();
 
 	/**
@@ -98,8 +104,8 @@ public class FolderDescriptor {
 	}
 	
 	/**
-	 * Get the type
-	 * 
+	 * Get the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {

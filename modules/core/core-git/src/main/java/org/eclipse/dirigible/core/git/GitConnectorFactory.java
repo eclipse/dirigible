@@ -98,10 +98,24 @@ public class GitConnectorFactory {
 		}
 	}
 
+	/**
+	 * Branch or null.
+	 *
+	 * @param branch the branch
+	 * @return the string
+	 */
 	private static String branchOrNull(String branch) {
 		return (branch != null && !branch.isEmpty()) ? branch : null;
 	}
 
+	/**
+	 * Inits the repository.
+	 *
+	 * @param repositoryDirectory the repository directory
+	 * @param isBare the is bare
+	 * @throws TransportException the transport exception
+	 * @throws GitAPIException the git API exception
+	 */
 	public static void initRepository(String repositoryDirectory, Boolean isBare) throws TransportException, GitAPIException {
 		try {
 			InitCommand initCommand = Git.init();

@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LastValueIdentityBuilder extends AbstractQuerySqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(LastValueIdentityBuilder.class);
 
 	/**
@@ -33,6 +34,11 @@ public class LastValueIdentityBuilder extends AbstractQuerySqlBuilder {
 		super(dialect);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

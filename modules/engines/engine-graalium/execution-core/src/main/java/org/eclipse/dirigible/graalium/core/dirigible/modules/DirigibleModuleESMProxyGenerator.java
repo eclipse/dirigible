@@ -6,20 +6,43 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The Class DirigibleModuleESMProxyGenerator.
+ */
 public class DirigibleModuleESMProxyGenerator {
 
+    /** The Constant API_MODULES_JSON_PATH. */
     private static final String API_MODULES_JSON_PATH = "/extensions/modules.json";
 
+    /** The Constant NAME_PLACEHOLDER. */
     private static final String NAME_PLACEHOLDER = "<name_placeholder>";
+    
+    /** The Constant PATH_PLACEHOLDER. */
     private static final String PATH_PLACEHOLDER = "<path_placeholder>";
+    
+    /** The Constant NAMES_LIST_PLACEHOLDER. */
     private static final String NAMES_LIST_PLACEHOLDER = "<names_list_placeholder>";
 
+    /** The Constant DEFAULT_EXPORT_PATTERN. */
     private static final String DEFAULT_EXPORT_PATTERN = "export default { " + NAMES_LIST_PLACEHOLDER + " }";
+    
+    /** The Constant EXPORT_PATTERN. */
     private static final String EXPORT_PATTERN =
             "export const " + NAME_PLACEHOLDER + " = dirigibleRequire('" + PATH_PLACEHOLDER + "');";
+    
+    /** The gson. */
     private final Gson gson = new Gson();
+    
+    /** The dirigible source provider. */
     private final DirigibleSourceProvider dirigibleSourceProvider = new DirigibleSourceProvider();
 
+    /**
+     * Generate.
+     *
+     * @param path the path
+     * @param apiVersion the api version
+     * @return the string
+     */
     public String generate(String path, String apiVersion) {
         DirigibleModule[] modules = readApiModuleJson(path + API_MODULES_JSON_PATH);
         StringBuilder source = new StringBuilder();
@@ -50,11 +73,24 @@ public class DirigibleModuleESMProxyGenerator {
         return source.toString();
     }
 
+    /**
+     * Read api module json.
+     *
+     * @param path the path
+     * @return the dirigible module[]
+     */
     private DirigibleModule[] readApiModuleJson(String path) {
         String apiModuleJson = dirigibleSourceProvider.getSource(path);
         return gson.fromJson(apiModuleJson, DirigibleModule[].class);
     }
 
+    /**
+     * Resolve path.
+     *
+     * @param module the module
+     * @param apiVersion the api version
+     * @return the string
+     */
     private String resolvePath(DirigibleModule module, String apiVersion) {
         if (apiVersion.isEmpty()) {
             return module.getPathDefault();

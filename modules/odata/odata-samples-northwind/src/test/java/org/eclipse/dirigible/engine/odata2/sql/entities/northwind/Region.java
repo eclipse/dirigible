@@ -21,17 +21,23 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 
+/**
+ * The Class Region.
+ */
 @EdmEntityType(name = "Region")
 @EdmEntitySet(name = "Regions", container = "NorthwindEntities")
 public class Region {
 
+	/** The region id. */
 	@EdmKey
     @EdmProperty(name = "RegionID", facets = @EdmFacets(nullable = false))
     private Integer regionId;
 
+    /** The region description. */
     @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 50))
     private String regionDescription;
 
+    /** The territories. */
     @EdmNavigationProperty( //
 			toMultiplicity = Multiplicity.MANY, //
 			toType = Territory.class, //

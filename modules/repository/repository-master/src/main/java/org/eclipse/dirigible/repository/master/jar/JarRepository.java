@@ -25,16 +25,15 @@ import org.eclipse.dirigible.repository.master.zip.ZipRepository;
  */
 public class JarRepository extends ZipRepository {
 
+	/** The jar repository root folder. */
 	private String jarRepositoryRootFolder;
 
 	/**
 	 * Instantiates a new jar repository.
 	 *
-	 * @param zip
-	 *            the zip
-	 * @throws LocalRepositoryException
-	 *             the local repository exception
-	 * @throws IOException 
+	 * @param zip            the zip
+	 * @throws LocalRepositoryException             the local repository exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public JarRepository(String zip) throws LocalRepositoryException, IOException {
 
@@ -93,6 +92,11 @@ public class JarRepository extends ZipRepository {
 		super();
 	}
 
+	/**
+	 * Gets the repository root folder.
+	 *
+	 * @return the repository root folder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.master.zip.ZipRepository#getRepositoryRootFolder()

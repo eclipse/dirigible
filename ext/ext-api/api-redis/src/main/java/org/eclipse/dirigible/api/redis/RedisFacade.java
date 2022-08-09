@@ -16,10 +16,22 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
 import redis.clients.jedis.Jedis;
 
+/**
+ * The Class RedisFacade.
+ */
 public class RedisFacade implements IScriptingFacade {
+	
+	/** The Constant DIRIGIBLE_REDIS_CLIENT_URI. */
 	private static final String DIRIGIBLE_REDIS_CLIENT_URI = "DIRIGIBLE_REDIS_CLIENT_URI";
+	
+	/** The Constant CLIENT_URI. */
 	private static final String CLIENT_URI = "localhost:6379";
 	
+	/**
+	 * Gets the client.
+	 *
+	 * @return the client
+	 */
 	public static Jedis getClient() {
 		
 		String[] splitUri = Configuration.get(DIRIGIBLE_REDIS_CLIENT_URI, CLIENT_URI).split(":");

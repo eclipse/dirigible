@@ -62,14 +62,34 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 		}
 	}
 
+	/**
+	 * Creates the table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void createTableForPojo(Connection connection, PersistenceManager<Process> persistenceManager) {
 		persistenceManager.tableCreate(connection, Process.class);
 	}
 
+	/**
+	 * Exists table.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @return true, if successful
+	 */
 	private boolean existsTable(Connection connection, PersistenceManager<Process> persistenceManager) {
 		return persistenceManager.tableExists(connection, Process.class);
 	}
 
+	/**
+	 * Insert pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @throws SQLException the SQL exception
+	 */
 	private void insertPojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
 		Process process = new Process();
 		process.setName("Process1");
@@ -89,6 +109,12 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 		}
 	}
 
+	/**
+	 * Insert nullable pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertNullablePojo(Connection connection, PersistenceManager<Process> persistenceManager) {
 		Process process = new Process();
 		process.setName("Process2");
@@ -97,6 +123,12 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 		persistenceManager.insert(connection, process);
 	}
 
+	/**
+	 * Find all pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void findAllPojo(Connection connection, PersistenceManager<Process> persistenceManager) {
 		List<Process> list = persistenceManager.findAll(connection, Process.class);
 
@@ -117,6 +149,12 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 
 	}
 
+	/**
+	 * Drop table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void dropTableForPojo(Connection connection, PersistenceManager<Process> persistenceManager) {
 		persistenceManager.tableDrop(connection, Process.class);
 	}

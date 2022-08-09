@@ -30,20 +30,43 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class KafkaConsumerRunner.
+ */
 public class KafkaConsumerRunner implements Runnable {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(KafkaConsumerRunner.class);
 	
+	/** The Constant DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE. */
 	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage";
+	
+	/** The Constant DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR. */
 	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError";
 
+	/** The stopped. */
 	private final AtomicBoolean stopped = new AtomicBoolean(false);
+	
+	/** The consumer. */
 	private final Consumer consumer;
 
+	/** The name. */
 	private String name;
+	
+	/** The handler. */
 	private String handler;
+	
+	/** The timeout. */
 	private int timeout = 1000;
 
+	/**
+	 * Instantiates a new kafka consumer runner.
+	 *
+	 * @param consumer the consumer
+	 * @param name the name
+	 * @param handler the handler
+	 * @param timeout the timeout
+	 */
 	public KafkaConsumerRunner(Consumer consumer, String name, String handler, int timeout) {
 		this.consumer = consumer;
 		this.name = name;
@@ -52,7 +75,7 @@ public class KafkaConsumerRunner implements Runnable {
 	}
 
 	/**
-	 * Start the consumer
+	 * Start the consumer.
 	 */
 	@Override
 	public void run() {
@@ -94,7 +117,7 @@ public class KafkaConsumerRunner implements Runnable {
 	}
 
 	/**
-	 * Stop the consumer
+	 * Stop the consumer.
 	 */
 	public void stop() {
 		stopped.set(true);
@@ -102,8 +125,8 @@ public class KafkaConsumerRunner implements Runnable {
 	}
 	
 	/**
-	 * Create a context map and set the handler
-	 * 
+	 * Create a context map and set the handler.
+	 *
 	 * @return the context map
 	 */
 	private Map<Object, Object> createMessagingContext() {

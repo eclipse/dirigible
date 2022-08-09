@@ -22,40 +22,81 @@ import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class ExtensionsPublisherHandler.
+ */
 public class ExtensionsPublisherHandler implements IPublisherHandler {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsPublisherHandler.class);
 	
+	/** The Constant EXTENSION_POINT_IDE_WORKSPACE_BEFORE_PUBLISH. */
 	private static final String EXTENSION_POINT_IDE_WORKSPACE_BEFORE_PUBLISH = "ide-workspace-before-publish";
 	
+	/** The Constant EXTENSION_POINT_IDE_WORKSPACE_AFTER_PUBLISH. */
 	private static final String EXTENSION_POINT_IDE_WORKSPACE_AFTER_PUBLISH = "ide-workspace-after-publish";
 	
+	/** The Constant EXTENSION_POINT_IDE_WORKSPACE_BEFORE_UNPUBLISH. */
 	private static final String EXTENSION_POINT_IDE_WORKSPACE_BEFORE_UNPUBLISH = "ide-workspace-before-unpublish";
 	
+	/** The Constant EXTENSION_POINT_IDE_WORKSPACE_AFTER_UNPUBLISH. */
 	private static final String EXTENSION_POINT_IDE_WORKSPACE_AFTER_UNPUBLISH = "ide-workspace-after-unpublish";
 	
+	/** The Constant EXTENSION_PARAMETER_PATH. */
 	private static final String EXTENSION_PARAMETER_PATH = "path";
 
+	/**
+	 * Before publish.
+	 *
+	 * @param location the location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Override
 	public void beforePublish(String location) throws SchedulerException {
 		triggerExtensions(location, EXTENSION_POINT_IDE_WORKSPACE_BEFORE_PUBLISH, "Before Publish");
 	}
 
+	/**
+	 * After publish.
+	 *
+	 * @param workspaceLocation the workspace location
+	 * @param registryLocation the registry location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Override
 	public void afterPublish(String workspaceLocation, String registryLocation) throws SchedulerException {
 		triggerExtensions(workspaceLocation, EXTENSION_POINT_IDE_WORKSPACE_AFTER_PUBLISH, "After Publish");
 	}
 
+	/**
+	 * Before unpublish.
+	 *
+	 * @param location the location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Override
 	public void beforeUnpublish(String location) throws SchedulerException {
 		triggerExtensions(location, EXTENSION_POINT_IDE_WORKSPACE_BEFORE_UNPUBLISH, "Before Unpublish");
 	}
 
+	/**
+	 * After unpublish.
+	 *
+	 * @param location the location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Override
 	public void afterUnpublish(String location) throws SchedulerException {
 		triggerExtensions(location, EXTENSION_POINT_IDE_WORKSPACE_AFTER_UNPUBLISH, "After Unpublish");
 	}
 	
+	/**
+	 * Trigger extensions.
+	 *
+	 * @param location the location
+	 * @param extensionPoint the extension point
+	 * @param state the state
+	 */
 	private void triggerExtensions(String location, String extensionPoint, String state) {
 		try {
             Map<Object, Object> context = new HashMap<Object, Object>();

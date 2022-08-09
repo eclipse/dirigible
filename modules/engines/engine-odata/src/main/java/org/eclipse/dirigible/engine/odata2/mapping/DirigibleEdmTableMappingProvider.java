@@ -21,11 +21,25 @@ import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingFactory;
 import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingProvider;
 
+/**
+ * The Class DirigibleEdmTableMappingProvider.
+ */
 public class DirigibleEdmTableMappingProvider extends DefaultEdmTableMappingProvider {
     
+    /**
+     * Instantiates a new dirigible edm table mapping provider.
+     *
+     * @throws ODataException the o data exception
+     */
     public DirigibleEdmTableMappingProvider() throws ODataException {
     }
     
+    /**
+     * Fill bindings.
+     *
+     * @param resources the resources
+     * @throws ODataException the o data exception
+     */
     @Override
     protected void fillBindings(String... resources) throws ODataException {
         EdmTableBindingFactory tableBindingFactory = new EdmTableBindingFactory();

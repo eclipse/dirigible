@@ -11,34 +11,70 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
+/**
+ * The Class ODataHandler.
+ */
 public class ODataHandler {
 
+    /** The method. */
     private String method;
 
+    /** The type. */
     private String type;
 
+    /** The handler. */
     private String handler;
 
+	/**
+	 * Gets the method.
+	 *
+	 * @return the method
+	 */
 	public String getMethod() {
 		return method;
 	}
 
+	/**
+	 * Sets the method.
+	 *
+	 * @param method the new method
+	 */
 	public void setMethod(String method) {
 		this.method = method;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * Sets the type.
+	 *
+	 * @param type the new type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * Gets the handler.
+	 *
+	 * @return the handler
+	 */
 	public String getHandler() {
 		return handler;
 	}
 
+	/**
+	 * Sets the handler.
+	 *
+	 * @param handler the new handler
+	 */
 	public void setHandler(String handler) {
 		this.handler = handler;
 	}

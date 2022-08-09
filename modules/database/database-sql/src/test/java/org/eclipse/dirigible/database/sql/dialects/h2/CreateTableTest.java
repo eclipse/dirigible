@@ -16,10 +16,8 @@ import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.dialects.h2.H2SqlDialect;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CreateTableTest.
  */

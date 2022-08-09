@@ -16,15 +16,37 @@ import java.util.List;
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 
+/**
+ * The Class CsvRecordDefinition.
+ */
 public class CsvRecordDefinition {
 
+	/** The csv record. */
 	private CSVRecord csvRecord;
+	
+	/** The table metadata model. */
 	private PersistenceTableModel tableMetadataModel;
+	
+	/** The header names. */
 	private List<String> headerNames;
+	
+	/** The distinguish empty from null. */
 	private boolean distinguishEmptyFromNull;
+	
+	/** The pk column name. */
 	private String pkColumnName;
+	
+	/** The csv record pk value. */
 	private String csvRecordPkValue;
 
+	/**
+	 * Instantiates a new csv record definition.
+	 *
+	 * @param csvRecord the csv record
+	 * @param tableMetadataModel the table metadata model
+	 * @param headerNames the header names
+	 * @param distinguishEmptyFromNull the distinguish empty from null
+	 */
 	public CsvRecordDefinition(CSVRecord csvRecord, PersistenceTableModel tableMetadataModel, List<String> headerNames,
 			boolean distinguishEmptyFromNull) {
 		this.csvRecord = csvRecord;
@@ -33,6 +55,12 @@ public class CsvRecordDefinition {
 		this.distinguishEmptyFromNull = distinguishEmptyFromNull;
 	}
 
+	/**
+	 * Gets the csv value for column.
+	 *
+	 * @param columnName the column name
+	 * @return the csv value for column
+	 */
 	public String getCsvValueForColumn(String columnName) {
 		if (headerNames.size() > 0) {
 			int csvValueIndex = headerNames.indexOf(columnName);
@@ -42,6 +70,11 @@ public class CsvRecordDefinition {
 		return null;
 	}
 
+	/**
+	 * Gets the pk column name.
+	 *
+	 * @return the pk column name
+	 */
 	public String getPkColumnName() {
 		if (pkColumnName == null) {
 			pkColumnName = tableMetadataModel.getColumns().stream().filter(c -> c.isPrimaryKey()).findFirst().get()
@@ -51,6 +84,11 @@ public class CsvRecordDefinition {
 		return pkColumnName;
 	}
 
+	/**
+	 * Gets the csv record pk value.
+	 *
+	 * @return the csv record pk value
+	 */
 	public String getCsvRecordPkValue() {
 		if (csvRecordPkValue == null && headerNames.size() > 0) {
 			csvRecordPkValue = getCsvValueForColumn(getPkColumnName());
@@ -61,18 +99,38 @@ public class CsvRecordDefinition {
 		return csvRecordPkValue;
 	}
 
+	/**
+	 * Gets the csv record.
+	 *
+	 * @return the csv record
+	 */
 	public CSVRecord getCsvRecord() {
 		return csvRecord;
 	}
 
+	/**
+	 * Gets the table metadata model.
+	 *
+	 * @return the table metadata model
+	 */
 	public PersistenceTableModel getTableMetadataModel() {
 		return tableMetadataModel;
 	}
 
+	/**
+	 * Gets the header names.
+	 *
+	 * @return the header names
+	 */
 	public List<String> getHeaderNames() {
 		return headerNames;
 	}
 
+	/**
+	 * Checks if is distinguish empty from null.
+	 *
+	 * @return true, if is distinguish empty from null
+	 */
 	public boolean isDistinguishEmptyFromNull() {
 		return distinguishEmptyFromNull;
 	}

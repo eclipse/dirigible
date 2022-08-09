@@ -21,13 +21,26 @@ import java.io.InputStream;
 import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.GET;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * The Class ODataSQLProcessorAggregationTest.
+ */
 public class ODataSQLProcessorAggregationTest extends AbstractSQLProcessorTest {
 
+    /**
+     * Gets the o data entities.
+     *
+     * @return the o data entities
+     */
     @Override
     protected Class<?>[] getODataEntities() {
         return new Class<?>[]{Customer.class};
     }
 
+    /**
+     * Test SQL processor with group by.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSQLProcessorWithGroupBy() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //

@@ -13,10 +13,23 @@ package org.eclipse.dirigible.commons.api.topology;
 
 import java.util.List;
 
+/**
+ * The Interface ITopologicallySortable.
+ */
 public interface ITopologicallySortable {
 	
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	public String getId();
 	
+	/**
+	 * Gets the dependencies.
+	 *
+	 * @return the dependencies
+	 */
 	public List<ITopologicallySortable> getDependencies();
 
 }

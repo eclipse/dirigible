@@ -96,10 +96,9 @@ public class UrlFacade {
 	}
 
 	/**
-	 * Escape URL fragments
+	 * Escape URL fragments.
 	 *
-	 * @param input
-	 *            the input string
+	 * @param input            the input string
 	 * @return escaped input
 	 */
 	public static final String escape(String input) {
@@ -108,10 +107,9 @@ public class UrlFacade {
 	}
 	
 	/**
-	 * Escape URL path
+	 * Escape URL path.
 	 *
-	 * @param input
-	 *            the input string
+	 * @param input            the input string
 	 * @return escaped input
 	 */
 	public static final String escapePath(String input) {
@@ -120,10 +118,9 @@ public class UrlFacade {
 	}
 	
 	/**
-	 * Escape URL fragments
+	 * Escape URL fragments.
 	 *
-	 * @param input
-	 *            the input string
+	 * @param input            the input string
 	 * @return escaped input
 	 */
 	public static final String escapeForm(String input) {

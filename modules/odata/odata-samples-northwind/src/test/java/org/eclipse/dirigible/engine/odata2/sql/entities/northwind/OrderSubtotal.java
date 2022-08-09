@@ -18,14 +18,19 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 
+/**
+ * The Class OrderSubtotal.
+ */
 @EdmEntityType(name = "Order_Subtotal")
 @EdmEntitySet(name = "Order_Subtotals", container = "NorthwindEntities")
 public class OrderSubtotal {
 
+	/** The order id. */
 	@EdmKey
 	@EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
 	private Integer orderId;
 
+	/** The subtotal. */
 	@EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(precision = 19, scale = 4))
 	private Double subtotal;
 }

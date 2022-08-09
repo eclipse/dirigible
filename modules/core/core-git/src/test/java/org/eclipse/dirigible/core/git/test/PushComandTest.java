@@ -35,10 +35,13 @@ import org.junit.Test;
  */
 public class PushComandTest extends AbstractDirigibleTest {
 
+	/** The Constant DIRIGIBLE_TEST_GIT_EMAIL. */
 	private static final String DIRIGIBLE_TEST_GIT_EMAIL = "DIRIGIBLE_TEST_GIT_EMAIL";
 	
+	/** The Constant DIRIGIBLE_TEST_GIT_USERNAME. */
 	private static final String DIRIGIBLE_TEST_GIT_USERNAME = "DIRIGIBLE_TEST_GIT_USERNAME";
 
+	/** The Constant DIRIGIBLE_TEST_GIT_PASSWORD. */
 	private static final String DIRIGIBLE_TEST_GIT_PASSWORD = "DIRIGIBLE_TEST_GIT_PASSWORD";
 
 	/** The clone command. */

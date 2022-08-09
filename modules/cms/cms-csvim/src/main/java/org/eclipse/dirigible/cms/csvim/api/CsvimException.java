@@ -16,6 +16,7 @@ package org.eclipse.dirigible.cms.csvim.api;
  */
 public class CsvimException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5800180600419241248L;
 
 	/**

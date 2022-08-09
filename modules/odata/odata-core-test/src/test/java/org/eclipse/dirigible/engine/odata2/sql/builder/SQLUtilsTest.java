@@ -44,12 +44,21 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+/**
+ * The Class SQLUtilsTest.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class SQLUtilsTest {
 
+  /** The stmt. */
   @Mock
   private PreparedStatement stmt;
 
+  /**
+   * Test set string parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetStringParameter() throws SQLException {
     String value = "TestValue";
@@ -57,6 +66,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setString(1, value);
   }
 
+  /**
+   * Test set byte parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetByteParameter() throws SQLException {
     short value = 13;
@@ -64,6 +78,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setShort(1, value);
   }
 
+  /**
+   * Test set int 16 parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetInt16Parameter() throws SQLException {
     short value = 16;
@@ -71,6 +90,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setShort(1, value);
   }
 
+  /**
+   * Test set int 32 parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetInt32Parameter() throws SQLException {
     int value = 36589;
@@ -78,6 +102,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setInt(1, value);
   }
 
+  /**
+   * Test set int 64 parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetInt64Parameter() throws SQLException {
     long value = 4684684L;
@@ -85,6 +114,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setLong(1, value);
   }
 
+  /**
+   * Test set double parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetDoubleParameter() throws SQLException {
     double value = 458.32;
@@ -92,6 +126,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setDouble(1, value);
   }
 
+  /**
+   * Test set boolean parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetBooleanParameter() throws SQLException {
     boolean value = false;
@@ -99,6 +138,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setBoolean(1, value);
   }
 
+  /**
+   * Test set decimal parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetDecimalParameter() throws SQLException {
     BigDecimal value = BigDecimal.valueOf(1569863.3);
@@ -106,6 +150,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setBigDecimal(1, value);
   }
 
+  /**
+   * Test set null parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetNullParameter() throws SQLException {
     Object value = null;
@@ -113,6 +162,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setObject(1, value);
   }
 
+  /**
+   * Test set guid parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetGuidParameter() throws SQLException {
     Object value = "2312312301231-123123j";
@@ -120,6 +174,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setObject(1, value);
   }
 
+  /**
+   * Test set S byte parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetSByteParameter() throws SQLException {
     byte value = 12;
@@ -127,6 +186,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setByte(1, value);
   }
 
+  /**
+   * Test set single parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetSingleParameter() throws SQLException {
     float value = 11;
@@ -134,6 +198,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setFloat(1, value);
   }
 
+  /**
+   * Test set time parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetTimeParameter() throws SQLException {
     Calendar value = new GregorianCalendar(2022,Calendar.FEBRUARY,24);
@@ -142,6 +211,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setTime(1, expectedTime);
   }
 
+  /**
+   * Test set date time parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetDateTimeParameter() throws SQLException {
     Calendar value = new GregorianCalendar(2022,Calendar.MARCH,3);
@@ -150,6 +224,11 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setTimestamp(1, expectedTimestamp);
   }
 
+  /**
+   * Test set date time offset parameter.
+   *
+   * @throws SQLException the SQL exception
+   */
   @Test
   public void testSetDateTimeOffsetParameter() throws SQLException {
     Calendar value = new GregorianCalendar(2022,Calendar.MARCH,3);
@@ -158,6 +237,13 @@ public class SQLUtilsTest {
     Mockito.verify(stmt).setDate(1, expectedDate);
   }
 
+  /**
+   * Execute set parameter.
+   *
+   * @param value the value
+   * @param edmType the edm type
+   * @throws SQLException the SQL exception
+   */
   private void executeSetParameter(Object value, EdmType edmType) throws SQLException {
     SQLStatementParam param = new SQLStatementParam(value, edmType, null);
     List<SQLStatementParam> params = new ArrayList<>();

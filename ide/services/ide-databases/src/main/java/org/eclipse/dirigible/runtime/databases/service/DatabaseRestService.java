@@ -49,10 +49,13 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class DatabaseRestService extends AbstractRestService implements IRestService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseRestService.class);
 
+	/** The processor. */
 	private DatabaseProcessor processor = new DatabaseProcessor();
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 	
@@ -60,7 +63,7 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 	 * List defined database.
 	 *
 	 * @return the response
-	 * @throws DatabasesException 
+	 * @throws DatabasesException the databases exception
 	 */
 	@GET
 	@Path("")
@@ -80,8 +83,9 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 	/**
 	 * Get a defined database.
 	 *
+	 * @param id the id
 	 * @return the response
-	 * @throws DatabasesException 
+	 * @throws DatabasesException the databases exception
 	 */
 	@GET
 	@Path("{id}")
@@ -101,8 +105,9 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 	/**
 	 * Create a defined database.
 	 *
+	 * @param definition the definition
 	 * @return the response
-	 * @throws DatabasesException 
+	 * @throws DatabasesException the databases exception
 	 */
 	@POST
 	@Path("")
@@ -128,7 +133,7 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 	 *
 	 * @param id the id
 	 * @return the response
-	 * @throws DatabasesException 
+	 * @throws DatabasesException the databases exception
 	 */
 	@DELETE
 	@Path("{id}")
@@ -147,11 +152,11 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 	
 	/**
 	 * Update a defined database.
-	 * 
+	 *
 	 * @param id the id
 	 * @param definition the definition
 	 * @return the response
-	 * @throws DatabasesException 
+	 * @throws DatabasesException the databases exception
 	 */
 	@PUT
 	@Path("{id}")
@@ -178,11 +183,21 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 	}
 	
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return DatabaseRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

@@ -11,10 +11,26 @@
  */
 package org.eclipse.dirigible.database.ds.synchronizer;
 
+/**
+ * The Enum TopologyDataStructureModelEnum.
+ */
 public enum TopologyDataStructureModelEnum {
 	
-	EXECUTE_TABLE_UPDATE, EXECUTE_TABLE_CREATE, EXECUTE_TABLE_FOREIGN_KEYS_CREATE, 
-	EXECUTE_TABLE_ALTER, EXECUTE_TABLE_DROP, EXECUTE_TABLE_FOREIGN_KEYS_DROP, 
-	EXECUTE_VIEW_CREATE, EXECUTE_VIEW_DROP
+	/** The execute table update. */
+	EXECUTE_TABLE_UPDATE, /** The execute table create. */
+ EXECUTE_TABLE_CREATE, /** The execute table foreign keys create. */
+ EXECUTE_TABLE_FOREIGN_KEYS_CREATE, 
+	
+	/** The execute table alter. */
+	EXECUTE_TABLE_ALTER, 
+ /** The execute table drop. */
+ EXECUTE_TABLE_DROP, 
+ /** The execute table foreign keys drop. */
+ EXECUTE_TABLE_FOREIGN_KEYS_DROP, 
+	
+	/** The execute view create. */
+	EXECUTE_VIEW_CREATE, 
+ /** The execute view drop. */
+ EXECUTE_VIEW_DROP
 
 }

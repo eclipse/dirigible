@@ -31,6 +31,7 @@ import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 public class H2SqlDialect extends
 		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, H2NextValueSequenceBuilder, H2LastValueIdentityBuilder> {
 
+	/** The Constant FUNCTIONS. */
 	public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {
 			"abs",
 			"acos",
@@ -241,6 +242,12 @@ public class H2SqlDialect extends
 
 			})));
 	
+	/**
+	 * Nextval.
+	 *
+	 * @param sequence the sequence
+	 * @return the h 2 next value sequence builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
@@ -250,6 +257,12 @@ public class H2SqlDialect extends
 		return new H2NextValueSequenceBuilder(this, sequence);
 	}
 
+	/**
+	 * Lastval.
+	 *
+	 * @param args the args
+	 * @return the h 2 last value identity builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
@@ -259,6 +272,11 @@ public class H2SqlDialect extends
 		return new H2LastValueIdentityBuilder(this);
 	}
 	
+	/**
+	 * Checks if is synonym supported.
+	 *
+	 * @return true, if is synonym supported
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSynonymSupported()
@@ -268,6 +286,11 @@ public class H2SqlDialect extends
 		return false;
 	}
 	
+	/**
+	 * Gets the functions names.
+	 *
+	 * @return the functions names
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()

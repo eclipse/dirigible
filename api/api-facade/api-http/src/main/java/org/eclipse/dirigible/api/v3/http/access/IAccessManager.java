@@ -13,7 +13,17 @@ package org.eclipse.dirigible.api.v3.http.access;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * The Interface IAccessManager.
+ */
 public interface IAccessManager {
 
+	/**
+	 * Checks if is in role.
+	 *
+	 * @param request the request
+	 * @param role the role
+	 * @return true, if is in role
+	 */
 	public boolean isInRole(HttpServletRequest request, String role);
 }

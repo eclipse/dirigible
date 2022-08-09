@@ -16,14 +16,19 @@ package org.eclipse.dirigible.runtime.repository.json;
  */
 public class Resource {
 
+	/** The Constant TYPE_RESOURCE. */
 	private static final String TYPE_RESOURCE = "resource";
 
+	/** The name. */
 	private String name;
 
+	/** The path. */
 	private String path;
 
+	/** The content type. */
 	private String contentType;
 
+	/** The type. */
 	private String type = TYPE_RESOURCE;
 
 	/**

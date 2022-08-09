@@ -35,20 +35,28 @@ import java.util.*;
  */
 public class PublisherSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PublisherSynchronizer.class);
 
+	/** The publish core service. */
 	private PublisherCoreService publishCoreService = new PublisherCoreService();
 	
+	/** The synchronizer core service. */
 	private SynchronizerCoreService synchronizerCoreService = new SynchronizerCoreService();
 
+	/** The resource locations. */
 	private Map<String, String> resourceLocations = new HashMap<String, String>();
 	
+	/** The unpublish locations. */
 	private List<String> unpublishLocations = new ArrayList<String>();
 
+	/** The current workspace. */
 	private String currentWorkspace = null;
 
+	/** The current registry. */
 	private String currentRegistry = null;
 
+	/** The current request time. */
 	private Timestamp currentRequestTime = new Timestamp(0);
 
 	/**
@@ -59,6 +67,9 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		publisherSynchronizer.synchronize();
 	}
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -145,6 +156,11 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		return publishRequestDefinitions;
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -336,6 +352,12 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		}
 	}
 	
+	/**
+	 * Synchronize collection.
+	 *
+	 * @param collection the collection
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeCollection(org.eclipse.dirigible.
@@ -349,6 +371,12 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		resourceLocations.put(sourceLocation, targetLocation);
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -362,6 +390,11 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		resourceLocations.put(sourceLocation, targetLocation);
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()

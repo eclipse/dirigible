@@ -42,6 +42,11 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 	/** The GraalVM javascript engine executor. */
 	private GraalVMJavascriptEngineExecutor graalVMJavascriptEngineExecutor;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
 	 */
@@ -89,6 +94,9 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 //		}
 	}
 
+	/**
+	 * Register modules.
+	 */
 	@Override
 	public void registerModules() {
 		registerModulesV4();

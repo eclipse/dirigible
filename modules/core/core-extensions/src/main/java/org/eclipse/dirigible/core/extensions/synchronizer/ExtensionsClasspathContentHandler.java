@@ -23,10 +23,18 @@ import org.slf4j.LoggerFactory;
  */
 public class ExtensionsClasspathContentHandler extends AbstractClasspathContentHandler {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsClasspathContentHandler.class);
 
+	/** The extensions synchronizer. */
 	private ExtensionsSynchronizer extensionsSynchronizer = new ExtensionsSynchronizer();
 
+	/**
+	 * Checks if is valid.
+	 *
+	 * @param path the path
+	 * @return true, if is valid
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#isValid(java.lang.String)
@@ -51,6 +59,11 @@ public class ExtensionsClasspathContentHandler extends AbstractClasspathContentH
 		return false;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#getLogger()

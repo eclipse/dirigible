@@ -34,6 +34,8 @@ public class ExecFacade implements IScriptingFacade {
      * @param forAdding   variables to be declared
      * @param forRemoving variables to be removed
      * @return the output of the command
+     * @throws ExecutionException the execution exception
+     * @throws InterruptedException the interrupted exception
      */
 
     public static String exec(String command, Map<String, String> forAdding, List<String> forRemoving) throws ExecutionException, InterruptedException {
@@ -44,6 +46,13 @@ public class ExecFacade implements IScriptingFacade {
         return output.getProcessOutputs().getStandardOutput();
     }
 
+    /**
+     * Creates the environment variables.
+     *
+     * @param forAdding the for adding
+     * @param forRemoving the for removing
+     * @return the map
+     */
     private static Map<String, String> createEnvironmentVariables(Map<String, String> forAdding, List<String> forRemoving) {
         if (forAdding == null) {
             return new ProcessBuilder().environment();

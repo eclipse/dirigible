@@ -14,6 +14,9 @@ package org.eclipse.dirigible.engine.js.api;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+/**
+ * The Interface IJavascriptModuleSourceProvider.
+ */
 public interface IJavascriptModuleSourceProvider {
 	
 	/**

@@ -23,18 +23,39 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
+/**
+ * The Class FolderToRegistryImporter.
+ */
 public class FolderToRegistryImporter extends SimpleFileVisitor<Path> {
 	
-	    private Path sourceDir;
-	    private Path targetDir = Paths.get(IRepositoryStructure.SEPARATOR);
-	    IRepository repository;
+	    /** The source dir. */
+    	private Path sourceDir;
+	    
+    	/** The target dir. */
+    	private Path targetDir = Paths.get(IRepositoryStructure.SEPARATOR);
+	    
+    	/** The repository. */
+    	IRepository repository;
 	 
-	    public FolderToRegistryImporter(Path sourceDir, IRepository repository) {
+	    /**
+    	 * Instantiates a new folder to registry importer.
+    	 *
+    	 * @param sourceDir the source dir
+    	 * @param repository the repository
+    	 */
+    	public FolderToRegistryImporter(Path sourceDir, IRepository repository) {
 	        this.sourceDir = sourceDir;
 	        this.repository = repository;
 	    }
 	 
-	    @Override
+	    /**
+    	 * Visit file.
+    	 *
+    	 * @param file the file
+    	 * @param attributes the attributes
+    	 * @return the file visit result
+    	 */
+    	@Override
 	    public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
 	    	FileInputStream input = null;
 	        try {
@@ -59,7 +80,14 @@ public class FolderToRegistryImporter extends SimpleFileVisitor<Path> {
 	        return FileVisitResult.CONTINUE;
 	    }
 	 
-	    @Override
+	    /**
+    	 * Pre visit directory.
+    	 *
+    	 * @param dir the dir
+    	 * @param attributes the attributes
+    	 * @return the file visit result
+    	 */
+    	@Override
 	    public FileVisitResult preVisitDirectory(Path dir,
 	            BasicFileAttributes attributes) {
 	        return FileVisitResult.CONTINUE;

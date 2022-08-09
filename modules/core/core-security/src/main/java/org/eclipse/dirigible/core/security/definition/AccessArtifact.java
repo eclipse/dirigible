@@ -25,6 +25,7 @@ import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
  */
 public class AccessArtifact {
 
+	/** The constraints. */
 	private List<AccessArtifactConstraint> constraints = new ArrayList<AccessArtifactConstraint>();
 
 	/**

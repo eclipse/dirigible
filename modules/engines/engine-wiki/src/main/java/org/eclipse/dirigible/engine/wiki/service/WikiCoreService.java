@@ -30,10 +30,17 @@ import org.eclipse.dirigible.engine.wiki.definition.WikiDefinition;
  */
 public class WikiCoreService implements IWikiCoreService {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The wiki persistence manager. */
 	private PersistenceManager<WikiDefinition> wikiPersistenceManager = new PersistenceManager<WikiDefinition>();
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -43,6 +50,14 @@ public class WikiCoreService implements IWikiCoreService {
 
 	// Wiki
 
+	/**
+	 * Creates the wiki.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @return the wiki definition
+	 * @throws WikiException the wiki exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.wiki.api.IWikiCoreService#createWiki(java.lang.String,
@@ -72,6 +87,13 @@ public class WikiCoreService implements IWikiCoreService {
 		}
 	}
 
+	/**
+	 * Gets the wiki.
+	 *
+	 * @param location the location
+	 * @return the wiki
+	 * @throws WikiException the wiki exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.wiki.api.IWikiCoreService#getWiki(java.lang.String)
@@ -93,6 +115,12 @@ public class WikiCoreService implements IWikiCoreService {
 		}
 	}
 
+	/**
+	 * Removes the wiki.
+	 *
+	 * @param location the location
+	 * @throws WikiException the wiki exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.wiki.api.IWikiCoreService#removeWiki(java.lang.String)
@@ -114,6 +142,13 @@ public class WikiCoreService implements IWikiCoreService {
 		}
 	}
 
+	/**
+	 * Update wiki.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @throws WikiException the wiki exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.wiki.api.IWikiCoreService#updateWiki(java.lang.String,
@@ -138,6 +173,12 @@ public class WikiCoreService implements IWikiCoreService {
 		}
 	}
 
+	/**
+	 * Gets the wikis.
+	 *
+	 * @return the wikis
+	 * @throws WikiException the wiki exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.wiki.api.IWikisCoreService#getWikis()
@@ -159,6 +200,13 @@ public class WikiCoreService implements IWikiCoreService {
 		}
 	}
 
+	/**
+	 * Exists wiki.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws WikiException the wiki exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.wiki.api.IWikiCoreService#existsWiki(java.lang.String)

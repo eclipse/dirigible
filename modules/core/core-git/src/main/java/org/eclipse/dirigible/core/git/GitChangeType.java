@@ -12,17 +12,29 @@
 package org.eclipse.dirigible.core.git;
 
 /**
- * Git File Change Types
- *
+ * Git File Change Types.
  */
 public enum GitChangeType {
 	
+	/** The Conflicting. */
 	Conflicting,
-	Added, // staged
-	Changed, // staged
-	Missing, // unstaged
-	Modified, // unstaged
-	Removed, // staged
+	
+	/** The Added. */
+	Added, 
+ /** The Changed. */
+ // staged
+	Changed, 
+ /** The Missing. */
+ // staged
+	Missing, 
+ /** The Modified. */
+ // unstaged
+	Modified, 
+ /** The Removed. */
+ // unstaged
+	Removed, 
+ /** The Untracked. */
+ // staged
 	Untracked // unstaged
 
 }

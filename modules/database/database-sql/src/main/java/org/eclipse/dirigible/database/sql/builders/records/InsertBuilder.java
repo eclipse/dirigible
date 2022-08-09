@@ -24,14 +24,19 @@ import org.slf4j.LoggerFactory;
  */
 public class InsertBuilder extends AbstractSqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(InsertBuilder.class);
 
+	/** The table. */
 	private String table = null;
 
+	/** The columns. */
 	private List<String> columns = new ArrayList<String>();
 
+	/** The values. */
 	private List<String> values = new ArrayList<String>();
 
+	/** The select. */
 	private String select = null;
 
 	/**
@@ -96,6 +101,11 @@ public class InsertBuilder extends AbstractSqlBuilder {
 		return this;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

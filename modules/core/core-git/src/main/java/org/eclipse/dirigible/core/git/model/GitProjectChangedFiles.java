@@ -15,13 +15,17 @@ import java.util.List;
 
 import org.eclipse.dirigible.core.git.GitChangedFile;
 
+/**
+ * The Class GitProjectChangedFiles.
+ */
 public class GitProjectChangedFiles {
 	
+	/** The files. */
 	private List<GitChangedFile> files;
 	
 	/**
-	 * Getter for the files
-	 * 
+	 * Getter for the files.
+	 *
 	 * @return the files
 	 */
 	public List<GitChangedFile> getFiles() {
@@ -29,8 +33,8 @@ public class GitProjectChangedFiles {
 	}
 
 	/**
-	 * Setter for the files
-	 * 
+	 * Setter for the files.
+	 *
 	 * @param files the files to set
 	 */
 	public void setFiles(List<GitChangedFile> files) {

@@ -31,6 +31,7 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
  */
 public class WorkspaceJsonHelper {
 	
+	/** The status providers. */
 	private static ServiceLoader<IProjectStatusProvider> statusProviders = ServiceLoader.load(IProjectStatusProvider.class);
 
 	/**
@@ -95,6 +96,15 @@ public class WorkspaceJsonHelper {
 		return describeProject(collection, removePathPrefix, addPathPrefix, new HashMap<String, ProjectStatus>());
 	}
 
+	/**
+	 * Describe project.
+	 *
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
+	 * @param projectStatusCache the project status cache
+	 * @return the project descriptor
+	 */
 	private static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix, Map<String, ProjectStatus> projectStatusCache) {
 		ProjectDescriptor projectPojo = new ProjectDescriptor();
 		projectPojo.setName(collection.getName());
@@ -116,10 +126,27 @@ public class WorkspaceJsonHelper {
 		return projectPojo;
 	}
 
+	/**
+	 * Gets the project status.
+	 *
+	 * @param collection the collection
+	 * @param projectPojo the project pojo
+	 * @param repositoryPath the repository path
+	 * @return the project status
+	 */
 	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath) {
 		return getProjectStatus(collection, projectPojo, repositoryPath, new HashMap<String, ProjectStatus>());
 	}
 
+	/**
+	 * Gets the project status.
+	 *
+	 * @param collection the collection
+	 * @param projectPojo the project pojo
+	 * @param repositoryPath the repository path
+	 * @param projectStatusCache the project status cache
+	 * @return the project status
+	 */
 	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath, Map<String, ProjectStatus> projectStatusCache) {
 		Pair<Boolean, String> gitInfo = WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString());
 		projectPojo.setGit(gitInfo.getLeft());
@@ -180,6 +207,14 @@ public class WorkspaceJsonHelper {
 		return describeFolder(collection, removePathPrefix, addPathPrefix, status);
 	}
 
+	/**
+	 * Gets the project for status.
+	 *
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
+	 * @return the project for status
+	 */
 	private static ProjectDescriptor getProjectForStatus(ICollection collection, String removePathPrefix,
 			String addPathPrefix) {
 		String path = collection.getPath().substring(removePathPrefix.length());

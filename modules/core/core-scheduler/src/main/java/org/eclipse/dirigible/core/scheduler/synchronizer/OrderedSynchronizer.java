@@ -30,12 +30,16 @@ import org.slf4j.LoggerFactory;
  */
 public class OrderedSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(OrderedSynchronizer.class);
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
+	/** The Constant CONTRIBUTIONS. */
 	private static final ServiceLoader<IOrderedSynchronizerContribution> CONTRIBUTIONS = ServiceLoader.load(IOrderedSynchronizerContribution.class);
 	
+	/** The ordered contributions. */
 	private static List<IOrderedSynchronizerContribution> orderedContributions = new ArrayList<IOrderedSynchronizerContribution>();
 	
 	static {
@@ -45,6 +49,9 @@ public class OrderedSynchronizer extends AbstractSynchronizer {
 	}
 
 	
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -112,6 +119,12 @@ public class OrderedSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
 		// TODO Auto-generated method stub

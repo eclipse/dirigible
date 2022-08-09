@@ -13,13 +13,20 @@ package org.eclipse.dirigible.cms.csvim.definition;
 
 import java.util.List;
 
+/**
+ * The Class CsvimKeyDefinition.
+ */
 public class CsvimKeyDefinition {
 	
+	/** The column. */
 	private String column;
 	
+	/** The values. */
 	private List<String> values;
 
 	/**
+	 * Gets the column.
+	 *
 	 * @return the column
 	 */
 	public String getColumn() {
@@ -27,6 +34,8 @@ public class CsvimKeyDefinition {
 	}
 
 	/**
+	 * Sets the column.
+	 *
 	 * @param column the column to set
 	 */
 	public void setColumn(String column) {
@@ -34,6 +43,8 @@ public class CsvimKeyDefinition {
 	}
 
 	/**
+	 * Gets the values.
+	 *
 	 * @return the values
 	 */
 	public List<String> getValues() {
@@ -41,6 +52,8 @@ public class CsvimKeyDefinition {
 	}
 
 	/**
+	 * Sets the values.
+	 *
 	 * @param values the values to set
 	 */
 	public void setValues(List<String> values) {

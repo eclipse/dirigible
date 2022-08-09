@@ -31,15 +31,28 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The Class DBMetadataUtilTest.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class DBMetadataUtilTest {
 
+    /** The Constant CATALOG. */
     private static final String CATALOG = "Catalog";
+    
+    /** The Constant MY_TABLE_NAME. */
     private static final String MY_TABLE_NAME = "MY_TABLE";
+    
+    /** The Constant MY_SCHEMA_NAME. */
     private static final String MY_SCHEMA_NAME = "mySchema";
+    
+    /** The Constant COLUMN_NAME_LABEL. */
     private static final String COLUMN_NAME_LABEL = "COLUMN_NAME";
+    
+    /** The Constant COLUMN_TYPE_LABEL. */
     private static final String COLUMN_TYPE_LABEL = "TYPE_NAME";
 
+    /** The Constant SQL_TO_EDM_TYPE_MAP. */
     private static final Map<String, String> SQL_TO_EDM_TYPE_MAP = new HashMap<>();
 
     static {
@@ -74,15 +87,23 @@ public class DBMetadataUtilTest {
         SQL_TO_EDM_TYPE_MAP.put("ALPHANUM", "Edm.String");
     }
 
+    /** The connection. */
     @Mock
     private Connection connection;
 
+    /** The data source. */
     @Mock
     private DataSource dataSource;
 
+    /** The database meta data. */
     @Mock
     private DatabaseMetaData databaseMetaData;
 
+    /**
+     * Sets the up.
+     *
+     * @throws SQLException the SQL exception
+     */
     @Before
     public void setUp() throws SQLException {
         MockitoAnnotations.initMocks(this);
@@ -91,16 +112,27 @@ public class DBMetadataUtilTest {
         Mockito.when(connection.getCatalog()).thenReturn(CATALOG);
     }
 
+    /**
+     * Test get table metadata column type conversion.
+     */
     @Test
     public void testGetTableMetadata_columnTypeConversion(){
         SQL_TO_EDM_TYPE_MAP.forEach(this::testGetTableMetadata_columnTypeConversion);
     }
 
+    /**
+     * Test get table metadata column conversion not supported type.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testGetTableMetadata_columnConversionNotSupportedType(){
         testGetTableMetadata_columnTypeConversion("NotSupportedSQLType", null);
     }
 
+    /**
+     * Test artifact not found.
+     *
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testArtifactNotFound() throws SQLException {
         DBMetadataUtil dbMetadataUtil = new DBMetadataUtil();
@@ -114,6 +146,12 @@ public class DBMetadataUtilTest {
         Mockito.verifyNoMoreInteractions(databaseMetaData);
     }
 
+    /**
+     * Test get table metadata column type conversion.
+     *
+     * @param sqlType the sql type
+     * @param expectedEdmType the expected edm type
+     */
     private void testGetTableMetadata_columnTypeConversion(String sqlType, String expectedEdmType) {
         try {
             Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
@@ -157,6 +195,12 @@ public class DBMetadataUtilTest {
 
     }
 
+    /**
+     * Mock DB meta data query no result.
+     *
+     * @param executedResultSet the executed result set
+     * @throws SQLException the SQL exception
+     */
     private void mockDBMetaDataQuery_noResult(ResultSet executedResultSet) throws SQLException {
         ResultSet resultSet = Mockito.mock(ResultSet.class);
         Mockito.when(executedResultSet).thenReturn(resultSet);

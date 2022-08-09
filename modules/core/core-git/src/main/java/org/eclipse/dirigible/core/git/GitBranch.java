@@ -12,30 +12,37 @@
 package org.eclipse.dirigible.core.git;
 
 /**
- * The Branch representation POJO
- *
+ * The Branch representation POJO.
  */
 public class GitBranch {
 	
+	/** The name. */
 	private String name;
 	
+	/** The remote. */
 	private boolean remote;
 	
+	/** The current. */
 	private boolean current;
 	
+	/** The commit object id. */
 	private String commitObjectId;
 	
+	/** The commit short id. */
 	private String commitShortId;
 	
+	/** The commit date. */
 	private String commitDate;
 	
+	/** The commit message. */
 	private String commitMessage;
 	
+	/** The commit author. */
 	private String commitAuthor;
 	
 	/**
-	 * The constructor
-	 * 
+	 * The constructor.
+	 *
 	 * @param name the name
 	 * @param remote is remote
 	 * @param current is current
@@ -59,8 +66,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Getter for name
-	 * 
+	 * Getter for name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -68,8 +75,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Setter for name
-	 * 
+	 * Setter for name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -77,8 +84,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Getter for remote
-	 * 
+	 * Getter for remote.
+	 *
 	 * @return the remote
 	 */
 	public boolean isRemote() {
@@ -86,8 +93,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Setter for remote
-	 * 
+	 * Setter for remote.
+	 *
 	 * @param remote the remote to set
 	 */
 	public void setRemote(boolean remote) {
@@ -95,8 +102,8 @@ public class GitBranch {
 	}
 	
 	/**
-	 * Getter for current
-	 * 
+	 * Getter for current.
+	 *
 	 * @return the current
 	 */
 	public boolean isCurrent() {
@@ -104,8 +111,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Setter for current
-	 * 
+	 * Setter for current.
+	 *
 	 * @param current the current to set
 	 */
 	public void setCurrent(boolean current) {
@@ -113,8 +120,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Getter for full object id
-	 * 
+	 * Getter for full object id.
+	 *
 	 * @return the commitObjectId
 	 */
 	public String getCommitObjectId() {
@@ -122,8 +129,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Setter for full object id
-	 * 
+	 * Setter for full object id.
+	 *
 	 * @param commitObjectId the commitObjectId to set
 	 */
 	public void setCommitObjectId(String commitObjectId) {
@@ -131,8 +138,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Getter for short object id
-	 * 
+	 * Getter for short object id.
+	 *
 	 * @return the commitShortId
 	 */
 	public String getCommitShortId() {
@@ -140,8 +147,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Setter for short object id
-	 * 
+	 * Setter for short object id.
+	 *
 	 * @param commitShortId the commitShortId to set
 	 */
 	public void setCommitShortId(String commitShortId) {
@@ -149,8 +156,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Getter for commit date
-	 * 
+	 * Getter for commit date.
+	 *
 	 * @return the commitDate
 	 */
 	public String getCommitDate() {
@@ -158,8 +165,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Setter for commit date
-	 * 
+	 * Setter for commit date.
+	 *
 	 * @param commitDate the commitDate to set
 	 */
 	public void setCommitDate(String commitDate) {
@@ -167,8 +174,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Getter for commit message
-	 * 
+	 * Getter for commit message.
+	 *
 	 * @return the commitMessage
 	 */
 	public String getCommitMessage() {
@@ -176,8 +183,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Setter for the commit message
-	 * 
+	 * Setter for the commit message.
+	 *
 	 * @param commitMessage the commitMessage to set
 	 */
 	public void setCommitMessage(String commitMessage) {
@@ -185,8 +192,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Getter for the commit author
-	 * 
+	 * Getter for the commit author.
+	 *
 	 * @return the commitAuthor
 	 */
 	public String getCommitAuthor() {
@@ -194,8 +201,8 @@ public class GitBranch {
 	}
 
 	/**
-	 * Setter for the commit author
-	 * 
+	 * Setter for the commit author.
+	 *
 	 * @param commitAuthor the commitAuthor to set
 	 */
 	public void setCommitAuthor(String commitAuthor) {

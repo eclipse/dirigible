@@ -36,12 +36,20 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class MigrationsCoreService implements IMigrationsCoreService {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The migrations persistence manager. */
 	private PersistenceManager<MigrationDefinition> migrationsPersistenceManager = new PersistenceManager<MigrationDefinition>();
 	
+	/** The migrations status persistence manager. */
 	private PersistenceManager<MigrationStatusDefinition> migrationsStatusPersistenceManager = new PersistenceManager<MigrationStatusDefinition>();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -51,6 +59,20 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 
 	// Migrations
 
+	/**
+	 * Creates the migration.
+	 *
+	 * @param location the location
+	 * @param project the project
+	 * @param major the major
+	 * @param minor the minor
+	 * @param micro the micro
+	 * @param handler the handler
+	 * @param engine the engine
+	 * @param description the description
+	 * @return the migration definition
+	 * @throws MigrationsException the migrations exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#createMigration(java.lang.String, java.lang.String,
@@ -86,6 +108,13 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the migration.
+	 *
+	 * @param location the location
+	 * @return the migration
+	 * @throws MigrationsException the migrations exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#getMigration(java.lang.String)
@@ -107,6 +136,13 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		}
 	}
 
+	/**
+	 * Exists migration.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws MigrationsException the migrations exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#existsMigration(java.lang.String)
@@ -116,6 +152,12 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		return getMigration(location) != null;
 	}
 
+	/**
+	 * Removes the migration.
+	 *
+	 * @param location the location
+	 * @throws MigrationsException the migrations exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#removeMigration(java.lang.String)
@@ -137,6 +179,19 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		}
 	}
 
+	/**
+	 * Update migration.
+	 *
+	 * @param location the location
+	 * @param project the project
+	 * @param major the major
+	 * @param minor the minor
+	 * @param micro the micro
+	 * @param handler the handler
+	 * @param engine the engine
+	 * @param description the description
+	 * @throws MigrationsException the migrations exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#updateMigration(java.lang.String, java.lang.String,
@@ -167,6 +222,12 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the migrations.
+	 *
+	 * @return the migrations
+	 * @throws MigrationsException the migrations exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#getMigrations()
@@ -188,6 +249,13 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		}
 	}
 	
+	/**
+	 * Gets the migrations per project.
+	 *
+	 * @param project the project
+	 * @return the migrations per project
+	 * @throws MigrationsException the migrations exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#getMigrationsPerProject(java.lang.String)
 	 */
@@ -210,6 +278,12 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		}
 	}
 
+	/**
+	 * Parses the migration.
+	 *
+	 * @param json the json
+	 * @return the migration definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#parseMigrations(java.lang.String)
@@ -219,6 +293,12 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		return GsonHelper.GSON.fromJson(json, MigrationDefinition.class);
 	}
 
+	/**
+	 * Parses the migration.
+	 *
+	 * @param json the json
+	 * @return the migration definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#parseMigrations(byte[])
@@ -228,6 +308,12 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), MigrationDefinition.class);
 	}
 
+	/**
+	 * Serialize migration.
+	 *
+	 * @param migration the migration
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -243,6 +329,17 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 	
 	// Migrations Status
 
+	/**
+	 * Creates the migration status.
+	 *
+	 * @param project the project
+	 * @param major the major
+	 * @param minor the minor
+	 * @param micro the micro
+	 * @param location the location
+	 * @return the migration status definition
+	 * @throws MigrationsException the migrations exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#createMigrationStatus(java.lang.String, int, int, int, java.lang.String)
 	 */
@@ -274,6 +371,13 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the migration status.
+	 *
+	 * @param project the project
+	 * @return the migration status
+	 * @throws MigrationsException the migrations exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#getMigrationStatus(java.lang.String)
 	 */
@@ -294,6 +398,13 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		}
 	}
 
+	/**
+	 * Exists migration status.
+	 *
+	 * @param project the project
+	 * @return true, if successful
+	 * @throws MigrationsException the migrations exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#existsMigrationStatus(java.lang.String)
 	 */
@@ -302,6 +413,12 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		return getMigrationStatus(project) != null;
 	}
 
+	/**
+	 * Removes the migration status.
+	 *
+	 * @param project the project
+	 * @throws MigrationsException the migrations exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#removeMigrationStatus(java.lang.String)
 	 */
@@ -322,6 +439,16 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		}		
 	}
 
+	/**
+	 * Update migration status.
+	 *
+	 * @param project the project
+	 * @param major the major
+	 * @param minor the minor
+	 * @param micro the micro
+	 * @param location the location
+	 * @throws MigrationsException the migrations exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#updateMigrationStatus(java.lang.String, int, int, int, java.lang.String)
 	 */
@@ -348,6 +475,12 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		}		
 	}
 
+	/**
+	 * Gets the migrations status.
+	 *
+	 * @return the migrations status
+	 * @throws MigrationsException the migrations exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService#getMigrationsStatus()
 	 */

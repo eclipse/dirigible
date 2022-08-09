@@ -44,11 +44,13 @@ import liquibase.resource.AbstractResourceAccessor;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
 /**
- * OData2TestUtils
- *
+ * OData2TestUtils.
  */
 public class OData2TestUtils {
 
+    /**
+     * Instantiates a new o data 2 test utils.
+     */
     private OData2TestUtils() {
     }
 
@@ -113,6 +115,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Fqn.
+     *
      * @param ns the namespace
      * @param name the name
      * @return FQN
@@ -122,6 +126,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Fqn.
+     *
      * @param clazz the class
      * @return FQN
      */
@@ -142,6 +148,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Fqns.
+     *
      * @param classes the classes
      * @return list
      */
@@ -154,6 +162,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Resources.
+     *
      * @param classes the classes
      * @return array
      */
@@ -167,6 +177,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Resource.
+     *
      * @param <T> T
      * @param clazz class
      * @return content
@@ -176,6 +188,8 @@ public class OData2TestUtils {
     }
 
     /**
+     * Stream.
+     *
      * @param <T> T
      * @param clazz class
      * @return InputStream
@@ -185,7 +199,10 @@ public class OData2TestUtils {
     }
 
     /**
+     * Inits the liquibase.
+     *
      * @param ds data source
+     * @param resourceAccessor the resource accessor
      * @throws SQLException in case of error
      */
     public static void initLiquibase(DataSource ds, AbstractResourceAccessor resourceAccessor) throws SQLException {

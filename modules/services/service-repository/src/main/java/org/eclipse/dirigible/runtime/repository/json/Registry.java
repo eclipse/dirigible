@@ -19,16 +19,22 @@ import java.util.List;
  */
 public class Registry {
 
+	/** The Constant TYPE_REGISTRY. */
 	private static final String TYPE_REGISTRY = "registry";
 
+	/** The name. */
 	private String name;
 
+	/** The path. */
 	private String path;
 
+	/** The type. */
 	private String type = TYPE_REGISTRY;
 
+	/** The collections. */
 	private List<Collection> collections = new ArrayList<Collection>();
 
+	/** The resources. */
 	private List<Resource> resources = new ArrayList<Resource>();
 
 	/**

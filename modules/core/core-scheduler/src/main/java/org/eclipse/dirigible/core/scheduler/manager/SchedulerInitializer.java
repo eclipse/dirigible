@@ -34,14 +34,19 @@ import org.slf4j.LoggerFactory;
  */
 public class SchedulerInitializer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerInitializer.class);
 
+	/** The scheduler core service. */
 	private SchedulerCoreService schedulerCoreService = new SchedulerCoreService();
 
+	/** The quartz database layout initializer. */
 	private QuartzDatabaseLayoutInitializer quartzDatabaseLayoutInitializer = new QuartzDatabaseLayoutInitializer();
 	
+	/** The synchronizer database layout initializer. */
 	private SynchronizerDatabaseLayoutInitializer synchronizerDatabaseLayoutInitializer = new SynchronizerDatabaseLayoutInitializer();
 	
+	/** The master to repository initializer. */
 	private MasterToRepositoryInitializer masterToRepositoryInitializer = new MasterToRepositoryInitializer();
 
 	/**

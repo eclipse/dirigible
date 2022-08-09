@@ -16,8 +16,10 @@ package org.eclipse.dirigible.database.ds.model;
  */
 public class DataStructureDependencyModel {
 
+	/** The name. */
 	private String name;
 
+	/** The type. */
 	private String type;
 
 	/**

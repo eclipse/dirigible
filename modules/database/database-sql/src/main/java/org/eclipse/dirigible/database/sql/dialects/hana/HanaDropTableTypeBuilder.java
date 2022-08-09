@@ -16,23 +16,33 @@ import org.eclipse.dirigible.database.sql.builders.tableType.DropTableTypeBuilde
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class HanaDropTableTypeBuilder.
+ */
 public class HanaDropTableTypeBuilder extends DropTableTypeBuilder {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(HanaDropTableTypeBuilder.class);
 
+    /** The table type. */
     private String tableType;
 
     /**
      * Instantiates a new abstract drop sql builder.
      *
      * @param dialect   the dialect
-     * @param tableType
+     * @param tableType the table type
      */
     public HanaDropTableTypeBuilder(ISqlDialect dialect, String tableType) {
         super(dialect, tableType);
         this.tableType=tableType;
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     @Override
     public String generate() {
 

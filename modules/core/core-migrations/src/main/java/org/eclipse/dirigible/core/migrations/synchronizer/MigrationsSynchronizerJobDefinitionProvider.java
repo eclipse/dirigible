@@ -21,12 +21,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class MigrationsSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS = "DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_MIGRATIONS_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_MIGRATIONS_SYNCHRONIZER_JOB = "dirigible-internal-migrations-synchronizer-job";
 	
+	/** The Constant MIGRATIONS_SYNCHRONIZER_JOB. */
 	static final String MIGRATIONS_SYNCHRONIZER_JOB = "Migrations Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

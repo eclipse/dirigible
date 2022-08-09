@@ -32,8 +32,10 @@ import org.junit.Test;
  */
 public class IndexingCoreServiceTest extends AbstractDirigibleTest {
 
+	/** The Constant TEST_INDEX. */
 	private static final String TEST_INDEX = "test_index";
 
+	/** The indexing core service. */
 	private IIndexingCoreService indexingCoreService = new IndexingCoreService();
 
 	/**

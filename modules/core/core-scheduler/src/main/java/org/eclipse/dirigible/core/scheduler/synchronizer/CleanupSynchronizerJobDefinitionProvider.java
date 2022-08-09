@@ -21,12 +21,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class CleanupSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_CLEANUP. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_CLEANUP = "DIRIGIBLE_JOB_EXPRESSION_CLEANUP";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_CLEANUP_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_CLEANUP_SYNCHRONIZER_JOB = "dirigible-internal-cleanup-synchronizer-job";
 	
+	/** The Constant CLEANUP_SYNCHRONIZER_JOB. */
 	static final String CLEANUP_SYNCHRONIZER_JOB = "Cleanup Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

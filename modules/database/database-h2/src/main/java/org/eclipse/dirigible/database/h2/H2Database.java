@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class H2Database extends AbstractDatabase {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(H2Database.class);
 
 	/** The Constant TYPE. */
@@ -77,6 +78,9 @@ public class H2Database extends AbstractDatabase {
 		logger.debug("Embedded H2 datasource initialized.");
 	}
 
+	/**
+	 * Initialize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#initialize()
@@ -87,6 +91,12 @@ public class H2Database extends AbstractDatabase {
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @param name the name
+	 * @return the data source
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
@@ -101,6 +111,11 @@ public class H2Database extends AbstractDatabase {
 		return dataSource;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getName()
@@ -110,6 +125,11 @@ public class H2Database extends AbstractDatabase {
 		return NAME;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getType()
@@ -202,6 +222,11 @@ public class H2Database extends AbstractDatabase {
 		return h2Root;
 	}
 
+	/**
+	 * Gets the data sources.
+	 *
+	 * @return the data sources
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSources()

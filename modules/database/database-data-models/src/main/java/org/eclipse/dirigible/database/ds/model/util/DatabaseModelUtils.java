@@ -22,8 +22,17 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnMo
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
 
+/**
+ * The Class DatabaseModelUtils.
+ */
 public class DatabaseModelUtils {
 
+    /**
+     * Generate hashed name.
+     *
+     * @param values the values
+     * @return the string
+     */
     public static String generateHashedName(List<String> values){
         StringBuilder hashedName = new StringBuilder("");
         for(String val : values){
@@ -32,6 +41,12 @@ public class DatabaseModelUtils {
         return String.valueOf(hashedName.toString().hashCode());
     }
     
+    /**
+     * Table model to structure.
+     *
+     * @param model the model
+     * @return the data structure table model
+     */
     public static DataStructureTableModel tableModelToStructure(PersistenceTableModel model) {
 	    if (model != null) {
 			DataStructureTableModel tableModel = new DataStructureTableModel();
@@ -49,6 +64,13 @@ public class DatabaseModelUtils {
 	    return null;
     }
 
+	/**
+	 * Table models to schema.
+	 *
+	 * @param schemaName the schema name
+	 * @param models the models
+	 * @return the data structure schema model
+	 */
 	public static DataStructureSchemaModel tableModelsToSchema(String schemaName, List<PersistenceTableModel> models) {
 		DataStructureSchemaModel schemaModel = new DataStructureSchemaModel();
 		schemaModel.setName(schemaName);

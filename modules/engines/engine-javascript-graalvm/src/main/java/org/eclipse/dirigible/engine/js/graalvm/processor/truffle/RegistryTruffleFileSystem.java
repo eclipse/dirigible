@@ -27,21 +27,45 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * The Class RegistryTruffleFileSystem.
+ */
 public class RegistryTruffleFileSystem implements FileSystem {
 
+    /** The scope handler. */
     private final DirigibleScopePathHandler scopeHandler;
+    
+    /** The standard handler. */
     private final StandardPathHandler standardHandler;
 
+    /**
+     * Instantiates a new registry truffle file system.
+     *
+     * @param executor the executor
+     * @param project the project
+     */
     public RegistryTruffleFileSystem(IScriptEngineExecutor executor, String project) {
         this.scopeHandler = new DirigibleScopePathHandler(executor);
         this.standardHandler = new StandardPathHandler(project, IRepositoryStructure.PATH_REGISTRY_PUBLIC, executor);
     }
 
+    /**
+     * Parses the path.
+     *
+     * @param uri the uri
+     * @return the path
+     */
     @Override
     public Path parsePath(URI uri) {
         throw new ScriptingException("URIs are currently not supported!");
     }
 
+    /**
+     * Parses the path.
+     *
+     * @param path the path
+     * @return the path
+     */
     @Override
     public Path parsePath(String path) {
         if ("".equals(path)) {
@@ -50,6 +74,14 @@ public class RegistryTruffleFileSystem implements FileSystem {
         return standardHandler.handlePossibleRepositoryPath(path);
     }
 
+    /**
+     * Check access.
+     *
+     * @param path the path
+     * @param modes the modes
+     * @param linkOptions the link options
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public void checkAccess(
             Path path,
@@ -59,6 +91,13 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     }
 
+    /**
+     * Creates the directory.
+     *
+     * @param dir the dir
+     * @param attrs the attrs
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public void createDirectory(
             Path dir,
@@ -67,11 +106,26 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     }
 
+    /**
+     * Delete.
+     *
+     * @param path the path
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public void delete(Path path) throws IOException {
 
     }
 
+    /**
+     * New byte channel.
+     *
+     * @param path the path
+     * @param options the options
+     * @param attrs the attrs
+     * @return the seekable byte channel
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public SeekableByteChannel newByteChannel(
             Path path,
@@ -88,6 +142,14 @@ public class RegistryTruffleFileSystem implements FileSystem {
         return new SeekableInMemoryByteChannel(source.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * New directory stream.
+     *
+     * @param dir the dir
+     * @param filter the filter
+     * @return the directory stream
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public DirectoryStream<Path> newDirectoryStream(
             Path dir,
@@ -96,6 +158,12 @@ public class RegistryTruffleFileSystem implements FileSystem {
         return null;
     }
 
+    /**
+     * To absolute path.
+     *
+     * @param path the path
+     * @return the path
+     */
     @Override
     public Path toAbsolutePath(Path path) {
         if ("".equals(path.toString())) {
@@ -106,6 +174,14 @@ public class RegistryTruffleFileSystem implements FileSystem {
         return maybeDirigiblePath.toAbsolutePath();
     }
 
+    /**
+     * To real path.
+     *
+     * @param path the path
+     * @param linkOptions the link options
+     * @return the path
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public Path toRealPath(
             Path path,
@@ -118,6 +194,15 @@ public class RegistryTruffleFileSystem implements FileSystem {
         return standardHandler.handlePossibleRepositoryPath(path);
     }
 
+    /**
+     * Read attributes.
+     *
+     * @param path the path
+     * @param attributes the attributes
+     * @param options the options
+     * @return the map
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public Map<String, Object> readAttributes(
             Path path,

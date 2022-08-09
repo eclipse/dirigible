@@ -32,8 +32,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 /**
- * Front-facing service providing the version information
- *
+ * Front-facing service providing the version information.
  */
 @Path("/version")
 @RolesAllowed({ "Operator" })
@@ -42,13 +41,21 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class VersionRestService extends AbstractRestService implements IRestService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(VersionRestService.class);
 	
+	/** The processor. */
 	private VersionProcessor processor = new VersionProcessor();
 	
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -59,7 +66,7 @@ public class VersionRestService extends AbstractRestService implements IRestServ
 	}
 	
 	/**
-	 * Get the version  information
+	 * Get the version  information.
 	 *
 	 * @return the response
 	 * @throws Exception the scheduler exception
@@ -76,6 +83,11 @@ public class VersionRestService extends AbstractRestService implements IRestServ
 		return Response.ok().entity(processor.version()).build();
 	}
 	
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

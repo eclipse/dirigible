@@ -21,12 +21,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class WikiSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_WIKI. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_WIKI = "DIRIGIBLE_JOB_EXPRESSION_WIKI";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_WIKI_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_WIKI_SYNCHRONIZER_JOB = "dirigible-internal-wiki-synchronizer-job";
 	
+	/** The Constant WIKI_SYNCHRONIZER_JOB. */
 	static final String WIKI_SYNCHRONIZER_JOB = "Wiki Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

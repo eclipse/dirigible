@@ -24,10 +24,20 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * The Class ZipProcessor.
+ */
 public class ZipProcessor {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ZipProcessor.class);
 
+    /**
+     * Zip.
+     *
+     * @param path the path
+     * @param zipTargetPath the zip target path
+     */
     public static void zip(String path, String zipTargetPath) {
         Path source = Paths.get(path);
         Path target = Paths.get(zipTargetPath);
@@ -38,6 +48,12 @@ public class ZipProcessor {
         }
     }
 
+    /**
+     * Unzip.
+     *
+     * @param zipPath the zip path
+     * @param targetPath the target path
+     */
     public static void unzip(String zipPath, String targetPath) {
         Path source = Paths.get(zipPath);
         Path target = Paths.get(targetPath);
@@ -49,6 +65,13 @@ public class ZipProcessor {
 
     }
 
+    /**
+     * Unzip folder.
+     *
+     * @param source the source
+     * @param target the target
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public static void unzipFolder(Path source, Path target) throws IOException {
 
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(source.toFile()))) {
@@ -76,6 +99,13 @@ public class ZipProcessor {
     }
 
 
+    /**
+     * Zip folder.
+     *
+     * @param sourceFolderPath the source folder path
+     * @param zipPath the zip path
+     * @throws Exception the exception
+     */
     private static void zipFolder(Path sourceFolderPath, Path zipPath) throws Exception {
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipPath.toFile()));
         Files.walkFileTree(sourceFolderPath, new SimpleFileVisitor<Path>() {
@@ -89,6 +119,14 @@ public class ZipProcessor {
         zos.close();
     }
 
+    /**
+     * Zip slip protect.
+     *
+     * @param zipEntry the zip entry
+     * @param targetDir the target dir
+     * @return the path
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     // protect zip slip attack
     public static Path zipSlipProtect(ZipEntry zipEntry, Path targetDir)
             throws IOException {

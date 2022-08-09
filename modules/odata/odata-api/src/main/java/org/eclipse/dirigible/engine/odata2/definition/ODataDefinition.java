@@ -23,29 +23,36 @@ import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 /**
- * The OData Model
+ * The OData Model.
  */
 @Table(name = "DIRIGIBLE_ODATA")
 public class ODataDefinition implements IArtefactDefinition {
 	
+	/** The location. */
 	@Id
 	@Column(name = "ODATA_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 	
+	/** The namespace. */
 	@Column(name = "ODATA_NAMESPACE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String namespace;
 	
+	/** The hash. */
 	@Column(name = "ODATA_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 
+	/** The created by. */
 	@Column(name = "ODATA_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "ODATA_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 	
+	/** The entities. */
 	private List<ODataEntityDefinition> entities = new ArrayList<ODataEntityDefinition>();
 	
+	/** The associations. */
 	private List<ODataAssociationDefinition> associations = new ArrayList<ODataAssociationDefinition>();
 
 	
@@ -69,8 +76,8 @@ public class ODataDefinition implements IArtefactDefinition {
 	}
 	
 	/**
-	 * Gets the namesapce
-	 * 
+	 * Gets the namesapce.
+	 *
 	 * @return the namespace
 	 */
 	public String getNamespace() {
@@ -78,8 +85,8 @@ public class ODataDefinition implements IArtefactDefinition {
 	}
 
 	/**
-	 * Sets the namespace
-	 * 
+	 * Sets the namespace.
+	 *
 	 * @param namespace the namespace to set
 	 */
 	public void setNamespace(String namespace) {
@@ -159,6 +166,11 @@ public class ODataDefinition implements IArtefactDefinition {
 		return GsonHelper.GSON.toJson(this);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -171,6 +183,11 @@ public class ODataDefinition implements IArtefactDefinition {
 	
 	
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -184,6 +201,12 @@ public class ODataDefinition implements IArtefactDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -215,8 +238,8 @@ public class ODataDefinition implements IArtefactDefinition {
 	}
 
 	/**
-	 * Gets the entities
-	 * 
+	 * Gets the entities.
+	 *
 	 * @return the entities
 	 */
 	public List<ODataEntityDefinition> getEntities() {
@@ -224,19 +247,29 @@ public class ODataDefinition implements IArtefactDefinition {
 	}
 	
 	/**
-	 * Gets the associations
-	 * 
+	 * Gets the associations.
+	 *
 	 * @return the associations
 	 */
 	public List<ODataAssociationDefinition> getAssociations() {
 		return associations;
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getNamespace();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();

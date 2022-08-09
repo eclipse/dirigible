@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CheckoutCommand {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CheckoutCommand.class);
 
 	/** The publisher core service. */

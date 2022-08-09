@@ -11,11 +11,12 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mysql;
 
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.dialects.mysql.MySQLSqlDialect;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
-import static org.junit.Assert.*;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.junit.Test;
 
 /**
  * The Class SequenceTest.
@@ -36,6 +37,9 @@ public class SequenceTest {
         fail("Does MySQL support Sequences?");
     }
 
+    /**
+     * Alter sequence.
+     */
     @Test
     public void alterSequence() {
         String sql = SqlFactory.getNative(new MySQLSqlDialect())

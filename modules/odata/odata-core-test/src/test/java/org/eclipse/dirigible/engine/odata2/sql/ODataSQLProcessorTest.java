@@ -39,13 +39,26 @@ import java.util.*;
 import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class ODataSQLProcessorTest.
+ */
 public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
+    /**
+     * Gets the o data entities.
+     *
+     * @return the o data entities
+     */
     @Override
     protected Class<?>[] getODataEntities() {
         return new Class<?>[]{Car.class, Driver.class, Owner.class, Address.class};
     }
 
+    /**
+     * Test SQL processor.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSQLProcessor() throws Exception {
 
@@ -60,6 +73,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertTrue(content.contains("Lada"));
     }
 
+    /**
+     * Test not found xml response.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testNotFoundXmlResponse() throws Exception {
         String nonExistingUUID = "77777777-7777-7777-7777-777777777777";
@@ -70,6 +88,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(404, response.getStatus());
     }
 
+    /**
+     * Test not found json response.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testNotFoundJsonResponse() throws Exception {
         String nonExistingUUID = "77777777-7777-7777-7777-777777777777";
@@ -80,6 +103,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(404, response.getStatus());
     }
 
+    /**
+     * Test request entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testRequestEntity() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -100,6 +128,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
     }
 
+    /**
+     * Test top.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("rawtypes")
     public void testTop() throws Exception {
@@ -118,6 +151,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(2, elements.size());
     }
 
+    /**
+     * Test count.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testCount() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -131,6 +169,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals("7", IOUtils.toString(bais));
     }
 
+    /**
+     * Test create entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testCreateEntity() throws Exception {
 
@@ -175,6 +218,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
     }
 
+    /**
+     * Test read entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testReadEntity() throws Exception {
 
@@ -217,6 +265,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals("3ab18d92-a574-45bb-a5e5-bcce38b7af11", idValue);
     }
 
+    /**
+     * Test create entity without id.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testCreateEntityWithoutId() throws Exception {
 
@@ -238,6 +291,12 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(500, response.getStatus());
     }
 
+    /**
+     * Test create entity with reference ID.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testCreateEntityWithReferenceID() throws IOException, ODataException {
         String existingCarId = "639cac17-4cfd-4d94-b5d0-111fd5488423";
@@ -276,6 +335,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
     }
 
+    /**
+     * Test merge entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testMergeEntity() throws Exception {
         Response existingCar = OData2RequestBuilder.createRequest(sf) //
@@ -313,6 +377,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
     }
 
 
+    /**
+     * Test delete entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testDeleteEntity() throws Exception {
         Response getCar = OData2RequestBuilder.createRequest(sf) //
@@ -331,6 +400,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(404, getDeletedCar.getStatus());
     }
 
+    /**
+     * Test change reference id.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testChangeReferenceId() throws Exception {
         String existingCarId = "639cac17-4cfd-4d94-b5d0-111fd5488423";
@@ -353,6 +427,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(204, response.getStatus());
     }
 
+    /**
+     * Test put entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testPutEntity() throws Exception {
         Response existingCar = OData2RequestBuilder.createRequest(sf) //
@@ -389,6 +468,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(50000.0d, properties.get("Price"));
     }
 
+    /**
+     * Test patch entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testPatchEntity() throws Exception {
         Response existingCar = OData2RequestBuilder.createRequest(sf) //
@@ -424,6 +508,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(50001.0d, properties.get("Price"));
     }
 
+    /**
+     * Test patch entity non existing id.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testPatchEntityNonExistingId() throws Exception {
         String content = "{" //
@@ -442,6 +531,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(404, response.getStatus());
     }
 
+    /**
+     * Test put entity with filter not allowed.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testPutEntityWithFilterNotAllowed() throws Exception {
         String content = "{" //
@@ -464,6 +558,12 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(500, response.getStatus());
     }
 
+    /**
+     * Test navigation.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testNavigation() throws IOException, ODataException {
 
@@ -478,6 +578,12 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertTrue(responseStr.contains("\"uri\":\"http://localhost:8080/api/v1/Drivers('695796c4-09a1-11ec-9a03-0242ac130006')/Car"));
     }
 
+    /**
+     * Test get property.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testGetProperty() throws IOException, ODataException {
 
@@ -491,6 +597,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals("Peugeot", responseStr);
     }
 
+    /**
+     * Test top 2.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testTop2() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -502,6 +613,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(3, resultFeed.getEntries().size());
     }
 
+    /**
+     * Test skip 1.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSkip1() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -514,6 +630,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
     }
 
+    /**
+     * Test skip 2.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSkip2() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -526,6 +647,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
     }
 
+    /**
+     * Test select.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSelect() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -539,6 +665,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertNotNull(properties.get("Model"));
     }
 
+    /**
+     * Test order by asc.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testOrderByAsc() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -554,6 +685,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(3000.0, firstCarProperties.get("Price"));
     }
 
+    /**
+     * Test order by desc.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testOrderByDesc() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -569,6 +705,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(67000.0, firstCarProperties.get("Price"));
     }
 
+    /**
+     * Tes filter.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void tesFilter() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -586,6 +727,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
     }
 
+    /**
+     * Tes filter two conditions and.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void tesFilterTwoConditionsAnd() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -602,6 +748,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals("Moskvitch", entries.get(0).getProperties().get("Make"));
     }
 
+    /**
+     * Test filter 2.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testFilter2() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -618,6 +769,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals("Moskvitch", properties.get("Make"));
     }
 
+    /**
+     * Test incompatible value.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testIncompatibleValue() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -627,6 +783,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(400, response.getStatus());
     }
 
+    /**
+     * Test SQL processor filter le time.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSQLProcessorFilterLeTime() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -640,6 +801,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(1, entries.size());
     }
 
+    /**
+     * Test filter ge time.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testFilterGeTime() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -653,6 +819,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(6, entries.size());
     }
 
+    /**
+     * Test expand.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testExpand() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -677,6 +848,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(0, drivers.size());
     }
 
+    /**
+     * Test get entity expand two entities.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGetEntityExpandTwoEntities() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -705,6 +881,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals("Grigor", fourthOwnerProperties.get("FirstName"));
     }
 
+    /**
+     * Test get entity set expand two entities.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGetEntitySetExpandTwoEntities() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -735,6 +916,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals("Grigor", fourthOwnerProperties.get("FirstName"));
     }
 
+    /**
+     * Test order by expanded entity without expand.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testOrderByExpandedEntityWithoutExpand() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -746,6 +932,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(500, response.getStatus()); //TODO refine the error codes, here it should be a bad request
     }
 
+    /**
+     * Test order by top skip expanded entity property.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testOrderByTopSkipExpandedEntityProperty() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -765,6 +956,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
     }
 
 
+    /**
+     * Test order by expanded entity property.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testOrderByExpandedEntityProperty() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -811,6 +1007,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(0, driversAsc.size());
     }
 
+    /**
+     * Test order by expanded entity properties.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testOrderByExpandedEntityProperties() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -837,6 +1038,11 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals("Zahari", firstDriverProperties.get("FirstName"));
     }
 
+    /**
+     * Test get entity set expand sub entity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGetEntitySetExpandSubEntity() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //

@@ -22,6 +22,11 @@ public class PublisherSynchronizerJob extends AbstractSynchronizerJob {
 	/** The extensions synchronizer. */
 	private PublisherSynchronizer publisherSynchronizer = new PublisherSynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -31,6 +36,11 @@ public class PublisherSynchronizerJob extends AbstractSynchronizerJob {
 		return publisherSynchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()

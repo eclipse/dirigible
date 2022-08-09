@@ -11,10 +11,23 @@
  */
 package org.eclipse.dirigible.commons.api.artefacts;
 
+/**
+ * The Interface IArtefactDefinition.
+ */
 public interface IArtefactDefinition {
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	public String getArtefactName();
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	public String getArtefactLocation();
 
 }

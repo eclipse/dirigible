@@ -16,6 +16,9 @@ import javax.websocket.server.ServerEndpoint;
 import org.eclipse.dirigible.runtime.ide.terminal.service.XTerminalWebsocketService;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class SpringBootXTerminalWebsocketService.
+ */
 @Component
 @ServerEndpoint(
 		value = "/websockets/v4/ide/xterminal",

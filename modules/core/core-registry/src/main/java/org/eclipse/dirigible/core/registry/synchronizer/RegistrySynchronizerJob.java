@@ -14,15 +14,29 @@ package org.eclipse.dirigible.core.registry.synchronizer;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
+/**
+ * The Class RegistrySynchronizerJob.
+ */
 public class RegistrySynchronizerJob extends AbstractSynchronizerJob {
 
+	/** The synchronizer. */
 	private RegistrySynchronizer synchronizer = new RegistrySynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	@Override
 	public ISynchronizer getSynchronizer() {
 		return synchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return RegistrySynchronizerJobDefinitionProvider.REGISTRY_SYNCHRONIZER_JOB;

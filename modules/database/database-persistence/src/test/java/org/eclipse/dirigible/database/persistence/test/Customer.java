@@ -21,16 +21,20 @@ import javax.persistence.Table;
 @Table(name = "CUSTOMERS", schema = "FACTORY")
 public class Customer {
 
+	/** The id. */
 	@Id
 	@Column(name = "CUSTOMER_ID", columnDefinition = "INTEGER", nullable = false)
 	private int id;
 
+	/** The first name. */
 	@Column(name = "CUSTOMER_FIRST_NAME", columnDefinition = "VARCHAR", nullable = false, length = 512)
 	private String firstName;
 
+	/** The last name. */
 	@Column(name = "CUSTOMER_LAST_NAME", columnDefinition = "VARCHAR", nullable = false, length = 512)
 	private String lastName;
 
+	/** The age. */
 	@Column(name = "CUSTOMER_AGE", columnDefinition = "INTEGER", nullable = false)
 	private int age;
 

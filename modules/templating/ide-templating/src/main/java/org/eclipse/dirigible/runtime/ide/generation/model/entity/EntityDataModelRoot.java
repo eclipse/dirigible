@@ -14,20 +14,22 @@ package org.eclipse.dirigible.runtime.ide.generation.model.entity;
 import java.util.List;
 
 /**
- * Transport object for the Entity Data Model
- *
+ * Transport object for the Entity Data Model.
  */
 public class EntityDataModelRoot {
 	
+	/** The entities. */
 	private List<EntityDataModelEntity> entities;
 	
+	/** The perspectives. */
 	private List<EntityDataModelPerspective> perspectives;
 	
+	/** The sidebar. */
 	private List<EntityDataModelSidebarItem> sidebar;
 
 	/**
-	 * Gets the entities
-	 * 
+	 * Gets the entities.
+	 *
 	 * @return the entities
 	 */
 	public List<EntityDataModelEntity> getEntities() {
@@ -35,8 +37,8 @@ public class EntityDataModelRoot {
 	}
 
 	/**
-	 * Sets the entities
-	 * 
+	 * Sets the entities.
+	 *
 	 * @param entities the entities to set
 	 */
 	public void setEntities(List<EntityDataModelEntity> entities) {
@@ -44,6 +46,8 @@ public class EntityDataModelRoot {
 	}
 
 	/**
+	 * Gets the perspectives.
+	 *
 	 * @return the perspectives
 	 */
 	public List<EntityDataModelPerspective> getPerspectives() {
@@ -51,6 +55,8 @@ public class EntityDataModelRoot {
 	}
 
 	/**
+	 * Sets the perspectives.
+	 *
 	 * @param perspectives the perspectives to set
 	 */
 	public void setPerspectives(List<EntityDataModelPerspective> perspectives) {
@@ -58,6 +64,8 @@ public class EntityDataModelRoot {
 	}
 
 	/**
+	 * Gets the sidebar.
+	 *
 	 * @return the sidebar
 	 */
 	public List<EntityDataModelSidebarItem> getSidebar() {
@@ -65,6 +73,8 @@ public class EntityDataModelRoot {
 	}
 
 	/**
+	 * Sets the sidebar.
+	 *
 	 * @param sidebar the sidebar to set
 	 */
 	public void setSidebar(List<EntityDataModelSidebarItem> sidebar) {

@@ -25,12 +25,20 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
 
+/**
+ * The Class VelocityGenerationEngine.
+ */
 public class VelocityGenerationEngine implements IGenerationEngine {
 
+	/** The Constant ENGINE_NAME. */
 	public static final String ENGINE_NAME = "velocity";
 	
+	/** The engine. */
 	private VelocityEngine engine;
 
+	/**
+	 * Instantiates a new velocity generation engine.
+	 */
 	public VelocityGenerationEngine() {
 		engine = new VelocityEngine();
 		try {
@@ -42,16 +50,41 @@ public class VelocityGenerationEngine implements IGenerationEngine {
 	}
 
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return ENGINE_NAME;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @param parameters the parameters
+	 * @param location the location
+	 * @param input the input
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public byte[] generate(Map<String, Object> parameters, String location, byte[] input) throws IOException {
 		return generate(parameters, location, input, null, null);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @param parameters the parameters
+	 * @param location the location
+	 * @param input the input
+	 * @param sm the sm
+	 * @param em the em
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em)
 			throws IOException {
@@ -77,10 +110,10 @@ public class VelocityGenerationEngine implements IGenerationEngine {
 	}
 	
 	/**
-	 * Put the input parameters to the Velocity Context for processing
+	 * Put the input parameters to the Velocity Context for processing.
 	 *
-	 * @param parameters
-	 * @param context
+	 * @param parameters the parameters
+	 * @param context the context
 	 */
 	private void prepareContextData(Map<String, Object> parameters, VelocityContext context) {
 		if (parameters == null) {

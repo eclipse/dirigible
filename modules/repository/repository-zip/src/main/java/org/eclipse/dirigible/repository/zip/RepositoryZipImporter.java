@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RepositoryZipImporter {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryZipImporter.class);
 
 	/**
@@ -203,9 +204,9 @@ public class RepositoryZipImporter {
 	}
 
     /**
-     * Checks is zip contains files added by MAC OS when creating zip
+     * Checks is zip contains files added by MAC OS when creating zip.
      *
-     * @param path
+     * @param path the path
      * @return boolean
      */
     private static boolean ifEntryIsAddedByMac(String path) {

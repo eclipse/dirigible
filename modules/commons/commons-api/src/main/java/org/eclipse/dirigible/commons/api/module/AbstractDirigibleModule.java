@@ -25,7 +25,8 @@ public abstract class AbstractDirigibleModule implements DirigibleModule {
 	public abstract String getName();
 
 	/**
-	 * Gets the priority
+	 * Gets the priority.
+	 *
 	 * @return the priority
 	 */
 	@Override
@@ -34,7 +35,7 @@ public abstract class AbstractDirigibleModule implements DirigibleModule {
 	}
 	
 	/**
-	 * Runs the module initialization logic
+	 * Runs the module initialization logic.
 	 */
 	@Override
 	public abstract void configure();

@@ -18,8 +18,12 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 
+/**
+ * The Class CmsProviderInternal.
+ */
 public class CmsProviderInternal implements ICmsProvider {
 
+	/** The Constant CMS. */
 	private static final String CMS = "cms"; //$NON-NLS-1$
 
 	/** The Constant NAME. */
@@ -28,8 +32,12 @@ public class CmsProviderInternal implements ICmsProvider {
 	/** The Constant TYPE. */
 	public static final String TYPE = "internal"; //$NON-NLS-1$
 
+	/** The cmis repository. */
 	private CmisRepository cmisRepository;
 
+	/**
+	 * Instantiates a new cms provider internal.
+	 */
 	public CmsProviderInternal() {
 		Configuration.loadModuleConfig("/dirigible-cms-internal.properties");
 
@@ -42,16 +50,31 @@ public class CmsProviderInternal implements ICmsProvider {
 		this.cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return NAME;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	@Override
 	public String getType() {
 		return TYPE;
 	}
 
+	/**
+	 * Gets the session.
+	 *
+	 * @return the session
+	 */
 	@Override
 	public Object getSession() {
 		CmisSession cmisSession = this.cmisRepository.getSession();

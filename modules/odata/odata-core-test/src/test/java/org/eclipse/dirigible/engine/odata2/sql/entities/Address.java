@@ -16,25 +16,33 @@ import org.apache.olingo.odata2.api.annotation.edm.*;
 import static org.eclipse.dirigible.engine.odata2.sql.entities.Owner.OWNER_2_ADDRESS_ASSOCIATION;
 
 
+/**
+ * The Class Address.
+ */
 @EdmEntityType(name = "Address")
 @EdmEntitySet(name = "Addresses")
 public class Address {
 
 
+    /** The id. */
     @EdmKey
     @EdmProperty
     private String id;
 
+    /** The street. */
     @EdmProperty
     private String street;
 
+    /** The city. */
     @EdmProperty
     private String city;
 
+    /** The postal code. */
     @EdmProperty
     private Integer postalCode;
 
 
+    /** The owner. */
     @EdmNavigationProperty(toMultiplicity = EdmNavigationProperty.Multiplicity.ZERO_OR_ONE, toType = Owner.class, association = OWNER_2_ADDRESS_ASSOCIATION)
     private Owner owner;
 

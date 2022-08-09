@@ -28,23 +28,58 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.util.DecoratedCollection;
 
+/**
+ * The Class MustacheGenerationEngine.
+ */
 public class MustacheGenerationEngine implements IGenerationEngine {
 
+	/** The Constant DECORATION. */
 	private static final String DECORATION = "_";
+	
+	/** The Constant ENGINE_NAME. */
 	private static final String ENGINE_NAME = "mustache";
+	
+	/** The Constant MUSTACHE_DEFAULT_START_SYMBOL. */
 	private static final String MUSTACHE_DEFAULT_START_SYMBOL = "{{";
+	
+	/** The Constant MUSTACHE_DEFAULT_END_SYMBOL. */
 	private static final String MUSTACHE_DEFAULT_END_SYMBOL = "}}";
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return ENGINE_NAME;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @param parameters the parameters
+	 * @param location the location
+	 * @param input the input
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public byte[] generate(Map<String, Object> parameters, String location, byte[] input) throws IOException {
 		return generate(parameters, location, input, MUSTACHE_DEFAULT_START_SYMBOL, MUSTACHE_DEFAULT_END_SYMBOL);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @param parameters the parameters
+	 * @param location the location
+	 * @param input the input
+	 * @param sm the sm
+	 * @param em the em
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em)
 			throws IOException {
@@ -60,6 +95,11 @@ public class MustacheGenerationEngine implements IGenerationEngine {
 		return baos.toByteArray();
 	}
 
+	/**
+	 * Decorate parameters.
+	 *
+	 * @param parameters the parameters
+	 */
 	private void decorateParameters(Map<String, Object> parameters) {
 		if (parameters != null) {
 			Map<String, Object> newParameters = new HashMap<String, Object>();

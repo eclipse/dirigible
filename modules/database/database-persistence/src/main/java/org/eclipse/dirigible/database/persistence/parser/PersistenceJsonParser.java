@@ -24,6 +24,7 @@ import com.google.gson.Gson;
  */
 public class PersistenceJsonParser<T> {
 
+	/** The Constant gson. */
 	private static final Gson gson = new Gson();
 
 	/**

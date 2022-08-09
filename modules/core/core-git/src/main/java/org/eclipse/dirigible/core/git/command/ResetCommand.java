@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ResetCommand {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ResetCommand.class);
 
 	/** The verifier. */

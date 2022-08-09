@@ -55,8 +55,10 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceManager<T> {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceManager.class);
 
+	/** The Constant CONNECTION_ID_SEPARATOR. */
 	private static final String CONNECTION_ID_SEPARATOR = ":";
 
 	/** The Constant EXISTING_TABLES_CACHE. */
@@ -180,6 +182,12 @@ public class PersistenceManager<T> {
 		}
 	}
 
+	/**
+	 * Gets the connection identity.
+	 *
+	 * @param connection the connection
+	 * @return the connection identity
+	 */
 	private String getConnectionIdentity(Connection connection) {
 		try {
 			String url = connection.getMetaData().getURL();
@@ -197,6 +205,12 @@ public class PersistenceManager<T> {
 		EXISTING_TABLES_CACHE.clear();
 	}
 
+	/**
+	 * Reset.
+	 *
+	 * @param connection the connection
+	 * @param clazz the clazz
+	 */
 	public void reset(Connection connection, Class<T> clazz) {
 		String id = getConnectionIdentity(connection);
 		EXISTING_TABLES_CACHE.remove(id + CONNECTION_ID_SEPARATOR + clazz.getCanonicalName());

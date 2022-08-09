@@ -24,6 +24,7 @@ import org.eclipse.dirigible.core.security.service.SecurityCoreService;
  */
 public class SecurityProcessor {
 
+	/** The security core service. */
 	private SecurityCoreService securityCoreService = new SecurityCoreService();
 
 	/**

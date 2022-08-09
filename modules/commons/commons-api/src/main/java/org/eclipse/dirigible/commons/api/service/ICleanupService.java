@@ -11,8 +11,14 @@
  */
 package org.eclipse.dirigible.commons.api.service;
 
+/**
+ * The Interface ICleanupService.
+ */
 public interface ICleanupService {
 	
+	/**
+	 * Cleanup.
+	 */
 	public void cleanup();
 
 }

@@ -16,6 +16,7 @@ package org.eclipse.dirigible.database.databases.api;
  */
 public class DatabasesException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5585765264282669358L;
 
 	/**

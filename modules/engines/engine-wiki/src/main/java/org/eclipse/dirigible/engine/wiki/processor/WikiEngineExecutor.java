@@ -32,10 +32,17 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
  */
 public class WikiEngineExecutor extends AbstractResourceExecutor {
 	
+	/** The Constant ENGINE_TYPE. */
 	public static final String ENGINE_TYPE = "wiki";
 	
+	/** The Constant ENGINE_NAME. */
 	public static final String ENGINE_NAME = "Default Wiki Content Engine";
 	
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getType()
@@ -45,6 +52,11 @@ public class WikiEngineExecutor extends AbstractResourceExecutor {
 		return ENGINE_TYPE;
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()
@@ -57,8 +69,8 @@ public class WikiEngineExecutor extends AbstractResourceExecutor {
 	/**
 	 * Render content.
 	 *
-	 * @param content
-	 *            the content
+	 * @param path the path
+	 * @param content            the content
 	 * @return the string
 	 */
 	public String renderContent(String path, String content) {
@@ -71,6 +83,12 @@ public class WikiEngineExecutor extends AbstractResourceExecutor {
 		return "File extension is uknown for Wiki engine: " + path;
 	}
 	
+	/**
+	 * Render markdown.
+	 *
+	 * @param content the content
+	 * @return the string
+	 */
 	private String renderMarkdown(String content) {
 		MutableDataSet options = new MutableDataSet();
 
@@ -89,6 +107,12 @@ public class WikiEngineExecutor extends AbstractResourceExecutor {
         return html;
 	}
 	
+	/**
+	 * Render confluence.
+	 *
+	 * @param content the content
+	 * @return the string
+	 */
 	private String renderConfluence(String content) {
 		StringWriter writer = new StringWriter();
 		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);

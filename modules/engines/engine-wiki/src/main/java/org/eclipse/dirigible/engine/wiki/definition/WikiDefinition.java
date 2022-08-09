@@ -25,16 +25,20 @@ import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 @Table(name = "DIRIGIBLE_WIKI")
 public class WikiDefinition implements IArtefactDefinition {
 
+	/** The location. */
 	@Id
 	@Column(name = "WIKI_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
+	/** The hash. */
 	@Column(name = "WIKI_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 
+	/** The created by. */
 	@Column(name = "WIKI_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "WIKI_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -121,6 +125,11 @@ public class WikiDefinition implements IArtefactDefinition {
 		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -134,6 +143,12 @@ public class WikiDefinition implements IArtefactDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -167,11 +182,21 @@ public class WikiDefinition implements IArtefactDefinition {
 		return true;
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getLocation();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();

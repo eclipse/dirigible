@@ -16,6 +16,7 @@ package org.eclipse.dirigible.core.git;
  */
 public class GitConnectorException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3164412135969838078L;
 
 	/**

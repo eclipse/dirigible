@@ -33,20 +33,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Java facade for working with HttpServletRequest
+ * Java facade for working with HttpServletRequest.
  */
 public class HttpRequestFacade implements IScriptingFacade {
 
 	/** The Constant ATTRIBUTE_REST_RESOURCE_PATH. */
 	public static final String ATTRIBUTE_REST_RESOURCE_PATH = "dirigible-rest-resource-path";
+	
+	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Request Facade without a valid Request";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpRequestFacade.class);
 
+	/** The Constant ACCESS_MANAGERS. */
 	private static final ServiceLoader<IAccessManager> ACCESS_MANAGERS = ServiceLoader.load(IAccessManager.class);
 
 	/**
-	 * Returns the request in the current thread context
+	 * Returns the request in the current thread context.
 	 *
 	 * @return the request
 	 */
@@ -63,7 +67,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Checks if there is a request in the current thread context
+	 * Checks if there is a request in the current thread context.
 	 *
 	 * @return true, if there is a request in the current thread context
 	 */
@@ -73,7 +77,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Returns the name of the HTTP method with which this request in the current thread context was made
+	 * Returns the name of the HTTP method with which this request in the current thread context was made.
 	 *
 	 * @return the HTTP method of the request
 	 * @see HttpServletRequest#getMethod()
@@ -87,7 +91,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Returns the login of the user making the request or null if the user hasn't been authenticated
+	 * Returns the login of the user making the request or null if the user hasn't been authenticated.
 	 *
 	 * @return the login of the user making the request
 	 * @see HttpServletRequest#getRemoteUser()
@@ -101,7 +105,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Returns any extra path information associated with the URL the client sent when it made this request
+	 * Returns any extra path information associated with the URL the client sent when it made this request.
 	 *
 	 * @return the path info
 	 * @see HttpServletRequest#getPathInfo()
@@ -117,7 +121,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	/**
 	 * Returns any extra path information after the servlet name but before the query string, and translates it to a
 	 * real
-	 * path
+	 * path.
 	 *
 	 * @return the path translated
 	 * @see HttpServletRequest#getPathTranslated()
@@ -172,10 +176,9 @@ public class HttpRequestFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Returns the attribute as string
+	 * Returns the attribute as string.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name            the name
 	 * @return the attribute
 	 * @see HttpServletRequest#getAttribute(String)
 	 */

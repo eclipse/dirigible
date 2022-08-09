@@ -15,6 +15,9 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
 
+/**
+ * The Class DerbyAlterBranchingBuilder.
+ */
 public class DerbyAlterBranchingBuilder extends AlterBranchingBuilder {
     /**
      * Instantiates a new creates the branching builder.
@@ -25,6 +28,12 @@ public class DerbyAlterBranchingBuilder extends AlterBranchingBuilder {
         super(dialect);
     }
 
+    /**
+     * Table.
+     *
+     * @param table the table
+     * @return the alter table builder
+     */
     @Override
     public AlterTableBuilder table(String table) {
         return new DerbyAlterTableBuilder(getDialect(), table);

@@ -23,6 +23,7 @@ import org.eclipse.dirigible.database.api.DatabaseModule;
  */
 public class DatasourceProvider {
 
+	/** The runtime data source. */
 	private DataSource runtimeDataSource;
 
 	/**

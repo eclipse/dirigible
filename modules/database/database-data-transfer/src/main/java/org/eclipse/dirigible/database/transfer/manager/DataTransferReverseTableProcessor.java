@@ -23,12 +23,26 @@ import org.eclipse.dirigible.database.transfer.api.IDataTransferCallbackHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class DataTransferReverseTableProcessor.
+ */
 public class DataTransferReverseTableProcessor {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataTransferReverseTableProcessor.class);
 	
+	/** The database metadata util. */
 	private static DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
 	
+	/**
+	 * Reverse tables.
+	 *
+	 * @param dataSource the data source
+	 * @param schemaName the schema name
+	 * @param handler the handler
+	 * @return the list
+	 * @throws SQLException the SQL exception
+	 */
 	public static List<PersistenceTableModel> reverseTables(DataSource dataSource, String schemaName, IDataTransferCallbackHandler handler) throws SQLException {
 		
 		if (handler != null) {
@@ -58,6 +72,15 @@ public class DataTransferReverseTableProcessor {
 		return tables;
 	}
 
+	/**
+	 * Reverse table.
+	 *
+	 * @param dataSource the data source
+	 * @param schemaName the schema name
+	 * @param tableName the table name
+	 * @return the persistence table model
+	 * @throws SQLException the SQL exception
+	 */
 	public static PersistenceTableModel reverseTable(DataSource dataSource, String schemaName,
 			String tableName) throws SQLException {
 		return databaseMetadataUtil.getTableMetadata(tableName, schemaName, dataSource);

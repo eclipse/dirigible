@@ -14,8 +14,18 @@ package org.eclipse.dirigible.engine.odata2.sql.api;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 
+/**
+ * The Interface SQLStatementBuilder.
+ */
 public interface SQLStatementBuilder {
 
+    /**
+     * Builds the.
+     *
+     * @param context the context
+     * @return the SQL statement
+     * @throws ODataException the o data exception
+     */
     SQLStatement build(SQLContext context) throws ODataException;
 
 }

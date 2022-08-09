@@ -27,35 +27,53 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class KafkaFacade.
+ */
 public class KafkaFacade implements IScriptingFacade {
 	
+	/** The Constant DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER. */
 	private static final String DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER = "DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER";
 	
+	/** The Constant DIRIGIBLE_KAFKA_ACKS. */
 	private static final String DIRIGIBLE_KAFKA_ACKS = "DIRIGIBLE_KAFKA_ACKS";
 	
+	/** The Constant DIRIGIBLE_KAFKA_KEY_SERIALIZER. */
 	private static final String DIRIGIBLE_KAFKA_KEY_SERIALIZER = "DIRIGIBLE_KAFKA_KEY_SERIALIZER";
 	
+	/** The Constant DIRIGIBLE_KAFKA_VALUE_SERIALIZER. */
 	private static final String DIRIGIBLE_KAFKA_VALUE_SERIALIZER = "DIRIGIBLE_KAFKA_VALUE_SERIALIZER";
 	
+	/** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED. */
 	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED = "DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED";
 	
+	/** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL. */
 	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL = "DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL";
 	
 	
+	/** The Constant DEFAULT_BOOTSTRAP_SERVER. */
 	private static final String DEFAULT_BOOTSTRAP_SERVER = "localhost:9092";
 	
+	/** The Constant DIRIGIBLE_KAFKA_ACKS_ALL. */
 	private static final String DIRIGIBLE_KAFKA_ACKS_ALL = "all";
 	
+	/** The Constant DIRIGIBLE_KAFKA_SERIALIZER_STRING. */
 	private static final String DIRIGIBLE_KAFKA_SERIALIZER_STRING = "org.apache.kafka.common.serialization.StringSerializer";
 	
+	/** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED_DEFAULT. */
 	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED_DEFAULT = "true";
 	
+	/** The Constant DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT. */
 	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT = "1000";
 	
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(KafkaFacade.class);
 	
+	/** The producers. */
 	private static Map<String, Producer<String, String>> PRODUCERS = Collections.synchronizedMap(new HashMap());
+	
+	/** The consumers. */
 	private static Map<String, KafkaConsumerRunner> CONSUMERS = Collections.synchronizedMap(new HashMap());
 
 	/**
@@ -115,9 +133,9 @@ public class KafkaFacade implements IScriptingFacade {
 	}
 	
 	/**
-	 * Close the producer per server endpoint
-	 * 
-	 * @param configuration
+	 * Close the producer per server endpoint.
+	 *
+	 * @param configuration the configuration
 	 */
 	public static final void closeProducer(String configuration) {
 		if (configuration == null) {
@@ -141,6 +159,14 @@ public class KafkaFacade implements IScriptingFacade {
 		}
 	}
 	
+	/**
+	 * Start listening.
+	 *
+	 * @param destination the destination
+	 * @param handler the handler
+	 * @param timeout the timeout
+	 * @param configuration the configuration
+	 */
 	public static final void startListening(String destination, String handler, int timeout, String configuration) {
 		if (configuration == null) {
 			configuration = "{}";
@@ -204,6 +230,12 @@ public class KafkaFacade implements IScriptingFacade {
 		}
 	}
 	
+	/**
+	 * Stop listening.
+	 *
+	 * @param destination the destination
+	 * @param configuration the configuration
+	 */
 	public static final void stopListening(String destination, String configuration) {
 		if (configuration == null) {
 			configuration = "{}";
@@ -228,8 +260,8 @@ public class KafkaFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Create internal identifier for a consumer
-	 * 
+	 * Create internal identifier for a consumer.
+	 *
 	 * @param destination the destination
 	 * @param server the server
 	 * @return the identifier

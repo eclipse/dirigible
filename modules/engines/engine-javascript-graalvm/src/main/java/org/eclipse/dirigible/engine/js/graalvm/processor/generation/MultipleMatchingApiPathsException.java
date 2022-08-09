@@ -11,7 +11,16 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.processor.generation;
 
+/**
+ * The Class MultipleMatchingApiPathsException.
+ */
 public class MultipleMatchingApiPathsException extends RuntimeException {
+    
+    /**
+     * Instantiates a new multiple matching api paths exception.
+     *
+     * @param errorMessage the error message
+     */
     public MultipleMatchingApiPathsException(String errorMessage) {
         super(errorMessage);
     }

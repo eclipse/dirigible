@@ -24,20 +24,49 @@ import java.util.function.BiConsumer;
 import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
 import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 
+/**
+ * The Class JavascriptGenerationEngine.
+ */
 public class JavascriptGenerationEngine implements IGenerationEngine {
 
+	/** The Constant ENGINE_NAME. */
 	public static final String ENGINE_NAME = "javascript";
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return ENGINE_NAME;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @param parameters the parameters
+	 * @param location the location
+	 * @param input the input
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public byte[] generate(Map<String, Object> parameters, String location, byte[] input) throws IOException {
 		return generate(parameters, location, input, null, null);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @param parameters the parameters
+	 * @param location the location
+	 * @param input the input
+	 * @param sm the sm
+	 * @param em the em
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em)
 			throws IOException {
@@ -53,15 +82,30 @@ public class JavascriptGenerationEngine implements IGenerationEngine {
 		}
 	}
 	
+	/**
+	 * The Class ContextBiConsumer.
+	 */
 	class ContextBiConsumer implements BiConsumer<Object, Object> {
 		
+		/** The context. */
 		Map<Object, Object> context;
 		
+		/**
+		 * Instantiates a new context bi consumer.
+		 *
+		 * @param context the context
+		 */
 		ContextBiConsumer(Map<Object, Object> context) {
 			this.context = context;
 		}
 		  
-	    public void accept(Object k, Object v) { 
+	    /**
+    	 * Accept.
+    	 *
+    	 * @param k the k
+    	 * @param v the v
+    	 */
+    	public void accept(Object k, Object v) { 
 	    	this.context.put(k, v);
 	    } 
 	} 

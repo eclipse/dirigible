@@ -32,6 +32,12 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 		super(dialect);
 	}
 
+	/**
+	 * Table.
+	 *
+	 * @param table the table
+	 * @return the hana create table builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
@@ -41,6 +47,13 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 		return new HanaCreateTableBuilder(this.getDialect(), table, true);
 	}
 
+	/**
+	 * Table.
+	 *
+	 * @param table the table
+	 * @param tableType the table type
+	 * @return the hana create table builder
+	 */
 	@Override
 	public HanaCreateTableBuilder table(String table, String tableType) {
 		if(tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)){
@@ -52,6 +65,12 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	}
 	}
 
+	/**
+	 * Temporary table.
+	 *
+	 * @param table the table
+	 * @return the hana create temporary table builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#temporaryTable(java.lang.String)
@@ -83,6 +102,12 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 		return new HanaCreateTableBuilder(this.getDialect(), table, false);
 	}
 
+	/**
+	 * Table type.
+	 *
+	 * @param tableType the table type
+	 * @return the hana create table type builder
+	 */
 	public HanaCreateTableTypeBuilder tableType(String tableType){
 		return new HanaCreateTableTypeBuilder(this.getDialect(), tableType);
 	}

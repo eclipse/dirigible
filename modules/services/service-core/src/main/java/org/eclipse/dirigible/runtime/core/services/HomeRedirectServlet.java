@@ -28,8 +28,17 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 @WebServlet(name = "HomeRedirectServlet", urlPatterns = { "/home" })
 public class HomeRedirectServlet extends HttpServlet {
 
+	/** The Constant DIRIGIBLE_HOME_URL. */
 	private static final String DIRIGIBLE_HOME_URL = "DIRIGIBLE_HOME_URL";
 
+	/**
+	 * Do get.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,

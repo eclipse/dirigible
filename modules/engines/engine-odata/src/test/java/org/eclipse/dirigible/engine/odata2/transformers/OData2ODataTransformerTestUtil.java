@@ -28,8 +28,19 @@ import java.util.Collections;
 
 import static org.mockito.Mockito.when;
 
+/**
+ * The Class OData2ODataTransformerTestUtil.
+ */
 public class OData2ODataTransformerTestUtil {
 
+    /**
+     * Load data test transform entity property.
+     *
+     * @param dbMetadataUtil the db metadata util
+     * @return the o data definition
+     * @throws SQLException the SQL exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public static ODataDefinition loadData_testTransformEntityProperty(DBMetadataUtil dbMetadataUtil) throws SQLException, IOException {
         String orders = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/entityproperty/Entities.odata"), Charset.defaultCharset());
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/entityproperty/Entities.odata", orders);

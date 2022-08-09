@@ -20,8 +20,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class AppExceptionMessage {
 
+	/** The message. */
 	private String message;
 
+	/** The status. */
 	private int status;
 
 	/**

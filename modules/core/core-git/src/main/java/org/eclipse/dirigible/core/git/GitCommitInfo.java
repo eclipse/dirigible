@@ -11,15 +11,29 @@
  */
 package org.eclipse.dirigible.core.git;
 
+/**
+ * The Class GitCommitInfo.
+ */
 public class GitCommitInfo {
 
+	/** The id. */
 	private String id;
+	
+	/** The author. */
 	private String author;
+	
+	/** The email address. */
 	private String emailAddress;
+	
+	/** The date time. */
 	private String dateTime;
+	
+	/** The message. */
 	private String message;
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public String getId() {
@@ -27,6 +41,8 @@ public class GitCommitInfo {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(String id) {
@@ -34,6 +50,8 @@ public class GitCommitInfo {
 	}
 
 	/**
+	 * Gets the author.
+	 *
 	 * @return the author
 	 */
 	public String getAuthor() {
@@ -41,6 +59,8 @@ public class GitCommitInfo {
 	}
 
 	/**
+	 * Sets the author.
+	 *
 	 * @param author the author to set
 	 */
 	public void setAuthor(String author) {
@@ -48,6 +68,8 @@ public class GitCommitInfo {
 	}
 
 	/**
+	 * Gets the email address.
+	 *
 	 * @return the emailAddress
 	 */
 	public String getEmailAddress() {
@@ -55,6 +77,8 @@ public class GitCommitInfo {
 	}
 
 	/**
+	 * Sets the email address.
+	 *
 	 * @param emailAddress the emailAddress to set
 	 */
 	public void setEmailAddress(String emailAddress) {
@@ -62,6 +86,8 @@ public class GitCommitInfo {
 	}
 
 	/**
+	 * Gets the date time.
+	 *
 	 * @return the dateTime
 	 */
 	public String getDateTime() {
@@ -69,6 +95,8 @@ public class GitCommitInfo {
 	}
 
 	/**
+	 * Sets the date time.
+	 *
 	 * @param dateTime the dateTime to set
 	 */
 	public void setDateTime(String dateTime) {
@@ -76,6 +104,8 @@ public class GitCommitInfo {
 	}
 
 	/**
+	 * Gets the message.
+	 *
 	 * @return the message
 	 */
 	public String getMessage() {
@@ -83,6 +113,8 @@ public class GitCommitInfo {
 	}
 
 	/**
+	 * Sets the message.
+	 *
 	 * @param message the message to set
 	 */
 	public void setMessage(String message) {

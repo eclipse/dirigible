@@ -28,11 +28,20 @@ import static org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils.
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * The Class EdmTableBindingFactoryTest.
+ */
 @SuppressWarnings("unchecked")
 public class EdmTableBindingFactoryTest {
 
+    /** The edm. */
     private EdmImplProv edm;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         Class<?>[] classes = { //
@@ -44,6 +53,11 @@ public class EdmTableBindingFactoryTest {
         edm = new EdmImplProv(provider);
     }
 
+    /**
+     * Test mpl binding.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void testMplBinding() throws IOException {
         try (InputStream stream = stream(Entity1.class)) {
@@ -54,6 +68,11 @@ public class EdmTableBindingFactoryTest {
         }
     }
 
+    /**
+     * Test reference 1.
+     *
+     * @throws Exception the exception
+     */
     @SuppressWarnings("rawtypes")
     @Test
     public void testReference1() throws Exception {
@@ -70,6 +89,11 @@ public class EdmTableBindingFactoryTest {
     }
 
 
+    /**
+     * Test reference 2.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void testReference2() throws IOException {
         try (InputStream stream = stream(Entity1.class)) {
@@ -78,6 +102,11 @@ public class EdmTableBindingFactoryTest {
         }
     }
 
+    /**
+     * Test table mapping.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void testTableMapping() throws IOException {
         try (InputStream stream = stream(Entity1.class)) {
@@ -86,6 +115,11 @@ public class EdmTableBindingFactoryTest {
         }
     }
 
+    /**
+     * Test create table bindings.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testCreateTableBindings() throws Exception {
         try (InputStream stream = stream(Entity1.class)) {
@@ -94,6 +128,11 @@ public class EdmTableBindingFactoryTest {
         }
     }
 
+    /**
+     * Test get PK.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGetPK() throws Exception {
         try (InputStream stream = stream(Entity1.class)) {
@@ -102,6 +141,11 @@ public class EdmTableBindingFactoryTest {
         }
     }
 
+    /**
+     * Test get join column entity 2.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGetJoinColumnEntity2() throws Exception {
         try (InputStream stream = stream(Entity1.class)) {
@@ -111,6 +155,11 @@ public class EdmTableBindingFactoryTest {
         }
     }
 
+    /**
+     * Test get data structure type.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGetDataStructureType() throws Exception {
         try (InputStream stream = stream(Entity1.class)) {
@@ -119,6 +168,11 @@ public class EdmTableBindingFactoryTest {
         }
     }
 
+    /**
+     * Test get parameters.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGetParameters() throws Exception {
         try (InputStream stream = stream(Entity1.class)) {

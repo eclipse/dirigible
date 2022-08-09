@@ -19,28 +19,71 @@ import java.sql.SQLException;
 
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.SERVICE_UNAVAILABLE;
 
+/**
+ * The Class SQLContext.
+ */
 public class SQLContext {
 
+    /**
+     * The Enum DatabaseProduct.
+     */
     public enum DatabaseProduct {
-        DERBY(false), SYBASE_ASE(false), POSTGRE_SQL(true), H2(false), HANA(true);
+        
+        /** The derby. */
+        DERBY(false), 
+ /** The sybase ase. */
+ SYBASE_ASE(false), 
+ /** The postgre sql. */
+ POSTGRE_SQL(true), 
+ /** The h2. */
+ H2(false), 
+ /** The hana. */
+ HANA(true);
 
+        /** The case sensitive. */
         private boolean caseSensitive;
+        
+        /**
+         * Instantiates a new database product.
+         *
+         * @param caseSensitive the case sensitive
+         */
         DatabaseProduct (boolean caseSensitive){
             this.caseSensitive = caseSensitive;
         }
+        
+        /**
+         * Checks if is case sensitive.
+         *
+         * @return true, if is case sensitive
+         */
         public boolean isCaseSensitive(){
             return caseSensitive;
         }
     }
 
+    /** The database product. */
     private final DatabaseProduct databaseProduct;
+    
+    /** The odata context. */
     private ODataContext odataContext;
+    
+    /** The metadata. */
     private DatabaseMetaData metadata;
 
+    /**
+     * Instantiates a new SQL context.
+     */
     public SQLContext() {
         databaseProduct = DatabaseProduct.DERBY;
     }
 
+    /**
+     * Instantiates a new SQL context.
+     *
+     * @param metadata the metadata
+     * @param odataContext the odata context
+     */
     public SQLContext(final DatabaseMetaData metadata, final ODataContext odataContext) {
         this.metadata = metadata;
         this.odataContext = odataContext;
@@ -60,6 +103,8 @@ public class SQLContext {
     }
 
     /**
+     * Instantiates a new SQL context.
+     *
      * @param databaseProduct the database product name
      */
     public SQLContext(final DatabaseProduct databaseProduct) {
@@ -67,20 +112,38 @@ public class SQLContext {
     }
 
     /**
+     * Gets the database product.
+     *
      * @return the database product
      */
     public DatabaseProduct getDatabaseProduct() {
         return databaseProduct;
     }
 
+    /**
+     * Gets the odata context.
+     *
+     * @return the odata context
+     */
     public ODataContext getOdataContext() {
         return odataContext;
     }
 
+    /**
+     * Gets the database metadata.
+     *
+     * @return the database metadata
+     */
     public DatabaseMetaData getDatabaseMetadata() {
         return metadata;
     }
 
+    /**
+     * Gets the database name.
+     *
+     * @param metadata the metadata
+     * @return the database name
+     */
     private String getDatabaseName(final DatabaseMetaData metadata) {
         try {
             return metadata.getDatabaseProductName();

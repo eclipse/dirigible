@@ -24,6 +24,7 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
  */
 public class File implements IFile {
 
+	/** The internal. */
 	private transient IResource internal;
 
 	/**
@@ -36,6 +37,11 @@ public class File implements IFile {
 		this.internal = resource;
 	}
 
+	/**
+	 * Gets the internal.
+	 *
+	 * @return the internal
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFile#getInternal()
@@ -45,6 +51,11 @@ public class File implements IFile {
 		return internal;
 	}
 
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getRepository()
@@ -54,6 +65,12 @@ public class File implements IFile {
 		return internal.getRepository();
 	}
 
+	/**
+	 * Gets the content.
+	 *
+	 * @return the content
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#getContent()
@@ -63,6 +80,11 @@ public class File implements IFile {
 		return internal.getContent();
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getName()
@@ -72,6 +94,11 @@ public class File implements IFile {
 		return internal.getName();
 	}
 
+	/**
+	 * Gets the path.
+	 *
+	 * @return the path
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getPath()
@@ -81,6 +108,12 @@ public class File implements IFile {
 		return internal.getPath();
 	}
 
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the new content
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#setContent(byte[])
@@ -90,6 +123,14 @@ public class File implements IFile {
 		internal.setContent(content);
 	}
 
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the content
+	 * @param isBinary the is binary
+	 * @param contentType the content type
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#setContent(byte[], boolean, java.lang.String)
@@ -99,6 +140,11 @@ public class File implements IFile {
 		internal.setContent(content, isBinary, contentType);
 	}
 
+	/**
+	 * Gets the parent.
+	 *
+	 * @return the parent
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getParent()
@@ -108,6 +154,12 @@ public class File implements IFile {
 		return internal.getParent();
 	}
 
+	/**
+	 * Gets the information.
+	 *
+	 * @return the information
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getInformation()
@@ -117,6 +169,11 @@ public class File implements IFile {
 		return internal.getInformation();
 	}
 
+	/**
+	 * Checks if is binary.
+	 *
+	 * @return true, if is binary
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#isBinary()
@@ -126,6 +183,11 @@ public class File implements IFile {
 		return internal.isBinary();
 	}
 
+	/**
+	 * Gets the content type.
+	 *
+	 * @return the content type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#getContentType()
@@ -135,6 +197,11 @@ public class File implements IFile {
 		return internal.getContentType();
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#create()
@@ -144,6 +211,11 @@ public class File implements IFile {
 		internal.create();
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#delete()
@@ -153,6 +225,12 @@ public class File implements IFile {
 		internal.delete();
 	}
 
+	/**
+	 * Rename to.
+	 *
+	 * @param name the name
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#renameTo(java.lang.String)
@@ -162,6 +240,12 @@ public class File implements IFile {
 		internal.renameTo(name);
 	}
 
+	/**
+	 * Move to.
+	 *
+	 * @param path the path
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#moveTo(java.lang.String)
@@ -171,6 +255,12 @@ public class File implements IFile {
 		internal.moveTo(path);
 	}
 
+	/**
+	 * Copy to.
+	 *
+	 * @param path the path
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#copyTo(java.lang.String)
@@ -180,6 +270,12 @@ public class File implements IFile {
 		internal.copyTo(path);
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @return true, if successful
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#exists()
@@ -189,6 +285,12 @@ public class File implements IFile {
 		return internal.exists();
 	}
 
+	/**
+	 * Checks if is empty.
+	 *
+	 * @return true, if is empty
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#isEmpty()

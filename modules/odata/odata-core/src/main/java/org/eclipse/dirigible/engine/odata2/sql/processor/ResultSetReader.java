@@ -24,14 +24,35 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * The Class ResultSetReader.
+ */
 public class ResultSetReader {
 
+    /** The callback. */
     private final SQLProcessor callback;
 
+    /**
+     * Instantiates a new result set reader.
+     *
+     * @param callback the callback
+     */
     public ResultSetReader(SQLProcessor callback) {
         this.callback = callback;
     }
 
+    /**
+     * Gets the entity data from result set.
+     *
+     * @param selectEntityQuery the select entity query
+     * @param entityType the entity type
+     * @param properties the properties
+     * @param resultSet the result set
+     * @return the entity data from result set
+     * @throws SQLException the SQL exception
+     * @throws ODataException the o data exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected Map<String, Object> getEntityDataFromResultSet(SQLSelectBuilder selectEntityQuery, final EdmStructuralType entityType,
                                                              Collection<EdmProperty> properties, final ResultSet resultSet) throws SQLException, ODataException, IOException {
         Map<String, Object> result = new HashMap<>();
@@ -41,6 +62,19 @@ public class ResultSetReader {
         return result;
     }
 
+    /**
+     * Gets the result set entity.
+     *
+     * @param selectEntityQuery the select entity query
+     * @param entityType the entity type
+     * @param properties the properties
+     * @param resultSet the result set
+     * @param hasGeneratedId the has generated id
+     * @return the result set entity
+     * @throws SQLException the SQL exception
+     * @throws ODataException the o data exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected ResultSetEntity getResultSetEntity(SQLSelectBuilder selectEntityQuery, final EdmEntityType entityType,
                                                  Collection<EdmProperty> properties, final ResultSet resultSet, boolean hasGeneratedId) throws SQLException, ODataException, IOException {
         Map<String, Object> data = new HashMap<>();
@@ -54,6 +88,18 @@ public class ResultSetReader {
         return new ResultSetEntity(entityType, data);
     }
 
+    /**
+     * Read property.
+     *
+     * @param entityType the entity type
+     * @param property the property
+     * @param selectEntityQuery the select entity query
+     * @param resultSet the result set
+     * @return the object
+     * @throws SQLException the SQL exception
+     * @throws ODataException the o data exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected Object readProperty(EdmStructuralType entityType, EdmProperty property, SQLSelectBuilder selectEntityQuery,
                                   ResultSet resultSet) throws SQLException, ODataException, IOException {
         Object propertyDbValue;
@@ -82,6 +128,17 @@ public class ResultSetReader {
         }
     }
 
+    /**
+     * Accumulate expanded entities.
+     *
+     * @param query the query
+     * @param resultSet the result set
+     * @param accumulator the accumulator
+     * @param expandEntities the expand entities
+     * @throws SQLException the SQL exception
+     * @throws ODataException the o data exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void accumulateExpandedEntities(SQLSelectBuilder query, ResultSet resultSet, ExpandAccumulator accumulator,
                                            List<ArrayList<NavigationPropertySegment>> expandEntities) throws SQLException, ODataException, IOException {
 
@@ -105,27 +162,63 @@ public class ResultSetReader {
         }
     }
 
+    /**
+     * The Class ExpandAccumulator.
+     */
     public static class ExpandAccumulator {
+        
+        /** The entity. */
         private final ResultSetEntity entity;
+        
+        /** The expand data. */
         private final LinkedHashMap<String, List<ExpandAccumulator>> expandData;
 
+        /**
+         * Instantiates a new expand accumulator.
+         *
+         * @param type the type
+         * @throws EdmException the edm exception
+         */
         public ExpandAccumulator(EdmEntityType type) throws EdmException {
             this(new ResultSetEntity(type, new HashMap<>()));
         }
 
+        /**
+         * Instantiates a new expand accumulator.
+         *
+         * @param entity the entity
+         */
         public ExpandAccumulator(ResultSetEntity entity) {
             this.entity = entity;
             this.expandData = new LinkedHashMap<>();
         }
 
+        /**
+         * Checks if is accumulator for.
+         *
+         * @param entity the entity
+         * @return true, if is accumulator for
+         */
         public boolean isAccumulatorFor(ResultSetEntity entity) {
             return this.entity.equals(entity);
         }
 
+        /**
+         * Gets the result set entity.
+         *
+         * @return the result set entity
+         */
         public ResultSetEntity getResultSetEntity() {
             return entity;
         }
 
+        /**
+         * Adds the expand entity.
+         *
+         * @param entity the entity
+         * @param parents the parents
+         * @return true, if successful
+         */
         public boolean addExpandEntity(ResultSetEntity entity, List<ResultSetEntity> parents) {
             if (parents.isEmpty()) {
                 String fqn = OData2Utils.fqn(entity.entityType);
@@ -151,10 +244,22 @@ public class ResultSetReader {
 
         }
 
+        /**
+         * Last accumulator.
+         *
+         * @param acc the acc
+         * @return the expand accumulator
+         */
         ExpandAccumulator lastAccumulator(List<ExpandAccumulator> acc) {
             return (acc == null || acc.size() == 0) ? null : acc.get(acc.size() - 1);
         }
 
+        /**
+         * Accumulator for.
+         *
+         * @param firstParent the first parent
+         * @return the expand accumulator
+         */
         ExpandAccumulator accumulatorFor(ResultSetEntity firstParent) {
             String fqn = OData2Utils.fqn(firstParent.entityType);
             if (expandData.get(fqn) != null) {
@@ -168,10 +273,21 @@ public class ResultSetReader {
             throw new IllegalStateException("Unsupported expand case");
         }
 
+        /**
+         * Render for expand.
+         *
+         * @return the map
+         */
         public Map<String, Object> renderForExpand() {
             return renderForExpand(this);
         }
 
+        /**
+         * Render for expand.
+         *
+         * @param input the input
+         * @return the map
+         */
         public Map<String, Object> renderForExpand(ExpandAccumulator input) {
             Map<String, Object> result = new HashMap<>(input.getResultSetEntity().data);
             for (String key : input.expandData.keySet()) {
@@ -186,11 +302,27 @@ public class ResultSetReader {
         }
     }
 
+    /**
+     * The Class ResultSetEntity.
+     */
     static class ResultSetEntity {
+        
+        /** The data. */
         final Map<String, Object> data;
+        
+        /** The keys. */
         final Map<String, Object> keys;
+        
+        /** The entity type. */
         final EdmEntityType entityType;
 
+        /**
+         * Instantiates a new result set entity.
+         *
+         * @param type the type
+         * @param data the data
+         * @throws EdmException the edm exception
+         */
         public ResultSetEntity(EdmEntityType type, Map<String, Object> data) throws EdmException {
             this.entityType = type;
             this.data = data;
@@ -202,6 +334,14 @@ public class ResultSetReader {
             }
         }
 
+        /**
+         * Instantiates a new result set entity.
+         *
+         * @param type the type
+         * @param data the data
+         * @param key the key
+         * @throws EdmException the edm exception
+         */
         public ResultSetEntity(EdmEntityType type, Map<String, Object> data, String key) throws EdmException {
             this.entityType = type;
             this.data = data;
@@ -209,10 +349,22 @@ public class ResultSetReader {
             keys.put("Id", key);
         }
 
+        /**
+         * Checks if is empty.
+         *
+         * @return true, if is empty
+         * @throws ODataException the o data exception
+         */
         public boolean isEmpty() throws ODataException {
             return OData2Utils.isEmpty(entityType, data);
         }
 
+        /**
+         * Equals.
+         *
+         * @param o the o
+         * @return true, if successful
+         */
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -221,6 +373,11 @@ public class ResultSetReader {
             return keys.equals(that.keys);
         }
 
+        /**
+         * Hash code.
+         *
+         * @return the int
+         */
         @Override
         public int hashCode() {
             return Objects.hash(keys);

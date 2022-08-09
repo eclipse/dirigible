@@ -31,6 +31,12 @@ import io.swagger.annotations.ApiResponses;
 @Api("Core - Web Engine Public")
 public class WebEnginePublicRestService extends AbstractWebEngineRestService {
 
+	/**
+	 * Gets the resource.
+	 *
+	 * @param path the path
+	 * @return the resource
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.web.service.AbstractWebEngineRestService#getResource(java.lang.String)
@@ -45,6 +51,11 @@ public class WebEnginePublicRestService extends AbstractWebEngineRestService {
 		return super.getResource(path);
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()

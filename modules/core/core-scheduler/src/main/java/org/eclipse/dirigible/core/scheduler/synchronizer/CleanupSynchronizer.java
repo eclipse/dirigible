@@ -33,12 +33,18 @@ import org.slf4j.LoggerFactory;
  */
 public class CleanupSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CleanupSynchronizer.class);
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
+	/** The Constant CLEANUP_SERVICES. */
 	private static final ServiceLoader<ICleanupService> CLEANUP_SERVICES = ServiceLoader.load(ICleanupService.class);
 		
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -91,6 +97,12 @@ public class CleanupSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
 		// TODO Auto-generated method stub

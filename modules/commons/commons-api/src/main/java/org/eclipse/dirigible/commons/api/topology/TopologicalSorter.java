@@ -17,15 +17,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+/**
+ * The Class TopologicalSorter.
+ *
+ * @param <T> the generic type
+ */
 public class TopologicalSorter<T extends ITopologicallySortable> {
 	
 	
+    /** The stack. */
     private Stack<TopologicalSorterNode<T>> stack;
  
+    /**
+     * Instantiates a new topological sorter.
+     */
     public TopologicalSorter() {
         this.stack = new Stack<>();
     }
     
+    /**
+     * Sort.
+     *
+     * @param list the list
+     * @return the list
+     */
     public List<T> sort(List<T> list) {
     	Map<String, TopologicalSorterNode<T>> nodes = new HashMap<>();
     	for (ITopologicallySortable sortable : list) {
@@ -45,6 +60,11 @@ public class TopologicalSorter<T extends ITopologicallySortable> {
     	return results;
     }
 
+	/**
+	 * Topological sort.
+	 *
+	 * @param node the node
+	 */
 	private void topologicalSort(TopologicalSorterNode<T> node) {
 		List<TopologicalSorterNode<T>> dependencies = node.getDependencies();
 		for (int i = 0; i < dependencies.size(); i++) {

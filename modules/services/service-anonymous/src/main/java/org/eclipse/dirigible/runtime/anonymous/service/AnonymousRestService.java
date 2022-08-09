@@ -36,22 +36,28 @@ import io.swagger.annotations.Api;
 @Api(value = "Anonymous")
 public class AnonymousRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant HOME_LOCATION. */
 	private static final String HOME_LOCATION = "../../home.html";
 
+	/** The Constant ANONYMOUS_ACCESS_FAILED. */
 	private static final String ANONYMOUS_ACCESS_FAILED = "Anonymous access failed.";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AnonymousRestService.class);
 
+	/** The processor. */
 	private AnonymousAccess processor = new AnonymousAccess();
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
 	/**
 	 * Set anonymous identifier.
 	 *
+	 * @param identifier the identifier
 	 * @return the response
-	 * @throws IOException 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@POST
 	@Path("")
@@ -66,6 +72,11 @@ public class AnonymousRestService extends AbstractRestService implements IRestSe
 		return Response.ok().build();
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -75,6 +86,11 @@ public class AnonymousRestService extends AbstractRestService implements IRestSe
 		return AnonymousRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

@@ -11,13 +11,20 @@
  */
 package org.eclipse.dirigible.database.api;
 
+/**
+ * The Class DatabaseDefinition.
+ */
 public class DatabaseDefinition {
 	
+	/** The type. */
 	private String type; // local, dynamic, custom, managed, defined are available depending on which modules are packaged
 	
+	/** The name. */
 	private String name;
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -25,6 +32,8 @@ public class DatabaseDefinition {
 	}
 
 	/**
+	 * Sets the type.
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(String type) {
@@ -32,6 +41,8 @@ public class DatabaseDefinition {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -39,6 +50,8 @@ public class DatabaseDefinition {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {

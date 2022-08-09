@@ -31,6 +31,7 @@ import java.util.Set;
  */
 public class TableCreateProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TableCreateProcessor.class);
 	
 	/**
@@ -49,6 +50,7 @@ public class TableCreateProcessor {
 	 *
 	 * @param connection the connection
 	 * @param tableModel the table model
+	 * @param skipForeignKeys the skip foreign keys
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, DataStructureTableModel tableModel, boolean skipForeignKeys) throws SQLException {

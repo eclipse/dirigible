@@ -18,8 +18,16 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * The Class SparkFacadeTest.
+ */
 public class SparkFacadeTest {
 
+    /**
+     * Gets the session.
+     *
+     * @return the session
+     */
     @Test
     public void getSession() {
         SparkSession sparkSession = SparkFacade.getSession("spark://192.168.0.108:7077");
@@ -27,6 +35,11 @@ public class SparkFacadeTest {
         assertEquals("Dirigible-Spark", sparkSession.initialSessionOptions().get("spark.app.name").get());
     }
 
+    /**
+     * Gets the DB table dataset.
+     *
+     * @return the DB table dataset
+     */
     @Test
     public void getDBTableDataset() {
 

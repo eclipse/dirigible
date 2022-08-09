@@ -28,20 +28,34 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ * The Class ODataCoreService.
+ */
 public class ODataCoreService implements IODataCoreService {
 
+    /** The data source. */
     private DataSource dataSource = null;
 
+    /** The odata schema persistence manager. */
     private PersistenceManager<ODataSchemaDefinition> odataSchemaPersistenceManager = new PersistenceManager<ODataSchemaDefinition>();
 
+    /** The odata mapping persistence manager. */
     private PersistenceManager<ODataMappingDefinition> odataMappingPersistenceManager = new PersistenceManager<ODataMappingDefinition>();
 
+    /** The odata container persistence manager. */
     private PersistenceManager<ODataContainerDefinition> odataContainerPersistenceManager = new PersistenceManager<ODataContainerDefinition>();
 
+    /** The odata persistence manager. */
     private PersistenceManager<ODataDefinition> odataPersistenceManager = new PersistenceManager<ODataDefinition>();
 
+    /** The odata handler persistence manager. */
     private PersistenceManager<ODataHandlerDefinition> odataHandlerPersistenceManager = new PersistenceManager<ODataHandlerDefinition>();
 
+    /**
+     * Gets the data source.
+     *
+     * @return the data source
+     */
     protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -49,6 +63,14 @@ public class ODataCoreService implements IODataCoreService {
 		return dataSource;
 	}
 
+    /**
+     * Creates the schema.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the o data schema definition
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataSchemaDefinition createSchema(String location, byte[] content) throws ODataException {
         ODataSchemaDefinition odataSchemaDefinition = new ODataSchemaDefinition();
@@ -67,6 +89,13 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Gets the schema.
+     *
+     * @param location the location
+     * @return the schema
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataSchemaDefinition getSchema(String location) throws ODataException {
         try {
@@ -78,11 +107,24 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Exists schema.
+     *
+     * @param location the location
+     * @return true, if successful
+     * @throws ODataException the o data exception
+     */
     @Override
     public boolean existsSchema(String location) throws ODataException {
         return getSchema(location) != null;
     }
 
+    /**
+     * Removes the schema.
+     *
+     * @param location the location
+     * @throws ODataException the o data exception
+     */
     @Override
     public void removeSchema(String location) throws ODataException {
         try {
@@ -94,6 +136,13 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Update schema.
+     *
+     * @param location the location
+     * @param content the content
+     * @throws ODataException the o data exception
+     */
     @Override
     public void updateSchema(String location, byte[] content) throws ODataException {
         try {
@@ -107,6 +156,12 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Gets the schemas.
+     *
+     * @return the schemas
+     * @throws ODataException the o data exception
+     */
     @Override
     public List<ODataSchemaDefinition> getSchemas() throws ODataException {
         try {
@@ -118,6 +173,14 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Creates the mapping.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the o data mapping definition
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataMappingDefinition createMapping(String location, byte[] content) throws ODataException {
         ODataMappingDefinition odataMappingDefinition = new ODataMappingDefinition();
@@ -136,6 +199,13 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Gets the mapping.
+     *
+     * @param location the location
+     * @return the mapping
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataMappingDefinition getMapping(String location) throws ODataException {
         try {
@@ -147,11 +217,24 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Exists mapping.
+     *
+     * @param location the location
+     * @return true, if successful
+     * @throws ODataException the o data exception
+     */
     @Override
     public boolean existsMapping(String location) throws ODataException {
         return getMapping(location) != null;
     }
 
+    /**
+     * Removes the mapping.
+     *
+     * @param location the location
+     * @throws ODataException the o data exception
+     */
     @Override
     public void removeMapping(String location) throws ODataException {
         try {
@@ -163,6 +246,12 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Removes the mappings.
+     *
+     * @param location the location
+     * @throws ODataException the o data exception
+     */
     @Override
     public void removeMappings(String location) throws ODataException {
         try {
@@ -176,6 +265,13 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Update mapping.
+     *
+     * @param location the location
+     * @param content the content
+     * @throws ODataException the o data exception
+     */
     @Override
     public void updateMapping(String location, byte[] content) throws ODataException {
         try {
@@ -189,6 +285,12 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Gets the mappings.
+     *
+     * @return the mappings
+     * @throws ODataException the o data exception
+     */
     @Override
     public List<ODataMappingDefinition> getMappings() throws ODataException {
         try {
@@ -201,6 +303,14 @@ public class ODataCoreService implements IODataCoreService {
     }
 
 
+    /**
+     * Creates the container.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the o data container definition
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataContainerDefinition createContainer(String location, byte[] content) throws ODataException {
         ODataContainerDefinition odataContainerDefinition = new ODataContainerDefinition();
@@ -219,6 +329,13 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Gets the container.
+     *
+     * @param location the location
+     * @return the container
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataContainerDefinition getContainer(String location) throws ODataException {
         try {
@@ -230,11 +347,24 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Exists container.
+     *
+     * @param location the location
+     * @return true, if successful
+     * @throws ODataException the o data exception
+     */
     @Override
     public boolean existsContainer(String location) throws ODataException {
         return getContainer(location) != null;
     }
 
+    /**
+     * Removes the container.
+     *
+     * @param location the location
+     * @throws ODataException the o data exception
+     */
     @Override
     public void removeContainer(String location) throws ODataException {
         try {
@@ -246,6 +376,13 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Update container.
+     *
+     * @param location the location
+     * @param content the content
+     * @throws ODataException the o data exception
+     */
     @Override
     public void updateContainer(String location, byte[] content) throws ODataException {
         try {
@@ -259,6 +396,12 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Gets the containers.
+     *
+     * @return the containers
+     * @throws ODataException the o data exception
+     */
     @Override
     public List<ODataContainerDefinition> getContainers() throws ODataException {
         try {
@@ -271,6 +414,12 @@ public class ODataCoreService implements IODataCoreService {
     }
 
 
+    /**
+     * Gets the metadata.
+     *
+     * @return the metadata
+     * @throws ODataException the o data exception
+     */
     @Override
     public InputStream getMetadata() throws ODataException {
         StringBuilder builder = new StringBuilder();
@@ -301,16 +450,39 @@ public class ODataCoreService implements IODataCoreService {
         return new ByteArrayInputStream(builder.toString().getBytes());
     }
 
+    /**
+     * Parses the O data.
+     *
+     * @param contentPath the content path
+     * @param data the data
+     * @return the o data definition
+     */
     @Override
     public ODataDefinition parseOData(String contentPath, String data) {
         return ODataDefinitionFactory.parseOData(contentPath, data);
     }
 
+    /**
+     * Exists O data.
+     *
+     * @param location the location
+     * @return true, if successful
+     * @throws ODataException the o data exception
+     */
     @Override
     public boolean existsOData(String location) throws ODataException {
         return getOData(location) != null;
     }
 
+    /**
+     * Creates the O data.
+     *
+     * @param location the location
+     * @param namespace the namespace
+     * @param hash the hash
+     * @return the o data definition
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataDefinition createOData(String location, String namespace, String hash) throws ODataException {
         ODataDefinition odataModel = new ODataDefinition();
@@ -331,6 +503,13 @@ public class ODataCoreService implements IODataCoreService {
 
     }
 
+    /**
+     * Gets the o data.
+     *
+     * @param location the location
+     * @return the o data
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataDefinition getOData(String location) throws ODataException {
         try {
@@ -342,6 +521,14 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Update O data.
+     *
+     * @param location the location
+     * @param namespace the namespace
+     * @param hash the hash
+     * @throws ODataException the o data exception
+     */
     @Override
     public void updateOData(String location, String namespace, String hash) throws ODataException {
         try {
@@ -356,6 +543,12 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Gets the o datas.
+     *
+     * @return the o datas
+     * @throws ODataException the o data exception
+     */
     @Override
     public List<ODataDefinition> getODatas() throws ODataException {
         try {
@@ -367,6 +560,12 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Removes the O data.
+     *
+     * @param location the location
+     * @throws ODataException the o data exception
+     */
     public void removeOData(String location) throws ODataException {
         try {
             try (Connection connection = getDataSource().getConnection()) {
@@ -377,6 +576,18 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Creates the handler.
+     *
+     * @param location the location
+     * @param namespace the namespace
+     * @param name the name
+     * @param method the method
+     * @param type the type
+     * @param handler the handler
+     * @return the o data handler definition
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataHandlerDefinition createHandler(String location, String namespace, String name, String method,
                                                 String type, String handler) throws ODataException {
@@ -401,6 +612,17 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Gets the handler.
+     *
+     * @param location the location
+     * @param namespace the namespace
+     * @param name the name
+     * @param method the method
+     * @param type the type
+     * @return the handler
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataHandlerDefinition getHandler(String location, String namespace, String name, String method, String type)
             throws ODataException {
@@ -422,6 +644,16 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Gets the handlers.
+     *
+     * @param namespace the namespace
+     * @param name the name
+     * @param method the method
+     * @param type the type
+     * @return the handlers
+     * @throws ODataException the o data exception
+     */
     @Override
     public List<ODataHandlerDefinition> getHandlers(String namespace, String name, String method, String type)
             throws ODataException {
@@ -441,11 +673,31 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Exists handler.
+     *
+     * @param namespace the namespace
+     * @param name the name
+     * @param method the method
+     * @param type the type
+     * @return true, if successful
+     * @throws ODataException the o data exception
+     */
     @Override
     public boolean existsHandler(String namespace, String name, String method, String type) throws ODataException {
         return getHandlers(namespace, name, method, type).size() > 0;
     }
 
+    /**
+     * Removes the handler.
+     *
+     * @param location the location
+     * @param namespace the namespace
+     * @param name the name
+     * @param method the method
+     * @param type the type
+     * @throws ODataException the o data exception
+     */
     @Override
     public void removeHandler(String location, String namespace, String name, String method, String type)
             throws ODataException {
@@ -465,6 +717,12 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Removes the handlers.
+     *
+     * @param location the location
+     * @throws ODataException the o data exception
+     */
     @Override
     public void removeHandlers(String location) throws ODataException {
         try {
@@ -479,6 +737,17 @@ public class ODataCoreService implements IODataCoreService {
         }
     }
 
+    /**
+     * Update handler.
+     *
+     * @param location the location
+     * @param namespace the namespace
+     * @param name the name
+     * @param method the method
+     * @param type the type
+     * @param handler the handler
+     * @throws ODataException the o data exception
+     */
     @Override
     public void updateHandler(String location, String namespace, String name, String method, String type,
                               String handler) throws ODataException {
@@ -499,6 +768,12 @@ public class ODataCoreService implements IODataCoreService {
 
     }
 
+    /**
+     * Gets the all handlers.
+     *
+     * @return the all handlers
+     * @throws ODataException the o data exception
+     */
     @Override
     public List<ODataHandlerDefinition> getAllHandlers() throws ODataException {
         try {
@@ -511,6 +786,11 @@ public class ODataCoreService implements IODataCoreService {
     }
 
 
+    /**
+     * Handler definition table check.
+     *
+     * @throws ODataException the o data exception
+     */
     public void handlerDefinitionTableCheck() throws ODataException {
         try {
             try (Connection connection = getDataSource().getConnection()) {

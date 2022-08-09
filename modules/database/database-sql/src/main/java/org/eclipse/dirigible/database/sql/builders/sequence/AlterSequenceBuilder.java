@@ -15,13 +15,29 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class AlterSequenceBuilder.
+ */
 public class AlterSequenceBuilder extends CreateSequenceBuilder {
+    
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(AlterSequenceBuilder.class);
 
+    /**
+     * Instantiates a new alter sequence builder.
+     *
+     * @param dialect the dialect
+     * @param sequence the sequence
+     */
     public AlterSequenceBuilder(ISqlDialect dialect, String sequence) {
         super(dialect, sequence);
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     @Override
     public String generate() {
         StringBuilder sql = new StringBuilder();
@@ -63,6 +79,11 @@ public class AlterSequenceBuilder extends CreateSequenceBuilder {
         return generated;
     }
 
+    /**
+     * Generate start.
+     *
+     * @param sql the sql
+     */
     @Override
     protected void generateStart(StringBuilder sql) {
         if (this.getStart() != null) {

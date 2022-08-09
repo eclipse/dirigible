@@ -30,6 +30,12 @@ public class SybaseCreateBranchingBuilder extends CreateBranchingBuilder {
 		super(dialect);
 	}
 
+	/**
+	 * Sequence.
+	 *
+	 * @param sequence the sequence
+	 * @return the creates the sequence builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)

@@ -56,32 +56,49 @@ import org.slf4j.LoggerFactory;
  */
 public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedSynchronizerContribution {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CsvimSynchronizer.class);
 
+	/** The Constant CSVIM_PREDELIVERED. */
 	private static final Map<String, CsvimDefinition> CSVIM_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, CsvimDefinition>());
 
+	/** The Constant CSV_PREDELIVERED. */
 	private static final Map<String, CsvDefinition> CSV_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, CsvDefinition>());
 
+	/** The Constant CSVIM_SYNCHRONIZED. */
 	private static final List<String> CSVIM_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The Constant CSV_SYNCHRONIZED. */
 	private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The csvim core service. */
 	private CsvimCoreService csvimCoreService = new CsvimCoreService();
 
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant CSVIM_ARTEFACT. */
 	private static final CsvimSynchronizationArtefactType CSVIM_ARTEFACT = new CsvimSynchronizationArtefactType();
 
+	/** The Constant CSV_ARTEFACT. */
 	private static final CsvSynchronizationArtefactType CSV_ARTEFACT = new CsvSynchronizationArtefactType();
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The Constant CSVIM_MODELS. */
 	private static final Map<String, CsvimDefinition> CSVIM_MODELS = new LinkedHashMap<>();
 
+	/** The csvim processor. */
 	private CsvimProcessor csvimProcessor = new CsvimProcessor();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
@@ -89,6 +106,9 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		return dataSource;
 	}
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -193,12 +213,20 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		}
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		CSVIM_MODELS.clear();
 		CSVIM_SYNCHRONIZED.clear();
 		CSV_SYNCHRONIZED.clear();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered CSVIM files...");
 		// CSVIM
@@ -212,6 +240,12 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		logger.trace("Done synchronizing predelivered CSVIM files.");
 	}
 
+	/**
+	 * Synchronize csvim.
+	 *
+	 * @param csvimDefinition the csvim definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeCsvim(CsvimDefinition csvimDefinition) throws SynchronizationException {
 		try {
 			if (!csvimCoreService.existsCsvim(csvimDefinition.getLocation())) {
@@ -235,6 +269,12 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		}
 	}
 
+	/**
+	 * Synchronize csv.
+	 *
+	 * @param csvDefinition the csv definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeCsv(CsvDefinition csvDefinition) throws SynchronizationException {
 		try {
 			if (!csvimCoreService.existsCsv(csvDefinition.getLocation())) {
@@ -256,6 +296,11 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -271,6 +316,12 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		logger.trace("Done synchronizing CSVIM files from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -300,6 +351,11 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		}
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -333,6 +389,9 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		logger.trace("Done cleaning up CSVIM files.");
 	}
 
+	/**
+	 * Process csvim artefacts.
+	 */
 	private void processCsvimArtefacts() {
 		try (Connection connection = getDataSource().getConnection()) {
 			for (String csvimArtifactKey : CSVIM_MODELS.keySet()) {
@@ -343,6 +402,12 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		}
 	}
 
+	/**
+	 * Execute csvim.
+	 *
+	 * @param csvimDefinition the csvim definition
+	 * @param connection the connection
+	 */
 	private void executeCsvim(CsvimDefinition csvimDefinition, Connection connection) {
 		List<CsvFileDefinition> configurationDefinitions = csvimDefinition.getCsvFileDefinitions();
 
@@ -378,6 +443,11 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		}
 	}
 
+	/**
+	 * Gets the priority.
+	 *
+	 * @return the priority
+	 */
 	@Override
 	public int getPriority() {
 		return 400;

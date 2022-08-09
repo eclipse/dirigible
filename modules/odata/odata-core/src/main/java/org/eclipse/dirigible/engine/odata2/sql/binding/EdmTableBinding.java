@@ -21,17 +21,39 @@ import java.util.Map;
 
 import static java.lang.String.format;
 
+/**
+ * The Class EdmTableBinding.
+ */
 public class EdmTableBinding extends Mapping {
 
+    /**
+     * The Enum DataStructureType.
+     */
     public enum DataStructureType {
-        TABLE("TABLE"), CALC_VIEW("CALC VIEW");
+        
+        /** The table. */
+        TABLE("TABLE"), 
+ /** The calc view. */
+ CALC_VIEW("CALC VIEW");
 
+        /** The value. */
         private final String value;
 
+        /**
+         * Instantiates a new data structure type.
+         *
+         * @param value the value
+         */
         DataStructureType(String value) {
             this.value = value;
         }
 
+        /**
+         * Gets the type.
+         *
+         * @param value the value
+         * @return the type
+         */
         public static DataStructureType getType(String value) {
             for (DataStructureType type : DataStructureType.values()) {
                 if (type.toString().equals(value)) {
@@ -41,46 +63,102 @@ public class EdmTableBinding extends Mapping {
             throw new IllegalArgumentException("DataStructureType not found");
         }
 
+        /**
+         * To string.
+         *
+         * @return the string
+         */
         public String toString() {
             return value;
         }
     }
 
+    /** The Constant NO_PROPERTY_FOUND. */
     private static final String NO_PROPERTY_FOUND = "No sql binding configuration found in the mapping configuration for property %s."
             + " Did you map this property in the %s mapping?";
 
+    /** The Constant PROPERTY_WRONG_CONFIGURATION. */
     private static final String PROPERTY_WRONG_CONFIGURATION = "Sql binding configuration in the mapping configuration for property %s is wrongly configured.";
 
+    /** The Constant JOIN_COLUMN_UNSUPPORTED_CONFIGURATION. */
     private static final String JOIN_COLUMN_UNSUPPORTED_CONFIGURATION = PROPERTY_WRONG_CONFIGURATION + " The value %s is not of expected type List and String.";
 
+    /** The binding data. */
     private Map<String, Object> bindingData;
+    
+    /** The target fqn. */
     private String targetFqn;
 
+    /**
+     * Instantiates a new edm table binding.
+     *
+     * @param bindingData the binding data
+     */
     public EdmTableBinding(Map<String, Object> bindingData) {
         this.bindingData = bindingData;
         this.targetFqn = readEdmEntityFqn();
     }
 
+    /**
+     * Gets the edm fully qualifed name.
+     *
+     * @return the edm fully qualifed name
+     */
     public String getEdmFullyQualifedName() {
         return targetFqn;
     }
 
+    /**
+     * Gets the table name.
+     *
+     * @return the table name
+     */
     public String getTableName() {
         return readMandatoryConfig("sqlTable", String.class);
     }
 
+    /**
+     * Gets the mapping table name.
+     *
+     * @param target the target
+     * @return the mapping table name
+     * @throws EdmException the edm exception
+     */
     public List<String> getMappingTableName(EdmStructuralType target) throws EdmException {
         return getRefProperties(target, "manyToManyMappingTable", "mappingTableName");
     }
 
+    /**
+     * Gets the mapping table join column.
+     *
+     * @param target the target
+     * @return the mapping table join column
+     * @throws EdmException the edm exception
+     */
     public List<String> getMappingTableJoinColumn(EdmStructuralType target) throws EdmException {
         return getRefProperties(target, "manyToManyMappingTable", "mappingTableJoinColumn");
     }
 
+    /**
+     * Gets the join column to.
+     *
+     * @param target the target
+     * @return the join column to
+     * @throws EdmException the edm exception
+     */
     public List<String> getJoinColumnTo(EdmStructuralType target) throws EdmException {
         return getRefProperties(target, "joinColumn", "");
     }
 
+    /**
+     * Gets the ref properties.
+     *
+     * @param target the target
+     * @param property the property
+     * @param secondaryProperty the secondary property
+     * @return the ref properties
+     * @throws EdmException the edm exception
+     */
     @SuppressWarnings("unchecked")
     public List<String> getRefProperties(EdmStructuralType target, String property, String secondaryProperty) throws EdmException {
         String ref = "_ref_" + target.getName();
@@ -101,12 +179,25 @@ public class EdmTableBinding extends Mapping {
         }
     }
 
+    /**
+     * Checks for mapping table.
+     *
+     * @param target the target
+     * @return true, if successful
+     * @throws EdmException the edm exception
+     */
     public boolean hasMappingTable(EdmStructuralType target) throws EdmException {
         String ref = "_ref_" + target.getName();
         Map<String, Object> refKeys = readMandatoryConfig(ref, Map.class);
         return refKeys.containsKey("manyToManyMappingTable");
     }
 
+    /**
+     * Checks if is property mapped.
+     *
+     * @param p the p
+     * @return true, if is property mapped
+     */
     public boolean isPropertyMapped(EdmProperty p) {
         try {
             return this.isPropertyMapped(p.getName());
@@ -115,6 +206,12 @@ public class EdmTableBinding extends Mapping {
         }
     }
 
+    /**
+     * Checks if is property mapped.
+     *
+     * @param propertyName the property name
+     * @return true, if is property mapped
+     */
     public boolean isPropertyMapped(String propertyName) {
         if (bindingData.containsKey(propertyName)) {
             return true;
@@ -123,6 +220,11 @@ public class EdmTableBinding extends Mapping {
         }
     }
 
+    /**
+     * Checks if is aggregation type explicit.
+     *
+     * @return true, if is aggregation type explicit
+     */
     public boolean isAggregationTypeExplicit() {
         String key = "aggregationType";
         if (isPropertyMapped(key)) {
@@ -133,6 +235,12 @@ public class EdmTableBinding extends Mapping {
         return false;
     }
 
+    /**
+     * Checks if is column contained in aggregation prop.
+     *
+     * @param columnName the column name
+     * @return true, if is column contained in aggregation prop
+     */
     public boolean isColumnContainedInAggregationProp(String columnName) {
         String key = "aggregationProps";
         if (isPropertyMapped(key)) {
@@ -143,11 +251,25 @@ public class EdmTableBinding extends Mapping {
         return false;
     }
 
+    /**
+     * Gets the column aggregation type.
+     *
+     * @param columnName the column name
+     * @return the column aggregation type
+     */
     public String getColumnAggregationType(String columnName) {
         Map<String, String> aggregationProps = readMandatoryConfig("aggregationProps", Map.class);
         return aggregationProps.get(columnName);
     }
 
+    /**
+     * Checks if is of type.
+     *
+     * @param <T> the generic type
+     * @param key the key
+     * @param clazz the clazz
+     * @return true, if is of type
+     */
     private <T> boolean isOfType(String key, Class<T> clazz) {
         if (bindingData.containsKey(key)) {
             Object property = bindingData.get(key);
@@ -161,6 +283,14 @@ public class EdmTableBinding extends Mapping {
         throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, key, targetFqn));
     }
 
+    /**
+     * Read mandatory config.
+     *
+     * @param <T> the generic type
+     * @param key the key
+     * @param clazz the clazz
+     * @return the t
+     */
     private <T> T readMandatoryConfig(String key, Class<T> clazz) {
         if (bindingData.containsKey(key)) {
             Object property = bindingData.get(key);
@@ -171,6 +301,13 @@ public class EdmTableBinding extends Mapping {
         throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, key, targetFqn));
     }
 
+    /**
+     * Checks for join column to.
+     *
+     * @param target the target
+     * @return true, if successful
+     * @throws EdmException the edm exception
+     */
     public boolean hasJoinColumnTo(EdmStructuralType target) throws EdmException {
         if (target instanceof EdmEntityType || target instanceof EdmComplexType) {
             String jc = "_ref_" + target.getName();
@@ -181,10 +318,23 @@ public class EdmTableBinding extends Mapping {
         return false;
     }
 
+    /**
+     * Gets the join column to.
+     *
+     * @param target the target
+     * @return the join column to
+     * @throws EdmException the edm exception
+     */
     public List<String> getJoinColumnTo(EdmEntitySet target) throws EdmException {
         return getJoinColumnTo(target.getEntityType());
     }
 
+    /**
+     * Gets the column name.
+     *
+     * @param propertyName the property name
+     * @return the column name
+     */
     public String getColumnName(String propertyName) {
         if (bindingData.containsKey(propertyName)) {
             if (isOfType(propertyName, String.class)) {
@@ -202,6 +352,12 @@ public class EdmTableBinding extends Mapping {
         }
     }
 
+    /**
+     * Gets the column name.
+     *
+     * @param property the property
+     * @return the column name
+     */
     public String getColumnName(EdmProperty property) {
         try {
             return getColumnName(property.getName());
@@ -210,10 +366,21 @@ public class EdmTableBinding extends Mapping {
         }
     }
 
+    /**
+     * Read edm entity fqn.
+     *
+     * @return the string
+     */
     protected String readEdmEntityFqn() {
         return readMandatoryConfig("edmTypeFqn", String.class);
     }
 
+    /**
+     * Gets the column info.
+     *
+     * @param propertyName the property name
+     * @return the column info
+     */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ColumnInfo getColumnInfo(String propertyName) {
         if (bindingData.containsKey(propertyName)) {
@@ -233,6 +400,12 @@ public class EdmTableBinding extends Mapping {
 
     }
 
+    /**
+     * Gets the column info.
+     *
+     * @param property the property
+     * @return the column info
+     */
     public ColumnInfo getColumnInfo(EdmProperty property) {
         try {
             return getColumnInfo(property.getName());
@@ -241,6 +414,11 @@ public class EdmTableBinding extends Mapping {
         }
     }
 
+    /**
+     * Gets the parameters.
+     *
+     * @return the parameters
+     */
     public List<String> getParameters() {
         List<String> parameters = new ArrayList<>();
         String key = "_parameters_";
@@ -250,6 +428,11 @@ public class EdmTableBinding extends Mapping {
         return parameters;
     }
 
+    /**
+     * Gets the data structure type.
+     *
+     * @return the data structure type
+     */
     public DataStructureType getDataStructureType() {
         DataStructureType dataStructureType = DataStructureType.TABLE;
         String key = "dataStructureType";
@@ -259,27 +442,61 @@ public class EdmTableBinding extends Mapping {
         return dataStructureType;
     }
 
+    /**
+     * Gets the primary key.
+     *
+     * @return the primary key
+     * @throws EdmException the edm exception
+     */
     public String getPrimaryKey() throws EdmException {
         return readMandatoryConfig("_pk_", String.class);
     }
 
+    /**
+     * The Class ColumnInfo.
+     */
     public static class ColumnInfo {
+        
+        /** The column name. */
         private final String columnName;
+        
+        /** The jdbc type. */
         private final String jdbcType;
 
+        /**
+         * Instantiates a new column info.
+         *
+         * @param columnName the column name
+         * @param jdbcType the jdbc type
+         */
         public ColumnInfo(final String columnName, final String jdbcType) {
             this.columnName = columnName;
             this.jdbcType = jdbcType;
         }
 
+        /**
+         * Instantiates a new column info.
+         *
+         * @param columnName the column name
+         */
         public ColumnInfo(final String columnName) {
             this(columnName, (String) null);
         }
 
+        /**
+         * Gets the column name.
+         *
+         * @return the column name
+         */
         public String getColumnName() {
             return columnName;
         }
 
+        /**
+         * Gets the jdbc type.
+         *
+         * @return the jdbc type
+         */
         public String getJdbcType() {
             return jdbcType;
         }

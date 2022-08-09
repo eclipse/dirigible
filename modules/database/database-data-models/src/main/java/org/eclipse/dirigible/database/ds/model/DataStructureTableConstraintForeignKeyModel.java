@@ -16,22 +16,24 @@ package org.eclipse.dirigible.database.ds.model;
  */
 public class DataStructureTableConstraintForeignKeyModel extends DataStructureTableConstraintModel {
 
+	/** The referenced table. */
 	private String referencedTable;
 	
+	/** The referenced columns. */
 	private String[] referencedColumns;
 	
 	
 	
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 */
 	public DataStructureTableConstraintForeignKeyModel() {
 		super();
 	}
 
 	/**
-	 * Fields constructor
-	 * 
+	 * Fields constructor.
+	 *
 	 * @param referencedTable the table name
 	 * @param referencedColumns the column names
 	 */

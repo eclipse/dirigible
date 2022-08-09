@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.repository.generic;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +24,6 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RepositoryGenericModifiedTest.
  */

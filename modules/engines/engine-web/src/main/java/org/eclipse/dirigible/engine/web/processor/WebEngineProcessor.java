@@ -20,6 +20,7 @@ import org.eclipse.dirigible.repository.api.IResource;
  */
 public class WebEngineProcessor {
 
+	/** The web engine executor. */
 	private WebEngineExecutor webEngineExecutor = new WebEngineExecutor();
 
 	/**

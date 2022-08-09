@@ -13,28 +13,40 @@ package org.eclipse.dirigible.oauth;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * The Class AccessToken.
+ */
 public class AccessToken {
 
+	/** The access token. */
 	@SerializedName("access_token")
 	private String accessToken;
 
+	/** The token type. */
 	@SerializedName("token_type")
 	private String tokenType;
 
+	/** The id token. */
 	@SerializedName("id_token")
 	private String idToken;
 
+	/** The refresh token. */
 	@SerializedName("refresh_token")
 	private String refreshToken;
 
+	/** The expires in. */
 	@SerializedName("expires_in")
 	private long expiresIn;
 
+	/** The scope. */
 	private String scope;
 
+	/** The jti. */
 	private String jti;
 
 	/**
+	 * Gets the access token.
+	 *
 	 * @return the accessToken
 	 */
 	public String getAccessToken() {
@@ -42,6 +54,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Sets the access token.
+	 *
 	 * @param accessToken the accessToken to set
 	 */
 	public void setAccessToken(String accessToken) {
@@ -49,6 +63,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Gets the token type.
+	 *
 	 * @return the tokenType
 	 */
 	public String getTokenType() {
@@ -56,6 +72,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Sets the token type.
+	 *
 	 * @param tokenType the tokenType to set
 	 */
 	public void setTokenType(String tokenType) {
@@ -63,6 +81,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Gets the id token.
+	 *
 	 * @return the idToken
 	 */
 	public String getIdToken() {
@@ -70,6 +90,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Sets the id token.
+	 *
 	 * @param idToken the idToken to set
 	 */
 	public void setIdToken(String idToken) {
@@ -77,6 +99,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Gets the refresh token.
+	 *
 	 * @return the refreshToken
 	 */
 	public String getRefreshToken() {
@@ -84,6 +108,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Sets the refresh token.
+	 *
 	 * @param refreshToken the refreshToken to set
 	 */
 	public void setRefreshToken(String refreshToken) {
@@ -91,6 +117,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Gets the expires in.
+	 *
 	 * @return the expiresIn
 	 */
 	public long getExpiresIn() {
@@ -98,6 +126,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Sets the expires in.
+	 *
 	 * @param expiresIn the expiresIn to set
 	 */
 	public void setExpiresIn(long expiresIn) {
@@ -105,6 +135,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Gets the scope.
+	 *
 	 * @return the scope
 	 */
 	public String getScope() {
@@ -112,6 +144,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Sets the scope.
+	 *
 	 * @param scope the scope to set
 	 */
 	public void setScope(String scope) {
@@ -119,6 +153,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Gets the jti.
+	 *
 	 * @return the jti
 	 */
 	public String getJti() {
@@ -126,6 +162,8 @@ public class AccessToken {
 	}
 
 	/**
+	 * Sets the jti.
+	 *
 	 * @param jti the jti to set
 	 */
 	public void setJti(String jti) {

@@ -10,23 +10,47 @@ import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The Class JavaModuleResolver.
+ */
 public class JavaModuleResolver implements ModuleResolver {
 
+    /** The Constant JAVA_MODULE_PATTERN. */
     private static final Pattern JAVA_MODULE_PATTERN = Pattern.compile("(@java)(\\/)(.+[^\"])");
 
+    /** The cache directory path. */
     private final Path cacheDirectoryPath;
+    
+    /** The java package proxy generator. */
     private final JavaPackageProxyGenerator javaPackageProxyGenerator;
 
+    /**
+     * Instantiates a new java module resolver.
+     *
+     * @param cacheDirectoryPath the cache directory path
+     */
     public JavaModuleResolver(Path cacheDirectoryPath) {
         javaPackageProxyGenerator = new JavaPackageProxyGenerator();
         this.cacheDirectoryPath = cacheDirectoryPath;
     }
 
+    /**
+     * Checks if is resolvable.
+     *
+     * @param moduleToResolve the module to resolve
+     * @return true, if is resolvable
+     */
     @Override
     public boolean isResolvable(String moduleToResolve) {
         return moduleToResolve.contains("@java");
     }
 
+    /**
+     * Resolve.
+     *
+     * @param moduleToResolve the module to resolve
+     * @return the path
+     */
     @Override
     public Path resolve(String moduleToResolve) {
         Matcher modulePathMatcher = JAVA_MODULE_PATTERN.matcher(moduleToResolve);

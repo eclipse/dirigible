@@ -39,16 +39,22 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class SynchronizerCoreService implements ISynchronizerCoreService, ICleanupService {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The synchronizer state persistence manager. */
 	private PersistenceManager<SynchronizerStateDefinition> synchronizerStatePersistenceManager = new PersistenceManager<SynchronizerStateDefinition>();
 	
+	/** The synchronizer state log persistence manager. */
 	private PersistenceManager<SynchronizerStateLogDefinition> synchronizerStateLogPersistenceManager = new PersistenceManager<SynchronizerStateLogDefinition>();
 	
+	/** The synchronizer state artefact persistence manager. */
 	private PersistenceManager<SynchronizerStateArtefactDefinition> synchronizerStateArtefactPersistenceManager = new PersistenceManager<SynchronizerStateArtefactDefinition>();
 	
+	/** The synchronization enabled. */
 	private static AtomicBoolean SYNCHRONIZATION_ENABLED = new AtomicBoolean(true);
 	
+	/** The artefact types. */
 	private static Map<String, ISynchronizerArtefactType> artefactTypes = new HashMap<String, ISynchronizerArtefactType>();
 	
 	static {
@@ -59,6 +65,11 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -68,6 +79,19 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 
 	// State
 
+	/**
+	 * Creates the synchronizer state.
+	 *
+	 * @param name the name
+	 * @param state the state
+	 * @param message the message
+	 * @param firstTimeTriggered the first time triggered
+	 * @param firstTimeFinished the first time finished
+	 * @param lastTimeTriggered the last time triggered
+	 * @param lastTimeFinished the last time finished
+	 * @return the synchronizer state definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#createSynchronizerState(java.lang.String, int,
@@ -87,6 +111,13 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		return createSynchronizerState(synchronizerStateDefinition);
 	}
 
+	/**
+	 * Creates the synchronizer state.
+	 *
+	 * @param synchronizerStateDefinition the synchronizer state definition
+	 * @return the synchronizer state definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -119,6 +150,13 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 
+	/**
+	 * Gets the synchronizer state.
+	 *
+	 * @param name the name
+	 * @return the synchronizer state
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#getSynchronizerState(java.lang.String)
@@ -140,6 +178,12 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 
+	/**
+	 * Removes the synchronizer state.
+	 *
+	 * @param name the name
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#removeSynchronizerState(java.lang.String)
@@ -161,6 +205,18 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 
+	/**
+	 * Update synchronizer state.
+	 *
+	 * @param name the name
+	 * @param state the state
+	 * @param message the message
+	 * @param firstTimeTriggered the first time triggered
+	 * @param firstTimeFinished the first time finished
+	 * @param lastTimeTriggered the last time triggered
+	 * @param lastTimeFinished the last time finished
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#updateSynchronizerState(java.lang.String, int,
@@ -179,6 +235,12 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		updateSynchronizerState(synchronizerStateDefinition);
 	}
 	
+	/**
+	 * Update synchronizer state.
+	 *
+	 * @param synchronizerStateDefinition the synchronizer state definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#updateSynchronizerState(java.lang.String, int,
@@ -205,6 +267,12 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 
+	/**
+	 * Gets the synchronizer states.
+	 *
+	 * @return the synchronizer states
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#getSynchronizerStates()
@@ -226,6 +294,13 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 	
+	/**
+	 * Gets the synchronizer state logs.
+	 *
+	 * @param name the name
+	 * @return the synchronizer state logs
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#getSynchronizerStateLogs()
@@ -250,6 +325,11 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 	
+	/**
+	 * Delete old synchronizer state logs.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#deleteOldSynchronizerStateLogs()
@@ -275,6 +355,13 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 
+	/**
+	 * Exists synchronizer state.
+	 *
+	 * @param name the name
+	 * @return true, if successful
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#existsSynchronizerState(java.lang.String)
@@ -284,6 +371,11 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		return getSynchronizerState(name) != null;
 	}
 
+	/**
+	 * Initialize synchronizers states.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#initializeSynchronizersStates()
@@ -310,6 +402,11 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 
+	/**
+	 * Disable synchronization.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#disableSynchronization()
@@ -319,6 +416,11 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		SYNCHRONIZATION_ENABLED.set(false);
 	}
 
+	/**
+	 * Enable synchronization.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#enableSynchronization()
@@ -329,14 +431,25 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 	}
 	
 	/**
-	 * Returns the current state whether the synchronization is enabled
-	 * 
+	 * Returns the current state whether the synchronization is enabled.
+	 *
 	 * @return true if enabled
 	 */
 	public static boolean isSynchronizationEnabled() {
 		return SYNCHRONIZATION_ENABLED.get();
 	}
 
+	/**
+	 * Creates the synchronizer state artefact.
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @param type the type
+	 * @param state the state
+	 * @param message the message
+	 * @return the synchronizer state artefact definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#createSynchronizerStateArtefact(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
@@ -355,6 +468,13 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		return createSynchronizerStateArtefact(synchronizerStateArtefactDefinition);
 	}
 
+	/**
+	 * Creates the synchronizer state artefact.
+	 *
+	 * @param synchronizerStateArtefactDefinition the synchronizer state artefact definition
+	 * @return the synchronizer state artefact definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#createSynchronizerStateArtefact(SynchronizerStateArtefactDefinition)
@@ -383,6 +503,14 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 
+	/**
+	 * Gets the synchronizer state artefact.
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @return the synchronizer state artefact
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#getSynchronizerStateArtefact(java.lang.String, java.lang.String)
@@ -413,6 +541,13 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 
+	/**
+	 * Removes the synchronizer state artefact.
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#removeSynchronizerStateArtefact(java.lang.String, java.lang.String)
@@ -439,6 +574,16 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		
 	}
 
+	/**
+	 * Update synchronizer state artefact.
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @param type the type
+	 * @param state the state
+	 * @param message the message
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#updateSynchronizerStateArtefact(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
@@ -457,6 +602,12 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 
+	/**
+	 * Update synchronizer state artefact.
+	 *
+	 * @param synchronizerStateArtefactDefinition the synchronizer state artefact definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#updateSynchronizerStateArtefact(SynchronizerStateArtefactDefinition)
@@ -480,6 +631,12 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		
 	}
 
+	/**
+	 * Gets the synchronizer state artefacts.
+	 *
+	 * @return the synchronizer state artefacts
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#getSynchronizerStateArtefacts()
@@ -504,6 +661,13 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 	
+	/**
+	 * Gets the synchronizer state artefacts by location.
+	 *
+	 * @param location the location
+	 * @return the synchronizer state artefacts by location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#getSynchronizerStateArtefactsByLocation()
@@ -532,6 +696,14 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		}
 	}
 
+	/**
+	 * Exists synchronizer state artefact.
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws SchedulerException the scheduler exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#existsSynchronizerStateArtefact(java.lang.String, java.lang.String)
@@ -542,6 +714,9 @@ public class SynchronizerCoreService implements ISynchronizerCoreService, IClean
 		return (existing != null);
 	}
 
+	/**
+	 * Cleanup.
+	 */
 	@Override
 	public void cleanup() {
 		try {

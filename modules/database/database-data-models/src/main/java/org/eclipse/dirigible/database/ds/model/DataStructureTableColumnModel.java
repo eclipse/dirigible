@@ -16,20 +16,28 @@ package org.eclipse.dirigible.database.ds.model;
  */
 public class DataStructureTableColumnModel {
 
+	/** The name. */
 	private String name;
 	
+	/** The type. */
 	private String type;
 	
+	/** The length. */
 	private String length;
 	
+	/** The nullable. */
 	private boolean nullable;
 	
+	/** The primary key. */
 	private boolean primaryKey;
 	
+	/** The default value. */
 	private String defaultValue;
 	
+	/** The scale. */
 	private String scale;
 	
+	/** The unique. */
 	private boolean unique;
 
 	/**

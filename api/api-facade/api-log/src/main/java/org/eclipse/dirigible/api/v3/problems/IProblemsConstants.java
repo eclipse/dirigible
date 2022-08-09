@@ -11,8 +11,12 @@
  */
 package org.eclipse.dirigible.api.v3.problems;
 
+/**
+ * The Interface IProblemsConstants.
+ */
 public interface IProblemsConstants {
 	
+	/** The Constant PROGRAM_DEFAULT. */
 	public static final String PROGRAM_DEFAULT = "Eclipse Dirigible";
 
 }

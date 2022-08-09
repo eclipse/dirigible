@@ -17,7 +17,6 @@ import static org.junit.Assert.assertNotNull;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.Modifiers;
 import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.dialects.mysql.MySQLSqlDialect;
 import org.junit.Test;
 
 /**
@@ -59,6 +58,9 @@ public class CreateTableTest {
 		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )", sql);
 	}
 
+	/**
+	 * Creates the table with escaped table name.
+	 */
 	@Test
 	public void createTableWithEscapedTableName() {
 		String sql = SqlFactory.getDefault().create()
@@ -73,6 +75,9 @@ public class CreateTableTest {
 				sql);
 	}
 
+	/**
+	 * Creates the table with escaped table name and schema.
+	 */
 	@Test
 	public void createTableWithEscapedTableNameAndSchema() {
 		String sql = SqlFactory.getDefault().create()

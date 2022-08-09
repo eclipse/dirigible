@@ -16,6 +16,9 @@ import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
 import org.eclipse.dirigible.database.sql.builders.tableType.DropTableTypeBuilder;
 
+/**
+ * The Class HanaDropBranchingBuilder.
+ */
 public class HanaDropBranchingBuilder extends DropBranchingBuilder {
 
     /**
@@ -27,6 +30,12 @@ public class HanaDropBranchingBuilder extends DropBranchingBuilder {
         super(dialect);
     }
 
+    /**
+     * Sequence.
+     *
+     * @param sequence the sequence
+     * @return the drop sequence builder
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder#sequence(java.lang.String)
@@ -36,6 +45,12 @@ public class HanaDropBranchingBuilder extends DropBranchingBuilder {
         return new HanaDropSequenceBuilder(this.getDialect(), sequence);
     }
 
+    /**
+     * Table type.
+     *
+     * @param tableType the table type
+     * @return the drop table type builder
+     */
     @Override
     public DropTableTypeBuilder tableType(String tableType) {
         return new HanaDropTableTypeBuilder(this.getDialect(), tableType);

@@ -140,14 +140,15 @@ public interface IRepositoryWriter {
 	public void dispose();
 	
 	/**
-	 * Whether the Repository supports linking of external paths
-	 * @return
+	 * Whether the Repository supports linking of external paths.
+	 *
+	 * @return true, if is linking paths supported
 	 */
 	public boolean isLinkingPathsSupported();
 	
 	/**
-	 * Link external folder or file as an internal Repository artifact
-	 * 
+	 * Link external folder or file as an internal Repository artifact.
+	 *
 	 * @param repositoryPath the relative path
 	 * @param filePath the target folder or file
 	 * @throws IOException in case of exception
@@ -155,16 +156,16 @@ public interface IRepositoryWriter {
 	public void linkPath(String repositoryPath, String filePath) throws IOException;
 
 	/**
-	 * Delete link together with external folder or file
-	 * 
+	 * Delete link together with external folder or file.
+	 *
 	 * @param repositoryPath the relative path
 	 * @throws IOException in case of exception
 	 */
 	public void deleteLinkedPath(String repositoryPath) throws IOException;
 
 	/**
-	 * Check if Link exists between folder or file and an internal Repository artifact
-	 * 
+	 * Check if Link exists between folder or file and an internal Repository artifact.
+	 *
 	 * @param repositoryPath the relative path
 	 * @return true if link exists
 	 */

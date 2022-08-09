@@ -16,6 +16,7 @@ package org.eclipse.dirigible.commons.api.context;
  */
 public class InvalidStateException extends RuntimeException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5039208772641246649L;
 
 	/**

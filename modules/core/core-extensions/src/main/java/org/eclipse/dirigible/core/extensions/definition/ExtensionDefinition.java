@@ -26,22 +26,28 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 @Table(name = "DIRIGIBLE_EXTENSIONS")
 public class ExtensionDefinition implements IArtefactDefinition {
 
+	/** The location. */
 	@Id
 	@Column(name = "EXTENSION_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
+	/** The extension point. */
 	@Column(name = "EXTENSION_EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String extensionPoint;
 
+	/** The module. */
 	@Column(name = "EXTENSION_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String module;
 
+	/** The description. */
 	@Column(name = "EXTENSION_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
+	/** The created by. */
 	@Column(name = "EXTENSION_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "EXTENSION_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -186,6 +192,11 @@ public class ExtensionDefinition implements IArtefactDefinition {
 		return GsonHelper.GSON.toJson(this, ExtensionDefinition.class);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -195,6 +206,11 @@ public class ExtensionDefinition implements IArtefactDefinition {
 		return toJson();
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -210,6 +226,12 @@ public class ExtensionDefinition implements IArtefactDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -257,11 +279,21 @@ public class ExtensionDefinition implements IArtefactDefinition {
 		return true;
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getLocation();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();

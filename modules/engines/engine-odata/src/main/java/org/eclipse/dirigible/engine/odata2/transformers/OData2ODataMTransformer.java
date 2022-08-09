@@ -25,22 +25,45 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The Class OData2ODataMTransformer.
+ */
 public class OData2ODataMTransformer {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(OData2ODataMTransformer.class);
 
+    /** The property name escaper. */
     private final ODataPropertyNameEscaper propertyNameEscaper;
+    
+    /** The table metadata provider. */
     private final ITableMetadataProvider tableMetadataProvider;
 
+    /**
+     * Instantiates a new o data 2 O data M transformer.
+     */
     public OData2ODataMTransformer() {
         this(new DefaultTableMetadataProvider(), new DefaultPropertyNameEscaper());
     }
 
+    /**
+     * Instantiates a new o data 2 O data M transformer.
+     *
+     * @param metadataProvider the metadata provider
+     * @param propertyNameEscaper the property name escaper
+     */
     public OData2ODataMTransformer(ITableMetadataProvider metadataProvider, ODataPropertyNameEscaper propertyNameEscaper) {
         this.tableMetadataProvider = metadataProvider;
         this.propertyNameEscaper = propertyNameEscaper;
     }
 
+    /**
+     * Transform.
+     *
+     * @param model the model
+     * @return the string[]
+     * @throws SQLException the SQL exception
+     */
     public String[] transform(ODataDefinition model) throws SQLException {
 
         List<String> result = new ArrayList<>();
@@ -187,6 +210,20 @@ public class OData2ODataMTransformer {
         return result.toArray(new String[]{});
     }
 
+    /**
+     * Check ref section consistency.
+     *
+     * @param buff the buff
+     * @param entity the entity
+     * @param groupRelationsByToTableName the group relations by to table name
+     * @param assembleRefFromFK the assemble ref from FK
+     * @param toSetEntity the to set entity
+     * @param principleEntity the principle entity
+     * @param fkElement the fk element
+     * @param mappingTableName the mapping table name
+     * @param mappingTableJoinColumn the mapping table join column
+     * @return the string
+     */
     private String checkRefSectionConsistency(StringBuilder buff, ODataEntityDefinition entity, Map<String,
             List<PersistenceTableRelationModel>> groupRelationsByToTableName, List<String> assembleRefFromFK,
                                               ODataEntityDefinition toSetEntity, String principleEntity, String fkElement,
@@ -204,11 +241,24 @@ public class OData2ODataMTransformer {
         return null;
     }
 
+    /**
+     * Validate association properties.
+     *
+     * @param association the association
+     * @param model the model
+     */
     private void validateAssociationProperties(ODataAssociationDefinition association, ODataDefinition model) {
         validateAssociationProperty(association.getFrom(), model, association);
         validateAssociationProperty(association.getTo(), model, association);
     }
 
+    /**
+     * Validate association property.
+     *
+     * @param assEndDefinition the ass end definition
+     * @param model the model
+     * @param association the association
+     */
     private void validateAssociationProperty(ODataAssociationEndDefinition assEndDefinition, ODataDefinition model, ODataAssociationDefinition association) {
         ODataEntityDefinition entity = ODataMetadataUtil.getEntity(model, assEndDefinition.getEntity(), association.getName());
         if (!entity.getProperties().isEmpty()) {
@@ -228,6 +278,15 @@ public class OData2ODataMTransformer {
         }
     }
 
+    /**
+     * Assemble odata M ref section.
+     *
+     * @param dependentEntity the dependent entity
+     * @param fkElements the fk elements
+     * @param mappingTableName the mapping table name
+     * @param mappingTableJoinColumn the mapping table join column
+     * @return the string
+     */
     private String assembleOdataMRefSection(String dependentEntity, String fkElements, String mappingTableName,
                                             String mappingTableJoinColumn) {
         String refSection = "\t\"_ref_" + dependentEntity + "Type" + "\": {\n\t\t\"joinColumn\" : " + "[\n\t\t\t" +

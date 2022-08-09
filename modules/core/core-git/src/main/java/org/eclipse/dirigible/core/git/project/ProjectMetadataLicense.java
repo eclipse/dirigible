@@ -16,8 +16,10 @@ package org.eclipse.dirigible.core.git.project;
  */
 public class ProjectMetadataLicense {
 
+	/** The name. */
 	private String name;
 
+	/** The url. */
 	private String url;
 
 	/**

@@ -30,10 +30,17 @@ import org.slf4j.LoggerFactory;
  */
 public class SynchronizerDatabaseLayoutInitializer extends AbstractDatabaseLayoutInitializer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizerDatabaseLayoutInitializer.class);
 
+	/** The data source. */
 	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);

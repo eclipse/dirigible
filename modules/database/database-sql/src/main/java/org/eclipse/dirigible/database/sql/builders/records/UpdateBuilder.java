@@ -27,12 +27,16 @@ import org.slf4j.LoggerFactory;
  */
 public class UpdateBuilder extends AbstractQuerySqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(UpdateBuilder.class);
 
+	/** The table. */
 	private String table;
 
+	/** The values. */
 	private Map<String, String> values = new LinkedHashMap<String, String>();
 
+	/** The wheres. */
 	private List<String> wheres = new ArrayList<String>();
 
 	/**
@@ -86,6 +90,11 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 		return this;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

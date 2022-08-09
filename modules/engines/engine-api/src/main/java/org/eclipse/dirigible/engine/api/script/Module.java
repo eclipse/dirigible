@@ -20,10 +20,13 @@ import org.eclipse.dirigible.repository.api.IEntityInformation;
  */
 public class Module {
 
+	/** The path. */
 	private String path;
 
+	/** The content. */
 	private byte[] content;
 
+	/** The entity information. */
 	private IEntityInformation entityInformation;
 
 	/**

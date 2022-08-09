@@ -12,11 +12,14 @@
 package org.eclipse.dirigible.api.v3.http.client;
 
 /**
- * Represents an HTTP header
+ * Represents an HTTP header.
  */
 public class HttpClientHeader {
 
+	/** The name. */
 	private String name;
+	
+	/** The value. */
 	private String value;
 
 	/**

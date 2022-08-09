@@ -11,6 +11,19 @@
  */
 package org.eclipse.dirigible.database.sql.builders.schema;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -22,14 +35,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
-import java.sql.*;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 /**
  * The Class SchemaTest.
@@ -37,19 +43,28 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SchemaTest {
 
+    /** The Constant DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY. */
     private static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE_CONF_KEY = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";
+    
+    /** The mock connection. */
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Connection mockConnection;
 
+    /** The mock database meta data. */
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private DatabaseMetaData mockDatabaseMetaData;
 
+    /** The mock prepare statement. */
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private PreparedStatement mockPrepareStatement;
 
+    /** The mock result set. */
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private ResultSet mockResultSet;
 
+    /**
+     * Open mocks.
+     */
     @Before
     public void openMocks() {
 //        MockitoAnnotations.initMocks(this);
@@ -57,6 +72,9 @@ public class SchemaTest {
     }
 
 
+    /**
+     * Execute create schema with case sensitive.
+     */
     @Test
     public void executeCreateSchemaWithCaseSensitive() {
         try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
@@ -71,6 +89,9 @@ public class SchemaTest {
         }
     }
 
+    /**
+     * Execute create schema no case sensitive.
+     */
     @Test
     public void executeCreateSchemaNoCaseSensitive() {
         try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
@@ -86,6 +107,9 @@ public class SchemaTest {
         }
     }
 
+    /**
+     * Execute drop schema with case sensitive.
+     */
     @Test
     public void executeDropSchemaWithCaseSensitive() {
         try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
@@ -102,6 +126,9 @@ public class SchemaTest {
         }
     }
 
+    /**
+     * Execute drop schema no case sensitive.
+     */
     @Test
     public void executeDropSchemaNoCaseSensitive() {
         try (MockedStatic<Configuration> configuration = Mockito.mockStatic(Configuration.class)) {
@@ -117,6 +144,11 @@ public class SchemaTest {
         }
     }
 
+    /**
+     * Check if schema exist.
+     *
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void checkIfSchemaExist() throws SQLException {
         String schemaName = "MySchema_1";
@@ -128,6 +160,11 @@ public class SchemaTest {
         assertTrue(exist);
     }
 
+    /**
+     * Check if schema does not exist.
+     *
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void checkIfSchemaDoesNotExist() throws SQLException {
         String schemaName = "MySchema_1";

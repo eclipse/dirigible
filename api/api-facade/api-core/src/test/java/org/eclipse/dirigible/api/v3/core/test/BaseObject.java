@@ -13,18 +13,46 @@ package org.eclipse.dirigible.api.v3.core.test;
 
 import java.util.Map;
 
+/**
+ * The Class BaseObject.
+ */
 public abstract class BaseObject implements IBaseObject {
 
+	/**
+	 * Do something.
+	 *
+	 * @param parameters the parameters
+	 * @param inheritedParameter the inherited parameter
+	 * @param exactParameter the exact parameter
+	 * @return the string
+	 */
 	@Override
 	public String doSomething(Map parameters, IBaseParameter inheritedParameter, ExactParameter exactParameter) {
 		return "";
 	}
 
+	/**
+	 * Do something.
+	 *
+	 * @param parameters the parameters
+	 * @param inheritedParameter the inherited parameter
+	 * @param exactParameter the exact parameter
+	 * @param s the s
+	 * @return the string
+	 */
 	@Override
 	public String doSomething(Map parameters, IBaseParameter inheritedParameter, ExactParameter exactParameter, String s) {
 		return "";
 	}
 
+	/**
+	 * Do something else.
+	 *
+	 * @param parameters the parameters
+	 * @param inheritedParameter the inherited parameter
+	 * @param s the s
+	 * @return the string
+	 */
 	@Override
 	public String doSomethingElse(Map parameters, IBaseParameter inheritedParameter, String s) {
 		return "";

@@ -73,10 +73,13 @@ import io.swagger.annotations.Authorization;
 public class GitRestService extends AbstractRestService implements IRestService {
 
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GitRestService.class);
 
+	/** The processor. */
 	private GitProcessor processor = new GitProcessor();
 	
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
@@ -109,7 +112,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param workspace the workspace
 	 * @param model the model
 	 * @return the response
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException the git connector exception
 	 */
 	@POST
 	@Path("/pull")
@@ -133,7 +136,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException the git connector exception
 	 */
 	@POST
 	@Path("/{project}/pull")
@@ -157,7 +160,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param workspace the workspace
 	 * @param model the model
 	 * @return the response
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException the git connector exception
 	 */
 	@POST
 	@Path("/push")
@@ -181,7 +184,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException the git connector exception
 	 */
 	@POST
 	@Path("/{project}/push")
@@ -205,7 +208,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param workspace the workspace
 	 * @param model the model
 	 * @return the response
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException the git connector exception
 	 */
 	@POST
 	@Path("/reset")
@@ -229,7 +232,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException the git connector exception
 	 */
 	@POST
 	@Path("/{project}/reset")
@@ -252,8 +255,9 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 *
 	 * @param workspace the workspace
 	 * @param repositoryName the project
+	 * @param unpublish the unpublish
 	 * @return the response
-	 * @throws GitConnectorException in case of exception 
+	 * @throws GitConnectorException in case of exception
 	 * @throws PublisherException in case of exception
 	 */
 	@DELETE
@@ -278,7 +282,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException the git connector exception
 	 */
 	@POST
 	@Path("/{project}/share")
@@ -303,7 +307,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException the git connector exception
 	 */
 	@POST
 	@Path("/{project}/checkout")
@@ -328,7 +332,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException the git connector exception
 	 */
 	@POST
 	@Path("/{project}/commit")
@@ -785,6 +789,11 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
@@ -793,6 +802,11 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return GitRestService.class;
 	}
 	
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
 	 */

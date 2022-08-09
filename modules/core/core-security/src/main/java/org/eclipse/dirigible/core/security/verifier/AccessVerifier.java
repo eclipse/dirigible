@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AccessVerifier {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AccessVerifier.class);
 
 	/**

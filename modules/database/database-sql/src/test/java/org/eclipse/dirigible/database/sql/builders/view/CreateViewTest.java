@@ -19,7 +19,6 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableTest;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CreateViewTest.
  */

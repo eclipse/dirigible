@@ -22,6 +22,9 @@ import org.junit.Test;
 public class CommandEngineServiceTest {
 
 	
+	/**
+	 * Command test.
+	 */
 	@Test
 	public void commandTest() {
 		CommandDefinition commandDefinition = new CommandDefinition();

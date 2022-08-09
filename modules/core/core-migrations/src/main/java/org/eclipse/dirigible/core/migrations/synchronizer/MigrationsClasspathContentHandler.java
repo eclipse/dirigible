@@ -23,10 +23,18 @@ import org.slf4j.LoggerFactory;
  */
 public class MigrationsClasspathContentHandler extends AbstractClasspathContentHandler {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MigrationsClasspathContentHandler.class);
 
+	/** The migrations synchronizer. */
 	private MigrationsSynchronizer migrationsSynchronizer = new MigrationsSynchronizer();
 
+	/**
+	 * Checks if is valid.
+	 *
+	 * @param path the path
+	 * @return true, if is valid
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#isValid(java.lang.String)
@@ -45,6 +53,11 @@ public class MigrationsClasspathContentHandler extends AbstractClasspathContentH
 		return false;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#getLogger()

@@ -30,10 +30,17 @@ import org.eclipse.dirigible.database.persistence.PersistenceManager;
  */
 public class BpmCoreService implements IBpmCoreService {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The bpm persistence manager. */
 	private PersistenceManager<BpmDefinition> bpmPersistenceManager = new PersistenceManager<BpmDefinition>();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -43,6 +50,14 @@ public class BpmCoreService implements IBpmCoreService {
 
 	// BPM
 
+	/**
+	 * Creates the bpm.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @return the bpm definition
+	 * @throws BpmException the bpm exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.bpm.flowable.api.IBpmCoreService#createBpm(java.lang.String, java.lang.String)
@@ -71,6 +86,13 @@ public class BpmCoreService implements IBpmCoreService {
 		}
 	}
 
+	/**
+	 * Gets the bpm.
+	 *
+	 * @param location the location
+	 * @return the bpm
+	 * @throws BpmException the bpm exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.bpm.flowable.api.IBpmCoreService#getBpm(java.lang.String)
@@ -92,6 +114,12 @@ public class BpmCoreService implements IBpmCoreService {
 		}
 	}
 
+	/**
+	 * Removes the bpm.
+	 *
+	 * @param location the location
+	 * @throws BpmException the bpm exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.bpm.flowable.api.IBpmCoreService#removeBpm(java.lang.String)
@@ -113,6 +141,13 @@ public class BpmCoreService implements IBpmCoreService {
 		}
 	}
 
+	/**
+	 * Update bpm.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @throws BpmException the bpm exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.bpm.flowable.api.IBpmCoreService#updateBpm(java.lang.String, java.lang.String)
@@ -136,6 +171,12 @@ public class BpmCoreService implements IBpmCoreService {
 		}
 	}
 
+	/**
+	 * Gets the bpm list.
+	 *
+	 * @return the bpm list
+	 * @throws BpmException the bpm exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.bpm.flowable.api.IBpmCoreService#getBpmList()
@@ -157,6 +198,13 @@ public class BpmCoreService implements IBpmCoreService {
 		}
 	}
 
+	/**
+	 * Exists bpm.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws BpmException the bpm exception
+	 */
 	@Override
 	public boolean existsBpm(String location) throws BpmException {
 		return getBpm(location) != null;

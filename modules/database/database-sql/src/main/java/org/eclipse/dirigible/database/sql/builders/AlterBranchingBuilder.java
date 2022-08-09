@@ -40,10 +40,21 @@ public class AlterBranchingBuilder extends AbstractSqlBuilder {
         return new AlterTableBuilder(getDialect(), table);
     }
 
+    /**
+     * Sequence.
+     *
+     * @param sequence the sequence
+     * @return the alter sequence builder
+     */
     public AlterSequenceBuilder sequence(String sequence) {
         return new AlterSequenceBuilder(getDialect(), sequence);
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

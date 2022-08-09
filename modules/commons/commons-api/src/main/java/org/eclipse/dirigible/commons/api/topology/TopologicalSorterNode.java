@@ -15,33 +15,68 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The Class TopologicalSorterNode.
+ *
+ * @param <T> the generic type
+ */
 public class TopologicalSorterNode<T extends ITopologicallySortable> {
 	
+	/** The data. */
 	private T data;
 	
+	/** The nodes. */
 	private Map<String, TopologicalSorterNode<T>> nodes;
 	
+    /** The visited. */
     private boolean visited;
     
+    /** The dependencies. */
     private List<TopologicalSorterNode<T>> dependencies;
 
+    /**
+     * Instantiates a new topological sorter node.
+     *
+     * @param data the data
+     * @param nodes the nodes
+     */
     public TopologicalSorterNode(T data, Map<String, TopologicalSorterNode<T>> nodes) {
         this.data = data;
         this.nodes = nodes;
     }
     
+    /**
+     * Gets the data.
+     *
+     * @return the data
+     */
     public T getData() {
 		return data;
 	}
     
+    /**
+     * Checks if is visited.
+     *
+     * @return true, if is visited
+     */
     public boolean isVisited() {
 		return visited;
 	}
     
+    /**
+     * Sets the visited.
+     *
+     * @param visited the new visited
+     */
     public void setVisited(boolean visited) {
 		this.visited = visited;
 	}
     
+    /**
+     * Gets the dependencies.
+     *
+     * @return the dependencies
+     */
     public List<TopologicalSorterNode<T>> getDependencies() {
     	if (this.dependencies == null) {
     		this.dependencies = new ArrayList<>();
@@ -52,10 +87,20 @@ public class TopologicalSorterNode<T extends ITopologicallySortable> {
         return this.dependencies;
     }
     
+    /**
+     * Sets the dependencies.
+     *
+     * @param dependencies the new dependencies
+     */
     public void setDependencies(List<TopologicalSorterNode<T>> dependencies) {
         this.dependencies = dependencies;
     }
     
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     public String toString() {
         return data.getId();
     }

@@ -15,8 +15,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * The Class TopologicalDepleter.
+ *
+ * @param <T> the generic type
+ */
 public class TopologicalDepleter<T extends ITopologicallyDepletable> {
 	
+	/**
+	 * Deplete.
+	 *
+	 * @param list the list
+	 * @param flow the flow
+	 * @return the list
+	 */
 	public List<T> deplete(List<T> list, String flow) {
 		List<T> depletables = new ArrayList<>();
 		depletables.addAll(list);

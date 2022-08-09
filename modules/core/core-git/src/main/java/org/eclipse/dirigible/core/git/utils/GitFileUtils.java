@@ -45,33 +45,53 @@ import org.slf4j.LoggerFactory;
  */
 public class GitFileUtils {
 
+	/** The Constant USER_WORKSPACE_PROJECT_SEGMENTS_COUNT. */
 	private static final int USER_WORKSPACE_PROJECT_SEGMENTS_COUNT = 4;
 
+	/** The Constant USER_WORKSPACE_SEGMENTS_COUNT. */
 	private static final int USER_WORKSPACE_SEGMENTS_COUNT = 3;
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GitFileUtils.class);
 	
+	/** The Constant DIRIGIBLE_GIT_ROOT_FOLDER. */
 	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
+	
+	/** The Constant DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER. */
 	private static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$ 
 
+	/** The Constant SLASH. */
 	public static final String SLASH = "/"; //$NON-NLS-1$
+	
+	/** The Constant DOT_GIT. */
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
 	
 	/** The Constant PATTERN_USERS_WORKSPACE. */
 	public static final String PATTERN_USERS_WORKSPACE = IRepositoryStructure.PATH_USERS + "/%s/%s/"; // /users/john/workspace1
 
+	/** The Constant REPOSITORY_GIT_FOLDER. */
 	private static final String REPOSITORY_GIT_FOLDER = "dirigible" + File.separator + "repository" + File.separator + DOT_GIT;
+	
+	/** The Constant DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER. */
 	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = "target" + File.separator + REPOSITORY_GIT_FOLDER; //$NON-NLS-1$
 
+	/** The Constant MINIMUM_URL_LENGTH. */
 	private static final int MINIMUM_URL_LENGTH = 25;
 
+	/** The Constant TEMP_DIRECTORY_PREFIX. */
 	public static final String TEMP_DIRECTORY_PREFIX = "dirigible_git_";
 
+	/** The git root folder. */
 	private static String GIT_ROOT_FOLDER;
 
 	/** The repository. */
 	private static IRepository REPOSITORY = null;
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	private static synchronized IRepository getRepository() {
 		if (REPOSITORY == null) {
 			REPOSITORY = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -101,8 +121,8 @@ public class GitFileUtils {
 	}
 	
 	/**
-	 * Create the directory for git
-	 * 
+	 * Create the directory for git.
+	 *
 	 * @param user the logged-in user
 	 * @param workspace the workspace
 	 * @param repositoryURI the repository URI
@@ -114,6 +134,14 @@ public class GitFileUtils {
 		return FileSystemUtils.forceCreateDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
 	}
 
+	/**
+	 * Delete git directory.
+	 *
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param repositoryURI the repository URI
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void deleteGitDirectory(String user, String workspace, String repositoryURI) throws IOException {
 		String repositoryName = generateGitRepositoryName(repositoryURI);
 
@@ -198,7 +226,8 @@ public class GitFileUtils {
 	}
 	
 	/**
-	 * Returns the local absolute path of a Repository path
+	 * Returns the local absolute path of a Repository path.
+	 *
 	 * @param path the Repository path
 	 * @return the local absolute path
 	 */
@@ -294,6 +323,13 @@ public class GitFileUtils {
 		return projectsNames.toArray(new String[]{});
 	}
 
+	/**
+	 * Checks if is git project.
+	 *
+	 * @param repository the repository
+	 * @param repositoryPath the repository path
+	 * @return true, if is git project
+	 */
 	public static boolean isGitProject(IRepository repository, String repositoryPath) {
 		try {
 			if (repository instanceof FileSystemRepository) {
@@ -312,8 +348,8 @@ public class GitFileUtils {
 	}
 
 	/**
-	 * Generate the local repository name
-	 * 
+	 * Generate the local repository name.
+	 *
 	 * @param repositoryURI the URI odf the repository
 	 * @return the generated local name
 	 */
@@ -322,8 +358,8 @@ public class GitFileUtils {
 	}
 
 	/**
-	 * Get the directory for git
-	 * 
+	 * Get the directory for git.
+	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
 	 * @return the directory
@@ -333,8 +369,8 @@ public class GitFileUtils {
 	}
 
 	/**
-	 * Get the directory for git
-	 * 
+	 * Get the directory for git.
+	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
 	 * @param repositoryURI the repository URI
@@ -345,8 +381,8 @@ public class GitFileUtils {
 	}
 
 	/**
-	 * Get the directory for git
-	 * 
+	 * Get the directory for git.
+	 *
 	 * @param workspace the workspace
 	 * @param repositoryName the repository URI
 	 * @return the directory
@@ -356,8 +392,8 @@ public class GitFileUtils {
 	}
 
 	/**
-	 * Get the directory for git
-	 * 
+	 * Get the directory for git.
+	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
 	 * @param repositoryName the repository URI
@@ -372,8 +408,8 @@ public class GitFileUtils {
 	}
 	
 	/**
-	 * Get the directory for git for deep projects
-	 * 
+	 * Get the directory for git for deep projects.
+	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
 	 * @param repositoryName the repository URI

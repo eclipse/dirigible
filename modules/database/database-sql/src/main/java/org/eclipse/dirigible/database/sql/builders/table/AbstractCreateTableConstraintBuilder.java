@@ -27,12 +27,16 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends AbstractCreateTableConstraintBuilder> extends AbstractSqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractCreateTableConstraintBuilder.class);
 
+	/** The name. */
 	private String name;
 
+	/** The modifiers. */
 	private Set<String> modifiers = new TreeSet<String>();
 
+	/** The columns. */
 	private Set<String> columns = new TreeSet<String>();
 
 	/**
@@ -100,6 +104,11 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 		return (CONSTRAINT) this;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

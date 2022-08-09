@@ -24,6 +24,9 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class CmsProviderManaged.
+ */
 public class CmsProviderManaged implements ICmsProvider {
 
 	/** The Constant DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD_KEY. */
@@ -38,23 +41,43 @@ public class CmsProviderManaged implements ICmsProvider {
 	/** The Constant TYPE. */
 	public static final String TYPE = "managed"; //$NON-NLS-1$
 
+	/** The Constant PARAM_USER. */
 	private static final String PARAM_USER = "User"; //$NON-NLS-1$
+	
+	/** The Constant PARAM_PASSWORD. */
 	private static final String PARAM_PASSWORD = "Password"; //$NON-NLS-1$
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CmsProviderManaged.class);
 	
+	/** The cmis session. */
 	private Object cmisSession;
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return NAME;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	@Override
 	public String getType() {
 		return TYPE;
 	}
 
+	/**
+	 * Gets the session.
+	 *
+	 * @return the session
+	 */
 	@Override
 	public Object getSession() {
 		if (this.cmisSession == null) {
@@ -71,15 +94,15 @@ public class CmsProviderManaged implements ICmsProvider {
 	}
 	
 	/**
-	 * Retrieve the CMIS Configuration from the target platform
+	 * Retrieve the CMIS Configuration from the target platform.
 	 *
 	 * @return the managed CMIS session
-	 * @throws NamingException
-	 * @throws InvocationTargetException
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws SecurityException
-	 * @throws NoSuchMethodException
+	 * @throws NamingException the naming exception
+	 * @throws NoSuchMethodException the no such method exception
+	 * @throws SecurityException the security exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws InvocationTargetException the invocation target exception
 	 */
 	public Object lookupCmisSession() throws NamingException, NoSuchMethodException, SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {

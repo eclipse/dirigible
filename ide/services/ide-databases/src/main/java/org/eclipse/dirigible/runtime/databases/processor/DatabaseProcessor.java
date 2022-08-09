@@ -65,19 +65,32 @@ import com.google.gson.JsonObject;
 public class DatabaseProcessor {
 
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseProcessor.class);
 
+	/** The Constant CREATE_PROCEDURE. */
 	private static final String CREATE_PROCEDURE = "CREATE PROCEDURE";
 
+	/** The Constant SCRIPT_DELIMITER. */
 	private static final String SCRIPT_DELIMITER = ";";
+	
+	/** The Constant PROCEDURE_DELIMITER. */
 	private static final String PROCEDURE_DELIMITER = "--";
 
+	/** The limited. */
 	private boolean LIMITED = true;
 
+	/** The database. */
 	private IDatabase database = null;
 	
+	/** The databases core service. */
 	private IDatabasesCoreService databasesCoreService = new DatabasesCoreService();
 	
+	/**
+	 * Gets the database.
+	 *
+	 * @return the database
+	 */
 	protected synchronized IDatabase getDatabase() {
 		if (database == null) {
 			database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
@@ -143,8 +156,8 @@ public class DatabaseProcessor {
 	}
 	
 	/**
-	 * Describe the requested artifact in JSON
-	 * 
+	 * Describe the requested artifact in JSON.
+	 *
 	 * @param dataSource the requested datasource
 	 * @param schema the requested schema
 	 * @param artifact the requested artifact
@@ -520,6 +533,12 @@ public class DatabaseProcessor {
 		}
 	}
 
+	/**
+	 * Gets the delimiter.
+	 *
+	 * @param sql the sql
+	 * @return the delimiter
+	 */
 	private String getDelimiter(String sql) {
 		if (StringUtils.containsIgnoreCase(sql, CREATE_PROCEDURE)) {
 			return PROCEDURE_DELIMITER;
@@ -527,30 +546,79 @@ public class DatabaseProcessor {
 		return SCRIPT_DELIMITER;
 	}
 	
+	/**
+	 * Gets the defined databases.
+	 *
+	 * @return the defined databases
+	 * @throws DatabasesException the databases exception
+	 */
 	public List<DatabaseDefinition> getDefinedDatabases() throws DatabasesException {
 		return databasesCoreService.getDatabases();
 	}
 	
+	/**
+	 * Gets the defined database.
+	 *
+	 * @param id the id
+	 * @return the defined database
+	 * @throws DatabasesException the databases exception
+	 */
 	public DatabaseDefinition getDefinedDatabase(long id) throws DatabasesException {
 		return databasesCoreService.getDatabase(id);
 	}
 	
+	/**
+	 * Creates the defined database.
+	 *
+	 * @param definition the definition
+	 * @return the database definition
+	 * @throws DatabasesException the databases exception
+	 */
 	public DatabaseDefinition createDefinedDatabase(DatabaseDefinition definition) throws DatabasesException {
 		return databasesCoreService.createDatabase(definition);
 	}
 	
+	/**
+	 * Removes the defined database.
+	 *
+	 * @param id the id
+	 * @throws DatabasesException the databases exception
+	 */
 	public void removeDefinedDatabase(long id) throws DatabasesException {
 		databasesCoreService.removeDatabase(id);
 	}
 	
+	/**
+	 * Update defined database.
+	 *
+	 * @param definition the definition
+	 * @throws DatabasesException the databases exception
+	 */
 	public void updateDefinedDatabase(DatabaseDefinition definition) throws DatabasesException {
 		databasesCoreService.createDatabase(definition);
 	}
 	
+	/**
+	 * Transfer data.
+	 *
+	 * @param definition the definition
+	 * @param handler the handler
+	 * @throws DataTransferException the data transfer exception
+	 */
 	public void transferData(DataTransferDefinition definition, IDataTransferCallbackHandler handler) throws DataTransferException {
 		DataTransferManager.transfer(definition, handler);
 	}
 
+	/**
+	 * Export artifact metadata.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @param schema the schema
+	 * @param artifact the artifact
+	 * @return the string
+	 * @throws SQLException the SQL exception
+	 */
 	public String exportArtifactMetadata(String type, String name, String schema, String artifact) throws SQLException {
 		DataSource dataSource = getDataSource(type, name);
 		PersistenceTableModel model = DataTransferReverseTableProcessor.reverseTable(dataSource, schema, artifact);
@@ -560,6 +628,15 @@ public class DatabaseProcessor {
 		return null;
 	}
 
+	/**
+	 * Export schema metadata.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @param schema the schema
+	 * @return the string
+	 * @throws SQLException the SQL exception
+	 */
 	public String exportSchemaMetadata(String type, String name, String schema) throws SQLException {
 		DataSource dataSource = getDataSource(type, name);
 		List<PersistenceTableModel> models = DataTransferReverseTableProcessor.reverseTables(dataSource, schema, null);

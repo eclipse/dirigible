@@ -60,23 +60,36 @@ import liquibase.exception.LiquibaseException;
  */
 public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrderedSynchronizerContribution {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ChangelogSynchronizer.class);
 
+	/** The Constant CHANGELOG_PREDELIVERED. */
 	private static final Map<String, DataStructureChangelogModel> CHANGELOG_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureChangelogModel>());
 
+	/** The Constant CHANGELOG_SYNCHRONIZED. */
 	private static final List<String> CHANGELOG_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 	
+	/** The Constant DATA_STRUCTURE_CHANGELOG_MODELS. */
 	private static final Map<String, DataStructureChangelogModel> DATA_STRUCTURE_CHANGELOG_MODELS = new LinkedHashMap<String, DataStructureChangelogModel>();
 
+	/** The data structures core service. */
 	private DataStructuresCoreService dataStructuresCoreService = new DataStructuresCoreService();
 	
+	/** The data source. */
 	private DataSource dataSource = null;
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant CHANGELOG_ARTEFACT. */
 	private static final ChangelogSynchronizationArtefactType CHANGELOG_ARTEFACT = new ChangelogSynchronizationArtefactType();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
@@ -84,6 +97,9 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 		return dataSource;
 	}
 	
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -154,6 +170,13 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 		CHANGELOG_PREDELIVERED.put(contentPath, model);
 	}
 
+	/**
+	 * Load resource content.
+	 *
+	 * @param modelPath the model path
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private String loadResourceContent(String modelPath) throws IOException {
 		InputStream in = ChangelogSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + modelPath);
 		try {
@@ -225,6 +248,11 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -238,6 +266,12 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 		logger.trace("Done synchronizing Changelogs from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -263,6 +297,11 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 		}
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
@@ -339,6 +378,17 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 		}
 	}
 
+	/**
+	 * Execute changelog update.
+	 *
+	 * @param connection the connection
+	 * @param changelog the changelog
+	 * @param model the model
+	 * @throws DatabaseException the database exception
+	 * @throws URISyntaxException the URI syntax exception
+	 * @throws LiquibaseException the liquibase exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void executeChangelogUpdate(Connection connection, String changelog,
 			DataStructureChangelogModel model) throws DatabaseException, URISyntaxException, LiquibaseException, IOException {
 		if (!changelog.endsWith(".json")) {
@@ -376,6 +426,11 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 		return buff.toString();
 	}
 
+	/**
+	 * Gets the priority.
+	 *
+	 * @return the priority
+	 */
 	@Override
 	public int getPriority() {
 		return 100;

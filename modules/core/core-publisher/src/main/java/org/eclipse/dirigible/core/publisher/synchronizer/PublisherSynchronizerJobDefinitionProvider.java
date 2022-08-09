@@ -21,12 +21,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class PublisherSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_PUBLISHER. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_PUBLISHER = "DIRIGIBLE_JOB_EXPRESSION_PUBLISHER";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_PUBLISHER_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_PUBLISHER_SYNCHRONIZER_JOB = "dirigible-internal-publisher-synchronizer-job";
 	
+	/** The Constant PUBLISHER_SYNCHRONIZER_JOB. */
 	static final String PUBLISHER_SYNCHRONIZER_JOB = "Publisher Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

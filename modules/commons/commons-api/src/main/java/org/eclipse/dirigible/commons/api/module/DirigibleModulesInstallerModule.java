@@ -32,10 +32,15 @@ import org.slf4j.LoggerFactory;
  */
 public class DirigibleModulesInstallerModule {
 
+	/** The logger. */
 	private static Logger logger = LoggerFactory.getLogger(DirigibleModulesInstallerModule.class);
 	
+	/** The modules. */
 	private static Set<String> modules = new HashSet<String>();
 
+	/**
+	 * Configure.
+	 */
 	public static synchronized void configure() {
 		logger.debug("Initializing Dirigible Modules...");
 
@@ -80,6 +85,11 @@ public class DirigibleModulesInstallerModule {
 		logger.debug("Done initializing Dirigible Modules.");
 	}
 	
+	/**
+	 * Gets the modules.
+	 *
+	 * @return the modules
+	 */
 	public static Set<String> getModules() {
 		return modules.stream().collect(Collectors.toSet());
 	}

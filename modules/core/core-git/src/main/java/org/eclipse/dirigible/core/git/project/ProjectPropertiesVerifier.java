@@ -23,11 +23,17 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
  */
 public class ProjectPropertiesVerifier {
 	
+	/** The Constant DOT_GIT. */
 	private static final String DOT_GIT = ".git";
 
 	/** The repository. */
 	private IRepository repository = null;
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);

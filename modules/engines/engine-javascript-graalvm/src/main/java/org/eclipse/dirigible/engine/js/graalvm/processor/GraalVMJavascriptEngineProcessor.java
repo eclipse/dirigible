@@ -25,6 +25,12 @@ public class GraalVMJavascriptEngineProcessor implements IJavascriptEngineProces
 	/** The GraalVM engine executor. */
 	private GraalVMJavascriptEngineExecutor graalVMEngineExecutor = new GraalVMJavascriptEngineExecutor();
 
+	/**
+	 * Execute service.
+	 *
+	 * @param module the module
+	 * @throws ScriptingException the scripting exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String)

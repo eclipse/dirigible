@@ -22,17 +22,22 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * The Interface SQLProcessor.
+ */
 public interface SQLProcessor extends ODataProcessor {
 
 	/**
-     * Getter for the default data source
-     * @return the default data source
-     */
+	 * Getter for the default data source.
+	 *
+	 * @return the default data source
+	 */
     DataSource getDataSource();
 
 
     /**
-     * Getter for the default sql builder
+     * Getter for the default sql builder.
+     *
      * @return the default sql builder
      */
     SQLQueryBuilder getSQLQueryBuilder();
@@ -42,28 +47,27 @@ public interface SQLProcessor extends ODataProcessor {
      * being written. The default implementation returns the provided value.
      * Note that this method is dependent on the sequence of the property in the
      * entity. If this property depends on other properties
-     * 
-     * 
+     *
      * @param entityType edm entity type
-     * @param property
-     *            EDM property of the model that is currently being filled with
+     * @param property            EDM property of the model that is currently being filled with
      *            data.
-     * @param entityInstance
-     *            The EDM instance which will is being populated with the DB
+     * @param entityInstance            The EDM instance which will is being populated with the DB
      *            data
-     * @param value
-     *            The DB value of the property. <code>null</code> if the
+     * @param value            The DB value of the property. <code>null</code> if the
      *            property is not mapped to DB.
      * @return the customized property value. If you do not customize then just
      *         return the <code>value</code>
      * @throws EdmException in case of an error
+     * @throws SQLException the SQL exception
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value)
             throws EdmException, SQLException, IOException;
     
 
     /**
-     * 
+     * On customize expanded navigaton property.
+     *
      * @param entityType the entity type
      * @param expandType the expand type
      * @param expandInstance the expand instance

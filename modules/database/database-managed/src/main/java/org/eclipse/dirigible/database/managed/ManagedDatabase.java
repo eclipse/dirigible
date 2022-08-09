@@ -27,10 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Managed Database
+ * The Managed Database.
  */
 public class ManagedDatabase extends AbstractDatabase {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ManagedDatabase.class);
 
 	/** The Constant NAME. */
@@ -39,12 +40,14 @@ public class ManagedDatabase extends AbstractDatabase {
 	/** The Constant TYPE. */
 	public static final String TYPE = "managed";
 
+	/** The Constant DATASOURCES. */
 	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<String, DataSource>());
 
+	/** The Constant JNDI_DEFAULT_PREFIX. */
 	private static final String JNDI_DEFAULT_PREFIX = "java:comp/env/jdbc/";
 
 	/**
-	 * The default constructor
+	 * The default constructor.
 	 */
 	public ManagedDatabase() {
 		logger.debug("Initializing the managed datasources...");
@@ -54,6 +57,9 @@ public class ManagedDatabase extends AbstractDatabase {
 		logger.debug("Managed datasources initialized.");
 	}
 
+	/**
+	 * Initialize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#initialize()
@@ -77,6 +83,12 @@ public class ManagedDatabase extends AbstractDatabase {
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @param name the name
+	 * @return the data source
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
@@ -112,6 +124,11 @@ public class ManagedDatabase extends AbstractDatabase {
 		}
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getName()
@@ -121,6 +138,11 @@ public class ManagedDatabase extends AbstractDatabase {
 		return NAME;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getType()
@@ -130,6 +152,11 @@ public class ManagedDatabase extends AbstractDatabase {
 		return TYPE;
 	}
 
+	/**
+	 * Gets the data sources.
+	 *
+	 * @return the data sources
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSources()

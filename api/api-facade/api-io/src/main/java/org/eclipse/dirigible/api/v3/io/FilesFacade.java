@@ -43,14 +43,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Facade for working with files
+ * Facade for working with files.
  */
 public class FilesFacade {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FilesFacade.class);
 
 	/**
-	 * Check if file with the provided path exists
+	 * Check if file with the provided path exists.
+	 *
 	 * @param path the path to the file
 	 * @return true if a file exists
 	 * @throws IOException in case of failure in underlying layer
@@ -61,7 +63,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Check if file with the provided path is executable
+	 * Check if file with the provided path is executable.
+	 *
 	 * @param path the path to the file
 	 * @return true if the file is executable
 	 * @throws IOException in case of failure in underlying layer
@@ -71,7 +74,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Check if file with the provided path is readable
+	 * Check if file with the provided path is readable.
+	 *
 	 * @param path the path to the file
 	 * @return true if the file is readable
 	 * @throws IOException in case of failure in underlying layer
@@ -81,7 +85,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Check if file with the provided path is writable
+	 * Check if file with the provided path is writable.
+	 *
 	 * @param path the path to the file
 	 * @return true if the file is writable
 	 * @throws IOException in case of failure in underlying layer
@@ -91,7 +96,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Check if file with the provided path is hidden
+	 * Check if file with the provided path is hidden.
+	 *
 	 * @param path the path to the file
 	 * @return true if the file is hidden
 	 * @throws IOException in case of failure in underlying layer
@@ -101,7 +107,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Check if file with the provided path is a directory
+	 * Check if file with the provided path is a directory.
+	 *
 	 * @param path the path to the file
 	 * @return true if the file is directory
 	 * @throws IOException in case of failure in underlying layer
@@ -111,7 +118,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Check if file with the provided path is a regular file
+	 * Check if file with the provided path is a regular file.
+	 *
 	 * @param path the path to the file
 	 * @return true if the file is a regular file
 	 * @throws IOException in case of failure in underlying layer
@@ -121,7 +129,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Check if the two paths point to the same file
+	 * Check if the two paths point to the same file.
+	 *
 	 * @param path1 path to the first file
 	 * @param path2 path to the second file
 	 * @return true if both paths point to the same file
@@ -132,7 +141,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Get canonical representation of the provided path
+	 * Get canonical representation of the provided path.
+	 *
 	 * @param path the path
 	 * @return the canonical representation of the path
 	 * @throws IOException in case of failure in underlying layer
@@ -142,7 +152,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Get the name of the file or directory represented by the provided path
+	 * Get the name of the file or directory represented by the provided path.
+	 *
 	 * @param path the path
 	 * @return the name of the file or the directory
 	 * @throws IOException in case of failure in underlying layer
@@ -152,7 +163,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Get the path of the parent directory
+	 * Get the path of the parent directory.
+	 *
 	 * @param path the path
 	 * @return the path of the parent
 	 * @throws IOException in case of failure in underlying layer
@@ -162,7 +174,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Read the content of the file into a byte array
+	 * Read the content of the file into a byte array.
+	 *
 	 * @param path the path of the file
 	 * @return the file content as byte array
 	 * @throws IOException in case of failure in underlying layer
@@ -172,7 +185,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Read the text file represented by the provided path using UTF-8 charset
+	 * Read the text file represented by the provided path using UTF-8 charset.
+	 *
 	 * @param path path to the file
 	 * @return the text file content
 	 * @throws IOException in case of failure in underlying layer
@@ -215,7 +229,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Get the timestamp of last modification
+	 * Get the timestamp of last modification.
+	 *
 	 * @param path path to the file
 	 * @return the timestamp of last modification
 	 * @throws IOException in case of failure in underlying layer
@@ -225,7 +240,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Set the last modification timestamp
+	 * Set the last modification timestamp.
+	 *
 	 * @param path path to a file
 	 * @param time the last modification timestamp to set
 	 * @throws IOException in case of failure in underlying layer
@@ -235,7 +251,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Set the last modification timestamp
+	 * Set the last modification timestamp.
+	 *
 	 * @param path path to a file
 	 * @param time the last modification timestamp to set
 	 * @throws IOException in case of failure in underlying layer
@@ -245,7 +262,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Get the name of teh principal representing the file owner
+	 * Get the name of teh principal representing the file owner.
+	 *
 	 * @param path path to a file
 	 * @return the name of the principal representing the file owner
 	 * @throws IOException in case of failure in underlying layer
@@ -255,7 +273,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Set the file owner
+	 * Set the file owner.
+	 *
 	 * @param path path to file
 	 * @param owner the owner
 	 * @throws IOException in case of failure in underlying layer
@@ -266,7 +285,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Get the string representation of the file permissions
+	 * Get the string representation of the file permissions.
+	 *
 	 * @param path path to the file
 	 * @return the string representation of the file permissions
 	 * @throws IOException in case of failure in underlying layer
@@ -276,7 +296,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Set the file permissions
+	 * Set the file permissions.
+	 *
 	 * @param path path to the file
 	 * @param permissions the permissions string
 	 * @throws IOException in case of failure in underlying layer
@@ -287,7 +308,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Get the file size
+	 * Get the file size.
+	 *
 	 * @param path path to the file
 	 * @return the file size
 	 * @throws IOException in case of failure in underlying layer
@@ -297,7 +319,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Create a new file if it does not exist
+	 * Create a new file if it does not exist.
+	 *
 	 * @param path path to the file
 	 * @throws IOException in case of failure in underlying layer
 	 */
@@ -306,7 +329,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Create all directories on the given path if they do not exist
+	 * Create all directories on the given path if they do not exist.
+	 *
 	 * @param path the path parameter
 	 * @throws IOException in case of failure in underlying layer
 	 */
@@ -315,7 +339,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Copy the directory structure
+	 * Copy the directory structure.
+	 *
 	 * @param source source location
 	 * @param target target location
 	 * @throws IOException in case of failure in underlying layer
@@ -340,7 +365,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Move the file to the specified location
+	 * Move the file to the specified location.
+	 *
 	 * @param source source location
 	 * @param target target location
 	 * @throws IOException in case of failure in underlying layer
@@ -350,7 +376,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Delete the file if it exists
+	 * Delete the file if it exists.
+	 *
 	 * @param path path to file
 	 * @throws IOException in case of failure in underlying layer
 	 */
@@ -359,7 +386,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Delete empty directory
+	 * Delete empty directory.
+	 *
 	 * @param path path to the directory
 	 * @throws IOException in case of failure in underlying layer
 	 */
@@ -424,7 +452,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Create temporary file
+	 * Create temporary file.
+	 *
 	 * @param prefix the prefix parameter
 	 * @param suffix the suffix parameter
 	 * @return path to the temp file
@@ -435,7 +464,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Create temporary directory
+	 * Create temporary directory.
+	 *
 	 * @param prefix the prefix parameter
 	 * @return path to the created directory
 	 * @throws IOException in case of failure in underlying layer
@@ -446,7 +476,8 @@ public class FilesFacade {
 
 
 	/**
-	 * Open input stream from the file represented by the given path
+	 * Open input stream from the file represented by the given path.
+	 *
 	 * @param path path to file
 	 * @return the created input stream
 	 * @throws IOException in case of failure in underlying layer
@@ -456,7 +487,8 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Open output stream  to the file represented by the given path
+	 * Open output stream  to the file represented by the given path.
+	 *
 	 * @param path path to file
 	 * @return the created output stream
 	 * @throws IOException in case of failure in underlying layer
@@ -466,9 +498,10 @@ public class FilesFacade {
 	}
 	
 	/**
-	 * Traverse the directory structure
+	 * Traverse the directory structure.
+	 *
 	 * @param source source location
-	 * @return JSON rendered files and folders tree 
+	 * @return JSON rendered files and folders tree
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String traverse(String source) throws IOException {
@@ -507,9 +540,10 @@ public class FilesFacade {
 	}
 	
 	/**
-	 * List the directory structure
+	 * List the directory structure.
+	 *
 	 * @param source source location
-	 * @return JSON rendered files and folders list 
+	 * @return JSON rendered files and folders list
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String list(String source) throws IOException {
@@ -522,8 +556,8 @@ public class FilesFacade {
 	}
 	
 	/**
-	 * Find all the files matching the pattern
-	 * 
+	 * Find all the files matching the pattern.
+	 *
 	 * @param path the root path
 	 * @param pattern the glob pattern
 	 * @return the list of file names

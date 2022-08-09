@@ -29,8 +29,12 @@ import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class TableForeignKeysCreateProcessor.
+ */
 public class TableForeignKeysCreateProcessor {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(TableForeignKeysCreateProcessor.class);
 
     /**

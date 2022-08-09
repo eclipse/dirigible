@@ -13,10 +13,13 @@ package org.eclipse.dirigible.api.v3.bpm;
 
 import org.eclipse.dirigible.bpm.api.BpmModule;
 
+/**
+ * The Class BpmFacade.
+ */
 public class BpmFacade {
 	
 	/**
-	 * BPM Engine
+	 * BPM Engine.
 	 *
 	 * @return the BPM engine object
 	 */
@@ -25,7 +28,7 @@ public class BpmFacade {
 	}
 	
 	/**
-	 * Deploy a BPMN process available in the registry or in the class-path
+	 * Deploy a BPMN process available in the registry or in the class-path.
 	 *
 	 * @param location the BPMN resource location
 	 * @return the deployment id
@@ -35,7 +38,7 @@ public class BpmFacade {
 	}
 	
 	/**
-	 * Undeploy a BPMN process and all its dependencies
+	 * Undeploy a BPMN process and all its dependencies.
 	 *
 	 * @param deploymentId the BPMN process definition deployment id
 	 */
@@ -44,7 +47,7 @@ public class BpmFacade {
 	}
 	
 	/**
-	 * Starts a BPMN process by its key and initial parameters
+	 * Starts a BPMN process by its key and initial parameters.
 	 *
 	 * @param key the BPMN id of the process
 	 * @param parameters the serialized in JSON process initial parameters
@@ -55,8 +58,8 @@ public class BpmFacade {
 	}
 	
 	/**
-	 * Get a variable in the process execution context
-	 * 
+	 * Get a variable in the process execution context.
+	 *
 	 * @param processInstanceId the process instance id
 	 * @param variableName the variable name
 	 * @return the value
@@ -66,8 +69,8 @@ public class BpmFacade {
 	}
 	
 	/**
-	 * Set a variable in the process execution context
-	 * 
+	 * Set a variable in the process execution context.
+	 *
 	 * @param processInstanceId the process instance id
 	 * @param variableName the variable name
 	 * @param value the value object
@@ -77,8 +80,8 @@ public class BpmFacade {
 	}
 	
 	/**
-	 * Remove a variable from the process execution context
-	 * 
+	 * Remove a variable from the process execution context.
+	 *
 	 * @param processInstanceId the process instance id
 	 * @param variableName the variable name
 	 */
@@ -87,7 +90,7 @@ public class BpmFacade {
 	}
 	
 	/**
-	 * Get all the tasks
+	 * Get all the tasks.
 	 *
 	 * @return the list of tasks
 	 */
@@ -96,8 +99,8 @@ public class BpmFacade {
 	}
 	
 	/**
-	 * Get all the task's variables
-	 * 
+	 * Get all the task's variables.
+	 *
 	 * @param taskId the task id
 	 * @return the task's variables
 	 */
@@ -106,18 +109,19 @@ public class BpmFacade {
 	}
 	
 	/**
-	 * Set the task's variables
-	 * 
+	 * Set the task's variables.
+	 *
 	 * @param taskId the task id
 	 * @param variables serialized as JSON string
+	 * @return the task variables
 	 */
 	public static void getTaskVariables(String taskId, String variables) {
 		BpmModule.getProcessEngineProvider().setTaskVariables(taskId, variables);
 	}
 	
 	/**
-	 * Complete the task with variables
-	 * 
+	 * Complete the task with variables.
+	 *
 	 * @param taskId the task id
 	 * @param variables serialized as JSON string
 	 */

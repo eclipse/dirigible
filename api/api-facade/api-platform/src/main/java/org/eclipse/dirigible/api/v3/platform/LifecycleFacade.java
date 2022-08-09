@@ -14,10 +14,22 @@ package org.eclipse.dirigible.api.v3.platform;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.processor.PublisherProcessor;
 
+/**
+ * The Class LifecycleFacade.
+ */
 public class LifecycleFacade {
 
+	/** The processor. */
 	private static PublisherProcessor processor = new PublisherProcessor();
 
+	/**
+	 * Publish.
+	 *
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return true, if successful
+	 */
 	public static boolean publish(String user, String workspace, String project) {
 		boolean isSuccessfulPublishRequest = false;
 		try {
@@ -29,6 +41,14 @@ public class LifecycleFacade {
 		return isSuccessfulPublishRequest;
 	}
 	
+	/**
+	 * Unpublish.
+	 *
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return true, if successful
+	 */
 	public static boolean unpublish(String user, String workspace, String project) {
 		boolean isSuccessfulUnpublishRequest = false;
 		try {

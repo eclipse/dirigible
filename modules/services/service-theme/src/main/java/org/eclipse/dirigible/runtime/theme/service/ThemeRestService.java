@@ -50,18 +50,29 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class ThemeRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ThemeRestService.class);
 
+	/** The Constant NAME_PARAM. */
 	private static final String NAME_PARAM = "name"; //$NON-NLS-1$
 
+	/** The Constant DEFAULT_THEME. */
 	private static final String DEFAULT_THEME = "fiori"; //$NON-NLS-1$
 
+	/** The Constant INIT_PARAM_DEFAULT_THEME. */
 	private static final String INIT_PARAM_DEFAULT_THEME = "DIRIGIBLE_THEME_DEFAULT"; //$NON-NLS-1$
 
+	/** The Constant COOKIE_THEME. */
 	private static final String COOKIE_THEME = "dirigible-theme"; //$NON-NLS-1$
 
+	/** The repository. */
 	private IRepository repository = null;
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -69,9 +80,11 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 		return repository;
 	}
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/** The Constant THEMES_PATH. */
 	private static final String THEMES_PATH = "/theme-";
 
 	/**
@@ -198,6 +211,11 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 		return createErrorResponseNotFound(message);
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -207,6 +225,11 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 		return ThemeRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

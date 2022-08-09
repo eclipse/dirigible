@@ -55,12 +55,16 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class TransportProjectRestService extends AbstractRestService implements IRestService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TransportProjectRestService.class);
 
+	/** The Constant FILE_UPLOAD_FAILED. */
 	private static final String FILE_UPLOAD_FAILED = "Upload failed.";
 
+	/** The processor. */
 	private TransportProcessor processor = new TransportProcessor();
 	
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
@@ -115,6 +119,15 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		}
 	}
 
+	/**
+	 * Import project.
+	 *
+	 * @param path the path
+	 * @param isPathWorkspace the is path workspace
+	 * @param attachments the attachments
+	 * @return the response
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private Response importProject(String path, boolean isPathWorkspace, List<Attachment> attachments) throws IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
@@ -138,6 +151,7 @@ public class TransportProjectRestService extends AbstractRestService implements 
 	 * @param workspace the workspace
 	 * @param project the project
 	 * @param folder Internal folder (url encoded)
+	 * @param files the files
 	 * @return the response
 	 * @throws RepositoryExportException the repository export exception
 	 * @throws UnsupportedEncodingException the repository export exception
@@ -269,6 +283,11 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		return new SimpleDateFormat("yyyyMMddhhmmss");
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
@@ -277,6 +296,11 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		return TransportProjectRestService.class;
 	}
 	
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
 	 */

@@ -47,26 +47,38 @@ import org.slf4j.LoggerFactory;
  */
 public class WikiSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant FILE_EXTENSION_HTML. */
 	public static final String FILE_EXTENSION_HTML = ".html";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WikiSynchronizer.class);
 
+	/** The Constant WIKI_PREDELIVERED. */
 	private static final Map<String, WikiDefinition> WIKI_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, WikiDefinition>());
 	
+	/** The Constant WIKI_SYNCHRONIZED. */
 	private static final List<String> WIKI_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The wiki core service. */
 	private WikiCoreService wikiCoreService = new WikiCoreService();
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant WIKI_ARTEFACT. */
 	private static final WikiSynchronizationArtefactType WIKI_ARTEFACT = new WikiSynchronizationArtefactType();
 	
+	/** The Constant WIKI_DEFINITIONS. */
 	private static final Map<String, WikiDefinition> WIKI_DEFINITIONS = new LinkedHashMap<String, WikiDefinition>();
 	
+	/** The wiki engine executor. */
 	private WikiEngineExecutor wikiEngineExecutor = new WikiEngineExecutor();
 	
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -120,11 +132,8 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Register pre-delivered Wiki.
 	 *
-	 * @param path
-	 *            the Wiki path
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws IOException
+	 * @param path            the Wiki path
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredWiki(String path) throws IOException {
 		InputStream in = WikiSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + path);
@@ -141,11 +150,19 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		WIKI_SYNCHRONIZED.clear();
 		WIKI_DEFINITIONS.clear();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Wiki files...");
 		// Wiki
@@ -155,6 +172,12 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing predelivered Wiki files.");
 	}
 
+	/**
+	 * Synchronize wiki.
+	 *
+	 * @param wikiDefinition the wiki definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeWiki(WikiDefinition wikiDefinition) throws SynchronizationException {
 		try {
 			if (!wikiCoreService.existsWiki(wikiDefinition.getLocation())) {
@@ -178,6 +201,11 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -191,6 +219,12 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing Wiki from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -216,6 +250,11 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
@@ -240,6 +279,9 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done cleaning up Wiki files.");
 	}
 	
+	/**
+	 * Process wikis.
+	 */
 	private void processWikis() {
 		for (String location : WIKI_DEFINITIONS.keySet()) {
 			String path = location;

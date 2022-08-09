@@ -35,10 +35,19 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * The Class CmisInternalRepositoryTest.
+ */
 public class CmisInternalRepositoryTest {
 
+	/** The cmis repository. */
 	private CmisRepository cmisRepository;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		String rootFolder = "target/cms";
@@ -49,10 +58,20 @@ public class CmisInternalRepositoryTest {
 		this.cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
 	}
 
+	/**
+	 * Tear down.
+	 *
+	 * @throws Exception the exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Test.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void test() throws IOException {
 		CmisSession cmisSession = this.cmisRepository.getSession();

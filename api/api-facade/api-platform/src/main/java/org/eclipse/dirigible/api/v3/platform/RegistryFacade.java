@@ -28,11 +28,25 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.local.LocalCollection;
 
+/**
+ * The Class RegistryFacade.
+ */
 public class RegistryFacade {
 
+	/** The Constant META_INF_DIRIGIBLE. */
 	private static final String META_INF_DIRIGIBLE = "/META-INF/dirigible";
+	
+	/** The Constant META_INF_WEBJARS. */
 	private static final String META_INF_WEBJARS = "/META-INF/resources/webjars";
 
+	/**
+	 * Gets the content.
+	 *
+	 * @param path the path
+	 * @return the content
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 */
 	public static byte[] getContent(String path) throws IOException, ScriptingException {
 		// Check in the repository first
 		IResource resource = RepositoryFacade.getResource(toRepositoryPath(path));
@@ -53,6 +67,13 @@ public class RegistryFacade {
 		return null;
 	}
 
+	/**
+	 * Gets the from classpath.
+	 *
+	 * @param path the path
+	 * @return the from classpath
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static byte[] getFromClasspath(String path) throws IOException {
 		InputStream in = RegistryFacade.class.getResourceAsStream(path);
 		try {
@@ -68,6 +89,14 @@ public class RegistryFacade {
 		}
 	}
 
+	/**
+	 * Gets the text.
+	 *
+	 * @param path the path
+	 * @return the text
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 */
 	public static String getText(String path) throws IOException, ScriptingException {
 		byte[] content = getContent(path);
 		if (content == null) {
@@ -76,14 +105,34 @@ public class RegistryFacade {
 		return new String(content);
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @param path the path
+	 * @return the boolean
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 */
 	public static Boolean exists(String path) throws IOException, ScriptingException {
 		return getContent(path) == null;
 	}
 
+	/**
+	 * To repository path.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	private static String toRepositoryPath(String path) {
 		return new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(path).build();
 	}
 
+	/**
+	 * To resource path.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	private static String toResourcePath(String path) {
 		if (!path.startsWith(IRepositoryStructure.SEPARATOR)) {
 			return IRepositoryStructure.SEPARATOR + path;
@@ -92,8 +141,8 @@ public class RegistryFacade {
 	}
 	
 	/**
-	 * Find all the files matching the pattern
-	 * 
+	 * Find all the files matching the pattern.
+	 *
 	 * @param path the root path
 	 * @param pattern the glob pattern
 	 * @return the list of file names

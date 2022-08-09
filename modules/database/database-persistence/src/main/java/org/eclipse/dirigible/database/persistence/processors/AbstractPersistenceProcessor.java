@@ -48,8 +48,10 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractPersistenceProcessor implements IPersistenceProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractPersistenceProcessor.class);
 
+	/** The entity manager interceptor. */
 	private IEntityManagerInterceptor entityManagerInterceptor;
 
 	/**
@@ -318,19 +320,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value to pojo.
 	 *
-	 * @param pojo
-	 *            the pojo
-	 * @param resultSet
-	 *            the result set
-	 * @param columnModel
-	 *            the column model
-	 * @throws NoSuchFieldException
-	 *             the no such field exception
-	 * @throws SQLException
-	 *             the SQL exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
-	 * @throws IOException
+	 * @param pojo            the pojo
+	 * @param resultSet            the result set
+	 * @param columnModel            the column model
+	 * @throws NoSuchFieldException             the no such field exception
+	 * @throws SQLException             the SQL exception
+	 * @throws IllegalAccessException             the illegal access exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void setValueToPojo(Object pojo, ResultSet resultSet, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException, IOException {
@@ -341,19 +337,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value to pojo.
 	 *
-	 * @param pojo
-	 *            the pojo
-	 * @param value
-	 *            the value
-	 * @param columnModel
-	 *            the column model
-	 * @throws NoSuchFieldException
-	 *             the no such field exception
-	 * @throws SQLException
-	 *             the SQL exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
-	 * @throws IOException
+	 * @param pojo            the pojo
+	 * @param value            the value
+	 * @param columnModel            the column model
+	 * @throws NoSuchFieldException             the no such field exception
+	 * @throws SQLException             the SQL exception
+	 * @throws IllegalAccessException             the illegal access exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void setValueToPojo(Object pojo, Object value, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException, IOException {
@@ -402,6 +392,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		}
 	}
 
+	/**
+	 * Float adaptation.
+	 *
+	 * @param value the value
+	 * @param field the field
+	 * @return the object
+	 */
 	private Object floatAdaptation(Object value, Field field) {
 		if (field.getType().equals(float.class) || field.getType().equals(Float.class)) {
 			if (value instanceof Double) {
@@ -413,6 +410,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		return value;
 	}
 
+	/**
+	 * Short adaptation.
+	 *
+	 * @param value the value
+	 * @param field the field
+	 * @return the object
+	 */
 	private Object shortAdaptation(Object value, Field field) {
 		if (field.getType().equals(short.class) || field.getType().equals(Short.class)) {
 			if (value instanceof Long) {
@@ -426,6 +430,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		return value;
 	}
 
+	/**
+	 * Big integer adaptation.
+	 *
+	 * @param value the value
+	 * @param field the field
+	 * @return the object
+	 */
 	private Object bigIntegerAdaptation(Object value, Field field) {
 		if (field.getType().equals(BigInteger.class)) {
 			if (value instanceof Long) {
@@ -435,6 +446,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		return value;
 	}
 
+	/**
+	 * Boolean adaptation.
+	 *
+	 * @param value the value
+	 * @param field the field
+	 * @return the object
+	 */
 	private Object booleanAdaptation(Object value, Field field) {
 		if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
 			if (value instanceof Short) {
@@ -448,6 +466,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		return value;
 	}
 
+	/**
+	 * Char adaptation.
+	 *
+	 * @param value the value
+	 * @param field the field
+	 * @return the object
+	 */
 	private Object charAdaptation(Object value, Field field) {
 		if (field.getType().equals(char.class) || field.getType().equals(Character.class)) {
 			if ((value instanceof String) && (((String) value).length() <= 1)) {
@@ -459,6 +484,14 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		return value;
 	}
 
+	/**
+	 * Blob adaptation.
+	 *
+	 * @param value the value
+	 * @return the object
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws SQLException the SQL exception
+	 */
 	private Object blobAdaptation(Object value) throws IOException, SQLException {
 		if (value instanceof Blob) {
 			value = IOUtils.toByteArray(((Blob) value).getBinaryStream());
@@ -466,6 +499,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		return value;
 	}
 
+	/**
+	 * Int adaptation.
+	 *
+	 * @param value the value
+	 * @param field the field
+	 * @return the object
+	 */
 	private Object intAdaptation(Object value, Field field) {
 		if (field.getType().equals(int.class) || field.getType().equals(Integer.class)) {
 			if (value instanceof Long) {
@@ -475,6 +515,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		return value;
 	}
 
+	/**
+	 * Byte adaptation.
+	 *
+	 * @param value the value
+	 * @param field the field
+	 * @return the object
+	 */
 	private Object byteAdaptation(Object value, Field field) {
 		if (field.getType().equals(byte.class) || field.getType().equals(Byte.class)) {
 			if (value instanceof Integer) {

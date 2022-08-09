@@ -22,11 +22,16 @@ import org.apache.commons.io.input.BoundedInputStream;
  */
 public class Piper implements java.lang.Runnable {
 
+	/** The Constant BROKEN_PIPE. */
 	private static final String BROKEN_PIPE = "Broken pipe";
+	
+	/** The Constant MAX_COMMAND_OUTPUT_LENGTH. */
 	private static final long MAX_COMMAND_OUTPUT_LENGTH = 2097152;
 
+	/** The input. */
 	private InputStream input;
 
+	/** The output. */
 	private OutputStream output;
 
 	/**
@@ -42,6 +47,9 @@ public class Piper implements java.lang.Runnable {
 		this.output = output;
 	}
 
+	/**
+	 * Run.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Runnable#run()

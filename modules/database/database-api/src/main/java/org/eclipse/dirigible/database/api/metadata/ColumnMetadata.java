@@ -16,33 +16,36 @@ package org.eclipse.dirigible.database.api.metadata;
  */
 public class ColumnMetadata {
 
+	/** The name. */
 	private String name;
 
+	/** The type. */
 	private String type;
 
+	/** The size. */
 	private int size;
 
+	/** The nullable. */
 	private boolean nullable;
 
+	/** The key. */
 	private boolean key;
 
+	/** The kind. */
 	private String kind = "column";
 	
+	/** The scale. */
 	private int scale;
 
 	/**
 	 * Instantiates a new column metadata.
 	 *
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
-	 * @param size
-	 *            the size
-	 * @param nullable
-	 *            the nullable
-	 * @param key
-	 *            the key
+	 * @param name            the name
+	 * @param type            the type
+	 * @param size            the size
+	 * @param nullable            the nullable
+	 * @param key            the key
+	 * @param scale the scale
 	 */
 	public ColumnMetadata(String name, String type, int size, boolean nullable, boolean key, int scale) {
 		super();
@@ -169,6 +172,8 @@ public class ColumnMetadata {
 	}
 
 	/**
+	 * Gets the scale.
+	 *
 	 * @return the scale
 	 */
 	public int getScale() {
@@ -176,6 +181,8 @@ public class ColumnMetadata {
 	}
 
 	/**
+	 * Sets the scale.
+	 *
 	 * @param scale the scale to set
 	 */
 	public void setScale(int scale) {

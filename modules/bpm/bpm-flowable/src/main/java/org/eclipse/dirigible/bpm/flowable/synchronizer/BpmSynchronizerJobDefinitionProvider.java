@@ -21,12 +21,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class BpmSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 	
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_BPM. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_BPM = "DIRIGIBLE_JOB_EXPRESSION_BPM";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_BPM_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_BPM_SYNCHRONIZER_JOB = "dirigible-internal-bpm-synchronizer-job";
 	
+	/** The Constant BPM_SYNCHRONIZER_JOB. */
 	static final String BPM_SYNCHRONIZER_JOB = "BPM Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

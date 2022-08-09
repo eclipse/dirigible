@@ -16,6 +16,7 @@ package org.eclipse.dirigible.engine.web.api;
  */
 public class WebCoreException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5800180600419241248L;
 
 	/**

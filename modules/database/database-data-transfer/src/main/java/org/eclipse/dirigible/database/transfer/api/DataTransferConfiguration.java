@@ -11,13 +11,20 @@
  */
 package org.eclipse.dirigible.database.transfer.api;
 
+/**
+ * The Class DataTransferConfiguration.
+ */
 public class DataTransferConfiguration {
 	
+	/** The source schema. */
 	private String sourceSchema;
 	
+	/** The target schema. */
 	private String targetSchema;
 
 	/**
+	 * Gets the source schema.
+	 *
 	 * @return the sourceSchema
 	 */
 	public String getSourceSchema() {
@@ -25,6 +32,8 @@ public class DataTransferConfiguration {
 	}
 
 	/**
+	 * Sets the source schema.
+	 *
 	 * @param sourceSchema the sourceSchema to set
 	 */
 	public void setSourceSchema(String sourceSchema) {
@@ -32,6 +41,8 @@ public class DataTransferConfiguration {
 	}
 
 	/**
+	 * Gets the target schema.
+	 *
 	 * @return the targetSchema
 	 */
 	public String getTargetSchema() {
@@ -39,6 +50,8 @@ public class DataTransferConfiguration {
 	}
 
 	/**
+	 * Sets the target schema.
+	 *
 	 * @param targetSchema the targetSchema to set
 	 */
 	public void setTargetSchema(String targetSchema) {

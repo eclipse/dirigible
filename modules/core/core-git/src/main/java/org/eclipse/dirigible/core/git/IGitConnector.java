@@ -56,10 +56,29 @@ public interface IGitConnector {
 	/** The Constant GIT_ADD_ALL_FILE_PATTERN. */
 	public static final String GIT_ADD_ALL_FILE_PATTERN = "."; //$NON-NLS-1$
 
+	/**
+	 * Gets the origin urls.
+	 *
+	 * @return the origin urls
+	 */
 	ProjectOriginUrls getOriginUrls();
 
+	/**
+	 * Sets the fetch url.
+	 *
+	 * @param fetchUrl the new fetch url
+	 * @throws URISyntaxException the URI syntax exception
+	 * @throws GitAPIException the git API exception
+	 */
 	void setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException;
 
+	/**
+	 * Sets the push url.
+	 *
+	 * @param pushUrl the new push url
+	 * @throws URISyntaxException the URI syntax exception
+	 * @throws GitAPIException the git API exception
+	 */
 	void setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException;
 
 	/**
@@ -95,28 +114,22 @@ public interface IGitConnector {
 	void addDeleted(String filePattern) throws IOException, NoFilepatternException, GitAPIException;
 	
 	/**
-	 * Remove from the index
-	 * 
+	 * Remove from the index.
+	 *
 	 * @param path the path to be removed
-	 * @throws IOException
-	 *             IO Exception
-	 * @throws NoFilepatternException
-	 *             No File Pattern Exception
-	 * @throws GitAPIException
-	 *             Git API Exception
+	 * @throws IOException             IO Exception
+	 * @throws NoFilepatternException             No File Pattern Exception
+	 * @throws GitAPIException             Git API Exception
 	 */
 	void remove(String path) throws IOException, NoFilepatternException, GitAPIException;
 	
 	/**
-	 * Revert to head revision
-	 * 
+	 * Revert to head revision.
+	 *
 	 * @param path the path to be removed
-	 * @throws IOException
-	 *             IO Exception
-	 * @throws NoFilepatternException
-	 *             No File Pattern Exception
-	 * @throws GitAPIException
-	 *             Git API Exception
+	 * @throws IOException             IO Exception
+	 * @throws NoFilepatternException             No File Pattern Exception
+	 * @throws GitAPIException             Git API Exception
 	 */
 	void revert(String path) throws IOException, NoFilepatternException, GitAPIException;
 
@@ -332,16 +345,16 @@ public interface IGitConnector {
 //			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException;
 
 	/**
-	 * List all the local branches info
-	 * 
-	 * @return the list of branches
-	 * @throws GitConnectorException in case of exception
-	 */
+ * List all the local branches info.
+ *
+ * @return the list of branches
+ * @throws GitConnectorException in case of exception
+ */
 	List<GitBranch> getLocalBranches() throws GitConnectorException;
 
 	/**
-	 * List all the remote branches info
-	 * 
+	 * List all the remote branches info.
+	 *
 	 * @return the list of branches
 	 * @throws GitConnectorException in case of exception
 	 */
@@ -349,23 +362,24 @@ public interface IGitConnector {
 	
 	
 	/**
-	 * Get the list of the unstaged files
-	 * 
+	 * Get the list of the unstaged files.
+	 *
 	 * @return the list
 	 * @throws GitConnectorException in case of exception
 	 */
 	List<GitChangedFile> getUnstagedChanges() throws GitConnectorException;
 
 	/**
-	 * Get the list of the staged files
-	 * 
+	 * Get the list of the staged files.
+	 *
 	 * @return the list
 	 * @throws GitConnectorException in case of exception
 	 */
 	List<GitChangedFile> getStagedChanges() throws GitConnectorException;
 
 	/**
-	 * Get file content from the HEAD
+	 * Get file content from the HEAD.
+	 *
 	 * @param path the path
 	 * @param revStr the revStr
 	 * @return the content
@@ -374,7 +388,8 @@ public interface IGitConnector {
 	String getFileContent(String path, String revStr) throws GitConnectorException;
 
 	/**
-	 * Get history
+	 * Get history.
+	 *
 	 * @param path the file path or null
 	 * @return the history of a file or the whole git repo
 	 * @throws GitConnectorException in case of exception

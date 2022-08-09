@@ -49,34 +49,59 @@ import io.swagger.annotations.Api;
 @Api(value = "OAuth")
 public class OAuthService extends AbstractRestService implements IRestService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(OAuthService.class);
 
+	/** The Constant AUTHORIZATION_HEADER. */
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 
+	/** The request. */
 	@Context
 	private HttpServletRequest request;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/** The Constant DIRIGIBLE_OAUTH_ENABLED. */
 	public static final String DIRIGIBLE_OAUTH_ENABLED = "DIRIGIBLE_OAUTH_ENABLED";
+	
+	/** The Constant DIRIGIBLE_OAUTH_PREFIX. */
 	public static final String DIRIGIBLE_OAUTH_PREFIX = "DIRIGIBLE_OAUTH_PREFIX";
+	
+	/** The Constant DIRIGIBLE_OAUTH_AUTHORIZE_URL. */
 	public static final String DIRIGIBLE_OAUTH_AUTHORIZE_URL = "DIRIGIBLE_OAUTH_AUTHORIZE_URL";
+	
+	/** The Constant DIRIGIBLE_OAUTH_TOKEN_URL. */
 	public static final String DIRIGIBLE_OAUTH_TOKEN_URL = "DIRIGIBLE_OAUTH_TOKEN_URL";
+	
+	/** The Constant DIRIGIBLE_OAUTH_CLIENT_ID. */
 	public static final String DIRIGIBLE_OAUTH_CLIENT_ID = "DIRIGIBLE_OAUTH_CLIENT_ID";
+	
+	/** The Constant DIRIGIBLE_OAUTH_CLIENT_SECRET. */
 	public static final String DIRIGIBLE_OAUTH_CLIENT_SECRET = "DIRIGIBLE_OAUTH_CLIENT_SECRET";
+	
+	/** The Constant DIRIGIBLE_OAUTH_VERIFICATION_KEY. */
 	public static final String DIRIGIBLE_OAUTH_VERIFICATION_KEY = "DIRIGIBLE_OAUTH_VERIFICATION_KEY";
+	
+	/** The Constant DIRIGIBLE_OAUTH_APPLICATION_NAME. */
 	public static final String DIRIGIBLE_OAUTH_APPLICATION_NAME = "DIRIGIBLE_OAUTH_APPLICATION_NAME";
+	
+	/** The Constant DIRIGIBLE_OAUTH_APPLICATION_HOST. */
 	public static final String DIRIGIBLE_OAUTH_APPLICATION_HOST = "DIRIGIBLE_OAUTH_APPLICATION_HOST";
+	
+	/** The Constant DIRIGIBLE_OAUTH_ISSUER. */
 	public static final String DIRIGIBLE_OAUTH_ISSUER = "DIRIGIBLE_OAUTH_ISSUER";
+	
+	/** The Constant DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED. */
 	public static final String DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED = "DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED";
 
 	/**
 	 * Clone repository.
 	 *
 	 * @param code the code
-	 * @throws IOException 
-	 * @throws ClientProtocolException 
+	 * @throws ClientProtocolException the client protocol exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@GET
 	@Path("/callback")
@@ -87,6 +112,14 @@ public class OAuthService extends AbstractRestService implements IRestService {
 		response.sendRedirect(redirectPath);
 	}
 
+	/**
+	 * Gets the access token.
+	 *
+	 * @param code the code
+	 * @return the access token
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ClientProtocolException the client protocol exception
+	 */
 	private AccessToken getAccessToken(String code) throws IOException, ClientProtocolException {
 		String tokenUrl = OAuthUtils.getTokenUrl(code);
 		String authorizationHeader = OAuthUtils.getOAuthAuthorizationHeader();
@@ -102,6 +135,11 @@ public class OAuthService extends AbstractRestService implements IRestService {
 		return GsonHelper.GSON.fromJson(clientResponse.getText(), AccessToken.class);
 	}
 
+	/**
+	 * Gets the redirect path.
+	 *
+	 * @return the redirect path
+	 */
 	private String getRedirectPath() {
 		String redirectPath = "/";
 		Cookie[] cookies = request.getCookies();
@@ -120,6 +158,11 @@ public class OAuthService extends AbstractRestService implements IRestService {
 		return redirectPath;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
@@ -128,6 +171,11 @@ public class OAuthService extends AbstractRestService implements IRestService {
 		return OAuthService.class;
 	}
 	
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
 	 */

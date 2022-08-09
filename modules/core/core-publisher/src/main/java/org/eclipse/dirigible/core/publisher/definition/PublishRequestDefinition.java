@@ -24,8 +24,10 @@ import javax.persistence.Table;
 @Table(name = "DIRIGIBLE_PUBLISH_REQUESTS")
 public class PublishRequestDefinition {
 	
+	/** The Constant COMMAND_PUBLISH. */
 	public transient static final String COMMAND_PUBLISH = "P";
 	
+	/** The Constant COMMAND_UNPUBLISH. */
 	public transient static final String COMMAND_UNPUBLISH = "U";
 
 	/** The id. */

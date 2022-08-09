@@ -7,18 +7,37 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 
+/**
+ * The Class TypescriptCompiler.
+ */
 class TypescriptCompiler {
 
+    /** The cwd. */
     private final Path cwd;
 
+    /**
+     * Instantiates a new typescript compiler.
+     *
+     * @param cwd the cwd
+     */
     public TypescriptCompiler(Path cwd) {
         this.cwd = cwd;
     }
 
+    /**
+     * Compile.
+     *
+     * @param filePattern the file pattern
+     */
     void compile(String filePattern) {
         compileTypeScriptFile(filePattern);
     }
 
+    /**
+     * Compile type script file.
+     *
+     * @param filePattern the file pattern
+     */
     private void compileTypeScriptFile(String filePattern) {
 //        var tscFilesPattern = filePath != null ? filePath.toString() : "**/*.ts";
     	ProcessBuilder processBuilder = new ProcessBuilder(

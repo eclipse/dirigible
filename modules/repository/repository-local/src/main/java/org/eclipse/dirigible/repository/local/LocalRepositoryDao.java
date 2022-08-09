@@ -32,26 +32,37 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalRepositoryDao {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(LocalRepositoryDao.class);
 
+	/** The Constant LAST. */
 	private static final String LAST = "last";
 
+	/** The Constant MODIFIED_AT. */
 	private static final String MODIFIED_AT = "modifiedAt";
 
+	/** The Constant MODIFIED_BY. */
 	private static final String MODIFIED_BY = "modifiedBy";
 
+	/** The Constant CREATED_AT. */
 	private static final String CREATED_AT = "createdAt";
 
+	/** The Constant CREATED_BY. */
 	private static final String CREATED_BY = "createdBy";
 
+	/** The Constant OBJECT_TYPE_FOLDER. */
 	static final int OBJECT_TYPE_FOLDER = 0;
 
+	/** The Constant OBJECT_TYPE_DOCUMENT. */
 	static final int OBJECT_TYPE_DOCUMENT = 1;
 
+	/** The Constant OBJECT_TYPE_BINARY. */
 	static final int OBJECT_TYPE_BINARY = 2;
 
+	/** The repository. */
 	private FileSystemRepository repository;
 	
+	/** The cache. */
 	private final RepositoryCache cache = new RepositoryCache();
 	
 
@@ -351,8 +362,8 @@ public class LocalRepositoryDao {
 	}
 	
 	/**
-	 * Check whether the file exists
-	 * 
+	 * Check whether the file exists.
+	 *
 	 * @param path the path
 	 * @return true if exists
 	 */
@@ -362,8 +373,8 @@ public class LocalRepositoryDao {
 	}
 	
 	/**
-	 * Check whether the directory exists
-	 * 
+	 * Check whether the directory exists.
+	 *
 	 * @param path the path
 	 * @return true if exists
 	 */

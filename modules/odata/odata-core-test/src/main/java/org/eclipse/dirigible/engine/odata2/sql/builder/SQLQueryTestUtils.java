@@ -14,16 +14,20 @@ package org.eclipse.dirigible.engine.odata2.sql.builder;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 
 /**
- * SQLQueryTestUtils
- *
+ * SQLQueryTestUtils.
  */
 public class SQLQueryTestUtils {
 
+    /**
+     * Instantiates a new SQL query test utils.
+     */
     private SQLQueryTestUtils() {
         // Static class
     }
 
     /**
+     * Grant table alias for structural type in query.
+     *
      * @param sqlQuery the query
      * @param structuralType the type
      */

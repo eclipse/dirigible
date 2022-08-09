@@ -16,11 +16,12 @@ package org.eclipse.dirigible.runtime.ide.generation.model.template;
  */
 public class GenerationTemplateModelParameters extends GenerationTemplateParameters {
 	
+	/** The model. */
 	private String model;
 	
 	/**
-	 * Gets the model
-	 * 
+	 * Gets the model.
+	 *
 	 * @return the model
 	 */
 	public String getModel() {
@@ -28,8 +29,8 @@ public class GenerationTemplateModelParameters extends GenerationTemplateParamet
 	}
 	
 	/**
-	 * Sets the model
-	 * 
+	 * Sets the model.
+	 *
 	 * @param model the model
 	 */
 	public void setModel(String model) {

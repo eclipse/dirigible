@@ -38,15 +38,36 @@ import org.eclipse.dirigible.core.workspace.json.ProjectDescriptor;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.Test;
 
+/**
+ * The Class GitFacadeTest.
+ */
 public class GitFacadeTest extends AbstractDirigibleTest {
 
+    /** The username. */
     private String username = "dirigible";
+    
+    /** The email. */
     private String email = "dirigible@eclipse.com";
+    
+    /** The project name. */
     private String projectName = "project1";
+    
+    /** The workspace name. */
     private String workspaceName = "workspace";
+    
+    /** The repository. */
     private String repository = "project1-repo";
+    
+    /** The gson. */
     private final Gson gson = new Gson();
 
+    /**
+     * Test init repository and commit.
+     *
+     * @throws GitAPIException the git API exception
+     * @throws GitConnectorException the git connector exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void testInitRepositoryAndCommit() throws GitAPIException, GitConnectorException, IOException {
         String user = UserFacade.getName();
@@ -77,6 +98,11 @@ public class GitFacadeTest extends AbstractDirigibleTest {
         FileUtils.deleteDirectory(new File("./target/.git"));
     }
 
+    /**
+     * Assert project json exists.
+     *
+     * @param project the project
+     */
     private void assertProjectJsonExists(IProject project) {
         IFile maybeProjectJson = project.getFile("project.json");
         assertTrue("project.json does not exist", maybeProjectJson.exists());

@@ -36,12 +36,25 @@ import static java.util.Collections.EMPTY_MAP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+/**
+ * The Class SQLSelectBuilderComplexTypeTest.
+ */
 public class SQLSelectBuilderComplexTypeTest {
 
+    /** The provider. */
     AnnotationEdmProvider provider;
+    
+    /** The uri parser. */
     UriParser uriParser;
+    
+    /** The builder. */
     SQLQueryBuilder builder;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         Class<?>[] classes = { //
@@ -58,6 +71,11 @@ public class SQLSelectBuilderComplexTypeTest {
         builder = new SQLQueryBuilder(tableMappingProvider);
     }
 
+    /**
+     * Test query with complex type property simple.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testQueryWithComplexTypePropertySimple() throws Exception {
@@ -73,6 +91,11 @@ public class SQLSelectBuilderComplexTypeTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test query with complex type property with filter on the complex property.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testQueryWithComplexTypePropertyWithFilterOnTheComplexProperty() throws Exception {
@@ -90,6 +113,11 @@ public class SQLSelectBuilderComplexTypeTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test query with complex type property with filter.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testQueryWithComplexTypePropertyWithFilter() throws Exception {
@@ -108,6 +136,11 @@ public class SQLSelectBuilderComplexTypeTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test query with complex type property with filter and brackets.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testQueryWithComplexTypePropertyWithFilterAndBrackets() throws Exception {
@@ -126,6 +159,11 @@ public class SQLSelectBuilderComplexTypeTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test query with complex type property select whole complex type.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testQueryWithComplexTypePropertySelectWholeComplexType() throws Exception {
@@ -143,6 +181,11 @@ public class SQLSelectBuilderComplexTypeTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test query with complex type property select complex type fields.
+     *
+     * @throws Exception the exception
+     */
     /*
      * OData Specification 2.0/3.0: Negative test: It is not supported to use
      * single properties of a complex type within a $select clause

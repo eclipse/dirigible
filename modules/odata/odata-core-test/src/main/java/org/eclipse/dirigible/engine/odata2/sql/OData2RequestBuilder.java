@@ -79,19 +79,37 @@ import org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor;
  */
 public class OData2RequestBuilder {
 
+    /** The Constant PROTOCOL. */
     private static final String PROTOCOL = "http";
+    
+    /** The Constant HOST. */
     private static final String HOST = "localhost";
+    
+    /** The Constant PORT. */
     private static final int PORT = 8080;
+    
+    /** The Constant RELATIVE_SERVICE_ROOT. */
     private static final String RELATIVE_SERVICE_ROOT = "/api/v1";
 
+    /** The path segment string list. */
     //
     private final List<String> pathSegmentStringList = new ArrayList<>();
+    
+    /** The query params. */
     private final MultivaluedMap<String, String> queryParams = new MetadataMap<>();
+    
+    /** The accept. */
     private String accept = "*/*"; // Default value; Maybe overruled by constructor
+    
+    /** The content size. */
     private int contentSize = 1024 * 4;
+    
+    /** The service factory. */
     private ODataServiceFactory serviceFactory;
 
     /**
+     * Segments.
+     *
      * @param pathSegmentStrings the path
      * @return OData2RequestBuilder
      */
@@ -101,6 +119,8 @@ public class OData2RequestBuilder {
     }
 
     /**
+     * Param.
+     *
      * @param name the param name
      * @param value the param value
      * @return OData2RequestBuilder
@@ -111,6 +131,8 @@ public class OData2RequestBuilder {
     }
 
     /**
+     * Accept.
+     *
      * @param accept the accept header
      * @return OData2RequestBuilder
      */
@@ -120,6 +142,8 @@ public class OData2RequestBuilder {
     }
 
     /**
+     * Content size.
+     *
      * @param contentSize the contentSize header
      * @return OData2RequestBuilder
      */
@@ -129,6 +153,8 @@ public class OData2RequestBuilder {
     }
 
     /**
+     * Execute request.
+     *
      * @return executeRequest
      * @throws IOException in case of error
      * @throws ODataException in case of error
@@ -138,6 +164,8 @@ public class OData2RequestBuilder {
     }
 
     /**
+     * Service factory.
+     *
      * @param serviceFactory serviceFactory
      * @return OData2RequestBuilder
      */
@@ -147,6 +175,8 @@ public class OData2RequestBuilder {
     }
 
     /**
+     * Creates the request.
+     *
      * @param sf ODataServiceFactory
      * @return OData2RequestBuilder
      */
@@ -156,10 +186,9 @@ public class OData2RequestBuilder {
     }
 
     /**
-     * This methods executes an OData Request based on applied parameters and mocked REST layer
-     * 
-     * @param method
-     *            Mandatory parameter defining Http Method to be used for the request. Expected values are: GET, PUT, POST, DELETE, PATCH,
+     * This methods executes an OData Request based on applied parameters and mocked REST layer.
+     *
+     * @param method            Mandatory parameter defining Http Method to be used for the request. Expected values are: GET, PUT, POST, DELETE, PATCH,
      *            MERGE
      * @return OData Response
      * @throws IOException in case of error
@@ -261,6 +290,15 @@ public class OData2RequestBuilder {
 
 
 
+    /**
+     * Execute batch request.
+     *
+     * @param batch the batch
+     * @return the o data response
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws URISyntaxException the URI syntax exception
+     * @throws ODataException the o data exception
+     */
     public  ODataResponse executeBatchRequest(List<BatchPart> batch) throws IOException, URISyntaxException, ODataException {
         InputStream body = EntityProvider.writeBatchRequest(batch, "batch_1");
         String batchRequestBody = IOUtils.toString(body);
@@ -284,9 +322,12 @@ public class OData2RequestBuilder {
 
 
     /**
+     * Gets the servlet input stream.
+     *
      * @param method the method
-     * @param easyMockSupport the easyMockSupport 
+     * @param easyMockSupport the easyMockSupport
      * @param servletRequest the servletRequest
+     * @return the servlet input stream
      * @throws IOException in case of error
      */
     protected void getServletInputStream(final ODataHttpMethod method, final EasyMockSupport easyMockSupport,
@@ -306,6 +347,8 @@ public class OData2RequestBuilder {
     }
 
     /**
+     * Content.
+     *
      * @param content the content
      * @return OData2RequestBuilder
      */
@@ -336,6 +379,12 @@ public class OData2RequestBuilder {
         // default implementation is empty
     }
 
+    /**
+     * Creates the query string.
+     *
+     * @param queryParams the query params
+     * @return the string
+     */
     private String createQueryString(final MultivaluedMap<String, String> queryParams) {
         StringBuilder queryString = new StringBuilder();
         for (Entry<String, List<String>> entry : queryParams.entrySet()) {
@@ -349,6 +398,12 @@ public class OData2RequestBuilder {
         return HttpUtils.pathEncode(queryString.toString());
     }
 
+    /**
+     * Creates the path segments.
+     *
+     * @param segmentStrings the segment strings
+     * @return the list
+     */
     private List<PathSegment> createPathSegments(final Collection<String> segmentStrings) {
         final ArrayList<PathSegment> pathSegments = new ArrayList<>();
         if (segmentStrings != null) {
@@ -359,6 +414,11 @@ public class OData2RequestBuilder {
         return pathSegments;
     }
 
+    /**
+     * Absolute service root.
+     *
+     * @return the string
+     */
     private String absoluteServiceRoot() {
         return PROTOCOL + "://" + HOST + ":" + PORT + RELATIVE_SERVICE_ROOT;
     }

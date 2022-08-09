@@ -22,14 +22,29 @@ import org.slf4j.LoggerFactory;
  */
 public class InitCommand {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(PullCommand.class);
 
 
+    /**
+     * Execute.
+     *
+     * @param gitDirectory the git directory
+     * @param isBare the is bare
+     * @throws GitConnectorException the git connector exception
+     */
     public void execute(String gitDirectory, Boolean isBare) throws GitConnectorException {
         initRepository(gitDirectory, isBare);
 
     }
 
+    /**
+     * Inits the repository.
+     *
+     * @param gitDirectory the git directory
+     * @param isBare the is bare
+     * @throws GitConnectorException the git connector exception
+     */
     void initRepository(String gitDirectory, Boolean isBare) throws GitConnectorException {
         try {
             GitConnectorFactory.initRepository(gitDirectory, isBare);

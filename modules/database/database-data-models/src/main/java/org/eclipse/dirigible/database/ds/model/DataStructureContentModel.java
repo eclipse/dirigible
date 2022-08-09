@@ -18,13 +18,24 @@ import javax.persistence.Transient;
  */
 public class DataStructureContentModel extends DataStructureModel {
 
+	/** The content. */
 	@Transient
 	private transient String content;
 
+	/**
+	 * Gets the content.
+	 *
+	 * @return the content
+	 */
 	public String getContent() {
 		return content;
 	}
 
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the new content
+	 */
 	public void setContent(String content) {
 		this.content = content;
 	}

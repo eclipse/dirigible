@@ -25,7 +25,6 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RepositoryGenericImportZipTest.
  */
@@ -36,7 +35,8 @@ public class RepositoryGenericImportZipTest {
 
 	/**
 	 * Test import zip.
-	 * @throws IOException 
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Test
 	public void testImportZip() throws IOException {

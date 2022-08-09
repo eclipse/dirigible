@@ -16,6 +16,7 @@ package org.eclipse.dirigible.database.ds.api;
  */
 public class DataStructuresException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5800180600419241248L;
 
 	/**

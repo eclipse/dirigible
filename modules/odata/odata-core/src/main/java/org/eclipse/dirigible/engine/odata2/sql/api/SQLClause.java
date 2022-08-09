@@ -14,9 +14,24 @@ package org.eclipse.dirigible.engine.odata2.sql.api;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 
+/**
+ * The Interface SQLClause.
+ */
 public interface SQLClause {
 
+    /**
+     * Evaluate.
+     *
+     * @param context the context
+     * @return the string
+     * @throws EdmException the edm exception
+     */
     String evaluate(SQLContext context) throws EdmException;
 
+    /**
+     * Checks if is empty.
+     *
+     * @return true, if is empty
+     */
     boolean isEmpty();
 }

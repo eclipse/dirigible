@@ -26,19 +26,24 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 @Table(name = "DIRIGIBLE_BPM")
 public class BpmDefinition implements IArtefactDefinition {
 
+	/** The location. */
 	@Id
 	@Column(name = "BPM_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 	
+	/** The hash. */
 	@Column(name = "BPM_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 
+	/** The created by. */
 	@Column(name = "BPM_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "BPM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 	
+	/** The content. */
 	private transient String content;
 
 	/**
@@ -144,6 +149,11 @@ public class BpmDefinition implements IArtefactDefinition {
 		return GsonHelper.GSON.toJson(this, BpmDefinition.class);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -153,6 +163,11 @@ public class BpmDefinition implements IArtefactDefinition {
 		return toJson();
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -162,6 +177,12 @@ public class BpmDefinition implements IArtefactDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -184,19 +205,39 @@ public class BpmDefinition implements IArtefactDefinition {
 		return true;
 	}
 
+	/**
+	 * Gets the content.
+	 *
+	 * @return the content
+	 */
 	public String getContent() {
 		return content;
 	}
 	
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the new content
+	 */
 	public void setContent(String content) {
 		this.content = content;
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getLocation();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();

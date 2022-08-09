@@ -16,7 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * The Database File Content Definition
+ * The Database File Content Definition.
  */
 @Table(name = "DIRIGIBLE_CMS_FILES_CONTENT")
 public class CmisDatabaseFileContentDefinition {
@@ -30,18 +30,38 @@ public class CmisDatabaseFileContentDefinition {
 	@Column(name = "FILE_CONTENT", columnDefinition = "BLOB", nullable = true)
 	private byte[] content;
 
+	/**
+	 * Gets the path.
+	 *
+	 * @return the path
+	 */
 	public String getPath() {
 		return path;
 	}
 
+	/**
+	 * Sets the path.
+	 *
+	 * @param path the new path
+	 */
 	public void setPath(String path) {
 		this.path = path;
 	}
 
+	/**
+	 * Gets the content.
+	 *
+	 * @return the content
+	 */
 	public byte[] getContent() {
 		return content != null ? content.clone() : new byte[] {};
 	}
 
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the new content
+	 */
 	public void setContent(byte[] content) {
 		this.content = content != null ? content.clone() : null;
 	}

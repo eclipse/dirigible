@@ -19,8 +19,14 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class ExtensionsSynchronizerJob extends AbstractSynchronizerJob {
 
+	/** The extensions synchronizer. */
 	private ExtensionsSynchronizer extensionsSynchronizer = new ExtensionsSynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -30,6 +36,11 @@ public class ExtensionsSynchronizerJob extends AbstractSynchronizerJob {
 		return extensionsSynchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()

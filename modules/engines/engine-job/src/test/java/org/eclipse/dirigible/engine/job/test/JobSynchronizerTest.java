@@ -39,14 +39,19 @@ import org.junit.Test;
  */
 public class JobSynchronizerTest extends AbstractDirigibleTest {
 
+	/** The scheduler initializer. */
 	private SchedulerInitializer schedulerInitializer;
 
+	/** The scheduler core service. */
 	private ISchedulerCoreService schedulerCoreService;
 
+	/** The job synchronizer. */
 	private JobSynchronizer jobSynchronizer;
 
+	/** The scheduler manager. */
 	private SchedulerManager schedulerManager;
 
+	/** The repository. */
 	private IRepository repository;
 
 	/**
@@ -107,10 +112,8 @@ public class JobSynchronizerTest extends AbstractDirigibleTest {
 	/**
 	 * Creates the job test.
 	 *
-	 * @throws JobException
-	 *             the job exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws SchedulerException the scheduler exception
+	 * @throws IOException             Signals that an I/O exception has occurred.
 	 */
 	public void createJobTest() throws SchedulerException, IOException {
 		jobSynchronizer.registerPredeliveredJob("/control/control.job");

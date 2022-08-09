@@ -13,15 +13,23 @@ package org.eclipse.dirigible.database.transfer.api;
 
 import org.eclipse.dirigible.database.api.DatabaseDefinition;
 
+/**
+ * The Class DataTransferDefinition.
+ */
 public class DataTransferDefinition {
 	
+	/** The source. */
 	private DatabaseDefinition source;
 	
+	/** The target. */
 	private DatabaseDefinition target;
 	
+	/** The configuration. */
 	private DataTransferConfiguration configuration;
 
 	/**
+	 * Gets the source.
+	 *
 	 * @return the source
 	 */
 	public DatabaseDefinition getSource() {
@@ -29,6 +37,8 @@ public class DataTransferDefinition {
 	}
 
 	/**
+	 * Sets the source.
+	 *
 	 * @param source the source to set
 	 */
 	public void setSource(DatabaseDefinition source) {
@@ -36,6 +46,8 @@ public class DataTransferDefinition {
 	}
 
 	/**
+	 * Gets the target.
+	 *
 	 * @return the target
 	 */
 	public DatabaseDefinition getTarget() {
@@ -43,6 +55,8 @@ public class DataTransferDefinition {
 	}
 
 	/**
+	 * Sets the target.
+	 *
 	 * @param target the target to set
 	 */
 	public void setTarget(DatabaseDefinition target) {
@@ -50,6 +64,8 @@ public class DataTransferDefinition {
 	}
 
 	/**
+	 * Gets the configuration.
+	 *
 	 * @return the configuration
 	 */
 	public DataTransferConfiguration getConfiguration() {
@@ -57,6 +73,8 @@ public class DataTransferDefinition {
 	}
 
 	/**
+	 * Sets the configuration.
+	 *
 	 * @param configuration the configuration to set
 	 */
 	public void setConfiguration(DataTransferConfiguration configuration) {

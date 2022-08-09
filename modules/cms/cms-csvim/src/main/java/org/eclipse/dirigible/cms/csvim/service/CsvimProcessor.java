@@ -56,36 +56,70 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
+/**
+ * The Class CsvimProcessor.
+ */
 public class CsvimProcessor {
 
+	/** The Constant DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE. */
 	private static final String DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE = "DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE";
+	
+	/** The Constant DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE_DEFAULT. */
 	private static final int DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE_DEFAULT = 1000;
 
+	/** The Constant DIRIGIBLE_CSV_DATA_BATCH_SIZE. */
 	private static final String DIRIGIBLE_CSV_DATA_BATCH_SIZE = "DIRIGIBLE_CSV_DATA_BATCH_SIZE";
+	
+	/** The Constant DIRIGIBLE_CSV_DATA_BATCH_SIZE_DEFAULT. */
 	private static final int DIRIGIBLE_CSV_DATA_BATCH_SIZE_DEFAULT = 100;
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CsvimProcessor.class);
+	
+	/** The Constant ARTEFACT_TYPE_CSV. */
 	private static final String ARTEFACT_TYPE_CSV = new CsvSynchronizationArtefactType().getId();
 
+	/** The Constant MODULE. */
 	private static final String MODULE = "dirigible-cms-csvim";
+	
+	/** The Constant ERROR_TYPE_PROCESSOR. */
 	private static final String ERROR_TYPE_PROCESSOR = "PROCESSOR";
 
+	/** The Constant ERROR_MESSAGE_NO_PRIMARY_KEY. */
 	private static final String ERROR_MESSAGE_NO_PRIMARY_KEY = "Error while trying to process CSV from location [%s] - no primary key.";
+	
+	/** The Constant ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE. */
 	private static final String ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE = "Error while trying to process CSV record with Id [%s] from location [%s]. The number of CSV items should be equal to the number of columns of the database entity.";
+	
+	/** The Constant ERROR_MESSAGE_INSERT_RECORD. */
 	private static final String ERROR_MESSAGE_INSERT_RECORD = "Error occurred while trying to insert in table [%s] a CSV record [%s] from location [%s].";
 
+	/** The Constant PROBLEM_MESSAGE_NO_PRIMARY_KEY. */
 	private static final String PROBLEM_MESSAGE_NO_PRIMARY_KEY = "No primary key. Check the configured CSVIM delimiter, whether matches the delimiter used in the CSV data file.";
+	
+	/** The Constant PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE. */
 	private static final String PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE = "Error while trying to process CSV record with Id [%s]. The number of CSV items should be equal to the number of columns of the database entity.";
+	
+	/** The Constant PROBLEM_MESSAGE_INSERT_RECORD. */
 	private static final String PROBLEM_MESSAGE_INSERT_RECORD = "Error occurred while trying to insert in table [%s] a CSV record [%s].";
 
+	/** The database metadata util. */
 	private final DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The repository. */
 	private IRepository repository = null;
 	
+	/** The csv processor. */
 	private final CsvProcessor csvProcessor = new CsvProcessor();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
@@ -93,6 +127,11 @@ public class CsvimProcessor {
 		return dataSource;
 	}
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -100,15 +139,39 @@ public class CsvimProcessor {
 		return repository;
 	}
 	
+	/**
+	 * Gets the csv resource.
+	 *
+	 * @param csvFileDefinition the csv file definition
+	 * @return the csv resource
+	 */
 	public IResource getCsvResource(CsvFileDefinition csvFileDefinition) {
 		IResource resource = getRepository().getResource(convertToActualFileName(csvFileDefinition.getFile()));
 		return resource;
 	}
 	
+	/**
+	 * Gets the csv content.
+	 *
+	 * @param resource the resource
+	 * @return the csv content
+	 * @throws RepositoryReadException the repository read exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public String getCsvContent(IResource resource) throws RepositoryReadException, IOException {
 		return IOUtils.toString(new InputStreamReader(new ByteArrayInputStream(resource.getContent()), StandardCharsets.UTF_8));
 	}
 
+	/**
+	 * Process.
+	 *
+	 * @param csvFileDefinition the csv file definition
+	 * @param content the content
+	 * @param connection the connection
+	 * @throws CsvimException the csvim exception
+	 * @throws SQLException the SQL exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void process(CsvFileDefinition csvFileDefinition, String content, Connection connection) throws CsvimException, SQLException, IOException {
 		String tableName = convertToActualTableName(csvFileDefinition.getTable());
 		CSVParser csvParser = getCsvParser(csvFileDefinition, content);
@@ -164,6 +227,14 @@ public class CsvimProcessor {
 		updateCsvRecords(recordsToUpdate, csvParser.getHeaderNames(), csvFileDefinition);
 	}
 
+	/**
+	 * Checks if is empty table.
+	 *
+	 * @param tableName the table name
+	 * @param connection the connection
+	 * @return true, if is empty table
+	 * @throws SQLException the SQL exception
+	 */
 	private boolean isEmptyTable(String tableName, Connection connection) throws SQLException {
 		boolean isEmpty = false;
 		SelectBuilder selectBuilder = new SelectBuilder(SqlFactory.deriveDialect(connection));
@@ -177,6 +248,16 @@ public class CsvimProcessor {
 		return isEmpty;
 	}
 
+	/**
+	 * Record exists.
+	 *
+	 * @param tableName the table name
+	 * @param pkNameForCSVRecord the pk name for CSV record
+	 * @param pkValueForCSVRecord the pk value for CSV record
+	 * @param connection the connection
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	private boolean recordExists(String tableName, String pkNameForCSVRecord, String pkValueForCSVRecord, Connection connection) throws SQLException {
 		boolean exists = false;
 		SelectBuilder selectBuilder = new SelectBuilder(SqlFactory.deriveDialect(connection));
@@ -201,6 +282,14 @@ public class CsvimProcessor {
 		return exists;
 	}
 
+	/**
+	 * Insert csv records.
+	 *
+	 * @param recordsToProcess the records to process
+	 * @param headerNames the header names
+	 * @param csvFileDefinition the csv file definition
+	 * @throws SQLException the SQL exception
+	 */
 	private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFileDefinition csvFileDefinition) throws SQLException {
 		String tableName = convertToActualTableName(csvFileDefinition.getTable());
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
@@ -222,6 +311,14 @@ public class CsvimProcessor {
 		}
 	}
 
+	/**
+	 * Update csv records.
+	 *
+	 * @param recordsToProcess the records to process
+	 * @param headerNames the header names
+	 * @param csvFileDefinition the csv file definition
+	 * @throws SQLException the SQL exception
+	 */
 	private void updateCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFileDefinition csvFileDefinition) throws SQLException {
 		String tableName = convertToActualTableName(csvFileDefinition.getTable());
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
@@ -243,6 +340,11 @@ public class CsvimProcessor {
 		}
 	}
 
+	/**
+	 * Gets the csv data batch size.
+	 *
+	 * @return the csv data batch size
+	 */
 	private int getCsvDataBatchSize() {
 		int batchSize = DIRIGIBLE_CSV_DATA_BATCH_SIZE_DEFAULT;
 		try {
@@ -253,6 +355,14 @@ public class CsvimProcessor {
 		return batchSize;
 	}
 
+	/**
+	 * Record should be included.
+	 *
+	 * @param record the record
+	 * @param columns the columns
+	 * @param keys the keys
+	 * @return true, if successful
+	 */
 	private boolean recordShouldBeIncluded(CSVRecord record, List<PersistenceTableColumnModel> columns,
 			Map<String, List<String>> keys) {
 		if (keys == null || keys.isEmpty()) {
@@ -272,6 +382,12 @@ public class CsvimProcessor {
 		return match;
 	}
 
+	/**
+	 * Gets the table metadata.
+	 *
+	 * @param csvFileDefinition the csv file definition
+	 * @return the table metadata
+	 */
 	private PersistenceTableModel getTableMetadata(CsvFileDefinition csvFileDefinition) {
 		String tableName = convertToActualTableName(csvFileDefinition.getTable());
 		try {
@@ -284,6 +400,14 @@ public class CsvimProcessor {
 		return null;
 	}
 	
+	/**
+	 * Gets the csv parser.
+	 *
+	 * @param csvFileDefinition the csv file definition
+	 * @param contentAsString the content as string
+	 * @return the csv parser
+	 * @throws CsvimException the csvim exception
+	 */
 	private CSVParser getCsvParser(CsvFileDefinition csvFileDefinition, String contentAsString) throws CsvimException {
 		try {
 			CSVFormat csvFormat = createCSVFormat(csvFileDefinition);
@@ -297,6 +421,13 @@ public class CsvimProcessor {
 		return null;
 	}
 
+	/**
+	 * Creates the CSV format.
+	 *
+	 * @param csvFileDefinition the csv file definition
+	 * @return the CSV format
+	 * @throws CsvimException the csvim exception
+	 */
 	private CSVFormat createCSVFormat(CsvFileDefinition csvFileDefinition) throws CsvimException {
 		if (csvFileDefinition.getDelimField() != null && (!csvFileDefinition.getDelimField().equals(",") && !csvFileDefinition.getDelimField().equals(";"))) {
 			String errorMessage = "Only ';' or ',' characters are supported as delimiters for CSV files.";
@@ -321,7 +452,12 @@ public class CsvimProcessor {
 	}
 
 	/**
-	 * Use to log errors from artifact processing
+	 * Use to log errors from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
 	 */
 	private static void logProcessorErrors(String errorMessage, String errorType, String location, String artifactType) {
 		try {
@@ -332,6 +468,13 @@ public class CsvimProcessor {
 		}
 	}
 	
+	/**
+	 * Gets the pk name for CSV record.
+	 *
+	 * @param tableName the table name
+	 * @param headerNames the header names
+	 * @return the pk name for CSV record
+	 */
 	private String getPkNameForCSVRecord(String tableName, List<String> headerNames) {
 		List<PersistenceTableColumnModel> columnModels = getTableMetadata(tableName).getColumns();
 		if (headerNames.size() > 0) {
@@ -348,6 +491,14 @@ public class CsvimProcessor {
 		return null;
 	}
 
+	/**
+	 * Gets the pk value for CSV record.
+	 *
+	 * @param csvRecord the csv record
+	 * @param tableName the table name
+	 * @param headerNames the header names
+	 * @return the pk value for CSV record
+	 */
 	private String getPkValueForCSVRecord(CSVRecord csvRecord, String tableName, List<String> headerNames) {
 		List<PersistenceTableColumnModel> columnModels = getTableMetadata(tableName).getColumns();
 		if (headerNames.size() > 0) {
@@ -366,6 +517,12 @@ public class CsvimProcessor {
 		return null;
 	}
 
+	/**
+	 * Convert to actual table name.
+	 *
+	 * @param tableName the table name
+	 * @return the string
+	 */
 	private String convertToActualTableName(String tableName) {
 		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		if (caseSensitive) {
@@ -374,10 +531,22 @@ public class CsvimProcessor {
 		return tableName;
 	}
 
+	/**
+	 * Convert to actual file name.
+	 *
+	 * @param fileNamePath the file name path
+	 * @return the string
+	 */
 	private String convertToActualFileName(String fileNamePath) {
 		return IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepository.SEPARATOR + fileNamePath;
 	}
 
+	/**
+	 * Gets the table metadata.
+	 *
+	 * @param tableName the table name
+	 * @return the table metadata
+	 */
 	private PersistenceTableModel getTableMetadata(String tableName) {
 		try {
 			return databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));

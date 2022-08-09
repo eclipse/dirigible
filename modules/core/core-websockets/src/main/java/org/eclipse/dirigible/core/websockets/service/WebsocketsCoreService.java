@@ -36,10 +36,17 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class WebsocketsCoreService implements IWebsocketsCoreService {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The websockets persistence manager. */
 	private PersistenceManager<WebsocketDefinition> websocketsPersistenceManager = new PersistenceManager<WebsocketDefinition>();
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -49,6 +56,16 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 
 	// Websocket
 
+	/**
+	 * Creates the websocket.
+	 *
+	 * @param location the location
+	 * @param module the module
+	 * @param endpoint the endpoint
+	 * @param description the description
+	 * @return the websocket definition
+	 * @throws WebsocketsException the websockets exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService#createWebsocket(java.lang.String,
@@ -80,6 +97,13 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the websocket.
+	 *
+	 * @param location the location
+	 * @return the websocket
+	 * @throws WebsocketsException the websockets exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService#getWebsocket(java.lang.String)
@@ -101,6 +125,12 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		}
 	}
 
+	/**
+	 * Removes the websocket.
+	 *
+	 * @param location the location
+	 * @throws WebsocketsException the websockets exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService#removeWebsocket(java.lang.String)
@@ -122,6 +152,15 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		}
 	}
 
+	/**
+	 * Update websocket.
+	 *
+	 * @param location the location
+	 * @param module the module
+	 * @param endpoint the endpoint
+	 * @param description the description
+	 * @throws WebsocketsException the websockets exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService#updateWebsocket(java.lang.String,
@@ -148,6 +187,12 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the websockets.
+	 *
+	 * @return the websockets
+	 * @throws WebsocketsException the websockets exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService#getWebsockets()
@@ -169,6 +214,13 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the websocket by endpoint.
+	 *
+	 * @param endpoint the endpoint
+	 * @return the websocket by endpoint
+	 * @throws WebsocketsException the websockets exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -194,6 +246,13 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		}
 	}
 
+	/**
+	 * Exists websocket.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws WebsocketsException the websockets exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService#existsWebsocket(java.lang.String)
@@ -203,6 +262,12 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		return getWebsocket(location) != null;
 	}
 
+	/**
+	 * Parses the websocket.
+	 *
+	 * @param json the json
+	 * @return the websocket definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService#parseWebsocket(java.lang.String)
@@ -212,6 +277,12 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		return GsonHelper.GSON.fromJson(json, WebsocketDefinition.class);
 	}
 
+	/**
+	 * Parses the websocket.
+	 *
+	 * @param json the json
+	 * @return the websocket definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService#parseWebsocket(byte[])
@@ -222,6 +293,12 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 				WebsocketDefinition.class);
 	}
 
+	/**
+	 * Serialize websocket.
+	 *
+	 * @param websocketDefinition the websocket definition
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see

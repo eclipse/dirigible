@@ -26,13 +26,25 @@ import org.eclipse.dirigible.database.sql.builders.tableType.CreateTableTypeBuil
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class HanaCreateTableTypeBuilder.
+ */
 public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
+    
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(HanaCreateTableTypeBuilder.class);
+    
+    /** The Constant ARGS_DATA_TYPES. */
     private static final List<DataType> ARGS_DATA_TYPES = new ArrayList<>(
         List.of(DataType.VARCHAR, DataType.CHAR, DataType.NVARCHAR, DataType.ALPHANUM, DataType.SHORTTEXT, DataType.DECIMAL));
 
+    /** The table type. */
     private String tableType;
+    
+    /** The columns. */
     private List<String[]> columns = new ArrayList<>();
+    
+    /** The primary key. */
     private CreateTablePrimaryKeyBuilder primaryKey;
 
     /**
@@ -48,6 +60,11 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
         this.tableType=tableType;
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     @Override
     public String generate() {
 

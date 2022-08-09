@@ -27,19 +27,42 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The Class SQLInterceptorChain.
+ */
 public class SQLInterceptorChain implements SQLInterceptor {
 
+    /** The interceptors. */
     private final List<SQLInterceptor> interceptors;
 
+    /**
+     * Instantiates a new SQL interceptor chain.
+     *
+     * @param interceptors the interceptors
+     */
     public SQLInterceptorChain(SQLInterceptor... interceptors) {
         this.interceptors = new ArrayList<>();
         this.interceptors.addAll(Arrays.asList(interceptors));
     }
 
+    /**
+     * Adds the interceptor.
+     *
+     * @param interceptor the interceptor
+     */
     public void addInterceptor(SQLInterceptor interceptor) {
         this.interceptors.add(interceptor);
     }
 
+    /**
+     * On create.
+     *
+     * @param query the query
+     * @param uriInfo the uri info
+     * @param context the context
+     * @return the SQL insert builder
+     * @throws ODataException the o data exception
+     */
     @Override
     public SQLInsertBuilder onCreate(SQLInsertBuilder query, PostUriInfo uriInfo, ODataContext context) throws ODataException {
         SQLInsertBuilder resultQuery = query;
@@ -50,6 +73,15 @@ public class SQLInterceptorChain implements SQLInterceptor {
         return resultQuery;
     }
 
+    /**
+     * On read.
+     *
+     * @param query the query
+     * @param uriInfo the uri info
+     * @param context the context
+     * @return the SQL select builder
+     * @throws ODataException the o data exception
+     */
     @Override
     public SQLSelectBuilder onRead(SQLSelectBuilder query, UriInfo uriInfo, ODataContext context) throws ODataException {
         SQLSelectBuilder resultQuery = query;
@@ -60,6 +92,15 @@ public class SQLInterceptorChain implements SQLInterceptor {
         return resultQuery;
     }
 
+    /**
+     * On update.
+     *
+     * @param query the query
+     * @param uriInfo the uri info
+     * @param context the context
+     * @return the SQL update builder
+     * @throws ODataException the o data exception
+     */
     @Override
     public SQLUpdateBuilder onUpdate(SQLUpdateBuilder query, PutMergePatchUriInfo uriInfo, ODataContext context) throws ODataException {
         SQLUpdateBuilder resultQuery = query;
@@ -70,6 +111,15 @@ public class SQLInterceptorChain implements SQLInterceptor {
         return resultQuery;
     }
 
+    /**
+     * On delete.
+     *
+     * @param query the query
+     * @param uriInfo the uri info
+     * @param context the context
+     * @return the SQL delete builder
+     * @throws ODataException the o data exception
+     */
     @Override
     public SQLDeleteBuilder onDelete(SQLDeleteBuilder query, DeleteUriInfo uriInfo, ODataContext context) throws ODataException {
         SQLDeleteBuilder resultQuery = query;

@@ -39,14 +39,24 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class DirigibleSpringConfiguration.
+ */
 @Configuration
 public class DirigibleSpringConfiguration {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleSpringConfiguration.class);
 
+	/** The bus. */
 	@Autowired
 	private Bus bus;
 
+	/**
+	 * Rs server.
+	 *
+	 * @return the server
+	 */
 	@Bean
 	public Server rsServer() {
 		EmbeddedDirigible dirigible = new EmbeddedDirigible();
@@ -63,6 +73,11 @@ public class DirigibleSpringConfiguration {
 		return endpoint.create();
 	}
 
+	/**
+	 * Context filter.
+	 *
+	 * @return the filter registration bean
+	 */
 	@Bean
 	public FilterRegistrationBean<HttpContextFilter> contextFilter() {
 		FilterRegistrationBean<HttpContextFilter> registrationBean = new FilterRegistrationBean<>();
@@ -78,6 +93,11 @@ public class DirigibleSpringConfiguration {
 		return registrationBean;
 	}
 
+	/**
+	 * Healthcheck filter.
+	 *
+	 * @return the filter registration bean
+	 */
 	@Bean
 	public FilterRegistrationBean<HealthCheckFilter> healthcheckFilter() {
 		FilterRegistrationBean<HealthCheckFilter> registrationBean = new FilterRegistrationBean<>();
@@ -93,6 +113,11 @@ public class DirigibleSpringConfiguration {
 		return registrationBean;
 	}
 
+	/**
+	 * Cors filter.
+	 *
+	 * @return the filter registration bean
+	 */
 	@Bean
 	public FilterRegistrationBean<CorsFilter> corsFilter() {
 		FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
@@ -152,16 +177,31 @@ public class DirigibleSpringConfiguration {
 //        return registrationBean;    
 //    }
 
-	@Bean
+	/**
+ * Delegate home redirect servlet.
+ *
+ * @return the servlet registration bean
+ */
+@Bean
 	public ServletRegistrationBean<HomeRedirectServlet> delegateHomeRedirectServlet() {
 		return new ServletRegistrationBean<HomeRedirectServlet>(new HomeRedirectServlet(), "/home");
 	}
 
+	/**
+	 * Delegate logout servlet.
+	 *
+	 * @return the servlet registration bean
+	 */
 	@Bean
 	public ServletRegistrationBean<LogoutServlet> delegateLogoutServlet() {
 		return new ServletRegistrationBean<LogoutServlet>(new LogoutServlet(), "/logout");
 	}
 
+	/**
+	 * Olingo servlet.
+	 *
+	 * @return the servlet registration bean
+	 */
 	@Bean
 	public ServletRegistrationBean<ODataServlet> olingoServlet() {
 		ServletRegistrationBean<ODataServlet> bean = new ServletRegistrationBean<ODataServlet>(new ODataServlet(), "/odata/v2/*");
@@ -171,6 +211,11 @@ public class DirigibleSpringConfiguration {
 		return bean;
 	}
 
+	/**
+	 * Creates the open api feature.
+	 *
+	 * @return the open api feature
+	 */
 	@Bean
 	public OpenApiFeature createOpenApiFeature() {
 		final OpenApiFeature openApiFeature = new OpenApiFeature();
@@ -192,26 +237,56 @@ public class DirigibleSpringConfiguration {
 		return openApiFeature;
 	}
 
+	/**
+	 * Gets the open api title.
+	 *
+	 * @return the open api title
+	 */
 	protected String getOpenApiTitle() {
 		return "Eclipse Dirigible - RESTful Services API";
 	}
 
+	/**
+	 * Gets the open api contact name.
+	 *
+	 * @return the open api contact name
+	 */
 	protected String getOpenApiContactName() {
 		return "Eclipse Dirigible";
 	}
 
+	/**
+	 * Gets the open api contact email.
+	 *
+	 * @return the open api contact email
+	 */
 	protected String getOpenApiContactEmail() {
 		return "dirigible-dev@eclipse.org";
 	}
 
+	/**
+	 * Gets the open api license.
+	 *
+	 * @return the open api license
+	 */
 	protected String getOpenApiLicense() {
 		return "Eclipse Public License - v 2.0";
 	}
 
+	/**
+	 * Gets the open api license url.
+	 *
+	 * @return the open api license url
+	 */
 	protected String getOpenApiLicenseUrl() {
 		return "https://www.eclipse.org/legal/epl-v20.html";
 	}
 
+	/**
+	 * Gets the open api description.
+	 *
+	 * @return the open api description
+	 */
 	protected String getOpenApiDescription() {
 		return "Eclipse Dirigible API of the core RESTful services provided by the application development platform itself";
 	}

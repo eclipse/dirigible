@@ -41,13 +41,21 @@ import java.util.List;
         @ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class ProblemsService extends AbstractRestService implements IRestService {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ProblemsService.class);
 
+    /** The processor. */
     private ProblemsProcessor processor = new ProblemsProcessor();
 
+    /** The response. */
     @Context
     private HttpServletResponse response;
 
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -79,6 +87,8 @@ public class ProblemsService extends AbstractRestService implements IRestService
     /**
      * List all the problems currently registered.
      *
+     * @param condition the condition
+     * @param limit the limit
      * @return the response
      * @throws ProblemsException the scheduler exception
      */
@@ -98,6 +108,8 @@ public class ProblemsService extends AbstractRestService implements IRestService
     /**
      * Updates the status of all selected problems.
      *
+     * @param status the status
+     * @param selectedIds the selected ids
      * @return the complete list of problems after the update
      * @throws ProblemsException the scheduler exception
      */
@@ -117,7 +129,9 @@ public class ProblemsService extends AbstractRestService implements IRestService
 
     /**
      * Deletes all problems by their status.
-     *s
+     * s
+     *
+     * @param status the status
      * @return the response
      * @throws ProblemsException the scheduler exception
      */
@@ -157,7 +171,9 @@ public class ProblemsService extends AbstractRestService implements IRestService
 
     /**
      * Deletes all selected problems.
-     *s
+     * s
+     *
+     * @param selectedIds the selected ids
      * @return the response
      * @throws ProblemsException the scheduler exception
      */
@@ -175,6 +191,11 @@ public class ProblemsService extends AbstractRestService implements IRestService
         return Response.ok().build();
     }
 
+    /**
+     * Gets the logger.
+     *
+     * @return the logger
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

@@ -13,13 +13,29 @@ package org.eclipse.dirigible.core.scheduler.api;
 
 import java.text.MessageFormat;
 
+/**
+ * The Class AbstractSynchronizationArtefactType.
+ */
 public abstract class AbstractSynchronizationArtefactType implements ISynchronizerArtefactType {
 	
+	/**
+	 * Gets the state message.
+	 *
+	 * @param state the state
+	 * @return the state message
+	 */
 	@Override
 	public String getStateMessage(ArtefactState state) {
 		return getStateMessage(state, null);
 	}
 
+	/**
+	 * Gets the state message.
+	 *
+	 * @param state the state
+	 * @param message the message
+	 * @return the state message
+	 */
 	@Override
 	public String getStateMessage(ArtefactState state, String message) {
 		if (message != null && !message.equals("")) {
@@ -28,6 +44,12 @@ public abstract class AbstractSynchronizationArtefactType implements ISynchroniz
 		return getArtefactStateMessage(state);
 	}
 
+	/**
+	 * Gets the artefact state message.
+	 *
+	 * @param state the state
+	 * @return the artefact state message
+	 */
 	protected abstract String getArtefactStateMessage(ArtefactState state);
 
 }

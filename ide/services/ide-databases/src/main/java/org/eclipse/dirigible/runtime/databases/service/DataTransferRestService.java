@@ -53,16 +53,20 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class DataTransferRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataTransferRestService.class);
 
+	/** The processor. */
 	private DatabaseProcessor processor = new DatabaseProcessor();
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 	
 	/**
 	 * Request data transfer.
 	 *
+	 * @param definition the definition
 	 * @return the response
 	 * @throws DataTransferException in case of error
 	 * 
@@ -77,10 +81,10 @@ public class DataTransferRestService extends AbstractRestService implements IRes
 	 *         "type": "defined",
 	 *         "name": "MyDB"
 	 *     },
- 	 *    "configuration": {
- 	 *        "sourceSchema": "PUBLIC",
+	 *    "configuration": {
+	 *        "sourceSchema": "PUBLIC",
 	 *         "targetSchema": "PUBLIC"
- 	 *    }
+	 *    }
 	 * }
 	 */
 	@GET
@@ -115,6 +119,11 @@ public class DataTransferRestService extends AbstractRestService implements IRes
 		return Response.ok(stream).build();
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -124,6 +133,11 @@ public class DataTransferRestService extends AbstractRestService implements IRes
 		return DataTransferRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

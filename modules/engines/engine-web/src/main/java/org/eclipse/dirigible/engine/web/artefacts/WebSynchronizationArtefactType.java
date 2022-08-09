@@ -13,13 +13,27 @@ package org.eclipse.dirigible.engine.web.artefacts;
 
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizationArtefactType;
 
+/**
+ * The Class WebSynchronizationArtefactType.
+ */
 public class WebSynchronizationArtefactType extends AbstractSynchronizationArtefactType {
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	@Override
 	public String getId() {
 		return "Web";
 	}
 
+	/**
+	 * Gets the artefact state message.
+	 *
+	 * @param state the state
+	 * @return the artefact state message
+	 */
 	@Override
 	protected String getArtefactStateMessage(ArtefactState state) {
 		switch (state) {

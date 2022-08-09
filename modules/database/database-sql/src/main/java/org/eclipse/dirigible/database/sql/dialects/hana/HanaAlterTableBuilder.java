@@ -18,19 +18,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * The Class HanaAlterTableBuilder.
+ */
 public class HanaAlterTableBuilder extends AlterTableBuilder {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(HanaAlterTableBuilder.class);
+    
     /**
      * Instantiates a new creates the table builder.
      *
      * @param dialect the dialect
-     * @param table
+     * @param table the table
      */
     public HanaAlterTableBuilder(ISqlDialect dialect, String table) {
         super(dialect, table);
     }
 
+    /**
+     * Generate columns.
+     *
+     * @param sql the sql
+     */
     @Override
     protected void generateColumns(StringBuilder sql) {
         if (!this.getColumns().isEmpty()) {
@@ -38,6 +48,11 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
         }
     }
 
+    /**
+     * Generate columns for alter.
+     *
+     * @param sql the sql
+     */
     @Override
     protected void generateColumnsForAlter(StringBuilder sql) {
         if (!this.getColumns().isEmpty()) {
@@ -45,6 +60,11 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
         }
     }
 
+    /**
+     * Traverse column names for drop.
+     *
+     * @return the string
+     */
     @Override
     protected String traverseColumnNamesForDrop() {
         StringBuilder snippet = new StringBuilder();
@@ -57,6 +77,11 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
         return snippet.substring(0, snippet.length() - 2);
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     @Override
     public String generate() {
 
@@ -101,6 +126,11 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
         return generated;
     }
 
+    /**
+     * Generate unique indices.
+     *
+     * @param sql the sql
+     */
     @Override
     protected void generateUniqueIndices(StringBuilder sql) {
         for (CreateTableUniqueIndexBuilder uniqueIndex : this.getUniqueIndices()) {
@@ -112,6 +142,13 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
             sql.append(SEMICOLON);
         }
     }
+    
+    /**
+     * Generate unique index.
+     *
+     * @param sql the sql
+     * @param uniqueIndex the unique index
+     */
     @Override
     protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
         if (uniqueIndex != null) {

@@ -23,13 +23,22 @@ import org.slf4j.LoggerFactory;
 /**
  * This class handles the initialization of all modules and all REST API
  * resources.
+ *
+ * @see DirigibleServletContextEvent
  */
 public class DirigibleServletContextListener implements ServletContextListener {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleServletContextListener.class);
 
+	/** The initializer. */
 	private static DirigibleInitializer initializer = new DirigibleInitializer();
 
+	/**
+	 * Context initialized.
+	 *
+	 * @param servletContextEvent the servlet context event
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
@@ -48,6 +57,11 @@ public class DirigibleServletContextListener implements ServletContextListener {
 		return initializer.getServices();
 	}
 
+	/**
+	 * Context destroyed.
+	 *
+	 * @param servletContextEvent the servlet context event
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)

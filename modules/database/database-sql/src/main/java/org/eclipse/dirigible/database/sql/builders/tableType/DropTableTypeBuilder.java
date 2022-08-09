@@ -14,6 +14,9 @@ package org.eclipse.dirigible.database.sql.builders.tableType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractDropSqlBuilder;
 
+/**
+ * The Class DropTableTypeBuilder.
+ */
 public class DropTableTypeBuilder extends AbstractDropSqlBuilder {
 
     /**
@@ -28,6 +31,11 @@ public class DropTableTypeBuilder extends AbstractDropSqlBuilder {
         super(dialect);
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     @Override
     public String generate() {
         throw new IllegalStateException("Table type is not supported for this dialect");

@@ -11,12 +11,23 @@
  */
 package org.eclipse.dirigible.runtime.operations.service;
 
+/**
+ * The Class LogInfo.
+ */
 public class LogInfo {
 	
+	/** The name. */
 	private String name;
 	
+	/** The severity. */
 	private String severity;
 
+	/**
+	 * Instantiates a new log info.
+	 *
+	 * @param name the name
+	 * @param severity the severity
+	 */
 	public LogInfo(String name, String severity) {
 		super();
 		this.name = name;
@@ -24,6 +35,8 @@ public class LogInfo {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -31,6 +44,8 @@ public class LogInfo {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -38,6 +53,8 @@ public class LogInfo {
 	}
 
 	/**
+	 * Gets the severity.
+	 *
 	 * @return the severity
 	 */
 	public String getSeverity() {
@@ -45,6 +62,8 @@ public class LogInfo {
 	}
 
 	/**
+	 * Sets the severity.
+	 *
 	 * @param severity the severity to set
 	 */
 	public void setSeverity(String severity) {

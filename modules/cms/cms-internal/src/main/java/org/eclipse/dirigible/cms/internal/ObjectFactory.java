@@ -13,15 +13,33 @@ package org.eclipse.dirigible.cms.internal;
 
 import java.io.InputStream;
 
+/**
+ * A factory for creating Object objects.
+ */
 public class ObjectFactory {
 
+	/** The session. */
 	private CmisSession session;
 
+	/**
+	 * Instantiates a new object factory.
+	 *
+	 * @param session the session
+	 */
 	public ObjectFactory(CmisSession session) {
 		super();
 		this.session = session;
 	}
 
+	/**
+	 * Creates a new Object object.
+	 *
+	 * @param filename the filename
+	 * @param length the length
+	 * @param mimetype the mimetype
+	 * @param inputStream the input stream
+	 * @return the content stream
+	 */
 	public ContentStream createContentStream(String filename, long length, String mimetype, InputStream inputStream) {
 		return new ContentStream(this.session, filename, length, mimetype, inputStream);
 	}

@@ -30,10 +30,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Custom Database
+ * The Custom Database.
  */
 public class CustomDatabase extends AbstractDatabase {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomDatabase.class);
 
 	/** The Constant NAME. */
@@ -42,10 +43,11 @@ public class CustomDatabase extends AbstractDatabase {
 	/** The Constant TYPE. */
 	public static final String TYPE = "custom";
 
+	/** The Constant DATASOURCES. */
 	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
 
 	/**
-	 * The default constructor
+	 * The default constructor.
 	 */
 	public CustomDatabase() {
 		LOGGER.debug("Initializing the custom datasources...");
@@ -55,6 +57,9 @@ public class CustomDatabase extends AbstractDatabase {
 		LOGGER.debug("Custom datasources initialized.");
 	}
 
+	/**
+	 * Initialize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#initialize()
@@ -79,6 +84,12 @@ public class CustomDatabase extends AbstractDatabase {
 
 	
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @param name the name
+	 * @return the data source
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
@@ -128,6 +139,12 @@ public class CustomDatabase extends AbstractDatabase {
 		throw new IllegalArgumentException("Invalid configuration for the custom datasource: " + name);
 	}
 
+	/**
+	 * Gets the hikari properties.
+	 *
+	 * @param databaseName the database name
+	 * @return the hikari properties
+	 */
 	private Map<String, String> getHikariProperties(String databaseName) {
 		Map<String, String> properties = new HashMap<>();
 		String hikariDelimiter = "_HIKARI_";
@@ -139,6 +156,11 @@ public class CustomDatabase extends AbstractDatabase {
 		return properties;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getName()
@@ -148,6 +170,11 @@ public class CustomDatabase extends AbstractDatabase {
 		return NAME;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getType()
@@ -157,6 +184,11 @@ public class CustomDatabase extends AbstractDatabase {
 		return TYPE;
 	}
 
+	/**
+	 * Gets the data sources.
+	 *
+	 * @return the data sources
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSources()

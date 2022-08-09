@@ -25,8 +25,10 @@ import org.slf4j.LoggerFactory;
  */
 public class EngineExecutorFactory {
 
+	/** The Constant ENGINE_EXECUTORS. */
 	private static final ServiceLoader<IEngineExecutor> ENGINE_EXECUTORS = ServiceLoader.load(IEngineExecutor.class);
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(EngineExecutorFactory.class);
 
 	/**
@@ -51,6 +53,11 @@ public class EngineExecutorFactory {
 		return null;
 	}
 	
+	/**
+	 * Gets the engines types.
+	 *
+	 * @return the engines types
+	 */
 	public static Set<String> getEnginesTypes() {
 		Set<String> engineTypes = new HashSet<String>();
 		for (IEngineExecutor next : ENGINE_EXECUTORS) {
@@ -59,6 +66,11 @@ public class EngineExecutorFactory {
 		return engineTypes;
 	}
 	
+	/**
+	 * Gets the engines names.
+	 *
+	 * @return the engines names
+	 */
 	public static Set<String> getEnginesNames() {
 		Set<String> engineTypes = new HashSet<String>();
 		for (IEngineExecutor next : ENGINE_EXECUTORS) {

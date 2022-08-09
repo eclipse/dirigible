@@ -21,6 +21,7 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  */
 public class HanaNextValueSequenceBuilder extends NextValueSequenceBuilder {
 
+	/** The Constant PATTERN_SELECT_NEXT_VAL_SEQUENCE. */
 	private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = "SELECT {0}.NEXTVAL FROM DUMMY";
 
 	/**
@@ -35,6 +36,11 @@ public class HanaNextValueSequenceBuilder extends NextValueSequenceBuilder {
 		super(dialect, sequence);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()

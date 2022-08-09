@@ -14,7 +14,6 @@ package org.eclipse.dirigible.engine.web.synchronizer;
 import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
-import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.engine.web.api.IWebCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +23,18 @@ import org.slf4j.LoggerFactory;
  */
 public class WebClasspathContentHandler extends AbstractClasspathContentHandler {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WebClasspathContentHandler.class);
 
+	/** The web synchronizer. */
 	private WebSynchronizer webSynchronizer = new WebSynchronizer();
 
+	/**
+	 * Checks if is valid.
+	 *
+	 * @param path the path
+	 * @return true, if is valid
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#isValid(java.lang.String)
@@ -46,6 +53,11 @@ public class WebClasspathContentHandler extends AbstractClasspathContentHandler 
 		return false;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#getLogger()

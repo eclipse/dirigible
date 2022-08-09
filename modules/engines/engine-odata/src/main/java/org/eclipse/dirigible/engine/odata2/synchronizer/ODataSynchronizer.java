@@ -50,37 +50,54 @@ import static java.text.MessageFormat.format;
  */
 public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedSynchronizerContribution {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ODataSynchronizer.class);
 
+	/** The Constant SCHEMAS_PREDELIVERED. */
 	private static final Map<String, ODataSchemaDefinition> SCHEMAS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<>());
 
+	/** The Constant MAPPINGS_PREDELIVERED. */
 	private static final Map<String, ODataMappingDefinition> MAPPINGS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<>());
 	
+	/** The Constant ODATA_PREDELIVERED. */
 	private static final Map<String, ODataDefinition> ODATA_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<>());
 
+	/** The Constant SCHEMAS_SYNCHRONIZED. */
 	private static final List<String> SCHEMAS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
 
+	/** The Constant MAPPINGS_SYNCHRONIZED. */
 	private static final List<String> MAPPINGS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
 	
+	/** The Constant ODATA_SYNCHRONIZED. */
 	private static final List<String> ODATA_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
 	
+	/** The Constant ODATA_MODELS. */
 	private static final Map<String, ODataDefinition> ODATA_MODELS = new LinkedHashMap<>();
 
+	/** The odata core service. */
 	private ODataCoreService odataCoreService = new ODataCoreService();
 	
+	/** The odata 2 O data M transformer. */
 	private OData2ODataMTransformer odata2ODataMTransformer = new OData2ODataMTransformer();
 
+	/** The odata 2 O data X transformer. */
 	private OData2ODataXTransformer odata2ODataXTransformer = new OData2ODataXTransformer(new DefaultTableMetadataProvider());
 	
+	/** The odata 2 O data H transformer. */
 	private OData2ODataHTransformer odata2ODataHTransformer = new OData2ODataHTransformer();
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant ODATA_ARTEFACT. */
 	private static final ODataSynchronizationArtefactType ODATA_ARTEFACT = new ODataSynchronizationArtefactType();
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -191,18 +208,33 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		ODATA_PREDELIVERED.put(contentPath, model);
 	}
 
+	/**
+	 * Load resource content.
+	 *
+	 * @param modelPath the model path
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private String loadResourceContent(String modelPath) throws IOException {
 		try (InputStream in = ODataSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + modelPath)) {
 			return IOUtils.toString(in, StandardCharsets.UTF_8);
 		}
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		SCHEMAS_SYNCHRONIZED.clear();
 		MAPPINGS_SYNCHRONIZED.clear();
 		ODATA_MODELS.clear();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered OData Schemas and Mappings...");
 		// Schemas
@@ -224,6 +256,12 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		logger.trace("Done synchronizing predelivered OData Schemas and Mappings.");
 	}
 
+	/**
+	 * Synchronize schema.
+	 *
+	 * @param schemaDefinition the schema definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeSchema(ODataSchemaDefinition schemaDefinition) throws SynchronizationException {
 		try {
 			if (!odataCoreService.existsSchema(schemaDefinition.getLocation())) {
@@ -242,6 +280,12 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		}
 	}
 
+	/**
+	 * Synchronize mapping.
+	 *
+	 * @param mappingDefinition the mapping definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeMapping(ODataMappingDefinition mappingDefinition) throws SynchronizationException {
 		try {
 			if (!odataCoreService.existsMapping(mappingDefinition.getLocation())) {
@@ -288,6 +332,11 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -301,6 +350,12 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		logger.trace("Done synchronizing OData Schemas and Mappings from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -344,6 +399,11 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		}
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
@@ -394,6 +454,11 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 	}
 	
 	
+	/**
+	 * Update O data.
+	 *
+	 * @throws ODataException the o data exception
+	 */
 	private void updateOData() throws ODataException {
 		// Update OData
 		
@@ -459,14 +524,35 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		
 	}
 
+	/**
+	 * Generate O data X.
+	 *
+	 * @param model the model
+	 * @return the string[]
+	 * @throws SQLException the SQL exception
+	 */
 	private String[] generateODataX(ODataDefinition model) throws SQLException {
 		return odata2ODataXTransformer.transform(model);
 	}
 	
+	/**
+	 * Generate O data ms.
+	 *
+	 * @param model the model
+	 * @return the string[]
+	 * @throws SQLException the SQL exception
+	 */
 	private String[] generateODataMs(ODataDefinition model) throws SQLException {
 		return odata2ODataMTransformer.transform(model);
 	}
 	
+	/**
+	 * Generate O data hs.
+	 *
+	 * @param model the model
+	 * @return the list
+	 * @throws SQLException the SQL exception
+	 */
 	private List<ODataHandlerDefinition> generateODataHs(ODataDefinition model) throws SQLException {
 		return odata2ODataHTransformer.transform(model);
 	}
@@ -488,6 +574,11 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		return buff.toString();
 	}
 
+	/**
+	 * Gets the priority.
+	 *
+	 * @return the priority
+	 */
 	@Override
 	public int getPriority() {
 		return 500;
