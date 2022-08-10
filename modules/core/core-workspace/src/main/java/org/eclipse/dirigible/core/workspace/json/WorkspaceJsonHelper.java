@@ -81,20 +81,20 @@ public class WorkspaceJsonHelper {
 		return workspacePojo;
 	}
 
-//	/**
-//	 * Describe project.
-//	 *
-//	 * @param collection
-//	 *            the collection
-//	 * @param removePathPrefix
-//	 *            the remove path prefix
-//	 * @param addPathPrefix
-//	 *            the add path prefix
-//	 * @return the project descriptor
-//	 */
-//	public static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix) {
-//		return describeProject(collection, removePathPrefix, addPathPrefix, new HashMap<String, ProjectStatus>());
-//	}
+	/**
+	 * Describe project.
+	 *
+	 * @param collection
+	 *            the collection
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
+	 * @return the project descriptor
+	 */
+	public static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix) {
+		return describeProject(collection, removePathPrefix, addPathPrefix, new HashMap<String, ProjectStatus>());
+	}
 
 	/**
 	 * Describe project.
@@ -105,7 +105,7 @@ public class WorkspaceJsonHelper {
 	 * @param projectStatusCache the project status cache
 	 * @return the project descriptor
 	 */
-	public static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix) { //, Map<String, ProjectStatus> projectStatusCache
+	public static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix, Map<String, ProjectStatus> projectStatusCache) {
 		ProjectDescriptor projectPojo = new ProjectDescriptor();
 		projectPojo.setName(collection.getName());
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
