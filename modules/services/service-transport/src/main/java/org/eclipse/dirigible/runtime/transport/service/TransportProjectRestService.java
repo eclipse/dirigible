@@ -11,29 +11,36 @@
  */
 package org.eclipse.dirigible.runtime.transport.service;
 
-import java.io.UnsupportedEncodingException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.io.IOUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryExportException;
 import org.eclipse.dirigible.repository.api.RepositoryImportException;
 import org.eclipse.dirigible.runtime.transport.processor.TransportProcessor;
@@ -272,6 +279,51 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		SimpleDateFormat pattern = getDateFormat();
 		byte[] zip = processor.exportSnapshot();
 		return Response.ok().header("Content-Disposition",  "attachment; filename=\"repository-snapshot-" + pattern.format(new Date()) + ".zip\"").entity(zip).build();
+	}
+	
+	/**
+	 * Import file to folder.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param folder Internal folder (url encoded)
+	 * @param files the files
+	 * @return the response
+	 * @throws RepositoryExportException the repository export exception
+	 * @throws DecoderException the repository export exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@POST
+	@Path("/fileimport/{workspace}/{project}/{folder}")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Import File to Folder")
+	@ApiResponses({ @ApiResponse(code = 200, message = "ZIP imported") })
+	public Response importFilesToFolder(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+								  @ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project,
+								  @ApiParam(value = "Relative path to folder (url encoded)", required = false) @PathParam("folder") String folder,
+									  @ApiParam(value = "The file(s) containing the artifacts", required = true) @Multipart("file") List<Attachment> files) throws RepositoryExportException, DecoderException, IOException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		String relativePath;
+		if (folder == null || folder.isEmpty() || folder.trim().isEmpty() || folder.equals("/"))
+			relativePath = "";
+		else {
+			UrlFacade decodedFolder = new UrlFacade();
+			relativePath = decodedFolder.decode(folder, null);
+		}
+
+		TransportProcessor processor = new TransportProcessor();
+
+		for (Attachment file : files) {
+			InputStream in = file.getObject(InputStream.class);
+			byte[] bytes = IOUtils.toByteArray(in);
+			processor.importFileToPath(workspace, project, relativePath + IRepository.SEPARATOR + file.getContentDisposition().getFilename(), bytes);
+		}
+		return Response.ok().build();
 	}
 
 	/**

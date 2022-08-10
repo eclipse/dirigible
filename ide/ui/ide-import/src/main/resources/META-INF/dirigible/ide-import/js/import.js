@@ -92,10 +92,10 @@ importView.controller('ImportViewController', [
                 } else if ($scope.inDialog && $scope.importType === 'file') {
                     item.headers = {
                         'Dirigible-Editor': 'Editor',
-                        'Content-Type': 'application/octet-stream',
+                        'Content-Type': 'multipart/form-data',
                         'Content-Transfer-Encoding': 'base64'
                     };
-                    item.url = new UriBuilder().path('/services/v4/ide/workspaces'.split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).build();
+                    item.url = new UriBuilder().path(transportApi.getFileImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).build();
                 }
             }
         };

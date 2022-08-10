@@ -406,13 +406,13 @@ projectsView.controller('ProjectsViewController', [
                         divider: true,
                         data: node,
                     };
-                    // let importObj = {
-                    //     id: "import",
-                    //     label: "Import",
-                    //     icon: "sap-icon--attachment",
-                    //     divider: true,
-                    //     data: node,
-                    // };
+                    let importObj = {
+                        id: "import",
+                        label: "Import",
+                        icon: "sap-icon--attachment",
+                        divider: true,
+                        data: node,
+                    };
                     let importZipObj = {
                         id: "importZip",
                         label: "Import from zip",
@@ -443,7 +443,7 @@ projectsView.controller('ProjectsViewController', [
                             menuObj.items.push(generateObj);
                             setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path);
                         }
-                        // menuObj.items.push(importObj);
+                        menuObj.items.push(importObj);
                         menuObj.items.push(importZipObj);
                         menuObj.items.push({
                             id: "exportProject",
@@ -466,7 +466,7 @@ projectsView.controller('ProjectsViewController', [
                                 publishObj,
                                 unpublishObj,
                                 generateObj,
-                                // importObj,
+                                importObj,
                                 importZipObj,
                             ]
                         };
