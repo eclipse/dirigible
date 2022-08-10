@@ -417,7 +417,6 @@ projectsView.controller('ProjectsViewController', [
                         id: "importZip",
                         label: "Import from zip",
                         icon: "sap-icon--attachment-zip-file",
-                        divider: true,
                         data: node,
                     };
                     if (node.type === 'project') {
