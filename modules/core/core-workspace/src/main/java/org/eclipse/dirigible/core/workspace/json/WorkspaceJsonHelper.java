@@ -126,17 +126,17 @@ public class WorkspaceJsonHelper {
 		return projectPojo;
 	}
 
-//	/**
-//	 * Gets the project status.
-//	 *
-//	 * @param collection the collection
-//	 * @param projectPojo the project pojo
-//	 * @param repositoryPath the repository path
-//	 * @return the project status
-//	 */
-//	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath) {
-//		return getProjectStatus(collection, projectPojo, repositoryPath, new HashMap<String, ProjectStatus>());
-//	}
+	/**
+	 * Gets the project status.
+	 *
+	 * @param collection the collection
+	 * @param projectPojo the project pojo
+	 * @param repositoryPath the repository path
+	 * @return the project status
+	 */
+	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath) {
+		return getProjectStatus(collection, projectPojo, repositoryPath, new HashMap<String, ProjectStatus>());
+	}
 
 	/**
 	 * Gets the project status.
@@ -147,18 +147,18 @@ public class WorkspaceJsonHelper {
 	 * @param projectStatusCache the project status cache
 	 * @return the project status
 	 */
-	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath) { // , Map<String, ProjectStatus> projectStatusCache
+	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath, Map<String, ProjectStatus> projectStatusCache) {
 		Pair<Boolean, String> gitInfo = WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString());
 		projectPojo.setGit(gitInfo.getLeft());
 		projectPojo.setGitName(gitInfo.getRight());
 		ProjectStatus status = null;
-//		if (projectStatusCache.containsKey(projectPojo.getGitName())) {
-//			status = projectStatusCache.get(projectPojo.getGitName());
-//		} else 
+		if (projectStatusCache.containsKey(projectPojo.getName())) {
+			status = projectStatusCache.get(projectPojo.getName());
+		} else 
 			if (projectPojo.isGit()) {
 			for (IProjectStatusProvider statusProvider : statusProviders) {
 				status = statusProvider.getProjectStatus(collection.getParent().getName(), collection.getName());
-//				projectStatusCache.put(projectPojo.getGitName(), status);
+				projectStatusCache.put(projectPojo.getName(), status);
 				break;
 			}
 		}
