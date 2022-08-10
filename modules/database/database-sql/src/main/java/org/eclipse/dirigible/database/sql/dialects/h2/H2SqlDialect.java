@@ -301,6 +301,11 @@ public class H2SqlDialect extends
 		return FUNCTIONS;
 	}
 	
+	/**
+	 * Creates the.
+	 *
+	 * @return the h 2 create branching builder
+	 */
 	/*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()

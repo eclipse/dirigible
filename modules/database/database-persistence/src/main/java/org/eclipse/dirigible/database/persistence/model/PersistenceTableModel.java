@@ -49,6 +49,7 @@ public class PersistenceTableModel {
      * @param tableName the table name
      * @param columns the columns
      * @param relations the relations
+     * @param indices the indices
      */
     public PersistenceTableModel(String tableName, List<PersistenceTableColumnModel> columns, List<PersistenceTableRelationModel> relations, List<PersistenceTableIndexModel> indices) {
         this.tableName = tableName;

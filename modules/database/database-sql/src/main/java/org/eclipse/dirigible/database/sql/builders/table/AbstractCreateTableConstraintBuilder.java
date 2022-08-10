@@ -80,8 +80,8 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	}
 	
 	/**
-	 * Sets the columns
-	 * 
+	 * Sets the columns.
+	 *
 	 * @param columns the columns
 	 */
 	public void setColumns(Set<String> columns) {

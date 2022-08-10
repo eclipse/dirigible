@@ -41,7 +41,7 @@ public class PersistenceTableIndexModel {
 	 * Instantiates a new persistence table index model.
 	 *
 	 * @param name      the name
-	 * @param indexType the index type
+	 * @param type the type
 	 * @param unique    the unique
 	 * @param columns   the columns
 	 */

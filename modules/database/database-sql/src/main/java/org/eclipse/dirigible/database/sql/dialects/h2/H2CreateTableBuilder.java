@@ -9,15 +9,37 @@ import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class H2CreateTableBuilder.
+ */
 public class H2CreateTableBuilder extends CreateTableBuilder<H2CreateTableBuilder> {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(H2CreateTableBuilder.class);
 
+	/**
+	 * Instantiates a new h 2 create table builder.
+	 *
+	 * @param dialect the dialect
+	 * @param table the table
+	 */
 	public H2CreateTableBuilder(ISqlDialect dialect, String table) {
 		super(dialect, table);
 	}
 
+	/**
+	 * Column.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param isPrimaryKey the is primary key
+	 * @param isNullable the is nullable
+	 * @param isUnique the is unique
+	 * @param isIdentity the is identity
+	 * @param isFuzzyIndexEnabled the is fuzzy index enabled
+	 * @param args the args
+	 * @return the h 2 create table builder
+	 */
 	public H2CreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable,
 			Boolean isUnique, Boolean isIdentity, Boolean isFuzzyIndexEnabled, String... args) {
 		logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: "

@@ -247,13 +247,13 @@ public class DatabaseMetadataUtil {
     }
     
     /**
-     * Add indices
-     * 
+     * Add indices.
+     *
      * @param databaseMetadata the database metadata
      * @param connection the connection
      * @param tableMetadata the table metadata
      * @param schema the schema name
-     * @throws SQLException 
+     * @throws SQLException the SQL exception
      */
     public static void addIndices(DatabaseMetaData databaseMetadata, Connection connection,
 			PersistenceTableModel tableMetadata, String schema) throws SQLException {
