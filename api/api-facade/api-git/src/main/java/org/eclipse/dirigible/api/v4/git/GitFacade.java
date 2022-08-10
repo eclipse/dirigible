@@ -168,8 +168,8 @@ public class GitFacade implements IScriptingFacade {
      */
     public static void deleteRepository(String workspaceName, String repositoryName) throws GitConnectorException {
         try {
-
-            File gitRepository = GitFileUtils.getGitDirectoryByRepositoryName(workspaceName, repositoryName);
+        	String user = UserFacade.getName();
+            File gitRepository = GitFileUtils.getGitDirectory(user, workspaceName, repositoryName);
             if (gitRepository == null) {
                 throw new RefNotFoundException("Repository not found");
             }
