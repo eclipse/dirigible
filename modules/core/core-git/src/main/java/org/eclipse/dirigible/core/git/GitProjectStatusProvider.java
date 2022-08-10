@@ -11,7 +11,11 @@
  */
 package org.eclipse.dirigible.core.git;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.eclipse.dirigible.core.git.command.StatusCommand;
+import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.workspace.api.IProjectStatusProvider;
 import org.eclipse.dirigible.core.workspace.api.ProjectStatus;
 import org.slf4j.Logger;
@@ -41,6 +45,13 @@ public class GitProjectStatusProvider implements IProjectStatusProvider {
 			logger.error(e.getMessage(), e);
 		}
 		return null;
+	}
+
+	@Override
+	public String getProjectGitFolder(String workspace, String project) throws IOException {
+		File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project).getCanonicalFile();
+		String git = gitDirectory.getCanonicalPath() + File.separator;
+		return git;
 	}
 
 }

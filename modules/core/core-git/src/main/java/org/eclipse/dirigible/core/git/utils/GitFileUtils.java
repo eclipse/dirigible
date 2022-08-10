@@ -400,7 +400,7 @@ public class GitFileUtils {
 	 * @return the directory
 	 */
 	public static File getGitDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
-		File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName);
+		File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName + IRepository.SEPARATOR + repositoryName);
 		if (gitDirectoryByRepositoryName == null) {
 			return getGitDeepDirectoryByRepositoryName(UserFacade.getName(), workspace, repositoryName);
 		}

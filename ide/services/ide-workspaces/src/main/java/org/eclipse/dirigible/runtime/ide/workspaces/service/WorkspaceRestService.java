@@ -231,7 +231,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		if (!projectObject.exists()) {
 			return createErrorResponseNotFound(project);
 		}
-		return Response.ok().entity(processor.renderProjectTree(projectObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		return Response.ok().entity(processor.renderProjectTree(workspace, projectObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
 	/**
@@ -269,7 +269,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		if (!projectObject.exists()) {
 			return createErrorResponseNotFound(project);
 		}
-		return Response.created(processor.getURI(workspace, project, null)).entity(processor.renderProjectTree(projectObject))
+		return Response.created(processor.getURI(workspace, project, null)).entity(processor.renderProjectTree(workspace, projectObject))
 				.type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
@@ -347,11 +347,11 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 			if (!folder.exists()) {
 				return createErrorResponseNotFound(path);
 			}
-			return Response.ok().entity(processor.renderFolderTree(folder)).type(ContentTypeHelper.APPLICATION_JSON).build();
+			return Response.ok().entity(processor.renderFolderTree(workspace, folder)).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}
 		String headerContentType = request.getHeader("describe");
 		if ((headerContentType != null) && ContentTypeHelper.APPLICATION_JSON.equals(headerContentType)) {
-			return Response.ok().entity(processor.renderFileDescription(file)).type(ContentTypeHelper.APPLICATION_JSON).build();
+			return Response.ok().entity(processor.renderFileDescription(workspace, file)).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}
 		if (file.isBinary()) {
 			return Response.ok().entity(file.getContent()).type(file.getContentType()).build();

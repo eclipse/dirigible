@@ -13,11 +13,13 @@ package org.eclipse.dirigible.core.git.command;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
+import org.eclipse.dirigible.core.git.project.ProjectMetadata;
 import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.workspace.api.ProjectStatus;
@@ -76,12 +78,15 @@ public class StatusCommand {
 
 		try {
 			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project).getCanonicalFile();
+			String git = gitDirectory.getCanonicalPath() + File.separator;
+			
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 			ProjectStatus projectStatus = null;
-			try {
+			try {	
 				Status status = gitConnector.status();
 				projectStatus = new ProjectStatus(
 						project,
+						git,
 						status.getAdded(),
 						status.getChanged(),
 						status.getRemoved(),

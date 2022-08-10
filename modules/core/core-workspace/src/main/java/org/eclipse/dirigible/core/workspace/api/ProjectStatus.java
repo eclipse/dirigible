@@ -31,6 +31,9 @@ public class ProjectStatus {
 	/** The project. */
 	private String project;
 	
+	/** The git. */
+	private String git;
+	
 	/** The added. */
 	private Set<String> added;
 	
@@ -68,18 +71,19 @@ public class ProjectStatus {
 	 * @param untracked the untracked
 	 * @param untrackedFolders the untracked folders
 	 */
-	public ProjectStatus(String project, Set<String> added, Set<String> changed, Set<String> removed, Set<String> missing,
+	public ProjectStatus(String project, String git, Set<String> added, Set<String> changed, Set<String> removed, Set<String> missing,
 			Set<String> modified, Set<String> conflicting, Set<String> untracked, Set<String> untrackedFolders) {
 		super();
 		this.project = project;
-		this.added = remapFilesIfNeeded(added, project);
-		this.changed = remapFilesIfNeeded(changed, project);
-		this.removed = remapFilesIfNeeded(removed, project);
-		this.missing = remapFilesIfNeeded(missing, project);
-		this.modified = remapFilesIfNeeded(modified, project);
-		this.conflicting = remapFilesIfNeeded(conflicting, project);
-		this.untracked = remapFilesIfNeeded(untracked, project);
-		this.untrackedFolders = remapFilesIfNeeded(untrackedFolders, project);
+		this.git = git;
+		this.added = added; //remapFilesIfNeeded(added, project);
+		this.changed = changed; //remapFilesIfNeeded(changed, project);
+		this.removed = removed; //remapFilesIfNeeded(removed, project);
+		this.missing = missing; //remapFilesIfNeeded(missing, project);
+		this.modified = modified; //remapFilesIfNeeded(modified, project);
+		this.conflicting = conflicting; //remapFilesIfNeeded(conflicting, project);
+		this.untracked = untracked; //remapFilesIfNeeded(untracked, project);
+		this.untrackedFolders = untrackedFolders; //remapFilesIfNeeded(untrackedFolders, project);
 	}
 	
 	/**
@@ -89,6 +93,15 @@ public class ProjectStatus {
 	 */
 	public String getProject() {
 		return project;
+	}
+	
+	/**
+	 * Gets the git.
+	 *
+	 * @return the git
+	 */
+	public String getGit() {
+		return git;
 	}
 
 	/**
@@ -163,31 +176,31 @@ public class ProjectStatus {
 		return untrackedFolders;
 	}
 	
-	/**
-	 * Remap files if needed.
-	 *
-	 * @param originals the originals
-	 * @param project the project
-	 * @return the sets the
-	 */
-	private Set<String> remapFilesIfNeeded(Set<String> originals, String project) {
-		Set<String> result = new HashSet<String>();
-		for (String original : originals) {
-			if (original.startsWith(project)) {
-				result.add(original);
-			} else {
-				String search = DIRIGIBLE_FOLDER + project;
-				int index = original.indexOf(search);
-				if (index > 0) {
-					result.add(original.substring(index + DIRIGIBLE_FOLDER.length()));
-				} else {
-					logger.error("Wrong layout of project: " + project);
-					result.add(original);
-					
-				}
-			}
-		}
-		return result;
-	}
+//	/**
+//	 * Remap files if needed.
+//	 *
+//	 * @param originals the originals
+//	 * @param project the project
+//	 * @return the sets the
+//	 */
+//	private Set<String> remapFilesIfNeeded(Set<String> originals, String project) {
+//		Set<String> result = new HashSet<String>();
+//		for (String original : originals) {
+//			if (original.startsWith(project)) {
+//				result.add(original);
+//			} else {
+//				String search = DIRIGIBLE_FOLDER + project;
+//				int index = original.indexOf(search);
+//				if (index > 0) {
+//					result.add(original.substring(index + DIRIGIBLE_FOLDER.length()));
+//				} else {
+//					logger.error("Wrong layout of project: " + project);
+//					result.add(original);
+//					
+//				}
+//			}
+//		}
+//		return result;
+//	}
 
 }
