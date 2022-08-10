@@ -1,4 +1,12 @@
 {{- if .Values.keycloak.install }}
+{{- if .Values.keycloak.serviceAccountCreate }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ required "Missing Keycloak service account name" .Values.keycloak.serviceAccountName }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
+---  
 {{- if .Values.keycloak.database.enabled }}
 ### Keycloak Database (PostgreSQL) Enabled###
 apiVersion: v1
@@ -30,6 +38,7 @@ spec:
       labels:
         app: {{ required "Missing Keycloak name" .Values.keycloak.name }}-database
     spec:
+      serviceAccountName: {{ include "keycloak.serviceAccountName" . }}
       containers:
         - name: {{ required "Missing Keycloak name" .Values.keycloak.name }}-database
           image: {{ required "Missing Keycloak database storage" .Values.keycloak.database.image }}
@@ -90,6 +99,7 @@ spec:
       labels:
         app: {{ required "Missing Keycloak name" .Values.keycloak.name }}
     spec:
+      serviceAccountName: {{ include "keycloak.serviceAccountName" . }}
       {{- if .Values.keycloak.database.enabled }}
       initContainers:
         - name: wait-db-ready
@@ -98,12 +108,14 @@ spec:
             - sh
             - -c
             - for i in {1..15}; do echo "Waiting for database creation."; sleep 2; done;
-        # - name: check-db-ready
-        #   image: postgres:9.6.5
-        #   command:
-        #     - sh
-        #     - -c
-        #     - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database; sleep 2; done;
+        {{- if eq .Values.gke.cloudSQL false }}
+        - name: check-db-ready
+          image: postgres:9.6.5
+          command:
+            - sh
+            - -c
+            - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database; sleep 2; done;
+        {{- end }}
       {{- end }}
       containers:
         - name: {{ required "Missing Keycloak name" .Values.keycloak.name }}
@@ -122,8 +134,11 @@ spec:
             {{- else if .Values.ingress.enabled }}
             - name: KEYCLOAK_FRONTEND_URL
               value:  "http{{ if $.Values.ingress.tls }}s{{ end }}://{{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing Ingress host" .Values.ingress.host }}/auth/"
+            {{- else if .Values.istio.enabled }}
+            - name: KEYCLOAK_FRONTEND_URL
+              value:  "http{{ if $.Values.ingress.tls }}s{{ end }}://{{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing Ingress host" .Values.ingress.host }}/auth/"
             {{- end }}
-            {{- if .Values.keycloak.database.enabled }}
+            {{- if .Values.keycloak.database.enabled }}            
             - name: DB_VENDOR
               value: postgres
             - name: DB_USER
@@ -131,13 +146,48 @@ spec:
             - name: DB_PASSWORD
               value: {{ required "Missing Keycloak password" .Values.keycloak.database.password }}
             - name: DB_ADDR
-              value: {{ required "Missing Keycloak name" .Values.keycloak.name }}-database
+            {{- else if .Values.gke.cloudSQL }}
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/auth"
+            - name: DB_VENDOR
+              value: postgres
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Missing Keycloak secret" .Values.gke.secretNameKeycloak }}
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Missing Keycloak secret" .Values.gke.secretNameKeycloak }}
+                  key: password
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Missing Keycloak secret" .Values.gke.secretNameKeycloak }}
+                  key: database
+            - name: DB_ADDR
+              value: 127.0.0.1
             {{- end }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
-
+        {{- if .Values.gke.cloudSQL }}
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.28.0
+          command:
+            - "/cloud_sql_proxy"
+            - "-ip_address_types=PRIVATE"
+            - "-log_debug_stdout"
+            - "-instances={{ required "Missing GCP project id" .Values.gke.projectId }}:{{ required "Missing GCP region" .Values.gke.region }}:{{ required "Missing GCP Cloud SQL Keycloak instance name" .Values.gke.keycloakSqlInstanceName }}=tcp:5432"
+          securityContext:
+            runAsNonRoot: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+        {{- end }}
 ---
 
 apiVersion: v1
@@ -213,5 +263,73 @@ spec:
                 name: {{ required "Missing Keycloak name" .Values.keycloak.name }}
                 port: 
                   number: 8080
+---
+{{- else if .Values.istio.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ required "Missing Keycloak name" .Values.keycloak.name }}-gateway
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+  - port:
+      number: {{ required "Missing Istio server port number" .Values.istio.serversPortNumber }}
+      name: {{ required "Missing Istio server port name" .Values.istio.serversPortName }}
+      protocol: {{ required "Missing Istio server port protocol" .Values.istio.serversPortProtocol }}
+    hosts:
+    - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+    {{- if .Values.istio.httpsRedirect }}
+    tls:
+      httpsRedirect: true
+    {{- end}}
+  {{- if .Values.istio.enableHttps }}
+  - port:
+      number: 443
+      name: https-443
+      protocol: HTTPS
+    hosts:
+    -  {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+    tls:
+      mode: SIMPLE 
+      credentialName:  {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+  {{- end }}
+  {{- end }}
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ required "Missing Keycloak name" .Values.keycloak.name }}
+spec:
+  hosts:
+  - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+  - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release namespace" .Release.Namespace }}.svc.cluster.local
+  gateways:
+  - {{ required "Missing Keycloak name" .Values.keycloak.name }}-gateway
+  http:
+  - match:
+    - uri:
+        regex: /.*
+    route:
+    - destination:
+        host: {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release namespace" .Release.Namespace }}.svc.cluster.local
+        port:
+          number: 8080
+{{- if .Values.istio.enableHttps }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: keycloak
+  namespace: istio-ingress
+spec:
+  secretName: {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+  issuerRef: 
+    name: letsencrypt
+    kind: ClusterIssuer
+  commonName: {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+  dnsNames: 
+  - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
 {{- end }}
 {{- end }}
