@@ -142,7 +142,7 @@ previewView.controller('DebugPreviewController', ['$scope', 'messageHub', functi
 					url += '/js';
 					break;
 				case 'xsjs':
-					url += '/kronos';
+					url += '/xsjs';
 					break;
 				case 'md':
 					url += '/wiki';
@@ -256,8 +256,8 @@ previewView.controller('DebugPreviewController', ['$scope', 'messageHub', functi
 	// 			resourcePath = url.substring(url.indexOf('/graalvm/') + '/graalvm/'.length);
 	// 		} else if (url.indexOf('/js/') > 0) {
 	// 			resourcePath = url.substring(url.indexOf('/js/') + '/js/'.length);
-	// 		} else if (url.indexOf('/kronos/') > 0) {
-	// 			resourcePath = url.substring(url.indexOf('/kronos/') + '/kronos/'.length);
+	// 		} else if (url.indexOf('/xsjs/') > 0) {
+	// 			resourcePath = url.substring(url.indexOf('/xsjs/') + '/xsjs/'.length);
 	// 		}
 	// 		messageHub.refresh("/" + resourcePath);
 	// 	}
@@ -285,7 +285,7 @@ previewView.controller('DebugPreviewController', ['$scope', 'messageHub', functi
 	// 			url += '/graalvm';
 	// 			break;
 	// 		case 'xsjs':
-	// 			url += '/kronos';
+	// 			url += '/xsjs';
 	// 			break;
 	// 		case 'md':
 	// 			url += '/wiki';
