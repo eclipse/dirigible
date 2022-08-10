@@ -13,11 +13,14 @@ package org.eclipse.dirigible.database.sql.builders.table;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlException;
+import org.eclipse.dirigible.database.sql.TableStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,16 +36,22 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
     private static final Logger logger = LoggerFactory.getLogger(CreateTableBuilder.class);
 
     /** The primary key. */
-    private CreateTablePrimaryKeyBuilder primaryKey;
+    protected CreateTablePrimaryKeyBuilder primaryKey;
 
     /** The foreign keys. */
-    private final List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<>();
+    protected final List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<>();
 
     /** The unique indices. */
-    private final List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
+    protected final List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
 
     /** The checks. */
-    private final List<CreateTableCheckBuilder> checks = new ArrayList<>();
+    protected final List<CreateTableCheckBuilder> checks = new ArrayList<>();
+    
+    /** The indices. */
+    protected final List<CreateTableIndexBuilder> indices = new ArrayList<>();
+    
+    /** The Constant DELIMITER. */
+	public static final String STATEMENT_DELIMITER = "; ";
 
     /**
      * Instantiates a new creates the table builder.
@@ -228,60 +237,79 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      *
      * @param name    the name
      * @param isUnique    the isUnique
-     * @param order the order
-     * @param indexType the indexType
-     * @param indexColumns the indexColumns
+     * @param type the type
+     * @param columns the index columns
      * @return the creates the table builder
      */
-    public TABLE_BUILDER index(String name, Boolean isUnique, String order, String indexType, Set<String> indexColumns) {
+    public TABLE_BUILDER index(String name, Boolean isUnique, String type, Set<String> columns) {
+    	logger.trace("index: " + name + ", isUnique" + isUnique + ", type" + type + ", columns" + columns);
+    	CreateTableIndexBuilder index = new CreateTableIndexBuilder(getDialect(), name);
+    	index.setIndexType(type);
+    	index.setUnique(isUnique);
+    	index.setColumns(columns);
+    	this.indices.add(index);
         return (TABLE_BUILDER) this;
     }
 
     /**
-     * Generate.
-     *
-     * @return the string
-     */
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
-    @Override
-    public String generate() {
+	 * Generate.
+	 *
+	 * @return the string
+	 */
+	@Override
+	public String generate() {
+		TableStatements table = buildTable();
 
-        StringBuilder sql = new StringBuilder();
+		String generated = table.getCreateTableStatement();
+		if(!table.getCreateIndicesStatements().isEmpty()) {
+			String uniqueIndices = table.getCreateIndicesStatements().stream().collect(Collectors.joining(STATEMENT_DELIMITER));
+			generated = String.join(STATEMENT_DELIMITER, generated, uniqueIndices);
+		}
 
-        // CREATE
-        generateCreate(sql);
+		logger.trace("generated: " + generated);
 
-        // TABLE
-        generateTable(sql);
+		return generated;
+	}
 
-        sql.append(SPACE).append(OPEN);
+	/**
+	 * Build {@link TableStatements} object containing the SQL statements.
+	 * @return {@link TableStatements}
+	 */
+	public TableStatements buildTable(){
+		
+		StringBuilder sql = new StringBuilder();
 
-        // COLUMNS
-        generateColumns(sql);
+		// CREATE
+		generateCreate(sql);
 
-        // PRIMARY KEY
-        generatePrimaryKey(sql);
+		// TABLE
+		generateTable(sql);
 
-        // FOREIGN KEYS
-        generateForeignKeys(sql);
+		sql.append(SPACE).append(OPEN);
 
-        // UNIQUE INDICES
-        generateUniqueIndices(sql);
+		// COLUMNS
+		generateColumns(sql);
 
-        // INDICES
-        generateChecks(sql);
+		// PRIMARY KEY
+		generatePrimaryKey(sql);
 
-        sql.append(CLOSE);
+		// FOREIGN KEYS
+		generateForeignKeys(sql);
 
-        String generated = sql.toString();
+		// CHECKS
+		generateChecks(sql);
 
-        logger.trace("generated: " + generated);
+		sql.append(CLOSE);
 
-        return generated;
-    }
+		String createTableStatement = sql.toString();
+
+		// INDICES
+		Collection<String> createIndicesStatements = new HashSet<>();
+		createIndicesStatements.addAll(generateIndices());
+		createIndicesStatements.addAll(generateUniqueIndices());
+
+		return new TableStatements(createTableStatement, createIndicesStatements);
+	}
 
     /**
      * Generate primary key.
@@ -346,32 +374,48 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
     }
 
     /**
-     * Generate unique indices.
-     *
-     * @param sql the sql
-     */
-    protected void generateUniqueIndices(StringBuilder sql) {
-        for (CreateTableUniqueIndexBuilder uniqueIndex : this.uniqueIndices) {
-            generateUniqueIndex(sql, uniqueIndex);
-        }
-    }
+	 * Generate create statements for indices.
+	 *
+	 * @return Collection of create index statements
+	 */
+	protected Collection<String> generateUniqueIndices() {
+		Collection<String> indices = new HashSet<>();
+		for (CreateTableUniqueIndexBuilder uniqueIndex : this.uniqueIndices) {
+			indices.add(generateUniqueIndex(uniqueIndex));
+		}
 
-    /**
-     * Generate unique index.
-     *
-     * @param sql         the sql
-     * @param uniqueIndex the unique index
-     */
-    protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
-        if (uniqueIndex != null) {
-            sql.append(COMMA).append(SPACE);
-            if (uniqueIndex.getName() != null) {
-                String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName()) : uniqueIndex.getName();
-                sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(uniqueIndexName).append(SPACE);
-            }
-            sql.append(KEYWORD_UNIQUE).append(SPACE).append(OPEN).append(traverseNames(uniqueIndex.getColumns())).append(CLOSE);
-        }
-    }
+		return indices;
+	}
+
+
+	/**
+	 * Generate unique index.
+	 *
+	 * @param uniqueIndex the unique index
+	 * @return Create index statement
+	 */
+	protected String generateUniqueIndex(CreateTableUniqueIndexBuilder uniqueIndex) {
+		StringBuilder sql = new StringBuilder();
+		if(uniqueIndex != null){
+			sql.append(KEYWORD_CREATE).append(SPACE);
+			sql.append(KEYWORD_UNIQUE).append(SPACE);
+			if(uniqueIndex.getIndexType() != null) {
+				sql.append(uniqueIndex.getIndexType()).append(SPACE);
+			}
+			sql.append(KEYWORD_INDEX).append(SPACE);
+			if(uniqueIndex.getName() != null) {
+				sql.append(uniqueIndex.getName()).append(SPACE);
+			}
+			sql.append(KEYWORD_ON).append(SPACE).append(this.getTable());
+			sql.append(SPACE).append(OPEN).append(traverseNames(uniqueIndex.getColumns())).append(CLOSE);
+			if (uniqueIndex.getOrder() != null) {
+				sql.append(SPACE).append(uniqueIndex.getOrder());
+			}
+
+		}
+
+		return sql.toString();
+	}
 
     /**
      * Generate checks.
@@ -383,7 +427,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
             generateCheck(sql, index);
         }
     }
-
+    
     /**
      * Generate check.
      *
@@ -400,5 +444,42 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
             sql.append(KEYWORD_CHECK).append(SPACE).append(OPEN).append(check.getExpression()).append(CLOSE);
         }
     }
+    
+    /**
+	 * Generate create statements for indices.
+	 *
+	 * @return Collection of create index statements
+	 */
+	protected Collection<String> generateIndices() {
+		Collection<String> indices = new HashSet<>();
+		for (CreateTableIndexBuilder index : this.indices) {
+			indices.add(generateIndex(index));
+		}
+
+		return indices;
+	}
+
+	/**
+	 * Generate index create statement.
+	 *
+	 * @param index IndexBuilder
+	 * @return Generated statement
+	 */
+	protected String generateIndex(CreateTableIndexBuilder index) {
+		StringBuilder sql = new StringBuilder();
+		if (index != null && !index.isUnique()) {
+			sql.append(KEYWORD_CREATE).append(SPACE);
+			if(index.getIndexType() != null) {
+				sql.append(index.getIndexType()).append(SPACE);
+			}
+			sql.append(KEYWORD_INDEX).append(SPACE).append(index.getName()).append(SPACE).append(KEYWORD_ON).append(SPACE).append(this.getTable());
+			sql.append(SPACE).append(OPEN).append(traverseNames(index.getColumns())).append(CLOSE);
+			if (index.getOrder() != null) {
+				sql.append(SPACE).append(index.getOrder());
+			}
+		}
+
+		return sql.toString();
+	}
 
 }

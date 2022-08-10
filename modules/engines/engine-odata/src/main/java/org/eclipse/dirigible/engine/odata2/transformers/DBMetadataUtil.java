@@ -146,7 +146,7 @@ public class DBMetadataUtil {
      * @throws SQLException the SQL exception
      */
     public PersistenceTableModel getTableMetadata(String tableName, String schemaName) throws SQLException {
-        PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>());
+        PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         try (Connection connection = getDataSource().getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             String artifactType = getArtifactType(databaseMetadata, connection, tableName, schemaName);

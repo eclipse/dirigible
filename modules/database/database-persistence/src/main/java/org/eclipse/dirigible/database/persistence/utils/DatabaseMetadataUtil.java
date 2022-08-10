@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableIndexModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
@@ -125,7 +126,7 @@ public class DatabaseMetadataUtil {
     	if (dataSource == null) {
     		dataSource = getDataSource();
     	}
-        PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>());
+        PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             try (ResultSet rs = databaseMetadata.getTables(null, schemaName, tableName, null)) {
@@ -133,6 +134,7 @@ public class DatabaseMetadataUtil {
 		            addFields(databaseMetadata, connection, tableMetadata, schemaName);
 		            addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
 		            addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
+		            addIndices(databaseMetadata, connection, tableMetadata, schemaName);
 		            addTableType(databaseMetadata, connection, tableMetadata, schemaName);
             	} else {
             		return null;
@@ -146,7 +148,7 @@ public class DatabaseMetadataUtil {
         return tableMetadata;
     }
 
-    /**
+	/**
      * Adds the foreign keys.
      *
      * @param databaseMetadata the database metadata
@@ -169,7 +171,7 @@ public class DatabaseMetadataUtil {
             }
         }
     }
-
+    
     /**
      * Iterate foreign keys.
      *
@@ -243,6 +245,45 @@ public class DatabaseMetadataUtil {
             }
         });
     }
+    
+    /**
+     * Add indices
+     * 
+     * @param databaseMetadata the database metadata
+     * @param connection the connection
+     * @param tableMetadata the table metadata
+     * @param schema the schema name
+     * @throws SQLException 
+     */
+    public static void addIndices(DatabaseMetaData databaseMetadata, Connection connection,
+			PersistenceTableModel tableMetadata, String schema) throws SQLException {
+		
+    	try (ResultSet indexes = databaseMetadata.getIndexInfo(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()), false, true)) {
+	        String lastIndexName = "";
+	
+	        PersistenceTableIndexModel index = null;
+	
+	        while (indexes.next()) {
+	            String indexName = indexes.getString("INDEX_NAME");
+	            if (indexName == null) {
+	                continue;
+	            }
+	
+	            if (!indexName.equals(lastIndexName)) {
+	                index = new PersistenceTableIndexModel();
+	                index.setName(indexName);
+	                index.setUnique(!indexes.getBoolean("NON_UNIQUE"));
+	                tableMetadata.getIndices().add(index);
+	                lastIndexName = indexName;
+	            }
+	            if (index != null) {
+	                String columnName = indexes.getString("COLUMN_NAME");
+	                index.getColumns().add(columnName);
+	            }
+	        }
+    	}
+		
+	}
 
     /**
      * Adds the fields.

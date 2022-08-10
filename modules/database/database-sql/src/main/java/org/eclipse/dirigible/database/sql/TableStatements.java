@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * Table object containing SQL statements needed to create it.
  */
-public class Table {
+public class TableStatements {
 
   /** The create table statement. */
   private final String createTableStatement;
@@ -31,7 +31,7 @@ public class Table {
    * @param createTableStatement the create table statement
    * @param createIndicesStatements the create indices statements
    */
-  public Table(String createTableStatement, Collection<String> createIndicesStatements) {
+  public TableStatements(String createTableStatement, Collection<String> createIndicesStatements) {
     this.createTableStatement = createTableStatement;
     this.createIndicesStatements = createIndicesStatements;
   }
@@ -68,7 +68,7 @@ public class Table {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Table table = (Table) o;
+    TableStatements table = (TableStatements) o;
     return createTableStatement.equals(table.createTableStatement)
         && createIndicesStatements.equals(
         table.createIndicesStatements);

@@ -41,7 +41,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     private final String table;
 
     /** The columns. */
-    private final List<String[]> columns = new ArrayList<>();
+    protected final List<String[]> columns = new ArrayList<>();
 
     /**
      * Instantiates a new creates the table builder.
@@ -121,6 +121,19 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the table builder
      */
     public TABLE_BUILDER check(String name, String expression) {
+        throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
+    }
+    
+    /**
+     * Index.
+     *
+     * @param name the name
+     * @param isUnique whether the index is unique
+     * @param type the type
+     * @param columns the list of the columns names
+     * @return the table builder
+     */
+    public TABLE_BUILDER index(String name, Boolean isUnique, String type, Set<String> columns) {
         throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
 

@@ -78,6 +78,15 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	public Set<String> getColumns() {
 		return columns;
 	}
+	
+	/**
+	 * Sets the columns
+	 * 
+	 * @param columns the columns
+	 */
+	public void setColumns(Set<String> columns) {
+		this.columns = columns;
+	}
 
 	/**
 	 * Modifier.
