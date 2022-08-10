@@ -19,8 +19,14 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class WikiSynchronizerJob extends AbstractSynchronizerJob {
 
+	/** The wiki synchronizer. */
 	private WikiSynchronizer wikiSynchronizer = new WikiSynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -30,6 +36,11 @@ public class WikiSynchronizerJob extends AbstractSynchronizerJob {
 		return wikiSynchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return WikiSynchronizerJobDefinitionProvider.WIKI_SYNCHRONIZER_JOB;

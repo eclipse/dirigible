@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceDropSequenceProcessor.class);
 
 	/**
@@ -42,6 +43,13 @@ public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcess
 		super(entityManagerInterceptor);
 	}
 
+	/**
+	 * Generate script.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.

@@ -16,6 +16,7 @@ package org.eclipse.dirigible.core.scheduler.api;
  */
 public interface ISynchronizer {
 	
+	/** The Constant DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES. */
 	public static final String DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES = "DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES";
 
 	/**
@@ -36,15 +37,15 @@ public interface ISynchronizer {
 	public void afterSynchronizing();
 
 	/**
-	 * Set the flag whether the synchronization is forced or not
-	 * 
+	 * Set the flag whether the synchronization is forced or not.
+	 *
 	 * @param forced flag showing whether is forced or not
 	 */
 	public void setForcedSynchronization(boolean forced);
 	
 	/**
-	 * Is synchronization enabled globally
-	 * 
+	 * Is synchronization enabled globally.
+	 *
 	 * @return true if enabled
 	 */
 	public boolean isSynchronizationEnabled();

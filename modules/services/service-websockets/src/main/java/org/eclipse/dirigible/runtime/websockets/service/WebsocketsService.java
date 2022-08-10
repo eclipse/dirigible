@@ -35,8 +35,10 @@ import org.slf4j.LoggerFactory;
 @ServerEndpoint("/websockets/v4/service/{endpoint}")
 public class WebsocketsService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WebsocketsService.class);
 	
+	/** The handler. */
 	private WebsocketHandler handler = null;
 	
 	/**
@@ -129,6 +131,11 @@ public class WebsocketsService {
 		}
 	}
 	
+	/**
+	 * Gets the handler.
+	 *
+	 * @return the handler
+	 */
 	protected synchronized WebsocketHandler getHandler() {
 		if (this.handler == null) {
 			handler = (WebsocketHandler) StaticObjects.get(StaticObjects.WEBSOCKET_HANDLER);

@@ -27,14 +27,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The built-in scripting service job handler
+ * The built-in scripting service job handler.
  */
 public class JobHandler implements Job {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(JobHandler.class);
 	
+	/** The scheduler core service. */
 	private ISchedulerCoreService schedulerCoreService = new SchedulerCoreService();
 
+	/**
+	 * Execute.
+	 *
+	 * @param context the context
+	 * @throws JobExecutionException the job execution exception
+	 */
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		String name = context.getJobDetail().getKey().getName();
@@ -60,6 +68,14 @@ public class JobHandler implements Job {
 		registeredFinished(name, module, triggered);
 	}
 
+	/**
+	 * Register triggered.
+	 *
+	 * @param name the name
+	 * @param module the module
+	 * @param triggered the triggered
+	 * @return the job log definition
+	 */
 	private JobLogDefinition registerTriggered(String name, String module, JobLogDefinition triggered) {
 		try {
 			triggered = schedulerCoreService.jobTriggered(name, module);
@@ -69,6 +85,14 @@ public class JobHandler implements Job {
 		return triggered;
 	}
 	
+	/**
+	 * Registered failed.
+	 *
+	 * @param name the name
+	 * @param module the module
+	 * @param triggered the triggered
+	 * @param e the e
+	 */
 	private void registeredFailed(String name, String module, JobLogDefinition triggered, ScriptingException e) {
 		try {
 			schedulerCoreService.jobFailed(name, module, triggered.getId(), new Date(triggered.getTriggeredAt().getTime()), e.getMessage());
@@ -77,6 +101,13 @@ public class JobHandler implements Job {
 		}
 	}
 	
+	/**
+	 * Registered finished.
+	 *
+	 * @param name the name
+	 * @param module the module
+	 * @param triggered the triggered
+	 */
 	private void registeredFinished(String name, String module, JobLogDefinition triggered) {
 		try {
 			schedulerCoreService.jobFinished(name, module, triggered.getId(), new Date(triggered.getTriggeredAt().getTime()));

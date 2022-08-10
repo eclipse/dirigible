@@ -15,13 +15,17 @@ import java.util.List;
 
 import org.eclipse.dirigible.core.git.GitBranch;
 
+/**
+ * The Class GitProjectLocalBranches.
+ */
 public class GitProjectLocalBranches {
 	
+	/** The local. */
 	private List<GitBranch> local;
 	
 	/**
-	 * Getter for the local branches
-	 * 
+	 * Getter for the local branches.
+	 *
 	 * @return the local
 	 */
 	public List<GitBranch> getLocal() {
@@ -29,8 +33,8 @@ public class GitProjectLocalBranches {
 	}
 
 	/**
-	 * Setter for the local branches
-	 * 
+	 * Setter for the local branches.
+	 *
 	 * @param local the local to set
 	 */
 	public void setLocal(List<GitBranch> local) {

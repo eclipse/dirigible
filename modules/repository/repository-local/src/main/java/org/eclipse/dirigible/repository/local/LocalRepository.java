@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalRepository extends FileSystemRepository {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(LocalRepository.class);
 
 	/** The Constant TYPE. */
@@ -35,6 +36,7 @@ public class LocalRepository extends FileSystemRepository {
 	/** The Constant DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE. */
 	public static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
 	
+	/** The Constant lastModified. */
 	private static final AtomicLong lastModified = new AtomicLong(0);
 
 	/**
@@ -75,6 +77,9 @@ public class LocalRepository extends FileSystemRepository {
 		lastModified.set(System.currentTimeMillis());
 	}
 
+	/**
+	 * Initialize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
@@ -85,11 +90,21 @@ public class LocalRepository extends FileSystemRepository {
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
 	
+	/**
+	 * Gets the last modified.
+	 *
+	 * @return the last modified
+	 */
 	@Override
 	public long getLastModified() {
 		return lastModified.get();
 	}
 	
+	/**
+	 * Sets the last modified.
+	 *
+	 * @param time the new last modified
+	 */
 	void setLastModified(long time) {
 		lastModified.set(time);
 	}

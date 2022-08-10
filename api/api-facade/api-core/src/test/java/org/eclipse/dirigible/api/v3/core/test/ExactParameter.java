@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.api.v3.core.test;
 
+/**
+ * The Class ExactParameter.
+ */
 public class ExactParameter {
 
 }

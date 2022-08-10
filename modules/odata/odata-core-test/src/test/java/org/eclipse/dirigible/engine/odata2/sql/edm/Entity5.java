@@ -17,20 +17,27 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multipl
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Class Entity5.
+ */
 @EdmEntityType
 @EdmEntitySet(name = "Entities5")
 public class Entity5 {
 
+    /** The id 5. */
     @EdmKey
     @EdmProperty
     private Long id5;
 
+    /** The fk id 4 1. */
     @EdmProperty
     private Long fk_id4_1;
 
+    /** The fk id 4 2. */
     @EdmProperty
     private Long fk_id4_2;
 
+    /** The entity 4. */
     @EdmNavigationProperty(toMultiplicity = Multiplicity.ZERO_OR_ONE, toType = Entity4.class, association = "Entities4OfEntity5")
     private Entity4 entity4;
 }

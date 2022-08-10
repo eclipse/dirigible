@@ -19,8 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The Class ODataMetadataUtil.
+ */
 public class ODataMetadataUtil {
 
+    /**
+     * Gets the entity.
+     *
+     * @param model the model
+     * @param name the name
+     * @param navigation the navigation
+     * @return the entity
+     */
     public static ODataEntityDefinition getEntity(ODataDefinition model, String name, String navigation) {
         for (ODataEntityDefinition entity : model.getEntities()) {
             if (name.equals(entity.getName())) {
@@ -30,6 +41,13 @@ public class ODataMetadataUtil {
         throw new IllegalArgumentException(String.format("There is no entity with name: %s, referenced by the navigation: %s", name, navigation));
     }
 
+    /**
+     * Gets the entity by table name.
+     *
+     * @param model the model
+     * @param tableName the table name
+     * @return the entity by table name
+     */
     public static ODataEntityDefinition getEntityByTableName(ODataDefinition model, String tableName) {
         for (ODataEntityDefinition entity : model.getEntities()) {
             if (tableName.equals(entity.getTable())) {
@@ -39,6 +57,13 @@ public class ODataMetadataUtil {
         throw new IllegalArgumentException(String.format("There is no table with name: %s defined in the model", tableName));
     }
 
+    /**
+     * Gets the table name by entity.
+     *
+     * @param model the model
+     * @param entityName the entity name
+     * @return the table name by entity
+     */
     public static String getTableNameByEntity(ODataDefinition model, String entityName) {
         for (ODataEntityDefinition entity : model.getEntities()) {
             if (entityName.equals(entity.getName())) {
@@ -48,6 +73,14 @@ public class ODataMetadataUtil {
         throw new IllegalArgumentException(String.format("There is no entity with name: %s defined in the model", entityName));
     }
     
+    /**
+     * Gets the entity property column by property name.
+     *
+     * @param model the model
+     * @param entityName the entity name
+     * @param propertyName the property name
+     * @return the entity property column by property name
+     */
     public static String getEntityPropertyColumnByPropertyName(ODataDefinition model, String entityName, String propertyName) {
         for (ODataEntityDefinition entity : model.getEntities()) {
             if (entityName.equals(entity.getName())) {
@@ -65,6 +98,14 @@ public class ODataMetadataUtil {
         throw new IllegalArgumentException(String.format("There is no entity with name: %s and property with name: %s defined in the model", entityName, propertyName));
     }
 
+    /**
+     * Gets the association.
+     *
+     * @param model the model
+     * @param name the name
+     * @param navigation the navigation
+     * @return the association
+     */
     public static ODataAssociationDefinition getAssociation(ODataDefinition model, String name, String navigation) {
         for (ODataAssociationDefinition association : model.getAssociations()) {
             if (name.equals(association.getName())) {
@@ -74,6 +115,11 @@ public class ODataMetadataUtil {
         throw new IllegalArgumentException(String.format("There is no association with name: %s, referenced by the navigation: %s", name, navigation));
     }
 
+    /**
+     * Validate multiplicity.
+     *
+     * @param actualValue the actual value
+     */
     public static void validateMultiplicity(String actualValue) {
         try {
             EdmMultiplicity.fromLiteral(actualValue);
@@ -82,6 +128,12 @@ public class ODataMetadataUtil {
         }
     }
 
+    /**
+     * Validate handler definition types.
+     *
+     * @param actualValue the actual value
+     * @param entityName the entity name
+     */
     public static void validateHandlerDefinitionTypes(String actualValue, String entityName) {
         try {
             ODataHandlerTypes.fromValue(actualValue);
@@ -90,6 +142,12 @@ public class ODataMetadataUtil {
         }
     }
 
+    /**
+     * Validate handler definition method.
+     *
+     * @param actualValue the actual value
+     * @param entityName the entity name
+     */
     public static void validateHandlerDefinitionMethod(String actualValue, String entityName) {
         try {
             ODataHandlerMethods.fromValue(actualValue);
@@ -99,14 +157,11 @@ public class ODataMetadataUtil {
     }
 
     /**
-     * Check if the provided ODataProperty column is the same as the one defined in the DB for the given entity
+     * Check if the provided ODataProperty column is the same as the one defined in the DB for the given entity.
      *
-     * @param dbColumnNames
-     *          db artifact column name
-     * @param entityProperties
-     *          list of entity properties
-     * @param entityName
-     *           name of entity
+     * @param dbColumnNames          db artifact column name
+     * @param entityProperties          list of entity properties
+     * @param entityName           name of entity
      */
     public static void validateODataPropertyName(List<PersistenceTableColumnModel> dbColumnNames, List<ODataProperty> entityProperties, String entityName) {
         if (!entityProperties.isEmpty()) {

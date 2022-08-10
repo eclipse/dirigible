@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableIndexModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
@@ -30,27 +31,58 @@ import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import com.google.common.base.CaseFormat;
 
 
+/**
+ * The Class DatabaseMetadataUtil.
+ */
 public class DatabaseMetadataUtil {
 
+    /** The Constant DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE. */
     public static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";
 
+    /** The Constant IS_CASE_SENSETIVE. */
     private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
+    /** The data source. */
     private DataSource dataSource = null;
 
+    /** The Constant JDBC_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_COLUMN_NAME_PROPERTY = "COLUMN_NAME";
+    
+    /** The Constant JDBC_COLUMN_TYPE_PROPERTY. */
     public static final String JDBC_COLUMN_TYPE_PROPERTY = "TYPE_NAME";
+    
+    /** The Constant JDBC_COLUMN_NULLABLE_PROPERTY. */
     public static final String JDBC_COLUMN_NULLABLE_PROPERTY = "NULLABLE";
+    
+    /** The Constant JDBC_COLUMN_SIZE_PROPERTY. */
     public static final String JDBC_COLUMN_SIZE_PROPERTY = "COLUMN_SIZE";
+    
+    /** The Constant JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY. */
     public static final String JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY = "DECIMAL_DIGITS";
     
+    /** The Constant JDBC_FK_TABLE_NAME_PROPERTY. */
     public static final String JDBC_FK_TABLE_NAME_PROPERTY = "FKTABLE_NAME";
+    
+    /** The Constant JDBC_FK_NAME_PROPERTY. */
     public static final String JDBC_FK_NAME_PROPERTY = "FK_NAME";
+    
+    /** The Constant JDBC_PK_NAME_PROPERTY. */
     public static final String JDBC_PK_NAME_PROPERTY = "PK_NAME";
+    
+    /** The Constant JDBC_PK_TABLE_NAME_PROPERTY. */
     public static final String JDBC_PK_TABLE_NAME_PROPERTY = "PKTABLE_NAME";
+    
+    /** The Constant JDBC_FK_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_FK_COLUMN_NAME_PROPERTY = "FKCOLUMN_NAME";
+    
+    /** The Constant JDBC_PK_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_PK_COLUMN_NAME_PROPERTY = "PKCOLUMN_NAME";
     
+    /**
+     * Gets the data source.
+     *
+     * @return the data source
+     */
     protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
@@ -58,25 +90,56 @@ public class DatabaseMetadataUtil {
 		return dataSource;
 	}
     
+    /**
+     * Gets the table metadata.
+     *
+     * @param tableName the table name
+     * @return the table metadata
+     * @throws SQLException the SQL exception
+     */
     public PersistenceTableModel getTableMetadata(String tableName) throws SQLException {
         return getTableMetadata(tableName, null);
     }
     
+    /**
+     * Gets the table metadata.
+     *
+     * @param tableName the table name
+     * @param schemaName the schema name
+     * @return the table metadata
+     * @throws SQLException the SQL exception
+     */
     public PersistenceTableModel getTableMetadata(String tableName, String schemaName) throws SQLException {
     	return getTableMetadata(tableName, schemaName, null);
     }
 
+    /**
+     * Gets the table metadata.
+     *
+     * @param tableName the table name
+     * @param schemaName the schema name
+     * @param dataSource the data source
+     * @return the table metadata
+     * @throws SQLException the SQL exception
+     */
     public PersistenceTableModel getTableMetadata(String tableName, String schemaName, DataSource dataSource) throws SQLException {
     	if (dataSource == null) {
     		dataSource = getDataSource();
     	}
-        PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>());
+        PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
-            addFields(databaseMetadata, connection, tableMetadata, schemaName);
-            addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
-            addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
-            addTableType(databaseMetadata, connection, tableMetadata, schemaName);
+            try (ResultSet rs = databaseMetadata.getTables(null, schemaName, tableName, null)) {
+            	if (rs.next()) {
+		            addFields(databaseMetadata, connection, tableMetadata, schemaName);
+		            addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
+		            addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
+		            addIndices(databaseMetadata, connection, tableMetadata, schemaName);
+		            addTableType(databaseMetadata, connection, tableMetadata, schemaName);
+            	} else {
+            		return null;
+            	}
+            }
             tableMetadata.setSchemaName(schemaName);
         } catch (SQLException e) {
             throw e;
@@ -85,6 +148,15 @@ public class DatabaseMetadataUtil {
         return tableMetadata;
     }
 
+	/**
+     * Adds the foreign keys.
+     *
+     * @param databaseMetadata the database metadata
+     * @param connection the connection
+     * @param tableMetadata the table metadata
+     * @param schema the schema
+     * @throws SQLException the SQL exception
+     */
     public static void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
         ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
         if (foreignKeys.next()) {
@@ -99,7 +171,14 @@ public class DatabaseMetadataUtil {
             }
         }
     }
-
+    
+    /**
+     * Iterate foreign keys.
+     *
+     * @param tableMetadata the table metadata
+     * @param foreignKeys the foreign keys
+     * @throws SQLException the SQL exception
+     */
     private static void iterateForeignKeys(PersistenceTableModel tableMetadata, ResultSet foreignKeys)
             throws SQLException {
         do {
@@ -114,6 +193,15 @@ public class DatabaseMetadataUtil {
         } while (foreignKeys.next());
     }
 
+    /**
+     * Adds the primary keys.
+     *
+     * @param databaseMetadata the database metadata
+     * @param connection the connection
+     * @param tableMetadata the table metadata
+     * @param schema the schema
+     * @throws SQLException the SQL exception
+     */
     public static void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
         ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
         if (primaryKeys.next()) {
@@ -130,6 +218,13 @@ public class DatabaseMetadataUtil {
 
     }
 
+    /**
+     * Iterate primary keys.
+     *
+     * @param tableMetadata the table metadata
+     * @param primaryKeys the primary keys
+     * @throws SQLException the SQL exception
+     */
     private static void iteratePrimaryKeys(PersistenceTableModel tableMetadata, ResultSet primaryKeys)
             throws SQLException {
         do {
@@ -137,6 +232,12 @@ public class DatabaseMetadataUtil {
         } while (primaryKeys.next());
     }
 
+    /**
+     * Sets the column primary key.
+     *
+     * @param columnName the column name
+     * @param tableModel the table model
+     */
     public static void setColumnPrimaryKey(String columnName, PersistenceTableModel tableModel) {
         tableModel.getColumns().forEach(column -> {
             if (column.getName().equals(columnName)) {
@@ -144,7 +245,55 @@ public class DatabaseMetadataUtil {
             }
         });
     }
+    
+    /**
+     * Add indices.
+     *
+     * @param databaseMetadata the database metadata
+     * @param connection the connection
+     * @param tableMetadata the table metadata
+     * @param schema the schema name
+     * @throws SQLException the SQL exception
+     */
+    public static void addIndices(DatabaseMetaData databaseMetadata, Connection connection,
+			PersistenceTableModel tableMetadata, String schema) throws SQLException {
+		
+    	try (ResultSet indexes = databaseMetadata.getIndexInfo(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()), false, true)) {
+	        String lastIndexName = "";
+	
+	        PersistenceTableIndexModel index = null;
+	
+	        while (indexes.next()) {
+	            String indexName = indexes.getString("INDEX_NAME");
+	            if (indexName == null) {
+	                continue;
+	            }
+	
+	            if (!indexName.equals(lastIndexName)) {
+	                index = new PersistenceTableIndexModel();
+	                index.setName(indexName);
+	                index.setUnique(!indexes.getBoolean("NON_UNIQUE"));
+	                tableMetadata.getIndices().add(index);
+	                lastIndexName = indexName;
+	            }
+	            if (index != null) {
+	                String columnName = indexes.getString("COLUMN_NAME");
+	                index.getColumns().add(columnName);
+	            }
+	        }
+    	}
+		
+	}
 
+    /**
+     * Adds the fields.
+     *
+     * @param databaseMetadata the database metadata
+     * @param connection the connection
+     * @param tableMetadata the table metadata
+     * @param schemaPattern the schema pattern
+     * @throws SQLException the SQL exception
+     */
     public static void addFields(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schemaPattern) throws SQLException {
         ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
         if (columns.next()) {
@@ -161,6 +310,13 @@ public class DatabaseMetadataUtil {
 
     }
 
+    /**
+     * Iterate fields.
+     *
+     * @param tableMetadata the table metadata
+     * @param columns the columns
+     * @throws SQLException the SQL exception
+     */
     private static void iterateFields(PersistenceTableModel tableMetadata, ResultSet columns) throws SQLException {
         do {
             tableMetadata.getColumns().add(
@@ -175,10 +331,22 @@ public class DatabaseMetadataUtil {
         } while (columns.next());
     }
 
+    /**
+     * Adds the correct formatting.
+     *
+     * @param columnName the column name
+     * @return the string
+     */
     public static String addCorrectFormatting(String columnName) {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, columnName);
     }
 
+    /**
+     * Normalize table name.
+     *
+     * @param table the table
+     * @return the string
+     */
     public static String normalizeTableName(String table) {
         if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
             table = table.substring(1, table.length() - 1);
@@ -186,6 +354,15 @@ public class DatabaseMetadataUtil {
         return table;
     }
 
+    /**
+     * Adds the table type.
+     *
+     * @param databaseMetadata the database metadata
+     * @param connection the connection
+     * @param tableMetadata the table metadata
+     * @param schemaPattern the schema pattern
+     * @throws SQLException the SQL exception
+     */
     public static void addTableType(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schemaPattern) throws SQLException {
         ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
         if (tables.next()) {
@@ -201,12 +378,27 @@ public class DatabaseMetadataUtil {
         }
     }
 
+    /**
+     * Iterate tables.
+     *
+     * @param tableMetadata the table metadata
+     * @param tables the tables
+     * @throws SQLException the SQL exception
+     */
     private static void iterateTables(PersistenceTableModel tableMetadata, ResultSet tables) throws SQLException {
         do {
             tableMetadata.setTableType(tables.getString("TABLE_TYPE"));
         } while (tables.next());
     }
 
+    /**
+     * Gets the table schema.
+     *
+     * @param dataSource the data source
+     * @param tableName the table name
+     * @return the table schema
+     * @throws SQLException the SQL exception
+     */
     public static String getTableSchema(DataSource dataSource, String tableName) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
@@ -218,16 +410,29 @@ public class DatabaseMetadataUtil {
         }
     }
     
+    /**
+     * Gets the tables in schema.
+     *
+     * @param dataSource the data source
+     * @param schemaName the schema name
+     * @return the tables in schema
+     * @throws SQLException the SQL exception
+     */
     public static List<String> getTablesInSchema(DataSource dataSource, String schemaName) throws SQLException {
     	List<String> tableNames = new ArrayList<String>();
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            ResultSet rs = databaseMetaData.getTables(connection.getCatalog(), schemaName, null, new String[]{ISqlKeywords.KEYWORD_TABLE});
-            while (rs.next()) {
-            	tableNames.add(rs.getString("TABLE_NAME"));
+            ResultSet schemas = databaseMetaData.getSchemas(null, schemaName);
+            if (schemas.next()) {
+            		
+	            ResultSet rs = databaseMetaData.getTables(connection.getCatalog(), schemaName, null, new String[]{ISqlKeywords.KEYWORD_TABLE});
+	            while (rs.next()) {
+	            	tableNames.add(rs.getString("TABLE_NAME"));
+	            }
+	            return tableNames;
             }
-            return tableNames;
         }
+        return null;
     }
 
 }

@@ -22,12 +22,13 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 
 /**
- * Facade for working with I/O streams
+ * Facade for working with I/O streams.
  */
 public class StreamsFacade {
 
 	/**
-	 * Read the next byte from the provided {@link InputStream}
+	 * Read the next byte from the provided {@link InputStream}.
+	 *
 	 * @param input the input stream to read from
 	 * @return the next byte of data in the range 0-255 or -1 if end of stream is reached
 	 * @throws IOException in case of failure in underlying layer
@@ -37,7 +38,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Read the content of the provided {@link InputStream} as byte array
+	 * Read the content of the provided {@link InputStream} as byte array.
+	 *
 	 * @param input the input stream to read from
 	 * @return the input stream content
 	 * @throws IOException in case of failure in underlying layer
@@ -47,7 +49,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Read the content of the {@link InputStream} as UTF-8 text
+	 * Read the content of the {@link InputStream} as UTF-8 text.
+	 *
 	 * @param input the input stream to read from
 	 * @return the content of the stream as string
 	 * @throws IOException in case of failure in underlying layer
@@ -57,7 +60,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Close the provided {@link InputStream}
+	 * Close the provided {@link InputStream}.
+	 *
 	 * @param input the input stream to close
 	 * @throws IOException in case of failure in underlying layer
 	 */
@@ -76,7 +80,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Write data to the provided {@link OutputStream}
+	 * Write data to the provided {@link OutputStream}.
+	 *
 	 * @param output the output stream to write to
 	 * @param input the data to write
 	 * @throws IOException in case of failure in underlying layer
@@ -87,7 +92,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Write text to the provided {@link OutputStream} using UTF-8 encoding
+	 * Write text to the provided {@link OutputStream} using UTF-8 encoding.
+	 *
 	 * @param output the output stream to write to
 	 * @param value the text to write
 	 * @throws IOException in case of failure in underlying layer
@@ -97,7 +103,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Close the provided {@link OutputStream}
+	 * Close the provided {@link OutputStream}.
+	 *
 	 * @param output the output stream that is to be closed
 	 * @throws IOException in case of failure in underlying layer
 	 */
@@ -106,7 +113,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Write the {@link InputStream} content into the {@link OutputStream}
+	 * Write the {@link InputStream} content into the {@link OutputStream}.
+	 *
 	 * @param input the input stream to read from
 	 * @param output the output stream to write to
 	 * @throws IOException in case of failure in underlying layer
@@ -116,7 +124,8 @@ public class StreamsFacade {
 	}
 	
 	/**
-	 * Write the {@link InputStream} content into the {@link OutputStream}
+	 * Write the {@link InputStream} content into the {@link OutputStream}.
+	 *
 	 * @param input the input stream to read from
 	 * @param output the output stream to write to
 	 * @throws IOException in case of failure in underlying layer
@@ -126,7 +135,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Get the byte array as {@link ByteArrayInputStream}
+	 * Get the byte array as {@link ByteArrayInputStream}.
+	 *
 	 * @param input the byte array
 	 * @return the created byte array input stream
 	 * @throws IOException in case of failure in underlying layer
@@ -136,7 +146,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Get the input data as {@link ByteArrayInputStream}
+	 * Get the input data as {@link ByteArrayInputStream}.
+	 *
 	 * @param input the input data
 	 * @return the created byte array input stream
 	 * @throws IOException in case of failure in underlying layer
@@ -147,7 +158,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Create empty {@link ByteArrayInputStream}
+	 * Create empty {@link ByteArrayInputStream}.
+	 *
 	 * @return the created byte array input stream
 	 * @throws IOException in case of failure in underlying layer
 	 */
@@ -156,7 +168,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Create empty {@link ByteArrayOutputStream}
+	 * Create empty {@link ByteArrayOutputStream}.
+	 *
 	 * @return the created byte array output stream
 	 * @throws IOException in case of failure in underlying layer
 	 */
@@ -165,7 +178,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Get the {@link ByteArrayOutputStream} content as byte array
+	 * Get the {@link ByteArrayOutputStream} content as byte array.
+	 *
 	 * @param output the byte array output stream
 	 * @return the content of the byte array output stream
 	 * @throws IOException in case of failure in underlying layer
@@ -176,7 +190,8 @@ public class StreamsFacade {
 	}
 
 	/**
-	 * Get the {@link ByteArrayOutputStream} content as UTF-8 string
+	 * Get the {@link ByteArrayOutputStream} content as UTF-8 string.
+	 *
 	 * @param output the byte array output stream
 	 * @return the content of the byte array output stream
 	 * @throws IOException in case of failure in underlying layer
@@ -187,6 +202,13 @@ public class StreamsFacade {
 		return text;
 	}
 
+	/**
+	 * Gets the resource as byte array input stream.
+	 *
+	 * @param path the path
+	 * @return the resource as byte array input stream
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static final ByteArrayInputStream getResourceAsByteArrayInputStream(String path) throws IOException {
 		InputStream in = null;
 		try {

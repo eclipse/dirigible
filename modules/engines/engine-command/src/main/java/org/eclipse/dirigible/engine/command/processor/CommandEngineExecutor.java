@@ -38,10 +38,13 @@ import org.slf4j.LoggerFactory;
  */
 public class CommandEngineExecutor extends AbstractScriptExecutor implements IScriptEngineExecutor {
 	
+	/** The Constant REPOSITORY_ROOT_FOLDER. */
 	private static final String REPOSITORY_ROOT_FOLDER = "REPOSITORY_ROOT_FOLDER";
 
+	/** The Constant REPOSITORY_FILE_BASED. */
 	private static final String REPOSITORY_FILE_BASED = "REPOSITORY_FILE_BASED";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractScriptExecutor.class);
 	
 	/** The Constant ENGINE_TYPE_COMMAND. */
@@ -53,11 +56,18 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 	/** The Constant MODULE_EXT_COMMAND. */
 	public static final String MODULE_EXT_COMMAND = COMMAND_EXTENSION + "/";
 	
+	/** The Constant ENGINE_NAME. */
 	public static final String ENGINE_NAME = "Execution Command Engine";
 
+	/** The Constant DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED. */
 	private static final String DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED = "DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED";
 
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#getType()
@@ -67,6 +77,11 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		return ENGINE_TYPE;
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()
@@ -76,6 +91,14 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		return ENGINE_NAME;
 	}
 
+	/**
+	 * Execute service module.
+	 *
+	 * @param module the module
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceModule(java.lang.String,
@@ -86,6 +109,14 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		return executeService(module, executionContext, true);
 	}
 
+	/**
+	 * Execute service code.
+	 *
+	 * @param code the code
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceCode(java.lang.String,
@@ -96,16 +127,41 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		return executeService(code, executionContext, false);
 	}
 
+	/**
+	 * Eval code.
+	 *
+	 * @param code the code
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	@Override
 	public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
 		return executeService(code, executionContext, false);
 	}
 
+	/**
+	 * Eval module.
+	 *
+	 * @param module the module
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	@Override
 	public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 		return executeService(module, executionContext, true);
 	}
 
+	/**
+	 * Execute method from module.
+	 *
+	 * @param module the module
+	 * @param memberClass the member class
+	 * @param memberClassMethod the member class method
+	 * @param executionContext the execution context
+	 * @return the object
+	 */
 	@Override
 	public Object executeMethodFromModule(String module, String memberClass, String memberClassMethod, Map<Object, Object> executionContext) {
 		throw new RuntimeException(this.getClass().getSimpleName() + " does not support executing ES6 modules!");
@@ -169,6 +225,16 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		return result;
 	}
 
+	/**
+	 * Execute command line.
+	 *
+	 * @param commandLine the command line
+	 * @param forAdding the for adding
+	 * @param forRemoving the for removing
+	 * @param isFileBasedRepository the is file based repository
+	 * @return the string
+	 * @throws ScriptingException the scripting exception
+	 */
 	public String executeCommandLine(String commandLine, Map<String, String> forAdding, List<String> forRemoving, boolean isFileBasedRepository) throws ScriptingException {
 		String result;
 
@@ -231,11 +297,23 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		return result;
 	}
 
+	/**
+	 * Should log command.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean shouldLogCommand() {
 		String shouldEnableLogging = Configuration.get(DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED);
 		return Boolean.parseBoolean(shouldEnableLogging);
 	}
 
+	/**
+	 * Load source.
+	 *
+	 * @param module the module
+	 * @return the string
+	 * @throws ScriptingException the scripting exception
+	 */
 	private String loadSource(String module) throws ScriptingException {
 		
 		if (module == null) {

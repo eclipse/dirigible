@@ -30,26 +30,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * The Class WebsocketsFacade.
+ */
 public class WebsocketsFacade implements IScriptingFacade {
 	
+	/** The Constant DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_OPEN. */
 	public static final String DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_OPEN = "net/wrappers/onOpen";
+	
+	/** The Constant DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE. */
 	public static final String DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE = "net/wrappers/onMessage";
+	
+	/** The Constant DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR. */
 	public static final String DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR = "net/wrappers/onError";
+	
+	/** The Constant DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_CLOSE. */
 	public static final String DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_CLOSE = "net/wrappers/onClose";
 	
+	/** The logger. */
 	private static Logger logger = LoggerFactory.getLogger(WebsocketsFacade.class);
 	
+	/** The Constant CLIENTS. */
 	public static final List<WebsocketClient> CLIENTS = Collections.synchronizedList(new ArrayList<WebsocketClient>());
 	
 	/**
-	 * Create a new Websocket by a given URI and Handler
-	 * 
+	 * Create a new Websocket by a given URI and Handler.
+	 *
 	 * @param uri the URI
 	 * @param handler the handler
 	 * @param engine the engine type
 	 * @return the Websocket Session object
-	 * @throws IOException  in case of an error
 	 * @throws DeploymentException in case of an error
+	 * @throws IOException  in case of an error
 	 */
 	public static final Session createWebsocket(String uri, String handler, String engine) throws DeploymentException, IOException {
 		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
@@ -60,21 +72,21 @@ public class WebsocketsFacade implements IScriptingFacade {
 	}
 	
 	/**
-	 * Create a new Websocket by a given URI and Javascript Handler
-	 * 
+	 * Create a new Websocket by a given URI and Javascript Handler.
+	 *
 	 * @param uri the URI
 	 * @param handler the Javascript Handler
 	 * @return the Websocket Session object
-	 * @throws IOException  in case of an error
 	 * @throws DeploymentException in case of an error
+	 * @throws IOException  in case of an error
 	 */
 	public static final Session createWebsocket(String uri, String handler) throws DeploymentException, IOException {
         return createWebsocket(uri, handler, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT);
 	}
 	
 	/**
-	 * Get all created clients
-	 * 
+	 * Get all created clients.
+	 *
 	 * @return the list of clients
 	 */
 	public static final List<WebsocketClient> getClients() {
@@ -82,8 +94,8 @@ public class WebsocketsFacade implements IScriptingFacade {
 	}
 	
 	/**
-	 * Get all created clients
-	 * 
+	 * Get all created clients.
+	 *
 	 * @return the list in JSON
 	 */
 	public static final String getClientsAsJson() {
@@ -91,8 +103,8 @@ public class WebsocketsFacade implements IScriptingFacade {
 	}
 	
 	/**
-	 * Get a particular client by its session id
-	 * 
+	 * Get a particular client by its session id.
+	 *
 	 * @param id the session id
 	 * @return the client
 	 */
@@ -103,8 +115,8 @@ public class WebsocketsFacade implements IScriptingFacade {
 	}
 	
 	/**
-	 * Get a particular client by its handler
-	 * 
+	 * Get a particular client by its handler.
+	 *
 	 * @param handler the handler
 	 * @return the client
 	 */

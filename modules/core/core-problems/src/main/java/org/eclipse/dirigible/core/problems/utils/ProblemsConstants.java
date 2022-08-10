@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.core.problems.utils;
 
+/**
+ * The Class ProblemsConstants.
+ */
 public final class ProblemsConstants {
 
     // ---- PROBLEM STATUS ----

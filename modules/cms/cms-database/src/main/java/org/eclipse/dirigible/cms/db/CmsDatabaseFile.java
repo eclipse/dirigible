@@ -18,8 +18,10 @@ import java.sql.SQLException;
  */
 public class CmsDatabaseFile extends CmsDatabaseObject {
 
+	/** The binary. */
 	private boolean binary = false;
 
+	/** The content type. */
 	private String contentType;
 
 	/**

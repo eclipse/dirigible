@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class BaseGitProjectModel extends BaseGitModel {
 
+	/** The projects. */
 	@ApiModelProperty(value = "List of projects, on which a Git Operation will be performed", required = true, example = "[core_api]")
 	private List<String> projects;
 

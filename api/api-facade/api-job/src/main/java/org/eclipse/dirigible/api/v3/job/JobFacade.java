@@ -27,18 +27,42 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 import org.quartz.JobExecutionException;
 
+/**
+ * The Class JobFacade.
+ */
 public class JobFacade {
 	
+	/** The scheduler core service. */
 	private static ISchedulerCoreService schedulerCoreService = new SchedulerCoreService();
 	
+	/**
+	 * Gets the jobs.
+	 *
+	 * @return the jobs
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public static String getJobs() throws SchedulerException {
 		return GsonHelper.GSON.toJson(schedulerCoreService.getJobs());
 	}
 	
+	/**
+	 * Gets the job.
+	 *
+	 * @param name the name
+	 * @return the job
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public static String getJob(String name) throws SchedulerException {
 		return GsonHelper.GSON.toJson(schedulerCoreService.getJob(name));
 	}
 	
+	/**
+	 * Enable.
+	 *
+	 * @param name the name
+	 * @return the string
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public static String enable(String name) throws SchedulerException {
 		JobDefinition job = schedulerCoreService.getJob(name);
 		if (job != null) {
@@ -53,6 +77,13 @@ public class JobFacade {
         return GsonHelper.GSON.toJson(job);
 	}
 	
+	/**
+	 * Disable.
+	 *
+	 * @param name the name
+	 * @return the string
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public static String disable(String name) throws SchedulerException {
 		JobDefinition job = schedulerCoreService.getJob(name);
 		if (job != null) {
@@ -67,6 +98,15 @@ public class JobFacade {
         return GsonHelper.GSON.toJson(job);
 	}
 	
+	/**
+	 * Trigger.
+	 *
+	 * @param name the name
+	 * @param parameters the parameters
+	 * @return true, if successful
+	 * @throws JobExecutionException the job execution exception
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public static boolean trigger(String name, String parameters) throws JobExecutionException, SchedulerException {
 		Map<String, String> parametersMap = GsonHelper.GSON.fromJson(parameters, Map.class);
 		JobDefinition job = schedulerCoreService.getJob(name);
@@ -98,6 +138,13 @@ public class JobFacade {
         return true;
 	}
 	
+	/**
+	 * Log.
+	 *
+	 * @param name the name
+	 * @param message the message
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public static void log(String name, String message) throws SchedulerException {
 		JobDefinition job = schedulerCoreService.getJob(name);
 		if (job != null) {
@@ -109,6 +156,13 @@ public class JobFacade {
 		}
 	}
 	
+	/**
+	 * Error.
+	 *
+	 * @param name the name
+	 * @param message the message
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public static void error(String name, String message) throws SchedulerException {
 		JobDefinition job = schedulerCoreService.getJob(name);
 		if (job != null) {
@@ -120,6 +174,13 @@ public class JobFacade {
 		}
 	}
 	
+	/**
+	 * Warn.
+	 *
+	 * @param name the name
+	 * @param message the message
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public static void warn(String name, String message) throws SchedulerException {
 		JobDefinition job = schedulerCoreService.getJob(name);
 		if (job != null) {
@@ -131,6 +192,13 @@ public class JobFacade {
 		}
 	}
 	
+	/**
+	 * Info.
+	 *
+	 * @param name the name
+	 * @param message the message
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public static void info(String name, String message) throws SchedulerException {
 		JobDefinition job = schedulerCoreService.getJob(name);
 		if (job != null) {

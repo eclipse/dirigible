@@ -48,10 +48,13 @@ import com.google.gson.JsonSyntaxException;
 @ServerEndpoint("/websockets/v4/ide/data/transfer")
 public class DataTransferWebsocketService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataTransferWebsocketService.class);
 
+	/** The processor. */
 	private DatabaseProcessor processor = new DatabaseProcessor();
 
+	/** The Constant HANDLERS. */
 	private static final Map<String, IDataTransferCallbackHandler> HANDLERS = new HashMap<String, IDataTransferCallbackHandler>();
 
 	/**

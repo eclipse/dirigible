@@ -14,10 +14,15 @@ package org.eclipse.dirigible.engine.odata2.definition;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The Class ODataNavigation.
+ */
 public class ODataNavigation {
 
+    /** The name. */
     private String name;
 
+    /** The association. */
     private String association;
 
     /**
@@ -27,26 +32,56 @@ public class ODataNavigation {
      */
     private Map<String ,String> annotationsNavigationProperty = new HashMap<>();
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Gets the association.
+	 *
+	 * @return the association
+	 */
 	public String getAssociation() {
 		return association;
 	}
 
+	/**
+	 * Sets the association.
+	 *
+	 * @param association the new association
+	 */
 	public void setAssociation(String association) {
 		this.association = association;
 	}
 
+	/**
+	 * Gets the annotations navigation property.
+	 *
+	 * @return the annotations navigation property
+	 */
 	public Map<String, String> getAnnotationsNavigationProperty() {
 		return annotationsNavigationProperty;
 	}
 
+	/**
+	 * Sets the annotations navigation property.
+	 *
+	 * @param annotationsNavigationProperty the annotations navigation property
+	 */
 	public void setAnnotationsNavigationProperty(Map<String, String> annotationsNavigationProperty) {
 		this.annotationsNavigationProperty = annotationsNavigationProperty;
 	}

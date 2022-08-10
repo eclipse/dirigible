@@ -11,10 +11,24 @@
  */
 package org.eclipse.dirigible.commons.api.topology;
 
+/**
+ * The Interface ITopologicallyDepletable.
+ */
 public interface ITopologicallyDepletable {
 	
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	public String getId();
 	
+	/**
+	 * Complete.
+	 *
+	 * @param flow the flow
+	 * @return true, if successful
+	 */
 	public boolean complete(String flow);
 
 }

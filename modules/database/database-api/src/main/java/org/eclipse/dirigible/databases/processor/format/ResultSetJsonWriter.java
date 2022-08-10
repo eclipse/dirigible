@@ -26,8 +26,10 @@ import com.google.gson.JsonObject;
  */
 public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 
+	/** The limited. */
 	private boolean limited = true;
 	
+	/** The stringify. */
 	private boolean stringify = true;
 
 	/**
@@ -68,6 +70,13 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 		this.stringify = stringify;
 	}
 
+	/**
+	 * Write.
+	 *
+	 * @param resultSet the result set
+	 * @return the string
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.databases.processor.format.ResultSetWriter#write(java.sql.ResultSet)

@@ -23,6 +23,9 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 
+/**
+ * The Class DatabaseTestHelper.
+ */
 public class DatabaseTestHelper {
 
 	/**

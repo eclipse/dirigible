@@ -27,6 +27,12 @@ import org.junit.Test;
  */
 public class ExecFacadeTest extends AbstractDirigibleTest {
 
+    /**
+     * Exec test.
+     *
+     * @throws ExecutionException the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
     @Test
     public void execTest() throws ExecutionException, InterruptedException {
         String commandLine = null;

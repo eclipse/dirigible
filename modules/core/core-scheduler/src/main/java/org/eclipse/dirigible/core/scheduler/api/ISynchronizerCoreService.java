@@ -24,16 +24,16 @@ import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerState
 public interface ISynchronizerCoreService extends ICoreService {
 	
 	
-	/** The state initial */
+	/**  The state initial. */
 	public int STATE_INITIAL = 0;
 	
-	/** The state successful */
+	/**  The state successful. */
 	public int STATE_SUCCESSFUL = 1;
 	
-	/** The state failed */
+	/**  The state failed. */
 	public int STATE_FAILED = 2;
 	
-	/** The state in progress */
+	/**  The state in progress. */
 	public int STATE_IN_PROGRESS = 3;
 	
 	
@@ -116,18 +116,17 @@ public interface ISynchronizerCoreService extends ICoreService {
 	public List<SynchronizerStateDefinition> getSynchronizerStates() throws SchedulerException;
 
 	/**
-	 * Checks whether a job with the given name already exist
+	 * Checks whether a job with the given name already exist.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name            the name
 	 * @return true if exists and false otherwise
-	 * @throws SchedulerException
-	 *             in case of an internal error
+	 * @throws SchedulerException             in case of an internal error
 	 */
 	public boolean existsSynchronizerState(String name) throws SchedulerException;
 
 	/**
-	 * Get all the state logs by a given synchronizer
+	 * Get all the state logs by a given synchronizer.
+	 *
 	 * @param name the synchronizer
 	 * @return the list of state log
 	 * @throws SchedulerException the scheduler exception
@@ -135,29 +134,29 @@ public interface ISynchronizerCoreService extends ICoreService {
 	public List<SynchronizerStateLogDefinition> getSynchronizerStateLogs(String name) throws SchedulerException;
 
 	/**
-	 * Delete old state log
-	 * 
+	 * Delete old state log.
+	 *
 	 * @throws SchedulerException the scheduler exception
 	 */
 	public void deleteOldSynchronizerStateLogs() throws SchedulerException;
 	
 	/**
-	 * Delete all the State Logs data for synchronizers
-	 * 
+	 * Delete all the State Logs data for synchronizers.
+	 *
 	 * @throws SchedulerException in case of error
 	 */
 	public void initializeSynchronizersStates() throws SchedulerException;
 	
 	/**
-	 * Disable synchronization
-	 * 
+	 * Disable synchronization.
+	 *
 	 * @throws SchedulerException in case of error
 	 */
 	public void disableSynchronization() throws SchedulerException;
 	
 	/**
-	 * Enable synchronization
-	 * 
+	 * Enable synchronization.
+	 *
 	 * @throws SchedulerException in case of error
 	 */
 	public void enableSynchronization() throws SchedulerException;
@@ -247,13 +246,12 @@ public interface ISynchronizerCoreService extends ICoreService {
 	public List<SynchronizerStateArtefactDefinition> getSynchronizerStateArtefactsByLocation(String location) throws SchedulerException;
 
 	/**
-	 * Checks whether a job with the given name already exist
+	 * Checks whether a job with the given name already exist.
 	 *
 	 * @param name the name
 	 * @param location the location
 	 * @return true if exists and false otherwise
-	 * @throws SchedulerException
-	 *             in case of an internal error
+	 * @throws SchedulerException             in case of an internal error
 	 */
 	public boolean existsSynchronizerStateArtefact(String name, String location) throws SchedulerException;
 	

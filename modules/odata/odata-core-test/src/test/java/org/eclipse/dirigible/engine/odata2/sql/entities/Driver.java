@@ -18,22 +18,31 @@ import java.util.Calendar;
 
 import static org.eclipse.dirigible.engine.odata2.sql.entities.Car.CAR_2_DRIVERS_ASSOCIATION;
 
+/**
+ * The Class Driver.
+ */
 @EdmEntityType(name = "Driver")
 @EdmEntitySet(name = "Drivers")
 public class Driver {
+    
+    /** The id. */
     @EdmKey
     @EdmProperty
     private String id;
 
+    /** The first name. */
     @EdmProperty
     private String firstName;
 
+    /** The last name. */
     @EdmProperty
     private String lastName;
 
+    /** The car. */
     @EdmNavigationProperty(toMultiplicity = Multiplicity.ZERO_OR_ONE, toType = Car.class, association = CAR_2_DRIVERS_ASSOCIATION)
     private Car car;
 
+    /** The updated. */
     @EdmProperty(type = EdmType.DATE_TIME)
     private Calendar updated;
 

@@ -14,6 +14,9 @@ package org.eclipse.dirigible.database.sql.dialects.mysql;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
+/**
+ * The Class DropTableTypeTest.
+ */
 public class DropTableTypeTest {
 
     /**

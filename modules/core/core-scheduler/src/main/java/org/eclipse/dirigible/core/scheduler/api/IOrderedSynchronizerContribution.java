@@ -11,11 +11,14 @@
  */
 package org.eclipse.dirigible.core.scheduler.api;
 
+/**
+ * The Interface IOrderedSynchronizerContribution.
+ */
 public interface IOrderedSynchronizerContribution extends ISynchronizer {
 	
 	/**
-	 * Set the order priority
-	 * 
+	 * Set the order priority.
+	 *
 	 * @return the priority
 	 */
 	public int getPriority();

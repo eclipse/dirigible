@@ -25,14 +25,27 @@ import org.quartz.impl.jdbcjobstore.JobStoreTX;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.SchedulerSignaler;
 
+/**
+ * The Class CustomJobStore.
+ */
 public class CustomJobStore extends JobStoreTX {
 	
+	/** The runtime data source. */
 	private DataSource runtimeDataSource;
 	
+	/** The data source type. */
 	private String dataSourceType;
 	
+	/** The data source name. */
 	private String dataSourceName;
 
+	/**
+	 * Initialize.
+	 *
+	 * @param classLoadHelper the class load helper
+	 * @param schedSignaler the sched signaler
+	 * @throws SchedulerConfigException the scheduler config exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.quartz.impl.jdbcjobstore.JobStoreTX#initialize(org.quartz.spi.ClassLoadHelper, org.quartz.spi.SchedulerSignaler)
 	 */
@@ -49,6 +62,11 @@ public class CustomJobStore extends JobStoreTX {
 		super.initialize(classLoadHelper, schedSignaler);
 	}
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	/* (non-Javadoc)
 	 * @see org.quartz.impl.jdbcjobstore.JobStoreSupport#getDataSource()
 	 */
@@ -60,6 +78,12 @@ public class CustomJobStore extends JobStoreTX {
 		return super.getDataSource();
 	}
 
+	/**
+	 * Gets the connection.
+	 *
+	 * @return the connection
+	 * @throws JobPersistenceException the job persistence exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.quartz.impl.jdbcjobstore.JobStoreSupport#getConnection()
 	 */

@@ -22,6 +22,11 @@ public class CleanupSynchronizerJob extends AbstractSynchronizerJob {
 	/** The cleanup synchronizer. */
 	private CleanupSynchronizer cleanupSynchronizer = new CleanupSynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -31,6 +36,11 @@ public class CleanupSynchronizerJob extends AbstractSynchronizerJob {
 		return cleanupSynchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return CleanupSynchronizerJobDefinitionProvider.CLEANUP_SYNCHRONIZER_JOB;

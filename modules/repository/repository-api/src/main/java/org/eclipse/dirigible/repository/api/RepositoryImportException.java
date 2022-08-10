@@ -16,6 +16,7 @@ package org.eclipse.dirigible.repository.api;
  */
 public class RepositoryImportException extends RepositoryException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -163847774919514248L;
 
 	/**

@@ -11,7 +11,16 @@
  */
 package org.eclipse.dirigible.commons.process.execution;
 
+/**
+ * The Class ProcessExecutionException.
+ */
 public class ProcessExecutionException extends RuntimeException{
+    
+    /**
+     * Instantiates a new process execution exception.
+     *
+     * @param cause the cause
+     */
     public ProcessExecutionException(Throwable cause) {
         super(cause);
     }

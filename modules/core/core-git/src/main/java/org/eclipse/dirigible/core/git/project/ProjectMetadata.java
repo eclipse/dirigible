@@ -16,20 +16,28 @@ package org.eclipse.dirigible.core.git.project;
  */
 public class ProjectMetadata {
 
+	/** The Constant PROJECT_METADATA_FILE_NAME. */
 	public static final String PROJECT_METADATA_FILE_NAME = "project.json"; //$NON-NLS-1$
 
+	/** The guid. */
 	private String guid;
 
+	/** The name. */
 	private String name;
 
+	/** The component. */
 	private String component;
 
+	/** The description. */
 	private String description;
 
+	/** The author. */
 	private String author;
 
+	/** The licenses. */
 	private ProjectMetadataLicense[] licenses;
 
+	/** The dependencies. */
 	private ProjectMetadataDependency[] dependencies;
 
 	/**

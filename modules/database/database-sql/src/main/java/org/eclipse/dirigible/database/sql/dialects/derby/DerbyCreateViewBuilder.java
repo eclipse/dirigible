@@ -19,6 +19,7 @@ import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
  */
 public class DerbyCreateViewBuilder extends CreateViewBuilder {
 
+	/** The values. */
 	private String values = null;
 
 	/**
@@ -33,6 +34,12 @@ public class DerbyCreateViewBuilder extends CreateViewBuilder {
 		super(dialect, view);
 	}
 
+	/**
+	 * Column.
+	 *
+	 * @param name the name
+	 * @return the derby create view builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#column(java.lang.String)
@@ -43,6 +50,12 @@ public class DerbyCreateViewBuilder extends CreateViewBuilder {
 		return this;
 	}
 
+	/**
+	 * As select.
+	 *
+	 * @param select the select
+	 * @return the derby create view builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#asSelect(java.lang.String)
@@ -71,6 +84,11 @@ public class DerbyCreateViewBuilder extends CreateViewBuilder {
 		return this;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#generate()

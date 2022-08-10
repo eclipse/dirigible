@@ -28,10 +28,13 @@ import com.google.common.base.Charsets;
  */
 public class EtcdFacade implements IScriptingFacade {
 	
+	/** The Constant DIRIGIBLE_ETCD_CLIENT_ENDPOINT. */
 	private static final String DIRIGIBLE_ETCD_CLIENT_ENDPOINT = "DIRIGIBLE_ETCD_CLIENT_ENDPOINT";
 
+	/** The Constant CLIENT_ENDPOINT. */
 	private static final String CLIENT_ENDPOINT = "http://localhost:2379";
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(EtcdFacade.class);
 
 	/**

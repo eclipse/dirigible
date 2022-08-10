@@ -21,8 +21,16 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.api.v3.documents.PDFFacade;
 import org.junit.Test;
 
+/**
+ * The Class PDFFacadeTest.
+ */
 public class PDFFacadeTest {
 
+	/**
+	 * Generate pdf test.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void generatePdfTest() throws IOException {
 		String template = IOUtils.toString(PDFFacadeTest.class.getResourceAsStream("template.xsl"), Charset.defaultCharset());
@@ -34,6 +42,11 @@ public class PDFFacadeTest {
 		assertTrue(pdf.length > 0);
 	}
 
+	/**
+	 * Generate larger pdf test.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void generateLargerPdfTest() throws IOException {
 		String template = IOUtils.toString(PDFFacadeTest.class.getResourceAsStream("template.xsl"), Charset.defaultCharset());

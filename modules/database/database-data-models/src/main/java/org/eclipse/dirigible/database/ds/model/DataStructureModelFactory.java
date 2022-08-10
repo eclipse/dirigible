@@ -93,8 +93,8 @@ public class DataStructureModelFactory {
 	/**
 	 * Creates a data model from the raw content.
 	 *
-	 * @param content
-	 *            the data definition
+	 * @param location the location
+	 * @param content            the data definition
 	 * @return the data model instance
 	 */
 	public static DataStructureDataReplaceModel parseReplace(String location, String content) {
@@ -106,8 +106,8 @@ public class DataStructureModelFactory {
 	/**
 	 * Creates a data model from the raw content.
 	 *
-	 * @param content
-	 *            the data definition
+	 * @param location the location
+	 * @param content            the data definition
 	 * @return the data model instance
 	 */
 	public static DataStructureDataAppendModel parseAppend(String location, String content) {
@@ -119,8 +119,8 @@ public class DataStructureModelFactory {
 	/**
 	 * Creates a data model from the raw content.
 	 *
-	 * @param content
-	 *            the data definition
+	 * @param location the location
+	 * @param content            the data definition
 	 * @return the data model instance
 	 */
 	public static DataStructureDataDeleteModel parseDelete(String location, String content) {
@@ -132,8 +132,8 @@ public class DataStructureModelFactory {
 	/**
 	 * Creates a data model from the raw content.
 	 *
-	 * @param content
-	 *            the data definition
+	 * @param location the location
+	 * @param content            the data definition
 	 * @return the data model instance
 	 */
 	public static DataStructureDataUpdateModel parseUpdate(String location, String content) {
@@ -145,8 +145,8 @@ public class DataStructureModelFactory {
 	/**
 	 * Creates a data model from the raw content.
 	 *
-	 * @param content
-	 *            the data definition
+	 * @param location the location
+	 * @param content            the data definition
 	 * @return the data model instance
 	 */
 	public static DataStructureChangelogModel parseChangelog(String location, String content) {
@@ -155,6 +155,14 @@ public class DataStructureModelFactory {
 		return result;
 	}
 
+	/**
+	 * Sets the content model attributes.
+	 *
+	 * @param location the location
+	 * @param content the content
+	 * @param dataModel the data model
+	 * @param type the type
+	 */
 	private static void setContentModelAttributes(String location, String content, DataStructureContentModel dataModel,
 			String type) {
 		dataModel.setLocation(location);
@@ -169,8 +177,8 @@ public class DataStructureModelFactory {
 	/**
 	 * Creates a schema model from the raw content.
 	 *
-	 * @param content
-	 *            the schema definition
+	 * @param location the location
+	 * @param content            the schema definition
 	 * @return the schema model instance
 	 */
 	public static DataStructureSchemaModel parseSchema(String location, String content) {
@@ -228,6 +236,15 @@ public class DataStructureModelFactory {
 		return result;
 	}
 
+	/**
+	 * Sets the view attributes.
+	 *
+	 * @param location the location
+	 * @param result the result
+	 * @param structure the structure
+	 * @param type the type
+	 * @param view the view
+	 */
 	private static void setViewAttributes(String location, DataStructureSchemaModel result, JsonObject structure,
 			String type, DataStructureViewModel view) {
 		view.setLocation(location);
@@ -239,6 +256,15 @@ public class DataStructureModelFactory {
 		view.setHash(result.getHash());
 	}
 
+	/**
+	 * Sets the table attributes.
+	 *
+	 * @param location the location
+	 * @param result the result
+	 * @param structure the structure
+	 * @param type the type
+	 * @param table the table
+	 */
 	private static void setTableAttributes(String location, DataStructureSchemaModel result, JsonObject structure,
 			String type, DataStructureTableModel table) {
 		table.setLocation(location);
@@ -266,6 +292,12 @@ public class DataStructureModelFactory {
 		}
 	}
 
+	/**
+	 * Sets the column attributes.
+	 *
+	 * @param column the column
+	 * @param columnModel the column model
+	 */
 	private static void setColumnAttributes(JsonObject column, DataStructureTableColumnModel columnModel) {
 		columnModel.setName(column.get("name") != null && !column.get("name").isJsonNull() ? column.get("name").getAsString() : "unknown");
 		columnModel.setType(column.get("type") != null && !column.get("type").isJsonNull()  ? column.get("type").getAsString() : "unknown");

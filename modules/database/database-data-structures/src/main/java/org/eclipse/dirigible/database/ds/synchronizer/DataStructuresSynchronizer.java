@@ -85,69 +85,111 @@ import org.slf4j.LoggerFactory;
  */
 public class DataStructuresSynchronizer extends AbstractSynchronizer implements IOrderedSynchronizerContribution {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataStructuresSynchronizer.class);
 
+	/** The Constant TABLES_PREDELIVERED. */
 	private static final Map<String, DataStructureTableModel> TABLES_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureTableModel>());
 
+	/** The Constant VIEWS_PREDELIVERED. */
 	private static final Map<String, DataStructureViewModel> VIEWS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureViewModel>());
 
+	/** The Constant REPLACE_PREDELIVERED. */
 	private static final Map<String, DataStructureDataReplaceModel> REPLACE_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureDataReplaceModel>());
 
+	/** The Constant APPEND_PREDELIVERED. */
 	private static final Map<String, DataStructureDataAppendModel> APPEND_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureDataAppendModel>());
 
+	/** The Constant DELETE_PREDELIVERED. */
 	private static final Map<String, DataStructureDataDeleteModel> DELETE_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureDataDeleteModel>());
 
+	/** The Constant UPDATE_PREDELIVERED. */
 	private static final Map<String, DataStructureDataUpdateModel> UPDATE_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureDataUpdateModel>());
 	
+	/** The Constant SCHEMA_PREDELIVERED. */
 	private static final Map<String, DataStructureSchemaModel> SCHEMA_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureSchemaModel>());
 
+	/** The Constant TABLES_SYNCHRONIZED. */
 	private static final List<String> TABLES_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The Constant VIEWS_SYNCHRONIZED. */
 	private static final List<String> VIEWS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The Constant REPLACE_SYNCHRONIZED. */
 	private static final List<String> REPLACE_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The Constant APPEND_SYNCHRONIZED. */
 	private static final List<String> APPEND_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The Constant DELETE_SYNCHRONIZED. */
 	private static final List<String> DELETE_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The Constant UPDATE_SYNCHRONIZED. */
 	private static final List<String> UPDATE_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 	
+	/** The Constant SCHEMA_SYNCHRONIZED. */
 	private static final List<String> SCHEMA_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The Constant DATA_STRUCTURE_MODELS. */
 	private static final Map<String, DataStructureModel> DATA_STRUCTURE_MODELS = new LinkedHashMap<String, DataStructureModel>();
 
+	/** The Constant DATA_STRUCTURE_REPLACE_MODELS. */
 	private static final Map<String, DataStructureDataReplaceModel> DATA_STRUCTURE_REPLACE_MODELS = new LinkedHashMap<String, DataStructureDataReplaceModel>();
 
+	/** The Constant DATA_STRUCTURE_APPEND_MODELS. */
 	private static final Map<String, DataStructureDataAppendModel> DATA_STRUCTURE_APPEND_MODELS = new LinkedHashMap<String, DataStructureDataAppendModel>();
 
+	/** The Constant DATA_STRUCTURE_DELETE_MODELS. */
 	private static final Map<String, DataStructureDataDeleteModel> DATA_STRUCTURE_DELETE_MODELS = new LinkedHashMap<String, DataStructureDataDeleteModel>();
 
+	/** The Constant DATA_STRUCTURE_UPDATE_MODELS. */
 	private static final Map<String, DataStructureDataUpdateModel> DATA_STRUCTURE_UPDATE_MODELS = new LinkedHashMap<String, DataStructureDataUpdateModel>();
 	
+	/** The Constant DATA_STRUCTURE_SCHEMA_MODELS. */
 	private static final Map<String, DataStructureSchemaModel> DATA_STRUCTURE_SCHEMA_MODELS = new LinkedHashMap<String, DataStructureSchemaModel>();
 
+	/** The data structures core service. */
 	private DataStructuresCoreService dataStructuresCoreService = new DataStructuresCoreService();
 	
+	/** The data source. */
 	private DataSource dataSource = null;
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
+	/** The Constant SCHEMA_ARTEFACT. */
 	private static final SchemaSynchronizationArtefactType SCHEMA_ARTEFACT = new SchemaSynchronizationArtefactType();
+	
+	/** The Constant TABLE_ARTEFACT. */
 	private static final TableSynchronizationArtefactType TABLE_ARTEFACT = new TableSynchronizationArtefactType();
+	
+	/** The Constant VIEW_ARTEFACT. */
 	private static final ViewSynchronizationArtefactType VIEW_ARTEFACT = new ViewSynchronizationArtefactType();
+	
+	/** The Constant REPLACE_ARTEFACT. */
 	private static final ReplaceSynchronizationArtefactType REPLACE_ARTEFACT = new ReplaceSynchronizationArtefactType();
+	
+	/** The Constant APPEND_ARTEFACT. */
 	private static final AppendSynchronizationArtefactType APPEND_ARTEFACT = new AppendSynchronizationArtefactType();
+	
+	/** The Constant DELETE_ARTEFACT. */
 	private static final DeleteSynchronizationArtefactType DELETE_ARTEFACT = new DeleteSynchronizationArtefactType();
+	
+	/** The Constant UPDATE_ARTEFACT. */
 	private static final UpdateSynchronizationArtefactType UPDATE_ARTEFACT = new UpdateSynchronizationArtefactType();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
@@ -155,6 +197,9 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		return dataSource;
 	}
 	
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -325,6 +370,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		SCHEMA_PREDELIVERED.put(contentPath, model);
 	}
 
+	/**
+	 * Load resource content.
+	 *
+	 * @param modelPath the model path
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private String loadResourceContent(String modelPath) throws IOException {
 		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + modelPath);
 		try {
@@ -634,6 +686,11 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		}
 	}
 
+	/**
+	 * Adds the data structure models from schema.
+	 *
+	 * @param schemaModel the schema model
+	 */
 	private void addDataStructureModelsFromSchema(DataStructureSchemaModel schemaModel) {
 		for (DataStructureTableModel tableModel : schemaModel.getTables()) {
 			DATA_STRUCTURE_MODELS.put(tableModel.getName(), tableModel);
@@ -643,6 +700,11 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -656,6 +718,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		logger.trace("Done synchronizing Data Structures from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -721,6 +789,11 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		}
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
@@ -905,6 +978,15 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		}
 	}
 
+	/**
+	 * Prints the errors.
+	 *
+	 * @param errors the errors
+	 * @param results the results
+	 * @param flow the flow
+	 * @param artefact the artefact
+	 * @param state the state
+	 */
 	private void printErrors(List<String> errors, List<TopologyDataStructureModelWrapper> results, String flow, ISynchronizerArtefactType artefact, ISynchronizerArtefactType.ArtefactState state) {
 		if (results.size() > 0) {
 			for (TopologyDataStructureModelWrapper result : results) {
@@ -937,8 +1019,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 
 	// Content
 
+	/** The Constant COLUMN_NAME. */
 	private static final String COLUMN_NAME = "COLUMN_NAME";
 
+	/**
+	 * Update database content.
+	 */
 	private void updateDatabaseContent() {
 
 		// Replace
@@ -992,12 +1078,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	}
 
 	/**
-	 * Process the data rows in the 'replace' mode
+	 * Process the data rows in the 'replace' mode.
 	 *
-	 * @param model
-	 *            the model
-	 * @throws Exception
-	 *             in case of database error
+	 * @param model            the model
+	 * @throws Exception             in case of database error
 	 */
 	public void executeReplaceUpdate(DataStructureDataReplaceModel model) throws Exception {
 		logger.info("Processing rows in mode 'replace': " + model.getLocation());
@@ -1017,12 +1101,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	}
 
 	/**
-	 * Process the data rows in the 'append' mode
+	 * Process the data rows in the 'append' mode.
 	 *
-	 * @param model
-	 *            the model
-	 * @throws Exception
-	 *             in case of database error
+	 * @param model            the model
+	 * @throws Exception             in case of database error
 	 */
 	public void executeAppendUpdate(DataStructureDataAppendModel model) throws Exception {
 		logger.info("Processing rows in mode 'append': " + model.getLocation());
@@ -1043,12 +1125,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	}
 
 	/**
-	 * Process the data rows in the 'delete' mode
+	 * Process the data rows in the 'delete' mode.
 	 *
-	 * @param model
-	 *            the model
-	 * @throws Exception
-	 *             in case of database error
+	 * @param model            the model
+	 * @throws Exception             in case of database error
 	 */
 	public void executeDeleteUpdate(DataStructureDataDeleteModel model) throws Exception {
 		logger.info("Processing rows in mode 'delete': " + model.getLocation());
@@ -1065,12 +1145,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	}
 
 	/**
-	 * Process the data rows in the 'update' mode
+	 * Process the data rows in the 'update' mode.
 	 *
-	 * @param model
-	 *            the model
-	 * @throws Exception
-	 *             in case of database error
+	 * @param model            the model
+	 * @throws Exception             in case of database error
 	 */
 	public void executeUpdateUpdate(DataStructureDataUpdateModel model) throws Exception {
 		logger.info("Processing rows in mode 'update': " + model.getLocation());
@@ -1080,6 +1158,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		updateRowsDataInTable(DataStructuresUtils.getCaseSensitiveTableName(tableName), primaryKey, content);
 	}
 
+	/**
+	 * Delete all data from table.
+	 *
+	 * @param tableName the table name
+	 * @throws Exception the exception
+	 */
 	private void deleteAllDataFromTable(String tableName) throws Exception {
 		Connection connection = null;
 		try {
@@ -1094,6 +1178,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		}
 	}
 
+	/**
+	 * Gets the table rows count.
+	 *
+	 * @param tableName the table name
+	 * @return the table rows count
+	 * @throws Exception the exception
+	 */
 	private int getTableRowsCount(String tableName) throws Exception {
 		Connection connection = null;
 		try {
@@ -1113,6 +1204,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		return -1;
 	}
 
+	/**
+	 * Gets the primary key.
+	 *
+	 * @param tableName the table name
+	 * @return the primary key
+	 * @throws Exception the exception
+	 */
 	private String getPrimaryKey(String tableName) throws Exception {
 		String result = null;
 		Connection connection = null;
@@ -1140,6 +1238,14 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		return result;
 	}
 
+	/**
+	 * Delete rows data from table.
+	 *
+	 * @param tableName the table name
+	 * @param primaryKey the primary key
+	 * @param fileContent the file content
+	 * @throws Exception the exception
+	 */
 	private void deleteRowsDataFromTable(String tableName, String primaryKey, byte[] fileContent) throws Exception {
 		Connection connection = null;
 		try {
@@ -1163,6 +1269,14 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		}
 	}
 
+	/**
+	 * Update rows data in table.
+	 *
+	 * @param tableName the table name
+	 * @param primaryKey the primary key
+	 * @param fileContent the file content
+	 * @throws Exception the exception
+	 */
 	private void updateRowsDataInTable(String tableName, String primaryKey, byte[] fileContent) throws Exception {
 		Connection connection = null;
 		try {
@@ -1196,6 +1310,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		}
 	}
 
+	/**
+	 * Move sequence.
+	 *
+	 * @param tableName the table name
+	 * @throws Exception the exception
+	 * @throws SQLException the SQL exception
+	 */
 	protected void moveSequence(String tableName) throws Exception, SQLException {
 
 		int tableRowsCount;
@@ -1236,6 +1357,11 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		}
 	}
 
+	/**
+	 * Gets the priority.
+	 *
+	 * @return the priority
+	 */
 	@Override
 	public int getPriority() {
 		return 200;
@@ -1296,11 +1422,9 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	/**
 	 * Execute table alter.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @throws SQLException 
+	 * @param connection            the connection
+	 * @param tableModel            the table model
+	 * @throws SQLException the SQL exception
 	 */
 	public void executeTableAlter(Connection connection, DataStructureTableModel tableModel) throws SQLException {
 		TableAlterProcessor.execute(connection, tableModel);

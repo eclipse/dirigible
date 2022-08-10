@@ -17,14 +17,13 @@ import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.database.databases.definition.DatabaseDefinition;
 
 /**
- * Manage the databases definitions
- *
+ * Manage the databases definitions.
  */
 public interface IDatabasesCoreService extends ICoreService {
 	
 	/**
-	 * Create database
-	 * 
+	 * Create database.
+	 *
 	 * @param name the name
 	 * @param driver the driver
 	 * @param url the url
@@ -37,8 +36,8 @@ public interface IDatabasesCoreService extends ICoreService {
 	public DatabaseDefinition createDatabase(String name, String driver, String url, String username, String password, String parameters) throws DatabasesException;
 	
 	/**
-	 * Create database
-	 * 
+	 * Create database.
+	 *
 	 * @param definition the definition
 	 * @return the database
 	 * @throws DatabasesException in case of error
@@ -46,8 +45,8 @@ public interface IDatabasesCoreService extends ICoreService {
 	public DatabaseDefinition createDatabase(DatabaseDefinition definition) throws DatabasesException;
 	
 	/**
-	 * Get the database by id
-	 * 
+	 * Get the database by id.
+	 *
 	 * @param id the id
 	 * @return the database
 	 * @throws DatabasesException in case of error
@@ -55,8 +54,8 @@ public interface IDatabasesCoreService extends ICoreService {
 	public DatabaseDefinition getDatabase(long id) throws DatabasesException;
 	
 	/**
-	 * Get the database by name
-	 * 
+	 * Get the database by name.
+	 *
 	 * @param name the name
 	 * @return the database
 	 * @throws DatabasesException in case of error
@@ -64,16 +63,16 @@ public interface IDatabasesCoreService extends ICoreService {
 	public DatabaseDefinition getDatabaseByName(String name) throws DatabasesException;
 	
 	/**
-	 * Remove the database
-	 * 
+	 * Remove the database.
+	 *
 	 * @param id the id
 	 * @throws DatabasesException in case of error
 	 */
 	public void removeDatabase(long id) throws DatabasesException;
 	
 	/**
-	 * Update existing database
-	 * 
+	 * Update existing database.
+	 *
 	 * @param id the id
 	 * @param name the name
 	 * @param driver the driver
@@ -86,16 +85,16 @@ public interface IDatabasesCoreService extends ICoreService {
 	public void updateDatabase(long id, String name, String driver, String url, String username, String password, String parameters) throws DatabasesException;
 	
 	/**
-	 * Update database
-	 * 
+	 * Update database.
+	 *
 	 * @param definition the definition
 	 * @throws DatabasesException in case of error
 	 */
 	public void updateDatabase(DatabaseDefinition definition) throws DatabasesException;
 	
 	/**
-	 * List all the databases
-	 * 
+	 * List all the databases.
+	 *
 	 * @return the list of databases
 	 * @throws DatabasesException in case of error
 	 */

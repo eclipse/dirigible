@@ -24,10 +24,18 @@ import org.slf4j.LoggerFactory;
  */
 public class OpenAPIClasspathContentHandler extends AbstractClasspathContentHandler {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(OpenAPIClasspathContentHandler.class);
 
+	/** The open API synchronizer. */
 	private OpenAPISynchronizer openAPISynchronizer = new OpenAPISynchronizer();
 
+	/**
+	 * Checks if is valid.
+	 *
+	 * @param path the path
+	 * @return true, if is valid
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#isValid(java.lang.String)
@@ -46,6 +54,11 @@ public class OpenAPIClasspathContentHandler extends AbstractClasspathContentHand
 		return false;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#getLogger()

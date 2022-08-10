@@ -24,13 +24,16 @@ import org.slf4j.Logger;
  */
 public abstract class AbstractClasspathContentHandler implements IClasspathContentHandler {
 
+	/** The Constant DIRIGIBLE_SYNCHRONIZER_EXCLUDE_PATHS. */
 	private static final String DIRIGIBLE_SYNCHRONIZER_EXCLUDE_PATHS = "DIRIGIBLE_SYNCHRONIZER_EXCLUDE_PATHS";
 
+	/** The Constant EXCLUDE_SEPARATOR. */
 	private static final String EXCLUDE_SEPARATOR = ",";
 
 	/** The resources. */
 	private final Set<String> resources = Collections.synchronizedSet(new HashSet<String>());
 	
+	/** The excludes. */
 	private static Set<String> EXCLUDES = Collections.synchronizedSet(new HashSet<String>());
 	static {
 		String pathsToExclude = Configuration.get(DIRIGIBLE_SYNCHRONIZER_EXCLUDE_PATHS);
@@ -43,6 +46,11 @@ public abstract class AbstractClasspathContentHandler implements IClasspathConte
 		}
 	}
 
+	/**
+	 * Accept.
+	 *
+	 * @param path the path
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.IClasspathContentHandler#accept(java.lang.String)
@@ -63,6 +71,11 @@ public abstract class AbstractClasspathContentHandler implements IClasspathConte
 		}
 	}
 
+	/**
+	 * Gets the paths.
+	 *
+	 * @return the paths
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.IClasspathContentHandler#getPaths()

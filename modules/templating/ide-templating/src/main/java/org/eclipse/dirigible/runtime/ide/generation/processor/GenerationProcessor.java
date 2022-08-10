@@ -61,6 +61,7 @@ import com.google.gson.Gson;
  */
 public class GenerationProcessor extends WorkspaceProcessor {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GenerationProcessor.class);
 	
 
@@ -119,6 +120,17 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		throw new ScriptingException(format("Invalid template definition file: [{0}]", parameters.getTemplate()));
 	}
 
+	/**
+	 * Generate with template iterable.
+	 *
+	 * @param parameters the parameters
+	 * @param projectObject the project object
+	 * @param generatedFiles the generated files
+	 * @param source the source
+	 * @param input the input
+	 * @throws ScriptingException the scripting exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void generateWithTemplateIterable(GenerationTemplateParameters parameters, IProject projectObject,
 			List<IFile> generatedFiles, GenerationTemplateMetadataSource source, byte[] input)
 			throws ScriptingException, IOException {
@@ -272,8 +284,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 	}
 
 	/**
-	 * Generate a full-stack application based on the provided entity data model
-	 * 
+	 * Generate a full-stack application based on the provided entity data model.
+	 *
 	 * @param model the model
 	 * @param workspace the workspace
 	 * @param project the project
@@ -345,6 +357,14 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		}
 	}
 
+	/**
+	 * Distribute by layout type.
+	 *
+	 * @param models the models
+	 * @param perspectives the perspectives
+	 * @param sidebar the sidebar
+	 * @param parameters the parameters
+	 */
 	private void distributeByLayoutType(List<Map<String, Object>> models, Map<String, Map<String, Object>> perspectives, 
 			Map<String, Map<String, Object>> sidebar, GenerationTemplateModelParameters parameters) {
 		
@@ -446,6 +466,16 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		parameters.getParameters().put("uiPerspectives", uiPerspectives);
 	}
 
+	/**
+	 * Map models.
+	 *
+	 * @param entityDataModel the entity data model
+	 * @param parameters the parameters
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @return the list
+	 */
 	private List<Map<String, Object>> mapModels(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
 		List<Map<String, Object>> models = new ArrayList<>();
 		for (EntityDataModelEntity entity : entityDataModel.getModel().getEntities()) {
@@ -539,6 +569,16 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		return models;
 	}
 
+	/**
+	 * Map perspectives.
+	 *
+	 * @param entityDataModel the entity data model
+	 * @param parameters the parameters
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @return the map
+	 */
 	private Map<String, Map<String, Object>> mapPerspectives(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
 		Map<String, Map<String, Object>> perspectives = new HashMap<>();
 		for (EntityDataModelPerspective perspective : entityDataModel.getModel().getPerspectives()) {
@@ -555,6 +595,16 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		return perspectives;
 	}
 	
+	/**
+	 * Map sidebar.
+	 *
+	 * @param entityDataModel the entity data model
+	 * @param parameters the parameters
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @return the map
+	 */
 	private Map<String, Map<String, Object>> mapSidebar(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
 		Map<String, Map<String, Object>> sidebar = new HashMap<>();
 		for (EntityDataModelSidebarItem item : entityDataModel.getModel().getSidebar()) {

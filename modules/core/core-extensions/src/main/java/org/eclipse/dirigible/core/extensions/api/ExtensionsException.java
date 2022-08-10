@@ -16,6 +16,7 @@ package org.eclipse.dirigible.core.extensions.api;
  */
 public class ExtensionsException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5800180600419241248L;
 
 	/**

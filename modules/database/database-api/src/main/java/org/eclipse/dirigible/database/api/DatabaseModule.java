@@ -32,12 +32,18 @@ import org.slf4j.LoggerFactory;
  */
 public class DatabaseModule extends AbstractDirigibleModule {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseModule.class);
 
+	/** The Constant DATABASES. */
 	private static final ServiceLoader<IDatabase> DATABASES = ServiceLoader.load(IDatabase.class);
 
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Database Module";
 
+	/**
+	 * Configure.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
@@ -81,6 +87,12 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		}
 	}
 	
+	/**
+	 * Bind system datasource.
+	 *
+	 * @param next the next
+	 * @param dataSourceName the data source name
+	 */
 	private void bindSystemDatasource(IDatabase next, String dataSourceName) {
 		logger.trace(format("Binding System Database - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 		try {
@@ -94,6 +106,12 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		logger.trace(format("Done binding System Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 	}
 
+	/**
+	 * Bind datasource.
+	 *
+	 * @param next the next
+	 * @param dataSourceName the data source name
+	 */
 	private void bindDatasource(IDatabase next, String dataSourceName) {
 		StaticObjects.set(StaticObjects.DATABASE, next);
 		logger.trace(format("Binding Database - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
@@ -114,6 +132,11 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		logger.trace(format("Done binding Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
@@ -176,6 +199,11 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		return null;
 	}
 	
+	/**
+	 * Gets the priority.
+	 *
+	 * @return the priority
+	 */
 	@Override
 	public int getPriority() {
 		return PRIORITY_DATABASE;

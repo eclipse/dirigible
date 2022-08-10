@@ -22,22 +22,22 @@ import java.util.List;
  */
 public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 
+	/** The Constant EMPTY_RESULT_SET. */
 	private static final String EMPTY_RESULT_SET = "Empty result set";
 
-	/**
-	 * DELIMITER
-	 */
+	/** DELIMITER. */
 	public static final String DELIMITER = "|"; //$NON-NLS-1$
 
-	/**
-	 * NEWLINE_CHARACTER
-	 */
+	/** NEWLINE_CHARACTER. */
 	public static final String NEWLINE_CHARACTER = System.getProperty("line.separator"); //$NON-NLS-1$
 
+	/** The header format. */
 	private HeaderFormatter<?> headerFormat = new StringHeaderFormatter();
 
+	/** The row format. */
 	private RowFormatter<?> rowFormat = new StringRowFormatter();
 
+	/** The limited. */
 	private boolean limited = true;
 
 	/**
@@ -59,6 +59,13 @@ public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 		this.limited = limited;
 	}
 
+	/**
+	 * Write.
+	 *
+	 * @param resultSet the result set
+	 * @return the string
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.databases.processor.format.ResultSetWriter#write(java.sql.ResultSet)

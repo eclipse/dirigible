@@ -16,8 +16,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.eclipse.dirigible.api.v3.http.access.IAccessManager;
 import org.eclipse.dirigible.oauth.utils.JwtUtils;
 
+/**
+ * The Class OAuthAccessManager.
+ */
 public class OAuthAccessManager implements IAccessManager {
 
+	/**
+	 * Checks if is in role.
+	 *
+	 * @param request the request
+	 * @param role the role
+	 * @return true, if is in role
+	 */
 	@Override
 	public boolean isInRole(HttpServletRequest request, String role) {
 		return JwtUtils.isInRole(request, role);

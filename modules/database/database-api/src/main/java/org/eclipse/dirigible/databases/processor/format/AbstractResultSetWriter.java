@@ -15,27 +15,33 @@ import org.eclipse.dirigible.commons.config.Configuration;
 
 /**
  * The Abstract ResultSet Writer.
+ *
+ * @param <T> the generic type
  */
 public abstract class AbstractResultSetWriter<T> implements ResultSetWriter<T> {
 	
+	/** The Constant DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT. */
 	private static final String DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT = "DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT";
 
+	/** The limit. */
 	private int limit = 1000;
 
+	/** The limited. */
 	private boolean limited = true;
 	
+	/** The stringify. */
 	private boolean stringify = true;
 	
 	/**
-	 * Default Constructor
+	 * Default Constructor.
 	 */
 	public AbstractResultSetWriter() {
 		this.limit = Integer.parseInt(Configuration.get(DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT, "1000"));
 	}
 	
 	/**
-	 * Getter for the limit
-	 * 
+	 * Getter for the limit.
+	 *
 	 * @return the limit
 	 */
 	public int getLimit() {
@@ -43,8 +49,8 @@ public abstract class AbstractResultSetWriter<T> implements ResultSetWriter<T> {
 	}
 	
 	/**
-	 * Setter for the limit
-	 * 
+	 * Setter for the limit.
+	 *
 	 * @param limit the limit
 	 */
 	public void setLimit(int limit) {

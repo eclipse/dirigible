@@ -11,13 +11,12 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.sybase;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.dialects.sybase.SybaseSqlDialect;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * The Class SequenceTest.
@@ -38,6 +37,9 @@ public class SequenceTest {
         fail("Does Sybase support Sequences?");
     }
 
+    /**
+     * Alter sequence.
+     */
     @Test
     public void alterSequence() {
         String sql = SqlFactory.getNative(new SybaseSqlDialect())

@@ -23,15 +23,19 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class BaseGitModel {
 
+	/** The username. */
 	@ApiModelProperty(value = "The User Name", required = true, example = "dirigible")
 	private String username;
 
+	/** The password. */
 	@ApiModelProperty(value = "Base64 Encoded Password", required = true, example = "ZGlyaWdpYmxl")
 	private String password;
 
+	/** The email. */
 	@ApiModelProperty(value = "The E-mail Address", example = "dirigible@gmail.com")
 	private String email;
 	
+	/** The branch. */
 	@ApiModelProperty(value = "The selected branch", required = false, example = "master")
 	private String branch = ProjectMetadataManager.BRANCH_MASTER;
 
@@ -93,8 +97,8 @@ public class BaseGitModel {
 	}
 
 	/**
-	 * Gets the branch
-	 * 
+	 * Gets the branch.
+	 *
 	 * @return the branch
 	 */
 	public String getBranch() {
@@ -102,8 +106,8 @@ public class BaseGitModel {
 	}
 
 	/**
-	 * Sets the branch
-	 * 
+	 * Sets the branch.
+	 *
 	 * @param branch the branch to set
 	 */
 	public void setBranch(String branch) {

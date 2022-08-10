@@ -41,36 +41,79 @@ import java.util.Map;
 
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 
+/**
+ * The Class DefaultSQLProcessor.
+ */
 public class DefaultSQLProcessor extends AbstractSQLProcessor {
 
+    /** The Constant DEFAULT_DATA_SOURCE_CONTEXT_KEY. */
     public static final String DEFAULT_DATA_SOURCE_CONTEXT_KEY = DataSource.class.getName();
+    
+    /** The Constant LOG. */
     private static final Logger LOG = LoggerFactory.getLogger(DefaultSQLProcessor.class);
+    
+    /** The sql query builder. */
     private final SQLQueryBuilder sqlQueryBuilder;
 
+    /**
+     * Instantiates a new default SQL processor.
+     *
+     * @param tableMappingProvider the table mapping provider
+     */
     public DefaultSQLProcessor(EdmTableBindingProvider tableMappingProvider) {
         this.sqlQueryBuilder = new SQLQueryBuilder(tableMappingProvider);
     }
 
+    /**
+     * Instantiates a new default SQL processor.
+     *
+     * @param queryBuilder the query builder
+     */
     public DefaultSQLProcessor(SQLQueryBuilder queryBuilder) {
         this.sqlQueryBuilder = queryBuilder;
     }
 
+    /**
+     * Instantiates a new default SQL processor.
+     *
+     * @param tableMappingProvider the table mapping provider
+     * @param odata2EventHandler the odata 2 event handler
+     */
     public DefaultSQLProcessor(EdmTableBindingProvider tableMappingProvider, OData2EventHandler odata2EventHandler) {
         super(odata2EventHandler);
         this.sqlQueryBuilder = new SQLQueryBuilder(tableMappingProvider);
     }
 
+    /**
+     * Instantiates a new default SQL processor.
+     *
+     * @param queryBuilder the query builder
+     * @param odata2EventHandler the odata 2 event handler
+     */
     public DefaultSQLProcessor(SQLQueryBuilder queryBuilder, OData2EventHandler odata2EventHandler) {
         super(odata2EventHandler);
         this.sqlQueryBuilder = queryBuilder;
     }
 
+    /**
+     * Adds the interceptors.
+     *
+     * @param interceptors the interceptors
+     */
     public void addInterceptors(List<SQLInterceptor> interceptors) {
         for (SQLInterceptor sqlInterceptor : interceptors) {
             this.sqlQueryBuilder.addInterceptor(sqlInterceptor);
         }
     }
 
+    /**
+     * On customize expanded navigaton property.
+     *
+     * @param entityType the entity type
+     * @param expandType the expand type
+     * @param expandInstance the expand instance
+     * @return the map
+     */
     @Override
     public Map<String, Object> onCustomizeExpandedNavigatonProperty(EdmStructuralType entityType, EdmStructuralType expandType,
                                                                     Map<String, Object> expandInstance) {
@@ -79,6 +122,18 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
 
     }
 
+    /**
+     * On customize property value.
+     *
+     * @param entityType the entity type
+     * @param property the property
+     * @param entityInstance the entity instance
+     * @param value the value
+     * @return the object
+     * @throws EdmException the edm exception
+     * @throws SQLException the SQL exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value) throws EdmException, SQLException, IOException {
         EdmType propertyType = property.getType();
@@ -129,11 +184,21 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
         return value;
     }
 
+    /**
+     * Gets the SQL query builder.
+     *
+     * @return the SQL query builder
+     */
     @Override
     public SQLQueryBuilder getSQLQueryBuilder() {
         return sqlQueryBuilder;
     }
 
+    /**
+     * Gets the data source.
+     *
+     * @return the data source
+     */
     @Override
     public DataSource getDataSource() {
         ODataContext context = this.getContext();

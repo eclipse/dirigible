@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.repository.api;
 
-import java.util.List;
-
 /**
  * The <code>IResource</code> interface represents a resource located in the
  * repository.

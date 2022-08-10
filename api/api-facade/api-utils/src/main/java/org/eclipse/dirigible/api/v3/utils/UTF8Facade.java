@@ -23,9 +23,9 @@ public class UTF8Facade {
     /**
      * UTF8 encode.
      *
-     * @param input
-     *            the input
+     * @param input            the input
      * @return the utf8encoded input
+     * @throws UnsupportedEncodingException the unsupported encoding exception
      */
     public static final byte[] encode(String input) throws UnsupportedEncodingException {
         return input.getBytes(StandardCharsets.UTF_8);
@@ -48,13 +48,11 @@ public class UTF8Facade {
     /**
      * UTF8 bytes to string.
      *
-     * @param bytes
-     *            the input byte array
-     * @param offset
-     *            the byte offset
-     * @param length
-     *            the length of the byte array
+     * @param bytes            the input byte array
+     * @param offset            the byte offset
+     * @param length            the length of the byte array
      * @return the utf8 decoded output
+     * @throws UnsupportedEncodingException the unsupported encoding exception
      */
     public static final String bytesToString(byte[] bytes, int offset, int length) throws UnsupportedEncodingException {
         return new String(bytes, offset, length, "UTF-8");

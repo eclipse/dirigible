@@ -16,22 +16,31 @@ package org.eclipse.dirigible.runtime.ide.generation.model.template;
  */
 public class GenerationTemplateMetadataSource {
 	
+	/** The location. */
 	private String location;
 	
+	/** The action. */
 	private String action;
 	
+	/** The rename. */
 	private String rename;
 	
+	/** The start. */
 	private String start;
 	
+	/** The end. */
 	private String end;
 	
+	/** The collection. */
 	private String collection;
 	
+	/** The type. */
 	private String type;
 	
+	/** The engine. */
 	private String engine;
 	
+	/** The handler. */
 	private String handler;
 
 	/**
@@ -125,8 +134,8 @@ public class GenerationTemplateMetadataSource {
 	}
 	
 	/**
-	 * Gets the collection element
-	 * 
+	 * Gets the collection element.
+	 *
 	 * @return collection
 	 */
 	public String getCollection() {
@@ -134,8 +143,8 @@ public class GenerationTemplateMetadataSource {
 	}
 	
 	/**
-	 * Sets the collection element
-	 * 
+	 * Sets the collection element.
+	 *
 	 * @param collection the collection element
 	 */
 	public void setCollection(String collection) {
@@ -143,8 +152,8 @@ public class GenerationTemplateMetadataSource {
 	}
 	
 	/**
-	 * Gets the named type
-	 * 
+	 * Gets the named type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -152,8 +161,8 @@ public class GenerationTemplateMetadataSource {
 	}
 	
 	/**
-	 * Sets the named type
-	 * 
+	 * Sets the named type.
+	 *
 	 * @param type the type
 	 */
 	public void setType(String type) {
@@ -161,8 +170,8 @@ public class GenerationTemplateMetadataSource {
 	}
 	
 	/**
-	 * Gets the named engine
-	 * 
+	 * Gets the named engine.
+	 *
 	 * @return the engine
 	 */
 	public String getEngine() {
@@ -170,8 +179,8 @@ public class GenerationTemplateMetadataSource {
 	}
 	
 	/**
-	 * Sets the named engine
-	 * 
+	 * Sets the named engine.
+	 *
 	 * @param engine the engine
 	 */
 	public void setEngine(String engine) {
@@ -179,6 +188,8 @@ public class GenerationTemplateMetadataSource {
 	}
 
 	/**
+	 * Gets the handler.
+	 *
 	 * @return the handler
 	 */
 	public String getHandler() {
@@ -186,6 +197,8 @@ public class GenerationTemplateMetadataSource {
 	}
 
 	/**
+	 * Sets the handler.
+	 *
 	 * @param handler the handler to set
 	 */
 	public void setHandler(String handler) {

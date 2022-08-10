@@ -21,12 +21,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * The Class TableDataReader.
+ */
 public class TableDataReader {
 
+	/** The Constant INVALID_NUMBER_D_OF_ELEMENTS_AT_LINE_D_INITIAL_COLUMNS_NUMBER_D. */
 	private static final String INVALID_NUMBER_D_OF_ELEMENTS_AT_LINE_D_INITIAL_COLUMNS_NUMBER_D = "Invalid number (%d) of elements at line: %d. Initial columns number: %d.";
 
+	/** The Constant DELIMITER. */
 	private static final String DELIMITER = "|"; //$NON-NLS-1$
 
+	/**
+	 * Read records.
+	 *
+	 * @param csvFile the csv file
+	 * @return the list
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InvalidNumberOfElementsException the invalid number of elements exception
+	 */
 	public static List<String[]> readRecords(InputStream csvFile)
 			throws FileNotFoundException, IOException, InvalidNumberOfElementsException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(csvFile, StandardCharsets.UTF_8));
@@ -54,6 +68,12 @@ public class TableDataReader {
 		return data;
 	}
 
+	/**
+	 * Gets the string items.
+	 *
+	 * @param str the str
+	 * @return the string items
+	 */
 	private static String[] getStringItems(String str) {
 		String delimiter = DELIMITER;
 		StringTokenizer tok = new StringTokenizer(str, delimiter, true);

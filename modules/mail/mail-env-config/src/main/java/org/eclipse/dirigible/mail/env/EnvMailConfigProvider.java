@@ -16,48 +16,92 @@ import org.eclipse.dirigible.commons.config.Configuration;
 
 import java.util.Properties;
 
+/**
+ * The Class EnvMailConfigProvider.
+ */
 public class EnvMailConfigProvider implements IMailConfigurationProvider {
 
+    /** The Constant MAIL_USER. */
     // Mail properties
     private static final String MAIL_USER = "mail.user";
+    
+    /** The Constant MAIL_PASSWORD. */
     private static final String MAIL_PASSWORD = "mail.password";
+    
+    /** The Constant MAIL_TRANSPORT_PROTOCOL. */
     private static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
 
+    /** The Constant MAIL_SMTPS_HOST. */
     // SMTPS properties
     private static final String MAIL_SMTPS_HOST = "mail.smtps.host";
+    
+    /** The Constant MAIL_SMTPS_PORT. */
     private static final String MAIL_SMTPS_PORT = "mail.smtps.port";
+    
+    /** The Constant MAIL_SMTPS_AUTH. */
     private static final String MAIL_SMTPS_AUTH = "mail.smtps.auth";
 
+    /** The Constant MAIL_SMTP_HOST. */
     // SMTP properties
     private static final String MAIL_SMTP_HOST = "mail.smtp.host";
+    
+    /** The Constant MAIL_SMTP_PORT. */
     private static final String MAIL_SMTP_PORT = "mail.smtp.port";
+    
+    /** The Constant MAIL_SMTP_AUTH. */
     private static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 
+    /** The Constant DIRIGIBLE_MAIL_USERNAME. */
     private static final String DIRIGIBLE_MAIL_USERNAME = "DIRIGIBLE_MAIL_USERNAME";
+    
+    /** The Constant DIRIGIBLE_MAIL_PASSWORD. */
     private static final String DIRIGIBLE_MAIL_PASSWORD = "DIRIGIBLE_MAIL_PASSWORD";
 
+    /** The Constant DIRIGIBLE_MAIL_TRANSPORT_PROTOCOL. */
     private static final String DIRIGIBLE_MAIL_TRANSPORT_PROTOCOL = "DIRIGIBLE_MAIL_TRANSPORT_PROTOCOL";
 
+    /** The Constant DIRIGIBLE_MAIL_SMTPS_HOST. */
     // SMTPS properties
     private static final String DIRIGIBLE_MAIL_SMTPS_HOST = "DIRIGIBLE_MAIL_SMTPS_HOST";
+    
+    /** The Constant DIRIGIBLE_MAIL_SMTPS_PORT. */
     private static final String DIRIGIBLE_MAIL_SMTPS_PORT = "DIRIGIBLE_MAIL_SMTPS_PORT";
+    
+    /** The Constant DIRIGIBLE_MAIL_SMTPS_AUTH. */
     private static final String DIRIGIBLE_MAIL_SMTPS_AUTH = "DIRIGIBLE_MAIL_SMTPS_AUTH";
 
+    /** The Constant DIRIGIBLE_MAIL_SMTP_HOST. */
     // SMTP properties
     private static final String DIRIGIBLE_MAIL_SMTP_HOST = "DIRIGIBLE_MAIL_SMTP_HOST";
+    
+    /** The Constant DIRIGIBLE_MAIL_SMTP_PORT. */
     private static final String DIRIGIBLE_MAIL_SMTP_PORT = "DIRIGIBLE_MAIL_SMTP_PORT";
+    
+    /** The Constant DIRIGIBLE_MAIL_SMTP_AUTH. */
     private static final String DIRIGIBLE_MAIL_SMTP_AUTH = "DIRIGIBLE_MAIL_SMTP_AUTH";
 
+    /** The Constant DEFAULT_MAIL_TRANSPORT_PROTOCOL. */
     // Default values
     private static final String DEFAULT_MAIL_TRANSPORT_PROTOCOL = "smtps";
 
+    /** The Constant PROVIDER_NAME. */
     private static final String PROVIDER_NAME = "environment";
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     @Override
     public String getName() {
         return PROVIDER_NAME;
     }
 
+    /**
+     * Gets the properties.
+     *
+     * @return the properties
+     */
     @Override
     public Properties getProperties() {
         Properties properties = new Properties();
@@ -78,10 +122,25 @@ public class EnvMailConfigProvider implements IMailConfigurationProvider {
         return properties;
     }
 
+    /**
+     * Adds the value.
+     *
+     * @param properties the properties
+     * @param key the key
+     * @param envKey the env key
+     */
     private static void addValue(Properties properties, String key, String envKey) {
         addValue(properties, key, envKey, null);
     }
 
+    /**
+     * Adds the value.
+     *
+     * @param properties the properties
+     * @param key the key
+     * @param envKey the env key
+     * @param defaultValue the default value
+     */
     private static void addValue(Properties properties, String key, String envKey, String defaultValue) {
         String value = Configuration.get(envKey);
         if (value != null) {

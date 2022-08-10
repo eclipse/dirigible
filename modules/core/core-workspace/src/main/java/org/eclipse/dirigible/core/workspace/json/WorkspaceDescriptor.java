@@ -24,12 +24,16 @@ import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
  */
 public class WorkspaceDescriptor {
 
+	/** The name. */
 	private String name;
 
+	/** The path. */
 	private String path;
 
+	/** The type. */
 	private String type = "workspace";
 
+	/** The projects. */
 	private List<ProjectDescriptor> projects = new ArrayList<ProjectDescriptor>();
 
 	/**
@@ -80,8 +84,8 @@ public class WorkspaceDescriptor {
 	}
 	
 	/**
-	 * Get the type
-	 * 
+	 * Get the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -99,10 +103,11 @@ public class WorkspaceDescriptor {
 	}
 	
 	/**
-	 * Get the git folder
-	 * 
+	 * Get the git folder.
+	 *
 	 * @param repository the repository
 	 * @param repositoryPath the path
+	 * @return the canonical file per project path
 	 */
 	public static File getCanonicalFilePerProjectPath(IRepository repository, String repositoryPath) {
 		try {

@@ -21,10 +21,11 @@ import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 
 /**
- * The Workspace Facade
+ * The Workspace Facade.
  */
 public class WorkspaceFacade {
 	
+	/** The workspaces core service. */
 	private static WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 	
 	/**
@@ -72,7 +73,7 @@ public class WorkspaceFacade {
 	}
 	
 	/**
-	 * Get the file content
+	 * Get the file content.
 	 *
 	 * @param file the file
 	 * @return the content

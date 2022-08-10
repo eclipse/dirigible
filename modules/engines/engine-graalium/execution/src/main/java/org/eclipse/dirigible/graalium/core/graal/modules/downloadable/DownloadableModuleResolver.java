@@ -12,20 +12,41 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
 
+/**
+ * The Class DownloadableModuleResolver.
+ */
 public class DownloadableModuleResolver {
 
+    /** The dependencies cache path. */
     private final Path dependenciesCachePath;
 
+    /**
+     * Instantiates a new downloadable module resolver.
+     *
+     * @param dependenciesCachePath the dependencies cache path
+     */
     public DownloadableModuleResolver(Path dependenciesCachePath) {
         dependenciesCachePath.toFile().mkdirs();
         this.dependenciesCachePath = dependenciesCachePath;
     }
 
+    /**
+     * Resolve.
+     *
+     * @param uri the uri
+     * @return the path
+     */
     public Path resolve(URI uri) {
         Path maybeCachePath = tryGetCachePath(uri);
         return maybeCachePath != null ? maybeCachePath : downloadDependency(uri);
     }
 
+    /**
+     * Try get cache path.
+     *
+     * @param uri the uri
+     * @return the path
+     */
     private Path tryGetCachePath(URI uri) {
         String base64DependencyName = getBase64FromURI(uri);
         Path expectedDependencyPath = dependenciesCachePath.resolve(base64DependencyName);
@@ -38,6 +59,12 @@ public class DownloadableModuleResolver {
         return null;
     }
 
+    /**
+     * Download dependency.
+     *
+     * @param uri the uri
+     * @return the path
+     */
     private Path downloadDependency(URI uri) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
@@ -58,11 +85,23 @@ public class DownloadableModuleResolver {
         }
     }
 
+    /**
+     * Gets the dependency file path for output.
+     *
+     * @param dependencyUri the dependency uri
+     * @return the dependency file path for output
+     */
     private Path getDependencyFilePathForOutput(URI dependencyUri) {
         String base64DependencyName = getBase64FromURI(dependencyUri);
         return dependenciesCachePath.resolve(base64DependencyName);
     }
 
+    /**
+     * Gets the base 64 from URI.
+     *
+     * @param uri the uri
+     * @return the base 64 from URI
+     */
     private static String getBase64FromURI(URI uri) {
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] bytes = uri.toString().getBytes(StandardCharsets.UTF_8);

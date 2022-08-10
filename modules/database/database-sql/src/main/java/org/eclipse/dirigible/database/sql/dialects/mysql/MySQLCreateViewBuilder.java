@@ -14,16 +14,32 @@ package org.eclipse.dirigible.database.sql.dialects.mysql;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
 
+/**
+ * The Class MySQLCreateViewBuilder.
+ */
 public class MySQLCreateViewBuilder extends CreateViewBuilder {
 
+    /** The values. */
     private String values = null;
 
 
+    /**
+     * Instantiates a new my SQL create view builder.
+     *
+     * @param dialect the dialect
+     * @param view the view
+     */
     public MySQLCreateViewBuilder(ISqlDialect dialect, String view) {
         super(dialect, view);
     }
 
 
+    /**
+     * As select.
+     *
+     * @param select the select
+     * @return the my SQL create view builder
+     */
     @Override
     public MySQLCreateViewBuilder asSelect(String select) {
 
@@ -34,6 +50,12 @@ public class MySQLCreateViewBuilder extends CreateViewBuilder {
         return this;
     }
 
+    /**
+     * Gets the select proper escaping.
+     *
+     * @param select the select
+     * @return the select proper escaping
+     */
     private String getSelectProperEscaping(String select) {
         return select.replaceAll("\"", "`");
     }

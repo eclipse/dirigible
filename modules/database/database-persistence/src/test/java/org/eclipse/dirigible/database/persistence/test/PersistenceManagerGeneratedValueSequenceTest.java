@@ -59,26 +59,57 @@ public class PersistenceManagerGeneratedValueSequenceTest extends AbstractPersis
 		}
 	}
 
+	/**
+	 * Creates the table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void createTableForPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) {
 		persistenceManager.tableCreate(connection, Inquiry.class);
 	}
 
+	/**
+	 * Exists table.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @return true, if successful
+	 */
 	private boolean existsTable(Connection connection, PersistenceManager<Inquiry> persistenceManager) {
 		return persistenceManager.tableExists(connection, Inquiry.class);
 	}
 
+	/**
+	 * Insert pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) {
 		Inquiry inquiry = new Inquiry();
 		inquiry.setSubject("Subject 1");
 		persistenceManager.insert(connection, inquiry);
 	}
 
+	/**
+	 * Insert second pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertSecondPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) {
 		Inquiry inquiry = new Inquiry();
 		inquiry.setSubject("Subject 2");
 		persistenceManager.insert(connection, inquiry);
 	}
 
+	/**
+	 * Find all pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void findAllPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) {
 		List<Inquiry> list = persistenceManager.findAll(connection, Inquiry.class);
 
@@ -92,6 +123,12 @@ public class PersistenceManagerGeneratedValueSequenceTest extends AbstractPersis
 
 	}
 
+	/**
+	 * Drop table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void dropTableForPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) {
 		persistenceManager.tableDrop(connection, Inquiry.class);
 	}

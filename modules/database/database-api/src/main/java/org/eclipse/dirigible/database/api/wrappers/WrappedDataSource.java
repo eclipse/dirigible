@@ -25,12 +25,16 @@ import org.slf4j.LoggerFactory;
  */
 public class WrappedDataSource implements DataSource {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(WrappedDataSource.class);
 
+	/** The Constant DATABASE_NAME_HDB. */
 	private static final String DATABASE_NAME_HDB = "HDB";
 
+	/** The database name. */
 	private String databaseName;
 
+	/** The original data source. */
 	private final DataSource originalDataSource;
 
 	/**
@@ -43,6 +47,12 @@ public class WrappedDataSource implements DataSource {
 		this.originalDataSource = originalDataSource;
 	}
 
+	/**
+	 * Gets the connection.
+	 *
+	 * @return the connection
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.sql.DataSource#getConnection()
@@ -52,6 +62,14 @@ public class WrappedDataSource implements DataSource {
 		return getConnection(null, null);
 	}
 
+	/**
+	 * Gets the connection.
+	 *
+	 * @param username the username
+	 * @param password the password
+	 * @return the connection
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.sql.DataSource#getConnection(java.lang.String, java.lang.String)
@@ -76,6 +94,12 @@ public class WrappedDataSource implements DataSource {
 		return connection;
 	}
 
+	/**
+	 * Gets the log writer.
+	 *
+	 * @return the log writer
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.sql.CommonDataSource#getLogWriter()
@@ -85,6 +109,12 @@ public class WrappedDataSource implements DataSource {
 		return originalDataSource.getLogWriter();
 	}
 
+	/**
+	 * Gets the login timeout.
+	 *
+	 * @return the login timeout
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.sql.CommonDataSource#getLoginTimeout()
@@ -94,6 +124,13 @@ public class WrappedDataSource implements DataSource {
 		return originalDataSource.getLoginTimeout();
 	}
 
+	/**
+	 * Checks if is wrapper for.
+	 *
+	 * @param arg0 the arg 0
+	 * @return true, if is wrapper for
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.sql.Wrapper#isWrapperFor(java.lang.Class)
@@ -103,6 +140,12 @@ public class WrappedDataSource implements DataSource {
 		return originalDataSource.isWrapperFor(arg0);
 	}
 
+	/**
+	 * Sets the log writer.
+	 *
+	 * @param arg0 the new log writer
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.sql.CommonDataSource#setLogWriter(java.io.PrintWriter)
@@ -112,6 +155,12 @@ public class WrappedDataSource implements DataSource {
 		originalDataSource.setLogWriter(arg0);
 	}
 
+	/**
+	 * Sets the login timeout.
+	 *
+	 * @param arg0 the new login timeout
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.sql.CommonDataSource#setLoginTimeout(int)
@@ -121,6 +170,14 @@ public class WrappedDataSource implements DataSource {
 		originalDataSource.setLoginTimeout(arg0);
 	}
 
+	/**
+	 * Unwrap.
+	 *
+	 * @param <T> the generic type
+	 * @param arg0 the arg 0
+	 * @return the t
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.sql.Wrapper#unwrap(java.lang.Class)
@@ -130,6 +187,12 @@ public class WrappedDataSource implements DataSource {
 		return originalDataSource.unwrap(arg0);
 	}
 
+	/**
+	 * Gets the parent logger.
+	 *
+	 * @return the parent logger
+	 * @throws SQLFeatureNotSupportedException the SQL feature not supported exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.sql.CommonDataSource#getParentLogger()

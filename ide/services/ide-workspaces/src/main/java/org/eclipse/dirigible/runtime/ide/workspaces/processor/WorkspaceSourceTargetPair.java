@@ -16,12 +16,16 @@ package org.eclipse.dirigible.runtime.ide.workspaces.processor;
  */
 public class WorkspaceSourceTargetPair {
 
+    /** The source workspace. */
     private String sourceWorkspace;
 
+    /** The source. */
     private String source;
 
+    /** The target workspace. */
     private String targetWorkspace;
 
+    /** The target. */
     private String target;
 
     /**

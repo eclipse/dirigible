@@ -113,6 +113,15 @@
                 let executionObject = createExecuteAction();
                 executionObject.run(_editor);
               }, "database.sql.run");
+              messageHub.subscribe(function (command) {
+                //_editor.trigger('keyboard', 'type', {text: command.data});
+                 var line = editor.getPosition();
+                 var range = new monaco.Range(line.lineNumber, 1, line.lineNumber, 1);
+                 var id = { major: 1, minor: 1 };             
+                 var text = command.data;
+                 var op = {identifier: id, range: range, text: text, forceMoveMarkers: true};
+                 editor.executeEdits("source", [op]);
+              }, "database.sql.script");
               let sqlCommand = loadSQLCommand();
               return sqlPlaceholder + sqlCommand;
             })

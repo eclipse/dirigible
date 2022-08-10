@@ -18,9 +18,11 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class GitCloneModel extends BaseGitModel {
 
+	/** The repository. */
 	@ApiModelProperty(value = "The Git Repository URL", example = "https://github.com/dirigiblelabs/sample_git_test.git", required = true)
 	private String repository;
 
+	/** The publish. */
 	@ApiModelProperty(value = "Whether to publish the project(s) after clone", example = "true")
 	private boolean publish;
 

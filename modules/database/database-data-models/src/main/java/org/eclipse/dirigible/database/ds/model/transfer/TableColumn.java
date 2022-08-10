@@ -11,14 +11,28 @@
  */
 package org.eclipse.dirigible.database.ds.model.transfer;
 
+/**
+ * The Class TableColumn.
+ */
 public class TableColumn {
 
+	/** The name. */
 	private String name;
 
+	/** The type. */
 	private int type;
 
+	/** The key. */
 	private boolean key;
 
+	/**
+	 * Instantiates a new table column.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param key the key
+	 * @param visible the visible
+	 */
 	public TableColumn(String name, int type, boolean key, boolean visible) {
 		super();
 		this.name = name;
@@ -26,26 +40,56 @@ public class TableColumn {
 		this.key = key;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Checks if is key.
+	 *
+	 * @return true, if is key
+	 */
 	public boolean isKey() {
 		return key;
 	}
 
+	/**
+	 * Sets the key.
+	 *
+	 * @param key the new key
+	 */
 	public void setKey(boolean key) {
 		this.key = key;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	public int getType() {
 		return type;
 	}
 
+	/**
+	 * Sets the type.
+	 *
+	 * @param type the new type
+	 */
 	public void setType(int type) {
 		this.type = type;
 	}

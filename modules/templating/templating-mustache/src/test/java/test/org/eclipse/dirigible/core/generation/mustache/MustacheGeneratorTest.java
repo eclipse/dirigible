@@ -24,8 +24,16 @@ import org.junit.Test;
 
 import com.github.mustachejava.util.DecoratedCollection;
 
+/**
+ * The Class MustacheGeneratorTest.
+ */
 public class MustacheGeneratorTest {
 	
+	/**
+	 * Generate.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void generate() throws IOException {
 		IGenerationEngine generationEngine = new MustacheGenerationEngine();
@@ -35,6 +43,11 @@ public class MustacheGeneratorTest {
 		assertEquals("test testValue", new String(result));
 	}
 	
+	/**
+	 * Generate collection decorated.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void generateCollectionDecorated() throws IOException {
 		IGenerationEngine generationEngine = new MustacheGenerationEngine();
@@ -56,6 +69,11 @@ public class MustacheGeneratorTest {
 		assertEquals("test name1, name2, name3", new String(result));
 	}
 
+	/**
+	 * Generate collection simple.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void generateCollectionSimple() throws IOException {
 		IGenerationEngine generationEngine = new MustacheGenerationEngine();
@@ -77,6 +95,11 @@ public class MustacheGeneratorTest {
 		assertEquals("test name1 name2 name3 ", new String(result));
 	}
 	
+	/**
+	 * Generate collection decorated default.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void generateCollectionDecoratedDefault() throws IOException {
 		IGenerationEngine generationEngine = new MustacheGenerationEngine();
@@ -98,6 +121,11 @@ public class MustacheGeneratorTest {
 		assertEquals("test name1, name2, name3", new String(result));
 	}
 
+	/**
+	 * Generate collection decorated nested.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void generateCollectionDecoratedNested() throws IOException {
 		IGenerationEngine generationEngine = new MustacheGenerationEngine();

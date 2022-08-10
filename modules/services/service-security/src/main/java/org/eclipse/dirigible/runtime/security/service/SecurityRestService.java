@@ -39,10 +39,13 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class SecurityRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SecurityRestService.class);
 
+	/** The processor. */
 	private SecurityProcessor processor = new SecurityProcessor();
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
@@ -82,6 +85,11 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 		return Response.ok().entity(processor.renderRoles()).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -91,6 +99,11 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 		return SecurityRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

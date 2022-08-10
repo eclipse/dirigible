@@ -19,7 +19,19 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/**
+ * The Class QRCodeFacade.
+ */
 public class QRCodeFacade {
+    
+    /**
+     * Generate QR code.
+     *
+     * @param text the text
+     * @return the byte[]
+     * @throws WriterException the writer exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public static final byte[] generateQRCode(String text) throws WriterException, IOException {
         QRCodeWriter qrCodeWriter               = new QRCodeWriter();
         BitMatrix bitMatrix                     = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);

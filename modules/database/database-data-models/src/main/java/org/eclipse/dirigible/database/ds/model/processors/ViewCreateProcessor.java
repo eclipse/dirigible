@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ViewCreateProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ViewCreateProcessor.class);
 
 	/**

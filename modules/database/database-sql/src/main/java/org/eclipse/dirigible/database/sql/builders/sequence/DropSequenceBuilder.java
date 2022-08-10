@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
  */
 public class DropSequenceBuilder extends AbstractDropSqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DropSequenceBuilder.class);
 
+	/** The sequence. */
 	private String sequence = null;
 
 	/**
@@ -38,6 +40,11 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
 		this.sequence = sequence;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

@@ -16,10 +16,8 @@ import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SelectTest.
  */
@@ -359,7 +357,7 @@ public class SelectTest {
 	}
 	
 	/**
-	 * Select column and where clause in case sensitive mode
+	 * Select column and where clause in case sensitive mode.
 	 */
 	@Test
 	public void selectFunctionCaseSensitive() {

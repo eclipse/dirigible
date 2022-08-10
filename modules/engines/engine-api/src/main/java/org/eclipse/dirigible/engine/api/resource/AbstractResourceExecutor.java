@@ -34,15 +34,20 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractResourceExecutor implements IResourceExecutor {
 
+	/** The Constant LOCATION_META_INF_DIRIGIBLE. */
 	private static final String LOCATION_META_INF_DIRIGIBLE = "/META-INF/dirigible";
 	
+	/** The Constant LOCATION_META_INF_WEBJARS. */
 	private static final String LOCATION_META_INF_WEBJARS = "/META-INF/resources/webjars";
 	
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractResourceExecutor.class);
 
+	/** The repository. */
 	private IRepository repository = null;
 
+	/** The predelivered. */
 	private static Map<String, byte[]> PREDELIVERED = Collections.synchronizedMap(new HashMap<String, byte[]>());
 	
 
@@ -58,6 +63,14 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		return repository;
 	}
 
+	/**
+	 * Gets the resource content.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @return the resource content
+	 * @throws RepositoryException the repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#getResourceContent(java.lang.String,
@@ -68,6 +81,15 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		return getResourceContent(root, module, null);
 	}
 
+	/**
+	 * Gets the resource content.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @param extension the extension
+	 * @return the resource content
+	 * @throws RepositoryException the repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#getResourceContent(java.lang.String,
@@ -106,6 +128,14 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		throw new RepositoryNotFoundException(logMsg);
 	}
 
+	/**
+	 * Try from repository location.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @param extension the extension
+	 * @return the byte[]
+	 */
 	private byte[] tryFromRepositoryLocation(String root, String module, String extension) {
 		byte[] result = null;
 		String repositoryPath = createResourcePath(root, module, extension);
@@ -116,14 +146,36 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		return result;
 	}
 	
+	/**
+	 * Try from dirigible location.
+	 *
+	 * @param module the module
+	 * @param extension the extension
+	 * @return the byte[]
+	 */
 	private byte[] tryFromDirigibleLocation(String module, String extension) {
 		return tryFromClassloaderLocation(module, extension, LOCATION_META_INF_DIRIGIBLE);
 	}
 	
+	/**
+	 * Try from web jars location.
+	 *
+	 * @param module the module
+	 * @param extension the extension
+	 * @return the byte[]
+	 */
 	private byte[] tryFromWebJarsLocation(String module, String extension) {
 		return tryFromClassloaderLocation(module, extension, LOCATION_META_INF_WEBJARS);
 	}
 	
+	/**
+	 * Try from classloader location.
+	 *
+	 * @param module the module
+	 * @param extension the extension
+	 * @param path the path
+	 * @return the byte[]
+	 */
 	private byte[] tryFromClassloaderLocation(String module, String extension, String path) {
 		byte[] result = null;
 		try {
@@ -151,6 +203,14 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		return result;
 	}
 
+	/**
+	 * Gets the collection.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @return the collection
+	 * @throws RepositoryException the repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#getCollection(java.lang.String,
@@ -169,6 +229,14 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		throw new RepositoryException(logMsg);
 	}
 
+	/**
+	 * Gets the resource.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @return the resource
+	 * @throws RepositoryException the repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#getResource(java.lang.String, java.lang.String)
@@ -178,6 +246,15 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		return getResource(root, module, null);
 	}
 
+	/**
+	 * Gets the resource.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @param extension the extension
+	 * @return the resource
+	 * @throws RepositoryException the repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#getResource(java.lang.String, java.lang.String,
@@ -197,6 +274,14 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 
 	}
 
+	/**
+	 * Exist resource.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @return true, if successful
+	 * @throws RepositoryException the repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#existResource(java.lang.String,
@@ -207,6 +292,15 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		return existResource(root, module, null);
 	}
 
+	/**
+	 * Exist resource.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @param extension the extension
+	 * @return true, if successful
+	 * @throws RepositoryException the repository exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#existResource(java.lang.String,
@@ -219,6 +313,13 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		return resource.exists();
 	}
 
+	/**
+	 * Creates the resource path.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#createResourcePath(java.lang.String,
@@ -229,6 +330,14 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		return createResourcePath(root, module, null);
 	}
 
+	/**
+	 * Creates the resource path.
+	 *
+	 * @param root the root
+	 * @param module the module
+	 * @param extension the extension
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#createResourcePath(java.lang.String,
@@ -248,6 +357,12 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		return resourcePath;
 	}
 	
+	/**
+	 * Gets the loaded predelivered content.
+	 *
+	 * @param location the location
+	 * @return the loaded predelivered content
+	 */
 	protected byte[] getLoadedPredeliveredContent(String location) {
 		return PREDELIVERED.get(location);
 	}

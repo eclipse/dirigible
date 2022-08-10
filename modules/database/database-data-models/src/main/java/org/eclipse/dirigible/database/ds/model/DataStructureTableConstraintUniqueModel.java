@@ -16,22 +16,44 @@ package org.eclipse.dirigible.database.ds.model;
  */
 public class DataStructureTableConstraintUniqueModel extends DataStructureTableConstraintModel {
 
+    /** The index type. */
     private String indexType;
 
+    /** The order. */
     private String order;
 
+    /**
+     * Gets the index type.
+     *
+     * @return the index type
+     */
     public String getIndexType() {
         return indexType;
     }
 
+    /**
+     * Sets the index type.
+     *
+     * @param indexType the new index type
+     */
     public void setIndexType(String indexType) {
         this.indexType = indexType;
     }
 
+    /**
+     * Gets the order.
+     *
+     * @return the order
+     */
     public String getOrder() {
         return order;
     }
 
+    /**
+     * Sets the order.
+     *
+     * @param order the new order
+     */
     public void setOrder(String order) {
         this.order = order;
     }

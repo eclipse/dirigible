@@ -26,8 +26,10 @@ import org.slf4j.LoggerFactory;
  */
 public class DatabaseMetadata {
 	
+	/** The Constant NOT_SUPPORTED. */
 	private static final String NOT_SUPPORTED = "Not supported: ";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseMetadata.class);
 
 	/** The all procedures are callable. */

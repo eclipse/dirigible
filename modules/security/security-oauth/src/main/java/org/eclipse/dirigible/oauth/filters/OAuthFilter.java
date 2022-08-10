@@ -34,6 +34,9 @@ import org.eclipse.dirigible.oauth.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class OAuthFilter.
+ */
 @WebFilter(urlPatterns = {
 		"/services/v3/*",
 		"/public/v3/*",
@@ -45,19 +48,42 @@ import org.slf4j.LoggerFactory;
 }, filterName = "XSUAA Security Filter", description = "Check all URIs for the permissions")
 public class OAuthFilter extends AbstractOAuthFilter {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(OAuthFilter.class);
 
+	/** The Constant PUBLIC. */
 	private static final String PUBLIC = "public";
+	
+	/** The Constant SERVICES_V3_PUBLIC. */
 	private static final String SERVICES_V3_PUBLIC = "/services/v3/public";
+	
+	/** The Constant SERVICES_V4_PUBLIC. */
 	private static final String SERVICES_V4_PUBLIC = "/services/v4/public";
+	
+	/** The Constant SERVICES_V4_OAUTH. */
 	private static final String SERVICES_V4_OAUTH = "/services/v4/oauth";
+	
+	/** The Constant SERVICES_V4_WEB_RESOURCES. */
 	private static final String SERVICES_V4_WEB_RESOURCES = "/services/v4/web/resources";
+	
+	/** The Constant SERVICES_V4_HEALTHCHECK. */
 	private static final String SERVICES_V4_HEALTHCHECK = "/services/v4/healthcheck";
 
+	/** The Constant UNAUTHORIZED_MESSAGE. */
 	private static final String UNAUTHORIZED_MESSAGE = "No logged in user";
 
+	/** The security core service. */
 	private static ISecurityCoreService securityCoreService = new SecurityCoreService();
 	
+	/**
+	 * Filter.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param chain the chain
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ServletException the servlet exception
+	 */
 	@Override
 	protected void filter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String jwt = null;
@@ -102,6 +128,12 @@ public class OAuthFilter extends AbstractOAuthFilter {
 		}
 	}
 
+	/**
+	 * Checks if is public enabled access.
+	 *
+	 * @param servletRequest the servlet request
+	 * @return true, if is public enabled access
+	 */
 	private boolean isPublicEnabledAccess(ServletRequest servletRequest) {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		String requestURI = request.getRequestURI();
@@ -122,18 +154,35 @@ public class OAuthFilter extends AbstractOAuthFilter {
 		return false;
 	}
 
+	/**
+	 * Checks if is o auth.
+	 *
+	 * @param servletRequest the servlet request
+	 * @return true, if is o auth
+	 */
 	private boolean isOAuth(ServletRequest servletRequest) {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		String requestURI = request.getRequestURI();
 		return requestURI.startsWith(SERVICES_V4_OAUTH);
 	}
 
+	/**
+	 * Checks if is public resource.
+	 *
+	 * @param servletRequest the servlet request
+	 * @return true, if is public resource
+	 */
 	private boolean isPublicResource(ServletRequest servletRequest) {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		String requestURI = request.getRequestURI();
 		return requestURI.startsWith(SERVICES_V4_WEB_RESOURCES) || requestURI.startsWith(SERVICES_V4_HEALTHCHECK);
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

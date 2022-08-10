@@ -33,8 +33,10 @@ import org.slf4j.LoggerFactory;
  */
 public class PushCommand {
 
+	/** The Constant SHOULD_BE_EMPTY_REPOSITORY. */
 	private static final String SHOULD_BE_EMPTY_REPOSITORY = "Should be empty repository: {}";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PushCommand.class);
 
 	/** The project metadata manager. */
@@ -72,10 +74,9 @@ public class PushCommand {
 	/**
 	 * Push project to git repository by executing several low level Git commands.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param model
-	 *            the git push model
+	 * @param workspace            the workspace
+	 * @param repositoryName the repository name
+	 * @param model            the git push model
 	 * @throws GitConnectorException in case of exception
 	 */
 	private void pushProjectToGitRepository(final IWorkspace workspace, String repositoryName, GitPushModel model) throws GitConnectorException {

@@ -16,14 +16,27 @@ import java.io.IOException;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 
+/**
+ * The Class CmisObject.
+ */
 public class CmisObject {
 
+	/** The session. */
 	private CmisSession session;
 
+	/** The internal entity. */
 	private IEntity internalEntity;
 
+	/** The type collection. */
 	private boolean typeCollection = false;
 
+	/**
+	 * Instantiates a new cmis object.
+	 *
+	 * @param session the session
+	 * @param path the path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public CmisObject(CmisSession session, String path) throws IOException {
 		super();
 		this.session = session;
@@ -38,16 +51,27 @@ public class CmisObject {
 		}
 	}
 
+	/**
+	 * Sanitize.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	protected String sanitize(String path) {
 		return path.replace("\\", "");
 	}
 
+	/**
+	 * Gets the internal entity.
+	 *
+	 * @return the internal entity
+	 */
 	public IEntity getInternalEntity() {
 		return internalEntity;
 	}
 
 	/**
-	 * Returns the ID of this CmisObject
+	 * Returns the ID of this CmisObject.
 	 *
 	 * @return the Id
 	 */
@@ -56,7 +80,7 @@ public class CmisObject {
 	}
 
 	/**
-	 * Returns the Name of this CmisObject
+	 * Returns the Name of this CmisObject.
 	 *
 	 * @return the name
 	 */
@@ -68,7 +92,7 @@ public class CmisObject {
 	}
 
 	/**
-	 * Returns the Type of this CmisObject
+	 * Returns the Type of this CmisObject.
 	 *
 	 * @return the object type
 	 */
@@ -76,12 +100,17 @@ public class CmisObject {
 		return this.isCollection() ? ObjectType.FOLDER : ObjectType.DOCUMENT;
 	}
 
+	/**
+	 * Checks if is collection.
+	 *
+	 * @return true, if is collection
+	 */
 	protected boolean isCollection() {
 		return typeCollection;
 	}
 
 	/**
-	 * Delete this CmisObject
+	 * Delete this CmisObject.
 	 *
 	 * @throws IOException IO Exception
 	 */
@@ -90,10 +119,9 @@ public class CmisObject {
 	}
 
 	/**
-	 * Delete this CmisObject
+	 * Delete this CmisObject.
 	 *
 	 * @param allVersions whether to delete all versions
-	 * 
 	 * @throws IOException IO Exception
 	 */
 	public void delete(boolean allVersions) throws IOException {
@@ -101,10 +129,9 @@ public class CmisObject {
 	}
 
 	/**
-	 * Rename this CmisObject
-	 * 
-	 * @param newName the new name
+	 * Rename this CmisObject.
 	 *
+	 * @param newName the new name
 	 * @throws IOException IO Exception
 	 */
 	public void rename(String newName) throws IOException {

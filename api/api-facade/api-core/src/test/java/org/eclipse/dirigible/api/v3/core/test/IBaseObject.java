@@ -13,12 +13,40 @@ package org.eclipse.dirigible.api.v3.core.test;
 
 import java.util.Map;
 
+/**
+ * The Interface IBaseObject.
+ */
 public interface IBaseObject {
 
+	/**
+	 * Do something.
+	 *
+	 * @param parameters the parameters
+	 * @param inheritedParameter the inherited parameter
+	 * @param exactParameter the exact parameter
+	 * @return the string
+	 */
 	public String doSomething(Map parameters, IBaseParameter inheritedParameter, ExactParameter exactParameter);
 
+	/**
+	 * Do something.
+	 *
+	 * @param parameters the parameters
+	 * @param inheritedParameter the inherited parameter
+	 * @param exactParameter the exact parameter
+	 * @param s the s
+	 * @return the string
+	 */
 	public String doSomething(Map parameters, IBaseParameter inheritedParameter, ExactParameter exactParameter, String s);
 
+	/**
+	 * Do something else.
+	 *
+	 * @param parameters the parameters
+	 * @param inheritedParameter the inherited parameter
+	 * @param s the s
+	 * @return the string
+	 */
 	public String doSomethingElse(Map parameters, IBaseParameter inheritedParameter, String s);
 
 }

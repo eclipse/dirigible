@@ -38,18 +38,31 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class HttpClientAsyncFacade.
+ */
 public final class HttpClientAsyncFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientAsyncFacade.class);
 	
+	/** The default engine executor. */
 	private IJavascriptEngineExecutor defaultEngineExecutor = null;
 
+	/** The requests counter. */
 	private int requestsCounter = 0;
 	
+	/** The async http requests. */
 	private List<AsyncHttpRequest> asyncHttpRequests = new ArrayList<AsyncHttpRequest>();
 	
+	/** The count down latch. */
 	private CountDownLatch countDownLatch;
 	
+	/**
+	 * Gets the default engine executor.
+	 *
+	 * @return the default engine executor
+	 */
 	protected synchronized IJavascriptEngineExecutor getDefaultEngineExecutor() {
 		if (defaultEngineExecutor == null) {
 			defaultEngineExecutor = (IJavascriptEngineExecutor) StaticObjects.get(StaticObjects.JAVASCRIPT_ENGINE);
@@ -58,8 +71,8 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Create HttpResponseCallback
-	 * 
+	 * Create HttpResponseCallback.
+	 *
 	 * @param completeCallback the complete callback
 	 * @return HttpResponseCallback
 	 */
@@ -68,8 +81,8 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Create HttpResponseCallback
-	 * 
+	 * Create HttpResponseCallback.
+	 *
 	 * @param completeCallback the complete callback
 	 * @param failCallback the fail callback
 	 * @return HttpResponseCallback
@@ -79,8 +92,8 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Create HttpResponseCallback
-	 * 
+	 * Create HttpResponseCallback.
+	 *
 	 * @param completeCallback the complete callback
 	 * @param failCallback the fail callback
 	 * @param cancelCallback the cancel callback
@@ -91,14 +104,11 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Performs a Async GET request for the specified URL and options
+	 * Performs a Async GET request for the specified URL and options.
 	 *
-	 * @param url
-	 *            the URL
-	 * @param options
-	 *            the options
-	 * @param httpResponseCallback
-	 *            the callback
+	 * @param url            the URL
+	 * @param options            the options
+	 * @param httpResponseCallback            the callback
 	 */
 	public void getAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
@@ -109,16 +119,12 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Performs a Async POST request for the specified URL and options
+	 * Performs a Async POST request for the specified URL and options.
 	 *
-	 * @param url
-	 *            the URL
-	 * @param options
-	 *            the options
-	 * @param httpResponseCallback
-	 *            the callback
-	 * @throws IOException
-	 *             In case an I/O exception occurs
+	 * @param url            the URL
+	 * @param options            the options
+	 * @param httpResponseCallback            the callback
+	 * @throws IOException             In case an I/O exception occurs
 	 */
 	public void postAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
 		requestsCounter ++;
@@ -129,16 +135,12 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Performs a Async PUT request for the specified URL and options
+	 * Performs a Async PUT request for the specified URL and options.
 	 *
-	 * @param url
-	 *            the URL
-	 * @param options
-	 *            the options
-	 * @param httpResponseCallback
-	 *            the callback
-	 * @throws IOException
-	 *             In case an I/O exception occurs
+	 * @param url            the URL
+	 * @param options            the options
+	 * @param httpResponseCallback            the callback
+	 * @throws IOException             In case an I/O exception occurs
 	 */
 	public void putAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
 		requestsCounter ++;
@@ -149,16 +151,12 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Performs a Async PATCH request for the specified URL and options
+	 * Performs a Async PATCH request for the specified URL and options.
 	 *
-	 * @param url
-	 *            the URL
-	 * @param options
-	 *            the options
-	 * @param httpResponseCallback
-	 *            the callback
-	 * @throws IOException
-	 *             In case an I/O exception occurs
+	 * @param url            the URL
+	 * @param options            the options
+	 * @param httpResponseCallback            the callback
+	 * @throws IOException             In case an I/O exception occurs
 	 */
 	public void patchAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
 		requestsCounter ++;
@@ -169,14 +167,11 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Performs a Async DELETE request for the specified URL and options
+	 * Performs a Async DELETE request for the specified URL and options.
 	 *
-	 * @param url
-	 *            the URL
-	 * @param options
-	 *            the options
-	 * @param httpResponseCallback
-	 *            the callback
+	 * @param url            the URL
+	 * @param options            the options
+	 * @param httpResponseCallback            the callback
 	 */
 	public void deleteAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
@@ -187,14 +182,11 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Performs a Async HEAD request for the specified URL and options
+	 * Performs a Async HEAD request for the specified URL and options.
 	 *
-	 * @param url
-	 *            the URL
-	 * @param options
-	 *            the options
-	 * @param httpResponseCallback
-	 *            the callback
+	 * @param url            the URL
+	 * @param options            the options
+	 * @param httpResponseCallback            the callback
 	 */
 	public void headAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
@@ -205,14 +197,11 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Performs a Async TRACE request for the specified URL and options
+	 * Performs a Async TRACE request for the specified URL and options.
 	 *
-	 * @param url
-	 *            the URL
-	 * @param options
-	 *            the options
-	 * @param httpResponseCallback
-	 *            the callback
+	 * @param url            the URL
+	 * @param options            the options
+	 * @param httpResponseCallback            the callback
 	 */
 	public void traceAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
@@ -223,8 +212,8 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Execute request asynchronously
-	 * 
+	 * Execute request asynchronously.
+	 *
 	 * @throws InterruptedException in case an concurrency exception occurs
 	 * @throws IOException in case an I/O exception occurs
 	 */
@@ -239,45 +228,96 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 		httpClient.close();
 	}
 
+	/**
+	 * The Class AsyncHttpRequest.
+	 */
 	private static class AsyncHttpRequest {
+		
+		/** The request. */
 		private final HttpUriRequest request;
+		
+		/** The callback. */
 		private final FutureCallback<HttpResponse> callback;
 
+		/**
+		 * Instantiates a new async http request.
+		 *
+		 * @param request the request
+		 * @param callback the callback
+		 */
 		private AsyncHttpRequest(HttpUriRequest request, FutureCallback<HttpResponse> callback) {
 			this.request = request;
 			this.callback = callback;
 		}
 
+		/**
+		 * Gets the request.
+		 *
+		 * @return the request
+		 */
 		private HttpUriRequest getRequest() {
 			return request;
 		}
 
+		/**
+		 * Gets the callback.
+		 *
+		 * @return the callback
+		 */
 		private FutureCallback<HttpResponse> getCallback() {
 			return callback;
 		}
 	}
 
 	/**
-	 * The callback handler
+	 * The callback handler.
 	 */
 	public class HttpResponseCallback {
 
+		/** The callback. */
 		private final FutureCallback<HttpResponse> callback;
+		
+		/** The http client request options. */
 		private HttpClientRequestOptions httpClientRequestOptions;
 
+		/**
+		 * Instantiates a new http response callback.
+		 *
+		 * @param completeCallback the complete callback
+		 * @param failCallback the fail callback
+		 * @param cancelCallback the cancel callback
+		 */
 		HttpResponseCallback(String completeCallback, String failCallback, String cancelCallback) {
 			this.callback = createFutureCallback(completeCallback, failCallback, cancelCallback);
 		}
 
+		/**
+		 * Sets the options.
+		 *
+		 * @param httpClientRequestOptions the new options
+		 */
 		public void setOptions(HttpClientRequestOptions httpClientRequestOptions) {
 			this.httpClientRequestOptions = httpClientRequestOptions;
 			
 		}
 
+		/**
+		 * Gets the callback.
+		 *
+		 * @return the callback
+		 */
 		public FutureCallback<HttpResponse> getCallback() {
 			return callback;
 		}
 
+		/**
+		 * Creates the future callback.
+		 *
+		 * @param completeCallback the complete callback
+		 * @param failCallback the fail callback
+		 * @param cancelCallback the cancel callback
+		 * @return the future callback
+		 */
 		private FutureCallback<HttpResponse> createFutureCallback(String completeCallback, String failCallback, String cancelCallback) {
 			return new FutureCallback<HttpResponse>() {
 

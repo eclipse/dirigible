@@ -27,8 +27,10 @@ import org.slf4j.LoggerFactory;
  */
 public class ExtensionsServiceFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsServiceFacade.class);
 
+	/** The extensions core service. */
 	private static IExtensionsCoreService extensionsCoreService = new ExtensionsCoreService();
 
 	/**

@@ -85,15 +85,25 @@ import org.slf4j.LoggerFactory;
 	}, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
 public class SecurityFilter implements Filter {
 
+	/** The Constant PATH_WEB_RESOURCES. */
 	private static final String PATH_WEB_RESOURCES = "/web/resources";
 
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
+	/** The security core service. */
 	private static ISecurityCoreService securityCoreService = new SecurityCoreService();
 
+	/** The Constant SECURED_PREFIXES. */
 	private static final Set<String> SECURED_PREFIXES = new HashSet<String>();
 
+	/**
+	 * Inits the.
+	 *
+	 * @param filterConfig the filter config
+	 * @throws ServletException the servlet exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -110,6 +120,15 @@ public class SecurityFilter implements Filter {
 		SECURED_PREFIXES.add("/command");
 	}
 
+	/**
+	 * Do filter.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param chain the chain
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ServletException the servlet exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
@@ -199,6 +218,9 @@ public class SecurityFilter implements Filter {
 		response.sendError(HttpServletResponse.SC_FORBIDDEN, error);
 	}
 
+	/**
+	 * Destroy.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()

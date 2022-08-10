@@ -43,11 +43,26 @@ import java.lang.reflect.InvocationTargetException;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class JavascriptRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(JavascriptRestService.class.getCanonicalName());
+	
+	/** The Constant DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME. */
 	private static final String DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME = "DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME";
+	
+	/** The Constant HTTP_PATH_MATCHER. */
 	private static final String HTTP_PATH_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}";
-	private static final String HTTP_PATH_WITH_PARAM_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}/{projectFilePathParam}";
+	
+	/** The Constant HTTP_PATH_WITH_PARAM_MATCHER. */
+	private static final String HTTP_PATH_WITH_PARAM_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}/{projectFilePathParam:.*}";
 
+	/**
+	 * Gets the.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@GET
 	@Path(HTTP_PATH_MATCHER)
 	public Response get(
@@ -58,6 +73,15 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
+	/**
+	 * Gets the.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param projectFilePathParam the project file path param
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@GET
 	@Path(HTTP_PATH_WITH_PARAM_MATCHER)
 	public Response get(
@@ -69,6 +93,14 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
+	/**
+	 * Post.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@POST
 	@Path(HTTP_PATH_MATCHER)
 	public Response post(
@@ -79,6 +111,15 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
+	/**
+	 * Post.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param projectFilePathParam the project file path param
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@POST
 	@Path(HTTP_PATH_WITH_PARAM_MATCHER)
 	public Response post(
@@ -90,6 +131,14 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
+	/**
+	 * Put.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@PUT
 	@Path(HTTP_PATH_MATCHER)
 	public Response put(
@@ -100,6 +149,15 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
+	/**
+	 * Put.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param projectFilePathParam the project file path param
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@PUT
 	@Path(HTTP_PATH_WITH_PARAM_MATCHER)
 	public Response put(
@@ -111,6 +169,14 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
+	/**
+	 * Patch.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@PATCH
 	@Path(HTTP_PATH_MATCHER)
 	public Response patch(
@@ -121,6 +187,15 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
+	/**
+	 * Patch.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param projectFilePathParam the project file path param
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@PATCH
 	@Path(HTTP_PATH_WITH_PARAM_MATCHER)
 	public Response patch(
@@ -132,6 +207,14 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@DELETE
 	@Path(HTTP_PATH_MATCHER)
 	public Response delete(
@@ -142,6 +225,15 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param projectFilePathParam the project file path param
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@DELETE
 	@Path(HTTP_PATH_WITH_PARAM_MATCHER)
 	public Response delete(
@@ -153,6 +245,14 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
+	/**
+	 * Head.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@HEAD
 	@Path(HTTP_PATH_MATCHER)
 	public Response head(
@@ -163,6 +263,15 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
+	/**
+	 * Head.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param projectFilePathParam the project file path param
+	 * @param debug the debug
+	 * @return the response
+	 */
 	@HEAD
 	@Path(HTTP_PATH_WITH_PARAM_MATCHER)
 	public Response head(
@@ -174,10 +283,27 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
+	/**
+	 * Execute java script.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param debug the debug
+	 * @return the response
+	 */
 	private Response executeJavaScript(String projectName, String projectFilePath, boolean debug) {
 		return executeJavaScript(projectName, projectFilePath, "", debug);
 	}
 
+	/**
+	 * Execute java script.
+	 *
+	 * @param projectName the project name
+	 * @param projectFilePath the project file path
+	 * @param projectFilePathParam the project file path param
+	 * @param debug the debug
+	 * @return the response
+	 */
 	private Response executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
 		try {
 			if (!isValid(projectName) || !isValid(projectFilePath)) {
@@ -192,6 +318,11 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		}
 	}
 
+	/**
+	 * Gets the javascript handler.
+	 *
+	 * @return the javascript handler
+	 */
 	private JavascriptHandler getJavascriptHandler() {
 		String javascriptHandlerClassName = Configuration.get(DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME, null);
 		if (javascriptHandlerClassName == null) {
@@ -205,12 +336,23 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		}
 	}
 
+	/**
+	 * Gets the dirigible working directory.
+	 *
+	 * @return the dirigible working directory
+	 */
 	private java.nio.file.Path getDirigibleWorkingDirectory() {
 		IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 		String publicRegistryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		return java.nio.file.Path.of(publicRegistryPath);
 	}
 
+	/**
+	 * Checks if is valid.
+	 *
+	 * @param inputPath the input path
+	 * @return true, if is valid
+	 */
 	public boolean isValid(String inputPath) {
 		String registryPath = getDirigibleWorkingDirectory().toString();
 		String normalizedInputPath = java.nio.file.Path.of(inputPath).normalize().toString();
@@ -222,6 +364,11 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		}
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -231,6 +378,11 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 		return JavascriptRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

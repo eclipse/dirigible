@@ -17,10 +17,21 @@ import org.eclipse.dirigible.core.workspace.api.ProjectStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class GitProjectStatusProvider.
+ */
 public class GitProjectStatusProvider implements IProjectStatusProvider {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GitProjectStatusProvider.class);
 
+	/**
+	 * Gets the project status.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the project status
+	 */
 	@Override
 	public ProjectStatus getProjectStatus(String workspace, String project) {
 		StatusCommand statusCommand = new StatusCommand();

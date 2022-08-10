@@ -37,12 +37,25 @@ import static org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement.EMPTY_STR
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * The Class SQLWhereClauseTest.
+ */
 public final class SQLWhereClauseTest {
 
+    /** The provider. */
     AnnotationEdmProvider provider;
+    
+    /** The edm. */
     EdmImplProv edm;
+    
+    /** The table mapping provider. */
     EdmTableBindingProvider tableMappingProvider;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         Class<?>[] classes = { //
@@ -55,6 +68,9 @@ public final class SQLWhereClauseTest {
         tableMappingProvider = new DefaultEdmTableMappingProvider(OData2TestUtils.resources(classes));
     }
 
+    /**
+     * Test empty and empty clause.
+     */
     @Test
     public void testEmptyAndEmptyClause() {
 
@@ -66,6 +82,11 @@ public final class SQLWhereClauseTest {
         assertTrue(where.isEmpty());
     }
 
+    /**
+     * Test and clause with equals.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testAndClauseWithEquals() throws Exception {
 
@@ -102,6 +123,11 @@ public final class SQLWhereClauseTest {
 
     }
 
+    /**
+     * Test is null filter.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testIsNullFilter() throws Exception {
         SQLWhereClause where = createWhereClause("MessageGuid eq null");
@@ -110,6 +136,11 @@ public final class SQLWhereClauseTest {
         assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NULL", where.getWhereClause());
     }
 
+    /**
+     * Test is not null filter.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testIsNotNullFilter() throws Exception {
         SQLWhereClause where = createWhereClause("MessageGuid ne null");
@@ -118,6 +149,11 @@ public final class SQLWhereClauseTest {
         assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NOT NULL", where.getWhereClause());
     }
 
+    /**
+     * Test is not null and null filter.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testIsNotNullAndNullFilter() throws Exception {
         SQLWhereClause where = createWhereClause("MessageGuid ne null").and(createWhereClause("Status eq null"));
@@ -126,6 +162,11 @@ public final class SQLWhereClauseTest {
         assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NOT NULL AND T0.STATUS IS NULL", where.getWhereClause());
     }
 
+    /**
+     * Test is null with additional filter.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testIsNullWithAdditionalFilter() throws Exception {
         SQLWhereClause where = createWhereClause("MessageGuid eq null").and(createWhereClause("Status eq 'SUCCESS'"));
@@ -134,6 +175,11 @@ public final class SQLWhereClauseTest {
         assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NULL AND T0.STATUS = ?", where.getWhereClause());
     }
 
+    /**
+     * Test or clause with equals.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testOrClauseWithEquals() throws Exception {
 
@@ -158,6 +204,11 @@ public final class SQLWhereClauseTest {
 
     }
 
+    /**
+     * Test filter function to upper to lower.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testFilterFunctionToUpperToLower() throws Exception {
 
@@ -168,6 +219,11 @@ public final class SQLWhereClauseTest {
         assertEquals("UPPER(T0.STATUS) = ? AND LOWER(T0.MESSAGEGUID) = ?", where.getWhereClause());
     }
 
+    /**
+     * Test filter function to upper applied twice.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testFilterFunctionToUpperAppliedTwice() throws Exception {
         SQLWhereClause where = createWhereClause( //
@@ -175,6 +231,11 @@ public final class SQLWhereClauseTest {
         assertEquals("UPPER(T0.MESSAGEGUID) = LOWER(T0.MESSAGEGUID)", where.getWhereClause());
     }
 
+    /**
+     * Test concat function.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testConcatFunction() throws Exception {
         SQLWhereClause where = createWhereClause( //
@@ -183,6 +244,11 @@ public final class SQLWhereClauseTest {
         assertEquals("CONCAT(T0.MESSAGEGUID,?)", where.getWhereClause());
     }
 
+    /**
+     * Test concat function 2.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testConcatFunction2() throws Exception {
         SQLWhereClause where = createWhereClause( //
@@ -191,6 +257,11 @@ public final class SQLWhereClauseTest {
         assertEquals("CONCAT(?,T0.MESSAGEGUID)", where.getWhereClause());
     }
 
+    /**
+     * Test concat function 3.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testConcatFunction3() throws Exception {
         SQLWhereClause where = createWhereClause( //
@@ -199,6 +270,11 @@ public final class SQLWhereClauseTest {
         assertEquals("CONCAT(T0.MESSAGEGUID,T0.MESSAGEGUID)", where.getWhereClause());
     }
 
+    /**
+     * Test length function.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testLengthFunction() throws Exception {
         SQLWhereClause where = createWhereClause( //
@@ -207,6 +283,11 @@ public final class SQLWhereClauseTest {
         assertEquals("LENGTH(T0.MESSAGEGUID)", where.getWhereClause());
     }
 
+    /**
+     * Test filter function starts with.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testFilterFunctionStartsWith() throws Exception {
         SQLWhereClause where = createWhereClause("Status eq 'ERROR' and startswith(MessageGuid, 'fl')");
@@ -215,12 +296,22 @@ public final class SQLWhereClauseTest {
         assertEquals("T0.STATUS = ? AND T0.MESSAGEGUID LIKE ?", where.getWhereClause());
     }
 
+    /**
+     * Test filter function starts with 2.
+     *
+     * @throws Exception the exception
+     */
     @Test(expected = OData2Exception.class)
     public void testFilterFunctionStartsWith2() throws Exception {
         SQLWhereClause where = createWhereClause("Status eq 'ERROR' and startswith('fl',MessageGuid)");
         where.getWhereClause();
     }
 
+    /**
+     * Test filter function ends with.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testFilterFunctionEndsWith() throws Exception {
         SQLWhereClause where = createWhereClause(
@@ -229,11 +320,21 @@ public final class SQLWhereClauseTest {
         assertEquals("T0.STATUS = ? AND T0.MESSAGEGUID LIKE ?", where.getWhereClause());
     }
 
+    /**
+     * Test filter function subtring of.
+     *
+     * @throws Exception the exception
+     */
     public void testFilterFunctionSubtringOf() throws Exception {
         SQLWhereClause where = createWhereClause("Status eq 'ERROR' and substringof('fl', MessageGuid)");
         assertEquals("T0.STATUS = ? AND T0.MESSAGEGUID LIKE ?", where.getWhereClause());
     }
 
+    /**
+     * Test not equals and with date param.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testNotEqualsAndWithDateParam() throws Exception {
         String date = "2014-10-02T09:14:00"; //This is a date in the client locale. 
@@ -252,6 +353,11 @@ public final class SQLWhereClauseTest {
         assertEquals(f.parse(date), c.getTime());
     }
 
+    /**
+     * Test less than greater equals with date param.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testLessThanGreaterEqualsWithDateParam() throws Exception {
         String from = "2015-03-24T23:00:00"; //This is a date in the client locale. 
@@ -277,6 +383,11 @@ public final class SQLWhereClauseTest {
         assertEquals(f.parse(to), cto.getTime());
     }
 
+    /**
+     * Test operator precedence and or not.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testOperatorPrecedenceAndOrNot() throws Exception {
 
@@ -330,6 +441,11 @@ public final class SQLWhereClauseTest {
 
     }
 
+    /**
+     * Test less equal greater than with date param.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testLessEqualGreaterThanWithDateParam() throws Exception {
         String from = "2015-03-24T23:00:00"; //This is a date in the client locale. 
@@ -355,6 +471,13 @@ public final class SQLWhereClauseTest {
         assertEquals(f.parse(to), cto.getTime());
     }
 
+    /**
+     * Creates the where clause.
+     *
+     * @param expression the expression
+     * @return the SQL where clause
+     * @throws ODataException the o data exception
+     */
     private SQLWhereClause createWhereClause(final String expression) throws ODataException {
         EdmEntityType type = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
         FilterExpression filter = UriParser.parseFilter(edm, type, expression);
@@ -362,6 +485,12 @@ public final class SQLWhereClauseTest {
         return SQLUtils.buildSQLWhereClause(noop, type, filter);
     }
 
+    /**
+     * Assert param list equals.
+     *
+     * @param paramsExp the params exp
+     * @param paramsAct the params act
+     */
     private void assertParamListEquals(final String[] paramsExp, final List<SQLStatementParam> paramsAct) {
 
         assertEquals(paramsExp.length, paramsAct.size());

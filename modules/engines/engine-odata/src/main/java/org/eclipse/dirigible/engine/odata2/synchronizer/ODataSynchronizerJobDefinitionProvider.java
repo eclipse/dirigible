@@ -21,12 +21,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class ODataSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_ODATA. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_ODATA = "DIRIGIBLE_JOB_EXPRESSION_ODATA";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_ODATA_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_ODATA_SYNCHRONIZER_JOB = "dirigible-internal-odata-synchronizer-job";
 	
+	/** The Constant ODATA_SYNCHRONIZER_JOB. */
 	static final String ODATA_SYNCHRONIZER_JOB = "OData Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

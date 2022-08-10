@@ -18,12 +18,15 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class GitPushModel extends BaseGitProjectModel {
 
+	/** The commit message. */
 	@ApiModelProperty(value = "The Commit Message", required = true, example = "Updates README.md")
 	private String commitMessage;
 	
+	/** The auto add. */
 	@ApiModelProperty(value = "Add all unstaged files", required = true, example = "Updates README.md")
 	private boolean autoAdd;
 	
+	/** The auto commit. */
 	@ApiModelProperty(value = "Commit all staged files", required = true, example = "Updates README.md")
 	private boolean autoCommit;
 	
@@ -48,6 +51,8 @@ public class GitPushModel extends BaseGitProjectModel {
 	}
 
 	/**
+	 * Checks if is auto add.
+	 *
 	 * @return the autoAdd
 	 */
 	public boolean isAutoAdd() {
@@ -55,6 +60,8 @@ public class GitPushModel extends BaseGitProjectModel {
 	}
 
 	/**
+	 * Sets the auto add.
+	 *
 	 * @param autoAdd the autoAdd to set
 	 */
 	public void setAutoAdd(boolean autoAdd) {
@@ -62,6 +69,8 @@ public class GitPushModel extends BaseGitProjectModel {
 	}
 
 	/**
+	 * Checks if is auto commit.
+	 *
 	 * @return the autoCommit
 	 */
 	public boolean isAutoCommit() {
@@ -69,6 +78,8 @@ public class GitPushModel extends BaseGitProjectModel {
 	}
 
 	/**
+	 * Sets the auto commit.
+	 *
 	 * @param autoCommit the autoCommit to set
 	 */
 	public void setAutoCommit(boolean autoCommit) {

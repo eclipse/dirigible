@@ -20,16 +20,21 @@ import org.eclipse.dirigible.core.websockets.definition.WebsocketDefinition;
 import org.eclipse.dirigible.core.websockets.service.WebsocketsCoreService;
 import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 
+/**
+ * The Class WebsocketHandler.
+ */
 public class WebsocketHandler {
 	
+	/** The websockets core service. */
 	private WebsocketsCoreService websocketsCoreService = new WebsocketsCoreService();
 	
 	/**
-	 * Process the event
-	 * 
+	 * Process the event.
+	 *
 	 * @param endpoint the endpoint
+	 * @param wrapper the wrapper
 	 * @param context the context
-	 * @throws WebsocketsException
+	 * @throws WebsocketsException the websockets exception
 	 */
 	public void processEvent(String endpoint, String wrapper, Map<Object, Object> context) throws WebsocketsException {
 		List<WebsocketDefinition> websocketByEndpointList = websocketsCoreService.getWebsocketByEndpoint(endpoint);

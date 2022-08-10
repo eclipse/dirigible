@@ -32,49 +32,64 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 @Table(name = "DIRIGIBLE_JOBS")
 public class JobDefinition implements IArtefactDefinition {
 
+	/** The name. */
 	@Id
 	@Column(name = "JOB_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String name;
 
+	/** The group. */
 	@Column(name = "JOB_GROUP", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String group;
 
+	/** The clazz. */
 	@Column(name = "JOB_CLASS", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String clazz = "";
 
+	/** The description. */
 	@Column(name = "JOB_DESCRIPTION", columnDefinition = "VARCHAR", nullable = false, length = 1024)
 	private String description;
 
+	/** The expression. */
 	@Column(name = "JOB_EXPRESSION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String expression;
 
+	/** The handler. */
 	@Column(name = "JOB_HANDLER", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	private String handler;
 
+	/** The engine. */
 	@Column(name = "JOB_ENGINE", columnDefinition = "VARCHAR", nullable = true, length = 100)
 	private String engine;
 
+	/** The singleton. */
 	@Column(name = "JOB_SINGLETON", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean singleton = false;
 
+	/** The enabled. */
 	@Column(name = "JOB_ENABLED", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean enabled = true;
 
+	/** The created by. */
 	@Column(name = "JOB_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "JOB_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 	
+	/** The parameters. */
 	@Transient
 	private List<JobParameterDefinition> parameters = new ArrayList<JobParameterDefinition>();
 	
+	/** The status. */
 	@Column(name = "JOB_STATUS", columnDefinition = "SMALLINT", nullable = true)
 	private short status = 99;
 	
+	/** The message. */
 	@Column(name = "JOBLOG_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	private String message;
 	
+	/** The executed at. */
 	@Column(name = "JOB_EXECUTED_AT", columnDefinition = "TIMESTAMP", nullable = true)
 	private Timestamp executedAt;
 
@@ -174,7 +189,7 @@ public class JobDefinition implements IArtefactDefinition {
 	}
 
 	/**
-	 * Gets the handler
+	 * Gets the handler.
 	 *
 	 * @return the handler
 	 */
@@ -183,17 +198,16 @@ public class JobDefinition implements IArtefactDefinition {
 	}
 
 	/**
-	 * Sets the handler
+	 * Sets the handler.
 	 *
-	 * @param handler
-	 *            the handler
+	 * @param handler            the handler
 	 */
 	public void setHandler(String handler) {
 		this.handler = handler;
 	}
 
 	/**
-	 * Gets the engine type
+	 * Gets the engine type.
 	 *
 	 * @return the engine type
 	 */
@@ -202,10 +216,9 @@ public class JobDefinition implements IArtefactDefinition {
 	}
 
 	/**
-	 * Sets the engine type
+	 * Sets the engine type.
 	 *
-	 * @param engine
-	 *            the engine type
+	 * @param engine            the engine type
 	 */
 	public void setEngine(String engine) {
 		this.engine = engine;
@@ -314,6 +327,11 @@ public class JobDefinition implements IArtefactDefinition {
 		return GsonHelper.GSON.toJson(this, JobDefinition.class);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -323,17 +341,33 @@ public class JobDefinition implements IArtefactDefinition {
 		return toJson();
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getName();
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(clazz, description, enabled, engine, expression, group, handler, name, parameters,
 				singleton);
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -350,12 +384,26 @@ public class JobDefinition implements IArtefactDefinition {
 				&& Objects.equals(parameters, other.parameters) && singleton == other.singleton;
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getName();
 	}
 	
 	
+	/**
+	 * Adds the parameter.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param defaultValue the default value
+	 * @param choices the choices
+	 * @param description the description
+	 */
 	public void addParameter(String name, String type, String defaultValue, String choices, String description) {
 		JobParameterDefinition parameter = new JobParameterDefinition();
 		parameter.setId(this.name, name);
@@ -369,6 +417,11 @@ public class JobDefinition implements IArtefactDefinition {
 		parameters.add(parameter);
 	}
 	
+	/**
+	 * Removes the parameter.
+	 *
+	 * @param name the name
+	 */
 	public void removeParameter(String name) {
 		for (JobParameterDefinition p : parameters) {
 			if (p.getName().equals(name)) {
@@ -378,12 +431,17 @@ public class JobDefinition implements IArtefactDefinition {
 		}
 	}
 	
+	/**
+	 * Gets the parameters.
+	 *
+	 * @return the parameters
+	 */
 	public Collection<JobParameterDefinition> getParameters() {
 		return Collections.unmodifiableCollection(parameters);
 	}
 	
 	/**
-	 * Gets the latest status
+	 * Gets the latest status.
 	 *
 	 * @return the latest status
 	 */
@@ -392,17 +450,16 @@ public class JobDefinition implements IArtefactDefinition {
 	}
 	
 	/**
-	 * Sets the latest status
+	 * Sets the latest status.
 	 *
-	 * @param status
-	 *            the latest status
+	 * @param status            the latest status
 	 */
 	public void setStatus(short status) {
 		this.status = status;
 	}
 	
 	/**
-	 * Gets the latest message
+	 * Gets the latest message.
 	 *
 	 * @return the latest message
 	 */
@@ -411,10 +468,9 @@ public class JobDefinition implements IArtefactDefinition {
 	}
 	
 	/**
-	 * Sets the latest message
+	 * Sets the latest message.
 	 *
-	 * @param message
-	 *            the latest message
+	 * @param message            the latest message
 	 */
 	public void setMessage(String message) {
 		this.message = message;

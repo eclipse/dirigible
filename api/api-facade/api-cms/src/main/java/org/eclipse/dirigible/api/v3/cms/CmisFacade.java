@@ -28,20 +28,43 @@ import org.eclipse.dirigible.core.security.verifier.AccessVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class CmisFacade.
+ */
 public class CmisFacade {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CmisFacade.class);
 
+	/** The Constant VERSIONING_STATE_NONE. */
 	public static final String VERSIONING_STATE_NONE = "none";
+	
+	/** The Constant VERSIONING_STATE_MAJOR. */
 	public static final String VERSIONING_STATE_MAJOR = "major";
+	
+	/** The Constant VERSIONING_STATE_MINOR. */
 	public static final String VERSIONING_STATE_MINOR = "minor";
+	
+	/** The Constant VERSIONING_STATE_CHECKEDOUT. */
 	public static final String VERSIONING_STATE_CHECKEDOUT = "checkedout";
+	
+	/** The Constant CMIS_METHOD_READ. */
 	public static final String CMIS_METHOD_READ = "READ";
+	
+	/** The Constant CMIS_METHOD_WRITE. */
 	public static final String CMIS_METHOD_WRITE = "WRITE";
 	
+	/** The Constant DIRIGIBLE_CMS_ROLES_ENABLED. */
 	public static final String DIRIGIBLE_CMS_ROLES_ENABLED = "DIRIGIBLE_CMS_ROLES_ENABLED";
+	
+	/** The cms provider. */
 	private static ICmsProvider cmsProvider = null;
 	
+	/**
+	 * Gets the cms provider.
+	 *
+	 * @return the cms provider
+	 */
 	protected static synchronized ICmsProvider getCmsProvider() {
 		if (cmsProvider == null) {
 			cmsProvider = (ICmsProvider) StaticObjects.get(StaticObjects.CMS_PROVIDER);
@@ -50,7 +73,7 @@ public class CmisFacade {
 	}
 
 	/**
-	 * CMIS Session
+	 * CMIS Session.
 	 *
 	 * @return the CMIS session object
 	 */
@@ -60,7 +83,8 @@ public class CmisFacade {
 	}
 	
 	/**
-	 * Mapping utility between the CMIS standard and Javascript string representation of the versioning state
+	 * Mapping utility between the CMIS standard and Javascript string representation of the versioning state.
+	 *
 	 * @param state the Javascript state
 	 * @return the CMIS state
 	 */
@@ -77,10 +101,16 @@ public class CmisFacade {
 		return org.apache.chemistry.opencmis.commons.enums.VersioningState.MAJOR;
 	}
 	
+	/**
+	 * Gets the unified object delete.
+	 *
+	 * @return the unified object delete
+	 */
 	public static final Object getUnifiedObjectDelete() {
 		return org.apache.chemistry.opencmis.commons.enums.UnfileObject.DELETE;
 	}
 	
+	/** The security core service. */
 	private static ISecurityCoreService securityCoreService = new SecurityCoreService();
 
 	/**
@@ -147,6 +177,15 @@ public class CmisFacade {
 		return true;
 	}
 
+	/**
+	 * Gets the access definitions.
+	 *
+	 * @param path the path
+	 * @param method the method
+	 * @return the access definitions
+	 * @throws ServletException the servlet exception
+	 * @throws AccessException the access exception
+	 */
 	public static Set<AccessDefinition> getAccessDefinitions(String path, String method) throws ServletException, AccessException {
 		Set<AccessDefinition> accessDefinitions = new HashSet<AccessDefinition>();
 		int indexOf = 0;

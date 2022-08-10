@@ -24,30 +24,43 @@ import org.slf4j.LoggerFactory;
  */
 public class SelectBuilder extends AbstractQuerySqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SelectBuilder.class);
 
+	/** The columns. */
 	private List<String> columns = new ArrayList<String>();
 
+	/** The tables. */
 	private List<String> tables = new ArrayList<String>();
 
+	/** The joins. */
 	private List<String> joins = new ArrayList<String>();
 
+	/** The wheres. */
 	private List<String> wheres = new ArrayList<String>();
 
+	/** The orders. */
 	private List<String> orders = new ArrayList<String>();
 
+	/** The groups. */
 	private List<String> groups = new ArrayList<String>();
 
+	/** The unions. */
 	private List<String> unions = new ArrayList<String>();
 
+	/** The distinct. */
 	private boolean distinct = false;
 
+	/** The having. */
 	private String having = null;
 
+	/** The limit. */
 	private int limit = -1;
 
+	/** The offset. */
 	private int offset = -1;
 
+	/** The for update. */
 	private boolean forUpdate = false;
 
 	/**
@@ -470,6 +483,11 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return this;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

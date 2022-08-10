@@ -22,6 +22,11 @@ import org.eclipse.dirigible.runtime.core.listener.DirigibleServletContextListen
  */
 public class DirigibleApplication extends Application {
 
+	/**
+	 * Gets the singletons.
+	 *
+	 * @return the singletons
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.ws.rs.core.Application#getSingletons()

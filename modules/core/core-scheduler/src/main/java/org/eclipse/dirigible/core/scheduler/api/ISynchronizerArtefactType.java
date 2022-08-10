@@ -11,43 +11,99 @@
  */
 package org.eclipse.dirigible.core.scheduler.api;
 
+/**
+ * The Interface ISynchronizerArtefactType.
+ */
 public interface ISynchronizerArtefactType {
 	
+	/**
+	 * The Enum ArtefactState.
+	 */
 	public enum ArtefactState {
+		
+		/** The initial. */
 		INITIAL("Initial"), //
 
-		SUCCESSFUL("Successful"),  //
-		SUCCESSFUL_CREATE("Successful"), //
-		SUCCESSFUL_UPDATE("Successful"), //
-		SUCCESSFUL_CREATE_UPDATE("Successful"), //
+		/** The successful. */
+ SUCCESSFUL("Successful"),  /** The successful create. */
+  //
+		SUCCESSFUL_CREATE("Successful"), 
+ /** The successful update. */
+ //
+		SUCCESSFUL_UPDATE("Successful"), 
+ /** The successful create update. */
+ //
+		SUCCESSFUL_CREATE_UPDATE("Successful"), 
+ /** The successful delete. */
+ //
 		SUCCESSFUL_DELETE("Successful"), //
 
-		FAILED("Failed"), //
-		FAILED_CREATE("Failed"), //
-		FAILED_UPDATE("Failed"), //
-		FAILED_CREATE_UPDATE("Failed"), //
+		/** The failed. */
+ FAILED("Failed"), /** The failed create. */
+ //
+		FAILED_CREATE("Failed"), 
+ /** The failed update. */
+ //
+		FAILED_UPDATE("Failed"), 
+ /** The failed create update. */
+ //
+		FAILED_CREATE_UPDATE("Failed"), 
+ /** The failed delete. */
+ //
 		FAILED_DELETE("Failed"), //
 
-		IN_PROGRESS("Processing..."), //
+		/** The in progress. */
+ IN_PROGRESS("Processing..."), //
 
-		FATAL("Erroneous"),
+		/** The fatal. */
+ FATAL("Erroneous"),
 
+		/** The unknown. */
 		UNKNOWN("Unknown");
 
+		/** The state. */
 		private String state;
 
+		/**
+		 * Instantiates a new artefact state.
+		 *
+		 * @param state the state
+		 */
 		ArtefactState(String state) {
 			this.state = state;
 		}
 
+		/**
+		 * Gets the value.
+		 *
+		 * @return the value
+		 */
 		public String getValue() {
 			return this.state;
 		}
 	}
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	public String getId();
 
+	/**
+	 * Gets the state message.
+	 *
+	 * @param state the state
+	 * @return the state message
+	 */
 	public String getStateMessage(ArtefactState state);
 
+	/**
+	 * Gets the state message.
+	 *
+	 * @param state the state
+	 * @param message the message
+	 * @return the state message
+	 */
 	public String getStateMessage(ArtefactState state, String message);
 }

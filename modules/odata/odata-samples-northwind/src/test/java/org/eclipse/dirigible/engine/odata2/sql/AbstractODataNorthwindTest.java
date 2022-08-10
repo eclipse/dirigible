@@ -40,13 +40,26 @@ import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.SummaryOfSales
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Supplier;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Territory;
 
+/**
+ * The Class AbstractODataNorthwindTest.
+ */
 public abstract class AbstractODataNorthwindTest extends AbstractSQLProcessorTest {
 
+	/**
+	 * Gets the changelog location.
+	 *
+	 * @return the changelog location
+	 */
 	@Override
 	protected String getChangelogLocation() {
 		return "liquibase/changelog-northwind.xml";
 	}
 
+	/**
+	 * Gets the o data entities.
+	 *
+	 * @return the o data entities
+	 */
 	@Override
 	protected Class<?>[] getODataEntities() {
 		Class<?>[] classes = { //
@@ -80,10 +93,23 @@ public abstract class AbstractODataNorthwindTest extends AbstractSQLProcessorTes
 		return classes;
 	}
 
+	/**
+	 * Load expected metadata.
+	 *
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected String loadExpectedMetadata() throws IOException {
 		return loadExpectedData("metadata.xml");
 	}
 
+	/**
+	 * Load expected data.
+	 *
+	 * @param fileName the file name
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected String loadExpectedData(String fileName) throws IOException {
 		String data = loadResource(fileName);
 		return data //

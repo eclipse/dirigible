@@ -28,31 +28,67 @@ import java.util.stream.Collectors;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils.*;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
+/**
+ * The Class SQLUpdateBuilder.
+ */
 public class SQLUpdateBuilder extends AbstractQueryBuilder {
 
+	/** The uri key properties. */
 	private final Map<String, Object> uriKeyProperties;
 
+	/** The target. */
 	private  EdmEntityType target;
+	
+	/** The update entry. */
 	private  ODataEntry updateEntry;
+	
+	/** The table name. */
 	private  String tableName;
 
+	/** The non key column names. */
 	private final List<String> nonKeyColumnNames = new ArrayList<>();
 
+	/**
+	 * Instantiates a new SQL update builder.
+	 *
+	 * @param tableMappingProvider the table mapping provider
+	 * @param uriKeys the uri keys
+	 * @throws ODataException the o data exception
+	 */
 	public SQLUpdateBuilder(final EdmTableBindingProvider tableMappingProvider, Map<String, Object> uriKeys) throws ODataException {
 		super(tableMappingProvider);
 		this.uriKeyProperties = uriKeys;
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @param target the target
+	 * @param updateEntry the update entry
+	 * @return the SQL update builder
+	 * @throws ODataException the o data exception
+	 */
 	public SQLUpdateBuilder update(EdmEntityType target, ODataEntry updateEntry) throws ODataException {
 		this.updateEntry = updateEntry;
 		this.target = target;
 		return this;
 	}
 
+	/**
+	 * Gets the update entry.
+	 *
+	 * @return the update entry
+	 */
 	public ODataEntry getUpdateEntry() {
 		return updateEntry;
 	}
 
+	/**
+	 * Builds the.
+	 *
+	 * @param context the context
+	 * @return the SQL statement
+	 */
 	@Override
 	public SQLStatement build(SQLContext context) {
 		return new SQLStatement() {
@@ -84,19 +120,40 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 		};
 	}
 
+	/**
+	 * Gets the target.
+	 *
+	 * @return the target
+	 */
 	public EdmStructuralType getTarget() {
 		return target;
 	}
 
+	/**
+	 * Sets the table name.
+	 *
+	 * @param tableName the table name
+	 * @return the SQL update builder
+	 */
 	public SQLUpdateBuilder setTableName(String tableName) {
 		this.tableName = tableName;
 		return this;
 	}
 
+	/**
+	 * Gets the target table name.
+	 *
+	 * @return the target table name
+	 */
 	public String getTargetTableName() {
 		return tableName != null ? tableName : buildInto();
 	}
 
+	/**
+	 * Initialize query.
+	 *
+	 * @throws ODataException the o data exception
+	 */
 	public void initializeQuery() throws ODataException {
 
 		grantTableAliasForStructuralTypeInQuery(target);
@@ -136,6 +193,11 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 		}
 	}
 
+	/**
+	 * Builds the into.
+	 *
+	 * @return the string
+	 */
 	private String buildInto() {
 		StringBuilder into = new StringBuilder();
 		Iterator<String> it = getTablesAliasesForEntitiesInQuery();
@@ -150,15 +212,32 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 		return into.toString();
 	}
 
+	/**
+	 * Checks if is update target.
+	 *
+	 * @param target the target
+	 * @return true, if is update target
+	 */
 	protected boolean isUpdateTarget(final EdmStructuralType target) {
 		// always select the entity target
 		return fqn(getTarget()).equals(fqn(target));
 	}
 
+	/**
+	 * Builds the column list.
+	 *
+	 * @return the string
+	 */
 	protected String buildColumnList() {
 		return csv(nonKeyColumnNames.stream().map(n -> n + "=?").collect(Collectors.toList()));
 	}
 
+	/**
+	 * Builds the where clause for keys.
+	 *
+	 * @return the string
+	 * @throws EdmException the edm exception
+	 */
 	protected String buildWhereClauseForKeys() throws EdmException {
 		List<String> keyConditions = new ArrayList<>();
 		for (String key : target.getKeyPropertyNames()){

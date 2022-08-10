@@ -21,10 +21,12 @@ import javax.persistence.Table;
 @Table(name = "DIRIGIBLE_IDENTITY")
 public class Identity {
 
+	/** The table. */
 	@Id
 	@Column(name = "IDENTITY_TABLE", columnDefinition = "VARCHAR", nullable = false, length = 512)
 	private String table;
 
+	/** The value. */
 	@Column(name = "IDENTITY_VALUE", columnDefinition = "BIGINT", nullable = false)
 	private long value;
 

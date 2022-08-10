@@ -30,10 +30,11 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
- * The Dynamic Database
+ * The Dynamic Database.
  */
 public class DynamicDatabase extends AbstractDatabase {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DynamicDatabase.class);
 
 	/** The Constant NAME. */
@@ -42,10 +43,11 @@ public class DynamicDatabase extends AbstractDatabase {
 	/** The Constant TYPE. */
 	public static final String TYPE = "dynamic";
 
+	/** The Constant DATASOURCES. */
 	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<String, DataSource>());
 
 	/**
-	 * The default constructor
+	 * The default constructor.
 	 */
 	public DynamicDatabase() {
 		logger.debug("Initializing the dynamic datasources...");
@@ -55,6 +57,9 @@ public class DynamicDatabase extends AbstractDatabase {
 		logger.debug("Dynamic datasources initialized.");
 	}
 
+	/**
+	 * Initialize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#initialize()
@@ -65,6 +70,12 @@ public class DynamicDatabase extends AbstractDatabase {
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @param name the name
+	 * @return the data source
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
@@ -81,10 +92,14 @@ public class DynamicDatabase extends AbstractDatabase {
 	/**
 	 * Initialize a data source.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name            the name
+	 * @param databaseDriver the database driver
+	 * @param databaseUrl the database url
+	 * @param databaseUsername the database username
+	 * @param databasePassword the database password
+	 * @param databaseConnectionProperties the database connection properties
 	 * @return the data source
-	 * @throws IOException 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static DataSource createDataSource(String name, String databaseDriver, String databaseUrl, String databaseUsername, String databasePassword, String databaseConnectionProperties) throws IOException {
 		DataSource dataSource = DATASOURCES.get(name);
@@ -120,6 +135,12 @@ public class DynamicDatabase extends AbstractDatabase {
 		throw new IllegalArgumentException("Invalid configuration for the dynamic datasource: " + name);
 	}
 	
+	/**
+	 * Gets the hikari properties.
+	 *
+	 * @param definedProps the defined props
+	 * @return the hikari properties
+	 */
 	private static Map<String, String> getHikariProperties(Properties definedProps) {
 		Map<String, String> properties = new HashMap<>();
 		String hikariDelimiter = "HIKARI_";
@@ -133,6 +154,11 @@ public class DynamicDatabase extends AbstractDatabase {
 		return properties;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getName()
@@ -142,6 +168,11 @@ public class DynamicDatabase extends AbstractDatabase {
 		return NAME;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getType()
@@ -151,6 +182,11 @@ public class DynamicDatabase extends AbstractDatabase {
 		return TYPE;
 	}
 	
+	/**
+	 * Gets the data sources.
+	 *
+	 * @return the data sources
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSources()

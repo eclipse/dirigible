@@ -21,8 +21,10 @@ import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition
  */
 public class ExtensionPoint {
 
+	/** The extension point. */
 	private ExtensionPointDefinition extensionPoint;
 
+	/** The extensions. */
 	private List<ExtensionDefinition> extensions;
 
 	/**

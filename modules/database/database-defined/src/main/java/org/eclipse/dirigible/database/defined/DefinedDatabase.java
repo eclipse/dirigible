@@ -38,10 +38,11 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
- * The Defined Database
+ * The Defined Database.
  */
 public class DefinedDatabase extends AbstractDatabase {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefinedDatabase.class);
 
 	/** The Constant NAME. */
@@ -50,12 +51,14 @@ public class DefinedDatabase extends AbstractDatabase {
 	/** The Constant TYPE. */
 	public static final String TYPE = "defined";
 
+	/** The Constant DATASOURCES. */
 	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
 	
+	/** The databases core service. */
 	private IDatabasesCoreService databasesCoreService = new DatabasesCoreService();
 
 	/**
-	 * The default constructor
+	 * The default constructor.
 	 */
 	public DefinedDatabase() {
 		LOGGER.debug("Initializing the defined datasources...");
@@ -65,6 +68,9 @@ public class DefinedDatabase extends AbstractDatabase {
 		LOGGER.debug("Defined datasources initialized.");
 	}
 
+	/**
+	 * Initialize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#initialize()
@@ -88,6 +94,12 @@ public class DefinedDatabase extends AbstractDatabase {
 
 	
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @param name the name
+	 * @return the data source
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
@@ -150,6 +162,12 @@ public class DefinedDatabase extends AbstractDatabase {
 		throw new IllegalArgumentException("Invalid configuration for the defined datasource: " + name);
 	}
 
+	/**
+	 * Gets the hikari properties.
+	 *
+	 * @param definedProps the defined props
+	 * @return the hikari properties
+	 */
 	private Map<String, String> getHikariProperties(Properties definedProps) {
 		Map<String, String> properties = new HashMap<>();
 		String hikariDelimiter = "HIKARI_";
@@ -163,6 +181,11 @@ public class DefinedDatabase extends AbstractDatabase {
 		return properties;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getName()
@@ -172,6 +195,11 @@ public class DefinedDatabase extends AbstractDatabase {
 		return NAME;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getType()
@@ -181,6 +209,11 @@ public class DefinedDatabase extends AbstractDatabase {
 		return TYPE;
 	}
 
+	/**
+	 * Gets the data sources.
+	 *
+	 * @return the data sources
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSources()

@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CloneCommand {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CloneCommand.class);
 	
 	/** The publisher core service. */

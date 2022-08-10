@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PullCommand {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PullCommand.class);
 
 	/** The publisher core service. */

@@ -25,7 +25,6 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.After;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RepositoryGenericRepositoryTest.
  */

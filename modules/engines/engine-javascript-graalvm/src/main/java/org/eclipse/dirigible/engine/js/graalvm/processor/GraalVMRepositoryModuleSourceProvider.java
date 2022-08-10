@@ -23,12 +23,16 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptModuleSourceProvider;
  */
 public class GraalVMRepositoryModuleSourceProvider implements IJavascriptModuleSourceProvider {
 
+	/** The Constant JS_EXTENSION. */
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
+	/** The Constant MJS_EXTENSION. */
 	private static final String MJS_EXTENSION = ".mjs";
 
+	/** The executor. */
 	private IScriptEngineExecutor executor;
 
+	/** The root. */
 	private String root;
 
 	/**

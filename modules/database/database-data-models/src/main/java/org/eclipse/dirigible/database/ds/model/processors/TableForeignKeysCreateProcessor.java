@@ -23,14 +23,18 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintForeignKeyModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
-import org.eclipse.dirigible.database.ds.model.util.DBModelUtils;
+import org.eclipse.dirigible.database.ds.model.util.DatabaseModelUtils;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class TableForeignKeysCreateProcessor.
+ */
 public class TableForeignKeysCreateProcessor {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(TableForeignKeysCreateProcessor.class);
 
     /**
@@ -55,7 +59,7 @@ public class TableForeignKeysCreateProcessor {
                     
                     List<String> valsToHashFKName = new ArrayList<>(Arrays.asList(foreignKey.getColumns()));
                     valsToHashFKName.add(foreignKey.getReferencedTable());
-                    String hashedFKName = "fk" + DBModelUtils.generateHashedName(valsToHashFKName);
+                    String hashedFKName = "fk" + DatabaseModelUtils.generateHashedName(valsToHashFKName);
                     String foreignKeyName = Objects.isNull(foreignKey.getName()) ? hashedFKName : foreignKey.getName();
                     if (caseSensitive) {
                         foreignKeyName = "\"" + foreignKeyName + "\"";

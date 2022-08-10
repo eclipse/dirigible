@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.anonymous;
 
+/**
+ * The Class AnonymousUser.
+ */
 public class AnonymousUser {
 
 	// Marker class

@@ -41,15 +41,32 @@ import java.util.*;
 import static java.util.Collections.EMPTY_MAP;
 import static org.junit.Assert.*;
 
+/**
+ * The Class SQLSelectBuilderTest.
+ */
 public class SQLSelectBuilderTest {
 
+    /** The Constant SERVER_SIDE_PAGING_DEFAULT_SUFFIX. */
     private static final String SERVER_SIDE_PAGING_DEFAULT_SUFFIX = String.format(" FETCH FIRST %d ROWS ONLY",
             SQLQueryBuilder.DEFAULT_SERVER_PAGING_SIZE);
+    
+    /** The provider. */
     AnnotationEdmProvider provider;
+    
+    /** The uri parser. */
     UriParser uriParser;
+    
+    /** The builder. */
     SQLQueryBuilder builder;
+    
+    /** The context. */
     SQLContext context;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         Class<?>[] classes = { //
@@ -68,10 +85,20 @@ public class SQLSelectBuilderTest {
         context = new SQLContext();
     }
 
+    /**
+     * Creates the path segment.
+     *
+     * @return the o data path segment impl
+     */
     private ODataPathSegmentImpl createPathSegment() {
         return new ODataPathSegmentImpl("Entities1", Collections.emptyMap());
     }
 
+    /**
+     * Test MPL count.
+     *
+     * @throws Exception the exception
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testMPLCount() throws Exception {
@@ -86,6 +113,11 @@ public class SQLSelectBuilderTest {
         assertEquals("SELECT COUNT(*) FROM MPLHEADER AS T0", q.buildSelect(context));
     }
 
+    /**
+     * Test count with date.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testCountWithDate() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
@@ -104,6 +136,11 @@ public class SQLSelectBuilderTest {
         assertEquals("SELECT COUNT(*) FROM MPLHEADER AS T0 WHERE T0.STATUS = ? AND T0.LOGEND < ?", q.buildSelect(context));
     }
 
+    /**
+     * Test build select with filter.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testBuildSelectWithFilter() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
@@ -127,6 +164,11 @@ public class SQLSelectBuilderTest {
                 q.buildSelect(context));
     }
 
+    /**
+     * Test build select with dynamic filter.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testBuildSelectWithDynamicFilter() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
@@ -151,6 +193,11 @@ public class SQLSelectBuilderTest {
                 q.buildSelect(context));
     }
 
+    /**
+     * Test build select with order by.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testBuildSelectWithOrderBy() throws Exception {
         Map<String, String> params = new HashMap<>();
@@ -163,6 +210,11 @@ public class SQLSelectBuilderTest {
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
+    /**
+     * Test build select without order by.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testBuildSelectWithoutOrderBy() throws Exception {
         Map<String, String> params = new HashMap<>();
@@ -174,6 +226,11 @@ public class SQLSelectBuilderTest {
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
+    /**
+     * Test build select with skip 0 and top.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testBuildSelectWithSkip0AndTop() throws Exception {
         Map<String, String> params = new HashMap<>();
@@ -188,6 +245,11 @@ public class SQLSelectBuilderTest {
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
+    /**
+     * Test build select with select.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testBuildSelectWithSelect() throws Exception {
         Map<String, String> params = new HashMap<>();
@@ -200,6 +262,11 @@ public class SQLSelectBuilderTest {
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
+    /**
+     * Test build select with select primary key.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testBuildSelectWithSelectPrimaryKey() throws Exception {
         Map<String, String> params = new HashMap<>();
@@ -211,6 +278,11 @@ public class SQLSelectBuilderTest {
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
+    /**
+     * Test build select with select attribute primary key is also selected.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testBuildSelectWithSelectAttribute_PrimaryKeyIsAlsoSelected() throws Exception {
         Map<String, String> params = new HashMap<>();
@@ -223,6 +295,11 @@ public class SQLSelectBuilderTest {
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
+    /**
+     * Test build select statement with select top.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testBuildSelectStatementWithSelectTop() throws ODataException {
         String expectedSelectStmnt = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.LOGSTART " +
@@ -230,24 +307,47 @@ public class SQLSelectBuilderTest {
         testBuildSelectStatementWithSelectTop(context.getDatabaseProduct(), 12, expectedSelectStmnt);
     }
 
+    /**
+     * Test build select statement with select top postgres.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testBuildSelectStatementWithSelectTopPostgres() throws ODataException {
         String expectedSelectStatement = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.LOGSTART DESC LIMIT 4";
         testBuildSelectStatementWithSelectTop(DatabaseProduct.POSTGRE_SQL, 4, expectedSelectStatement);
     }
 
+    /**
+     * Test build select statement with select top sybase.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testBuildSelectStatementWithSelectTopSybase() throws ODataException {
         String expectedSelectStatement = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.LOGSTART DESC LIMIT 5";
         testBuildSelectStatementWithSelectTop(DatabaseProduct.SYBASE_ASE, 5, expectedSelectStatement);
     }
 
+    /**
+     * Test build select statement with select top HANA.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testBuildSelectStatementWithSelectTopHANA() throws ODataException {
         String expectedSelectStatement = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.LOGSTART DESC LIMIT 3";
         testBuildSelectStatementWithSelectTop(DatabaseProduct.HANA, 3, expectedSelectStatement);
     }
 
+    /**
+     * Test build select statement with select top.
+     *
+     * @param dbType the db type
+     * @param top the top
+     * @param expectedSelectStatement the expected select statement
+     * @throws ODataException the o data exception
+     */
     private void testBuildSelectStatementWithSelectTop(DatabaseProduct dbType, Integer top, String expectedSelectStatement) throws ODataException {
         Map<String, String> params = new HashMap<>();
         params.put("$select", "MessageGuid");
@@ -257,24 +357,48 @@ public class SQLSelectBuilderTest {
         testBuildSelectStatement(params, dbType, expectedSelectStatement);
     }
 
+    /**
+     * Test build select statement with select top and skip HANA.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testBuildSelectStatementWithSelectTopAndSkipHANA() throws ODataException {
         String expectedSelectStatement = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART DESC LIMIT 2 OFFSET 5";
         testBuildSelectStatementWithSelectTopAndSkip(DatabaseProduct.HANA, 2, 5, expectedSelectStatement);
     }
 
+    /**
+     * Test build select statement with select top and skip sybase.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testBuildSelectStatementWithSelectTopAndSkipSybase() throws ODataException {
         String expectedSelectStatement = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART DESC LIMIT 10 OFFSET 20";
         testBuildSelectStatementWithSelectTopAndSkip(DatabaseProduct.SYBASE_ASE, 10, 20, expectedSelectStatement);
     }
 
+    /**
+     * Test build select statement with select top and skip postgre.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testBuildSelectStatementWithSelectTopAndSkipPostgre() throws ODataException {
         String expectedSelectStatement = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART DESC LIMIT 2 OFFSET 6";
         testBuildSelectStatementWithSelectTopAndSkip(DatabaseProduct.POSTGRE_SQL, 2, 6, expectedSelectStatement);
     }
 
+    /**
+     * Test build select statement with select top and skip.
+     *
+     * @param dbType the db type
+     * @param top the top
+     * @param skip the skip
+     * @param expectedSelectStatement the expected select statement
+     * @throws ODataException the o data exception
+     */
     private void testBuildSelectStatementWithSelectTopAndSkip(DatabaseProduct dbType, Integer top, Integer skip, String expectedSelectStatement) throws ODataException {
         Map<String, String> params = new HashMap<>();
         params.put("$select", "MessageGuid");
@@ -285,6 +409,14 @@ public class SQLSelectBuilderTest {
         testBuildSelectStatement(params, dbType, expectedSelectStatement);
     }
 
+    /**
+     * Test build select statement.
+     *
+     * @param uriParams the uri params
+     * @param dbType the db type
+     * @param expectedSelectStatment the expected select statment
+     * @throws ODataException the o data exception
+     */
     private void testBuildSelectStatement(Map<String, String> uriParams, DatabaseProduct dbType, String expectedSelectStatment)
             throws ODataException {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
@@ -296,6 +428,11 @@ public class SQLSelectBuilderTest {
         assertEquals(expectedSelectStatment, selectBuilder.buildSelect(context));
     }
 
+    /**
+     * Test calculate effective skip from skip and skiptoken.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testCalculateEffectiveSkipFromSkipAndSkiptoken() throws ODataException {
         PathSegment ps1 = createPathSegment();
@@ -310,6 +447,11 @@ public class SQLSelectBuilderTest {
         assertEquals(8, actualSkip);
     }
 
+    /**
+     * Test calculate effective skip from skiptoken without skip.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testCalculateEffectiveSkipFromSkiptokenWithoutSkip() throws ODataException {
         PathSegment ps1 = createPathSegment();
@@ -323,6 +465,11 @@ public class SQLSelectBuilderTest {
         assertEquals(5, actualSkip);
     }
 
+    /**
+     * Test calculate effective skip from skip without skiptoken.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testCalculateEffectiveSkipFromSkipWithoutSkiptoken() throws ODataException {
         PathSegment ps1 = createPathSegment();
@@ -336,6 +483,11 @@ public class SQLSelectBuilderTest {
         assertEquals(3, actualSkip);
     }
 
+    /**
+     * Test calculate effective skip without skip and skiptoken.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testCalculateEffectiveSkipWithoutSkipAndSkiptoken() throws ODataException {
         PathSegment ps1 = createPathSegment();
@@ -348,6 +500,11 @@ public class SQLSelectBuilderTest {
         assertEquals(SQLSelectClause.NOT_SET, actualSkip);
     }
 
+    /**
+     * Test calculate effective top from top in uri.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testCalculateEffectiveTopFromTopInUri() throws ODataException {
         PathSegment ps1 = createPathSegment();
@@ -362,6 +519,11 @@ public class SQLSelectBuilderTest {
         assertFalse(q.isServersidePaging());
     }
 
+    /**
+     * Test calculate effective top without top in uri.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testCalculateEffectiveTopWithoutTopInUri() throws ODataException {
         PathSegment ps1 = createPathSegment();
@@ -375,6 +537,11 @@ public class SQLSelectBuilderTest {
         assertTrue(q.isServersidePaging());
     }
 
+    /**
+     * Test calculate effective top beyond serverside paging in uri.
+     *
+     * @throws ODataException the o data exception
+     */
     @Test
     public void testCalculateEffectiveTopBeyondServersidePagingInUri() throws ODataException {
         PathSegment ps1 = createPathSegment();
@@ -389,6 +556,11 @@ public class SQLSelectBuilderTest {
         assertTrue(q.isServersidePaging());
     }
 
+    /**
+     * Test select with composed key.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSelectWithComposedKey() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
@@ -406,6 +578,11 @@ public class SQLSelectBuilderTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
+    /**
+     * Test select with parameters for entity when calc view and hana db.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSelectWithParametersForEntityWhenCalcViewAndHanaDb() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
@@ -437,6 +614,11 @@ public class SQLSelectBuilderTest {
         assertEquals("\"T0\".\"ID\" = ?", whereClause.trim());
     }
 
+    /**
+     * Test select with parameters for entity set when calc view and hana db.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testSelectWithParametersForEntitySetWhenCalcViewAndHanaDb() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
@@ -474,6 +656,11 @@ public class SQLSelectBuilderTest {
         assertEquals("1000", limitClause.trim());
     }
 
+    /**
+     * Test delete with composed key.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testDeleteWithComposedKey() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
@@ -487,6 +674,11 @@ public class SQLSelectBuilderTest {
         assertEquals(expected, deleteBuilder.build(context).sql());
     }
 
+    /**
+     * Test insert with composed key.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testInsertWithComposedKey() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
@@ -510,6 +702,13 @@ public class SQLSelectBuilderTest {
         assertEquals(expected, insertBuilder2.build(context).sql());
     }
 
+    /**
+     * Map keys.
+     *
+     * @param keys the keys
+     * @return the map
+     * @throws EdmException the edm exception
+     */
     private static Map<String, Object> mapKeys(final List<KeyPredicate> keys) throws EdmException {
         Map<String, Object> keyMap = new HashMap<>();
         for (final KeyPredicate key : keys) {

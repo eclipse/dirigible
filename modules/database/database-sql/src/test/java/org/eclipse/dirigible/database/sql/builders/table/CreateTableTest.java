@@ -11,14 +11,17 @@
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.HashSet;
+import java.util.List;
+
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.Modifiers;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class CreateTableTest.
@@ -131,6 +134,9 @@ public class CreateTableTest {
                 sql);
     }
 
+    /**
+     * Creates the table type constraint foreign key with reference schema.
+     */
     @Test
     public void createTableTypeConstraintForeignKeyWithReferenceSchema() {
         String sql = SqlFactory.getDefault().create()
@@ -159,7 +165,7 @@ public class CreateTableTest {
                 .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE TABLE CUSTOMERS ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) , CONSTRAINT LAST_NAME_UNIQUE UNIQUE ( LAST_NAME ))",
+        assertEquals("CREATE TABLE CUSTOMERS ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) ); CREATE UNIQUE INDEX LAST_NAME_UNIQUE ON CUSTOMERS ( LAST_NAME )",
                 sql);
     }
 
@@ -197,6 +203,9 @@ public class CreateTableTest {
                 sql);
     }
 
+    /**
+     * Creates the table with escaped table name.
+     */
     @Test
     public void createTableWithEscapedTableName() {
         String sql = SqlFactory.getDefault().create()
@@ -211,6 +220,9 @@ public class CreateTableTest {
                 sql);
     }
 
+    /**
+     * Creates the table with escaped table name and schema.
+     */
     @Test
     public void createTableWithEscapedTableNameAndSchema() {
         String sql = SqlFactory.getDefault().create()
@@ -222,6 +234,23 @@ public class CreateTableTest {
         assertNotNull(sql);
         assertEquals(
                 "CREATE TABLE \"DBADMIN\".\"hdbtable-itest::incompatible-column-type-change-hana\" ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) )",
+                sql);
+    }
+    
+    /**
+     * Creates the table type constraint check.
+     */
+    @Test
+    public void createTableWithIndex() {
+        String sql = SqlFactory.getDefault().create()
+                .table("CUSTOMERS")
+                .column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
+                .column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
+                .index("NAMES_INDEX", false, "", new HashSet<>(List.of("FIRST_NAME", "LAST_NAME")))
+                .build();
+
+        assertNotNull(sql);
+        assertEquals("CREATE TABLE CUSTOMERS ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) ); CREATE  INDEX NAMES_INDEX ON CUSTOMERS ( LAST_NAME , FIRST_NAME )",
                 sql);
     }
 

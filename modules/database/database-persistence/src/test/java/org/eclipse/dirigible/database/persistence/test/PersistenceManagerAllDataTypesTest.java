@@ -63,14 +63,33 @@ public class PersistenceManagerAllDataTypesTest extends AbstractPersistenceManag
 		}
 	}
 
+	/**
+	 * Creates the table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void createTableForPojo(Connection connection, PersistenceManager<AllDataTypes> persistenceManager) {
 		persistenceManager.tableCreate(connection, AllDataTypes.class);
 	}
 
+	/**
+	 * Exists table.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @return true, if successful
+	 */
 	private boolean existsTable(Connection connection, PersistenceManager<AllDataTypes> persistenceManager) {
 		return persistenceManager.tableExists(connection, AllDataTypes.class);
 	}
 
+	/**
+	 * Insert pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertPojo(Connection connection, PersistenceManager<AllDataTypes> persistenceManager) {
 		AllDataTypes allDataTypes = new AllDataTypes();
 		allDataTypes.set_bigint(new BigInteger("1000000000"));
@@ -92,11 +111,23 @@ public class PersistenceManagerAllDataTypesTest extends AbstractPersistenceManag
 		persistenceManager.insert(connection, allDataTypes);
 	}
 
+	/**
+	 * Find pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void findPojo(Connection connection, PersistenceManager<AllDataTypes> persistenceManager) {
 		AllDataTypes allDataTypes = persistenceManager.find(connection, AllDataTypes.class, "Test");
 		assertEquals("Test", allDataTypes.get_varchar());
 	}
 
+	/**
+	 * Drop table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void dropTableForPojo(Connection connection, PersistenceManager<AllDataTypes> persistenceManager) {
 		persistenceManager.tableDrop(connection, AllDataTypes.class);
 	}

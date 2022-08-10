@@ -30,12 +30,12 @@ import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GitConnectorTest.
  */
 public class GitConnectorTest {
 
+	/** The Constant DIRIGIBLE_TEST_GIT_ENABLED. */
 	public static final String DIRIGIBLE_TEST_GIT_ENABLED = "DIRIGIBLE_TEST_GIT_ENABLED";
 
 	/**

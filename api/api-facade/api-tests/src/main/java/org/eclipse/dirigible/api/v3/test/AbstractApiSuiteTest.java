@@ -40,22 +40,37 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class AbstractApiSuiteTest.
+ */
 public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(AbstractApiSuiteTest.class);
 
+    /** The test modules. */
     private static List<String> TEST_MODULES = new ArrayList<String>();
 
+    /** The extensions core service. */
     private IExtensionsCoreService extensionsCoreService;
 
+    /** The repository. */
     private IRepository repository;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         this.extensionsCoreService = new ExtensionsCoreService();
         this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
     }
 
+    /**
+     * Register modules.
+     */
     @Before
     public void registerModules() {
         // v3
@@ -83,6 +98,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         registerModulesEtcd();
     }
 
+    /**
+     * Register modules V 4.
+     */
     protected void registerModulesV4() {
         registerModulesUtilsV4();
         registerModulesDbV4();
@@ -95,6 +113,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         registerModulesPlatformV4();
     }
 
+    /**
+     * Register modules platform V 4.
+     */
     private void registerModulesPlatformV4() {
         TEST_MODULES.add("platform/v4/lifecycle/publishProject.js");
         TEST_MODULES.add("platform/v4/repository/createFile.js");
@@ -102,10 +123,16 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("platform/v4/engines/getTypes.js");
     }
 
+    /**
+     * Register modules security V 4.
+     */
     private void registerModulesSecurityV4() {
         TEST_MODULES.add("security/v4/user/getName.js");
     }
 
+    /**
+     * Register modules io V 4.
+     */
     private void registerModulesIoV4() {
         TEST_MODULES.add("io/v4/streams/copy.js");
         TEST_MODULES.add("io/v4/streams/text.js");
@@ -113,6 +140,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("io/v4/files/fileStreams.js");
     }
 
+    /**
+     * Register modules cms V 4.
+     */
     private void registerModulesCmsV4() {
         TEST_MODULES.add("cms/v4/cmis/getSession.js");
         TEST_MODULES.add("cms/v4/cmis/getRootFolder.js");
@@ -121,6 +151,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("cms/v4/cmis/createDocument.js");
     }
 
+    /**
+     * Register modules http V 4.
+     */
     private void registerModulesHttpV4() {
         TEST_MODULES.add("http/v4/request/isValid.js");
         TEST_MODULES.add("http/v4/request/getMethod.js");
@@ -139,12 +172,18 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("http/v4/session/getAttributeNames.js");
     }
 
+    /**
+     * Register modules indexing V 4.
+     */
     private void registerModulesIndexingV4() {
         TEST_MODULES.add("indexing/v4/writer/add.js");
         TEST_MODULES.add("indexing/v4/searcher/search.js");
         TEST_MODULES.add("indexing/v4/searcher/between.js");
     }
 
+    /**
+     * Register modules core V 4.
+     */
     private void registerModulesCoreV4() {
         TEST_MODULES.add("core/v4/configurations/get.js");
         TEST_MODULES.add("core/v4/console/log.js");
@@ -158,6 +197,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("core/v4/destinations/get.js");
     }
 
+    /**
+     * Register modules db V 4.
+     */
     private void registerModulesDbV4() {
         TEST_MODULES.add("db/v4/database/getDatabaseTypes.js");
         TEST_MODULES.add("db/v4/database/getDataSources.js");
@@ -168,6 +210,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("db/v4/sequence/nextval.js");
     }
 
+    /**
+     * Register modules utils V 4.
+     */
     private void registerModulesUtilsV4() {
         TEST_MODULES.add("utils/v4/base64/encode.js");
         TEST_MODULES.add("utils/v4/base64/decode.js");
@@ -203,6 +248,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("git/v4/client/local.js");
     }
 
+    /**
+     * Register modules V 3.
+     */
     protected void registerModulesV3() {
         registerModulesCoreV3();
         registerModulesSecurityV3();
@@ -215,18 +263,27 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
     }
 
 
+    /**
+     * Register modules cms V 3.
+     */
     private void registerModulesCmsV3() {
         TEST_MODULES.add("cms/v3/cmis/getSession.js");
         TEST_MODULES.add("cms/v3/cmis/getRootFolder.js");
         TEST_MODULES.add("cms/v3/cmis/getChildren.js");
     }
 
+    /**
+     * Register modules indexing V 3.
+     */
     private void registerModulesIndexingV3() {
         TEST_MODULES.add("indexing/v3/writer/add.js");
         TEST_MODULES.add("indexing/v3/searcher/search.js");
         TEST_MODULES.add("indexing/v3/searcher/between.js");
     }
 
+    /**
+     * Register modules utils V 3.
+     */
     private void registerModulesUtilsV3() {
         TEST_MODULES.add("utils/v3/base64/encode.js");
         TEST_MODULES.add("utils/v3/base64/decode.js");
@@ -242,6 +299,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("utils/v3/url/decode.js");
     }
 
+    /**
+     * Register modules io V 3.
+     */
     private void registerModulesIoV3() {
         TEST_MODULES.add("io/v3/streams/copy.js");
         TEST_MODULES.add("io/v3/streams/text.js");
@@ -249,6 +309,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("io/v3/files/fileStreams.js");
     }
 
+    /**
+     * Register modules http V 3.
+     */
     private void registerModulesHttpV3() {
         TEST_MODULES.add("http/v3/request/isValid.js");
         TEST_MODULES.add("http/v3/request/getMethod.js");
@@ -267,6 +330,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("http/v3/session/getAttributeNames.js");
     }
 
+    /**
+     * Register modules db V 3.
+     */
     private void registerModulesDbV3() {
         TEST_MODULES.add("db/v3/database/getDatabaseTypes.js");
         TEST_MODULES.add("db/v3/database/getDataSources.js");
@@ -276,10 +342,16 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("db/v3/update/update.js");
     }
 
+    /**
+     * Register modules security V 3.
+     */
     private void registerModulesSecurityV3() {
         TEST_MODULES.add("security/v3/user/getName.js");
     }
 
+    /**
+     * Register modules core V 3.
+     */
     private void registerModulesCoreV3() {
         TEST_MODULES.add("core/v3/java/call.js");
         TEST_MODULES.add("core/v3/java/invoke.js");
@@ -295,54 +367,101 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
     }
 
+    /**
+     * Spark register module.
+     */
     protected void sparkRegisterModule() {
         sparkRegisterModulesUtils();
     }
 
+    /**
+     * Spark register modules utils.
+     */
     private void sparkRegisterModulesUtils() {
         TEST_MODULES.add("ext/spark/client.js");
     }
 
+    /**
+     * Cassandra register module.
+     */
     protected void cassandraRegisterModule() {
         cassandraRegisterUtils();
     }
 
+    /**
+     * Cassandra register utils.
+     */
     private void cassandraRegisterUtils() {
         TEST_MODULES.add("ext/cassandra/client.js");
     }
 
+    /**
+     * Register modules rabbit MQ.
+     */
     protected void registerModulesRabbitMQ() {
         registerModulesRabbitMQExt();
     }
 
+    /**
+     * Register modules rabbit MQ ext.
+     */
     private void registerModulesRabbitMQExt() {
         TEST_MODULES.add("ext/rabbitmq/rabbitmq.js");
     }
 
+    /**
+     * Register modules elastic.
+     */
     protected void registerModulesElastic() {
         registerModulesElasticsearch();
     }
 
+    /**
+     * Register modules elasticsearch.
+     */
     protected void registerModulesElasticsearch() {
         TEST_MODULES.add("ext/elasticsearch/client/client.js");
     }
 
+    /**
+     * Register modules redis ext.
+     */
     protected void registerModulesRedisExt() {
         registerModulesRedis();
     }
 
+    /**
+     * Register modules redis.
+     */
     private void registerModulesRedis() {
         TEST_MODULES.add("ext/redis/client/client.js");
     }
 
+    /**
+     * Register modules etcd.
+     */
     protected void registerModulesEtcd() {
         registerModulesEtcdExt();
     }
 
+    /**
+     * Register modules etcd ext.
+     */
     private void registerModulesEtcdExt() {
         TEST_MODULES.add("ext/etcd/client/getClient.js");
     }
 
+    /**
+     * Run suite.
+     *
+     * @param executor the executor
+     * @param repository the repository
+     * @throws RepositoryWriteException the repository write exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ScriptingException the scripting exception
+     * @throws ContextException the context exception
+     * @throws ExtensionsException the extensions exception
+     */
     public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
             throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
         for (String testModule : TEST_MODULES) {
@@ -374,6 +493,11 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         }
     }
 
+    /**
+     * Mock request.
+     *
+     * @param mockedRequest the mocked request
+     */
     protected void mockRequest(HttpServletRequest mockedRequest) {
         Mockito.lenient().when(mockedRequest.getMethod()).thenReturn("GET");
         Mockito.lenient().when(mockedRequest.getRemoteUser()).thenReturn("tester");
@@ -393,14 +517,33 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         mockSession(mockedSession);
     }
 
+    /**
+     * Mock session.
+     *
+     * @param mockedSession the mocked session
+     */
     protected void mockSession(HttpSession mockedSession) {
         Mockito.lenient().when(mockedSession.getAttributeNames()).thenReturn(Collections.enumeration(Arrays.asList("attr1")));
     }
 
+    /**
+     * Mock response.
+     *
+     * @param mockedResponse the mocked response
+     */
     protected void mockResponse(HttpServletResponse mockedResponse) {
         Mockito.lenient().when(mockedResponse.getHeaderNames()).thenReturn(Arrays.asList("header1", "header2"));
     }
 
+    /**
+     * Run test.
+     *
+     * @param executor the executor
+     * @param repository the repository
+     * @param testModule the test module
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ScriptingException the scripting exception
+     */
     protected void runTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {
 
         try {

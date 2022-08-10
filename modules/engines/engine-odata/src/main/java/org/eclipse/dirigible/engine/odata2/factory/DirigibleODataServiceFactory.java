@@ -13,6 +13,8 @@ package org.eclipse.dirigible.engine.odata2.factory;
 
 import static org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor.DEFAULT_DATA_SOURCE_CONTEXT_KEY;
 
+import java.util.ServiceLoader;
+
 import javax.sql.DataSource;
 
 import org.apache.olingo.odata2.api.ODataCallback;
@@ -30,9 +32,7 @@ import org.apache.olingo.odata2.core.edm.provider.EdmxProvider;
 import org.eclipse.dirigible.api.v3.db.DatabaseFacade;
 import org.eclipse.dirigible.commons.api.context.InvalidStateException;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
-import org.eclipse.dirigible.engine.odata2.handler.ScriptingOData2EventHandler;
 import org.eclipse.dirigible.engine.odata2.mapping.DirigibleEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.service.ODataCoreService;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
@@ -40,14 +40,24 @@ import org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ServiceLoader;
-
+/**
+ * A factory for creating DirigibleODataService objects.
+ */
 public class DirigibleODataServiceFactory extends ODataServiceFactory {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(DefaultSQLProcessor.class);
 
+    /** The odata core service. */
     private static IODataCoreService odataCoreService = new ODataCoreService();
 
+    /**
+     * Creates a new DirigibleODataService object.
+     *
+     * @param ctx the ctx
+     * @return the o data service
+     * @throws ODataException the o data exception
+     */
     @Override
     public ODataService createService(ODataContext ctx) throws ODataException {
         try {
@@ -67,6 +77,13 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
         }
     }
 
+    /**
+     * Gets the callback.
+     *
+     * @param <T> the generic type
+     * @param callbackInterface the callback interface
+     * @return the callback
+     */
     @Override
     public <T extends ODataCallback> T getCallback(Class<T> callbackInterface) {
         if (callbackInterface.isAssignableFrom(ODataErrorCallback.class)) {
@@ -75,7 +92,18 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
         return super.getCallback(callbackInterface);
     }
 
+    /**
+     * The Class ODataDefaulErrorCallback.
+     */
     private class ODataDefaulErrorCallback implements ODataErrorCallback {
+        
+        /**
+         * Handle error.
+         *
+         * @param context the context
+         * @return the o data response
+         * @throws ODataApplicationException the o data application exception
+         */
         @Override
         public ODataResponse handleError(ODataErrorContext context) throws ODataApplicationException {
             logger.error(context.getMessage(), context.getException());
@@ -83,12 +111,23 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
         }
     }
 
+    /**
+     * Sets the default data source.
+     *
+     * @param ctx the new default data source
+     * @throws ODataException the o data exception
+     */
     private void setDefaultDataSource(ODataContext ctx) throws ODataException {
         DataSource dataSource;
         dataSource = DatabaseFacade.getDefaultDataSource();
         ctx.setParameter(DEFAULT_DATA_SOURCE_CONTEXT_KEY, dataSource);
     }
 
+    /**
+     * Gets the event handler.
+     *
+     * @return the event handler
+     */
     private OData2EventHandler getEventHandler() {
         ServiceLoader<OData2EventHandler> odata2EventHandlers = ServiceLoader.load(OData2EventHandler.class);
 

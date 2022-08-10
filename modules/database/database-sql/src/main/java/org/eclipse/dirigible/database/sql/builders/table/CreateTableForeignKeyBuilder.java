@@ -23,12 +23,16 @@ import java.util.TreeSet;
  */
 public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintBuilder<CreateTableForeignKeyBuilder> {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CreateTableForeignKeyBuilder.class);
 
+	/** The referenced table. */
 	private String referencedTable;
 
+	/** The referenced table schema. */
 	private String referencedTableSchema;
 
+	/** The referenced columns. */
 	private Set<String> referencedColumns = new TreeSet<String>();
 
 
@@ -98,9 +102,9 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 	}
 
 	/**
+	 * Referenced table schema.
 	 *
-	 * @param referencedTableSchema
-	 * 			  the schema name of the reference table
+	 * @param referencedTableSchema 			  the schema name of the reference table
 	 * @return created table foreign key builder
 	 */
 	public CreateTableForeignKeyBuilder referencedTableSchema(String referencedTableSchema) {

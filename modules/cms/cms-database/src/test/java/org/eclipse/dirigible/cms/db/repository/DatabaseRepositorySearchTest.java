@@ -38,6 +38,9 @@ public class DatabaseRepositorySearchTest extends RepositoryGenericSearchTest {
 		}
 	}
 
+	/**
+	 * Test search path.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchPath()
@@ -47,6 +50,9 @@ public class DatabaseRepositorySearchTest extends RepositoryGenericSearchTest {
 		super.testSearchPath();
 	}
 
+	/**
+	 * Test search text.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchText()

@@ -33,19 +33,23 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.runtime.core.initializer.DirigibleInitializer;
 
 /**
- * Utility class used in cases you need an embedded version of Dirigible
- *
+ * Utility class used in cases you need an embedded version of Dirigible.
  */
 public class EmbeddedDirigible {
 	
+	/** The Constant ENGINE_TYPE_JAVASCRIPT. */
 	public static final String ENGINE_TYPE_JAVASCRIPT = "javascript";
 	
+	/** The repository. */
 	private IRepository repository;
 	
+	/** The initializer. */
 	private DirigibleInitializer initializer;
 	
 	/**
-	 * Initialize the Dirigible instance
+	 * Initialize the Dirigible instance.
+	 *
+	 * @return the dirigible initializer
 	 */
 	public DirigibleInitializer initialize() {
 		
@@ -106,15 +110,15 @@ public class EmbeddedDirigible {
 	}
 	
 	/**
-	 * Destroy the Dirigible instance
+	 * Destroy the Dirigible instance.
 	 */
 	public void destroy() {
 		this.initializer.destory();
 	}
 	
 	/**
-	 * Execute a service module with context parameters based on its type
-	 * 
+	 * Execute a service module with context parameters based on its type.
+	 *
 	 * @param engine the type of the engine e.g. 'javascript'
 	 * @param module the module identifier
 	 * @param context the execution context parameters
@@ -140,8 +144,8 @@ public class EmbeddedDirigible {
 	}
 	
 	/**
-	 * Execute a service module with context parameters based on its type
-	 * 
+	 * Execute a service module with context parameters based on its type.
+	 *
 	 * @param engine the type of the engine e.g. 'javascript'
 	 * @param module the module identifier
 	 * @param context the execution context parameters
@@ -154,8 +158,8 @@ public class EmbeddedDirigible {
 	}
 	
 	/**
-	 * Execute a service module
-	 * 
+	 * Execute a service module.
+	 *
 	 * @param engine the type of the engine e.g. 'javascript'
 	 * @param module the module identifier
 	 * @return the result of the execution
@@ -167,8 +171,8 @@ public class EmbeddedDirigible {
 	}
 	
 	/**
-	 * Execute a JavaScript service module
-	 * 
+	 * Execute a JavaScript service module.
+	 *
 	 * @param module the module identifier
 	 * @return the result of the execution
 	 * @throws ScriptingException in case of an error
@@ -179,8 +183,8 @@ public class EmbeddedDirigible {
 	}
 	
 	/**
-	 * Execute a JavaScript service module
-	 * 
+	 * Execute a JavaScript service module.
+	 *
 	 * @param module the module identifier
 	 * @param context the execution context parameters
 	 * @return the result of the execution

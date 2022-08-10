@@ -21,15 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Table Metadata Helper
+ * Table Metadata Helper.
  */
 public class TableMetadataHelper {
 
+    /** The Constant DATA_TYPE. */
     private static final String DATA_TYPE = "DATA_TYPE";
+    
+    /** The Constant COLUMN_NAME. */
     private static final String COLUMN_NAME = "COLUMN_NAME";
 
     /**
-     * Returns the columns result set
+     * Returns the columns result set.
      *
      * @param connection the connection
      * @param tableName  the table name
@@ -40,6 +43,15 @@ public class TableMetadataHelper {
         return getColumns(connection, tableName, null);
     }
 
+    /**
+     * Gets the columns.
+     *
+     * @param connection the connection
+     * @param tableName the table name
+     * @param schemaName the schema name
+     * @return the columns
+     * @throws SQLException the SQL exception
+     */
     public static List<TableColumn> getColumns(Connection connection, String tableName, String schemaName) throws SQLException {
         DatabaseMetaData meta = connection.getMetaData();
         if (tableName == null) {
@@ -57,6 +69,13 @@ public class TableMetadataHelper {
         return populateColumns(columns);
     }
 
+    /**
+     * Populate columns.
+     *
+     * @param columns the columns
+     * @return the list
+     * @throws SQLException the SQL exception
+     */
     private static List<TableColumn> populateColumns(ResultSet columns) throws SQLException {
 
         List<TableColumn> availableTableColumns = new ArrayList<TableColumn>();
@@ -74,7 +93,7 @@ public class TableMetadataHelper {
     }
 
     /**
-     * Returns the primary keys result set
+     * Returns the primary keys result set.
      *
      * @param connection the connection
      * @param name       the table name

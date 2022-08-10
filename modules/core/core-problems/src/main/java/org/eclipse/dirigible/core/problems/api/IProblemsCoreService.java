@@ -18,6 +18,9 @@ import org.eclipse.dirigible.core.problems.model.response.ResponseModel;
 
 import java.util.List;
 
+/**
+ * The Interface IProblemsCoreService.
+ */
 public interface IProblemsCoreService extends ICoreService {
 
     /**
@@ -110,7 +113,7 @@ public interface IProblemsCoreService extends ICoreService {
     public ProblemsModel getProblemById(Long id) throws ProblemsException;
 
     /**
-     * Gets all Problems
+     * Gets all Problems.
      *
      * @return Problems model list
      * @throws ProblemsException the dirigible problem exception

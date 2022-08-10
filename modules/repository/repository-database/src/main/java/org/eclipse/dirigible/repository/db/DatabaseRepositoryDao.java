@@ -40,28 +40,44 @@ import org.slf4j.LoggerFactory;
  */
 public class DatabaseRepositoryDao {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseRepositoryDao.class);
 
+	/** The Constant LAST. */
 	private static final String LAST = "last";
 
+	/** The Constant MODIFIED_AT. */
 	private static final String MODIFIED_AT = "modifiedAt";
 
+	/** The Constant MODIFIED_BY. */
 	private static final String MODIFIED_BY = "modifiedBy";
 
+	/** The Constant CREATED_AT. */
 	private static final String CREATED_AT = "createdAt";
 
+	/** The Constant CREATED_BY. */
 	private static final String CREATED_BY = "createdBy";
 
+	/** The Constant OBJECT_TYPE_FOLDER. */
 	static final int OBJECT_TYPE_FOLDER = 0;
 
+	/** The Constant OBJECT_TYPE_DOCUMENT. */
 	static final int OBJECT_TYPE_DOCUMENT = 1;
 
+	/** The Constant OBJECT_TYPE_BINARY. */
 	static final int OBJECT_TYPE_BINARY = 2;
 
+	/** The repository. */
 	private DatabaseRepository repository = null;
 
+	/** The data source. */
 	private DataSource dataSource = null;
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
@@ -155,6 +171,12 @@ public class DatabaseRepositoryDao {
 		}
 	}
 
+	/**
+	 * Ensure folders created.
+	 *
+	 * @param path the path
+	 * @throws SQLException the SQL exception
+	 */
 	private void ensureFoldersCreated(String path) throws SQLException {
 		RepositoryPath fullPath = new RepositoryPath(path).getParentPath();
 		StringBuilder buff = new StringBuilder();
@@ -164,12 +186,24 @@ public class DatabaseRepositoryDao {
 		}
 	}
 
+	/**
+	 * Close connection.
+	 *
+	 * @param connection the connection
+	 * @throws SQLException the SQL exception
+	 */
 	private void closeConnection(Connection connection) throws SQLException {
 		if (connection != null) {
 			connection.close();
 		}
 	}
 
+	/**
+	 * Open connection.
+	 *
+	 * @return the connection
+	 * @throws SQLException the SQL exception
+	 */
 	private Connection openConnection() throws SQLException {
 		return getDataSource().getConnection();
 	}
@@ -177,14 +211,9 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Creates the version.
 	 *
-	 * @param path
-	 *            the workspace path
-	 * @param content
-	 *            the content
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws SQLException
-	 *             on sql error
+	 * @param path            the workspace path
+	 * @param content            the content
+	 * @throws SQLException             on sql error
 	 */
 	private void createVersion(String path, byte[] content) throws SQLException {
 		Connection connection = null;
@@ -200,12 +229,8 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Removes the versions.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws SQLException
-	 *             sql error
+	 * @param path the path
+	 * @throws SQLException             sql error
 	 */
 	private void removeVersions(String path) throws SQLException {
 		Connection connection = null;
@@ -228,11 +253,9 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Sets the file content.
 	 *
-	 * @param databaseFile
-	 *            the database file
-	 * @param content
-	 *            the content
-	 * @throws SQLException
+	 * @param databaseFile            the database file
+	 * @param content            the content
+	 * @throws SQLException the SQL exception
 	 */
 	public void setFileContent(DatabaseFile databaseFile, byte[] content) throws SQLException {
 		try {
@@ -276,11 +299,9 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Rename file.
 	 *
-	 * @param path
-	 *            the path
-	 * @param newPath
-	 *            the new path
-	 * @throws SQLException
+	 * @param path            the path
+	 * @param newPath            the new path
+	 * @throws SQLException the SQL exception
 	 */
 	public void renameFile(String path, String newPath) throws SQLException {
 		try {
@@ -307,11 +328,9 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Copy file.
 	 *
-	 * @param path
-	 *            the path
-	 * @param newPath
-	 *            the new path
-	 * @throws SQLException
+	 * @param path            the path
+	 * @param newPath            the new path
+	 * @throws SQLException the SQL exception
 	 */
 	public void copyFile(String path, String newPath) throws SQLException {
 		try {
@@ -336,9 +355,8 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Removes the file by path.
 	 *
-	 * @param path
-	 *            the path
-	 * @throws SQLException
+	 * @param path            the path
+	 * @throws SQLException the SQL exception
 	 */
 	public void removeFileByPath(String path) throws SQLException {
 		try {
@@ -359,9 +377,8 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Removes the folder by path.
 	 *
-	 * @param path
-	 *            the path
-	 * @throws SQLException
+	 * @param path            the path
+	 * @throws SQLException the SQL exception
 	 */
 	public void removeFolderByPath(String path) throws SQLException {
 		try {
@@ -382,9 +399,8 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Creates the folder.
 	 *
-	 * @param path
-	 *            the normalize path
-	 * @throws SQLException
+	 * @param path            the normalize path
+	 * @throws SQLException the SQL exception
 	 */
 	public void createFolder(String path) throws SQLException {
 		try {
@@ -404,11 +420,9 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Rename folder.
 	 *
-	 * @param path
-	 *            the path
-	 * @param newPath
-	 *            the new path
-	 * @throws SQLException
+	 * @param path            the path
+	 * @param newPath            the new path
+	 * @throws SQLException the SQL exception
 	 */
 	public void renameFolder(String path, String newPath) throws SQLException {
 		try {
@@ -456,10 +470,9 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Gets the object by path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path            the path
 	 * @return the object by path
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	public DatabaseObject getObjectByPath(String path) throws SQLException {
 		DatabaseObject databaseObject = null;
@@ -508,10 +521,9 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Gets the children by folder.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path            the path
 	 * @return the children by folder
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	public List<DatabaseObject> getChildrenByFolder(String path) throws SQLException {
 		List<DatabaseObject> databaseObjects = new ArrayList<DatabaseObject>();
@@ -536,13 +548,9 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Gets the resource versions by path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path            the path
 	 * @return the resource versions by path
-	 * @throws RepositoryVersioningException
-	 *             the repository versioning exception
-	 * @throws RepositoryVersioningException
-	 *             in case of error
+	 * @throws RepositoryVersioningException             in case of error
 	 */
 	public List<IResourceVersion> getResourceVersionsByPath(String path) throws RepositoryVersioningException {
 		List<IResourceVersion> versions = new ArrayList<IResourceVersion>();
@@ -588,14 +596,11 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Gets the database file version by path.
 	 *
-	 * @param version
-	 *            the version
-	 * @param path
-	 *            the workspace path
+	 * @param version            the version
+	 * @param path            the workspace path
 	 * @return the database file version by path
-	 * @throws RepositoryVersioningException
-	 *             the repository versioning exception
-	 * @throws SQLException
+	 * @throws RepositoryVersioningException             the repository versioning exception
+	 * @throws SQLException the SQL exception
 	 */
 	private DatabaseFileVersion getLocalFileVersionByPath(int version, String path) throws RepositoryVersioningException, SQLException {
 		Connection connection = null;
@@ -628,7 +633,7 @@ public class DatabaseRepositoryDao {
 	}
 
 	/**
-	 * Discposing resources if needed
+	 * Discposing resources if needed.
 	 */
 	public void dispose() {
 		// TODO Auto-generated method stub
@@ -636,7 +641,7 @@ public class DatabaseRepositoryDao {
 	}
 
 	/**
-	 * Clean-up versions older than the given period
+	 * Clean-up versions older than the given period.
 	 */
 	public void cleanupOldVersions() {
 		// TODO Auto-generated method stub
@@ -644,29 +649,23 @@ public class DatabaseRepositoryDao {
 	}
 
 	/**
-	 * Search by name of the resource
+	 * Search by name of the resource.
 	 *
-	 * @param parameter
-	 *            the search term
-	 * @param caseInsensitive
-	 *            whether to be case sensitive
+	 * @param parameter            the search term
+	 * @param caseInsensitive            whether to be case sensitive
 	 * @return list of entities
-	 * @throws RepositorySearchException
-	 *             in case of an error
+	 * @throws RepositorySearchException             in case of an error
 	 */
 	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		return searchName(null, parameter, caseInsensitive);
 	}
 
 	/**
-	 * Search by name of the resource
+	 * Search by name of the resource.
 	 *
-	 * @param root
-	 *            the relative root
-	 * @param parameter
-	 *            the search term
-	 * @param caseInsensitive
-	 *            whether to be case sensitive
+	 * @param root            the relative root
+	 * @param parameter            the search term
+	 * @param caseInsensitive            whether to be case sensitive
 	 * @return list of entities
 	 */
 	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) {
@@ -701,12 +700,10 @@ public class DatabaseRepositoryDao {
 	}
 
 	/**
-	 * Search by the full path of a resource
+	 * Search by the full path of a resource.
 	 *
-	 * @param parameter
-	 *            the search term
-	 * @param caseInsensitive
-	 *            whether to be case sensitive
+	 * @param parameter            the search term
+	 * @param caseInsensitive            whether to be case sensitive
 	 * @return list of entities
 	 */
 	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) {
@@ -735,13 +732,11 @@ public class DatabaseRepositoryDao {
 	}
 
 	/**
-	 * Whether the folder exists
+	 * Whether the folder exists.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path            the path
 	 * @return true if exists and false otherwise
-	 * @throws SQLException
-	 *             in case of an error
+	 * @throws SQLException             in case of an error
 	 */
 	public boolean folderExists(String path) throws SQLException {
 		Connection connection = null;
@@ -754,13 +749,11 @@ public class DatabaseRepositoryDao {
 	}
 
 	/**
-	 * Whether the file exists
-	 * 
-	 * @param path
-	 *            the path
+	 * Whether the file exists.
+	 *
+	 * @param path            the path
 	 * @return true if exists and false otherwise
-	 * @throws SQLException
-	 *             in case of an error
+	 * @throws SQLException             in case of an error
 	 */
 	public boolean fileExists(String path) throws SQLException {
 		Connection connection = null;
@@ -773,11 +766,10 @@ public class DatabaseRepositoryDao {
 	}
 
 	/**
-	 * List all the resources paths
-	 * 
+	 * List all the resources paths.
+	 *
 	 * @return the list
-	 * @throws SQLException
-	 *             in case of an error
+	 * @throws SQLException             in case of an error
 	 */
 	public List<String> getAllResourcePaths() throws SQLException {
 		Connection connection = null;

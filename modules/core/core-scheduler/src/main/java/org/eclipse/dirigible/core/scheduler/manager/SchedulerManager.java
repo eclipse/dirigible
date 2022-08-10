@@ -48,27 +48,49 @@ import org.slf4j.LoggerFactory;
  */
 public class SchedulerManager {
 
+	/** The Constant QUARTZ_SIMPL_RAM_JOB_STORE. */
 	private static final String QUARTZ_SIMPL_RAM_JOB_STORE = "org.quartz.simpl.RAMJobStore";
+	
+	/** The Constant PROPERTY_KEY_DATABASE_JOB_STORE. */
 	private static final String PROPERTY_KEY_DATABASE_JOB_STORE = "org.quartz.jobStore.class";
+	
+	/** The Constant PROPERTY_KEY_DATABASE_DATA_SOURCE. */
 	private static final String PROPERTY_KEY_DATABASE_DATA_SOURCE = "org.quartz.jobStore.dataSource";
+	
+	/** The Constant PROPERTY_KEY_DATABASE_DELEGATE. */
 	private static final String PROPERTY_KEY_DATABASE_DELEGATE = "org.quartz.jobStore.driverDelegateClass";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerManager.class);
 
+	/** The scheduler factory. */
 	private static SchedulerFactory schedulerFactory = null;
 
+	/** The scheduler. */
 	private static Scheduler scheduler = null;
 	
+	/** The Constant DIRIGIBLE_SCHEDULER_MEMORY_STORE. */
 	public static final String DIRIGIBLE_SCHEDULER_MEMORY_STORE = "DIRIGIBLE_SCHEDULER_MEMORY_STORE";
 	
+	/** The Constant DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_TYPE. */
 	public static final String DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_TYPE = "DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_TYPE";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME. */
 	public static final String DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME";
 
+	/** The Constant DIRIGIBLE_SCHEDULER_DATABASE_DRIVER. */
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_DRIVER = "DIRIGIBLE_SCHEDULER_DATABASE_DRIVER";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_DATABASE_URL. */
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_URL = "DIRIGIBLE_SCHEDULER_DATABASE_URL";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_DATABASE_USER. */
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_USER = "DIRIGIBLE_SCHEDULER_DATABASE_USER";
+	
+	/** The Constant DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD. */
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD = "DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD";
 	
+	/** The Constant DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE. */
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE = "DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE";
 
 	/**
@@ -274,13 +296,11 @@ public class SchedulerManager {
 	}
 
 	/**
-	 * Checks whether the job with a given name is already scheduled
+	 * Checks whether the job with a given name is already scheduled.
 	 *
-	 * @param name
-	 *            the name of the job
+	 * @param name            the name of the job
 	 * @return true if registered
-	 * @throws SchedulerException
-	 *             in case of error
+	 * @throws SchedulerException             in case of error
 	 */
 	public static boolean existsJob(String name) throws SchedulerException {
 		Set<TriggerKey> triggerKeys = listJobs();
@@ -292,6 +312,11 @@ public class SchedulerManager {
 		return false;
 	}
 
+	/**
+	 * Sets the scheduler connection properties.
+	 *
+	 * @param properties the new scheduler connection properties
+	 */
 	private static void setSchedulerConnectionProperties(Properties properties) {
 		
 		String memoryStore = Configuration.get(DIRIGIBLE_SCHEDULER_MEMORY_STORE); 
@@ -335,6 +360,13 @@ public class SchedulerManager {
 		}
 	}
 
+	/**
+	 * Sets the property.
+	 *
+	 * @param properties the properties
+	 * @param key the key
+	 * @param value the value
+	 */
 	private static void setProperty(Properties properties, String key, String value) {
 		if (!StringUtils.isEmpty(value)) {
 			properties.setProperty(key, value);

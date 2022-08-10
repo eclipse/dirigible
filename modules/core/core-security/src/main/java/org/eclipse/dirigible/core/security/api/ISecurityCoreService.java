@@ -22,16 +22,22 @@ import org.eclipse.dirigible.core.security.definition.RoleDefinition;
  */
 public interface ISecurityCoreService extends ICoreService {
 
+	/** The Constant FILE_EXTENSION_ACCESS. */
 	public static final String FILE_EXTENSION_ACCESS = ".access";
 
+	/** The Constant FILE_EXTENSION_ROLES. */
 	public static final String FILE_EXTENSION_ROLES = ".roles";
 	
+	/** The Constant CONSTRAINT_SCOPE_HTTP. */
 	public static final String CONSTRAINT_SCOPE_HTTP = "HTTP";
 	
+	/** The Constant CONSTRAINT_SCOPE_CMIS. */
 	public static final String CONSTRAINT_SCOPE_CMIS = "CMIS";
 	
+	/** The Constant CONSTRAINT_SCOPE_DEFAULT. */
 	public static final String CONSTRAINT_SCOPE_DEFAULT = "HTTP";
 	
+	/** The Constant ROLE_PUBLIC. */
 	public static final String ROLE_PUBLIC = "Public";
 
 	// Roles
@@ -98,16 +104,16 @@ public interface ISecurityCoreService extends ICoreService {
 	public void updateRole(String name, String location, String description) throws AccessException;
 	
 	/**
-	 * Delete the roles associated by a given file form the location
-	 * 
+	 * Delete the roles associated by a given file form the location.
+	 *
 	 * @param location the location of the file
 	 * @throws AccessException the error
 	 */
 	public void deleteRolesByLocation(String location) throws AccessException;
 	
 	/**
-	 * Delete all the roles
-	 * 
+	 * Delete all the roles.
+	 *
 	 * @throws AccessException the error
 	 */
 	public void deleteAllRoles() throws AccessException;
@@ -227,16 +233,16 @@ public interface ISecurityCoreService extends ICoreService {
 	public void updateAccessDefinition(long id, String location, String scope, String path, String method, String role, String description, String hash) throws AccessException;
 	
 	/**
-	 * Delete the access definitions associated by a given file form the location
-	 * 
+	 * Delete the access definitions associated by a given file form the location.
+	 *
 	 * @param location the location of the file
 	 * @throws AccessException the error
 	 */
 	public void deleteAccessDefinitionsByLocation(String location) throws AccessException;
 	
 	/**
-	 * Delete all the access definitions
-	 * 
+	 * Delete all the access definitions.
+	 *
 	 * @throws AccessException the error
 	 */
 	public void deleteAllAccessDefinitions() throws AccessException;
@@ -350,8 +356,8 @@ public interface ISecurityCoreService extends ICoreService {
 	public String serializeAccessDefinitions(List<AccessDefinition> accessDefinitions);
 	
 	/**
-	 * Remove the modified access definitions
-	 * 
+	 * Remove the modified access definitions.
+	 *
 	 * @param location the location
 	 * @param hash the hash of the file
 	 * @throws AccessException the error

@@ -47,18 +47,37 @@ import java.util.*;
 import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class ODataSQLBatchTest.
+ */
 public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
 
+	/**
+	 * Gets the o data entities.
+	 *
+	 * @return the o data entities
+	 */
 	@Override
 	protected Class<?>[] getODataEntities() {
 		return new Class[] {Car.class, Driver.class, Owner.class, Address.class};
 	}
 
 
+    /**
+     * Gets the boundary.
+     *
+     * @param body the body
+     * @return the boundary
+     */
     private String getBoundary(String body) {
         return body.split("\r\n")[0].substring(2);
     }
 
+    /**
+     * Test execute metadata request in batch.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testExecuteMetadataRequestInBatch() throws Exception {
         List<BatchPart> batch = new ArrayList<>();
@@ -79,6 +98,11 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
     }
 
 
+    /**
+     * Test execute metadata request batch change set two updates.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testExecuteMetadataRequestBatchChangeSetTwoUpdates() throws Exception {
         String content = "{" //
@@ -134,6 +158,11 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 123456789.0d);
     }
 
+    /**
+     * Test execute metadata request batch change set rollback.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testExecuteMetadataRequestBatchChangeSetRollback() throws Exception {
         String content = "{" //
@@ -191,6 +220,11 @@ public class ODataSQLBatchTest extends AbstractSQLProcessorTest {
         assertCarHasPrice("Cars('3b1ea3aa-e18a-434b-9d6b-a1044ba8c7e5')", 7000.0);
     }
 
+    /**
+     * Test execute metadata request batch change set rollback and put.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testExecuteMetadataRequestBatchChangeSetRollbackAndPut() throws Exception {
         String content = "{" //

@@ -21,14 +21,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Facade for working with images
+ * Facade for working with images.
  */
 public class ImageFacade {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FilesFacade.class);
 
 	/**
-	 * Resize an image to the given boundaries
+	 * Resize an image to the given boundaries.
+	 *
 	 * @param original original image
 	 * @param type type of the image
 	 * @param width width of the new image

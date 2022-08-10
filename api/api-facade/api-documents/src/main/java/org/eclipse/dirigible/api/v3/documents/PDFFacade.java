@@ -31,10 +31,21 @@ import org.apache.fop.apps.MimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class PDFFacade.
+ */
 public class PDFFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PDFFacade.class);
 
+	/**
+	 * Generate.
+	 *
+	 * @param template the template
+	 * @param data the data
+	 * @return the byte[]
+	 */
 	public static byte[] generate(String template, String data) {
 		if (logger.isInfoEnabled()) {
 			logger.info("Generating PDF from template: [\n{}\n] and data: [\n{}\n]", template, data);

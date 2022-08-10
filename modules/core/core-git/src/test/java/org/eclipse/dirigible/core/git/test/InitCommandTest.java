@@ -22,15 +22,28 @@ import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * The Class InitCommandTest.
+ */
 public class InitCommandTest extends AbstractDirigibleTest {
 
+    /** The init command. */
     private InitCommand initCommand;
 
+    /**
+     * Sets the up.
+     */
     @Before
     public void setUp() {
         this.initCommand = new InitCommand();
     }
 
+    /**
+     * Inits the repository test.
+     *
+     * @throws GitConnectorException the git connector exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void initRepositoryTest() throws GitConnectorException, IOException {
         String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);

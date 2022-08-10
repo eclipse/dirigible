@@ -45,6 +45,9 @@ public class LocalVirtualTest {
 		}
 	}
 	
+	/**
+	 * Test text.
+	 */
 	@Test
 	public void testText() {
 		if (repository == null) {

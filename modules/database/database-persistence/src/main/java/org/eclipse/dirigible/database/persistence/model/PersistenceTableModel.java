@@ -22,31 +22,62 @@ import java.util.Objects;
  */
 public class PersistenceTableModel {
 
+    /** The class name. */
     private String className;
 
+    /** The table name. */
     private String tableName;
 
+    /** The schema name. */
     private String schemaName;
 
+    /** The table type. */
     private String tableType = ISqlKeywords.METADATA_TABLE;
 
+    /** The columns. */
     private List<PersistenceTableColumnModel> columns = new ArrayList<>();
 
+    /** The relations. */
     private List<PersistenceTableRelationModel> relations = new ArrayList<>();
+    
+    /** The relations. */
+    private List<PersistenceTableIndexModel> indices = new ArrayList<>();
 
-    public PersistenceTableModel(String tableName, List<PersistenceTableColumnModel> columns, List<PersistenceTableRelationModel> relations) {
+    /**
+     * Instantiates a new persistence table model.
+     *
+     * @param tableName the table name
+     * @param columns the columns
+     * @param relations the relations
+     * @param indices the indices
+     */
+    public PersistenceTableModel(String tableName, List<PersistenceTableColumnModel> columns, List<PersistenceTableRelationModel> relations, List<PersistenceTableIndexModel> indices) {
         this.tableName = tableName;
         this.columns = columns;
         this.relations = relations;
+        this.indices = indices;
     }
 
+    /**
+     * Instantiates a new persistence table model.
+     */
     public PersistenceTableModel() {
     }
 
+    /**
+     * Gets the table type.
+     *
+     * @return the table type
+     */
     public String getTableType() {
         return tableType;
     }
 
+    /**
+     * Sets the table type.
+     *
+     * @param tableType the new table type
+     */
     public void setTableType(String tableType) {
         this.tableType = tableType;
     }
@@ -127,6 +158,8 @@ public class PersistenceTableModel {
      * gets the relations.
      * <p>
      * the new columns
+     *
+     * @return the relations
      */
     public List<PersistenceTableRelationModel> getRelations() {
         return relations;
@@ -140,7 +173,31 @@ public class PersistenceTableModel {
     public void setRelations(List<PersistenceTableRelationModel> relations) {
         this.relations = relations;
     }
+    
+    /**
+	 * Gets the indices.
+	 *
+	 * @return the indices
+	 */
+	public List<PersistenceTableIndexModel> getIndices() {
+		return indices;
+	}
 
+	/**
+	 * Sets the indices.
+	 *
+	 * @param indices the new indices
+	 */
+	public void setIndices(List<PersistenceTableIndexModel> indices) {
+		this.indices = indices;
+	}
+
+    /**
+     * Equals.
+     *
+     * @param o the o
+     * @return true, if successful
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -151,8 +208,15 @@ public class PersistenceTableModel {
                 Objects.equals(schemaName, that.schemaName);
     }
 
+    /**
+     * Hash code.
+     *
+     * @return the int
+     */
     @Override
     public int hashCode() {
         return Objects.hash(className, tableName, schemaName);
     }
+
+	
 }

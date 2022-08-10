@@ -17,24 +17,49 @@ import java.util.Objects;
 /**
  * Table object containing SQL statements needed to create it.
  */
-public class Table {
+public class TableStatements {
 
+  /** The create table statement. */
   private final String createTableStatement;
+  
+  /** The create indices statements. */
   private final Collection<String> createIndicesStatements;
 
-  public Table(String createTableStatement, Collection<String> createIndicesStatements) {
+  /**
+   * Instantiates a new table.
+   *
+   * @param createTableStatement the create table statement
+   * @param createIndicesStatements the create indices statements
+   */
+  public TableStatements(String createTableStatement, Collection<String> createIndicesStatements) {
     this.createTableStatement = createTableStatement;
     this.createIndicesStatements = createIndicesStatements;
   }
 
+  /**
+   * Gets the creates the table statement.
+   *
+   * @return the creates the table statement
+   */
   public String getCreateTableStatement() {
     return createTableStatement;
   }
 
+  /**
+   * Gets the creates the indices statements.
+   *
+   * @return the creates the indices statements
+   */
   public Collection<String> getCreateIndicesStatements() {
     return createIndicesStatements;
   }
 
+  /**
+   * Equals.
+   *
+   * @param o the o
+   * @return true, if successful
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -43,12 +68,17 @@ public class Table {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Table table = (Table) o;
+    TableStatements table = (TableStatements) o;
     return createTableStatement.equals(table.createTableStatement)
         && createIndicesStatements.equals(
         table.createIndicesStatements);
   }
 
+  /**
+   * Hash code.
+   *
+   * @return the int
+   */
   @Override
   public int hashCode() {
     return Objects.hash(createTableStatement, createIndicesStatements);

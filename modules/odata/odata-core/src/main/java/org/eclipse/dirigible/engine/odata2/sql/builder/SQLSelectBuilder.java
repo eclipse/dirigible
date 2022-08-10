@@ -39,18 +39,41 @@ import java.util.stream.Stream;
 import static org.eclipse.dirigible.engine.odata2.sql.clause.SQLSelectClause.EvaluationType.*;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isOrderByEntityInExpand;
+
+/**
+ * The Class SQLSelectBuilder.
+ */
 public class SQLSelectBuilder extends AbstractQueryBuilder {
 
+    /** The Constant LOG. */
     private static final Logger LOG = LoggerFactory.getLogger(SQLSelectBuilder.class);
+    
+    /** The Constant SPACE. */
     private static final String SPACE = " ";
 
+    /** The structural types in join. */
     private final Set<String> structuralTypesInJoin;
+    
+    /** The join expressions. */
     private final List<SQLJoinClause> joinExpressions = new ArrayList<>();
+    
+    /** The select expression. */
     private SQLSelectClause selectExpression;
+    
+    /** The order by clause. */
     private SQLOrderByClause orderByClause;
+    
+    /** The group by clause. */
     private SQLGroupByClause groupByClause;
+    
+    /** The serverside paging. */
     private boolean serversidePaging;
 
+    /**
+     * Instantiates a new SQL select builder.
+     *
+     * @param tableMappingProvider the table mapping provider
+     */
     public SQLSelectBuilder(final EdmTableBindingProvider tableMappingProvider) {
         super(tableMappingProvider);
         selectExpression = null;
@@ -59,27 +82,59 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         structuralTypesInJoin = new HashSet<>();
     }
 
+    /**
+     * Select.
+     *
+     * @param selects the selects
+     * @param expand the expand
+     * @return the SQL select clause
+     */
     public SQLSelectClause select(final List<SelectItem> selects, final List<ArrayList<NavigationPropertySegment>> expand) {
         selectExpression = new SQLSelectClause(this, selects, expand);
         return selectExpression;
     }
 
+    /**
+     * Select.
+     *
+     * @return the SQL select clause. SQL select builder
+     */
     public SQLSelectClause.SQLSelectBuilder select() {
         //this is the count
         selectExpression = new SQLSelectClause(this);
         return new SQLSelectClause.SQLSelectBuilder(selectExpression);
     }
 
+    /**
+     * And.
+     *
+     * @param whereClause the where clause
+     * @return the SQL select builder
+     */
     public SQLSelectBuilder and(final SQLWhereClause whereClause) {
         getWhereClause().and(whereClause);
         return this;
     }
 
+    /**
+     * Or.
+     *
+     * @param whereClause the where clause
+     * @return the SQL select builder
+     */
     public SQLSelectBuilder or(final SQLWhereClause whereClause) {
         getWhereClause().or(whereClause);
         return this;
     }
 
+    /**
+     * Order by.
+     *
+     * @param orderBy the order by
+     * @param entityType the entity type
+     * @return the SQL select builder
+     * @throws ODataNotImplementedException the o data not implemented exception
+     */
     public SQLSelectBuilder orderBy(final OrderByExpression orderBy, final EdmEntityType entityType) throws ODataNotImplementedException {
         if (orderBy != null && orderBy.getOrders() != null) {
             for (OrderExpression order : orderBy.getOrders()) {
@@ -97,10 +152,21 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         return this;
     }
 
+    /**
+     * Gets the order by clause.
+     *
+     * @return the order by clause
+     */
     public SQLOrderByClause getOrderByClause() {
         return orderByClause;
     }
 
+    /**
+     * Group by.
+     *
+     * @param entityType the entity type
+     * @return the SQL select builder
+     */
     public SQLSelectBuilder groupBy(final EdmEntityType entityType) {
         if (hasAggregationTypePresent(entityType)) {
             this.groupByClause = new SQLGroupByClause(this, entityType);
@@ -108,10 +174,22 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         return this;
     }
 
+    /**
+     * Gets the group by clause.
+     *
+     * @return the group by clause
+     */
     public SQLGroupByClause getGroupByClause() {
         return groupByClause;
     }
 
+    /**
+     * Validate order by.
+     *
+     * @param uriInfo the uri info
+     * @throws EdmException the edm exception
+     * @throws ODataNotImplementedException the o data not implemented exception
+     */
     public void validateOrderBy(final UriInfo uriInfo)
             throws EdmException, ODataNotImplementedException {
         boolean usingOrderBy = uriInfo.getOrderBy() != null && uriInfo.getOrderBy().getOrders() != null;
@@ -136,6 +214,14 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         }
     }
 
+    /**
+     * Filter.
+     *
+     * @param filterTarget the filter target
+     * @param filter the filter
+     * @return the SQL select builder
+     * @throws ODataException the o data exception
+     */
     public SQLSelectBuilder filter(final EdmEntitySet filterTarget, final FilterExpression filter) throws ODataException {
         //TODO we do not search only filter target table. What if we filter on property that is complex type and is field of the target entity?
         SQLWhereClause where = SQLUtils.buildSQLWhereClause(this, filterTarget.getEntityType(), filter);
@@ -145,6 +231,15 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         return this;
     }
 
+    /**
+     * Filter.
+     *
+     * @param filterTarget the filter target
+     * @param keyProperty the key property
+     * @param idsOfLeadingEntities the ids of leading entities
+     * @return the SQL select builder
+     * @throws ODataException the o data exception
+     */
     public SQLSelectBuilder filter(final EdmEntitySet filterTarget, final EdmProperty keyProperty, final List<String> idsOfLeadingEntities)  throws ODataException {
         ColumnInfo column = getSQLTableColumnInfo(filterTarget.getEntityType(), keyProperty);
         List<SQLStatementParam> filterParams = new ArrayList<>();
@@ -163,10 +258,23 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         return this;
     }
 
+    /**
+     * Gets the select expression.
+     *
+     * @return the select expression
+     */
     public SQLSelectClause getSelectExpression() {
         return selectExpression;
     }
 
+    /**
+     * Join.
+     *
+     * @param from the from
+     * @param to the to
+     * @return the SQL join clause
+     * @throws EdmException the edm exception
+     */
     public SQLJoinClause join(final EdmStructuralType from, final EdmStructuralType to) throws EdmException {
         SQLJoinClause join = new SQLJoinClause(this, from, to);
         if (!join.isEmpty()) {
@@ -180,16 +288,35 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
     }
 
 
+    /**
+     * Join.
+     *
+     * @param start the start
+     * @param target the target
+     * @param expands the expands
+     * @return the SQL join clause
+     * @throws ODataException the o data exception
+     */
     public SQLJoinClause join(final EdmEntitySet start, final EdmEntitySet target, final List<NavigationSegment> expands)
             throws ODataException {
         return this.join(start.getEntityType(), target.getEntityType());
     }
 
+    /**
+     * Gets the join where clauses.
+     *
+     * @return the join where clauses
+     */
     // Do NOT use this method; For Unit testing purposes ONLY
     Iterator<SQLJoinClause> getJoinWhereClauses() {
         return joinExpressions.iterator();
     }
 
+    /**
+     * Gets the statement params.
+     *
+     * @return the statement params
+     */
     @Override
     public List<SQLStatementParam> getStatementParams() {
         List<SQLStatementParam> selectClauseStatementParams = getSelectExpression().getStatementParams();
@@ -198,6 +325,13 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         return Stream.concat(selectClauseStatementParams.stream(), whereClauseStatementParams.stream()).collect(Collectors.toList());
     }
 
+    /**
+     * Evaluate joins.
+     *
+     * @param context the context
+     * @return the string
+     * @throws ODataException the o data exception
+     */
     private String evaluateJoins(final SQLContext context) throws ODataException {
         StringBuilder builder = new StringBuilder();
         for (SQLJoinClause join : joinExpressions) {
@@ -210,11 +344,10 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
     }
 
     /**
-     * Build select clause
+     * Build select clause.
      *
      * @param context the context
      * @return the clause
-     * @throws EdmException   in case of an error
      * @throws ODataException in case of an error
      */
     public String buildSelect(final SQLContext context) throws ODataException {
@@ -255,6 +388,14 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         return SQLUtils.normalizeSQLExpression(builder);
     }
 
+    /**
+     * Adds the select option.
+     *
+     * @param context the context
+     * @param statementBuilder the statement builder
+     * @param option the option
+     * @throws EdmException the edm exception
+     */
     private void addSelectOption(SQLContext context, StringBuilder statementBuilder, EvaluationType option)
         throws EdmException {
         String optionSupplement = selectExpression.evaluate(context, option);
@@ -264,7 +405,7 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
     }
 
     /**
-     * Check if server side paging is enabled
+     * Check if server side paging is enabled.
      *
      * @return true if it is enabled
      */
@@ -272,12 +413,25 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         return serversidePaging;
     }
 
+    /**
+     * Sets the serverside paging.
+     *
+     * @param serversidePaging the serverside paging
+     * @return the SQL select builder
+     */
     public SQLSelectBuilder setServersidePaging(final boolean serversidePaging) {
         this.serversidePaging = serversidePaging;
         return this;
     }
 
 
+    /**
+     * Builds the.
+     *
+     * @param context the context
+     * @return the SQL statement
+     * @throws ODataException the o data exception
+     */
     @Override
     public SQLStatement build(SQLContext context) throws ODataException {
         return  new SQLStatement() {

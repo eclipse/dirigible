@@ -45,6 +45,13 @@ public class CreateBranchingBuilder extends AbstractSqlBuilder {
         return new CreateTableBuilder(getDialect(), table);
     }
 
+    /**
+     * Table.
+     *
+     * @param table the table
+     * @param tableType the table type
+     * @return the creates the table builder
+     */
     public CreateTableBuilder table(String table, String tableType) {
         return new CreateTableBuilder(getDialect(), table);
     }
@@ -109,6 +116,11 @@ public class CreateBranchingBuilder extends AbstractSqlBuilder {
         return new CreateTableTypeBuilder(getDialect(), tableType);
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

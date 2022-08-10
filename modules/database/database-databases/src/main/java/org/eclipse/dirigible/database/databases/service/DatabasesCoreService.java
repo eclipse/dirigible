@@ -29,15 +29,21 @@ import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 
 /**
- * The Databases Core Service
- *
+ * The Databases Core Service.
  */
 public class DatabasesCoreService implements IDatabasesCoreService {
 	
+	/** The data source. */
 	private DataSource dataSource = null;
 	
+	/** The database persistence manager. */
 	private PersistenceManager<DatabaseDefinition> databasePersistenceManager = new PersistenceManager<DatabaseDefinition>();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -45,6 +51,18 @@ public class DatabasesCoreService implements IDatabasesCoreService {
 		return dataSource;
 	}
 
+	/**
+	 * Creates the database.
+	 *
+	 * @param name the name
+	 * @param driver the driver
+	 * @param url the url
+	 * @param username the username
+	 * @param password the password
+	 * @param parameters the parameters
+	 * @return the database definition
+	 * @throws DatabasesException the databases exception
+	 */
 	@Override
 	public DatabaseDefinition createDatabase(String name, String driver, String url, String username, String password,
 			String parameters) throws DatabasesException {
@@ -59,6 +77,13 @@ public class DatabasesCoreService implements IDatabasesCoreService {
 		return createDatabase(databaseDefinition);
 	}
 	
+	/**
+	 * Creates the database.
+	 *
+	 * @param definition the definition
+	 * @return the database definition
+	 * @throws DatabasesException the databases exception
+	 */
 	@Override
 	public DatabaseDefinition createDatabase(DatabaseDefinition definition) throws DatabasesException {
 		
@@ -71,6 +96,13 @@ public class DatabasesCoreService implements IDatabasesCoreService {
 		return definition;
 	}
 
+	/**
+	 * Gets the database.
+	 *
+	 * @param id the id
+	 * @return the database
+	 * @throws DatabasesException the databases exception
+	 */
 	@Override
 	public DatabaseDefinition getDatabase(long id) throws DatabasesException {
 		try (Connection connection = getDataSource().getConnection()) {
@@ -80,6 +112,13 @@ public class DatabasesCoreService implements IDatabasesCoreService {
 		}
 	}
 	
+	/**
+	 * Gets the database by name.
+	 *
+	 * @param name the name
+	 * @return the database by name
+	 * @throws DatabasesException the databases exception
+	 */
 	@Override
 	public DatabaseDefinition getDatabaseByName(String name) throws DatabasesException {
 		try (Connection connection = getDataSource().getConnection()) {
@@ -94,6 +133,12 @@ public class DatabasesCoreService implements IDatabasesCoreService {
 		return null;
 	}
 
+	/**
+	 * Removes the database.
+	 *
+	 * @param id the id
+	 * @throws DatabasesException the databases exception
+	 */
 	@Override
 	public void removeDatabase(long id) throws DatabasesException {
 		try (Connection connection = getDataSource().getConnection()) {
@@ -104,6 +149,18 @@ public class DatabasesCoreService implements IDatabasesCoreService {
 
 	}
 
+	/**
+	 * Update database.
+	 *
+	 * @param id the id
+	 * @param name the name
+	 * @param driver the driver
+	 * @param url the url
+	 * @param username the username
+	 * @param password the password
+	 * @param parameters the parameters
+	 * @throws DatabasesException the databases exception
+	 */
 	@Override
 	public void updateDatabase(long id, String name, String driver, String url, String username, String password,
 			String parameters) throws DatabasesException {
@@ -119,6 +176,12 @@ public class DatabasesCoreService implements IDatabasesCoreService {
 		updateDatabase(databaseDefinition);
 	}
 	
+	/**
+	 * Update database.
+	 *
+	 * @param definition the definition
+	 * @throws DatabasesException the databases exception
+	 */
 	@Override
 	public void updateDatabase(DatabaseDefinition definition) throws DatabasesException {
 		try (Connection connection = getDataSource().getConnection()) {
@@ -128,6 +191,12 @@ public class DatabasesCoreService implements IDatabasesCoreService {
 		}
 	}
 
+	/**
+	 * Gets the databases.
+	 *
+	 * @return the databases
+	 * @throws DatabasesException the databases exception
+	 */
 	@Override
 	public List<DatabaseDefinition> getDatabases() throws DatabasesException {
 		try (Connection connection = getDataSource().getConnection()) {

@@ -21,10 +21,15 @@ import javax.ws.rs.core.Response;
 import org.apache.cxf.helpers.IOUtils;
 import org.junit.Test;
 
+/**
+ * The Class MetadataODataNorthwindTest.
+ */
 public class MetadataODataNorthwindTest extends AbstractODataNorthwindTest {
 
 	/**
 	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/$metadata
+	 *
+	 * @throws Exception the exception
 	 */
 	@Test
 	public void testMetadataResponse() throws Exception {

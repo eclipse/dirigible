@@ -21,6 +21,7 @@ import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBui
  */
 public class MySQLLastValueIdentityBuilder extends LastValueIdentityBuilder {
 
+	/** The Constant PATTERN_SELECT_LAST_VALUE_IDENTITY. */
 	private static final String PATTERN_SELECT_LAST_VALUE_IDENTITY = "SELECT LAST_INSERT_ID()";
 
 	/**
@@ -33,6 +34,11 @@ public class MySQLLastValueIdentityBuilder extends LastValueIdentityBuilder {
 		super(dialect);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()

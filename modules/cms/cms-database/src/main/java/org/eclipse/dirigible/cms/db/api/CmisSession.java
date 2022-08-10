@@ -13,21 +13,35 @@ package org.eclipse.dirigible.cms.db.api;
 
 import java.io.IOException;
 
+/**
+ * The Class CmisSession.
+ */
 public class CmisSession {
 
+	/** The cmis repository. */
 	private CmisRepository cmisRepository;
 
+	/**
+	 * Instantiates a new cmis session.
+	 *
+	 * @param cmisRepository the cmis repository
+	 */
 	public CmisSession(CmisRepository cmisRepository) {
 		super();
 		this.cmisRepository = cmisRepository;
 	}
 
+	/**
+	 * Gets the cmis repository.
+	 *
+	 * @return the cmis repository
+	 */
 	public CmisRepository getCmisRepository() {
 		return cmisRepository;
 	}
 
 	/**
-	 * Returns the information about the CMIS repository
+	 * Returns the information about the CMIS repository.
 	 *
 	 * @return Repository Info
 	 */
@@ -36,7 +50,7 @@ public class CmisSession {
 	}
 
 	/**
-	 * Returns the ObjectFactory utility
+	 * Returns the ObjectFactory utility.
 	 *
 	 * @return Object Factory
 	 */
@@ -45,7 +59,7 @@ public class CmisSession {
 	}
 
 	/**
-	 * Returns the root folder of this repository
+	 * Returns the root folder of this repository.
 	 *
 	 * @return Folder
 	 * @throws IOException IO Exception
@@ -55,10 +69,9 @@ public class CmisSession {
 	}
 
 	/**
-	 * Returns a CMIS Object by name
+	 * Returns a CMIS Object by name.
 	 *
 	 * @param id the Id
-	 * 
 	 * @return CMIS Object
 	 * @throws IOException IO Exception
 	 */
@@ -76,10 +89,9 @@ public class CmisSession {
 	}
 
 	/**
-	 * Returns a CMIS Object by path
+	 * Returns a CMIS Object by path.
 	 *
 	 * @param path the path
-	 * 
 	 * @return CMIS Object
 	 * @throws IOException IO Exception
 	 */

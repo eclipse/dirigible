@@ -21,12 +21,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class CsvimSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_CSVIM. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_CSVIM = "DIRIGIBLE_JOB_EXPRESSION_CSVIM";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_CSVIM_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_CSVIM_SYNCHRONIZER_JOB = "dirigible-internal-csvim-synchronizer-job";
 	
+	/** The Constant CSVIM_SYNCHRONIZER_JOB. */
 	static final String CSVIM_SYNCHRONIZER_JOB = "CSVIM Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

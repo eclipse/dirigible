@@ -38,8 +38,18 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.processor.ExpandCallBack;
 import org.junit.Test;
 
+/**
+ * The Class OData2UtilsTest.
+ */
 public class OData2UtilsTest {
 
+    /**
+     * Test write entry with expand not found.
+     *
+     * @throws EntityProviderException the entity provider exception
+     * @throws ODataException the o data exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void testWriteEntryWithExpandNotFound() throws EntityProviderException, ODataException, IOException {
         ODataContext ctx = EasyMock.createMock(ODataContext.class);
@@ -62,6 +72,13 @@ public class OData2UtilsTest {
         assertEquals(HttpStatusCodes.NOT_FOUND.getStatusCode(), response.getStatus().getStatusCode());
     }
 
+    /**
+     * Test write entry with expand not found 2.
+     *
+     * @throws EntityProviderException the entity provider exception
+     * @throws ODataException the o data exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Test
     public void testWriteEntryWithExpandNotFound2() throws EntityProviderException, ODataException, IOException {
         ODataContext ctx = EasyMock.createMock(ODataContext.class);
@@ -84,6 +101,9 @@ public class OData2UtilsTest {
         assertEquals(HttpStatusCodes.NOT_FOUND.getStatusCode(), response.getStatus().getStatusCode());
     }
 
+    /**
+     * Test get tenant name from context multiple batch parents.
+     */
     @Test
     public void testGetTenantNameFromContextMultipleBatchParents() {
         String resultTenantName = "TestName";
@@ -99,6 +119,9 @@ public class OData2UtilsTest {
         EasyMock.verify(testContext, testContext2, testContext3);
     }
 
+    /**
+     * Test get tenant name from context one batch parent.
+     */
     @Test
     public void testGetTenantNameFromContextOneBatchParent() {
         String resultTenantName = "TestName";
@@ -112,6 +135,9 @@ public class OData2UtilsTest {
         EasyMock.verify(testContext, testContext2);
     }
 
+    /**
+     * Test get tenant name from context no batch parent.
+     */
     @Test
     public void testGetTenantNameFromContextNoBatchParent() {
         String resultTenantName = "TestName";
@@ -123,6 +149,11 @@ public class OData2UtilsTest {
         EasyMock.verify(testContext);
     }
 
+    /**
+     * Test get key predicate value by property name.
+     *
+     * @throws EdmException the edm exception
+     */
     @Test
     public void testGetKeyPredicateValueByPropertyName() throws EdmException {
         EdmProperty edmProperty = EasyMock.createMock(EdmProperty.class);
@@ -142,6 +173,11 @@ public class OData2UtilsTest {
         EasyMock.verify(keyPredicate);
     }
 
+    /**
+     * Test is property parameter.
+     *
+     * @throws EdmException the edm exception
+     */
     @Test
     public void testIsPropertyParameter() throws EdmException {
         EdmProperty edmProperty = EasyMock.createMock(EdmProperty.class);

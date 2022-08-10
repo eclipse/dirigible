@@ -21,13 +21,15 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
  */
 public class CommandEngineProcessor {
 
+	/** The engine executor. */
 	private CommandEngineExecutor engineExecutor = new CommandEngineExecutor();
 
 	/**
-	 * Execute the command
-	 * 
-	 * @param module
-	 * @throws ScriptingException
+	 * Execute the command.
+	 *
+	 * @param module the module
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
 	 */
 	public Object executeService(String module) throws ScriptingException {
 		Map<Object, Object> executionContext = new HashMap<Object, Object>();

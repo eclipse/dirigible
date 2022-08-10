@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GraalVMCustomTest.class);
 
 	/** The repository. */
@@ -40,6 +41,11 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	/** The GraalVM javascript engine executor. */
 	private GraalVMJavascriptEngineExecutor graalVMJavascriptEngineExecutor;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
 	 */
@@ -51,13 +57,16 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 		this.graalVMJavascriptEngineExecutor = new GraalVMJavascriptEngineExecutor();
 	}
 
+	/**
+	 * Register modules.
+	 */
 	@Override
 	public void registerModules() {
 		registerModulesV4();
 	}
 	
 	/**
-	 * Custom custom package
+	 * Custom custom package.
 	 *
 	 * @throws RepositoryWriteException the repository write exception
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -84,7 +93,7 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	}
 	
 	/**
-	 * Custom custom package
+	 * Custom custom package.
 	 *
 	 * @throws RepositoryWriteException the repository write exception
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -112,6 +121,13 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 		}
 	}
 
+	/**
+	 * Dirigible api ecma import.
+	 *
+	 * @throws ContextException the context exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 */
 	@Test
 	public void dirigibleApiEcmaImport() throws ContextException, IOException, ScriptingException {
 		String testModule = "graalvm/ecmascript/importDirigibleApi.mjs";
@@ -131,6 +147,13 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 		}
 	}
 
+	/**
+	 * Relative path ecma import.
+	 *
+	 * @throws ContextException the context exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 */
 	@Test
 	public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
 		String testModule = "graalvm/ecmascript/relativeImports/l12/l12.mjs";

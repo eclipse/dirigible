@@ -18,8 +18,10 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
  */
 public class LocalFile extends LocalObject {
 
+	/** The binary. */
 	private boolean binary = false;
 
+	/** The content type. */
 	private String contentType;
 
 	/**

@@ -31,17 +31,40 @@ import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERV
 import static org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
+/**
+ * The Class AbstractQueryBuilder.
+ */
 public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
+    
+    /** The Constant LOG. */
     private static final Logger LOG = LoggerFactory.getLogger(SQLSelectBuilder.class);
+    
+    /** The table aliases for entities in query. */
     private final Map<String, EdmStructuralType> tableAliasesForEntitiesInQuery;
+    
+    /** The table aliases for many to many mapping tables in query. */
     private final Map<String, String> tableAliasesForManyToManyMappingTablesInQuery;
+    
+    /** The structural types in join. */
     private final Set<String> structuralTypesInJoin;
 
+    /** The table binding. */
     private final EdmTableBindingProvider tableBinding;
+    
+    /** The join expressions. */
     private final List<SQLJoinClause> joinExpressions = new ArrayList<>();
+    
+    /** The sql statement params. */
     private final List<SQLStatementParam> sqlStatementParams;
+    
+    /** The where clause. */
     private SQLWhereClause whereClause;
 
+    /**
+     * Instantiates a new abstract query builder.
+     *
+     * @param tableBinding the table binding
+     */
     public AbstractQueryBuilder(final EdmTableBindingProvider tableBinding) {
         this.tableBinding = tableBinding;
         this.whereClause = new SQLWhereClause();
@@ -52,18 +75,41 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
     }
 
 
+    /**
+     * Gets the statement params.
+     *
+     * @return the statement params
+     */
     public List<SQLStatementParam> getStatementParams() {
         return sqlStatementParams;
     }
 
+    /**
+     * Adds the statement param.
+     *
+     * @param param the param
+     */
     public void addStatementParam(SQLStatementParam param) {
         sqlStatementParams.add(param);
     }
 
+    /**
+     * Gets the where clause.
+     *
+     * @return the where clause
+     */
     public SQLWhereClause getWhereClause() {
         return whereClause;
     }
 
+    /**
+     * Adds the statement param.
+     *
+     * @param entity the entity
+     * @param property the property
+     * @param value the value
+     * @throws EdmException the edm exception
+     */
     public void addStatementParam(EdmNavigationProperty entity, EdmProperty property, Object value) throws EdmException {
         EdmType edmType = entity.getType();
         if (edmType instanceof EdmEntityType) {
@@ -73,6 +119,14 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         }
     }
 
+    /**
+     * Adds the statement param.
+     *
+     * @param entity the entity
+     * @param property the property
+     * @param value the value
+     * @throws EdmException the edm exception
+     */
     public void addStatementParam(EdmStructuralType entity, EdmProperty property, Object value) throws EdmException {
         if (property.isSimple()) {
             EdmTableBinding.ColumnInfo info = getSQLTableColumnInfo(entity, property);
@@ -82,10 +136,21 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         }
     }
 
+    /**
+     * Gets the table binding.
+     *
+     * @return the table binding
+     */
     public EdmTableBindingProvider getTableBinding() {
         return tableBinding;
     }
 
+    /**
+     * Gets the SQL table name.
+     *
+     * @param target the target
+     * @return the SQL table name
+     */
     public String getSQLTableName(final EdmStructuralType target) { //TODO use context
         boolean caseSensitive = Boolean.parseBoolean(
                 Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
@@ -94,62 +159,154 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         return caseSensitive ? ("\"" + tableName + "\"") : tableName;
     }
 
+    /**
+     * Gets the SQL mapping table name.
+     *
+     * @param from the from
+     * @param to the to
+     * @return the SQL mapping table name
+     * @throws EdmException the edm exception
+     */
     public List<String> getSQLMappingTableName(final EdmStructuralType from, final EdmStructuralType to) throws EdmException {
         return tableBinding.getEdmTableBinding(from).getMappingTableName(to);
     }
 
+    /**
+     * Gets the SQL mapping table join column.
+     *
+     * @param from the from
+     * @param to the to
+     * @return the SQL mapping table join column
+     * @throws EdmException the edm exception
+     */
     public List<String> getSQLMappingTableJoinColumn(final EdmStructuralType from, final EdmStructuralType to) throws EdmException {
         return tableBinding.getEdmTableBinding(from).getMappingTableJoinColumn(to);
     }
 
+    /**
+     * Gets the SQL join table name.
+     *
+     * @param from the from
+     * @param to the to
+     * @return the SQL join table name
+     * @throws EdmException the edm exception
+     */
     public List<String> getSQLJoinTableName(final EdmStructuralType from, final EdmStructuralType to) throws EdmException {
         if (tableBinding.getEdmTableBinding(from).hasJoinColumnTo(to))
             return tableBinding.getEdmTableBinding(from).getJoinColumnTo(to);
         throw new IllegalArgumentException("No join column definition found from type " + from + " to type " + to);
     }
 
+    /**
+     * Checks for SQL mapping table present.
+     *
+     * @param from the from
+     * @param to the to
+     * @return true, if successful
+     * @throws EdmException the edm exception
+     */
     public boolean hasSQLMappingTablePresent(final EdmStructuralType from, final EdmStructuralType to) throws EdmException {
         EdmTableBinding mapping = tableBinding.getEdmTableBinding(from);
         return mapping.hasMappingTable(to);
     }
 
+    /**
+     * Checks for key generated present.
+     *
+     * @param target the target
+     * @return true, if successful
+     */
     public boolean hasKeyGeneratedPresent(final EdmStructuralType target) {
         EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
         return mapping.isPropertyMapped("keyGenerated");
     }
 
+    /**
+     * Checks for aggregation type present.
+     *
+     * @param target the target
+     * @return true, if successful
+     */
     public boolean hasAggregationTypePresent(final EdmStructuralType target) {
         EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
         return mapping.isPropertyMapped("aggregationType");
     }
 
+    /**
+     * Checks if is aggregation type explicit.
+     *
+     * @param target the target
+     * @return true, if is aggregation type explicit
+     */
     public boolean isAggregationTypeExplicit(final EdmStructuralType target) {
         EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
         return mapping.isAggregationTypeExplicit();
     }
 
+    /**
+     * Checks if is column contained in aggregation prop.
+     *
+     * @param target the target
+     * @param columnName the column name
+     * @return true, if is column contained in aggregation prop
+     */
     public boolean isColumnContainedInAggregationProp(final EdmStructuralType target, String columnName) {
         EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
         return mapping.isColumnContainedInAggregationProp(columnName);
     }
 
+    /**
+     * Gets the column aggregation type.
+     *
+     * @param target the target
+     * @param columnName the column name
+     * @return the column aggregation type
+     */
     public String getColumnAggregationType(final EdmStructuralType target, String columnName) {
         EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
         return mapping.getColumnAggregationType(columnName);
     }
 
+    /**
+     * Gets the SQL table primary key.
+     *
+     * @param type the type
+     * @return the SQL table primary key
+     * @throws EdmException the edm exception
+     */
     public String getSQLTablePrimaryKey(final EdmStructuralType type) throws EdmException {
         return tableBinding.getEdmTableBinding(type).getPrimaryKey();
     }
 
+    /**
+     * Gets the SQL table parameters.
+     *
+     * @param type the type
+     * @return the SQL table parameters
+     * @throws EdmException the edm exception
+     */
     public List<String> getSQLTableParameters(final EdmStructuralType type) throws EdmException {
         return tableBinding.getEdmTableBinding(type).getParameters();
     }
 
+    /**
+     * Gets the SQL table data structure type.
+     *
+     * @param type the type
+     * @return the SQL table data structure type
+     * @throws EdmException the edm exception
+     */
     public EdmTableBinding.DataStructureType getSQLTableDataStructureType(final EdmStructuralType type) throws EdmException {
         return tableBinding.getEdmTableBinding(type).getDataStructureType();
     }
 
+    /**
+     * Gets the SQL table column.
+     *
+     * @param targetEnitityType the target enitity type
+     * @param p the p
+     * @return the SQL table column
+     */
     public String getSQLTableColumn(final EdmStructuralType targetEnitityType, final EdmProperty p) {
         if (p.isSimple()) {
             boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
@@ -163,6 +320,13 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         }
     }
 
+    /**
+     * Gets the SQL table column no alias.
+     *
+     * @param targetEnitityType the target enitity type
+     * @param p the p
+     * @return the SQL table column no alias
+     */
     public String getSQLTableColumnNoAlias(final EdmStructuralType targetEnitityType, final EdmProperty p) {
         if (p.isSimple()) {
             boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
@@ -176,20 +340,50 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         }
     }
 
+    /**
+     * Fix database names case.
+     *
+     * @param column the column
+     * @return the string
+     */
     private String fixDatabaseNamesCase(String column) {
         boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
         return caseSensitive ? "\"" + column + "\"" : column;
     }
 
+    /**
+     * Gets the SQL join column no alias.
+     *
+     * @param targetEnitityType the target enitity type
+     * @param p the p
+     * @return the SQL join column no alias
+     * @throws EdmException the edm exception
+     */
     public List<String> getSQLJoinColumnNoAlias(final EdmStructuralType targetEnitityType, final EdmNavigationProperty p) throws EdmException {
         List<String> joinColums = tableBinding.getEdmTableBinding(targetEnitityType).getJoinColumnTo((EdmStructuralType) p.getType());
         return joinColums.stream().map(this::fixDatabaseNamesCase).collect(Collectors.toList());
     }
 
+    /**
+     * Gets the pure SQL column name.
+     *
+     * @param type the type
+     * @param p the p
+     * @return the pure SQL column name
+     * @throws EdmException the edm exception
+     */
     public String getPureSQLColumnName(final EdmStructuralType type, final EdmProperty p) throws EdmException {
         return tableBinding.getEdmTableBinding(type).getColumnName(p);
     }
 
+    /**
+     * Gets the SQL table column info.
+     *
+     * @param targetEnitityType the target enitity type
+     * @param p the p
+     * @return the SQL table column info
+     * @throws EdmException the edm exception
+     */
     public ColumnInfo getSQLTableColumnInfo(final EdmStructuralType targetEnitityType, final EdmProperty p) throws EdmException {
         if (p.isSimple()) {
             ColumnInfo info = tableBinding.getEdmTableBinding((targetEnitityType)).getColumnInfo(p);
@@ -206,6 +400,13 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         }
     }
 
+    /**
+     * Gets the SQL table column alias.
+     *
+     * @param targetEnitityType the target enitity type
+     * @param property the property
+     * @return the SQL table column alias
+     */
     public String getSQLTableColumnAlias(final EdmStructuralType targetEnitityType, final EdmProperty property) {
         if (property.isSimple())
             return tableBinding.getEdmTableBinding(targetEnitityType).getColumnName(property) + "_" + getSQLTableAlias(targetEnitityType);
@@ -213,10 +414,23 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
             throw new IllegalArgumentException("Unable to get the table column name of complex property " + property);
     }
 
+    /**
+     * Checks if is transient type.
+     *
+     * @param targetEnitityType the target enitity type
+     * @param property the property
+     * @return true, if is transient type
+     */
     public boolean isTransientType(final EdmStructuralType targetEnitityType, final EdmProperty property) {
         return !tableBinding.getEdmTableBinding(targetEnitityType).isPropertyMapped(property);
     }
 
+    /**
+     * Gets the SQL table alias.
+     *
+     * @param type the type
+     * @return the SQL table alias
+     */
     public String getSQLTableAlias(final EdmType type) {
         if (type instanceof EdmStructuralType)
             return getTableAliasForType((EdmStructuralType) type);
@@ -224,10 +438,22 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
             throw new IllegalArgumentException("Mapping of types other than EdmEntityType and EdmComplexType is not supported!");
     }
 
+    /**
+     * Gets the SQL table alias for many to many mapping table.
+     *
+     * @param manyToManyMappingTable the many to many mapping table
+     * @return the SQL table alias for many to many mapping table
+     */
     public String getSQLTableAliasForManyToManyMappingTable(final String manyToManyMappingTable) {
         return getTableAliasForManyToManyMappingTable(manyToManyMappingTable);
     }
 
+    /**
+     * Gets the table alias for type.
+     *
+     * @param st the st
+     * @return the table alias for type
+     */
     private String getTableAliasForType(final EdmStructuralType st) {
         Collection<String> keys = tableAliasesForEntitiesInQuery.keySet();
         try {
@@ -242,6 +468,12 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         }
     }
 
+    /**
+     * Gets the table alias for many to many mapping table.
+     *
+     * @param manyToManyMappingTable the many to many mapping table
+     * @return the table alias for many to many mapping table
+     */
     private String getTableAliasForManyToManyMappingTable(final String manyToManyMappingTable) {
         Collection<String> keys = tableAliasesForManyToManyMappingTablesInQuery.keySet();
         for (String key : keys) {
@@ -253,7 +485,7 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
     }
 
     /**
-     * Get table aliases
+     * Get table aliases.
      *
      * @return the aliases
      */
@@ -261,10 +493,22 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         return tableAliasesForEntitiesInQuery.keySet().iterator();
     }
 
+    /**
+     * Gets the entity in query for alias.
+     *
+     * @param tableAlias the table alias
+     * @return the entity in query for alias
+     */
     public EdmStructuralType getEntityInQueryForAlias(final String tableAlias) {
         return tableAliasesForEntitiesInQuery.get(tableAlias);
     }
 
+    /**
+     * Grant table alias for structural type in query.
+     *
+     * @param entity the entity
+     * @return the string
+     */
     public String grantTableAliasForStructuralTypeInQuery(final EdmStructuralType entity) {
         try {
             Collection<EdmStructuralType> targets = tableAliasesForEntitiesInQuery.values();
@@ -283,6 +527,12 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         }
     }
 
+    /**
+     * Grant table alias for many to many mapping table in query.
+     *
+     * @param manyToManyMappingTable the many to many mapping table
+     * @return the string
+     */
     private String grantTableAliasForManyToManyMappingTableInQuery(final String manyToManyMappingTable) {
         Collection<String> targets = tableAliasesForManyToManyMappingTablesInQuery.values();
         for (String target : targets) {

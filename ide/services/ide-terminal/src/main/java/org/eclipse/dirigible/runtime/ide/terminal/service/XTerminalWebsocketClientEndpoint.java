@@ -28,17 +28,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
  
 /**
- * XTerminal Websocket Proxy Client
- * 
+ * XTerminal Websocket Proxy Client.
  */
 @ClientEndpoint(subprotocols="tty")
 public class XTerminalWebsocketClientEndpoint {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(XTerminalWebsocketClientEndpoint.class);
 	
+	/** The session. */
 	private Session session = null;
+    
+    /** The message handler. */
     private MessageHandler messageHandler;
  
+    /**
+     * Instantiates a new x terminal websocket client endpoint.
+     *
+     * @param endpointURI the endpoint URI
+     */
     public XTerminalWebsocketClientEndpoint(URI endpointURI) {
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
@@ -48,6 +56,11 @@ public class XTerminalWebsocketClientEndpoint {
         }
     }
     
+    /**
+     * Gets the session.
+     *
+     * @return the session
+     */
     public Session getSession() {
 		return session;
 	}
@@ -96,8 +109,8 @@ public class XTerminalWebsocketClientEndpoint {
     }
  
     /**
-     * Register message handler
-     * 
+     * Register message handler.
+     *
      * @param messageHandler the message handler
      */
     public void addMessageHandler(MessageHandler messageHandler) {
@@ -124,6 +137,13 @@ public class XTerminalWebsocketClientEndpoint {
      * 
      */
     public static interface MessageHandler {
+        
+        /**
+         * Handle message.
+         *
+         * @param message the message
+         * @throws IOException Signals that an I/O exception has occurred.
+         */
         public void handleMessage(ByteBuffer message) throws IOException;
     }
 }

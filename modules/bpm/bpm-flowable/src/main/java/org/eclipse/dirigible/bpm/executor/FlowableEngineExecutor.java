@@ -13,12 +13,22 @@ package org.eclipse.dirigible.bpm.executor;
 
 import org.eclipse.dirigible.engine.api.IEngineExecutor;
 
+/**
+ * The Class FlowableEngineExecutor.
+ */
 public class FlowableEngineExecutor implements IEngineExecutor {
 	
+	/** The Constant ENGINE_TYPE. */
 	public static final String ENGINE_TYPE = "flowable";
 	
+	/** The Constant ENGINE_NAME. */
 	public static final String ENGINE_NAME = "Flowable BPMN Process Engine";
 	
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getType()
@@ -28,6 +38,11 @@ public class FlowableEngineExecutor implements IEngineExecutor {
 		return ENGINE_TYPE;
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()

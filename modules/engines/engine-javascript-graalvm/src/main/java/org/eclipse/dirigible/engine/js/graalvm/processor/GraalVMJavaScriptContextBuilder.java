@@ -24,22 +24,54 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * The Class GraalVMJavaScriptContextBuilder.
+ */
 class GraalVMJavaScriptContextBuilder {
+    
+    /** The Constant BUILDER_OPTION_INSPECT. */
     private static final String BUILDER_OPTION_INSPECT = "inspect";
+    
+    /** The Constant BUILDER_OPTION_INSPECT_SECURE. */
     private static final String BUILDER_OPTION_INSPECT_SECURE = "inspect.Secure";
+    
+    /** The Constant BUILDER_OPTION_INSPECT_PATH. */
     private static final String BUILDER_OPTION_INSPECT_PATH = "inspect.Path";
 
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED. */
     private static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED = "DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED";
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT. */
     private static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT = "DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT";
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS. */
     private static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS = "DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS";
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD. */
     private static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD = "DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD";
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS. */
     private static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS = "DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS";
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_IO. */
     private static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_IO = "DIRIGIBLE_JAVASCRIPT_GRAALVM_ALLOW_IO";
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN. */
     private static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN = "DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN";
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA. */
     private static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA = "DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA";
 
+    /** The Constant DEFAULT_DEBUG_PORT. */
     public static final String DEFAULT_DEBUG_PORT = GraalVMJavascriptEngineExecutor.DEFAULT_DEBUG_PORT;
 
+    /**
+     * Creates the java script context.
+     *
+     * @param moduleOrCode the module or code
+     * @param truffleFileSystemProvider the truffle file system provider
+     * @return the context
+     */
     Context createJavaScriptContext(String moduleOrCode, Function<String, RegistryTruffleFileSystem> truffleFileSystemProvider) {
         Context.Builder contextBuilder = Context.newBuilder("js")
                 .allowEnvironmentAccess(EnvironmentAccess.INHERIT)
@@ -85,6 +117,11 @@ class GraalVMJavaScriptContextBuilder {
         return contextBuilder.build();
     }
 
+    /**
+     * Checks if is debug enabled.
+     *
+     * @return true, if is debug enabled
+     */
     private boolean isDebugEnabled() {
         return GraalVMJavascriptDebugProcessor.haveUserSession(UserFacade.getName());
     }

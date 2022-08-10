@@ -1,5 +1,0 @@
-{
-    "module": "ide-workspace-menu/services/workspace-menu-new-template-csvim.js",
-    "extensionPoint": "ide-workspace-menu-new-template",
-    "description": "CSVIM Workspace New Menu Extension"
-}

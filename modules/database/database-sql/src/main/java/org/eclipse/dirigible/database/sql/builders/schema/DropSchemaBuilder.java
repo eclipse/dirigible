@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
  */
 public class DropSchemaBuilder extends AbstractDropSqlBuilder {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CreateSchemaBuilder.class);
 
+    /** The name. */
     private String name;
 
     /**
@@ -36,6 +38,11 @@ public class DropSchemaBuilder extends AbstractDropSqlBuilder {
         this.name = name;
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

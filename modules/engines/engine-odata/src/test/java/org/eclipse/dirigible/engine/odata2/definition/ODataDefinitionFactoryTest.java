@@ -19,8 +19,16 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
 import org.junit.Test;
 
+/**
+ * The Class ODataDefinitionFactoryTest.
+ */
 public class ODataDefinitionFactoryTest {
 
+	/**
+	 * Test simple.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void testSimple() throws IOException {
 		String cars = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/cars/Cars.odata"));
@@ -30,6 +38,11 @@ public class ODataDefinitionFactoryTest {
 		assertEquals("CAR", definition.getEntities().get(0).getTable());
 	}
 	
+	/**
+	 * Test navigation.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void testNavigation() throws IOException {
 		String cars = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/orders/Orders.odata"));
@@ -43,6 +56,11 @@ public class ODataDefinitionFactoryTest {
 		assertEquals("OrderItems", definition.getAssociations().get(0).getName());
 	}
 	
+	/**
+	 * Test handlers.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void testHandlers() throws IOException {
 		String def = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/def/OData1.odata"));

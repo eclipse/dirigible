@@ -26,37 +26,48 @@ import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 @Table(name = "DIRIGIBLE_SECURITY_ACCESS")
 public class AccessDefinition implements IArtefactDefinition {
 
+	/** The Constant METHOD_ANY. */
 	public static final transient String METHOD_ANY = "*";
 
+	/** The id. */
 	@Id
 	@GeneratedValue
 	@Column(name = "ACCESS_ID", columnDefinition = "BIGINT", nullable = false)
 	private long id;
 
+	/** The location. */
 	@Column(name = "ACCESS_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 	
+	/** The scope. */
 	@Column(name = "ACCESS_SCOPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String scope;
 
+	/** The path. */
 	@Column(name = "ACCESS_PATH", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String path;
 
+	/** The method. */
 	@Column(name = "ACCESS_METHOD", columnDefinition = "VARCHAR", nullable = false, length = 20)
 	private String method = METHOD_ANY;
 
+	/** The role. */
 	@Column(name = "ACCESS_ROLE", columnDefinition = "VARCHAR", nullable = false, length = 64)
 	private String role;
 
+	/** The description. */
 	@Column(name = "ACCESS_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 	
+	/** The hash. */
 	@Column(name = "ACCESS_HASH", columnDefinition = "VARCHAR", nullable = true, length = 32)
 	private String hash;
 
+	/** The created by. */
 	@Column(name = "ACCESS_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "ACCESS_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -247,6 +258,11 @@ public class AccessDefinition implements IArtefactDefinition {
 		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -263,6 +279,12 @@ public class AccessDefinition implements IArtefactDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -317,11 +339,21 @@ public class AccessDefinition implements IArtefactDefinition {
 		return true;
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getLocation();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();

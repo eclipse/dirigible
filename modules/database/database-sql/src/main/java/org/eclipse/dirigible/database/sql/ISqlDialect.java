@@ -31,26 +31,20 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
 /**
  * The SQL Dialect interface.
  *
- * @param <SELECT>
- *            the generic type
- * @param <INSERT>
- *            the generic type
- * @param <UPDATE>
- *            the generic type
- * @param <DELETE>
- *            the generic type
- * @param <CREATE>
- *            the generic type
- * @param <ALTER>
- *            the generic type
- * @param <DROP>
- *            the generic type
- * @param <NEXT>
- *            the generic type
+ * @param <SELECT>            the generic type
+ * @param <INSERT>            the generic type
+ * @param <UPDATE>            the generic type
+ * @param <DELETE>            the generic type
+ * @param <CREATE>            the generic type
+ * @param <ALTER>            the generic type
+ * @param <DROP>            the generic type
+ * @param <NEXT>            the generic type
+ * @param <LAST> the generic type
  */
 public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
 		extends ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST>, ISqlKeywords {
 	
+	/** The Constant FUNCTIONS. */
 	public static final Set FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {
 			"ASCII",
 			"CHAR_LENGTH",
@@ -337,9 +331,9 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	public boolean isSequenceSupported();
 	
 	/**
-	 * Returns the database name
-	 * 
-	 * @param connection the active database connection 
+	 * Returns the database name.
+	 *
+	 * @param connection the active database connection
 	 * @return the database name
 	 */
 	public String getDatabaseName(Connection connection);
@@ -352,14 +346,14 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	public boolean isSynonymSupported();
 	
 	/**
-	 * Returns the function names
+	 * Returns the function names.
 	 *
 	 * @return the list of functions names
 	 */
 	public Set<String> getFunctionsNames();
 
 	/**
-	 * Returns the creation of fuzzy search index
+	 * Returns the creation of fuzzy search index.
 	 *
 	 * @return the string for creating the Fuzzy Search Index
 	 */

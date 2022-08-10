@@ -32,6 +32,7 @@ import org.junit.Test;
  */
 public class ExtensionsCoreServiceTest extends AbstractDirigibleTest {
 
+	/** The extensions core service. */
 	private IExtensionsCoreService extensionsCoreService;
 
 	/**
@@ -64,8 +65,8 @@ public class ExtensionsCoreServiceTest extends AbstractDirigibleTest {
 	/**
 	 * Gets the extension point test.
 	 *
-	 * @throws ExtensionsException
-	 *             the extensions exception
+	 * @return the extension point test
+	 * @throws ExtensionsException             the extensions exception
 	 */
 	@Test
 	public void getExtensionPointTest() throws ExtensionsException {
@@ -161,8 +162,8 @@ public class ExtensionsCoreServiceTest extends AbstractDirigibleTest {
 	/**
 	 * Gets the extension test.
 	 *
-	 * @throws ExtensionsException
-	 *             the extensions exception
+	 * @return the extension test
+	 * @throws ExtensionsException             the extensions exception
 	 */
 	@Test
 	public void getExtensionTest() throws ExtensionsException {
@@ -184,8 +185,8 @@ public class ExtensionsCoreServiceTest extends AbstractDirigibleTest {
 	/**
 	 * Gets the extensions test.
 	 *
-	 * @throws ExtensionsException
-	 *             the extensions exception
+	 * @return the extensions test
+	 * @throws ExtensionsException             the extensions exception
 	 */
 	@Test
 	public void getExtensionsTest() throws ExtensionsException {

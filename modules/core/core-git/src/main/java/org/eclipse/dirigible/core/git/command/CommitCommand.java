@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CommitCommand {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CommitCommand.class);
 
 	/** The verifier. */

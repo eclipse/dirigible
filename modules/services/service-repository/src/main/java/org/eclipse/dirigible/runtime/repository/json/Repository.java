@@ -19,16 +19,22 @@ import java.util.List;
  */
 public class Repository {
 
+	/** The Constant TYPE_REPOSITORY. */
 	private static final String TYPE_REPOSITORY = "repository";
 
+	/** The name. */
 	private String name;
 
+	/** The path. */
 	private String path;
 
+	/** The type. */
 	private String type = TYPE_REPOSITORY;
 
+	/** The collections. */
 	private List<Collection> collections = new ArrayList<Collection>();
 
+	/** The resources. */
 	private List<Resource> resources = new ArrayList<Resource>();
 
 	/**

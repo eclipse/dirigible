@@ -29,8 +29,15 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractSynchronizerJob implements Job, ISynchronizerJob {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractSynchronizerJob.class);
 
+	/**
+	 * Execute.
+	 *
+	 * @param context the context
+	 * @throws JobExecutionException the job execution exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
@@ -60,10 +67,20 @@ public abstract class AbstractSynchronizerJob implements Job, ISynchronizerJob {
 		logger.trace("Synchronizer [{}] ended execution for {} ms...", getName(), System.currentTimeMillis() - startTime);
 	}
 
+	/**
+	 * Gets the timeout.
+	 *
+	 * @return the timeout
+	 */
 	protected int getTimeout() {
 		return TimeLimited.getTimeout();
 	}
 
+	/**
+	 * Gets the timeout unit.
+	 *
+	 * @return the timeout unit
+	 */
 	protected TimeUnit getTimeoutUnit() {
 		return TimeUnit.MINUTES;
 	}

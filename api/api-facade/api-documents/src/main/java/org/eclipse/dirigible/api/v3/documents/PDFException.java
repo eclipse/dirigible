@@ -11,8 +11,12 @@
  */
 package org.eclipse.dirigible.api.v3.documents;
 
+/**
+ * The Class PDFException.
+ */
 public class PDFException extends RuntimeException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 8564673107305212988L;
 
 	/**

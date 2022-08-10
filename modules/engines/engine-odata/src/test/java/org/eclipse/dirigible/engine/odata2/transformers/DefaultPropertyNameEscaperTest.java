@@ -18,26 +18,42 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
+/**
+ * The Class DefaultPropertyNameEscaperTest.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultPropertyNameEscaperTest {
 
+    /** The escaper. */
     private DefaultPropertyNameEscaper escaper;
 
+    /**
+     * Sets the up.
+     */
     @Before
     public void setUp(){
         this.escaper = new DefaultPropertyNameEscaper();
     }
     
+    /**
+     * Test escape dots.
+     */
     @Test
     public void testEscapeDots(){
         assertEquals("Unexpected escaped property name", "Property_Name_With_Dots", escaper.escape("Property.Name.With.Dots"));
     }
 
+    /**
+     * Test escape dot.
+     */
     @Test
     public void testEscapeDot(){
         assertEquals("Unexpected escaped property name", "Property_Name", escaper.escape("Property.Name"));
     }
 
+    /**
+     * Test escape valid name.
+     */
     @Test
     public void testEscapeValidName(){
         assertEquals("Unexpected escaped property name", "PropertyName", escaper.escape("PropertyName"));

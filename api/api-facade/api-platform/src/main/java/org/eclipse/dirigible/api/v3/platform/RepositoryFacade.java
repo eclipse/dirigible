@@ -28,10 +28,11 @@ import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 import org.eclipse.dirigible.runtime.repository.processor.RepositoryProcessor;
 
 /**
- * The Repository Facade
+ * The Repository Facade.
  */
 public class RepositoryFacade {
 	
+	/** The repository processor. */
 	private static RepositoryProcessor repositoryProcessor = new RepositoryProcessor();
 	
 	/**
@@ -155,8 +156,8 @@ public class RepositoryFacade {
 	}
 	
 	/**
-	 * Find all the files matching the pattern
-	 * 
+	 * Find all the files matching the pattern.
+	 *
 	 * @param path the root path
 	 * @param pattern the glob pattern
 	 * @return the list of file names

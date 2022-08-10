@@ -28,19 +28,24 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 @Table(name = "DIRIGIBLE_CSVIM")
 public class CsvimDefinition implements IArtefactDefinition {
 
+	/** The location. */
 	@Id
 	@Column(name = "CSVIM_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 	
+	/** The hash. */
 	@Column(name = "CSVIM_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 
+	/** The created by. */
 	@Column(name = "CSVIM_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "CSVIM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 	
+	/** The csv file definitions. */
 	private List<CsvFileDefinition> csvFileDefinitions;
 
 	/**
@@ -63,6 +68,8 @@ public class CsvimDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the hash.
+	 *
 	 * @return the hash
 	 */
 	public String getHash() {
@@ -70,6 +77,8 @@ public class CsvimDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the hash.
+	 *
 	 * @param hash the hash to set
 	 */
 	public void setHash(String hash) {
@@ -122,8 +131,8 @@ public class CsvimDefinition implements IArtefactDefinition {
 	}
 	
 	/**
-	 * Gets the CSV files
-	 * 
+	 * Gets the CSV files.
+	 *
 	 * @return the list of CSV files
 	 */
 	public List<CsvFileDefinition> getCsvFileDefinitions() {
@@ -131,8 +140,8 @@ public class CsvimDefinition implements IArtefactDefinition {
 	}
 	
 	/**
-	 * Sets the CSV files
-	 * 
+	 * Sets the CSV files.
+	 *
 	 * @param csvFileDefinitions the list of CSV files
 	 */
 	public void setCsvFileDefinitions(List<CsvFileDefinition> csvFileDefinitions) {
@@ -159,6 +168,11 @@ public class CsvimDefinition implements IArtefactDefinition {
 		return GsonHelper.GSON.toJson(this, CsvimDefinition.class);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -168,21 +182,42 @@ public class CsvimDefinition implements IArtefactDefinition {
 		return toJson();
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getLocation();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(hash, location);
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

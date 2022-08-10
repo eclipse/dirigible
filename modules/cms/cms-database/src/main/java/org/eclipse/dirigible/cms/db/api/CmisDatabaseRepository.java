@@ -13,20 +13,39 @@ package org.eclipse.dirigible.cms.db.api;
 
 import org.eclipse.dirigible.cms.db.CmsDatabaseRepository;
 
+/**
+ * The Class CmisDatabaseRepository.
+ */
 public class CmisDatabaseRepository implements CmisRepository {
 
+	/** The database repository. */
 	private CmsDatabaseRepository databaseRepository;
 
+	/**
+	 * Instantiates a new cmis database repository.
+	 *
+	 * @param repository the repository
+	 */
 	public CmisDatabaseRepository(CmsDatabaseRepository repository) {
 		super();
 		this.databaseRepository = repository;
 	}
 
+	/**
+	 * Gets the session.
+	 *
+	 * @return the session
+	 */
 	@Override
 	public CmisSession getSession() {
 		return new CmisSession(this);
 	}
 
+	/**
+	 * Gets the internal object.
+	 *
+	 * @return the internal object
+	 */
 	@Override
 	public Object getInternalObject() {
 		return this.databaseRepository;

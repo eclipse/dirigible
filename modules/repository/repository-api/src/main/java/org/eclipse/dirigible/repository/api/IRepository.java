@@ -44,16 +44,36 @@ public interface IRepository
 	/** The Constant DIRIGIBLE_REPOSITORY_CACHE_SIZE_LIMIT_IN_MEGABYTES. */
 	public static final String DIRIGIBLE_REPOSITORY_CACHE_SIZE_LIMIT_IN_MEGABYTES = "DIRIGIBLE_REPOSITORY_CACHE_SIZE_LIMIT_IN_MEGABYTES"; //$NON-NLS-1$
 
-	/** Gets the internal named parameter value*/
+	/**
+	 *  Gets the internal named parameter value.
+	 *
+	 * @param key the key
+	 * @return the parameter
+	 */
 	public String getParameter(String key);
 	
-	/** Gets the most recent time when the repository gets changed */
+	/**
+	 *  Gets the most recent time when the repository gets changed.
+	 *
+	 * @return the last modified
+	 */
 	public long getLastModified();
 
+	/**
+	 * Gets the internal resource path.
+	 *
+	 * @param resourcePath the resource path
+	 * @return the internal resource path
+	 */
 	default String getInternalResourcePath(String resourcePath) {
 		throw new RepositoryException("Operation not supported for repository type: " + this.getClass().getName());
 	}
 
+	/**
+	 * Gets the repository path.
+	 *
+	 * @return the repository path
+	 */
 	default String getRepositoryPath() {
 		throw new RepositoryException("Operation not supported for repository type: " + this.getClass().getName());
 	}

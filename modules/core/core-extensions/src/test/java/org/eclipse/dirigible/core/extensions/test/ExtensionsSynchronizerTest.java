@@ -35,10 +35,13 @@ import org.junit.Test;
  */
 public class ExtensionsSynchronizerTest extends AbstractDirigibleTest {
 
+	/** The extensions core service. */
 	private IExtensionsCoreService extensionsCoreService;
 
+	/** The extensions publisher. */
 	private ExtensionsSynchronizer extensionsPublisher;
 
+	/** The repository. */
 	private IRepository repository;
 
 	/**

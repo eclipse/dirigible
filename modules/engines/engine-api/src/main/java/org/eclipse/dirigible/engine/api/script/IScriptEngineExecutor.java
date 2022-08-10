@@ -104,10 +104,35 @@ public interface IScriptEngineExecutor extends IEngineExecutor {
 	 */
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException;
 
+	/**
+	 * Eval code.
+	 *
+	 * @param code the code
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException;
 
+	/**
+	 * Eval module.
+	 *
+	 * @param module the module
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException;
 
+	/**
+	 * Execute method from module.
+	 *
+	 * @param module the module
+	 * @param memberClass the member class
+	 * @param memberClassMethod the member class method
+	 * @param executionContext the execution context
+	 * @return the object
+	 */
 	public Object executeMethodFromModule(String module, String memberClass, String memberClassMethod, Map<Object, Object> executionContext);
 
 }

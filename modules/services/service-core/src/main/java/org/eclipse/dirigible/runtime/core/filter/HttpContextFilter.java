@@ -32,6 +32,12 @@ import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 @WebFilter(urlPatterns = {"/services/v3/*", "/public/v3/*", "/services/v4/*", "/public/v4/*"}, filterName = "HttpContextFilter", description = "Set the HTTP Request and Response to the Context for all URIs")
 public class HttpContextFilter implements Filter {
 
+	/**
+	 * Inits the.
+	 *
+	 * @param filterConfig the filter config
+	 * @throws ServletException the servlet exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -41,6 +47,15 @@ public class HttpContextFilter implements Filter {
 		// Not used
 	}
 
+	/**
+	 * Do filter.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param chain the chain
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ServletException the servlet exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
@@ -63,6 +78,9 @@ public class HttpContextFilter implements Filter {
 		}
 	}
 
+	/**
+	 * Destroy.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()

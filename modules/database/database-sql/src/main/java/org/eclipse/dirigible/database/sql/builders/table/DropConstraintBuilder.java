@@ -21,10 +21,13 @@ import org.slf4j.LoggerFactory;
  */
 public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DropConstraintBuilder.class);
 
+	/** The constraint. */
 	private String constraint = null;
 	
+	/** The table. */
 	private String table = null;
 
 	/**
@@ -41,7 +44,8 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 	}
 	
 	/**
-	 * Specify the table
+	 * Specify the table.
+	 *
 	 * @param table the table name
 	 * @return the builder itself
 	 */
@@ -51,13 +55,19 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 	}
 	
 	/**
-	 * Getter for the table field
+	 * Getter for the table field.
+	 *
 	 * @return the table
 	 */
 	public String getTable() {
 		return table;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
@@ -106,8 +116,8 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 	}
 	
 	/**
-	 * Getter for constraint
-	 * 
+	 * Getter for constraint.
+	 *
 	 * @return the constraint
 	 */
 	public String getConstraint() {

@@ -22,45 +22,48 @@ import java.util.Map;
 import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.topology.ITopologicallyDepletable;
 import org.eclipse.dirigible.commons.api.topology.ITopologicallySortable;
-import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizationArtefactType;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
-import org.eclipse.dirigible.database.ds.artefacts.AppendSynchronizationArtefactType;
-import org.eclipse.dirigible.database.ds.artefacts.DeleteSynchronizationArtefactType;
-import org.eclipse.dirigible.database.ds.artefacts.ReplaceSynchronizationArtefactType;
-import org.eclipse.dirigible.database.ds.artefacts.SchemaSynchronizationArtefactType;
 import org.eclipse.dirigible.database.ds.artefacts.TableSynchronizationArtefactType;
-import org.eclipse.dirigible.database.ds.artefacts.UpdateSynchronizationArtefactType;
-import org.eclipse.dirigible.database.ds.artefacts.ViewSynchronizationArtefactType;
 import org.eclipse.dirigible.database.ds.model.DataStructureDependencyModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
-import org.eclipse.dirigible.database.ds.model.processors.TableAlterProcessor;
-import org.eclipse.dirigible.database.ds.model.processors.TableCreateProcessor;
-import org.eclipse.dirigible.database.ds.model.processors.TableDropProcessor;
-import org.eclipse.dirigible.database.ds.model.processors.TableForeignKeysCreateProcessor;
-import org.eclipse.dirigible.database.ds.model.processors.TableForeignKeysDropProcessor;
-import org.eclipse.dirigible.database.ds.model.processors.ViewCreateProcessor;
-import org.eclipse.dirigible.database.ds.model.processors.ViewDropProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class TopologyDataStructureModelWrapper.
+ */
 public class TopologyDataStructureModelWrapper implements ITopologicallySortable, ITopologicallyDepletable {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TopologyDataStructureModelWrapper.class);
 	
+	/** The Constant TABLE_ARTEFACT. */
 	private static final TableSynchronizationArtefactType TABLE_ARTEFACT = new TableSynchronizationArtefactType();
 	
+	/** The synchronizer. */
 	private DataStructuresSynchronizer synchronizer;
 	
+	/** The connection. */
 	private Connection connection;
 	
+	/** The model. */
 	private DataStructureModel model;
 	
+	/** The wrappers. */
 	private Map<String, TopologyDataStructureModelWrapper> wrappers;
 
+	/**
+	 * Instantiates a new topology data structure model wrapper.
+	 *
+	 * @param synchronizer the synchronizer
+	 * @param connection the connection
+	 * @param model the model
+	 * @param wrappers the wrappers
+	 */
 	public TopologyDataStructureModelWrapper(DataStructuresSynchronizer synchronizer, Connection connection, DataStructureModel model, Map<String, TopologyDataStructureModelWrapper> wrappers) {
 		this.synchronizer = synchronizer;
 		this.connection = connection;
@@ -69,19 +72,39 @@ public class TopologyDataStructureModelWrapper implements ITopologicallySortable
 		this.wrappers.put(getId(), this);
 	}
 	
+	/**
+	 * Gets the model.
+	 *
+	 * @return the model
+	 */
 	public DataStructureModel getModel() {
 		return model;
 	}
 	
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	public DataStructuresSynchronizer getSynchronizer() {
 		return synchronizer;
 	}
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	@Override
 	public String getId() {
 		return this.model.getName();
 	}
 
+	/**
+	 * Gets the dependencies.
+	 *
+	 * @return the dependencies
+	 */
 	@Override
 	public List<ITopologicallySortable> getDependencies() {
 		List<ITopologicallySortable> dependencies = new ArrayList<ITopologicallySortable>();
@@ -96,6 +119,12 @@ public class TopologyDataStructureModelWrapper implements ITopologicallySortable
 		return dependencies;
 	}
 	
+	/**
+	 * Complete.
+	 *
+	 * @param flow the flow
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean complete(String flow) {
 		try {
@@ -217,11 +246,9 @@ public class TopologyDataStructureModelWrapper implements ITopologicallySortable
 	/**
 	 * Execute table alter.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @throws SQLException 
+	 * @param connection            the connection
+	 * @param tableModel            the table model
+	 * @throws SQLException the SQL exception
 	 */
 	private void executeTableAlter(Connection connection, DataStructureTableModel tableModel) throws SQLException {
 		this.synchronizer.executeTableAlter(connection, tableModel);
@@ -284,8 +311,8 @@ public class TopologyDataStructureModelWrapper implements ITopologicallySortable
 	}
 	
 	/**
-	 * Apply the state
-	 * 
+	 * Apply the state.
+	 *
 	 * @param artefact the artefact
 	 * @param type the type
 	 * @param state the state
@@ -295,8 +322,8 @@ public class TopologyDataStructureModelWrapper implements ITopologicallySortable
 	}
 
 	/**
-	 * Apply the state
-	 * 
+	 * Apply the state.
+	 *
 	 * @param artefact the artefact
 	 * @param type the type
 	 * @param state the state

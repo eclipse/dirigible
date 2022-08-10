@@ -21,12 +21,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class OpenAPISynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_OPENAPI. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_OPENAPI = "DIRIGIBLE_JOB_EXPRESSION_OPENAPI";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_OPENAPI_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_OPENAPI_SYNCHRONIZER_JOB = "dirigible-internal-openapi-synchronizer-job";
 	
+	/** The Constant OPENAPI_SYNCHRONIZER_JOB. */
 	static final String OPENAPI_SYNCHRONIZER_JOB = "OpenAPI Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

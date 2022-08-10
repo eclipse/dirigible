@@ -11,8 +11,16 @@
  */
 package io.dirigible.helium;
 
+/**
+ * The Class HeliumFacade.
+ */
 public class HeliumFacade {
 	
+	/**
+	 * Checks if is inert.
+	 *
+	 * @return true, if is inert
+	 */
 	public static final boolean isInert() {
 		return true;
 	}

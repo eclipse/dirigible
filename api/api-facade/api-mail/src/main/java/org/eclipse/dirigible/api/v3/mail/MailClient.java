@@ -27,16 +27,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * The Class MailClient.
+ */
 public class MailClient {
+	
+	/** The Constant MAIL_USER. */
 	// Mail properties
 	private static final String MAIL_USER = "mail.user";
+	
+	/** The Constant MAIL_PASSWORD. */
 	private static final String MAIL_PASSWORD = "mail.password";
+	
+	/** The Constant SMTP_TRANSPORT. */
 	private static final String SMTP_TRANSPORT = "smtp";
+	
+	/** The Constant SMTPS_TRANSPORT. */
 	private static final String SMTPS_TRANSPORT = "smtps";
 
+	/** The properties. */
 	private final Properties properties;
 
 	/**
+	 * Instantiates a new mail client.
+	 *
 	 * @param properties mail client configuration options
 	 */
 	public MailClient(Properties properties) {
@@ -44,7 +58,7 @@ public class MailClient {
 	}
 
 	/**
-	 * Send an email
+	 * Send an email.
 	 *
 	 * @param from    the sender
 	 * @param to      the to receiver
@@ -52,7 +66,9 @@ public class MailClient {
 	 * @param bcc     the bcc receiver
 	 * @param subject the subject
 	 * @param parts   the mail parts
-	 * @throws MessagingException
+	 * @return the map
+	 * @throws MessagingException the messaging exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public Map send(String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts) throws MessagingException, IOException {
 		Session session = getSession(this.properties);
@@ -83,9 +99,11 @@ public class MailClient {
 
 			transport.connect(socket);
 		} else {
-			transport.connect();
+			transport.connect(
+				this.properties.getProperty(MAIL_USER),
+				this.properties.getProperty(MAIL_PASSWORD)
+			);
 		}
-
 
 		MimeMessage mimeMessage = createMimeMessage(session, from, to, cc, bcc, subject, parts);
 		mimeMessage.saveChanges();
@@ -101,6 +119,12 @@ public class MailClient {
 		return mailResult;
 	}
 
+	/**
+	 * Gets the session.
+	 *
+	 * @param properties the properties
+	 * @return the session
+	 */
 	private Session getSession(Properties properties) {
 		String user = properties.getProperty(MAIL_USER);
 		String password = properties.getProperty(MAIL_PASSWORD);
@@ -112,6 +136,19 @@ public class MailClient {
 		return Session.getInstance(properties, authenticator);
 	}
 
+	/**
+	 * Creates the mime message.
+	 *
+	 * @param smtpSession the smtp session
+	 * @param from the from
+	 * @param to the to
+	 * @param cc the cc
+	 * @param bcc the bcc
+	 * @param subjectText the subject text
+	 * @param parts the parts
+	 * @return the mime message
+	 * @throws MessagingException the messaging exception
+	 */
 	private static MimeMessage createMimeMessage(Session smtpSession, String from, String to[], String cc[], String bcc[], String subjectText, List<Map> parts)
 			throws MessagingException {
 
@@ -201,10 +238,25 @@ public class MailClient {
 		return mimeMessage;
 	}
 
+	/**
+	 * Gets the transport property.
+	 *
+	 * @param transport the transport
+	 * @param prop the prop
+	 * @return the transport property
+	 */
 	private String getTransportProperty(String transport, String prop) {
 		return this.properties.getProperty("mail." + transport + "." + prop);
 	}
 
+	/**
+	 * Gets the transport property.
+	 *
+	 * @param transport the transport
+	 * @param prop the prop
+	 * @param defaultValue the default value
+	 * @return the transport property
+	 */
 	private String getTransportProperty(String transport, String prop, String defaultValue) {
 		return this.properties.getProperty("mail." + transport + "." + prop, defaultValue);
 	}

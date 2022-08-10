@@ -129,8 +129,8 @@ public interface IWorkspace extends IFolder {
 	public void moveFile(String sourceProject, String sourceFilePath, String targetProject, String targetFilePath);
 
 	/**
-	 * Link an external directory as a project
-	 * 
+	 * Link an external directory as a project.
+	 *
 	 * @param sourceProject the project
 	 * @param targetPath the path to the directory
 	 * @throws IOException in case of IO error

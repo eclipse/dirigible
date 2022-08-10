@@ -36,11 +36,13 @@ import org.slf4j.LoggerFactory;
  */
 public class ShareCommand {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ShareCommand.class);
 
 	/** The project metadata manager. */
 	private ProjectMetadataManager projectMetadataManager = new ProjectMetadataManager();
 
+	/** The publisher core service. */
 	private PublisherCoreService publisherCoreService = new PublisherCoreService();
 
 	/**

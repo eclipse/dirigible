@@ -16,14 +16,19 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 
+/**
+ * The Class View.
+ */
 @EdmEntityType(name = "View")
 @EdmEntitySet(name = "Views")
 public class View {
 
+    /** The id. */
     @EdmKey
     @EdmProperty
     private String id;
 
+    /** The name. */
     @EdmProperty
     private String name;
 }

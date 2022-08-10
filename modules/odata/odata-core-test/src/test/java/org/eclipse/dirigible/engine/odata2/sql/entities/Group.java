@@ -15,18 +15,26 @@ import org.apache.olingo.odata2.api.annotation.edm.*;
 
 import java.util.List;
 
+/**
+ * The Class Group.
+ */
 @EdmEntityType(name = "Group")
 @EdmEntitySet(name = "Groups")
 public class Group {
+    
+    /** The Constant USER_2_GROUP_ASSOCIATION. */
     static final String USER_2_GROUP_ASSOCIATION = "UserToGroup";
 
+    /** The id. */
     @EdmKey
     @EdmProperty
     private String id;
 
+    /** The name. */
     @EdmProperty
     private String name;
 
+    /** The users. */
     @EdmNavigationProperty(toMultiplicity = EdmNavigationProperty.Multiplicity.MANY, toType = User.class, association = USER_2_GROUP_ASSOCIATION)
     private List<User> users;
 }

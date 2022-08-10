@@ -15,7 +15,6 @@ import static java.text.MessageFormat.format;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,8 +45,10 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceAnnotationsParser {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceAnnotationsParser.class);
 
+	/** The Constant MODELS_CACHE. */
 	private static final Map<Class, PersistenceTableModel> MODELS_CACHE = Collections.synchronizedMap(new HashMap<Class, PersistenceTableModel>());
 
 	/**

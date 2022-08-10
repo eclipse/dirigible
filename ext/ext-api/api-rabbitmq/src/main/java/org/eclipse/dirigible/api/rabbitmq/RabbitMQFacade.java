@@ -25,27 +25,36 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class RabbitMQFacade.
+ */
 public class RabbitMQFacade extends Thread implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RabbitMQFacade.class);
 
+	/** The Constant DIRIGIBLE_RABBITMQ_USERNAME. */
 	private static final String DIRIGIBLE_RABBITMQ_USERNAME = "guest";
 
+	/** The Constant DIRIGIBLE_RABBITMQ_PASSWORD. */
 	private static final String DIRIGIBLE_RABBITMQ_PASSWORD = "guest";
 
 	//private static final String DIRIGIBLE_RABBITMQ_HOST = "127.0.0.1";
 
 	//private static final int DEFAULT_RABBITQM_PORT = 5672;
 	
+	/** The Constant RABBITMQ_CLIENT. */
 	private static final String RABBITMQ_CLIENT = "127.0.0.1:5672";
 	
+	/** The Constant DIRIGIBLE_RABBITMQ_CLIENT_URI. */
 	private static final String DIRIGIBLE_RABBITMQ_CLIENT_URI = "DIRIGIBLE_RABBITMQ_CLIENT_URI";
 
+	/** The consumers. */
 	private static Map<String, RabbitMQReceiverRunner> CONSUMERS = Collections.synchronizedMap(new HashMap());
 
 	/**
-	 * Send message to given queue
-	 * 
+	 * Send message to given queue.
+	 *
 	 * @param queue   the queue being used
 	 * @param message the message to be delivered
 	 */
@@ -64,8 +73,8 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 	}
 
 	/**
-	 * Start listening given queue and destination
-	 * 
+	 * Start listening given queue and destination.
+	 *
 	 * @param queue   the queue being used
 	 * @param handler the destination for the message
 	 */
@@ -92,8 +101,8 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 	}
 
 	/**
-	 * Stop listening on given queue and destination
-	 * 
+	 * Stop listening on given queue and destination.
+	 *
 	 * @param queue   the queue being used
 	 * @param handler the destination for the message
 	 */
@@ -112,6 +121,11 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Connect.
+	 *
+	 * @return the connection
+	 */
 	private static Connection connect() {
 		String[] splitUri = Configuration.get(DIRIGIBLE_RABBITMQ_CLIENT_URI, RABBITMQ_CLIENT).split(":");
         String host = splitUri[0];
@@ -133,6 +147,12 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 		return connection;
 	}
 
+	/**
+	 * Creates the channel.
+	 *
+	 * @param connection the connection
+	 * @return the channel
+	 */
 	private static Channel createChannel(Connection connection) {
 		Channel channel = null;
 		try {
@@ -145,8 +165,8 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 	}
 
 	/**
-	 * Create internal identifier for a consumer
-	 * 
+	 * Create internal identifier for a consumer.
+	 *
 	 * @param queue   the queue being used
 	 * @param handler the destination for the message
 	 * @return the identifier

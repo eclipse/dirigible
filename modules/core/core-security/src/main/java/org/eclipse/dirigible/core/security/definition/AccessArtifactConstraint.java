@@ -19,12 +19,16 @@ import java.util.List;
  */
 public class AccessArtifactConstraint {
 
+	/** The scope. */
 	private String scope;
 	
+	/** The path. */
 	private String path;
 
+	/** The method. */
 	private String method;
 
+	/** The roles. */
 	private List<String> roles = new ArrayList<String>();
 
 	/**

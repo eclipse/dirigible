@@ -21,8 +21,17 @@ import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.engine.api.EngineExecutorFactory;
 import org.eclipse.dirigible.repository.api.IRepository;
 
+/**
+ * The Class VersionProcessor.
+ */
 public class VersionProcessor {
 	
+	/**
+	 * Gets the version.
+	 *
+	 * @return the version
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public Version getVersion() throws IOException {
 		Version version = new Version();
 		final Properties properties = new Properties();
@@ -40,6 +49,12 @@ public class VersionProcessor {
 		return version;
 	}
 	
+	/**
+	 * Version.
+	 *
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public String version() throws IOException {
 		return GsonHelper.GSON.toJson(getVersion());
 	}

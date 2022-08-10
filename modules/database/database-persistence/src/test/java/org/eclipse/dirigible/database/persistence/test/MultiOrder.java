@@ -18,9 +18,11 @@ import javax.persistence.Column;
  */
 public class MultiOrder extends Order {
 
+	/** The amount. */
 	@Column(name = "ORDER_AMOUNT", columnDefinition = "BIGINT", nullable = true)
 	private Long amount;
 
+	/** The description. */
 	@Column(name = "ORDER_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 512)
 	private String description;
 
@@ -44,8 +46,8 @@ public class MultiOrder extends Order {
 	}
 
 	/**
-	 * Gets the description
-	 * 
+	 * Gets the description.
+	 *
 	 * @return the description
 	 */
 	public String getDescription() {

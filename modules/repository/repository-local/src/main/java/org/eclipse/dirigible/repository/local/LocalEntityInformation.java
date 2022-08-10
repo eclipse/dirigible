@@ -21,10 +21,13 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
  */
 public class LocalEntityInformation implements IEntityInformation {
 
+	/** The wrapper path. */
 	private RepositoryPath wrapperPath;
 
+	/** The master. */
 	private LocalObject master;
 
+	/** The size. */
 	private long size;
 
 	/**
@@ -40,6 +43,11 @@ public class LocalEntityInformation implements IEntityInformation {
 		this.master = master;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getName()
@@ -49,6 +57,11 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.wrapperPath.getLastSegment();
 	}
 
+	/**
+	 * Gets the path.
+	 *
+	 * @return the path
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getPath()
@@ -58,6 +71,11 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.wrapperPath.toString();
 	}
 
+	/**
+	 * Gets the permissions.
+	 *
+	 * @return the permissions
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getPermissions()
@@ -67,6 +85,11 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.master.getPermissions();
 	}
 
+	/**
+	 * Gets the size.
+	 *
+	 * @return the size
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getSize()
@@ -76,6 +99,11 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.size;
 	}
 
+	/**
+	 * Gets the created by.
+	 *
+	 * @return the created by
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getCreatedBy()
@@ -85,6 +113,11 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.master.getCreatedBy();
 	}
 
+	/**
+	 * Gets the created at.
+	 *
+	 * @return the created at
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getCreatedAt()
@@ -94,6 +127,11 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.master.getCreatedAt();
 	}
 
+	/**
+	 * Gets the modified by.
+	 *
+	 * @return the modified by
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getModifiedBy()
@@ -103,6 +141,11 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.master.getModifiedBy();
 	}
 
+	/**
+	 * Gets the modified at.
+	 *
+	 * @return the modified at
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getModifiedAt()
@@ -112,6 +155,12 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.master.getModifiedAt();
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -131,6 +180,11 @@ public class LocalEntityInformation implements IEntityInformation {
 		return getPath().equals(other.getPath());
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

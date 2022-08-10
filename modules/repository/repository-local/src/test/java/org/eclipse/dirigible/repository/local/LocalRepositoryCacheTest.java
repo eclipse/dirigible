@@ -21,8 +21,6 @@ import java.io.FileWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryCache;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;

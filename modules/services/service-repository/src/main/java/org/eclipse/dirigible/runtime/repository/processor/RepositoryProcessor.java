@@ -36,10 +36,17 @@ import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
  */
 public class RepositoryProcessor {
 
+	/** The Constant REPOSITORY_SERVICE_PREFIX. */
 	private static final String REPOSITORY_SERVICE_PREFIX = "core/repository";
 
+	/** The repository. */
 	private IRepository repository = null;
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -159,7 +166,7 @@ public class RepositoryProcessor {
 	}
 
 	/**
-	 * Find all the files matching the pattern
+	 * Find all the files matching the pattern.
 	 *
 	 * @param path the root path
 	 * @param pattern the glob pattern

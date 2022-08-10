@@ -16,11 +16,15 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 
 /**
- * The Abstract Database
- *
+ * The Abstract Database.
  */
 public abstract class AbstractDatabase implements IDatabase {
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource()
@@ -30,6 +34,11 @@ public abstract class AbstractDatabase implements IDatabase {
 		return getDataSource(getDefaultDataSourceName());
 	}
 	
+	/**
+	 * Gets the system data source.
+	 *
+	 * @return the system data source
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource()
@@ -39,6 +48,11 @@ public abstract class AbstractDatabase implements IDatabase {
 		return getDataSource(getSystemDataSourceName());
 	}
 	
+	/**
+	 * Gets the default data source name.
+	 *
+	 * @return the default data source name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDefaultDataSourceName()
@@ -48,6 +62,11 @@ public abstract class AbstractDatabase implements IDatabase {
 		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 	}
 	
+	/**
+	 * Gets the system data source name.
+	 *
+	 * @return the system data source name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getSystemDataSourceName()

@@ -17,10 +17,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 
+/**
+ * The Class GraalVMJavascriptDebugProcessor.
+ */
 public class GraalVMJavascriptDebugProcessor {
 
+	/** The Constant OPEN_USER_SESSIONS. */
 	private static final Set<String> OPEN_USER_SESSIONS = ConcurrentHashMap.newKeySet();
 
+	/**
+	 * Have user session.
+	 *
+	 * @param userName the user name
+	 * @return true, if successful
+	 */
 	public static boolean haveUserSession(String userName) {
 		if (Boolean.parseBoolean(Configuration.get(GraalVMJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED))) {
 			return OPEN_USER_SESSIONS.contains(userName); 
@@ -28,11 +38,19 @@ public class GraalVMJavascriptDebugProcessor {
 		return false;
 	}
 
+	/**
+	 * Adds the user session.
+	 *
+	 * @param userName the user name
+	 */
 	public static void addUserSession(String userName) {
 		Configuration.set(GraalVMJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED, "true");
 		OPEN_USER_SESSIONS.add(userName);
 	}
 
+	/**
+	 * Clear.
+	 */
 	public static void clear() {
 		Configuration.set(GraalVMJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED, "false");
 		OPEN_USER_SESSIONS.clear();

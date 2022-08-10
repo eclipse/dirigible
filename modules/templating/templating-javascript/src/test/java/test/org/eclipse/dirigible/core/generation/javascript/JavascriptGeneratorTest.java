@@ -25,15 +25,29 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * The Class JavascriptGeneratorTest.
+ */
 public class JavascriptGeneratorTest extends AbstractDirigibleTest {
 	
+	/** The repository. */
 	private IRepository repository = null;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 	}
 	
+	/**
+	 * Generate.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void generate() throws Exception {
 		try {

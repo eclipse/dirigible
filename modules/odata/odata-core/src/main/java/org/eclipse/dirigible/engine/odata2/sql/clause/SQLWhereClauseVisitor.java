@@ -28,9 +28,15 @@ import java.util.*;
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateDateTimeExpressions;
 
+/**
+ * The Class SQLWhereClauseVisitor.
+ */
 public class SQLWhereClauseVisitor implements ExpressionVisitor {
 
+    /** The Constant LOG. */
     private static final Logger LOG = LoggerFactory.getLogger(SQLWhereClauseVisitor.class);
+    
+    /** The binary operator priorities. */
     private static Map<BinaryOperator, Integer> binaryOperatorPriorities;
 
     static {
@@ -51,23 +57,53 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         binaryOperatorPriorities.put(BinaryOperator.OR, 10);
     }
 
+    /** The where clause params. */
     private final List<SQLStatementParam> whereClauseParams;
+    
+    /** The query. */
     private SQLSelectBuilder query;
+    
+    /** The target type. */
     private EdmStructuralType targetType;
+    
+    /** The is in complex type. */
     private boolean isInComplexType = false;
 
 
+    /**
+     * Instantiates a new SQL where clause visitor.
+     *
+     * @param query the query
+     * @param targetType the target type
+     */
     public SQLWhereClauseVisitor(SQLSelectBuilder query, EdmStructuralType targetType) {
         this.whereClauseParams = new ArrayList<>();
         this.targetType = targetType;
         this.query = query;
     }
 
+    /**
+     * Visit filter expression.
+     *
+     * @param filterExpression the filter expression
+     * @param expressionString the expression string
+     * @param expression the expression
+     * @return the object
+     */
     @Override
     public Object visitFilterExpression(FilterExpression filterExpression, String expressionString, Object expression) {
         return new SQLWhereClause((String) expression, whereClauseParams.toArray(new SQLStatementParam[0]));
     }
 
+    /**
+     * Visit binary.
+     *
+     * @param binaryExpression the binary expression
+     * @param operator the operator
+     * @param leftSide the left side
+     * @param rightSide the right side
+     * @return the object
+     */
     @Override
     public Object visitBinary(BinaryExpression binaryExpression, BinaryOperator operator, Object leftSide, Object rightSide) {
         String leftSideString;
@@ -114,11 +150,26 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         }
     }
 
+    /**
+     * Visit literal.
+     *
+     * @param literal the literal
+     * @param edmLiteral the edm literal
+     * @return the object
+     */
     @Override
     public Object visitLiteral(LiteralExpression literal, EdmLiteral edmLiteral) {
         return edmLiteral.getLiteral();
     }
 
+    /**
+     * Visit method.
+     *
+     * @param methodExpression the method expression
+     * @param method the method
+     * @param parameters the parameters
+     * @return the object
+     */
     @Override
     public Object visitMethod(MethodExpression methodExpression, MethodOperator method, List<Object> parameters) {
 
@@ -178,6 +229,14 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         }
     }
 
+    /**
+     * Visit member.
+     *
+     * @param memberExpression the member expression
+     * @param path the path
+     * @param property the property
+     * @return the object
+     */
     @Override
     public Object visitMember(MemberExpression memberExpression, Object path, Object property) {
         final EdmTypeKind propertyKind = memberExpression.getProperty().getEdmType().getKind();
@@ -216,6 +275,14 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         }
     }
 
+    /**
+     * Visit unary.
+     *
+     * @param unaryExpression the unary expression
+     * @param operator the operator
+     * @param operand the operand
+     * @return the object
+     */
     @Override
     public Object visitUnary(UnaryExpression unaryExpression, UnaryOperator operator, Object operand) {
         final ExpressionKind operandExpressionKind = unaryExpression.getOperand().getKind();
@@ -238,18 +305,42 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         return String.format(format, operatorString, operandString);
     }
 
+    /**
+     * Visit order by expression.
+     *
+     * @param orderByExpression the order by expression
+     * @param expressionString the expression string
+     * @param orders the orders
+     * @return the object
+     */
     @Override
     public Object visitOrderByExpression(OrderByExpression orderByExpression, String expressionString, List<Object> orders) {
         //TODO implement me
         throw new RuntimeException(new ODataNotImplementedException());
     }
 
+    /**
+     * Visit order.
+     *
+     * @param orderExpression the order expression
+     * @param filterResult the filter result
+     * @param sortOrder the sort order
+     * @return the object
+     */
     @Override
     public Object visitOrder(OrderExpression orderExpression, Object filterResult, SortOrder sortOrder) {
         //TODO implement me
         throw new RuntimeException(new ODataNotImplementedException());
     }
 
+    /**
+     * Visit property.
+     *
+     * @param propertyExpression the property expression
+     * @param uriLiteral the uri literal
+     * @param edmProperty the edm property
+     * @return the object
+     */
     @Override
     public Object visitProperty(PropertyExpression propertyExpression, String uriLiteral, EdmTyped edmProperty) {
         try {
@@ -286,6 +377,13 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         }
     }
 
+    /**
+     * Translate to SQL.
+     *
+     * @param operator the operator
+     * @param isNullPredicate the is null predicate
+     * @return the string
+     */
     private String translateToSQL(final BinaryOperator operator, boolean isNullPredicate) {
         switch (operator) {
             case EQ:
@@ -306,6 +404,14 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         }
     }
 
+    /**
+     * Write param.
+     *
+     * @param expression the expression
+     * @param literal the literal
+     * @param format the format
+     * @return the string
+     */
     private String writeParam(final CommonExpression expression, final String literal, final String format) {
 
         if (expression.getKind() == ExpressionKind.LITERAL) {
@@ -325,6 +431,12 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         return literal;
     }
 
+    /**
+     * Gets the column info.
+     *
+     * @param expression the expression
+     * @return the column info
+     */
     List<ColumnInfo> getColumnInfo(CommonExpression expression) {
         try {
             if (expression instanceof BinaryExpression) {
@@ -369,6 +481,15 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         return null;
     }
 
+    /**
+     * Write param.
+     *
+     * @param expression the expression
+     * @param literal the literal
+     * @param format the format
+     * @param info the info
+     * @return the string
+     */
     private String writeParam(final CommonExpression expression, final String literal, final String format, final ColumnInfo info) {
         if (expression.getKind() == ExpressionKind.LITERAL) {
             final String value = (format != null ? String.format(format, literal) : literal);
@@ -381,6 +502,14 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         return literal;
     }
 
+    /**
+     * Escape operator precedence.
+     *
+     * @param expression the expression
+     * @param subExpression the sub expression
+     * @param subExpressionString the sub expression string
+     * @return the object
+     */
     private Object escapeOperatorPrecedence(BinaryExpression expression, CommonExpression subExpression, String subExpressionString) {
 
         if (subExpression.getKind() == ExpressionKind.BINARY) {

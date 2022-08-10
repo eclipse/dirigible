@@ -39,8 +39,10 @@ import org.slf4j.LoggerFactory;
  */
 public class TableAlterProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TableAlterProcessor.class);
 	
+	/** The Constant INCOMPATIBLE_CHANGE_OF_TABLE. */
 	private static final String INCOMPATIBLE_CHANGE_OF_TABLE = "Incompatible change of table [%s] by adding a column [%s] which is [%s]"; //$NON-NLS-1$
 
 	/**
@@ -143,6 +145,13 @@ public class TableAlterProcessor {
 		
 	}
 
+	/**
+	 * Execute alter builder.
+	 *
+	 * @param connection the connection
+	 * @param alterTableBuilder the alter table builder
+	 * @throws SQLException the SQL exception
+	 */
 	private static void executeAlterBuilder(Connection connection, AlterTableBuilder alterTableBuilder)
 			throws SQLException {
 		final String sql = alterTableBuilder.build();

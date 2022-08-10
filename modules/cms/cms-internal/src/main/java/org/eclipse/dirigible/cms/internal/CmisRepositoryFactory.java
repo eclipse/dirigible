@@ -13,8 +13,17 @@ package org.eclipse.dirigible.cms.internal;
 
 import org.eclipse.dirigible.repository.api.IRepository;
 
+/**
+ * A factory for creating CmisRepository objects.
+ */
 public class CmisRepositoryFactory {
 
+	/**
+	 * Creates a new CmisRepository object.
+	 *
+	 * @param repository the repository
+	 * @return the cmis repository
+	 */
 	public static CmisRepository createCmisRepository(IRepository repository) {
 		return new CmisInternalRepository(repository);
 	}

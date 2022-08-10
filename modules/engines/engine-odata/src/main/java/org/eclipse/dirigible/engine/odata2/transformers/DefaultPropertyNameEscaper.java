@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.engine.odata2.transformers;
 
+/**
+ * The Class DefaultPropertyNameEscaper.
+ */
 class DefaultPropertyNameEscaper implements ODataPropertyNameEscaper {
 
     /**

@@ -24,14 +24,19 @@ import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.FunctionCo
  */
 public class FunctionMetadata {
 
+	/** The name. */
 	private String name;
 
+	/** The type. */
 	private String type;
 
+	/** The remarks. */
 	private String remarks;
 
+	/** The columns. */
 	private List<ParameterColumnMetadata> columns;
 	
+	/** The kind. */
 	private String kind = "function";
 
 	/**

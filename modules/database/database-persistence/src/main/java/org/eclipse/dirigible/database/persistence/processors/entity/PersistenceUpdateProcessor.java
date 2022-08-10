@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceUpdateProcessor.class);
 
 	/**
@@ -46,6 +47,13 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 		super(entityManagerInterceptor);
 	}
 
+	/**
+	 * Generate script.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.
@@ -112,6 +120,12 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 		}
 	}
 
+	/**
+	 * Should set column value.
+	 *
+	 * @param columnModel the column model
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#shouldSetColumnValue(org.

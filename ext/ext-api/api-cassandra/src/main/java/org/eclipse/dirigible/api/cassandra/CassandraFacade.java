@@ -18,14 +18,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * The Class CassandraFacade.
+ */
 public class CassandraFacade implements IScriptingFacade {
+    
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CassandraFacade.class);
 
+    /** The Constant DIRIGIBLE_CASSANDRA_CLIENT_URI. */
     private static final String DIRIGIBLE_CASSANDRA_CLIENT_URI = "DIRIGIBLE_CASSANDRA_CLIENT_URI";
 
+    /** The Constant CLIENT_URI. */
     private static final String CLIENT_URI = "127.0.0.1:9042";
+    
+    /** The session. */
     static Session session;
 
+    /**
+     * Connect.
+     *
+     * @param node the node
+     * @param port the port
+     * @return the session
+     */
     public static Session connect(String node, Integer port) {
         Cluster.Builder builder = Cluster.builder().addContactPoint(node).withPort(port);
         Cluster cluster = builder.build();
@@ -33,6 +49,13 @@ public class CassandraFacade implements IScriptingFacade {
        return session;
     }
 
+    /**
+     * Gets the result set.
+     *
+     * @param keySpaceName the key space name
+     * @param query the query
+     * @return the result set
+     */
     public static ResultSet getResultSet(String keySpaceName, String query) {
         session.execute("use " + keySpaceName + ";");
         return session.execute(query);

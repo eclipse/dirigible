@@ -15,12 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
+/**
+ * The Class GenerationEnginesManager.
+ */
 public class GenerationEnginesManager {
 	
+	/** The Constant GENERATION_ENGINES. */
 	private static final ServiceLoader<IGenerationEngine> GENERATION_ENGINES = ServiceLoader.load(IGenerationEngine.class);
 	
 	/**
-	 * Returns the registered Generation Engines
+	 * Returns the registered Generation Engines.
+	 *
 	 * @return the list of Generation Engines
 	 */
 	public static final List<IGenerationEngine> getGenerationEngines() {
@@ -32,8 +37,8 @@ public class GenerationEnginesManager {
 	}
 	
 	/**
-	 * Select a Generation Engine by Name
-	 * 
+	 * Select a Generation Engine by Name.
+	 *
 	 * @param name the name
 	 * @return the engine
 	 */

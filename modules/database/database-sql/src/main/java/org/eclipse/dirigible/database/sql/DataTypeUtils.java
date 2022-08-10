@@ -28,17 +28,22 @@ import java.util.Map.Entry;
  */
 public class DataTypeUtils {
 
-	/** The default length */
+	/**  The default length. */
 	public static final int VARCHAR_DEFAULT_LENGTH = 512;
 	
+	/** The Constant DECIMAL_DEFAULT_LENGTH. */
 	public static final int DECIMAL_DEFAULT_LENGTH = 100000;
 
+	/** The Constant DATABASE_TYPE_TO_DATA_TYPE. */
 	private static final Map<Integer, DataType> DATABASE_TYPE_TO_DATA_TYPE = Collections.synchronizedMap(new HashMap<Integer, DataType>());
 
+	/** The Constant STRING_TO_DATABASE_TYPE. */
 	private static final Map<String, Integer> STRING_TO_DATABASE_TYPE = Collections.synchronizedMap(new HashMap<String, Integer>());
 
+	/** The Constant JAVA_TYPE_TO_DATABASE_TYPE. */
 	private static final Map<Class, Integer> JAVA_TYPE_TO_DATABASE_TYPE = Collections.synchronizedMap(new HashMap<Class, Integer>());
 
+	/** The Constant DATABASE_TYPE_TO_JAVA_TYPE. */
 	private static final Map<Integer, Class> DATABASE_TYPE_TO_JAVA_TYPE = Collections.synchronizedMap(new HashMap<Integer, Class>());
 
 	static {

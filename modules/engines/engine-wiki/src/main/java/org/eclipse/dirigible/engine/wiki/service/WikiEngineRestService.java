@@ -45,10 +45,13 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found") })
 public class WikiEngineRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WikiEngineRestService.class);
 
+	/** The processor. */
 	private WikiEngineProcessor processor = new WikiEngineProcessor();
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
@@ -104,6 +107,11 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 		throw new RepositoryNotFoundException(errorMessage);
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -113,6 +121,11 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 		return WikiEngineRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

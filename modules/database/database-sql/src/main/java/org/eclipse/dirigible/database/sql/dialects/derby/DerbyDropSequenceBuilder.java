@@ -21,6 +21,7 @@ import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
  */
 public class DerbyDropSequenceBuilder extends DropSequenceBuilder {
 
+	/** The Constant PATTERN_DROP_SEQUENCE. */
 	private static final String PATTERN_DROP_SEQUENCE = "DROP SEQUENCE {0} RESTRICT";
 
 	/**
@@ -35,6 +36,11 @@ public class DerbyDropSequenceBuilder extends DropSequenceBuilder {
 		super(dialect, sequence);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder#generate()

@@ -37,15 +37,26 @@ import java.util.Arrays;
 import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.when;
 
+/**
+ * The Class OData2ODataXTransformerTest.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
 
+    /** The db metadata util. */
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private DBMetadataUtil dbMetadataUtil;
 
+    /** The default table metadata provider. */
     @InjectMocks
     private DefaultTableMetadataProvider defaultTableMetadataProvider;
 
+    /**
+     * Test transform with incorrect multiplicity.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testTransformWithIncorrectMultiplicity() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithWrongMultiplicity.odata"), Charset.defaultCharset());
@@ -53,13 +64,19 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
 
         PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         new OData2ODataXTransformer(defaultTableMetadataProvider).transform(definition);
     }
 
+    /**
+     * Test transform with composite primary key with less db props exposed.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformWithCompositePrimaryKeyWithLessDbPropsExposed() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithProp.odata"), Charset.defaultCharset());
@@ -69,14 +86,14 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", false, true, 0, 0);
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false, false, 0, 0);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", true, false, 0, 0);
         PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", true, false, 0, 0);
-        model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
+        model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
 
@@ -107,6 +124,12 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
 
+    /**
+     * Test transform with composite primary key and less number of DB props.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test(expected = OData2TransformerException.class)
     public void testTransformWithCompositePrimaryKeyAndLessNumberOfDBProps() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithProp.odata"), Charset.defaultCharset());
@@ -114,13 +137,19 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
 
         PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         new OData2ODataXTransformer(defaultTableMetadataProvider).transform(definition);
     }
 
+    /**
+     * Test transform with annotations.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformWithAnnotations() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/Employee.odata"), Charset.defaultCharset());
@@ -138,14 +167,14 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
 
         PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", true, false, 0, 0);
         PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", true, false, 0, 0);
-        model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
+        model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
 
@@ -184,6 +213,12 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
 
+    /**
+     * Test transform on view with gen id.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformOnViewWithGenId() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
@@ -194,7 +229,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false, 0, 0);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
@@ -217,6 +252,12 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
 
+    /**
+     * Test transform on view with original keys.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformOnViewWithOriginalKeys() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
@@ -228,7 +269,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false, 0, 0);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
@@ -251,6 +292,12 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
 
+    /**
+     * Test transform on view with props and original keys.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformOnViewWithPropsAndOriginalKeys() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
@@ -266,7 +313,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false, 0, 0);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
@@ -288,6 +335,12 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
 
+    /**
+     * Test transform on view with not original keys.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformOnViewWithNotOriginalKeys() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
@@ -299,7 +352,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false, 0, 0);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false, 0, 0);
         PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("ID", "Edm.Int32", true, false, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4, column5), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4, column5), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
@@ -322,6 +375,12 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
 
+    /**
+     * Test transform on view with props and not original keys.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformOnViewWithPropsAndNotOriginalKeys() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
@@ -335,7 +394,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false, 0, 0);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
@@ -355,6 +414,12 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
 
+    /**
+     * Test transform on view with non existing props and not original keys.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test(expected = OData2TransformerException.class)
     public void testTransformOnViewWithNonExistingPropsAndNotOriginalKeys() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
@@ -368,13 +433,19 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false, 0, 0);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         new OData2ODataXTransformer(defaultTableMetadataProvider).transform(definition);
     }
 
+    /**
+     * Test transform on hana calculation view with props and parameters.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformOnHanaCalculationViewWithPropsAndParameters() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
@@ -393,7 +464,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false, 0, 0);
 
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3), new ArrayList<>(), new ArrayList<>());
 
         model.setTableType(ISqlKeywords.METADATA_CALC_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -418,6 +489,12 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
 
+    /**
+     * Test transform with unsupported object type.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformWithUnsupportedObjectType() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
@@ -427,7 +504,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true, 0, 0);
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false, 0, 0);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false, 0, 0);
-        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>(), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_SYSTEM_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
         String entitySchema = "<Schema Namespace=\"np\"\n" +
@@ -439,6 +516,12 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
 
+    /**
+     * Test transform entity property.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransformEntityProperty() throws IOException, SQLException {
         ODataDefinition definition = OData2ODataTransformerTestUtil.loadData_testTransformEntityProperty(dbMetadataUtil);

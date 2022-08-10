@@ -41,12 +41,20 @@ import com.google.gson.reflect.TypeToken;
  */
 public class CsvimCoreService implements ICsvimCoreService {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The csvim persistence manager. */
 	private PersistenceManager<CsvimDefinition> csvimPersistenceManager = new PersistenceManager<CsvimDefinition>();
 
+	/** The csv persistence manager. */
 	private PersistenceManager<CsvDefinition> csvPersistenceManager = new PersistenceManager<CsvDefinition>();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -56,6 +64,14 @@ public class CsvimCoreService implements ICsvimCoreService {
 
 	// CSVIM
 
+	/**
+	 * Creates the csvim.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @return the csvim definition
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -87,6 +103,13 @@ public class CsvimCoreService implements ICsvimCoreService {
 		}
 	}
 
+	/**
+	 * Gets the csvim.
+	 *
+	 * @param location the location
+	 * @return the csvim
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -111,6 +134,12 @@ public class CsvimCoreService implements ICsvimCoreService {
 		}
 	}
 
+	/**
+	 * Removes the csvim.
+	 *
+	 * @param location the location
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -135,6 +164,13 @@ public class CsvimCoreService implements ICsvimCoreService {
 		}
 	}
 
+	/**
+	 * Update csvim.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -161,6 +197,12 @@ public class CsvimCoreService implements ICsvimCoreService {
 		}
 	}
 
+	/**
+	 * Gets the csvims.
+	 *
+	 * @return the csvims
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -183,6 +225,13 @@ public class CsvimCoreService implements ICsvimCoreService {
 		}
 	}
 
+	/**
+	 * Exists csvim.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -195,6 +244,12 @@ public class CsvimCoreService implements ICsvimCoreService {
 		return getCsvim(location) != null;
 	}
 
+	/**
+	 * Parses the csvim.
+	 *
+	 * @param json the json
+	 * @return the csvim definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -212,6 +267,12 @@ public class CsvimCoreService implements ICsvimCoreService {
 		return definition;
 	}
 
+	/**
+	 * Parses the csvim.
+	 *
+	 * @param json the json
+	 * @return the csvim definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -228,6 +289,12 @@ public class CsvimCoreService implements ICsvimCoreService {
 		return definition;
 	}
 
+	/**
+	 * Serialize csvim.
+	 *
+	 * @param csvimDefinition the csvim definition
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -242,6 +309,14 @@ public class CsvimCoreService implements ICsvimCoreService {
 
 	// CSV
 
+	/**
+	 * Creates the csv.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @return the csv definition
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -273,6 +348,13 @@ public class CsvimCoreService implements ICsvimCoreService {
 		}
 	}
 
+	/**
+	 * Gets the csv.
+	 *
+	 * @param location the location
+	 * @return the csv
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -296,6 +378,12 @@ public class CsvimCoreService implements ICsvimCoreService {
 		}
 	}
 
+	/**
+	 * Removes the csv.
+	 *
+	 * @param location the location
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -320,6 +408,14 @@ public class CsvimCoreService implements ICsvimCoreService {
 		}
 	}
 
+	/**
+	 * Update csv.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @param imported the imported
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -349,6 +445,12 @@ public class CsvimCoreService implements ICsvimCoreService {
 		}
 	}
 
+	/**
+	 * Gets the csvs.
+	 *
+	 * @return the csvs
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -371,6 +473,13 @@ public class CsvimCoreService implements ICsvimCoreService {
 		}
 	}
 
+	/**
+	 * Exists csv.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws CsvimException the csvim exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -16,13 +16,26 @@ import org.apache.commons.exec.ExecuteResultHandler;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Class ProcessExecutionFuture.
+ */
 public class ProcessExecutionFuture extends CompletableFuture<Integer> implements ExecuteResultHandler {
 
+    /**
+     * On process complete.
+     *
+     * @param i the i
+     */
     @Override
     public void onProcessComplete(int i) {
         complete(i);
     }
 
+    /**
+     * On process failed.
+     *
+     * @param e the e
+     */
     @Override
     public void onProcessFailed(ExecuteException e) {
         completeExceptionally(e);

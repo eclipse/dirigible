@@ -3,10 +3,22 @@ package org.eclipse.dirigible.graalium.core.graal;
 import org.eclipse.dirigible.graalium.core.graal.configuration.Configuration;
 import org.graalvm.polyglot.Engine;
 
+/**
+ * The Class GraalJSEngineCreator.
+ */
 public class GraalJSEngineCreator {
+    
+    /** The engine. */
     private static Engine engine = null;
+    
+    /** The debuggable engine. */
     private static Engine debuggableEngine = null;
 
+    /**
+     * Gets the or create engine.
+     *
+     * @return the or create engine
+     */
     public static Engine getOrCreateEngine() {
         if (engine == null) {
             engine = getDefaultEngineBuilder().build();
@@ -15,6 +27,11 @@ public class GraalJSEngineCreator {
         return engine;
     }
 
+    /**
+     * Gets the or create debuggable engine.
+     *
+     * @return the or create debuggable engine
+     */
     public static Engine getOrCreateDebuggableEngine() {
         if (debuggableEngine == null) {
             debuggableEngine = getDefaultEngineBuilder()
@@ -28,6 +45,11 @@ public class GraalJSEngineCreator {
         return debuggableEngine;
     }
 
+    /**
+     * Gets the default engine builder.
+     *
+     * @return the default engine builder
+     */
     private static Engine.Builder getDefaultEngineBuilder() {
         return Engine.newBuilder()
                 .allowExperimentalOptions(true)

@@ -17,24 +17,26 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
-
 /**
  * The OData Schema Entity.
  */
 @Table(name = "DIRIGIBLE_ODATA_CONTAINER")
 public class ODataContainerDefinition {
 
+	/** The location. */
 	@Id
 	@Column(name = "ODATAC_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
+	/** The content. */
 	@Column(name = "ODATAC_CONTENT", columnDefinition = "BLOB", nullable = true)
 	private byte[] content;
 
+	/** The created by. */
 	@Column(name = "ODATAC_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "ODATAC_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -121,6 +123,11 @@ public class ODataContainerDefinition {
 		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -134,6 +141,12 @@ public class ODataContainerDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)

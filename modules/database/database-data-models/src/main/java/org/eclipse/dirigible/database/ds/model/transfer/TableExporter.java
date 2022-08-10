@@ -23,27 +23,55 @@ import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class TableExporter.
+ */
 public class TableExporter {
 
+	/** The Constant SELECT_FROM. */
 	private static final String SELECT_FROM = "SELECT * FROM ";
+	
+	/** The Constant THERE_IS_NO_DATA_IN_TABLE. */
 	private static final String THERE_IS_NO_DATA_IN_TABLE = "There is no data in table ";
+	
+	/** The Constant COULD_NOT_RETRIEVE_TABLE_DATA. */
 	private static final String COULD_NOT_RETRIEVE_TABLE_DATA = "Could not retrieve table data reason: Table name is null";
+	
+	/** The Constant ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_TABLE. */
 	private static final String ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_TABLE = "Error on loading table columns from the Database for Table: ";
 
+	/** The Constant DATA_DELIMETER. */
 	public static final String DATA_DELIMETER = "|";
 
+	/** The table name. */
 	private String tableName;
+	
+	/** The table type. */
 	private String tableType;
+	
+	/** The table columns. */
 	private TableColumn[] tableColumns;
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TableExporter.class);
 
+	/** The data source. */
 	private DataSource dataSource;
 
+	/**
+	 * Instantiates a new table exporter.
+	 *
+	 * @param dataSource the data source
+	 */
 	public TableExporter(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
+	/**
+	 * Gets the table data.
+	 *
+	 * @return the table data
+	 */
 	public String getTableData() {
 		String data = "";
 
@@ -72,6 +100,11 @@ public class TableExporter {
 		return data;
 	}
 
+	/**
+	 * Gets the data for table.
+	 *
+	 * @return the data for table
+	 */
 	private String getDataForTable() {
 		String sql = null;
 		String result = null;
@@ -123,6 +156,13 @@ public class TableExporter {
 		}
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @param availableTableColumns the available table columns
+	 * @param tableColumn the table column
+	 * @return true, if successful
+	 */
 	private boolean exists(List<TableColumn> availableTableColumns, TableColumn tableColumn) {
 		if (getTableName() == null) {
 			return false;
@@ -137,26 +177,56 @@ public class TableExporter {
 		return false;
 	}
 
+	/**
+	 * Gets the table name.
+	 *
+	 * @return the table name
+	 */
 	public String getTableName() {
 		return tableName;
 	}
 
+	/**
+	 * Sets the table name.
+	 *
+	 * @param tableName the new table name
+	 */
 	public void setTableName(String tableName) {
 		this.tableName = DataStructuresUtils.getCaseSensitiveTableName(tableName);
 	}
 
+	/**
+	 * Gets the table type.
+	 *
+	 * @return the table type
+	 */
 	public String getTableType() {
 		return tableType;
 	}
 
+	/**
+	 * Sets the table type.
+	 *
+	 * @param tableType the new table type
+	 */
 	public void setTableType(String tableType) {
 		this.tableType = tableType;
 	}
 
+	/**
+	 * Gets the table columns.
+	 *
+	 * @return the table columns
+	 */
 	public TableColumn[] getTableColumns() {
 		return tableColumns;
 	}
 
+	/**
+	 * Sets the table columns.
+	 *
+	 * @param tableColumns the new table columns
+	 */
 	public void setTableColumns(TableColumn[] tableColumns) {
 		this.tableColumns = tableColumns;
 	}

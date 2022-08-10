@@ -52,23 +52,47 @@ import org.slf4j.LoggerFactory;
 public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor implements JavascriptCodeRunner<String, Object> {
 
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(GraalVMJavascriptEngineExecutor.class);
 
+    /** The Constant ENGINE_JAVA_SCRIPT. */
     private static final String ENGINE_JAVA_SCRIPT = "js";
+    
+    /** The Constant SOURCE_PROVIDER. */
     private static final String SOURCE_PROVIDER = "SourceProvider";
+    
+    /** The Constant CODE_DEBUGGER. */
     private static final String CODE_DEBUGGER = "debugger;\n\n";
 
+    /** The Constant ENGINE_NAME. */
     public static final String ENGINE_NAME = "GraalVM JavaScript Engine";
 
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED. */
     public static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED = "DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED";
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT. */
     public static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT = "DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT";
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA. */
     public static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA = "DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA";
 
+    /** The Constant DEFAULT_DEBUG_PORT. */
     public static final String DEFAULT_DEBUG_PORT = "8081";
 
+    /** The source provider. */
     private final GraalVMRepositoryModuleSourceProvider sourceProvider = new GraalVMRepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+    
+    /** The executable file type resolver. */
     private final ExecutableFileTypeResolver executableFileTypeResolver = new ExecutableFileTypeResolver();
 
+    /**
+     * Execute service module.
+     *
+     * @param module the module
+     * @param executionContext the execution context
+     * @return the object
+     * @throws ScriptingException the scripting exception
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceModule(java.lang.String,
@@ -79,6 +103,14 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         return executeService(module, executionContext, true, true);
     }
 
+    /**
+     * Execute service code.
+     *
+     * @param code the code
+     * @param executionContext the execution context
+     * @return the object
+     * @throws ScriptingException the scripting exception
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceCode(java.lang.String,
@@ -89,16 +121,41 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         return executeService(code, executionContext, false, true);
     }
 
+    /**
+     * Eval code.
+     *
+     * @param code the code
+     * @param executionContext the execution context
+     * @return the object
+     * @throws ScriptingException the scripting exception
+     */
     @Override
     public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
         return executeService(code, executionContext, false, false);
     }
 
+    /**
+     * Eval module.
+     *
+     * @param module the module
+     * @param executionContext the execution context
+     * @return the object
+     * @throws ScriptingException the scripting exception
+     */
     @Override
     public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
         return executeService(module, executionContext, true, false);
     }
 
+    /**
+     * Execute method from module.
+     *
+     * @param module the module
+     * @param memberClass the member class
+     * @param memberMethod the member method
+     * @param executionContext the execution context
+     * @return the object
+     */
     @Override
     public Object executeMethodFromModule(String module, String memberClass, String memberMethod, Map<Object, Object> executionContext) {
         CompletableFuture<Object> res = new CompletableFuture<>();
@@ -124,16 +181,38 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         }
     }
 
+    /**
+     * Run.
+     *
+     * @param codeFilePath the code file path
+     * @return the object
+     */
     @Override
     public Object run(Path codeFilePath) {
         return executeServiceModule(codeFilePath.toString(), new HashMap<>());
     }
 
+    /**
+     * Run.
+     *
+     * @param codeSource the code source
+     * @return the object
+     */
     @Override
     public Object run(String codeSource) {
         return executeServiceCode(codeSource, new HashMap<>());
     }
 
+    /**
+     * Execute service.
+     *
+     * @param moduleOrCode the module or code
+     * @param executionContext the execution context
+     * @param isModule the is module
+     * @param commonJSModule the common JS module
+     * @return the object
+     * @throws ScriptingException the scripting exception
+     */
     public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule, boolean commonJSModule) throws ScriptingException {
         return executeService(moduleOrCode, executionContext, isModule, commonJSModule, (c, v) -> {
         });
@@ -145,6 +224,8 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
      * @param moduleOrCode     the module or code
      * @param executionContext the execution context
      * @param isModule         the is module
+     * @param commonJSModule the common JS module
+     * @param onAfterExecute the on after execute
      * @return the object
      * @throws ScriptingException the scripting exception
      */
@@ -251,18 +332,42 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         return result;
     }
 
+    /**
+     * Load source.
+     *
+     * @param module the module
+     * @return the string
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws URISyntaxException the URI syntax exception
+     */
     protected String loadSource(String module) throws IOException, URISyntaxException {
         return getSourceProvider().loadSource(module);
     }
 
+    /**
+     * Before eval.
+     *
+     * @param context the context
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     protected void beforeEval(Context context) throws IOException {
 
     }
 
+    /**
+     * Checks if is debug enabled.
+     *
+     * @return true, if is debug enabled
+     */
     private boolean isDebugEnabled() {
         return GraalVMJavascriptDebugProcessor.haveUserSession(UserFacade.getName());
     }
 
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#getType()
@@ -272,6 +377,11 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         return JAVASCRIPT_TYPE_GRAALVM;
     }
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()
@@ -281,10 +391,18 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         return ENGINE_NAME;
     }
 
+    /**
+     * Gets the source provider.
+     *
+     * @return the source provider
+     */
     public IJavascriptModuleSourceProvider getSourceProvider() {
         return sourceProvider;
     }
 
+    /**
+     * Close.
+     */
     @Override
     public void close() {
 

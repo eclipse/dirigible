@@ -21,10 +21,16 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 
+/**
+ * The Class WorkspaceGitHelper.
+ */
 public class WorkspaceGitHelper {
 
+	/** The Constant GIT_REPOSITORY_PROJECT_DEPTH. */
 	// {workspace}/{userName}/{gitRepositoryName}
 	private static final int GIT_REPOSITORY_PROJECT_DEPTH = 3;
+	
+	/** The Constant DOT_GIT. */
 	private static final String DOT_GIT = ".git";
 
 	/**
@@ -46,11 +52,10 @@ public class WorkspaceGitHelper {
 	}
 
 	/**
-	 * Get the git folder
+	 * Get the git folder.
 	 *
 	 * @param repository the repository
 	 * @param repositoryPath the path
-	 *
 	 * @return the git folder
 	 */
 	public static File getGitFolderForProject(IRepository repository, String repositoryPath) {

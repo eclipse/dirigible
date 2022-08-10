@@ -64,9 +64,9 @@ public class MigrationsSynchronizerTest extends AbstractDirigibleTest {
 	/**
 	 * Creates the migration test.
 	 *
-	 * @throws MigrationsException the migrations exception
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws MigrationsException the access exception
+	 * @throws MigrationsException the access exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Test
 	public void createMigrationTest() throws MigrationsException, IOException, MigrationsException {
@@ -98,7 +98,6 @@ public class MigrationsSynchronizerTest extends AbstractDirigibleTest {
 	/**
 	 * Cleanup migration test.
 	 *
-	 * @throws MigrationsException the migrations exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws MigrationsException the access exception
 	 */

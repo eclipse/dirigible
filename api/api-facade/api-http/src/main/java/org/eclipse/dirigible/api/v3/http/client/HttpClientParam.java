@@ -12,11 +12,14 @@
 package org.eclipse.dirigible.api.v3.http.client;
 
 /**
- * Represents an HTTP param
+ * Represents an HTTP param.
  */
 public class HttpClientParam {
 
+	/** The name. */
 	private String name;
+	
+	/** The value. */
 	private String value;
 
 	/**

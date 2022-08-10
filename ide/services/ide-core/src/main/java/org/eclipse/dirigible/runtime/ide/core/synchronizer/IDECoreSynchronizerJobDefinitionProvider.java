@@ -20,10 +20,17 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class IDECoreSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_INTERNAL_IDE_CORE_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_IDE_CORE_SYNCHRONIZER_JOB = "dirigible-internal-ide-core-synchronizer-job";
 	
+	/** The Constant IDE_CORE_SYNCHRONIZER_JOB. */
 	static final String IDE_CORE_SYNCHRONIZER_JOB = "IDE Core Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

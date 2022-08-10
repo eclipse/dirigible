@@ -16,14 +16,19 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 
+/**
+ * The Class UsersToGroup.
+ */
 @EdmEntityType(name = "UsersToGroup")
 @EdmEntitySet(name = "UsersToGroup")
 public class UsersToGroup {
 
+/** The User id. */
 //    @EdmKey
     @EdmProperty
     private String UserId;
 
+/** The Group id. */
 //    @EdmKey
     @EdmProperty
     private String GroupId;

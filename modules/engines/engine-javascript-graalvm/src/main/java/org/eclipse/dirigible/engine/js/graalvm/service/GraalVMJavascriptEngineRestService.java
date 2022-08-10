@@ -44,10 +44,13 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class GraalVMJavascriptEngineRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GraalVMJavascriptEngineRestService.class);
 
+	/** The processor. */
 	private GraalVMJavascriptEngineProcessor processor = new GraalVMJavascriptEngineProcessor();
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
@@ -132,6 +135,11 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 		return executeGraalVMServiceGet(path);
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -141,6 +149,11 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 		return GraalVMJavascriptEngineRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

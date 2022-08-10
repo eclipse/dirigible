@@ -16,22 +16,32 @@ import org.eclipse.dirigible.database.sql.builders.table.CreateTemporaryTableBui
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class HanaCreateTemporaryTableBuilder.
+ */
 public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder<HanaCreateTemporaryTableBuilder> {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CreateTemporaryTableBuilder.class);
 
+    /** The Constant NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED. */
     private static final String NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED = "No `like` table or `as` select query specified.";
 
     /**
      * Instantiates a new abstract sql builder.
      *
      * @param dialect the dialect
-     * @param table
+     * @param table the table
      */
     protected HanaCreateTemporaryTableBuilder(ISqlDialect dialect, String table) {
         super(dialect, table);
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     @Override
     public String generate() {
 
@@ -67,6 +77,11 @@ public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder
         return generated;
     }
 
+    /**
+     * Append with no data keywords.
+     *
+     * @param sql the sql
+     */
     private void appendWithNoDataKeywords(StringBuilder sql) {
         sql.append(SPACE).append(KEYWORD_WITH).append(SPACE).append(KEYWORD_NO).append(SPACE).append(KEYWORD_DATA);
     }

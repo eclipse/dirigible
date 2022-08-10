@@ -58,28 +58,40 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class FileSystemRepository implements IRepository {
 
+	/** The Constant REPOSITORY_FILE_BASED. */
 	private static final String REPOSITORY_FILE_BASED = "REPOSITORY_FILE_BASED";
 	
+	/** The Constant REPOSITORY_ROOT_FOLDER. */
 	private static final String REPOSITORY_ROOT_FOLDER = "REPOSITORY_ROOT_FOLDER";
 
+	/** The Constant REPOSITORY_INDEX_FOLDER. */
 	private static final String REPOSITORY_INDEX_FOLDER = "REPOSITORY_INDEX_FOLDER";
 
+	/** The logger. */
 	private static Logger logger = LoggerFactory.getLogger(FileSystemRepository.class);
 
+	/** The Constant CURRENT_DIR. */
 	private static final String CURRENT_DIR = ".";
 
+	/** The Constant DIRIGIBLE_LOCAL. */
 	private static final String DIRIGIBLE_LOCAL = "dirigible" + IRepository.SEPARATOR + "repository";
 
+	/** The Constant PATH_SEGMENT_ROOT. */
 	private static final String PATH_SEGMENT_ROOT = "root";
 
+	/** The Constant DIRIGIBLE_LOCAL_ROOT. */
 	private static final String DIRIGIBLE_LOCAL_ROOT = DIRIGIBLE_LOCAL + IRepository.SEPARATOR + PATH_SEGMENT_ROOT;
 
+	/** The repository path. */
 	private String repositoryPath = IRepository.SEPARATOR;
 
+	/** The repository dao. */
 	private LocalRepositoryDao repositoryDao;
 
+	/** The repository searcher. */
 	private RepositorySearcher repositorySearcher;
 	
+	/** The parameters. */
 	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<>());
 
 	/**
@@ -190,6 +202,11 @@ public abstract class FileSystemRepository implements IRepository {
 		FileSystemUtils.createFolder(repositoryPath);
 	}
 
+	/**
+	 * Gets the root.
+	 *
+	 * @return the root
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getRoot()
@@ -203,6 +220,13 @@ public abstract class FileSystemRepository implements IRepository {
 		return localCollection;
 	}
 
+	/**
+	 * Creates the collection.
+	 *
+	 * @param path the path
+	 * @return the i collection
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createCollection(java.lang.String)
@@ -217,6 +241,12 @@ public abstract class FileSystemRepository implements IRepository {
 		return localCollection;
 	}
 
+	/**
+	 * Gets the collection.
+	 *
+	 * @param path the path
+	 * @return the collection
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getCollection(java.lang.String)
@@ -230,6 +260,12 @@ public abstract class FileSystemRepository implements IRepository {
 		return localCollection;
 	}
 
+	/**
+	 * Removes the collection.
+	 *
+	 * @param path the path
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#removeCollection(java.lang.String)
@@ -243,6 +279,13 @@ public abstract class FileSystemRepository implements IRepository {
 		logger.trace("exiting removeCollection"); //$NON-NLS-1$
 	}
 
+	/**
+	 * Checks for collection.
+	 *
+	 * @param path the path
+	 * @return true, if successful
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#hasCollection(java.lang.String)
@@ -257,6 +300,13 @@ public abstract class FileSystemRepository implements IRepository {
 		return result;
 	}
 
+	/**
+	 * Creates the resource.
+	 *
+	 * @param path the path
+	 * @return the i resource
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String)
@@ -271,6 +321,14 @@ public abstract class FileSystemRepository implements IRepository {
 		return resource;
 	}
 
+	/**
+	 * Creates the resource.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 * @return the i resource
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String, byte[])
@@ -285,6 +343,16 @@ public abstract class FileSystemRepository implements IRepository {
 		return resource;
 	}
 
+	/**
+	 * Creates the resource.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 * @param isBinary the is binary
+	 * @param contentType the content type
+	 * @return the i resource
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String, byte[], boolean,
@@ -295,6 +363,17 @@ public abstract class FileSystemRepository implements IRepository {
 		return createResource(path, content, isBinary, contentType, false);
 	}
 
+	/**
+	 * Creates the resource.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 * @param isBinary the is binary
+	 * @param contentType the content type
+	 * @param override the override
+	 * @return the i resource
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String, byte[], boolean,
@@ -315,6 +394,12 @@ public abstract class FileSystemRepository implements IRepository {
 		return resource;
 	}
 
+	/**
+	 * Gets the resource.
+	 *
+	 * @param path the path
+	 * @return the resource
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getResource(java.lang.String)
@@ -328,6 +413,12 @@ public abstract class FileSystemRepository implements IRepository {
 		return resource;
 	}
 
+	/**
+	 * Removes the resource.
+	 *
+	 * @param path the path
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#removeResource(java.lang.String)
@@ -341,6 +432,13 @@ public abstract class FileSystemRepository implements IRepository {
 		logger.trace("exiting removeResource"); //$NON-NLS-1$
 	}
 
+	/**
+	 * Checks for resource.
+	 *
+	 * @param path the path
+	 * @return true, if successful
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#hasResource(java.lang.String)
@@ -355,6 +453,9 @@ public abstract class FileSystemRepository implements IRepository {
 		return result;
 	}
 
+	/**
+	 * Dispose.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#dispose()
@@ -373,6 +474,13 @@ public abstract class FileSystemRepository implements IRepository {
 		return repositoryDao;
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param zipInputStream the zip input stream
+	 * @param path the path
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.zip.ZipInputStream,
@@ -383,6 +491,14 @@ public abstract class FileSystemRepository implements IRepository {
 		importZip(zipInputStream, path, false);
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param zipInputStream the zip input stream
+	 * @param path the path
+	 * @param override the override
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.zip.ZipInputStream,
@@ -393,6 +509,15 @@ public abstract class FileSystemRepository implements IRepository {
 		importZip(zipInputStream, path, override, false);
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param zipInputStream the zip input stream
+	 * @param relativeRoot the relative root
+	 * @param override the override
+	 * @param excludeRootFolderName the exclude root folder name
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.zip.ZipInputStream,
@@ -408,6 +533,13 @@ public abstract class FileSystemRepository implements IRepository {
 		RepositoryZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param data the data
+	 * @param path the path
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[], java.lang.String)
@@ -417,6 +549,14 @@ public abstract class FileSystemRepository implements IRepository {
 		importZip(data, path, false);
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param data the data
+	 * @param path the path
+	 * @param override the override
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[], java.lang.String, boolean)
@@ -426,6 +566,16 @@ public abstract class FileSystemRepository implements IRepository {
 		importZip(data, path, override, false, null);
 	}
 
+	/**
+	 * Import zip.
+	 *
+	 * @param data the data
+	 * @param relativeRoot the relative root
+	 * @param override the override
+	 * @param excludeRootFolderName the exclude root folder name
+	 * @param filter the filter
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[], java.lang.String, boolean,
@@ -442,6 +592,13 @@ public abstract class FileSystemRepository implements IRepository {
 				filter);
 	}
 
+	/**
+	 * Export zip.
+	 *
+	 * @param relativeRoots the relative roots
+	 * @return the byte[]
+	 * @throws RepositoryExportException the repository export exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryExporter#exportZip(java.util.List)
@@ -451,6 +608,14 @@ public abstract class FileSystemRepository implements IRepository {
 		return RepositoryZipExporter.exportZip(this, relativeRoots);
 	}
 
+	/**
+	 * Export zip.
+	 *
+	 * @param relativeRoot the relative root
+	 * @param inclusive the inclusive
+	 * @return the byte[]
+	 * @throws RepositoryExportException the repository export exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryExporter#exportZip(java.lang.String, boolean)
@@ -460,6 +625,14 @@ public abstract class FileSystemRepository implements IRepository {
 		return RepositoryZipExporter.exportZip(this, relativeRoot, inclusive);
 	}
 
+	/**
+	 * Search name.
+	 *
+	 * @param parameter the parameter
+	 * @param caseInsensitive the case insensitive
+	 * @return the list
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchName(java.lang.String, boolean)
@@ -469,6 +642,15 @@ public abstract class FileSystemRepository implements IRepository {
 		return searchName(IRepository.SEPARATOR, parameter, caseInsensitive);
 	}
 
+	/**
+	 * Search name.
+	 *
+	 * @param root the root
+	 * @param parameter the parameter
+	 * @param caseInsensitive the case insensitive
+	 * @return the list
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchName(java.lang.String, java.lang.String,
@@ -507,6 +689,14 @@ public abstract class FileSystemRepository implements IRepository {
 		}
 	}
 
+	/**
+	 * Search path.
+	 *
+	 * @param parameter the parameter
+	 * @param caseInsensitive the case insensitive
+	 * @return the list
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchPath(java.lang.String, boolean)
@@ -527,6 +717,13 @@ public abstract class FileSystemRepository implements IRepository {
 		return entities;
 	}
 
+	/**
+	 * Search text.
+	 *
+	 * @param parameter the parameter
+	 * @return the list
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchText(java.lang.String, boolean)
@@ -541,11 +738,22 @@ public abstract class FileSystemRepository implements IRepository {
 		return entities;
 	}
 
+	/**
+	 * Search refresh.
+	 *
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	@Override
 	public void searchRefresh() throws RepositorySearchException {
 		repositorySearcher.forceReindex();
 	}
 
+	/**
+	 * Gets the all resource paths.
+	 *
+	 * @return the all resource paths
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getAllResourcePaths()
@@ -564,6 +772,12 @@ public abstract class FileSystemRepository implements IRepository {
 		return paths;
 	}
 	
+	/**
+	 * Gets the parameter.
+	 *
+	 * @param key the key
+	 * @return the parameter
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepository#getParameter(java.lang.String)
 	 */
@@ -572,15 +786,33 @@ public abstract class FileSystemRepository implements IRepository {
 		return parameters.get(key);
 	}
 	
+	/**
+	 * Sets the parameter.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 */
 	protected void setParameter(String key, String value) {
 		parameters.put(key, value);
 	}
 	
+	/**
+	 * Checks if is linking paths supported.
+	 *
+	 * @return true, if is linking paths supported
+	 */
 	@Override
 	public boolean isLinkingPathsSupported() {
 		return true;
 	}
 	
+	/**
+	 * Link path.
+	 *
+	 * @param repositoryPath the repository path
+	 * @param filePath the file path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public void linkPath(String repositoryPath, String filePath) throws IOException {
 		if (!new File(filePath).exists()) {
@@ -593,6 +825,12 @@ public abstract class FileSystemRepository implements IRepository {
 		Files.createSymbolicLink(Paths.get(workspacePath).toAbsolutePath(), Paths.get(filePath).toAbsolutePath());
 	}
 
+	/**
+	 * Delete linked path.
+	 *
+	 * @param repositoryPath the repository path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public void deleteLinkedPath(String repositoryPath) throws IOException {
 		if (isLinkedPath(repositoryPath)) {
@@ -602,12 +840,26 @@ public abstract class FileSystemRepository implements IRepository {
 		}
 	}
 
+	/**
+	 * Checks if is linked path.
+	 *
+	 * @param repositoryPath the repository path
+	 * @return true, if is linked path
+	 */
 	@Override
 	public boolean isLinkedPath(String repositoryPath) {
 		String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
 		return Files.isSymbolicLink(Paths.get(workspacePath).toAbsolutePath());
 	}
 	
+	/**
+	 * Find.
+	 *
+	 * @param path the path
+	 * @param pattern the pattern
+	 * @return the list
+	 * @throws RepositorySearchException the repository search exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#find(java.lang.String, boolean)
@@ -635,6 +887,12 @@ public abstract class FileSystemRepository implements IRepository {
 		return new ArrayList<String>();
 	}
 
+	/**
+	 * Gets the internal resource path.
+	 *
+	 * @param resourcePath the resource path
+	 * @return the internal resource path
+	 */
 	@Override
 	public String getInternalResourcePath(String resourcePath) {
 		return LocalWorkspaceMapper.getMappedName(this, resourcePath);

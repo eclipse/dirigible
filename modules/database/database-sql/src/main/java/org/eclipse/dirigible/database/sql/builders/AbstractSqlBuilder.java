@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractSqlBuilder implements ISqlBuilder {
 
+	/** The dialect. */
 	private ISqlDialect dialect;
 	
 	
@@ -67,8 +68,8 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	}
 	
 	/**
-	 * Whether the names of tables, columns, indices are case sensitive
-	 * 
+	 * Whether the names of tables, columns, indices are case sensitive.
+	 *
 	 * @return true if set
 	 */
 	protected boolean isCaseSensitive() {
@@ -76,8 +77,8 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	}
 	
 	/**
-	 * Encapsulate the name within qutes
-	 * 
+	 * Encapsulate the name within qutes.
+	 *
 	 * @param name the name
 	 * @return the encapsulated name
 	 */
@@ -96,8 +97,14 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 		return name;
 	}
 	
+	/** The column pattern. */
 	private Pattern columnPattern = Pattern.compile("^(?![0-9]*$)[a-zA-Z0-9_#$]+$");
 
+	/**
+	 * Gets the escape symbol.
+	 *
+	 * @return the escape symbol
+	 */
 	public String getEscapeSymbol() {
 		return (getDialect().getClass().equals(MySQLSqlDialect.class))
 				? "`"
@@ -117,8 +124,8 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	}
 	
 	/**
-	 * Encapsulate all the non-function and non-numeric words
-	 * 
+	 * Encapsulate all the non-function and non-numeric words.
+	 *
 	 * @param line the input string
 	 * @return the transformed string
 	 */
@@ -143,10 +150,13 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * The Regex find the content between single quotes.
 	 */
 	private Pattern contentBetweenSingleQuotes = Pattern.compile("'([^']*?)'");
+	
+	/** The numeric pattern. */
 	private Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 	
 	/**
-	 * Check whether the string is a number
+	 * Check whether the string is a number.
+	 *
 	 * @param s the input
 	 * @return true if it is a number
 	 */
@@ -157,6 +167,12 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	    return numericPattern.matcher(s).matches();
 	}
 
+	/**
+	 * Checks if is value.
+	 *
+	 * @param s the s
+	 * @return true, if is value
+	 */
 	protected boolean isValue(String s) {
 		if (s == null) {
 			return false;

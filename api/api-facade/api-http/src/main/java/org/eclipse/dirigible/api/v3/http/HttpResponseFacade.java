@@ -28,16 +28,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Java facade for working HttpServletResponse
+ * Java facade for working HttpServletResponse.
  */
 public class HttpResponseFacade implements IScriptingFacade {
 
+	/** The Constant NO_VALID_RESPONSE. */
 	private static final String NO_VALID_RESPONSE = "Trying to use HTTP Response Facade without a valid Response";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpResponseFacade.class);
 
 	/**
-	 * Returns the HttpServletResponse associated with the current thread context
+	 * Returns the HttpServletResponse associated with the current thread context.
 	 *
 	 * @return the response
 	 */
@@ -54,7 +56,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Checks if there is a HttpServletResponse associated with the current thread context
+	 * Checks if there is a HttpServletResponse associated with the current thread context.
 	 *
 	 * @return true, if there is a HttpServletResponse associated with the current thread context
 	 */
@@ -64,10 +66,9 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Prints the text
+	 * Prints the text.
 	 *
-	 * @param text
-	 *            the text
+	 * @param text            the text
 	 */
 	public static final void print(String text) {
 		HttpServletResponse response = getResponse();
@@ -82,10 +83,9 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Prints the object as text
+	 * Prints the object as text.
 	 *
-	 * @param o
-	 *            the object to be printed
+	 * @param o            the object to be printed
 	 */
 	public static final void print(Object o) {
 		if (o != null) {
@@ -94,50 +94,45 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Prints the int primitive as text
+	 * Prints the int primitive as text.
 	 *
-	 * @param i
-	 *            the integer to be printed
+	 * @param i            the integer to be printed
 	 */
 	public static final void print(int i) {
 		print(i + "");
 	}
 
 	/**
-	 * Prints the double primitive as text
+	 * Prints the double primitive as text.
 	 *
-	 * @param d
-	 *            the double to be printed
+	 * @param d            the double to be printed
 	 */
 	public static final void print(double d) {
 		print(d + "");
 	}
 
 	/**
-	 * Prints the integer as text
+	 * Prints the integer as text.
 	 *
-	 * @param i
-	 *            the integer to be printed
+	 * @param i            the integer to be printed
 	 */
 	public static final void print(Integer i) {
 		print(i + "");
 	}
 
 	/**
-	 * Prints the double as text
+	 * Prints the double as text.
 	 *
-	 * @param d
-	 *            the double to be printed
+	 * @param d            the double to be printed
 	 */
 	public static final void print(Double d) {
 		print(d + "");
 	}
 
 	/**
-	 * Prints the text with a carriage return
+	 * Prints the text with a carriage return.
 	 *
-	 * @param text
-	 *            the text
+	 * @param text            the text
 	 */
 	public static final void println(String text) {
 		HttpServletResponse response = getResponse();
@@ -152,10 +147,9 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Prints the object as text with a carriage return
+	 * Prints the object as text with a carriage return.
 	 *
-	 * @param o
-	 *            the object
+	 * @param o            the object
 	 */
 	public static final void println(Object o) {
 		if (o != null) {
@@ -164,50 +158,45 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Prints the int primitive as text with a carriage return
+	 * Prints the int primitive as text with a carriage return.
 	 *
-	 * @param i
-	 *            the int primitive
+	 * @param i            the int primitive
 	 */
 	public static final void println(int i) {
 		println(i + "");
 	}
 
 	/**
-	 * Prints the double primitive as text with a carriage return
+	 * Prints the double primitive as text with a carriage return.
 	 *
-	 * @param d
-	 *            the double primitive
+	 * @param d            the double primitive
 	 */
 	public static final void println(double d) {
 		println(d + "");
 	}
 
 	/**
-	 * Prints the Integer as text with a carriage return
+	 * Prints the Integer as text with a carriage return.
 	 *
-	 * @param i
-	 *            the integer
+	 * @param i            the integer
 	 */
 	public static final void println(Integer i) {
 		println(i + "");
 	}
 
 	/**
-	 * Prints the Double as text with a carriage return
+	 * Prints the Double as text with a carriage return.
 	 *
-	 * @param d
-	 *            the double
+	 * @param d            the double
 	 */
 	public static final void println(Double d) {
 		println(d + "");
 	}
 
 	/**
-	 * Writes the bytes to the output stream
+	 * Writes the bytes to the output stream.
 	 *
-	 * @param bytes
-	 *            the bytes
+	 * @param bytes            the bytes
 	 */
 	public static final void write(byte[] bytes) {
 		HttpServletResponse response = getResponse();
@@ -222,10 +211,9 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Writes the string bytes to the output stream
+	 * Writes the string bytes to the output stream.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input            the input
 	 */
 	public static final void write(String input) {
 		HttpServletResponse response = getResponse();
@@ -268,7 +256,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Flushes the response
+	 * Flushes the response.
 	 */
 	public static final void flush() {
 		HttpServletResponse response = getResponse();
@@ -283,7 +271,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Closes the response output stream
+	 * Closes the response output stream.
 	 */
 	public static final void close() {
 		HttpServletResponse response = getResponse();
@@ -298,10 +286,9 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Adds a cookie
+	 * Adds a cookie.
 	 *
-	 * @param cookieJson
-	 *            the cookie in JSON format
+	 * @param cookieJson            the cookie in JSON format
 	 */
 	public static final void addCookie(String cookieJson) {
 		HttpServletResponse response = getResponse();
@@ -313,10 +300,9 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Checks if the response contains a header with the specified name
+	 * Checks if the response contains a header with the specified name.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name            the name
 	 * @return true, if the header has already been added
 	 */
 	public static final boolean containsHeader(String name) {
@@ -328,10 +314,9 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Encodes the specified URL
+	 * Encodes the specified URL.
 	 *
-	 * @param url
-	 *            the url
+	 * @param url            the url
 	 * @return the URL encoded
 	 */
 	public static final String encodeURL(String url) {
@@ -554,7 +539,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Reset the buffer
+	 * Reset the buffer.
 	 */
 	public static final void reset() {
 		HttpServletResponse response = getResponse();
@@ -565,10 +550,9 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Returns the value of the header with the specified name
+	 * Returns the value of the header with the specified name.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name            the name
 	 * @return the header
 	 */
 	public static final String getHeader(String name) {
@@ -669,7 +653,8 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 	
 	/**
-	 * Open the output stream of the current servlet response
+	 * Open the output stream of the current servlet response.
+	 *
 	 * @return the created output stream
 	 * @throws IOException in case of failure in underlying layer
 	 */

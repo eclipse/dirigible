@@ -16,6 +16,7 @@ package org.eclipse.dirigible.commons.api.scripting;
  */
 public class ScriptingDependencyException extends ScriptingException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7175996091072301851L;
 
 	/**

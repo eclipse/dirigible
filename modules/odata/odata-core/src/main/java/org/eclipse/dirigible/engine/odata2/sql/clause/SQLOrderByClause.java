@@ -32,14 +32,33 @@ import java.util.List;
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isPropertyParameter;
 
+/**
+ * The Class SQLOrderByClause.
+ */
 public class SQLOrderByClause implements SQLClause {
 
+    /** The Constant EMPTY_STRING. */
     private static final String EMPTY_STRING = "";
+    
+    /** The order by expression. */
     private final OrderByExpression orderByExpression;
+    
+    /** The query. */
     private final SQLSelectBuilder query;
+    
+    /** The entity type. */
     private final EdmEntityType entityType;
+    
+    /** The log. */
     private final Logger LOG = LoggerFactory.getLogger(SQLOrderByClause.class);
 
+    /**
+     * Instantiates a new SQL order by clause.
+     *
+     * @param query the query
+     * @param orderByEntityType the order by entity type
+     * @param orderByExpression the order by expression
+     */
     public SQLOrderByClause(final SQLSelectBuilder query, final EdmEntityType orderByEntityType, final OrderByExpression orderByExpression) {
         this.orderByExpression = orderByExpression;
         this.query = query;
@@ -47,16 +66,35 @@ public class SQLOrderByClause implements SQLClause {
     }
 
 
+    /**
+     * Evaluate.
+     *
+     * @param context the context
+     * @return the string
+     * @throws EdmException the edm exception
+     */
     @Override
     public String evaluate(final SQLContext context) throws EdmException {
         return isEmpty() ? getDefaultExpression(context) : parseExpression(context, orderByExpression);
     }
 
+    /**
+     * Checks if is empty.
+     *
+     * @return true, if is empty
+     */
     @Override
     public boolean isEmpty() {
         return orderByExpression == null || orderByExpression.getOrders() == null;
     }
 
+    /**
+     * Gets the default expression.
+     *
+     * @param context the context
+     * @return the default expression
+     * @throws EdmException the edm exception
+     */
     private String getDefaultExpression(SQLContext context)
             throws EdmException {
         List<String> keyPropertyNames = entityType.getKeyPropertyNames();
@@ -77,6 +115,14 @@ public class SQLOrderByClause implements SQLClause {
         return parseExpression(context, orderExpression);
     }
 
+    /**
+     * Parses the expression.
+     *
+     * @param context the context
+     * @param orderExpression the order expression
+     * @return the string
+     * @throws EdmException the edm exception
+     */
     private String parseExpression(SQLContext context, OrderByExpression orderExpression) throws EdmException {
         List<String> orderByClauses = new ArrayList<>();
         List<OrderExpression> orderBys = orderExpression.getOrders();
@@ -86,6 +132,14 @@ public class SQLOrderByClause implements SQLClause {
         return SQLUtils.csv(orderByClauses);
     }
 
+    /**
+     * Order by clause.
+     *
+     * @param context the context
+     * @param orderBy the order by
+     * @return the string
+     * @throws EdmException the edm exception
+     */
     protected String orderByClause(SQLContext context, OrderExpression orderBy) throws EdmException {
         CommonExpression expression = orderBy.getExpression();
         EdmStructuralType entityType;

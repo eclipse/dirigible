@@ -29,22 +29,44 @@ import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class TableImporter.
+ */
 public class TableImporter {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TableImporter.class);
 
+	/** The Constant BATCH_SIZE. */
 	private static final int BATCH_SIZE = 500;
 
+	/** The content. */
 	private byte[] content;
+	
+	/** The table name. */
 	private String tableName;
+	
+	/** The data source. */
 	private DataSource dataSource;
 
+	/**
+	 * Instantiates a new table importer.
+	 *
+	 * @param dataSource the data source
+	 * @param content the content
+	 * @param tableName the table name
+	 */
 	public TableImporter(DataSource dataSource, byte[] content, String tableName) {
 		this.content = content;
 		this.tableName = DataStructuresUtils.getCaseSensitiveTableName(tableName);
 		this.dataSource = dataSource;
 	}
 
+	/**
+	 * Insert.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void insert() throws Exception {
 		Connection connection = null;
 		try {
@@ -58,6 +80,15 @@ public class TableImporter {
 		}
 	}
 
+	/**
+	 * Insert records.
+	 *
+	 * @param connection the connection
+	 * @param records the records
+	 * @param tableName the table name
+	 * @throws SQLException the SQL exception
+	 * @throws ParseException the parse exception
+	 */
 	private void insertRecords(Connection connection, List<String[]> records, String tableName) throws SQLException, ParseException {
 		logger.debug("Start importing data for the table: {} ...", tableName);
 		InsertBuilder insertBuilder = new InsertBuilder(SqlFactory.deriveDialect(connection));
@@ -137,12 +168,24 @@ public class TableImporter {
 		logger.debug("Done importing data for the table: {}, records: {}", tableName, rn);
 	}
 
+	/**
+	 * Close connection.
+	 *
+	 * @param con the con
+	 * @throws SQLException the SQL exception
+	 */
 	private void closeConnection(Connection con) throws SQLException {
 		if (con != null) {
 			con.close();
 		}
 	}
 
+	/**
+	 * Gets the connection.
+	 *
+	 * @return the connection
+	 * @throws Exception the exception
+	 */
 	private Connection getConnection() throws Exception {
 		Connection con = dataSource.getConnection();
 		return con;

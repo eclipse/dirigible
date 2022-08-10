@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class StatusCommand {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(StatusCommand.class);
 
 	/** The verifier. */

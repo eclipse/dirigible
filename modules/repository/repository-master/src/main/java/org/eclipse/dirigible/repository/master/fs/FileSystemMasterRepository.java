@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.repository.master.fs;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.api.RepositoryInitializationException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
@@ -29,6 +27,7 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 	/** The Constant DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER. */
 	public static final String DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER = "DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER";
 
+	/** The Constant DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT. */
 	private static final String DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT = "dirigible_master";
 
 	/**
@@ -53,6 +52,11 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 		super();
 	}
 
+	/**
+	 * Gets the repository root folder.
+	 *
+	 * @return the repository root folder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#getRepositoryRootFolder()
@@ -62,6 +66,11 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 		return DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT;
 	}
 
+	/**
+	 * Initialize.
+	 *
+	 * @throws RepositoryInitializationException the repository initialization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
@@ -72,6 +81,11 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 
 	}
 	
+	/**
+	 * Gets the last modified.
+	 *
+	 * @return the last modified
+	 */
 	@Override
 	public long getLastModified() {
 		return 0;

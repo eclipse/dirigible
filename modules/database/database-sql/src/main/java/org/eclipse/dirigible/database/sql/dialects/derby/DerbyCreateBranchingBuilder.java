@@ -30,6 +30,12 @@ public class DerbyCreateBranchingBuilder extends CreateBranchingBuilder {
 		super(dialect);
 	}
 
+	/**
+	 * View.
+	 *
+	 * @param view the view
+	 * @return the derby create view builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)
@@ -39,6 +45,12 @@ public class DerbyCreateBranchingBuilder extends CreateBranchingBuilder {
 		return new DerbyCreateViewBuilder(this.getDialect(), view);
 	}
 
+	/**
+	 * Sequence.
+	 *
+	 * @param sequence the sequence
+	 * @return the creates the sequence builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)

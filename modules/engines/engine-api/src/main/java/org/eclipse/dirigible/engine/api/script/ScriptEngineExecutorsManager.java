@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ScriptEngineExecutorsManager {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ScriptEngineExecutorsManager.class);
 
     /**
@@ -65,7 +66,7 @@ public class ScriptEngineExecutorsManager {
     }
 
     /**
-     * Evaluate a code snippet
+     * Evaluate a code snippet.
      *
      * @param code             the code snippet
      * @param executionContext the execution context
@@ -113,6 +114,17 @@ public class ScriptEngineExecutorsManager {
                 format("Script Executor of Type [{0}] does not exist, hence the code [{1}] cannot be processed", engineType, code));
     }
 
+    /**
+     * Execute method from module.
+     *
+     * @param engineType the engine type
+     * @param module the module
+     * @param memberClass the member class
+     * @param memberMethod the member method
+     * @param executionContext the execution context
+     * @return the object
+     * @throws ScriptingException the scripting exception
+     */
     public static Object executeMethodFromModule(String engineType, String module, String memberClass, String memberMethod, Map<Object, Object> executionContext) throws ScriptingException {
         IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
         if (scriptEngineExecutor != null) {
@@ -130,7 +142,7 @@ public class ScriptEngineExecutorsManager {
     }
 
     /**
-     * Returns all the registered engine types
+     * Returns all the registered engine types.
      *
      * @return engine types
      */
@@ -139,7 +151,7 @@ public class ScriptEngineExecutorsManager {
     }
 
     /**
-     * Returns all the registered engine types as JSON
+     * Returns all the registered engine types as JSON.
      *
      * @return engine types as JSON
      */

@@ -16,12 +16,6 @@ import static java.text.MessageFormat.format;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,15 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
-import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.artefacts.AccessSynchronizationArtefactType;
@@ -55,26 +46,40 @@ import org.slf4j.LoggerFactory;
  */
 public class SecuritySynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SecuritySynchronizer.class);
 
+	/** The Constant ROLES_PREDELIVERED. */
 	private static final Map<String, RoleDefinition[]> ROLES_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, RoleDefinition[]>());
 
+	/** The Constant ACCESS_PREDELIVERED. */
 	private static final Map<String, List<AccessDefinition>> ACCESS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, List<AccessDefinition>>());
 
+	/** The Constant ROLES_SYNCHRONIZED. */
 	private static final Set<String> ROLES_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
 
+	/** The Constant ACCESS_SYNCHRONIZED. */
 	private static final Set<String> ACCESS_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
 
+	/** The security core service. */
 	private SecurityCoreService securityCoreService = new SecurityCoreService();
 	
+	/** The access persistence manager. */
 	private PersistenceManager<AccessDefinition> accessPersistenceManager = new PersistenceManager<AccessDefinition>();
 
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant ACCESS_ARTEFACT. */
 	private static final AccessSynchronizationArtefactType ACCESS_ARTEFACT = new AccessSynchronizationArtefactType();
+	
+	/** The Constant ROLE_ARTEFACT. */
 	private static final RoleSynchronizationArtefactType ROLE_ARTEFACT = new RoleSynchronizationArtefactType();
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -287,6 +292,11 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -300,6 +310,12 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing Extension Points and Extensions from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -334,6 +350,11 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()

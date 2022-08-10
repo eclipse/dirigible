@@ -16,26 +16,37 @@ package org.eclipse.dirigible.database.persistence.model;
  */
 public class PersistenceTableColumnModel {
 
+	/** The field. */
 	private String field;
 
+	/** The name. */
 	private String name;
 
+	/** The type. */
 	private String type;
 
+	/** The length. */
 	private int length;
 
+	/** The nullable. */
 	private boolean nullable;
 
+	/** The primary key. */
 	private boolean primaryKey;
 
+	/** The scale. */
 	private int scale;
 
+	/** The generated. */
 	private String generated;
 
+	/** The unique. */
 	private boolean unique;
 
+	/** The identity. */
 	private boolean identity;
 
+	/** The enumerated. */
 	private String enumerated;
 
 	/**
@@ -80,7 +91,7 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Empty constructor
+	 * Empty constructor.
 	 */
 	public PersistenceTableColumnModel() {
 	}
@@ -88,11 +99,12 @@ public class PersistenceTableColumnModel {
 	/**
 	 * The constructor from the fields.
 	 *
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
-	 * @param primaryKey
+	 * @param name            the name
+	 * @param type            the type
+	 * @param nullable the nullable
+	 * @param primaryKey the primary key
+	 * @param length the length
+	 * @param scale the scale
 	 */
 	public PersistenceTableColumnModel(String name, String type, boolean nullable, boolean primaryKey, int length, int scale) {
 		this.name = name;

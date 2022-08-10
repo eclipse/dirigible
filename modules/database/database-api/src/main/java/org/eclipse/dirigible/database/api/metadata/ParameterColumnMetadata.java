@@ -16,27 +16,36 @@ package org.eclipse.dirigible.database.api.metadata;
  */
 public class ParameterColumnMetadata {
 
+	/** The name. */
 	private String name;
 
+	/** The kind. */
 	private int kind;
 
+	/** The type. */
 	private String type;
 
+	/** The precision. */
 	private int precision;
 
+	/** The length. */
 	private int length;
 	
+	/** The scale. */
 	private int scale;
 	
+	/** The radix. */
 	private int radix;
 	
+	/** The nullable. */
 	private boolean nullable;
 
+	/** The remarks. */
 	private String remarks;
 
 	/**
-	 * Procedure Column Metadata
-	 * 
+	 * Procedure Column Metadata.
+	 *
 	 * @param name name
 	 * @param kind kind
 	 * @param type type
@@ -62,7 +71,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Get the metadata name
+	 * Get the metadata name.
 	 *
 	 * @return the name
 	 */
@@ -71,7 +80,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Set the metadata name
+	 * Set the metadata name.
 	 *
 	 * @param name the name to set
 	 */
@@ -80,7 +89,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Get the metadata kind
+	 * Get the metadata kind.
 	 *
 	 * @return the kind
 	 */
@@ -89,7 +98,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Set the metadata kind
+	 * Set the metadata kind.
 	 *
 	 * @param kind the kind to set
 	 */
@@ -98,7 +107,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Get the metadata type
+	 * Get the metadata type.
 	 *
 	 * @return the type
 	 */
@@ -107,7 +116,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Set the metadata type
+	 * Set the metadata type.
 	 *
 	 * @param type the type to set
 	 */
@@ -116,7 +125,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Get the metadata precision
+	 * Get the metadata precision.
 	 *
 	 * @return the precision
 	 */
@@ -125,7 +134,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Set the metadata precision
+	 * Set the metadata precision.
 	 *
 	 * @param precision the precision to set
 	 */
@@ -134,7 +143,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Get the metadata length
+	 * Get the metadata length.
 	 *
 	 * @return the length
 	 */
@@ -143,7 +152,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Set the metadata length
+	 * Set the metadata length.
 	 *
 	 * @param length the length to set
 	 */
@@ -152,7 +161,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Get the metadata scale
+	 * Get the metadata scale.
 	 *
 	 * @return the scale
 	 */
@@ -161,7 +170,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Set the metadata scale
+	 * Set the metadata scale.
 	 *
 	 * @param scale the scale to set
 	 */
@@ -170,7 +179,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Get the metadata radix
+	 * Get the metadata radix.
 	 *
 	 * @return the radix
 	 */
@@ -179,7 +188,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Set the metadata radix
+	 * Set the metadata radix.
 	 *
 	 * @param radix the radix to set
 	 */
@@ -188,7 +197,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Get the metadata nullable
+	 * Get the metadata nullable.
 	 *
 	 * @return the nullable
 	 */
@@ -197,7 +206,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Set the metadata nullable
+	 * Set the metadata nullable.
 	 *
 	 * @param nullable the nullable to set
 	 */
@@ -206,7 +215,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Get the metadata remarks
+	 * Get the metadata remarks.
 	 *
 	 * @return the remarks
 	 */
@@ -215,7 +224,7 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
-	 * Set the metadata remarks
+	 * Set the metadata remarks.
 	 *
 	 * @param remarks the remarks to set
 	 */

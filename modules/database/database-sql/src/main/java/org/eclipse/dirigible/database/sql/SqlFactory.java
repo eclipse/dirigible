@@ -138,6 +138,11 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 
 	}
 
+	/**
+	 * Select.
+	 *
+	 * @return the select
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#select()
@@ -147,6 +152,11 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.select();
 	}
 
+	/**
+	 * Insert.
+	 *
+	 * @return the insert
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#insert()
@@ -156,6 +166,11 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.insert();
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @return the update
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#update()
@@ -165,6 +180,11 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.update();
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @return the delete
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#delete()
@@ -174,6 +194,11 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.delete();
 	}
 
+	/**
+	 * Expression.
+	 *
+	 * @return the expression builder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#expression()
@@ -183,6 +208,11 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.expression();
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @return the creates the
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#create()
@@ -192,6 +222,11 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.create();
 	}
 	
+	/**
+	 * Alter.
+	 *
+	 * @return the alter
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#alter()
@@ -201,6 +236,11 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.alter();
 	}
 
+	/**
+	 * Drop.
+	 *
+	 * @return the drop
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#drop()
@@ -210,6 +250,12 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.drop();
 	}
 
+	/**
+	 * Nextval.
+	 *
+	 * @param sequence the sequence
+	 * @return the next
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#nextval(java.lang.String)
@@ -219,6 +265,14 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.nextval(sequence);
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String)
@@ -228,6 +282,15 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.exists(connection, table);
 	}
 	
+	/**
+	 * Exists.
+	 *
+	 * @param connection the connection
+	 * @param name the name
+	 * @param type the type
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String, java.lang.int)
@@ -237,6 +300,16 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.exists(connection, name, type);
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @param connection the connection
+	 * @param schema the schema
+	 * @param name the name
+	 * @param type the type
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String, java.lang.String, java.lang.int)
@@ -246,6 +319,14 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.exists(connection, schema, name, type);
 	}
 
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#count(java.sql.Connection, java.lang.String)
@@ -255,6 +336,12 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.count(connection, table);
 	}
 
+	/**
+	 * Lastval.
+	 *
+	 * @param args the args
+	 * @return the last
+	 */
 	@Override
 	public LAST lastval(String... args) {
 		return this.dialect.lastval(args);

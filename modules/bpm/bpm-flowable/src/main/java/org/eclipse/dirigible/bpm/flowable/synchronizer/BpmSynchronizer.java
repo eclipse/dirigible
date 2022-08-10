@@ -56,21 +56,31 @@ import org.slf4j.LoggerFactory;
  */
 public class BpmSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(BpmSynchronizer.class);
 
+	/** The Constant BPMN_PREDELIVERED. */
 	private static final Map<String, BpmDefinition> BPMN_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, BpmDefinition>());
 
+	/** The Constant BPMN_SYNCHRONIZED. */
 	private static final Map<String, BpmDefinition> BPMN_SYNCHRONIZED = Collections.synchronizedMap(new HashMap<String, BpmDefinition>());
 
+	/** The bpm core service. */
 	private BpmCoreService bpmCoreService = new BpmCoreService();
 	
+	/** The bpm provider flowable. */
 	private BpmProviderFlowable bpmProviderFlowable = new BpmProviderFlowable();
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant BPM_ARTEFACT. */
 	private static final BpmSynchronizationArtefactType BPM_ARTEFACT = new BpmSynchronizationArtefactType();
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -150,10 +160,18 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		BPMN_SYNCHRONIZED.clear();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered BPMN files...");
 		// BPMN files
@@ -163,6 +181,12 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing predelivered Extension Points and Extensions.");
 	}
 
+	/**
+	 * Synchronize bpm.
+	 *
+	 * @param bpmDefinition the bpm definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeBpm(BpmDefinition bpmDefinition) throws SynchronizationException {
 		try {
 			if (!bpmCoreService.existsBpm(bpmDefinition.getLocation())) {
@@ -186,6 +210,11 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -199,6 +228,12 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing BPMN files from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -219,6 +254,11 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
@@ -243,6 +283,11 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done cleaning up BPMN files.");
 	}
 	
+	/**
+	 * Deploy on process engine.
+	 *
+	 * @param bpmDefinition the bpm definition
+	 */
 	private void deployOnProcessEngine(BpmDefinition bpmDefinition) {
 		try {
 			ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
@@ -258,6 +303,9 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		}
 	}
 	
+	/**
+	 * Update process engine.
+	 */
 	private void updateProcessEngine() {
 		if (BPMN_SYNCHRONIZED.isEmpty()) {
 			logger.trace("No BPMN files to update.");

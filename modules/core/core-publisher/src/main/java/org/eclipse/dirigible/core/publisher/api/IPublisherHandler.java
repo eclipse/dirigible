@@ -13,14 +13,42 @@ package org.eclipse.dirigible.core.publisher.api;
 
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 
+/**
+ * The Interface IPublisherHandler.
+ */
 public interface IPublisherHandler {
 
+    /**
+     * Before publish.
+     *
+     * @param location the location
+     * @throws SchedulerException the scheduler exception
+     */
     void beforePublish(String location) throws SchedulerException;
 
+    /**
+     * After publish.
+     *
+     * @param workspaceLocation the workspace location
+     * @param registryLocation the registry location
+     * @throws SchedulerException the scheduler exception
+     */
     void afterPublish(String workspaceLocation, String registryLocation) throws SchedulerException;
 
+    /**
+     * Before unpublish.
+     *
+     * @param location the location
+     * @throws SchedulerException the scheduler exception
+     */
     void beforeUnpublish(String location) throws SchedulerException;
 
+    /**
+     * After unpublish.
+     *
+     * @param location the location
+     * @throws SchedulerException the scheduler exception
+     */
     void afterUnpublish(String location) throws SchedulerException;
 
 }

@@ -23,11 +23,13 @@ import javax.persistence.Table;
 @Table(name = "INQUIRIES")
 public class Inquiry {
 
+	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "INQUIRY_ID", columnDefinition = "BIGINT", nullable = false)
 	private long id;
 
+	/** The subject. */
 	@Column(name = "INQUIRY_SUBJECT", columnDefinition = "VARCHAR", nullable = false, length = 512)
 	private String subject;
 

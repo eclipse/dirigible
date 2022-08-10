@@ -12,8 +12,7 @@
 package org.eclipse.dirigible.repository.api;
 
 /**
- * Repository cache
- *
+ * Repository cache.
  */
 public interface IRepositoryCache {
 

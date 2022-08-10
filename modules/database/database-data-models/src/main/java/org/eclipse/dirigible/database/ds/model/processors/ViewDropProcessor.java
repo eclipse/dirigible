@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ViewDropProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ViewDropProcessor.class);
 
 	/**

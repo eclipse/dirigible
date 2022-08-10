@@ -26,14 +26,29 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * The Class DirigibleScopePathHandler.
+ */
 class DirigibleScopePathHandler {
 
+    /** The generator. */
     private final ExportGenerator generator;
 
+    /**
+     * Instantiates a new dirigible scope path handler.
+     *
+     * @param executor the executor
+     */
     DirigibleScopePathHandler(IScriptEngineExecutor executor) {
         this.generator = new ExportGenerator(executor);
     }
 
+    /**
+     * Resolve.
+     *
+     * @param pathString the path string
+     * @return the string
+     */
     String resolve(String pathString) {
         if (pathString.startsWith("/@dirigible-native/")) {
             String packageName = parseImportedJavaPackage(pathString);
@@ -48,6 +63,12 @@ class DirigibleScopePathHandler {
         return "";  // Not a dirigible scope path, generate nothing!
     }
 
+    /**
+     * Resolve versioned scope path.
+     *
+     * @param pathString the path string
+     * @return the string
+     */
     private String resolveVersionedScopePath(String pathString) {
         pathString = pathString.substring(Constants.DIRIGIBLE_SCOPE_VERSIONED.length() - 1);
         pathString = pathString.replace(Constants.SCOPED_PATH_SEPARATOR, Constants.PATH_SEPARATOR);
@@ -57,17 +78,35 @@ class DirigibleScopePathHandler {
         return generator.generate(pathString, apiVersion);
     }
 
+    /**
+     * Resolve default scope path.
+     *
+     * @param pathString the path string
+     * @return the string
+     */
     private String resolveDefaultScopePath(String pathString) {
         pathString = pathString.substring(Constants.DIRIGIBLE_SCOPE_DEFAULT.length());
         pathString = pathString.replace(Constants.SCOPED_PATH_SEPARATOR, Constants.PATH_SEPARATOR);
         return generator.generate(pathString, "");
     }
 
+    /**
+     * Parses the imported java package.
+     *
+     * @param importString the import string
+     * @return the string
+     */
     private String parseImportedJavaPackage(String importString) {
         String packageName = StringUtils.substringAfter(importString, "/@dirigible-native/");
         return packageName;
     }
 
+    /**
+     * Gets the classes in package.
+     *
+     * @param packageName the package name
+     * @return the classes in package
+     */
     private List<ClassName> getClassesInPackage(String packageName) {
         Set<ClassName> classNames = new HashSet<ClassName>();
 
@@ -86,6 +125,12 @@ class DirigibleScopePathHandler {
         return new ArrayList<>(classNames);
     }
 
+    /**
+     * Generate java exports.
+     *
+     * @param classes the classes
+     * @return the string
+     */
     private String generateJavaExports(List<ClassName> classes) {
     	StringBuilder exportsBuilder = new StringBuilder();
         List<String> exportedSymbolNames = new ArrayList<String>();
@@ -115,23 +160,52 @@ class DirigibleScopePathHandler {
         return exportsBuilder.toString();
     }
 
+    /**
+     * The Class ClassName.
+     */
     public static class ClassName {
+        
+        /** The class name. */
         private final String className;
+        
+        /** The package and class name. */
         private final String packageAndClassName;
 
+        /**
+         * Instantiates a new class name.
+         *
+         * @param className the class name
+         * @param packageAndClassName the package and class name
+         */
         public ClassName(String className, String packageAndClassName) {
             this.className = className;
             this.packageAndClassName = packageAndClassName;
         }
 
+        /**
+         * Gets the class name.
+         *
+         * @return the class name
+         */
         public String getClassName() {
             return className;
         }
 
+        /**
+         * Gets the package and class name.
+         *
+         * @return the package and class name
+         */
         public String getPackageAndClassName() {
             return packageAndClassName;
         }
 
+        /**
+         * Equals.
+         *
+         * @param o the o
+         * @return true, if successful
+         */
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -140,6 +214,11 @@ class DirigibleScopePathHandler {
             return Objects.equals(className, className1.className);
         }
 
+        /**
+         * Hash code.
+         *
+         * @return the int
+         */
         @Override
         public int hashCode() {
             return Objects.hash(className);

@@ -665,8 +665,8 @@ public interface IDataStructuresCoreService extends ICoreService {
 	public DataStructureSchemaModel parseSchema(String location, String content);
 
 	/**
-	 * Get all the data structure definitions
-	 * 
+	 * Get all the data structure definitions.
+	 *
 	 * @return the list of the definitions
 	 * @throws DataStructuresException in case of an error
 	 */

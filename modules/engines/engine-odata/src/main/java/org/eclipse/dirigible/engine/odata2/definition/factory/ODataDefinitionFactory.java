@@ -18,8 +18,18 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 
+/**
+ * A factory for creating ODataDefinition objects.
+ */
 public class ODataDefinitionFactory {
 	
+	/**
+	 * Parses the O data.
+	 *
+	 * @param contentPath the content path
+	 * @param data the data
+	 * @return the o data definition
+	 */
 	public static ODataDefinition parseOData(String contentPath, String data) {
 		ODataDefinition odataDefinition = GsonHelper.GSON.fromJson(data, ODataDefinition.class);
 		odataDefinition.setLocation(contentPath);

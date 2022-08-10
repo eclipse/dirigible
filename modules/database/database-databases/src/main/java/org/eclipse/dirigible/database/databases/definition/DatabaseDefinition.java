@@ -21,8 +21,7 @@ import javax.persistence.Table;
 import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 
 /**
- * Database Definition transfer object
- *
+ * Database Definition transfer object.
  */
 @Table(name = "DIRIGIBLE_DATABASES")
 public class DatabaseDefinition implements IArtefactDefinition {
@@ -33,32 +32,34 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	@Column(name = "DATABASE_ID", columnDefinition = "BIGINT", nullable = false)
 	private long id;
 	
-	/** The name */
+	/**  The name. */
 	@Column(name = "DATABASE_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String name;
 	
-	/** The driver */
+	/**  The driver. */
 	@Column(name = "DATABASE_DRIVER", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String driver;
 	
-	/** The url */
+	/**  The url. */
 	@Column(name = "DATABASE_URL", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String url;
 	
-	/** The username */
+	/**  The username. */
 	@Column(name = "DATABASE_USERNAME", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	private String username;
 	
-	/** The password */
+	/**  The password. */
 	@Column(name = "DATABASE_PASSWORD", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	private String password;
 	
-	/** The parameters */
+	/**  The parameters. */
 	@Column(name = "DATABASE_PARAMETERS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	private String parameters;
 	
 	
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public long getId() {
@@ -66,6 +67,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(long id) {
@@ -73,6 +76,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -80,6 +85,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -87,6 +94,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the driver.
+	 *
 	 * @return the driver
 	 */
 	public String getDriver() {
@@ -94,6 +103,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the driver.
+	 *
 	 * @param driver the driver to set
 	 */
 	public void setDriver(String driver) {
@@ -101,6 +112,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the url.
+	 *
 	 * @return the url
 	 */
 	public String getUrl() {
@@ -108,6 +121,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the url.
+	 *
 	 * @param url the url to set
 	 */
 	public void setUrl(String url) {
@@ -115,6 +130,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the username.
+	 *
 	 * @return the username
 	 */
 	public String getUsername() {
@@ -122,6 +139,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the username.
+	 *
 	 * @param username the username to set
 	 */
 	public void setUsername(String username) {
@@ -129,6 +148,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the password.
+	 *
 	 * @return the password
 	 */
 	public String getPassword() {
@@ -136,6 +157,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the password.
+	 *
 	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
@@ -143,6 +166,8 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the parameters.
+	 *
 	 * @return the parameters
 	 */
 	public String getParameters() {
@@ -150,17 +175,30 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the parameters.
+	 *
 	 * @param parameters the parameters to set
 	 */
 	public void setParameters(String parameters) {
 		this.parameters = parameters;
 	}
 	
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(driver, id, name, parameters, password, url, username);
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -175,11 +213,21 @@ public class DatabaseDefinition implements IArtefactDefinition {
 				&& Objects.equals(url, other.url) && Objects.equals(username, other.username);
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getName();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getName();

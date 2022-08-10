@@ -32,10 +32,13 @@ import org.slf4j.LoggerFactory;
  */
 public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CmsDatabaseResource.class);
 
+	/** The binary. */
 	private boolean binary = false;
 
+	/** The content type. */
 	private String contentType;
 
 	/**
@@ -60,6 +63,11 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		}
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#create()
@@ -69,6 +77,11 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		getParent().createResource(getName(), null, false, CONTENT_TYPE_DEFAULT);
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#delete()
@@ -83,6 +96,12 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		}
 	}
 
+	/**
+	 * Rename to.
+	 *
+	 * @param name the name
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#renameTo(java.lang.String)
@@ -97,6 +116,12 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		}
 	}
 
+	/**
+	 * Move to.
+	 *
+	 * @param path the path
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#moveTo(java.lang.String)
@@ -111,6 +136,12 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		}
 	}
 
+	/**
+	 * Copy to.
+	 *
+	 * @param path the path
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#copyTo(java.lang.String)
@@ -126,6 +157,12 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		}
 	}
 
+	/**
+	 * Exists.
+	 *
+	 * @return true, if successful
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#exists()
@@ -140,6 +177,12 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		}
 	}
 
+	/**
+	 * Checks if is empty.
+	 *
+	 * @return true, if is empty
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#isEmpty()
@@ -149,6 +192,12 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		return (getContent().length == 0);
 	}
 
+	/**
+	 * Gets the content.
+	 *
+	 * @return the content
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#getContent()
@@ -164,6 +213,12 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		}
 	}
 
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the new content
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#setContent(byte[])
@@ -186,6 +241,12 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		}
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.local.LocalEntity#equals(java.lang.Object)
@@ -205,6 +266,11 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		return getPath().equals(other.getPath());
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.local.LocalEntity#hashCode()
@@ -249,6 +315,11 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		return document;
 	}
 
+	/**
+	 * Checks if is binary.
+	 *
+	 * @return true, if is binary
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#isBinary()
@@ -258,6 +329,11 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		return binary;
 	}
 
+	/**
+	 * Gets the content type.
+	 *
+	 * @return the content type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#getContentType()
@@ -267,6 +343,14 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 		return contentType;
 	}
 
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the content
+	 * @param isBinary the is binary
+	 * @param contentType the content type
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#setContent(byte[], boolean, java.lang.String)

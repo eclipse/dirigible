@@ -38,16 +38,28 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The Class ProblemsCoreService.
+ */
 public class ProblemsCoreService implements IProblemsCoreService {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(ProblemsCoreService.class);
     
+    /** The data source. */
     private DataSource dataSource = null;
     
+    /** The persistence manager. */
     private PersistenceManager<ProblemsModel> persistenceManager = new PersistenceManager<ProblemsModel>();
 
+    /** The Constant PERCENT. */
     private static final String PERCENT = "%";
     
+    /**
+     * Gets the data source.
+     *
+     * @return the data source
+     */
     protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -55,6 +67,13 @@ public class ProblemsCoreService implements IProblemsCoreService {
 		return dataSource;
 	}
 
+    /**
+     * Creates the problem.
+     *
+     * @param problemsModel the problems model
+     * @return the problems model
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public ProblemsModel createProblem(ProblemsModel problemsModel) throws ProblemsException {
         problemsModel.setCreatedBy(UserFacade.getName());
@@ -69,6 +88,21 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Save.
+     *
+     * @param location the location
+     * @param type the type
+     * @param line the line
+     * @param column the column
+     * @param cause the cause
+     * @param expected the expected
+     * @param category the category
+     * @param module the module
+     * @param source the source
+     * @param program the program
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public void save(String location, String type, String line, String column, String cause, String expected,
                      String category, String module, String source, String program) throws ProblemsException {
@@ -91,11 +125,27 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Exists problem.
+     *
+     * @param location the location
+     * @param type the type
+     * @param line the line
+     * @param column the column
+     * @return true, if successful
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public boolean existsProblem(String location, String type, String line, String column) throws ProblemsException {
         return getProblem(location, type, line, column) != null;
     }
 
+    /**
+     * Update problem.
+     *
+     * @param problemsModel the problems model
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public void updateProblem(ProblemsModel problemsModel) throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {
@@ -105,6 +155,13 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Update problem status by id.
+     *
+     * @param id the id
+     * @param status the status
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public void updateProblemStatusById(Long id, String status) throws ProblemsException {
         ProblemsModel problemToUpdate = getProblemById(id);
@@ -118,6 +175,14 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Update status multiple problems.
+     *
+     * @param ids the ids
+     * @param status the status
+     * @return the int
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public int updateStatusMultipleProblems(List<Long> ids, String status) throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {
@@ -133,6 +198,16 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Gets the problem.
+     *
+     * @param location the location
+     * @param type the type
+     * @param line the line
+     * @param column the column
+     * @return the problem
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public ProblemsModel getProblem(String location, String type, String line, String column) throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {
@@ -146,6 +221,13 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Gets the problem by id.
+     *
+     * @param id the id
+     * @return the problem by id
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public ProblemsModel getProblemById(Long id) throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {
@@ -155,6 +237,12 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Gets the all problems.
+     *
+     * @return the all problems
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public List<ProblemsModel> getAllProblems() throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {
@@ -164,12 +252,28 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Fetch problems batch.
+     *
+     * @param condition the condition
+     * @param limit the limit
+     * @return the response model
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public ResponseModel fetchProblemsBatch(String condition, int limit) throws ProblemsException {
         List<ProblemsModel> result = searchProblemsLimited(condition, limit);
         return new ResponseModel(result, result.size(), countProblems());
     }
 
+    /**
+     * Search problems limited.
+     *
+     * @param condition the condition
+     * @param limit the limit
+     * @return the list
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public List<ProblemsModel> searchProblemsLimited(String condition, int limit) throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {
@@ -201,6 +305,12 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Count problems.
+     *
+     * @return the int
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public int countProblems() throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {
@@ -211,6 +321,12 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Delete problem by id.
+     *
+     * @param id the id
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public void deleteProblemById(Long id) throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {
@@ -220,6 +336,13 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Delete multiple problems by id.
+     *
+     * @param ids the ids
+     * @return the int
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public int deleteMultipleProblemsById(List<Long> ids) throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {
@@ -235,6 +358,13 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Delete problems by status.
+     *
+     * @param status the status
+     * @return the int
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public int deleteProblemsByStatus(String status) throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {
@@ -246,6 +376,11 @@ public class ProblemsCoreService implements IProblemsCoreService {
         }
     }
 
+    /**
+     * Delete all.
+     *
+     * @throws ProblemsException the problems exception
+     */
     @Override
     public void deleteAll() throws ProblemsException {
         try (Connection connection = getDataSource().getConnection()) {

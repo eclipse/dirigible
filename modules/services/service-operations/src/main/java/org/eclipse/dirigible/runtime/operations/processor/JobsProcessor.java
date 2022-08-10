@@ -27,10 +27,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
 import org.quartz.JobExecutionException;
 
+/**
+ * The Class JobsProcessor.
+ */
 public class JobsProcessor {
 	
+	/** The scheduler core service. */
 	private SchedulerCoreService schedulerCoreService = new SchedulerCoreService();
 	
+	/**
+	 * List.
+	 *
+	 * @return the string
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public String list() throws SchedulerException {
 		
 		List<JobDefinition> jobs = schedulerCoreService.getJobs();
@@ -38,24 +48,58 @@ public class JobsProcessor {
         return GsonHelper.GSON.toJson(jobs);
 	}
 	
+	/**
+	 * Enable.
+	 *
+	 * @param name the name
+	 * @return the string
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public String enable(String name) throws SchedulerException {
         return JobFacade.enable(name);
 	}
 	
+	/**
+	 * Disable.
+	 *
+	 * @param name the name
+	 * @return the string
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public String disable(String name) throws SchedulerException {
 		return JobFacade.disable(name);
 	}
 
+	/**
+	 * Logs.
+	 *
+	 * @param name the name
+	 * @return the string
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public String logs(String name) throws SchedulerException {
 		List<JobLogDefinition> jobLogs = schedulerCoreService.getJobLogs(name);
 		
         return GsonHelper.GSON.toJson(jobLogs);
 	}
 	
+	/**
+	 * Clear.
+	 *
+	 * @param name the name
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public void clear(String name) throws SchedulerException {
 		schedulerCoreService.clearJobLogs(name);
 	}
 	
+	/**
+	 * Parameters.
+	 *
+	 * @param name the name
+	 * @return the string
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public String parameters(String name) throws SchedulerException {
 		
 		List<JobParameterDefinition> parameters = schedulerCoreService.getJobParameters(name);
@@ -66,6 +110,15 @@ public class JobsProcessor {
         return GsonHelper.GSON.toJson(parameters);
 	}
 	
+	/**
+	 * Trigger.
+	 *
+	 * @param name the name
+	 * @param parameters the parameters
+	 * @return true, if successful
+	 * @throws JobExecutionException the job execution exception
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public boolean trigger(String name, List<NameValuePair> parameters) throws JobExecutionException, SchedulerException {
 		
 		Map<String, String> parametersMap = new HashMap<String, String>();
@@ -77,15 +130,35 @@ public class JobsProcessor {
 		return JobFacade.trigger(name, GsonHelper.GSON.toJson(parametersMap));
 	}
 
+	/**
+	 * Emails.
+	 *
+	 * @param name the name
+	 * @return the string
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public String emails(String name) throws SchedulerException {
 		List<JobEmailDefinition> jobEmails = schedulerCoreService.getJobEmails(name);
 		return GsonHelper.GSON.toJson(jobEmails);
 	}
 
+	/**
+	 * Adds the email.
+	 *
+	 * @param name the name
+	 * @param email the email
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public void addEmail(String name, String email) throws SchedulerException {
 		schedulerCoreService.addJobEmail(name, email);
 	}
 
+	/**
+	 * Removes the email.
+	 *
+	 * @param id the id
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public void removeEmail(Long id) throws SchedulerException {
 		schedulerCoreService.removeJobEmail(id);
 	}

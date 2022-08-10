@@ -34,12 +34,22 @@ import org.eclipse.dirigible.engine.web.api.IWebCoreService;
 import org.eclipse.dirigible.engine.web.api.WebCoreException;
 import org.eclipse.dirigible.engine.web.models.WebModel;
 
+/**
+ * The Class WebCoreService.
+ */
 public class WebCoreService implements IWebCoreService {
 	
+	/** The data source. */
 	private DataSource dataSource = null;
 	
+	/** The web persistence manager. */
 	private PersistenceManager<WebModel> webPersistenceManager = new PersistenceManager<WebModel>();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -47,6 +57,16 @@ public class WebCoreService implements IWebCoreService {
 		return dataSource;
 	}
 
+	/**
+	 * Creates the web.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param exposed the exposed
+	 * @param hash the hash
+	 * @return the web model
+	 * @throws WebCoreException the web core exception
+	 */
 	@Override
 	public WebModel createWeb(String location, String name, String exposed, String hash) throws WebCoreException {
 		WebModel webModel = new WebModel();
@@ -73,6 +93,13 @@ public class WebCoreService implements IWebCoreService {
 		}
 	}
 
+	/**
+	 * Gets the web.
+	 *
+	 * @param location the location
+	 * @return the web
+	 * @throws WebCoreException the web core exception
+	 */
 	@Override
 	public WebModel getWeb(String location) throws WebCoreException {
 		try {
@@ -90,6 +117,13 @@ public class WebCoreService implements IWebCoreService {
 		}
 	}
 	
+	/**
+	 * Gets the web by name.
+	 *
+	 * @param name the name
+	 * @return the web by name
+	 * @throws WebCoreException the web core exception
+	 */
 	@Override
 	public WebModel getWebByName(String name) throws WebCoreException {
 		try {
@@ -118,11 +152,24 @@ public class WebCoreService implements IWebCoreService {
 
 	}
 
+	/**
+	 * Exists web.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws WebCoreException the web core exception
+	 */
 	@Override
 	public boolean existsWeb(String location) throws WebCoreException {
 		return getWeb(location) != null;
 	}
 
+	/**
+	 * Removes the web.
+	 *
+	 * @param location the location
+	 * @throws WebCoreException the web core exception
+	 */
 	@Override
 	public void removeWeb(String location) throws WebCoreException {
 		try {
@@ -140,6 +187,15 @@ public class WebCoreService implements IWebCoreService {
 		}
 	}
 
+	/**
+	 * Update web.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param exposed the exposed
+	 * @param hash the hash
+	 * @throws WebCoreException the web core exception
+	 */
 	@Override
 	public void updateWeb(String location, String name, String exposed, String hash) throws WebCoreException {
 		try {
@@ -161,6 +217,12 @@ public class WebCoreService implements IWebCoreService {
 		}
 	}
 
+	/**
+	 * Gets the webs.
+	 *
+	 * @return the webs
+	 * @throws WebCoreException the web core exception
+	 */
 	@Override
 	public List<WebModel> getWebs() throws WebCoreException {
 		try {
@@ -178,6 +240,13 @@ public class WebCoreService implements IWebCoreService {
 		}
 	}
 
+	/**
+	 * Parses the web.
+	 *
+	 * @param path the path
+	 * @param json the json
+	 * @return the web model
+	 */
 	@Override
 	public WebModel parseWeb(String path, String json) {
 		WebModel result = GsonHelper.GSON.fromJson(json, WebModel.class);
@@ -187,6 +256,13 @@ public class WebCoreService implements IWebCoreService {
 		return result;
 	}
 
+	/**
+	 * Parses the web.
+	 *
+	 * @param path the path
+	 * @param json the json
+	 * @return the web model
+	 */
 	@Override
 	public WebModel parseWeb(String path, byte[] json) {
 		WebModel result = GsonHelper.GSON.fromJson(
@@ -198,6 +274,12 @@ public class WebCoreService implements IWebCoreService {
 		return result;
 	}
 
+	/**
+	 * Sets the name.
+	 *
+	 * @param path the path
+	 * @param result the result
+	 */
 	private void setName(String path, WebModel result) {
 		String name = path.split("/")[1];
 		if (result.getGuid() == null) {
@@ -209,6 +291,12 @@ public class WebCoreService implements IWebCoreService {
 		}
 	}
 
+	/**
+	 * Serialize web.
+	 *
+	 * @param webModel the web model
+	 * @return the string
+	 */
 	@Override
 	public String serializeWeb(WebModel webModel) {
 		return GsonHelper.GSON.toJson(webModel);

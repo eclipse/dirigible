@@ -29,10 +29,13 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class LocalEntity implements IEntity {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(LocalEntity.class);
 
+	/** The repository. */
 	private transient final FileSystemRepository repository;
 
+	/** The path. */
 	private final RepositoryPath path;
 
 	/**
@@ -49,6 +52,11 @@ public abstract class LocalEntity implements IEntity {
 		this.path = path;
 	}
 
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getRepository()
@@ -68,6 +76,11 @@ public abstract class LocalEntity implements IEntity {
 		return this.path;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getName()
@@ -77,6 +90,11 @@ public abstract class LocalEntity implements IEntity {
 		return this.path.getLastSegment();
 	}
 
+	/**
+	 * Gets the path.
+	 *
+	 * @return the path
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getPath()
@@ -86,6 +104,11 @@ public abstract class LocalEntity implements IEntity {
 		return this.path.toString();
 	}
 
+	/**
+	 * Gets the parent.
+	 *
+	 * @return the parent
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getParent()
@@ -99,6 +122,12 @@ public abstract class LocalEntity implements IEntity {
 		return new LocalCollection(repository, parentPath);
 	}
 
+	/**
+	 * Gets the information.
+	 *
+	 * @return the information
+	 * @throws RepositoryReadException the repository read exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getInformation()
@@ -171,6 +200,12 @@ public abstract class LocalEntity implements IEntity {
 		}
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -190,6 +225,11 @@ public abstract class LocalEntity implements IEntity {
 		return getPath().equals(other.getPath());
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

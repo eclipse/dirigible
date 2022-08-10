@@ -34,6 +34,12 @@ public abstract class AbstractExceptionHandler<T extends Throwable> implements E
 	/** The Constant GSON. */
 	private static final Gson GSON = new Gson();
 
+	/**
+	 * To response.
+	 *
+	 * @param exception the exception
+	 * @return the response
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
@@ -49,6 +55,12 @@ public abstract class AbstractExceptionHandler<T extends Throwable> implements E
 		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(GSON.toJson(appException)).build();
 	}
 
+	/**
+	 * Log error message.
+	 *
+	 * @param logger the logger
+	 * @param exception the exception
+	 */
 	protected void logErrorMessage(Logger logger, T exception) {
 		logger.error(exception.getMessage(), exception);
 	}

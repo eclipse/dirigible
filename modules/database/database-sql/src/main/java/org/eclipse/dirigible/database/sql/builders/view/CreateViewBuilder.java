@@ -24,12 +24,16 @@ import org.slf4j.LoggerFactory;
  */
 public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CreateViewBuilder.class);
 
+	/** The view. */
 	private String view = null;
 
+	/** The columns. */
 	private List<String> columns = new ArrayList<String>();
 
+	/** The select. */
 	private String select = null;
 
 	/**
@@ -109,6 +113,11 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 		return this;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

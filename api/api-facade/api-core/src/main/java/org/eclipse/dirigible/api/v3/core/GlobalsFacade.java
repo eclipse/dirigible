@@ -17,10 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The GlobalsFacade is used to store and retrieve values per name
+ * The GlobalsFacade is used to store and retrieve values per name.
  */
 public class GlobalsFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GlobalsFacade.class);
 
 	/**

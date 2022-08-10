@@ -35,10 +35,13 @@ import org.junit.Test;
  */
 public class WebsocketsSynchronizerTest extends AbstractDirigibleTest {
 
+	/** The websockets core service. */
 	private IWebsocketsCoreService websocketsCoreService;
 
+	/** The websockets synchronizer. */
 	private WebsocketsSynchronizer websocketsSynchronizer;
 
+	/** The repository. */
 	private IRepository repository;
 
 	/**

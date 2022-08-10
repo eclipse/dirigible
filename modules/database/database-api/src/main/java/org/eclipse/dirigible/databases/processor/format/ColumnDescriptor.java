@@ -16,12 +16,16 @@ package org.eclipse.dirigible.databases.processor.format;
  */
 public class ColumnDescriptor {
 
+	/** The name. */
 	private String name;
 
+	/** The label. */
 	private String label;
 
+	/** The sql type. */
 	private int sqlType;
 
+	/** The display size. */
 	private int displaySize;
 
 	/**
@@ -100,6 +104,11 @@ public class ColumnDescriptor {
 		this.displaySize = displaySize;
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -115,6 +124,12 @@ public class ColumnDescriptor {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)

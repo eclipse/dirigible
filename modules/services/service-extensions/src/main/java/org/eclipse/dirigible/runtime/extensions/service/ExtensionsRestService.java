@@ -47,10 +47,13 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found") })
 public class ExtensionsRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsRestService.class);
 
+	/** The processor. */
 	private ExtensionsProcessor processor = new ExtensionsProcessor();
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
@@ -105,6 +108,11 @@ public class ExtensionsRestService extends AbstractRestService implements IRestS
 		return Response.ok().entity(json).build();
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -114,6 +122,11 @@ public class ExtensionsRestService extends AbstractRestService implements IRestS
 		return ExtensionsRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

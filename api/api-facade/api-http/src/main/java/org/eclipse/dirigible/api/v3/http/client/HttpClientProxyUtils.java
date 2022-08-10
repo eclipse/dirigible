@@ -42,7 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility class for working with proxies
+ * Utility class for working with proxies.
  */
 public class HttpClientProxyUtils {
 
@@ -61,6 +61,7 @@ public class HttpClientProxyUtils {
 	/** The HTTP_NON_PROXY_HOSTS. */
 	public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts"; //$NON-NLS-1$
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientProxyUtils.class);
 
 	{
@@ -131,6 +132,12 @@ public class HttpClientProxyUtils {
 		}
 	}
 
+	/**
+	 * Sets the non proxy hosts if needed.
+	 *
+	 * @param httpClientBuilder the http client builder
+	 * @param httpProxy the http proxy
+	 */
 	private static void setNonProxyHostsIfNeeded(HttpClientBuilder httpClientBuilder, HttpHost httpProxy) {
 		String httpNonProxyHosts = Configuration.get(HTTP_NON_PROXY_HOSTS);
 

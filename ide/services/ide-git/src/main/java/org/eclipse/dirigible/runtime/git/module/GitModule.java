@@ -14,10 +14,17 @@ package org.eclipse.dirigible.runtime.git.module;
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 
+/**
+ * The Class GitModule.
+ */
 public class GitModule extends AbstractDirigibleModule {
 
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Git Module";
 
+	/**
+	 * Configure.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
@@ -27,6 +34,11 @@ public class GitModule extends AbstractDirigibleModule {
 		Configuration.loadModuleConfig("/dirigible-git.properties");
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return MODULE_NAME;

@@ -33,19 +33,37 @@ import java.util.Locale;
  */
 public class UserFacade implements IScriptingFacade {
 
+	/** The Constant DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME. */
 	private static final String DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME = "DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME";
 
+	/** The Constant DIRIGIBLE_ANONYMOUS_IDENTIFIER. */
 	private static final String DIRIGIBLE_ANONYMOUS_IDENTIFIER = "dirigible-anonymous-identifier";
+	
+	/** The Constant DIRIGIBLE_ANONYMOUS_USER. */
 	private static final String DIRIGIBLE_ANONYMOUS_USER = "dirigible-anonymous-user";
+	
+	/** The Constant DIRIGIBLE_JWT_USER. */
 	private static final String DIRIGIBLE_JWT_USER = "dirigible-jwt-user";
+	
+	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Session Facade without a valid Session (HTTP Request/Response)";
+	
+	/** The Constant INVOCATION_COUNT. */
 	private static final String INVOCATION_COUNT = "invocation.count";
+	
+	/** The Constant LANGUAGE_HEADER. */
 	private static final String LANGUAGE_HEADER = "accept-language";
+	
+	/** The Constant ANY_LANGUAGE. */
 	private static final String ANY_LANGUAGE = "*";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 
+	/** The Constant GUEST. */
 	private static final String GUEST = "guest";
+	
+	/** The Constant AUTH. */
 	private static final String AUTH = "authorization";
 
 	/**
@@ -113,6 +131,7 @@ public class UserFacade implements IScriptingFacade {
 	/**
 	 * Gets the user name by a given request as parameter.
 	 *
+	 * @param request the request
 	 * @return the user name
 	 */
 	public static final String getName(HttpServletRequest request) {
@@ -135,6 +154,7 @@ public class UserFacade implements IScriptingFacade {
 	/**
 	 * Gets the user name by a given request as parameter.
 	 *
+	 * @param session the session
 	 * @return the user name
 	 */
 	public static final String getName(Session session) {
@@ -154,6 +174,11 @@ public class UserFacade implements IScriptingFacade {
 		return getName();
 	}
 
+	/**
+	 * Gets the timeout.
+	 *
+	 * @return the timeout
+	 */
 	public static final Integer getTimeout() {
 		if (HttpSessionFacade.isValid()) {
 			return HttpSessionFacade.getMaxInactiveInterval();
@@ -163,6 +188,11 @@ public class UserFacade implements IScriptingFacade {
 		return 0;
 	}
 
+	/**
+	 * Gets the auth type.
+	 *
+	 * @return the auth type
+	 */
 	public static String getAuthType() {
 		if (HttpRequestFacade.isValid()) {
 			return HttpRequestFacade.getAuthType();
@@ -175,6 +205,8 @@ public class UserFacade implements IScriptingFacade {
 	/**
 	 * The Authorization header returns the type + token.
 	 * Substring from the empty space to only get the token.
+	 *
+	 * @return the security token
 	 */
 	public static String getSecurityToken() {
 		if (HttpRequestFacade.isValid()) {
@@ -186,6 +218,11 @@ public class UserFacade implements IScriptingFacade {
 		return "";
 	}
 
+	/**
+	 * Gets the invocation count.
+	 *
+	 * @return the invocation count
+	 */
 	public static String getInvocationCount() {
 		if (HttpSessionFacade.isValid()) {
 			return HttpSessionFacade.getAttribute(INVOCATION_COUNT);
@@ -199,6 +236,8 @@ public class UserFacade implements IScriptingFacade {
 	 * The accept-language attribute returns multiple values.
 	 * Eg. en-GB,en-US;q=0.9,en;q=0.8
 	 * Substring until the semicolon to get the IETF (BCP 47) format.
+	 *
+	 * @return the language
 	 */
 	public static String getLanguage() {
 		if (HttpRequestFacade.isValid()) {
@@ -214,6 +253,13 @@ public class UserFacade implements IScriptingFacade {
 		return null;
 	}
 
+	/**
+	 * Gets the context property.
+	 *
+	 * @param property the property
+	 * @return the context property
+	 * @throws ContextException the context exception
+	 */
 	private static String getContextProperty(String property) throws ContextException {
 		if (HttpSessionFacade.isValid()) {
 			return HttpSessionFacade.getAttribute(property);
@@ -226,6 +272,13 @@ public class UserFacade implements IScriptingFacade {
 		return null;
 	}
 
+	/**
+	 * Sets the context property.
+	 *
+	 * @param property the property
+	 * @param value the value
+	 * @throws ContextException the context exception
+	 */
 	private static void setContextProperty(String property, String value) throws ContextException {
 		if (HttpSessionFacade.isValid()) {
 			HttpSessionFacade.setAttribute(property, value);
@@ -236,6 +289,11 @@ public class UserFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Gets the remote user.
+	 *
+	 * @return the remote user
+	 */
 	private static String getRemoteUser() {
 		try {
 			if (HttpRequestFacade.isValid()) {
@@ -247,6 +305,11 @@ public class UserFacade implements IScriptingFacade {
 		return null;
 	}
 
+	/**
+	 * Gets the anonymous user.
+	 *
+	 * @return the anonymous user
+	 */
 	private static String getAnonymousUser() {
 		String userName = null;
 		if (Configuration.isAnonymousModeEnabled()) {
@@ -274,6 +337,11 @@ public class UserFacade implements IScriptingFacade {
 		return userName;
 	}
 
+	/**
+	 * Sets the anonymous user.
+	 *
+	 * @return the string
+	 */
 	private static String setAnonymousUser() {
 		String userName = null;
 		String anonymousUserNamePropertyName = Configuration.get(DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME);

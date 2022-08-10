@@ -22,17 +22,20 @@ import org.eclipse.dirigible.commons.config.Configuration;
  */
 public class MailFacade implements IScriptingFacade {
 
+    /** The Constant DIRIGIBLE_MAIL_CONFIG_PROVIDER. */
     // Dirigible mail properties
     private static final String DIRIGIBLE_MAIL_CONFIG_PROVIDER = "DIRIGIBLE_MAIL_CONFIG_PROVIDER";
 
+    /** The Constant DEFAULT_PROVIDER_NAME. */
     // Default values
     private static final String DEFAULT_PROVIDER_NAME = "environment";
 
+    /** The Constant MAIL_PROVIDERS. */
     private static final ServiceLoader<IMailConfigurationProvider> MAIL_PROVIDERS = ServiceLoader.load(IMailConfigurationProvider.class);
 
     /**
      * Get MailClient with configuration options
-     * from the chosen mail configuration provider
+     * from the chosen mail configuration provider.
      *
      * @return MailClient instance
      */
@@ -49,7 +52,7 @@ public class MailFacade implements IScriptingFacade {
     }
 
     /**
-     * Get MailClient with custom configuration options
+     * Get MailClient with custom configuration options.
      *
      * @param properties mail client configuration options
      * @return MailClient instance

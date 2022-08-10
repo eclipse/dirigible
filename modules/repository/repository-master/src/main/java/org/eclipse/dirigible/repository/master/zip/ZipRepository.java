@@ -37,8 +37,10 @@ import org.slf4j.LoggerFactory;
  */
 public class ZipRepository extends FileSystemRepository {
 
+	/** The logger. */
 	private static Logger logger = LoggerFactory.getLogger(ZipRepository.class);
 
+	/** The zip repository root folder. */
 	private String zipRepositoryRootFolder;
 
 	/**
@@ -132,6 +134,11 @@ public class ZipRepository extends FileSystemRepository {
 		super();
 	}
 
+	/**
+	 * Gets the repository root folder.
+	 *
+	 * @return the repository root folder
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#getRepositoryRootFolder()
@@ -141,6 +148,11 @@ public class ZipRepository extends FileSystemRepository {
 		return this.zipRepositoryRootFolder;
 	}
 
+	/**
+	 * Initialize.
+	 *
+	 * @throws RepositoryInitializationException the repository initialization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
@@ -151,16 +163,33 @@ public class ZipRepository extends FileSystemRepository {
 
 	}
 
+	/**
+	 * Checks if is linking paths supported.
+	 *
+	 * @return true, if is linking paths supported
+	 */
 	@Override
 	public boolean isLinkingPathsSupported() {
 		return false;
 	}
 	
+	/**
+	 * Link path.
+	 *
+	 * @param repositoryPath the repository path
+	 * @param filePath the file path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public void linkPath(String repositoryPath, String filePath) throws IOException {
 		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
 	}
 	
+	/**
+	 * Gets the last modified.
+	 *
+	 * @return the last modified
+	 */
 	@Override
 	public long getLastModified() {
 		return 0;

@@ -25,7 +25,7 @@ import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IResource;
 
 /**
- * The file system to repository transformation utility
+ * The file system to repository transformation utility.
  */
 public class RepositoryFileUtils {
 

@@ -31,16 +31,36 @@ import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 import java.net.URI;
 import java.util.*;
 
+/**
+ * The Class ExpandCallBack.
+ */
 public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, ODataCallback {
 
+    /** The base uri. */
     private final URI baseUri;
+    
+    /** The expand list. */
     private final List<ArrayList<NavigationPropertySegment>> expandList;
 
+    /**
+     * Instantiates a new expand call back.
+     *
+     * @param baseUri the base uri
+     * @param expandList the expand list
+     */
     private ExpandCallBack(final URI baseUri, final List<ArrayList<NavigationPropertySegment>> expandList) {
         this.baseUri = baseUri;
         this.expandList = expandList;
     }
 
+    /**
+     * Gets the callbacks.
+     *
+     * @param baseUri the base uri
+     * @param expandSelectTreeNode the expand select tree node
+     * @param expandList the expand list
+     * @return the callbacks
+     */
     public static Map<String, ODataCallback> getCallbacks(final URI baseUri, final ExpandSelectTreeNode expandSelectTreeNode, final List<ArrayList<NavigationPropertySegment>> expandList) {
         Map<String, ODataCallback> callbacks = new HashMap<>();
         for (String navigationPropertyName : expandSelectTreeNode.getLinks().keySet()) {
@@ -49,6 +69,16 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
         return callbacks;
     }
 
+    /**
+     * Write entry with expand.
+     *
+     * @param context the context
+     * @param uriInfo the uri info
+     * @param entryAccumulator the entry accumulator
+     * @param contentType the content type
+     * @return the o data response
+     * @throws ODataException the o data exception
+     */
     public static ODataResponse writeEntryWithExpand(ODataContext context, UriInfo uriInfo, ResultSetReader.ExpandAccumulator entryAccumulator, final String contentType) throws ODataException {
         if (entryAccumulator == null) {
             return OData2Utils.noContentResponse(contentType);
@@ -56,6 +86,16 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
         return writeEntryWithExpand(context, uriInfo, entryAccumulator.renderForExpand(), contentType);
     }
 
+    /**
+     * Write entry with expand.
+     *
+     * @param context the context
+     * @param uriInfo the uri info
+     * @param entry the entry
+     * @param contentType the content type
+     * @return the o data response
+     * @throws ODataException the o data exception
+     */
     public static ODataResponse writeEntryWithExpand(ODataContext context, UriInfo uriInfo, Map<String, Object> entry, final String contentType) throws ODataException {
         if (entry == null || entry.isEmpty()) {
             // Important NOTE:
@@ -81,6 +121,18 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
     }
 
 
+    /**
+     * Write feed with expand.
+     *
+     * @param context the context
+     * @param uriInfo the uri info
+     * @param entitiesFeed the entities feed
+     * @param contentType the content type
+     * @param count the count
+     * @param nextLink the next link
+     * @return the o data response
+     * @throws ODataException the o data exception
+     */
     public static ODataResponse writeFeedWithExpand(ODataContext context, UriInfo uriInfo, List<ResultSetReader.ExpandAccumulator> entitiesFeed,
                                                     final String contentType, Integer count, String nextLink) throws ODataException {
 
@@ -100,12 +152,28 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
         return EntityProvider.writeFeed(contentType, uriInfo.getTargetEntitySet(), feedEntities, feedProperties);
     }
 
+    /**
+     * Gets the callbacks.
+     *
+     * @param context the context
+     * @param uriInfo the uri info
+     * @param feedData the feed data
+     * @return the callbacks
+     * @throws ODataException the o data exception
+     */
     private static Map<String, ODataCallback> getCallbacks(ODataContext context, UriInfo uriInfo, List<Map<String, Object>> feedData) throws ODataException {
         return ExpandCallBack.getCallbacks(context.getPathInfo().getServiceRoot(), //
                 UriParser.createExpandSelectTree(uriInfo.getSelect(), uriInfo.getExpand()), //
                 uriInfo.getExpand());
     }
 
+    /**
+     * Retrieve entry result.
+     *
+     * @param context the context
+     * @return the write entry callback result
+     * @throws ODataApplicationException the o data application exception
+     */
     @Override
     public WriteEntryCallbackResult retrieveEntryResult(final WriteEntryCallbackContext context)
             throws ODataApplicationException {
@@ -127,6 +195,13 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
         return navigationEntryData;
     }
 
+    /**
+     * Retrieve feed result.
+     *
+     * @param context the context
+     * @return the write feed callback result
+     * @throws ODataApplicationException the o data application exception
+     */
     @Override
     public WriteFeedCallbackResult retrieveFeedResult(final WriteFeedCallbackContext context)
             throws ODataApplicationException {
@@ -143,6 +218,13 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
         return expandedPropertyFeed;
     }
 
+    /**
+     * Gets the inline entity provider properties.
+     *
+     * @param context the context
+     * @return the inline entity provider properties
+     * @throws EdmException the edm exception
+     */
     private EntityProviderWriteProperties getInlineEntityProviderProperties(final WriteCallbackContext context) throws EdmException {
         return EntityProviderWriteProperties.serviceRoot(baseUri) //
                 .callbacks(getCallbacks(baseUri, context.getCurrentExpandSelectTreeNode(), expandList)) //

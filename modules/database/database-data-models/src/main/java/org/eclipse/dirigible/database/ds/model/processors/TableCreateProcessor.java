@@ -31,6 +31,7 @@ import java.util.Set;
  */
 public class TableCreateProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TableCreateProcessor.class);
 	
 	/**
@@ -49,6 +50,7 @@ public class TableCreateProcessor {
 	 *
 	 * @param connection the connection
 	 * @param tableModel the table model
+	 * @param skipForeignKeys the skip foreign keys
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, DataStructureTableModel tableModel, boolean skipForeignKeys) throws SQLException {
@@ -176,26 +178,28 @@ public class TableCreateProcessor {
 		if(indexes != null){
 			for(DataStructureTableIndexModel indexModel : indexes) {
 				String name = indexModel.getName();
-				String indexType = indexModel.getIndexType();
+				String type = indexModel.getType();
 				Boolean isUnique = indexModel.isUnique();
-				String order = indexModel.getOrder();
-				Set<String> indexColumns = indexModel.getIndexColumns();
-				createTableBuilder.index(name, isUnique, order, indexType, indexColumns);
+				Set<String> indexColumns = indexModel.getColumns();
+				createTableBuilder.index(name, isUnique, type, indexColumns);
 			}
 		}
 
 		final String sql = createTableBuilder.build();
 		logger.info(sql);
-		PreparedStatement statement = connection.prepareStatement(sql);
-		try {
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
-			throw new SQLException(e.getMessage(), e);
-		} finally {
-			if (statement != null) {
-				statement.close();
+		String[] parts = sql.split(CreateTableBuilder.STATEMENT_DELIMITER);
+		for (String part : parts) {
+			PreparedStatement statement = connection.prepareStatement(part);
+			try {
+				statement.executeUpdate();
+			} catch (SQLException e) {
+				logger.error(sql);
+				logger.error(e.getMessage(), e);
+				throw new SQLException(e.getMessage(), e);
+			} finally {
+				if (statement != null) {
+					statement.close();
+				}
 			}
 		}
 	}

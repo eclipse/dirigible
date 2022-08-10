@@ -24,37 +24,47 @@ import javax.persistence.Table;
 @Table(name = "DIRIGIBLE_SYNCHRONIZER_STATE_ARTEFACTS")
 public class SynchronizerStateArtefactDefinition {
 	
+	/** The id. */
 	@Id
 	@GeneratedValue
 	@Column(name = "SYNCHRONIZER_ARTEFACT_ID", columnDefinition = "BIGINT", nullable = false, length = 255)
 	private long id;
 	
+	/** The name. */
 	@Column(name = "SYNCHRONIZER_ARTEFACT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String name;
 	
+	/** The location. */
 	@Column(name = "SYNCHRONIZER_ARTEFACT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 	
+	/** The type. */
 	@Column(name = "SYNCHRONIZER_ARTEFACT_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String type;
 
+	/** The state. */
 	@Column(name = "SYNCHRONIZER_ARTEFACT_STATE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String state;
 
+	/** The message. */
 	@Column(name = "SYNCHRONIZER_ARTEFACT_MESSAGE", columnDefinition = "VARCHAR", nullable = false, length = 2000)
 	private String message = "";
 
+	/** The timestamp. */
 	@Column(name = "SYNCHRONIZER_ARTEFACT_TIMESTAMP", columnDefinition = "BIGINT", nullable = false)
 	private long timestamp;
 
 	
+	/**
+	 * Instantiates a new synchronizer state artefact definition.
+	 */
 	public SynchronizerStateArtefactDefinition() {
 		super();
 	}
 
 	/**
-	 * Create Synchronizer state artefact by parameters
-	 * 
+	 * Create Synchronizer state artefact by parameters.
+	 *
 	 * @param name the name of the artefact
 	 * @param location the file location of the artefact
 	 * @param type the type of the artefact
@@ -72,6 +82,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public long getId() {
@@ -79,6 +91,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(long id) {
@@ -86,6 +100,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -93,6 +109,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -100,6 +118,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Gets the location.
+	 *
 	 * @return the location
 	 */
 	public String getLocation() {
@@ -107,6 +127,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Sets the location.
+	 *
 	 * @param location the location to set
 	 */
 	public void setLocation(String location) {
@@ -114,6 +136,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -121,6 +145,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Sets the type.
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(String type) {
@@ -128,6 +154,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Gets the state.
+	 *
 	 * @return the state
 	 */
 	public String getState() {
@@ -135,6 +163,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Sets the state.
+	 *
 	 * @param state the state to set
 	 */
 	public void setState(String state) {
@@ -142,6 +172,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Gets the message.
+	 *
 	 * @return the message
 	 */
 	public String getMessage() {
@@ -149,6 +181,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Sets the message.
+	 *
 	 * @param message the message to set
 	 */
 	public void setMessage(String message) {
@@ -156,6 +190,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Gets the timestamp.
+	 *
 	 * @return the timestamp
 	 */
 	public long getTimestamp() {
@@ -163,6 +199,8 @@ public class SynchronizerStateArtefactDefinition {
 	}
 
 	/**
+	 * Sets the timestamp.
+	 *
 	 * @param timestamp the timestamp to set
 	 */
 	public void setTimestamp(long timestamp) {

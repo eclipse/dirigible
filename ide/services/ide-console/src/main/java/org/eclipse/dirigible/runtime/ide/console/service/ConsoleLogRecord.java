@@ -16,10 +16,13 @@ package org.eclipse.dirigible.runtime.ide.console.service;
  */
 public class ConsoleLogRecord {
 
+	/** The level. */
 	private String level;
 
+	/** The message. */
 	private String message;
 
+	/** The timestamp. */
 	private long timestamp;
 
 	/**

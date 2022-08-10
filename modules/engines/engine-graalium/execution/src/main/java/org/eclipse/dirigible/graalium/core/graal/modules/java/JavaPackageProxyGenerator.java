@@ -6,12 +6,28 @@ import io.github.classgraph.ScanResult;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The Class JavaPackageProxyGenerator.
+ */
 public class JavaPackageProxyGenerator {
+    
+    /**
+     * Generate.
+     *
+     * @param javaPackageName the java package name
+     * @return the string
+     */
     public String generate(String javaPackageName) {
         List<ClassName> classesInPackage = getClassesInPackage(javaPackageName);
         return generateJavaExports(classesInPackage);
     }
 
+    /**
+     * Gets the classes in package.
+     *
+     * @param packageName the package name
+     * @return the classes in package
+     */
     private List<ClassName> getClassesInPackage(String packageName) {
         try (ScanResult scanResult = new ClassGraph()
                 .verbose()
@@ -30,6 +46,12 @@ public class JavaPackageProxyGenerator {
         }
     }
 
+    /**
+     * Generate java exports.
+     *
+     * @param classes the classes
+     * @return the string
+     */
     private String generateJavaExports(List<ClassName> classes) {
         StringBuilder exportsBuilder = new StringBuilder();
         List<String> exportedSymbolNames = new ArrayList<String>();
@@ -60,6 +82,12 @@ public class JavaPackageProxyGenerator {
         return exportsBuilder.toString();
     }
 
+    /**
+     * Checks if is alphanumeric.
+     *
+     * @param str the str
+     * @return true, if is alphanumeric
+     */
     private boolean isAlphanumeric(String str) {
         if (str == null || str.equals("")) {
             return false;
@@ -74,15 +102,34 @@ public class JavaPackageProxyGenerator {
         return true;
     }
 
+    /**
+     * The Class ClassName.
+     */
     private static class ClassName {
+        
+        /** The class name. */
         private final String className;
+        
+        /** The package and class name. */
         private final String packageAndClassName;
 
+        /**
+         * Instantiates a new class name.
+         *
+         * @param className the class name
+         * @param packageAndClassName the package and class name
+         */
         public ClassName(String className, String packageAndClassName) {
             this.className = className;
             this.packageAndClassName = packageAndClassName;
         }
 
+        /**
+         * Equals.
+         *
+         * @param o the o
+         * @return true, if successful
+         */
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -91,6 +138,11 @@ public class JavaPackageProxyGenerator {
             return Objects.equals(className, className1.className);
         }
 
+        /**
+         * Hash code.
+         *
+         * @return the int
+         */
         @Override
         public int hashCode() {
             return Objects.hash(className);

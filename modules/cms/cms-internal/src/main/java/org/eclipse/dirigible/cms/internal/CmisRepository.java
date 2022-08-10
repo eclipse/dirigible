@@ -11,10 +11,23 @@
  */
 package org.eclipse.dirigible.cms.internal;
 
+/**
+ * The Interface CmisRepository.
+ */
 public interface CmisRepository {
 
+	/**
+	 * Gets the session.
+	 *
+	 * @return the session
+	 */
 	public CmisSession getSession();
 
+	/**
+	 * Gets the internal object.
+	 *
+	 * @return the internal object
+	 */
 	public Object getInternalObject();
 
 }

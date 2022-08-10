@@ -23,10 +23,18 @@ import org.slf4j.LoggerFactory;
  */
 public class WikiClasspathContentHandler extends AbstractClasspathContentHandler {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WikiClasspathContentHandler.class);
 
+	/** The wiki synchronizer. */
 	private WikiSynchronizer wikiSynchronizer = new WikiSynchronizer();
 
+	/**
+	 * Checks if is valid.
+	 *
+	 * @param path the path
+	 * @return true, if is valid
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#isValid(java.lang.String)
@@ -47,6 +55,11 @@ public class WikiClasspathContentHandler extends AbstractClasspathContentHandler
 		return false;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#getLogger()

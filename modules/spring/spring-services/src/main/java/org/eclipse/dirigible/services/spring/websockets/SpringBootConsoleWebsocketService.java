@@ -16,6 +16,9 @@ import javax.websocket.server.ServerEndpoint;
 import org.eclipse.dirigible.runtime.ide.console.service.ConsoleWebsocketService;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class SpringBootConsoleWebsocketService.
+ */
 @Component
 @ServerEndpoint("/websockets/v4/ide/console")
 public class SpringBootConsoleWebsocketService extends ConsoleWebsocketService {

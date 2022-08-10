@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.api.v3.core.test;
 
+/**
+ * The Class BaseParameter.
+ */
 public class BaseParameter implements IBaseParameter {
 
 }

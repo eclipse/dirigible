@@ -26,29 +26,32 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Facade for working with ZIP files
+ * Facade for working with ZIP files.
  */
 public class ZipFacade {
 
 	/**
-	 * Unzip zip archive from proivided zipPath to targetPath folder
-	 * @param zipPath
-	 * @param targetPath
+	 * Unzip zip archive from proivided zipPath to targetPath folder.
+	 *
+	 * @param zipPath the zip path
+	 * @param targetPath the target path
 	 */
 	public static void importZip(String zipPath, String targetPath) {
 		ZipProcessor.unzip(zipPath, targetPath);
 	}
+	
 	/**
-	 * Creates zip archive from the provided folderPath and puts it to zipPath
-	 * @param folderPath
-	 * @param zipPath
+	 * Creates zip archive from the provided folderPath and puts it to zipPath.
+	 *
+	 * @param folderPath the folder path
+	 * @param zipPath the zip path
 	 */
 	public static void exportZip(String folderPath,String zipPath ) {
 		ZipProcessor.zip(folderPath, zipPath);
 	}
 
 	/**
-	 * Create a {@link ZipInputStream} from the provided {@link InputStream}
+	 * Create a {@link ZipInputStream} from the provided {@link InputStream}.
 	 *
 	 * @param in the provided input stream
 	 * @return the created ZipInputStream
@@ -59,7 +62,7 @@ public class ZipFacade {
 	}
 
 	/**
-	 * Create a {@link ZipOutputStream} from the provided {@link OutputStream}
+	 * Create a {@link ZipOutputStream} from the provided {@link OutputStream}.
 	 *
 	 * @param out the provided output stream
 	 * @return the created ZipOutputStream
@@ -70,7 +73,7 @@ public class ZipFacade {
 	}
 
 	/**
-	 * Create a {@link ZipEntry} with the provided name
+	 * Create a {@link ZipEntry} with the provided name.
 	 *
 	 * @param name the name of teh ZipEntry
 	 * @return the created ZipEntry
@@ -81,7 +84,7 @@ public class ZipFacade {
 	}
 
 	/**
-	 * Write data to the provided zip output stream
+	 * Write data to the provided zip output stream.
 	 *
 	 * @param output OutputStream to write to
 	 * @param bytes  The data to be written
@@ -92,7 +95,7 @@ public class ZipFacade {
 	}
 
 	/**
-	 * Write data to the provided zip output stream
+	 * Write data to the provided zip output stream.
 	 *
 	 * @param output OutputStream to write to
 	 * @param data   The data to be written
@@ -104,7 +107,7 @@ public class ZipFacade {
 	}
 
 	/**
-	 * Write data to the provided zip output stream
+	 * Write data to the provided zip output stream.
 	 *
 	 * @param output OutputStream to write to
 	 * @param data   The data to be written
@@ -115,7 +118,7 @@ public class ZipFacade {
 	}
 
 	/**
-	 * Write text to the provided zip output stream
+	 * Write text to the provided zip output stream.
 	 *
 	 * @param output OutputStream to write to
 	 * @param text   The text to be written
@@ -126,7 +129,7 @@ public class ZipFacade {
 	}
 
 	/**
-	 * Read data from the provided {@link InputStream}
+	 * Read data from the provided {@link InputStream}.
 	 *
 	 * @param input The input stream to read from
 	 * @return The read data
@@ -138,7 +141,7 @@ public class ZipFacade {
 	}
 
 	/**
-	 * Read data from the provided {@link InputStream}
+	 * Read data from the provided {@link InputStream}.
 	 *
 	 * @param input The input stream to read from
 	 * @return The read data
@@ -150,7 +153,7 @@ public class ZipFacade {
 	}
 
 	/**
-	 * Read text from the provided {@link InputStream}
+	 * Read text from the provided {@link InputStream}.
 	 *
 	 * @param input The input stream to read from
 	 * @return The read text

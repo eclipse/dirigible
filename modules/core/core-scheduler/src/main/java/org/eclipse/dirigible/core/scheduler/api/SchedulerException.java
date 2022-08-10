@@ -16,6 +16,7 @@ package org.eclipse.dirigible.core.scheduler.api;
  */
 public class SchedulerException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5800180600419241248L;
 
 	/**

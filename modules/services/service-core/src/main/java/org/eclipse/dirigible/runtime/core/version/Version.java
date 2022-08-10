@@ -15,32 +15,43 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Version properties
- *
+ * Version properties.
  */
 public class Version {
 	
+	/** The product name. */
 	private String productName;
 	
+	/** The product version. */
 	private String productVersion;
 	
+	/** The product commit id. */
 	private String productCommitId;
 
+	/** The product repository. */
 	private String productRepository;
 
+	/** The product type. */
 	private String productType;
 	
+	/** The instance name. */
 	private String instanceName;
 	
+	/** The repository provider. */
 	private String repositoryProvider = "local";
 	
+	/** The database provider. */
 	private String databaseProvider = "local";
 	
+	/** The modules. */
 	private Set<String> modules = new HashSet<String>();
 	
+	/** The engines. */
 	private Set<String> engines = new HashSet<String>();
 
 	/**
+	 * Gets the product name.
+	 *
 	 * @return the productName
 	 */
 	public String getProductName() {
@@ -48,6 +59,8 @@ public class Version {
 	}
 
 	/**
+	 * Sets the product name.
+	 *
 	 * @param productName the productName to set
 	 */
 	public void setProductName(String productName) {
@@ -55,6 +68,8 @@ public class Version {
 	}
 
 	/**
+	 * Gets the product version.
+	 *
 	 * @return the productVersion
 	 */
 	public String getProductVersion() {
@@ -62,6 +77,8 @@ public class Version {
 	}
 
 	/**
+	 * Sets the product version.
+	 *
 	 * @param productVersion the productVersion to set
 	 */
 	public void setProductVersion(String productVersion) {
@@ -69,6 +86,8 @@ public class Version {
 	}
 
 	/**
+	 * Gets the product commit id.
+	 *
 	 * @return the productCommitId
 	 */
 	public String getProductCommitId() {
@@ -76,6 +95,8 @@ public class Version {
 	}
 
 	/**
+	 * Sets the product commit id.
+	 *
 	 * @param productCommitId the productCommitId to set
 	 */
 	public void setProductCommitId(String productCommitId) {
@@ -83,6 +104,8 @@ public class Version {
 	}
 
 	/**
+	 * Gets the product repository.
+	 *
 	 * @return the productRepository
 	 */
 	public String getProductRepository() {
@@ -90,6 +113,8 @@ public class Version {
 	}
 
 	/**
+	 * Sets the product repository.
+	 *
 	 * @param productRepository the productRepository to set
 	 */
 	public void setProductRepository(String productRepository) {
@@ -97,6 +122,8 @@ public class Version {
 	}
 
 	/**
+	 * Gets the product type.
+	 *
 	 * @return the productType
 	 */
 	public String getProductType() {
@@ -104,6 +131,8 @@ public class Version {
 	}
 
 	/**
+	 * Sets the product type.
+	 *
 	 * @param productType the productType to set
 	 */
 	public void setProductType(String productType) {
@@ -111,6 +140,8 @@ public class Version {
 	}
 
 	/**
+	 * Gets the instance name.
+	 *
 	 * @return the instanceName
 	 */
 	public String getInstanceName() {
@@ -118,6 +149,8 @@ public class Version {
 	}
 
 	/**
+	 * Sets the instance name.
+	 *
 	 * @param instanceName the instanceName to set
 	 */
 	public void setInstanceName(String instanceName) {
@@ -125,6 +158,8 @@ public class Version {
 	}
 
 	/**
+	 * Gets the repository provider.
+	 *
 	 * @return the repositoryProvider
 	 */
 	public String getRepositoryProvider() {
@@ -132,6 +167,8 @@ public class Version {
 	}
 
 	/**
+	 * Sets the repository provider.
+	 *
 	 * @param repositoryProvider the repositoryProvider to set
 	 */
 	public void setRepositoryProvider(String repositoryProvider) {
@@ -139,6 +176,8 @@ public class Version {
 	}
 
 	/**
+	 * Gets the database provider.
+	 *
 	 * @return the databaseProvider
 	 */
 	public String getDatabaseProvider() {
@@ -146,6 +185,8 @@ public class Version {
 	}
 
 	/**
+	 * Sets the database provider.
+	 *
 	 * @param databaseProvider the databaseProvider to set
 	 */
 	public void setDatabaseProvider(String databaseProvider) {
@@ -153,6 +194,8 @@ public class Version {
 	}
 
 	/**
+	 * Gets the modules.
+	 *
 	 * @return the modules
 	 */
 	public Set<String> getModules() {
@@ -160,6 +203,8 @@ public class Version {
 	}
 
 	/**
+	 * Sets the modules.
+	 *
 	 * @param modules the modules to set
 	 */
 	public void setModules(Set<String> modules) {
@@ -167,6 +212,8 @@ public class Version {
 	}
 	
 	/**
+	 * Gets the engines.
+	 *
 	 * @return the engines
 	 */
 	public Set<String> getEngines() {
@@ -174,6 +221,8 @@ public class Version {
 	}
 
 	/**
+	 * Sets the engines.
+	 *
 	 * @param engines the engines to set
 	 */
 	public void setEngines(Set<String> engines) {

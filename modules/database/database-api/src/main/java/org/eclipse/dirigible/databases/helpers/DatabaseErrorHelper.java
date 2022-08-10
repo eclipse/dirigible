@@ -14,15 +14,14 @@ package org.eclipse.dirigible.databases.helpers;
 import com.google.gson.Gson;
 
 /**
- * Database Error Helper
+ * Database Error Helper.
  */
 public class DatabaseErrorHelper {
 
 	/**
-	 * Serialize the error as JSON
+	 * Serialize the error as JSON.
 	 *
-	 * @param t
-	 *            the error
+	 * @param t            the error
 	 * @return the error as JSON
 	 */
 	public static String toJson(Throwable t) {
@@ -30,10 +29,9 @@ public class DatabaseErrorHelper {
 	}
 
 	/**
-	 * Serialize the error as JSON
+	 * Serialize the error as JSON.
 	 *
-	 * @param errorMessage
-	 *            the error message
+	 * @param errorMessage            the error message
 	 * @return the error as JSON
 	 */
 	public static String toJson(String errorMessage) {
@@ -41,10 +39,9 @@ public class DatabaseErrorHelper {
 	}
 
 	/**
-	 * Return the error as plain text
+	 * Return the error as plain text.
 	 *
-	 * @param t
-	 *            the error
+	 * @param t            the error
 	 * @return the error as plain text
 	 */
 	public static String print(Throwable t) {
@@ -52,21 +49,29 @@ public class DatabaseErrorHelper {
 	}
 
 	/**
-	 * Return the error as plain text
+	 * Return the error as plain text.
 	 *
-	 * @param errorMessage
-	 *            the error message
+	 * @param errorMessage            the error message
 	 * @return the error as plain text
 	 */
 	public static String print(String errorMessage) {
 		return errorMessage;
 	}
 
+	/**
+	 * The Class ErrorMessage.
+	 */
 	private static class ErrorMessage {
 
+		/** The error message. */
 		@SuppressWarnings("unused")
 		private final String errorMessage;
 
+		/**
+		 * Instantiates a new error message.
+		 *
+		 * @param errorMessage the error message
+		 */
 		public ErrorMessage(String errorMessage) {
 			this.errorMessage = errorMessage;
 		}

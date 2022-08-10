@@ -31,11 +31,26 @@ import org.eclipse.dirigible.commons.health.HealthStatus;
 @WebFilter(urlPatterns = {"/services/v3/*", "/public/v3/*", "/services/v4/*", "/public/v4/*"}, filterName = "HealthCheckFilter", description = "Check the health status of the Dirigible instance")
 public class HealthCheckFilter implements Filter {
 
+	/**
+	 * Inits the.
+	 *
+	 * @param filterConfig the filter config
+	 * @throws ServletException the servlet exception
+	 */
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// Not used
 	}
 
+	/**
+	 * Do filter.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param chain the chain
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ServletException the servlet exception
+	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -57,6 +72,9 @@ public class HealthCheckFilter implements Filter {
 		chain.doFilter(request, response);
 	}
 
+	/**
+	 * Destroy.
+	 */
 	@Override
 	public void destroy() {
 		// Not used

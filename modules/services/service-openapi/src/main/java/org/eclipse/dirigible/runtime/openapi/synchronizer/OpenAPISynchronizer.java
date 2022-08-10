@@ -45,19 +45,28 @@ import org.slf4j.LoggerFactory;
  */
 public class OpenAPISynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(OpenAPISynchronizer.class);
 
+	/** The Constant OPENAPI_PREDELIVERED. */
 	private static final Map<String, OpenAPIDefinition> OPENAPI_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, OpenAPIDefinition>());
 
+	/** The Constant OPENAPI_SYNCHRONIZED. */
 	private static final List<String> OPENAPI_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The open API core service. */
 	private OpenAPICoreService openAPICoreService = new OpenAPICoreService();
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant OPENAPI_ARTEFACT. */
 	private static final OpenAPISynchronizationArtefactType OPENAPI_ARTEFACT = new OpenAPISynchronizationArtefactType();
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -110,11 +119,8 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 	/**
 	 * Register pre-delivered OpenAPI.
 	 *
-	 * @param path
-	 *            the OpenAPI path
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws IOException
+	 * @param path            the OpenAPI path
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredOpenAPI(String path) throws IOException {
 		InputStream in = OpenAPISynchronizer.class.getResourceAsStream("/META-INF/dirigible" + path);
@@ -131,10 +137,18 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		OPENAPI_SYNCHRONIZED.clear();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered OpenAPIs...");
 		// OpenAPI
@@ -144,6 +158,12 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing predelivered OpenAPIs.");
 	}
 
+	/**
+	 * Synchronize open API.
+	 *
+	 * @param openAPIDefinition the open API definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeOpenAPI(OpenAPIDefinition openAPIDefinition) throws SynchronizationException {
 		try {
 			if (!openAPICoreService.existsOpenAPI(openAPIDefinition.getLocation())) {
@@ -165,6 +185,11 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -178,6 +203,12 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing OpenAPI from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -201,6 +232,11 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()

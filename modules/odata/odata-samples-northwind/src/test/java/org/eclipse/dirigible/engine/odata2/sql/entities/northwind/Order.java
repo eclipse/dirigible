@@ -23,53 +23,71 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
 
+/**
+ * The Class Order.
+ */
 @EdmEntityType(name = "Order")
 @EdmEntitySet(name = "Orders", container = "NorthwindEntities")
 public class Order {
 
+	/** The order id. */
 	@EdmKey
     @EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
     private Integer orderId;
 
+	/** The customer id. */
 	@EdmProperty(name = "CustomerID", facets = @EdmFacets(maxLength = 5))
 	private String customerId;
 
+	/** The employee id. */
 	@EdmProperty(name = "EmployeeID")
 	private Integer employeeId;
 
+	/** The order date. */
 	@EdmProperty
 	private Date orderDate;
 
+	/** The required date. */
 	@EdmProperty
 	private Date requiredDate;
 
+	/** The shipped date. */
 	@EdmProperty
 	private Date shippedDate;
 
+	/** The ship via. */
 	@EdmProperty
 	private Integer shipVia;
 
+	/** The freight. */
 	@EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(precision = 19, scale = 4))
 	private Double freight;
 
+	/** The ship name. */
 	@EdmProperty(facets = @EdmFacets(maxLength = 40))
 	private String shipName;
 
+	/** The ship address. */
 	@EdmProperty(facets = @EdmFacets(maxLength = 60))
 	private String shipAddress;
 
+	/** The ship city. */
 	@EdmProperty(facets = @EdmFacets(maxLength = 15))
 	private String shipCity;
 
+	/** The ship region. */
 	@EdmProperty(facets = @EdmFacets(maxLength = 15))
 	private String shipRegion;
 
+	/** The ship postal code. */
 	@EdmProperty(facets = @EdmFacets(maxLength = 10))
 	private String shipPostalCode;
 
+	/** The ship country. */
 	@EdmProperty(facets = @EdmFacets(maxLength = 15))
 	private String shipCountry;
 
+	/** The customer. */
 	@EdmNavigationProperty( //
 			toMultiplicity = Multiplicity.ZERO_OR_ONE, //
 			toType = Customer.class, //
@@ -78,6 +96,7 @@ public class Order {
 	)
 	private Customer customer;
 
+	/** The employee. */
 	@EdmNavigationProperty( //
 			toMultiplicity = Multiplicity.ZERO_OR_ONE, //
 			toType = Employee.class, //
@@ -86,6 +105,7 @@ public class Order {
 	)
 	private Employee employee;
 
+	/** The order details. */
 	@EdmNavigationProperty( //
 			name = "Order_Details", //
 			toMultiplicity = Multiplicity.MANY, //
@@ -95,6 +115,7 @@ public class Order {
 	)
     private List<OrderDetail> orderDetails;
 
+	/** The shipper. */
 	@EdmNavigationProperty( //
 			toMultiplicity = Multiplicity.ZERO_OR_ONE, //
 			toType = Shipper.class, //

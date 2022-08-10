@@ -16,6 +16,7 @@ package org.eclipse.dirigible.api.v3.log;
  */
 public class JSServiceException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7966059602671226771L;
 
 	/**

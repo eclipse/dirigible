@@ -34,6 +34,9 @@ public class LocalSearchTest extends RepositoryGenericSearchTest {
 		}
 	}
 
+	/**
+	 * Test search path.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchPath()
@@ -43,6 +46,9 @@ public class LocalSearchTest extends RepositoryGenericSearchTest {
 		super.testSearchPath();
 	}
 
+	/**
+	 * Test search text.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchText()

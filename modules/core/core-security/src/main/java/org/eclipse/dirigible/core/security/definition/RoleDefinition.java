@@ -25,19 +25,24 @@ import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 @Table(name = "DIRIGIBLE_SECURITY_ROLES")
 public class RoleDefinition implements IArtefactDefinition {
 
+	/** The name. */
 	@Id
 	@Column(name = "ROLE_NAME", columnDefinition = "VARCHAR", nullable = false, length = 64)
 	private String name;
 
+	/** The location. */
 	@Column(name = "ROLE_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
+	/** The description. */
 	@Column(name = "ROLE_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
+	/** The created by. */
 	@Column(name = "ROLE_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "ROLE_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -143,6 +148,11 @@ public class RoleDefinition implements IArtefactDefinition {
 		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -157,6 +167,12 @@ public class RoleDefinition implements IArtefactDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -197,11 +213,21 @@ public class RoleDefinition implements IArtefactDefinition {
 		return true;
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getName();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();

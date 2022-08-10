@@ -47,19 +47,28 @@ import org.slf4j.LoggerFactory;
 		)
 public class XTerminalWebsocketService {
 
+	/** The Constant FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE. */
 	private static final String FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE = "Feature 'Terminal' is disabled in this mode.";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(XTerminalWebsocketService.class);
 
+	/** The open sessions. */
 	private static Map<String, Session> OPEN_SESSIONS = new ConcurrentHashMap<String, Session>();
+	
+	/** The session to client. */
 	private static Map<String, XTerminalWebsocketClientEndpoint> SESSION_TO_CLIENT = new ConcurrentHashMap<String, XTerminalWebsocketClientEndpoint>();
 	
 	static {
 		runTTYD();
 	}
 	
+	/** The started. */
 	static volatile boolean started = false;
 
+	/**
+	 * Run TTYD.
+	 */
 	public synchronized static void runTTYD() {
 		if (!started) {
 			if (Configuration.isAnonymousModeEnabled()) {
@@ -109,6 +118,14 @@ public class XTerminalWebsocketService {
 		}
 	}
 
+	/**
+	 * Creates the shell script.
+	 *
+	 * @param file the file
+	 * @param command the command
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static void createShellScript(File file, String command) throws FileNotFoundException, IOException {
 		FileOutputStream fos = new FileOutputStream(file);
 		try {
@@ -119,6 +136,14 @@ public class XTerminalWebsocketService {
 		}
 	}
 	
+	/**
+	 * Creates the executable.
+	 *
+	 * @param in the in
+	 * @param file the file
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static void createExecutable(InputStream in, File file) throws FileNotFoundException, IOException {
 		FileOutputStream fos = new FileOutputStream(file);
 		try {
@@ -226,11 +251,11 @@ public class XTerminalWebsocketService {
 	}
 
 	/**
-	 * Start the WebSocket proxy
-	 * 
+	 * Start the WebSocket proxy.
+	 *
 	 * @param session the source session
-	 * @param port the port for the client
-	 * @throws URISyntaxException 
+	 * @return the x terminal websocket client endpoint
+	 * @throws URISyntaxException the URI syntax exception
 	 */
 	private XTerminalWebsocketClientEndpoint startClientWebsocket(Session session) throws URISyntaxException {
 		
@@ -254,18 +279,33 @@ public class XTerminalWebsocketService {
 	 */
 	static class ProcessRunnable implements Runnable {
 		
+		/** The command. */
 		private String command;
 		
+		/** The process. */
 		private Process process;
 		
+		/**
+		 * Instantiates a new process runnable.
+		 *
+		 * @param command the command
+		 */
 		ProcessRunnable(String command) {
 			this.command = command;
 		}
 		
+		/**
+		 * Gets the process.
+		 *
+		 * @return the process
+		 */
 		public Process getProcess() {
 			return process;
 		}
 
+		/**
+		 * Run.
+		 */
 		@Override
 		public void run() {
 			try {

@@ -36,20 +36,43 @@ import org.slf4j.LoggerFactory;
  */
 public class Configuration {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
+	/**
+	 * The Enum ConfigType.
+	 */
 	private enum ConfigType {
-		RUNTIME, ENVIRONMENT, DEPLOYMENT, MODULE
+		
+		/** The runtime. */
+		RUNTIME, 
+ /** The environment. */
+ ENVIRONMENT, 
+ /** The deployment. */
+ DEPLOYMENT, 
+ /** The module. */
+ MODULE
 	}
 
+	/** The Constant RUNTIME_VARIABLES. */
 	private static final Map<String, String> RUNTIME_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+	
+	/** The Constant ENVIRONMENT_VARIABLES. */
 	private static final Map<String, String> ENVIRONMENT_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+	
+	/** The Constant DEPLOYMENT_VARIABLES. */
 	private static final Map<String, String> DEPLOYMENT_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+	
+	/** The Constant MODULE_VARIABLES. */
 	private static final Map<String, String> MODULE_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
 
+	/** The Constant CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES. */
 	private static final String CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES = "/dirigible.properties";
+	
+	/** The Constant ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST. */
 	private static final String ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST = "Configuration file {0} does not exist";
 
+	/** The loaded. */
 	public static boolean LOADED = false;
 
 	static {
@@ -58,19 +81,38 @@ public class Configuration {
 		LOADED = true;
 	}
 
+	/**
+	 * Load environment config.
+	 */
 	private static void loadEnvironmentConfig() {
 		addConfigProperties(System.getenv(), ConfigType.ENVIRONMENT);
 		addConfigProperties(System.getProperties(), ConfigType.ENVIRONMENT);
 	}
 
+	/**
+	 * Load deployment config.
+	 *
+	 * @param path the path
+	 */
 	private static void loadDeploymentConfig(String path) {
 		load(path, ConfigType.DEPLOYMENT);
 	}
 
+	/**
+	 * Load module config.
+	 *
+	 * @param path the path
+	 */
 	public static void loadModuleConfig(String path) {
 		load(path, ConfigType.MODULE);
 	}
 
+	/**
+	 * Load.
+	 *
+	 * @param path the path
+	 * @param type the type
+	 */
 	private static void load(String path, ConfigType type) {
 		try {
 			Properties custom = new Properties();
@@ -108,6 +150,12 @@ public class Configuration {
 		}
 	}
 
+	/**
+	 * Adds the config properties.
+	 *
+	 * @param properties the properties
+	 * @param type the type
+	 */
 	private static void addConfigProperties(Map<String, String> properties, ConfigType type) {
 		switch(type) {
 		case RUNTIME:
@@ -128,6 +176,12 @@ public class Configuration {
 		}
 	}
 
+	/**
+	 * Adds the config properties.
+	 *
+	 * @param properties the properties
+	 * @param type the type
+	 */
 	private static void addConfigProperties(Properties properties, ConfigType type) {
 		switch(type) {
 		case RUNTIME:
@@ -147,6 +201,12 @@ public class Configuration {
 		}
 	}
 
+	/**
+	 * Adds the config properties.
+	 *
+	 * @param properties the properties
+	 * @param map the map
+	 */
 	private static void addConfigProperties(Properties properties, Map<String, String> map) {
 		for (String property: properties.stringPropertyNames()) {
 			map.put(property, properties.getProperty(property));
@@ -207,8 +267,8 @@ public class Configuration {
 	}
 
 	/**
-	 * Remove property
-	 * 
+	 * Remove property.
+	 *
 	 * @param key the key
 	 */
 	public static void remove(String key) {
@@ -251,6 +311,11 @@ public class Configuration {
 		return !isProtectedModeEnabled();
 	}
 
+	/**
+	 * Checks if is protected mode enabled.
+	 *
+	 * @return true, if is protected mode enabled
+	 */
 	private static boolean isProtectedModeEnabled() {
 		return isKeycloakModeEnabled() || isOAuthAuthenticationEnabled() || isJwtModeEnabled();
 	}
@@ -333,8 +398,8 @@ public class Configuration {
 	}
 	
 	/**
-	 * Getter for the configurations set programmatically at runtime
-	 * 
+	 * Getter for the configurations set programmatically at runtime.
+	 *
 	 * @return the map of the runtime variables
 	 */
 	public static Map<String, String> getRuntimeVariables() {
@@ -342,8 +407,8 @@ public class Configuration {
 	}
 	
 	/**
-	 * Getter for the configurations from the environment
-	 * 
+	 * Getter for the configurations from the environment.
+	 *
 	 * @return the map of the variables from the environment
 	 */
 	public static Map<String, String> getEnvironmentVariables() {
@@ -368,6 +433,7 @@ public class Configuration {
 		return new HashMap<String, String>(MODULE_VARIABLES);
 	}
 	
+	/** The Constant CONFIGURATION_PARAMETERS. */
 	private static final String[] CONFIGURATION_PARAMETERS = new String[] {
 			"DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME",
 			"DIRIGIBLE_BRANDING_NAME",
@@ -510,26 +576,56 @@ public class Configuration {
 			"DIRIGIBLE_CSV_DATA_BATCH_SIZE"
 	};
 
+	/**
+	 * Gets the os.
+	 *
+	 * @return the os
+	 */
 	public static String getOS() {
 		return System.getProperty("os.name").toLowerCase();
 	}
 
+	/**
+	 * Checks if is OS windows.
+	 *
+	 * @return true, if is OS windows
+	 */
 	public static boolean isOSWindows() {
 		return (getOS().indexOf("win") >= 0);
 	}
 
+	/**
+	 * Checks if is OS mac.
+	 *
+	 * @return true, if is OS mac
+	 */
 	public static boolean isOSMac() {
 		return (getOS().indexOf("mac") >= 0);
 	}
 
+	/**
+	 * Checks if is osunix.
+	 *
+	 * @return true, if is osunix
+	 */
 	public static boolean isOSUNIX() {
 		return (getOS().indexOf("nix") >= 0 || getOS().indexOf("nux") >= 0 || getOS().indexOf("aix") > 0);
 	}
 
+	/**
+	 * Checks if is OS solaris.
+	 *
+	 * @return true, if is OS solaris
+	 */
 	public static boolean isOSSolaris() {
 		return (getOS().indexOf("sunos") >= 0);
 	}
 	
+	/**
+	 * Gets the configuration parameters.
+	 *
+	 * @return the configuration parameters
+	 */
 	public static String[] getConfigurationParameters() {
 		return CONFIGURATION_PARAMETERS.clone();
 	}

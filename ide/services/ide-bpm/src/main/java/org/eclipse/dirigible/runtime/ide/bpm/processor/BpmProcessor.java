@@ -41,10 +41,21 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 public class BpmProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(BpmProcessor.class);
 
+	/** The workspaces core service. */
 	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 
+	/**
+	 * Gets the model.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @return the model
+	 * @throws JsonProcessingException the json processing exception
+	 */
 	public String getModel(String workspace, String project, String path) throws JsonProcessingException {
 		BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
 		IFile file = workspacesCoreService.getWorkspace(workspace).getProject(project).getFile(path);
@@ -68,6 +79,15 @@ public class BpmProcessor {
 		}
 	}
 	
+	/**
+	 * Save model.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param payload the payload
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void saveModel(String workspace, String project, String path, String payload) throws IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode modelNode = objectMapper.readTree(payload);
@@ -82,6 +102,12 @@ public class BpmProcessor {
         file.setContent(bytes);
 	}
 	
+	/**
+	 * Gets the stencil set.
+	 *
+	 * @return the stencil set
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public String getStencilSet() throws IOException {
 		InputStream in = BpmProcessor.class.getResourceAsStream("/stencilset_bpmn.json");
 		try {

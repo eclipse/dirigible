@@ -15,13 +15,18 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmComplexType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 
+/**
+ * The Class CTEntity.
+ */
 @EdmComplexType(name = "CTEntity")
 public class CTEntity {
 
+    /** The id. */
     @EdmKey
     @EdmProperty
     private String id;
 
+    /** The detail. */
     @EdmProperty
     private String detail;
 

@@ -48,18 +48,27 @@ import org.slf4j.LoggerFactory;
  */
 public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrderedSynchronizerContribution {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MigrationsSynchronizer.class);
 
+	/** The Constant MIGRATIONS_PREDELIVERED. */
 	private static final Map<String, MigrationDefinition> MIGRATIONS_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, MigrationDefinition>());
 
+	/** The Constant MIGRATIONS_SYNCHRONIZED. */
 	private static final Set<String> MIGRATIONS_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
 
+	/** The migrations core service. */
 	private MigrationsCoreService migrationsCoreService = new MigrationsCoreService();
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant MIGRATION_ARTEFACT. */
 	private static final MigrationSynchronizationArtefactType MIGRATION_ARTEFACT = new MigrationSynchronizationArtefactType();
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -188,6 +197,11 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -201,6 +215,12 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 		logger.trace("Done synchronizing Migrations from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -216,6 +236,11 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 		}
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
@@ -241,6 +266,9 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 		logger.trace("Done cleaning up Migrations artifacts.");
 	}
 	
+	/**
+	 * Start migrations.
+	 */
 	private void startMigrations() {
 		logger.trace("Start running Migrations...");
 
@@ -308,10 +336,21 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 		logger.trace("Done running Migrations.");
 	}
 
+	/**
+	 * Perform migration.
+	 *
+	 * @param migration the migration
+	 * @throws ScriptingException the scripting exception
+	 */
 	private void performMigration(MigrationDefinition migration) throws ScriptingException {
 		ScriptEngineExecutorsManager.executeServiceModule(migration.getEngine(), migration.getHandler(), null);
 	}
 
+	/**
+	 * Gets the priority.
+	 *
+	 * @return the priority
+	 */
 	@Override
 	public int getPriority() {
 		return 300;

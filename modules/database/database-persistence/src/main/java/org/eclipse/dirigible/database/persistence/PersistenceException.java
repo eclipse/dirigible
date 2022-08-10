@@ -16,6 +16,7 @@ package org.eclipse.dirigible.database.persistence;
  */
 public class PersistenceException extends RuntimeException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5051153858321560002L;
 
 	/**

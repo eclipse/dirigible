@@ -23,8 +23,12 @@ import org.eclipse.dirigible.database.api.IDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class CmsProviderDatabase.
+ */
 public class CmsProviderDatabase implements ICmsProvider {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CmsProviderDatabase.class);
 
 	/** The Constant NAME. */
@@ -33,10 +37,15 @@ public class CmsProviderDatabase implements ICmsProvider {
 	/** The Constant TYPE. */
 	public static final String TYPE = "database"; //$NON-NLS-1$
 
+	/** The cms database repository. */
 	private CmsDatabaseRepository cmsDatabaseRepository;
 	
+	/** The cmis repository. */
 	private CmisRepository cmisRepository;
 
+	/**
+	 * Instantiates a new cms provider database.
+	 */
 	public CmsProviderDatabase() {
 		Configuration.loadModuleConfig("/dirigible-cms-database.properties");
 		
@@ -58,9 +67,9 @@ public class CmsProviderDatabase implements ICmsProvider {
 	
 	/**
 	 * Creates the instance.
-	 * @param dataSourceName 
-	 * @param dataSourceType2 
 	 *
+	 * @param dataSourceType the data source type
+	 * @param dataSourceName the data source name
 	 * @return the repository
 	 */
 	private CmsDatabaseRepository createInstance(String dataSourceType, String dataSourceName) {
@@ -85,16 +94,31 @@ public class CmsProviderDatabase implements ICmsProvider {
 		return databaseRepository;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return NAME;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	@Override
 	public String getType() {
 		return TYPE;
 	}
 
+	/**
+	 * Gets the session.
+	 *
+	 * @return the session
+	 */
 	@Override
 	public Object getSession() {
 		CmisSession cmisSession = this.cmisRepository.getSession();

@@ -30,10 +30,17 @@ import org.eclipse.dirigible.runtime.openapi.definition.OpenAPIDefinition;
  */
 public class OpenAPICoreService implements IOpenAPICoreService {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The open API persistence manager. */
 	private PersistenceManager<OpenAPIDefinition> openAPIPersistenceManager = new PersistenceManager<OpenAPIDefinition>();
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -43,6 +50,14 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 
 	// OpenAPI
 
+	/**
+	 * Creates the open API.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @return the open API definition
+	 * @throws OpenAPIException the open API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.openapi.api.IOpenAPICoreService#createOpenAPI(java.lang.String,
@@ -72,6 +87,13 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 		}
 	}
 
+	/**
+	 * Gets the open API.
+	 *
+	 * @param location the location
+	 * @return the open API
+	 * @throws OpenAPIException the open API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.openapi.api.IOpenAPICoreService#getOpenAPI(java.lang.String)
@@ -93,6 +115,12 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 		}
 	}
 
+	/**
+	 * Removes the open API.
+	 *
+	 * @param location the location
+	 * @throws OpenAPIException the open API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.openapi.api.IOpenAPICoreService#removeOpenAPI(java.lang.String)
@@ -114,6 +142,13 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 		}
 	}
 
+	/**
+	 * Update open API.
+	 *
+	 * @param location the location
+	 * @param hash the hash
+	 * @throws OpenAPIException the open API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.openapi.api.IOpenAPICoreService#updateOpenAPI(java.lang.String,
@@ -138,6 +173,12 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 		}
 	}
 
+	/**
+	 * Gets the open AP is.
+	 *
+	 * @return the open AP is
+	 * @throws OpenAPIException the open API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.openapi.api.IOpenAPIsCoreService#getOpenAPIs()
@@ -159,6 +200,13 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 		}
 	}
 
+	/**
+	 * Exists open API.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws OpenAPIException the open API exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.openapi.api.IOpenAPICoreService#existsOpenAPI(java.lang.String)

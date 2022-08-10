@@ -495,7 +495,7 @@ public class HttpClientRequestOptions {
 	}
 
 	/**
-	 * Checks if the character encoding is enabled
+	 * Checks if the character encoding is enabled.
 	 *
 	 * @return true, if the character encoding is enabled
 	 */

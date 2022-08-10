@@ -11,19 +11,25 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.Table;
+import org.eclipse.dirigible.database.sql.TableStatements;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
+/**
+ * The Class HanaCreateTableBuilderTest.
+ */
 public class HanaCreateTableBuilderTest {
 
   /**
@@ -94,6 +100,9 @@ public class HanaCreateTableBuilderTest {
     assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )", sql);
   }
 
+  /**
+   * Creates the table with composite key with set PK on column level.
+   */
   @Test
   public void createTableWithCompositeKeyWithSetPKOnColumnLevel() {
     String sql = SqlFactory.getNative(new HanaSqlDialect())
@@ -109,6 +118,9 @@ public class HanaCreateTableBuilderTest {
     assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY(ID , ID2) )", sql);
   }
 
+  /**
+   * Creates the table with composite key with set PK on constraint level.
+   */
   @Test
   public void createTableWithCompositeKeyWithSetPKOnConstraintLevel() {
     String sql = SqlFactory.getNative(new HanaSqlDialect())
@@ -125,6 +137,9 @@ public class HanaCreateTableBuilderTest {
     assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY ( ID , ID2 ))", sql);
   }
 
+  /**
+   * Creates the table with composite key with set PK on constraint and column level.
+   */
   @Test
   public void createTableWithCompositeKeyWithSetPKOnConstraintAndColumnLevel() {
     String sql = SqlFactory.getNative(new HanaSqlDialect())
@@ -141,6 +156,9 @@ public class HanaCreateTableBuilderTest {
     assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY(ID , ID2) )", sql);
   }
 
+  /**
+   * Creates the table with set PK on constraint and column level.
+   */
   @Test
   public void createTableWithSetPKOnConstraintAndColumnLevel() {
     String sql = SqlFactory.getNative(new HanaSqlDialect())
@@ -155,6 +173,9 @@ public class HanaCreateTableBuilderTest {
     assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE )", sql);
   }
 
+  /**
+   * Parses the table without PK.
+   */
   @Test
   public void parseTableWithoutPK() {
     String sql = SqlFactory.getNative(new HanaSqlDialect())
@@ -192,9 +213,12 @@ public class HanaCreateTableBuilderTest {
     assertEquals("Unexpected length of statement", expectedStatementLength, sql.length());
   }
 
+  /**
+   * Test create table with indexes.
+   */
   @Test
   public void testCreateTableWithIndexes() {
-    Table table = SqlFactory.getNative(new HanaSqlDialect())
+    TableStatements table = SqlFactory.getNative(new HanaSqlDialect())
         .create()
         .rowTable("CUSTOMERS")
         .column("ID", DataType.INTEGER, true, false, false)

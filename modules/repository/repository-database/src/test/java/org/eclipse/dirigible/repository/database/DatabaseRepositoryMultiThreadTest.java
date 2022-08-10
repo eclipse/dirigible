@@ -19,6 +19,12 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest
  */
 public class DatabaseRepositoryMultiThreadTest extends RepositoryGenericMultiThreadTest {
 
+	/**
+	 * Gets the new repository.
+	 *
+	 * @param user the user
+	 * @return the new repository
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest#getNewRepository(java.lang.String)

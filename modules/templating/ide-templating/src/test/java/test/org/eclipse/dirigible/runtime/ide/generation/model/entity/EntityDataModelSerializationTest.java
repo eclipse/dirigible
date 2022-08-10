@@ -30,10 +30,17 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonSyntaxException;
 
+/**
+ * The Class EntityDataModelSerializationTest.
+ */
 public class EntityDataModelSerializationTest {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(EntityDataModelSerializationTest.class);
 	
+	/**
+	 * Serialize.
+	 */
 	@Test
 	public void serialize() {
 		EntityDataModel model = new EntityDataModel();
@@ -75,6 +82,12 @@ public class EntityDataModelSerializationTest {
 		logger.info(json);
 	}
 	
+	/**
+	 * Parses the.
+	 *
+	 * @throws JsonSyntaxException the json syntax exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void parse() throws JsonSyntaxException, IOException {
 		InputStream in = EntityDataModelSerializationTest.class.getResourceAsStream("/test.model");

@@ -18,10 +18,17 @@ import org.eclipse.dirigible.engine.api.resource.AbstractResourceExecutor;
  */
 public class WebEngineExecutor extends AbstractResourceExecutor {
 	
+	/** The Constant ENGINE_TYPE. */
 	public static final String ENGINE_TYPE = "web";
 	
+	/** The Constant ENGINE_NAME. */
 	public static final String ENGINE_NAME = "Default Web Content Engine";
 	
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getType()
@@ -31,6 +38,11 @@ public class WebEngineExecutor extends AbstractResourceExecutor {
 		return ENGINE_TYPE;
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()

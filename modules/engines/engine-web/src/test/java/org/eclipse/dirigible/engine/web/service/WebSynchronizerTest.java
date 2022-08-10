@@ -39,12 +39,16 @@ import org.junit.Test;
  */
 public class WebSynchronizerTest extends AbstractDirigibleTest {
 
+	/** The web core service. */
 	private IWebCoreService webCoreService;
 
+	/** The web synchronizer. */
 	private WebSynchronizer webSynchronizer;
 	
+	/** The web engine processor. */
 	private WebEngineProcessor webEngineProcessor;
 
+	/** The repository. */
 	private IRepository repository;
 
 	/**

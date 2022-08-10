@@ -21,10 +21,15 @@ import javax.ws.rs.core.Response;
 import org.apache.cxf.helpers.IOUtils;
 import org.junit.Test;
 
+/**
+ * The Class CategoriesODataNorthwindTest.
+ */
 public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 
 	/**
 	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories/$count
+	 *
+	 * @throws Exception the exception
 	 */
 	@Test
 	public void testCount() throws Exception {
@@ -39,6 +44,8 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 
 	/**
 	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories?$format=json
+	 *
+	 * @throws Exception the exception
 	 */
 	@Test
 	public void testGet() throws Exception {
@@ -53,6 +60,8 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 
 	/**
 	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)?$format=json
+	 *
+	 * @throws Exception the exception
 	 */
 	@Test
 	public void testGetById() throws Exception {
@@ -67,6 +76,8 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 
 	/**
 	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)/Products/$count
+	 *
+	 * @throws Exception the exception
 	 */
 	@Test
 	public void testNavigationProductsCount() throws Exception {
@@ -82,6 +93,8 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 
 	/**
 	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)/Products?$format=json
+	 *
+	 * @throws Exception the exception
 	 */
 	@Test
 	public void testNavigationProductsGet() throws Exception {

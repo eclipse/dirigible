@@ -27,8 +27,10 @@ import org.slf4j.LoggerFactory;
  */
 public class IndexingFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(IndexingFacade.class);
 
+	/** The Constant indexingCoreService. */
 	private static final IIndexingCoreService indexingCoreService = new IndexingCoreService();
 
 	/**

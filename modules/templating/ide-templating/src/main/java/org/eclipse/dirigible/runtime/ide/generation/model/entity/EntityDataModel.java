@@ -12,14 +12,16 @@
 package org.eclipse.dirigible.runtime.ide.generation.model.entity;
 
 /**
- * Transport object for the Entity Data Model
- *
+ * Transport object for the Entity Data Model.
  */
 public class EntityDataModel {
 	
+	/** The model. */
 	private EntityDataModelRoot model;
 
 	/**
+	 * Gets the model.
+	 *
 	 * @return the model
 	 */
 	public EntityDataModelRoot getModel() {
@@ -27,6 +29,8 @@ public class EntityDataModel {
 	}
 
 	/**
+	 * Sets the model.
+	 *
 	 * @param model the model to set
 	 */
 	public void setModel(EntityDataModelRoot model) {

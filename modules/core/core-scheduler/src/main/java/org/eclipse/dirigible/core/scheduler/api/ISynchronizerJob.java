@@ -11,10 +11,14 @@
  */
 package org.eclipse.dirigible.core.scheduler.api;
 
+/**
+ * The Interface ISynchronizerJob.
+ */
 public interface ISynchronizerJob {
 	
 	/**
-	 * Getter for the name of the Synchronizer Job
+	 * Getter for the name of the Synchronizer Job.
+	 *
 	 * @return the name
 	 */
 	public String getName();

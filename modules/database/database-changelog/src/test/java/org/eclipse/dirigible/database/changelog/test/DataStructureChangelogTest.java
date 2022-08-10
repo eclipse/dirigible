@@ -44,7 +44,7 @@ public class DataStructureChangelogTest extends AbstractDirigibleTest {
 	/** The changelog synchronizer. */
 	private ChangelogSynchronizer changelogSynchronizer;
 
-	/** The datasource */
+	/**  The datasource. */
 	private DataSource dataSource;
 
 	/**
@@ -60,7 +60,7 @@ public class DataStructureChangelogTest extends AbstractDirigibleTest {
 	}
 
 	/**
-	 * Changelog data
+	 * Changelog data.
 	 */
 	@Test
 	public void updateChangelog() {

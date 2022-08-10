@@ -15,46 +15,91 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Entity element from the Entity Data Model
- *
+ * Entity element from the Entity Data Model.
  */
 public class EntityDataModelEntity {
 	
+	/** The name. */
 	private String name;
 
+	/** The data name. */
 	private String dataName;
+	
+	/** The data count. */
 	private String dataCount;
+	
+	/** The data query. */
 	private String dataQuery;
 	
+	/** The type. */
 	private String type;
+	
+	/** The title. */
 	private String title;
+	
+	/** The tooltip. */
 	private String tooltip;
+	
+	/** The icon. */
 	private String icon;
+	
+	/** The menu key. */
 	private String menuKey;
+	
+	/** The menu label. */
 	private String menuLabel;
+	
+	/** The menu index. */
 	private String menuIndex;
+	
+	/** The layout type. */
 	private String layoutType;
+	
+	/** The perspective name. */
 	private String perspectiveName;
+	
+	/** The perspective icon. */
 	private String perspectiveIcon;
+	
+	/** The perspective order. */
 	private int perspectiveOrder;
 	
+	/** The feed url. */
 	private String feedUrl;
+	
+	/** The feed username. */
 	private String feedUsername;
+	
+	/** The feed password. */
 	private String feedPassword;
+	
+	/** The feed schedule. */
 	private String feedSchedule;
+	
+	/** The feed path. */
 	private String feedPath;
 
+	/** The role read. */
 	private String roleRead;
+	
+	/** The role write. */
 	private String roleWrite;
 	
+	/** The projection referenced model. */
 	private String projectionReferencedModel;
+	
+	/** The projection referenced entity. */
 	private String projectionReferencedEntity;
 
+	/** The properties. */
 	private List<EntityDataModelProperty> properties = new ArrayList<EntityDataModelProperty>();
 	
+	/** The compositions. */
 	private List<EntityDataModelComposition> compositions = new ArrayList<EntityDataModelComposition>();
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -62,6 +107,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -69,6 +116,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the data name.
+	 *
 	 * @return the dataName
 	 */
 	public String getDataName() {
@@ -76,6 +125,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the data name.
+	 *
 	 * @param dataName the dataName to set
 	 */
 	public void setDataName(String dataName) {
@@ -83,6 +134,8 @@ public class EntityDataModelEntity {
 	}
 	
 	/**
+	 * Gets the data count.
+	 *
 	 * @return the dataCount
 	 */
 	public String getDataCount() {
@@ -90,6 +143,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the data count.
+	 *
 	 * @param dataCount the dataCount to set
 	 */
 	public void setDataCount(String dataCount) {
@@ -97,6 +152,8 @@ public class EntityDataModelEntity {
 	}
 	
 	/**
+	 * Gets the data query.
+	 *
 	 * @return the dataQuery
 	 */
 	public String getDataQuery() {
@@ -104,6 +161,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the data query.
+	 *
 	 * @param dataQuery the dataQuery to set
 	 */
 	public void setDataQuery(String dataQuery) {
@@ -111,6 +170,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -118,6 +179,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the type.
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(String type) {
@@ -125,6 +188,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the title.
+	 *
 	 * @return the title
 	 */
 	public String getTitle() {
@@ -132,6 +197,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the title.
+	 *
 	 * @param title the title to set
 	 */
 	public void setTitle(String title) {
@@ -139,6 +206,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the tooltip.
+	 *
 	 * @return the tooltip
 	 */
 	public String getTooltip() {
@@ -146,6 +215,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the tooltip.
+	 *
 	 * @param tooltip the tooltip to set
 	 */
 	public void setTooltip(String tooltip) {
@@ -153,6 +224,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the icon.
+	 *
 	 * @return the icon
 	 */
 	public String getIcon() {
@@ -160,6 +233,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the icon.
+	 *
 	 * @param icon the icon to set
 	 */
 	public void setIcon(String icon) {
@@ -167,6 +242,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the menu key.
+	 *
 	 * @return the menuKey
 	 */
 	public String getMenuKey() {
@@ -174,6 +251,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the menu key.
+	 *
 	 * @param menuKey the menuKey to set
 	 */
 	public void setMenuKey(String menuKey) {
@@ -181,6 +260,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the menu label.
+	 *
 	 * @return the menuLabel
 	 */
 	public String getMenuLabel() {
@@ -188,6 +269,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the menu label.
+	 *
 	 * @param menuLabel the menuLabel to set
 	 */
 	public void setMenuLabel(String menuLabel) {
@@ -195,6 +278,8 @@ public class EntityDataModelEntity {
 	}
 	
 	/**
+	 * Gets the menu index.
+	 *
 	 * @return the menuIndex
 	 */
 	public String getMenuIndex() {
@@ -202,6 +287,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the menu index.
+	 *
 	 * @param menuIndex the menuIndex to set
 	 */
 	public void setMenuIndex(String menuIndex) {
@@ -209,6 +296,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the layout type.
+	 *
 	 * @return the layoutType
 	 */
 	public String getLayoutType() {
@@ -216,6 +305,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the layout type.
+	 *
 	 * @param layoutType the layoutType to set
 	 */
 	public void setLayoutType(String layoutType) {
@@ -223,6 +314,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the properties.
+	 *
 	 * @return the properties
 	 */
 	public List<EntityDataModelProperty> getProperties() {
@@ -230,6 +323,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the properties.
+	 *
 	 * @param properties the properties to set
 	 */
 	public void setProperties(List<EntityDataModelProperty> properties) {
@@ -237,6 +332,8 @@ public class EntityDataModelEntity {
 	}
 	
 	/**
+	 * Gets the compositions.
+	 *
 	 * @return the compositions
 	 */
 	public List<EntityDataModelComposition> getCompositions() {
@@ -244,6 +341,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the compositions.
+	 *
 	 * @param compositions the compositions to set
 	 */
 	public void setCompositions(List<EntityDataModelComposition> compositions) {
@@ -251,6 +350,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the perspective name.
+	 *
 	 * @return the perspectiveName
 	 */
 	public String getPerspectiveName() {
@@ -258,6 +359,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the perspective name.
+	 *
 	 * @param perspectiveName the perspectiveName to set
 	 */
 	public void setPerspectiveName(String perspectiveName) {
@@ -265,6 +368,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the perspective icon.
+	 *
 	 * @return the perspectiveIcon
 	 */
 	public String getPerspectiveIcon() {
@@ -272,6 +377,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the perspective icon.
+	 *
 	 * @param perspectiveIcon the perspectiveIcon to set
 	 */
 	public void setPerspectiveIcon(String perspectiveIcon) {
@@ -279,6 +386,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the perspective order.
+	 *
 	 * @return the perspectiveOrder
 	 */
 	public int getPerspectiveOrder() {
@@ -286,6 +395,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the perspective order.
+	 *
 	 * @param perspectiveOrder the perspectiveOrder to set
 	 */
 	public void setPerspectiveOrder(int perspectiveOrder) {
@@ -293,6 +404,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the feed url.
+	 *
 	 * @return the feedUrl
 	 */
 	public String getFeedUrl() {
@@ -300,6 +413,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the feed url.
+	 *
 	 * @param feedUrl the feedUrl to set
 	 */
 	public void setFeedUrl(String feedUrl) {
@@ -307,6 +422,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the feed username.
+	 *
 	 * @return the feedUsername
 	 */
 	public String getFeedUsername() {
@@ -314,6 +431,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the feed username.
+	 *
 	 * @param feedUsername the feedUsername to set
 	 */
 	public void setFeedUsername(String feedUsername) {
@@ -321,6 +440,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the feed password.
+	 *
 	 * @return the feedPassword
 	 */
 	public String getFeedPassword() {
@@ -328,6 +449,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the feed password.
+	 *
 	 * @param feedPassword the feedPassword to set
 	 */
 	public void setFeedPassword(String feedPassword) {
@@ -335,6 +458,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the feed schedule.
+	 *
 	 * @return the feedSchedule
 	 */
 	public String getFeedSchedule() {
@@ -342,6 +467,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the feed schedule.
+	 *
 	 * @param feedSchedule the feedSchedule to set
 	 */
 	public void setFeedSchedule(String feedSchedule) {
@@ -349,6 +476,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the feed path.
+	 *
 	 * @return the feedPath
 	 */
 	public String getFeedPath() {
@@ -356,6 +485,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the feed path.
+	 *
 	 * @param feedPath the feedPath to set
 	 */
 	public void setFeedPath(String feedPath) {
@@ -364,6 +495,8 @@ public class EntityDataModelEntity {
 
 
 	/**
+	 * Gets the role read.
+	 *
 	 * @return the roleRead
 	 */
 	public String getRoleRead() {
@@ -371,6 +504,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the role read.
+	 *
 	 * @param roleRead the roleRead to set
 	 */
 	public void setRoleRead(String roleRead) {
@@ -378,6 +513,8 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Gets the role write.
+	 *
 	 * @return the roleWrite
 	 */
 	public String getRoleWrite() {
@@ -385,24 +522,46 @@ public class EntityDataModelEntity {
 	}
 
 	/**
+	 * Sets the role write.
+	 *
 	 * @param roleWrite the roleWrite to set
 	 */
 	public void setRoleWrite(String roleWrite) {
 		this.roleWrite = roleWrite;
 	}
 
+	/**
+	 * Gets the projection referenced model.
+	 *
+	 * @return the projection referenced model
+	 */
 	public String getProjectionReferencedModel() {
 		return projectionReferencedModel;
 	}
 
+	/**
+	 * Sets the projection referenced model.
+	 *
+	 * @param projectionReferencedModel the new projection referenced model
+	 */
 	public void setProjectionReferencedModel(String projectionReferencedModel) {
 		this.projectionReferencedModel = projectionReferencedModel;
 	}
 
+	/**
+	 * Gets the projection referenced entity.
+	 *
+	 * @return the projection referenced entity
+	 */
 	public String getProjectionReferencedEntity() {
 		return projectionReferencedEntity;
 	}
 
+	/**
+	 * Sets the projection referenced entity.
+	 *
+	 * @param projectionReferencedEntity the new projection referenced entity
+	 */
 	public void setProjectionReferencedEntity(String projectionReferencedEntity) {
 		this.projectionReferencedEntity = projectionReferencedEntity;
 	}

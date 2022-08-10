@@ -33,8 +33,10 @@ import org.slf4j.LoggerFactory;
 @ServerEndpoint("/websockets/v4/ide/console")
 public class ConsoleWebsocketService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ConsoleWebsocketService.class);
 
+	/** The open sessions. */
 	private static Map<String, Session> OPEN_SESSIONS = new ConcurrentHashMap<String, Session>();
 
 	/**

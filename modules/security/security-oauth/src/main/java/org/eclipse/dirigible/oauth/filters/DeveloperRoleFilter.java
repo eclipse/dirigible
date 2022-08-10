@@ -23,6 +23,9 @@ import org.eclipse.dirigible.oauth.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class DeveloperRoleFilter.
+ */
 @WebFilter(urlPatterns = {
 		"/services/v3/ide/*",
         "/websockets/v3/ide/*",
@@ -31,12 +34,24 @@ import org.slf4j.LoggerFactory;
 ,}, filterName = "Developer Role Security Filter", description = "Check all URIs for the Developer role permission")
 public class DeveloperRoleFilter extends AbstractOAuthFilter {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DeveloperRoleFilter.class);
 
+	/** The Constant FORBIDDEN_MESSAGE. */
 	private static final String FORBIDDEN_MESSAGE = "The logged in user does not have any of the required roles for the requested URI";
 
+	/** The Constant ROLE. */
 	private static final String ROLE = "Developer";
 
+	/**
+	 * Filter.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param chain the chain
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ServletException the servlet exception
+	 */
 	@Override
 	protected void filter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		if (!JwtUtils.isInRole(request, ROLE)) {
@@ -47,6 +62,11 @@ public class DeveloperRoleFilter extends AbstractOAuthFilter {
 		chain.doFilter(request, response);
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

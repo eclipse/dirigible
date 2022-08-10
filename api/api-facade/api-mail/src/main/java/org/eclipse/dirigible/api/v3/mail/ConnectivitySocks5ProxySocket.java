@@ -25,29 +25,71 @@ import java.nio.ByteBuffer;
 import java.util.Base64; // or any other library for base64 encoding
 import java.util.Properties;
 
+/**
+ * The Class ConnectivitySocks5ProxySocket.
+ */
 public class ConnectivitySocks5ProxySocket extends Socket {
 
+	/** The Constant SOCKS5_VERSION. */
 	private static final byte SOCKS5_VERSION = 0x05;
+	
+	/** The Constant SOCKS5_PASSWORD_AUTHENTICATION_METHOD. */
 	private static final byte SOCKS5_PASSWORD_AUTHENTICATION_METHOD = (byte) 0x02;
+	
+	/** The Constant SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION. */
 	private static final byte SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION = 0x01;
+	
+	/** The Constant SOCKS5_COMMAND_CONNECT_BYTE. */
 	private static final byte SOCKS5_COMMAND_CONNECT_BYTE = 0x01;
+	
+	/** The Constant SOCKS5_COMMAND_REQUEST_RESERVED_BYTE. */
 	private static final byte SOCKS5_COMMAND_REQUEST_RESERVED_BYTE = 0x00;
+	
+	/** The Constant SOCKS5_COMMAND_ADDRESS_TYPE_IPv4_BYTE. */
 	private static final byte SOCKS5_COMMAND_ADDRESS_TYPE_IPv4_BYTE = 0x01;
+	
+	/** The Constant SOCKS5_COMMAND_ADDRESS_TYPE_DOMAIN_BYTE. */
 	private static final byte SOCKS5_COMMAND_ADDRESS_TYPE_DOMAIN_BYTE = 0x03;
+	
+	/** The Constant SOCKS5_AUTHENTICATION_METHODS_COUNT. */
 	private static final byte SOCKS5_AUTHENTICATION_METHODS_COUNT = 0x01;
+	
+	/** The Constant SOCKS5_PASSWORD_AUTHENTICATION_METHOD_UNSIGNED_VALUE. */
 	private static final int SOCKS5_PASSWORD_AUTHENTICATION_METHOD_UNSIGNED_VALUE = 0x02 & 0xFF;
+	
+	/** The Constant SOCKS5_AUTHENTICATION_SUCCESS_BYTE. */
 	private static final byte SOCKS5_AUTHENTICATION_SUCCESS_BYTE = 0x00;
 
+	/** The proxy address. */
 	private final InetSocketAddress proxyAddress;
+	
+	/** The username. */
 	private final String username;
+	
+	/** The password. */
 	private final String password;
 
+	/**
+	 * Instantiates a new connectivity socks 5 proxy socket.
+	 *
+	 * @param host the host
+	 * @param port the port
+	 * @param username the username
+	 * @param password the password
+	 */
 	public ConnectivitySocks5ProxySocket(String host, String port, String username, String password) {
 		this.proxyAddress = new InetSocketAddress(host, Integer.parseInt(port));
 		this.username = username;
 		this.password = password;
 	}
 
+	/**
+	 * Connect.
+	 *
+	 * @param endpoint the endpoint
+	 * @param timeout the timeout
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public void connect(SocketAddress endpoint, int timeout) throws IOException {
 		super.connect(this.proxyAddress, timeout);
@@ -61,11 +103,23 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		executeSOCKS5ConnectRequest(outputStream, (InetSocketAddress) endpoint);
 	}
 
+	/**
+	 * Connect.
+	 *
+	 * @param endpoint the endpoint
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public void connect(SocketAddress endpoint) throws IOException {
 		this.connect(endpoint, 0);
 	}
 
+	/**
+	 * Execute SOCKS 5 initial request.
+	 *
+	 * @param outputStream the output stream
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void executeSOCKS5InitialRequest(OutputStream outputStream) throws IOException {
 		byte[] initialRequest = createInitialSOCKS5Request();
 		outputStream.write(initialRequest);
@@ -73,6 +127,12 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		assertServerInitialResponse();
 	}
 
+	/**
+	 * Creates the initial SOCKS 5 request.
+	 *
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private byte[] createInitialSOCKS5Request() throws IOException {
 		try (ByteArrayOutputStream byteArraysStream = new ByteArrayOutputStream()) {
 			byteArraysStream.write(SOCKS5_VERSION);
@@ -82,6 +142,11 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		}
 	}
 
+	/**
+	 * Assert server initial response.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void assertServerInitialResponse() throws IOException {
 		try (InputStream inputStream = getInputStream()) {
 			int versionByte = inputStream.read();
@@ -97,6 +162,12 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		}
 	}
 
+	/**
+	 * Execute SOCKS 5 authentication request.
+	 *
+	 * @param outputStream the output stream
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void executeSOCKS5AuthenticationRequest(OutputStream outputStream) throws IOException {
 		byte[] authenticationRequest = createPasswordAuthenticationRequest();
 		outputStream.write(authenticationRequest);
@@ -104,6 +175,12 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		assertAuthenticationResponse();
 	}
 
+	/**
+	 * Creates the password authentication request.
+	 *
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private byte[] createPasswordAuthenticationRequest() throws IOException {
 		try (ByteArrayOutputStream byteArraysStream = new ByteArrayOutputStream()) {
 			byteArraysStream.write(SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION);
@@ -115,6 +192,11 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		}
 	}
 
+	/**
+	 * Assert authentication response.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void assertAuthenticationResponse() throws IOException {
 		try (InputStream inputStream = getInputStream()) {
 			int authenticationMethodVersion = inputStream.read();
@@ -130,6 +212,13 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		}
 	}
 
+	/**
+	 * Execute SOCKS 5 connect request.
+	 *
+	 * @param outputStream the output stream
+	 * @param endpoint the endpoint
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void executeSOCKS5ConnectRequest(OutputStream outputStream, InetSocketAddress endpoint) throws IOException {
 		byte[] commandRequest = createConnectCommandRequest(endpoint);
 		outputStream.write(commandRequest);
@@ -137,6 +226,13 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		assertConnectCommandResponse();
 	}
 
+	/**
+	 * Creates the connect command request.
+	 *
+	 * @param endpoint the endpoint
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private byte[] createConnectCommandRequest(InetSocketAddress endpoint) throws IOException {
 		String host = endpoint.getHostName();
 		int port = endpoint.getPort();
@@ -158,6 +254,11 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		}
 	}
 
+	/**
+	 * Assert connect command response.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void assertConnectCommandResponse() throws IOException {
 		try (InputStream inputStream = getInputStream()) {
 			int versionByte = inputStream.read();
@@ -172,6 +273,12 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		}
 	}
 
+	/**
+	 * Assert connect status.
+	 *
+	 * @param commandConnectStatus the command connect status
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void assertConnectStatus(int commandConnectStatus) throws IOException {
 		if (commandConnectStatus == 0) {
 			return;
@@ -210,6 +317,12 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		throw new SocketException("SOCKS5 command failed with status: " + commandConnectStatusTranslation);
 	}
 
+	/**
+	 * Parses the host to I pv 4.
+	 *
+	 * @param hostName the host name
+	 * @return the byte[]
+	 */
 	private byte[] parseHostToIPv4(String hostName) {
 		byte[] parsedHostName = null;
 		String[] virtualHostOctets = hostName.split("\\.", -1);
@@ -233,6 +346,12 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 		return parsedHostName;
 	}
 
+	/**
+	 * Read remaining command response bytes.
+	 *
+	 * @param inputStream the input stream
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void readRemainingCommandResponseBytes(InputStream inputStream) throws IOException {
 		inputStream.read(); // skipping over SOCKS5 reserved byte
 		int addressTypeByte = inputStream.read();

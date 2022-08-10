@@ -16,6 +16,8 @@ package org.eclipse.dirigible.repository.api;
  */
 public class RepositoryNotFoundException extends RepositoryReadException {
 
+	private static final long serialVersionUID = 1912791323774243568L;
+
 	/**
 	 * Instantiates a new repository not found exception.
 	 */

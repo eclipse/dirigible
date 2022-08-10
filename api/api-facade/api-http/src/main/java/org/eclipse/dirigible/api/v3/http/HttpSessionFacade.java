@@ -24,17 +24,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Java facade for working with HttpSession
+ * Java facade for working with HttpSession.
  */
 public class HttpSessionFacade implements IScriptingFacade {
 
+	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Session Facade without a valid Session (HTTP Request/Response)";
+	
+	/** The Constant INVOCATION_COUNT. */
 	private static final String INVOCATION_COUNT = "invocation.count";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpSessionFacade.class);
 
 	/**
-	 * Returns the session associated with the current thread context
+	 * Returns the session associated with the current thread context.
 	 *
 	 * @return the session
 	 */
@@ -58,7 +62,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Checks if there is a session associated with the current thread context
+	 * Checks if there is a session associated with the current thread context.
 	 *
 	 * @return true, if is valid
 	 */
@@ -68,10 +72,9 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Returns the object bound to the specified name
+	 * Returns the object bound to the specified name.
 	 *
-	 * @param arg0
-	 *            the name
+	 * @param arg0            the name
 	 * @return the attribute
 	 */
 	public static final String getAttribute(String arg0) {
@@ -101,7 +104,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Returns the time the session was created
+	 * Returns the time the session was created.
 	 *
 	 * @return the creation time
 	 */
@@ -111,7 +114,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Returns the id of the session
+	 * Returns the id of the session.
 	 *
 	 * @return the id
 	 */
@@ -141,7 +144,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Invalidates the session
+	 * Invalidates the session.
 	 */
 	public static final void invalidate() {
 		HttpSession session = getSession();
@@ -149,7 +152,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Checks if the session is new
+	 * Checks if the session is new.
 	 *
 	 * @return true, if is new
 	 */

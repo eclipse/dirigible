@@ -16,6 +16,7 @@ package org.eclipse.dirigible.database.sql;
  */
 public class SqlException extends RuntimeException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 4878658205810743068L;
 
 	/**

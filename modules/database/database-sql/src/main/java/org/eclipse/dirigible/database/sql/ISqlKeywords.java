@@ -512,18 +512,12 @@ public interface ISqlKeywords {
      */
     public static final String KEYWORD_ROWSTORE = "ROWSTORE";
 
-    /**
-     * The Constant KEYWORD_LIKE
-     */
+    /** The Constant KEYWORD_LIKE. */
     public static final String KEYWORD_LIKE = "LIKE";
 
-    /**
-     * The Constant KEYWORD_NO
-     */
+    /** The Constant KEYWORD_NO. */
     public static final String KEYWORD_NO = "NO";
 
-    /**
-     * The Constant KEYWORD_DATA
-     */
+    /** The Constant KEYWORD_DATA. */
     public static final String KEYWORD_DATA = "DATA";
 }

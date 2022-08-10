@@ -26,16 +26,22 @@ import org.slf4j.LoggerFactory;
  */
 public class SchemaMetadata {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SchemaMetadata.class);
 
+	/** The name. */
 	private String name;
 
+	/** The kind. */
 	private String kind = "schema";
 
+	/** The tables. */
 	private List<TableMetadata> tables;
 	
+	/** The procedures. */
 	private List<ProcedureMetadata> procedures;
 	
+	/** The functions. */
 	private List<FunctionMetadata> functions;
 
 	/**

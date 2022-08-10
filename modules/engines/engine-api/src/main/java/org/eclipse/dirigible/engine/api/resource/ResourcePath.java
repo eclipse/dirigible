@@ -16,8 +16,10 @@ package org.eclipse.dirigible.engine.api.resource;
  */
 public class ResourcePath {
 
+	/** The module. */
 	private String module;
 
+	/** The path. */
 	private String path;
 
 	/**

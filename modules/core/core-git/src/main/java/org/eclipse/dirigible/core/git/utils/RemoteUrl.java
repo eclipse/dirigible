@@ -14,7 +14,16 @@ package org.eclipse.dirigible.core.git.utils;
 import org.eclipse.jgit.api.RemoteSetUrlCommand;
 import org.eclipse.jgit.lib.Repository;
 
+/**
+ * The Class RemoteUrl.
+ */
 public class RemoteUrl extends RemoteSetUrlCommand {
+    
+    /**
+     * Instantiates a new remote url.
+     *
+     * @param repo the repo
+     */
     public RemoteUrl(Repository repo) {
         super(repo);
     }

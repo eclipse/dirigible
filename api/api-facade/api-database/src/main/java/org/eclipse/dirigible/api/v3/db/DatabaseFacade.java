@@ -50,10 +50,17 @@ import com.google.gson.JsonObject;
  */
 public class DatabaseFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
 
+	/** The database. */
 	private static IDatabase database = null;
 	
+	/**
+	 * Gets the database.
+	 *
+	 * @return the database
+	 */
 	protected static synchronized IDatabase getDatabase() {
 		if (database == null) {
 			database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
@@ -99,7 +106,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Create a data source
+	 * Create a data source.
 	 *
 	 * @param name the name of the datasource
 	 * @param driver the driver of the datasource

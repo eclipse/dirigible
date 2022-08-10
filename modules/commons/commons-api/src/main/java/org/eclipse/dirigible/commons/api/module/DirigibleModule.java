@@ -11,18 +11,27 @@
  */
 package org.eclipse.dirigible.commons.api.module;
 
+/**
+ * The Interface DirigibleModule.
+ */
 public interface DirigibleModule {
 	
+	/** The priority configuration. */
 	int PRIORITY_CONFIGURATION = 10;
 	
+	/** The priority database. */
 	int PRIORITY_DATABASE = 20;
 	
+	/** The priority repository. */
 	int PRIORITY_REPOSITORY = 30;
 	
+	/** The priority engine. */
 	int PRIORITY_ENGINE = 40;
 	
+	/** The priority default. */
 	int PRIORITY_DEFAULT = 50;
 	
+	/** The low priority. */
 	int LOW_PRIORITY = 100;
 
 	/**
@@ -33,13 +42,14 @@ public interface DirigibleModule {
 	String getName();
 
 	/**
-	 * Gets the priority
+	 * Gets the priority.
+	 *
 	 * @return the priority
 	 */
 	int getPriority();
 	
 	/**
-	 * Runs the module initialization logic
+	 * Runs the module initialization logic.
 	 */
 	void configure();
 

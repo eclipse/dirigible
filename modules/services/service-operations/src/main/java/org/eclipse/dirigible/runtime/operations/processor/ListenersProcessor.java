@@ -18,10 +18,20 @@ import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.core.messaging.service.MessagingCoreService;
 
+/**
+ * The Class ListenersProcessor.
+ */
 public class ListenersProcessor {
 	
+	/** The messaging core service. */
 	private MessagingCoreService messagingCoreService = new MessagingCoreService();
 	
+	/**
+	 * List.
+	 *
+	 * @return the string
+	 * @throws MessagingException the messaging exception
+	 */
 	public String list() throws MessagingException {
 		
 		List<ListenerDefinition> listeners = messagingCoreService.getListeners();

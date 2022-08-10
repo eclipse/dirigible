@@ -16,6 +16,17 @@ import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
 
 import java.sql.SQLException;
 
+/**
+ * The Interface ITableMetadataProvider.
+ */
 public interface ITableMetadataProvider {
+    
+    /**
+     * Gets the persistence table model.
+     *
+     * @param oDataEntityDefinition the o data entity definition
+     * @return the persistence table model
+     * @throws SQLException the SQL exception
+     */
     PersistenceTableModel getPersistenceTableModel(ODataEntityDefinition oDataEntityDefinition) throws SQLException;
 }

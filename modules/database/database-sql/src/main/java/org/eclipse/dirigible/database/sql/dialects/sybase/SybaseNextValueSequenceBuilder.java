@@ -31,6 +31,11 @@ public class SybaseNextValueSequenceBuilder extends NextValueSequenceBuilder {
 		super(dialect, sequence);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()

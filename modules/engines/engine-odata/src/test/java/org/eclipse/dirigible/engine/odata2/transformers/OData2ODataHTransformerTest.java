@@ -29,12 +29,22 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * The Class OData2ODataHTransformerTest.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class OData2ODataHTransformerTest extends AbstractDirigibleTest {
 
+    /** The odata 2 O data H transformer. */
     @InjectMocks
     OData2ODataHTransformer odata2ODataHTransformer;
 
+    /**
+     * Test transform.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void testTransform() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithHandlers.odata"), Charset.defaultCharset());
@@ -67,6 +77,12 @@ public class OData2ODataHTransformerTest extends AbstractDirigibleTest {
         assertEquals(ODataHandlerTypes.forbid.name(), actualResult.get(3).getType());
     }
 
+    /**
+     * Test transform with incorrect O data handler type.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SQLException the SQL exception
+     */
     @Test(expected = OData2TransformerException.class)
     public void testTransformWithIncorrectODataHandlerType() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithWrongHandler.odata"), Charset.defaultCharset());

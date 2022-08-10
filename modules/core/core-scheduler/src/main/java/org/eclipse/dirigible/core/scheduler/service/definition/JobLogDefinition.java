@@ -25,20 +25,28 @@ import javax.persistence.Table;
 @Table(name = "DIRIGIBLE_JOB_LOGS")
 public class JobLogDefinition {
 	
+	/** The Constant JOB_LOG_STATUS_TRIGGRED. */
 	public static final short JOB_LOG_STATUS_TRIGGRED = 0;
 	
+	/** The Constant JOB_LOG_STATUS_FINISHED. */
 	public static final short JOB_LOG_STATUS_FINISHED = 1;
 	
+	/** The Constant JOB_LOG_STATUS_FAILED. */
 	public static final short JOB_LOG_STATUS_FAILED = -1;
 	
+	/** The Constant JOB_LOG_STATUS_LOGGED. */
 	public static final short JOB_LOG_STATUS_LOGGED = 2;
 	
+	/** The Constant JOB_LOG_STATUS_ERROR. */
 	public static final short JOB_LOG_STATUS_ERROR = 3;
 	
+	/** The Constant JOB_LOG_STATUS_WARN. */
 	public static final short JOB_LOG_STATUS_WARN = 4;
 	
+	/** The Constant JOB_LOG_STATUS_INFO. */
 	public static final short JOB_LOG_STATUS_INFO = 5;
 	
+	/** The Constant JOB_LOG_STATUS_UNKNOWN. */
 	public static final short JOB_LOG_STATUS_UNKNOWN = 99;
 
 	/** The id. */
@@ -59,6 +67,7 @@ public class JobLogDefinition {
 	@Column(name = "JOBLOG_TRIGGERED_AT", columnDefinition = "TIMESTAMP", nullable = true)
 	private Timestamp triggeredAt;
 	
+	/** The triggered id. */
 	@Column(name = "JOBLOG_TRIGGERED_ID", columnDefinition = "BIGINT", nullable = true)
 	private long triggeredId;
 	
@@ -66,7 +75,7 @@ public class JobLogDefinition {
 	@Column(name = "JOBLOG_FINISHED_AT", columnDefinition = "TIMESTAMP", nullable = true)
 	private Timestamp finishedAt;
 
-	/** The status */
+	/**  The status. */
 	@Column(name = "JOBLOG_STATUS", columnDefinition = "SMALLINT", nullable = false)
 	private short status;
 
@@ -78,6 +87,8 @@ public class JobLogDefinition {
 	
 	
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public long getId() {
@@ -85,6 +96,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(long id) {
@@ -92,6 +105,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -99,6 +114,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -106,6 +123,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Gets the handler.
+	 *
 	 * @return the handler
 	 */
 	public String getHandler() {
@@ -113,6 +132,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Sets the handler.
+	 *
 	 * @param handler the handler to set
 	 */
 	public void setHandler(String handler) {
@@ -120,6 +141,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Gets the triggered at.
+	 *
 	 * @return the triggeredAt
 	 */
 	public Timestamp getTriggeredAt() {
@@ -130,6 +153,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Sets the triggered at.
+	 *
 	 * @param triggeredAt the triggeredAt to set
 	 */
 	public void setTriggeredAt(Timestamp triggeredAt) {
@@ -141,6 +166,8 @@ public class JobLogDefinition {
 	}
 	
 	/**
+	 * Gets the triggered id.
+	 *
 	 * @return the triggeredId
 	 */
 	public long getTriggeredId() {
@@ -148,6 +175,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Sets the triggered id.
+	 *
 	 * @param triggeredId the triggeredId to set
 	 */
 	public void setTriggeredId(long triggeredId) {
@@ -156,6 +185,8 @@ public class JobLogDefinition {
 
 
 	/**
+	 * Gets the finished at.
+	 *
 	 * @return the finishedAt
 	 */
 	public Timestamp getFinishedAt() {
@@ -166,6 +197,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Sets the finished at.
+	 *
 	 * @param finishedAt the finishedAt to set
 	 */
 	public void setFinishedAt(Timestamp finishedAt) {
@@ -177,6 +210,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Gets the status.
+	 *
 	 * @return the status
 	 */
 	public short getStatus() {
@@ -184,6 +219,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Sets the status.
+	 *
 	 * @param status the status to set
 	 */
 	public void setStatus(short status) {
@@ -191,6 +228,8 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Gets the message.
+	 *
 	 * @return the message
 	 */
 	public String getMessage() {
@@ -198,17 +237,30 @@ public class JobLogDefinition {
 	}
 
 	/**
+	 * Sets the message.
+	 *
 	 * @param message the message to set
 	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(finishedAt, handler, id, message, name, status, triggeredAt, triggeredId);
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

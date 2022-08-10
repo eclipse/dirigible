@@ -28,8 +28,17 @@ import org.eclipse.dirigible.commons.config.Configuration;
 @WebServlet(name = "LogoutServlet", urlPatterns = { "/logout" })
 public class LogoutServlet extends HttpServlet {
 
+	/** The Constant JWT_COOKIE_NAME. */
 	private static final String JWT_COOKIE_NAME = "jwt-cookie";
 
+	/**
+	 * Do get.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,

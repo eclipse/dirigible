@@ -16,6 +16,7 @@ package org.eclipse.dirigible.core.security.api;
  */
 public class AccessException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5800180600419241248L;
 
 	/**

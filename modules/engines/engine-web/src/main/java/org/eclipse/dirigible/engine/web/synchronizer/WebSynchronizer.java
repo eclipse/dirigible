@@ -44,18 +44,27 @@ import org.slf4j.LoggerFactory;
  */
 public class WebSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WebSynchronizer.class);
 
+	/** The Constant WEB_PREDELIVERED. */
 	private static final Map<String, WebModel> WEB_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, WebModel>());
 
+	/** The Constant WEB_SYNCHRONIZED. */
 	private static final List<String> WEB_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The web core service. */
 	private WebCoreService webCoreService = new WebCoreService();
 
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant WEB_ARTEFACT. */
 	private static final WebSynchronizationArtefactType WEB_ARTEFACT = new WebSynchronizationArtefactType();
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -128,6 +137,11 @@ public class WebSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -141,6 +155,12 @@ public class WebSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing Webs from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -157,6 +177,11 @@ public class WebSynchronizer extends AbstractSynchronizer {
 
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
@@ -181,6 +206,11 @@ public class WebSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done cleaning up Webs.");
 	}
 
+	/**
+	 * Update web exposures.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	private void updateWebExposures() throws SchedulerException {
 		logger.trace("Start Web Registering...");
 
@@ -224,10 +254,18 @@ public class WebSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done registering Projects.");
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		WEB_SYNCHRONIZED.clear();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Webs...");
 		// Webs
@@ -237,6 +275,12 @@ public class WebSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing predelivered Jobs.");
 	}
 
+	/**
+	 * Synchronize web.
+	 *
+	 * @param webModel the web model
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeWeb(WebModel webModel) throws SynchronizationException {
 		try {
 			if (!webCoreService.existsWeb(webModel.getLocation())) {

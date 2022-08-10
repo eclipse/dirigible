@@ -53,10 +53,13 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class RepositoryRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryRestService.class);
 
+	/** The processor. */
 	private RepositoryProcessor processor = new RepositoryProcessor();
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
@@ -184,6 +187,11 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		return Response.noContent().build();
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -193,6 +201,11 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		return RepositoryRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

@@ -136,17 +136,12 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	/**
 	 * Check existence of an artifacts.
 	 *
-	 * @param connection
-	 *            the current connection
-	 * @param name
-	 *            the artifact name
-	 * @param schema
-	 * 	           the schema name
-	 * @param type
-	 *            the artifact type
+	 * @param connection            the current connection
+	 * @param schema 	           the schema name
+	 * @param name            the artifact name
+	 * @param type            the artifact type
 	 * @return true if the table exists and false otherwise
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @throws SQLException             the SQL exception
 	 */
 	public boolean exists(Connection connection, String schema, String name, int type) throws SQLException;
 

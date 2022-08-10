@@ -17,6 +17,7 @@ package org.eclipse.dirigible.database.transfer.api;
  */
 public class DataTransferException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2161860568272479874L;
 
 	/**

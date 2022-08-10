@@ -11,27 +11,22 @@
  */
 package org.eclipse.dirigible.database.ds.model.test;
 
-import static java.text.MessageFormat.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.io.IOUtils;
-import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.processors.TableCreateProcessor;
 import org.eclipse.dirigible.database.ds.model.transfer.TableImporter;
+import org.eclipse.dirigible.database.h2.H2Database;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +45,8 @@ public class DataStructureTableImportTest {
 	@Before
 	public void setUp() {
 		try {
-			this.dataSource = createDataSource("target/tests/derby");
+			H2Database h2Database = new H2Database();
+			this.dataSource = h2Database.getDataSource("target/h2");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -64,70 +60,6 @@ public class DataStructureTableImportTest {
 	 */
 	public DataSource getDataSource() {
 		return dataSource;
-	}
-
-	/**
-	 * Creates the data source.
-	 *
-	 * @param name
-	 *            the name
-	 * @return the data source
-	 * @throws Exception
-	 *             the exception
-	 */
-	protected DataSource createDataSource(String name) throws Exception {
-		try {
-			Properties databaseProperties = new Properties();
-			InputStream in = DataStructureTableImportTest.class.getResourceAsStream("/database.properties");
-			if (in != null) {
-				try {
-					databaseProperties.load(in);
-				} finally {
-					if (in != null) {
-						in.close();
-					}
-				}
-			}
-			String database = System.getProperty("database");
-			if (database == null) {
-				database = "derby";
-			}
-
-			if ("derby".equals(database)) {
-				DataSource embeddedDataSource = new EmbeddedDataSource();
-				String derbyRoot = prepareRootFolder(name);
-				((EmbeddedDataSource) embeddedDataSource).setDatabaseName(derbyRoot);
-				((EmbeddedDataSource) embeddedDataSource).setCreateDatabase("create");
-				return embeddedDataSource;
-			}
-			BasicDataSource basicDataSource = new BasicDataSource();
-			String databaseDriver = databaseProperties.getProperty(database + ".driver");
-			basicDataSource.setDriverClassName(databaseDriver);
-			String databaseUrl = databaseProperties.getProperty(database + ".url");
-			basicDataSource.setUrl(databaseUrl);
-			String databaseUsername = databaseProperties.getProperty(database + ".username");
-			basicDataSource.setUsername(databaseUsername);
-			String databasePassword = databaseProperties.getProperty(database + ".password");
-			basicDataSource.setPassword(databasePassword);
-			basicDataSource.setDefaultAutoCommit(true);
-			basicDataSource.setAccessToUnderlyingConnectionAllowed(true);
-
-			return basicDataSource;
-
-		} catch (IOException e) {
-			throw new Exception(e);
-		}
-	}
-	
-	private String prepareRootFolder(String name) throws IOException {
-		File rootFile = new File(name);
-		File parentFile = rootFile.getCanonicalFile().getParentFile();
-		if (!parentFile.exists()) {
-			if (!parentFile.mkdirs()) {
-				throw new IOException(format("Creation of the root folder [{0}] of the embedded Derby database failed.", name));
-			}
-		}
-		return name;
 	}
 	
 	/**

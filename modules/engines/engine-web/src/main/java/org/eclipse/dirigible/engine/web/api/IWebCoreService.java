@@ -21,7 +21,7 @@ import org.eclipse.dirigible.engine.web.models.WebModel;
  */
 public interface IWebCoreService extends ICoreService {
 
-	/** The project json file name */
+	/**  The project json file name. */
 	public String FILE_PROJECT_JSON = "project.json";
 
 	
@@ -30,15 +30,12 @@ public interface IWebCoreService extends ICoreService {
 	/**
 	 * Creates the project.json.
 	 *
-	 * @param location
-	 *            the location
-	 * @param name
-	 *            the name
-	 * @param hash
-	 *            the hash
+	 * @param location            the location
+	 * @param name            the name
+	 * @param exposed the exposed
+	 * @param hash            the hash
 	 * @return the project.json model
-	 * @throws WebCoreException
-	 *             the web exception
+	 * @throws WebCoreException             the web exception
 	 */
 	public WebModel createWeb(String location, String name, String exposed, String hash) throws WebCoreException;
 
@@ -54,10 +51,11 @@ public interface IWebCoreService extends ICoreService {
 	public WebModel getWeb(String location) throws WebCoreException;
 	
 	/**
-	 * Getter for the Web by its name
-	 * 
+	 * Getter for the Web by its name.
+	 *
 	 * @param name the name
 	 * @return the model
+	 * @throws WebCoreException the web core exception
 	 */
 	public WebModel getWebByName(String name) throws WebCoreException;
 
@@ -85,14 +83,11 @@ public interface IWebCoreService extends ICoreService {
 	/**
 	 * Update project.json.
 	 *
-	 * @param location
-	 *            the location
-	 * @param name
-	 *            the name
-	 * @param hash
-	 *            the hash
-	 * @throws WebCoreException
-	 *             the web exception
+	 * @param location            the location
+	 * @param name            the name
+	 * @param exposed the exposed
+	 * @param hash            the hash
+	 * @throws WebCoreException             the web exception
 	 */
 	public void updateWeb(String location, String name, String exposed, String hash) throws WebCoreException;
 

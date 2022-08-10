@@ -19,8 +19,14 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class OpenAPISynchronizerJob extends AbstractSynchronizerJob {
 
+	/** The open API synchronizer. */
 	private OpenAPISynchronizer openAPISynchronizer = new OpenAPISynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -30,6 +36,11 @@ public class OpenAPISynchronizerJob extends AbstractSynchronizerJob {
 		return openAPISynchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return OpenAPISynchronizerJobDefinitionProvider.OPENAPI_SYNCHRONIZER_JOB;

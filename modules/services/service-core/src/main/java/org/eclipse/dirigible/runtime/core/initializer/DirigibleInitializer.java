@@ -46,10 +46,15 @@ import io.swagger.models.auth.SecuritySchemeDefinition;
  */
 public class DirigibleInitializer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleInitializer.class);
 
+	/** The Constant services. */
 	private static final HashSet<Object> services = new HashSet<Object>();
 
+	/**
+	 * Initialize.
+	 */
 	public synchronized void initialize() {
 
 		logger.info("---------- Initializing Eclipse Dirigible Platform... ----------");
@@ -74,6 +79,9 @@ public class DirigibleInitializer {
 		logger.info("---------- Eclipse Dirigible Platform initialized. ----------");
 	}
 	
+	/**
+	 * Initialize modules.
+	 */
 	private void initializeModules() {
 		logger.trace("Initializing modules ...");
 
@@ -82,6 +90,9 @@ public class DirigibleInitializer {
 		logger.trace("Modules have been initialized.");
 	}
 
+	/**
+	 * Prints the all configurations.
+	 */
 	private void printAllConfigurations() {
 		
 		logger.info("---------- Environment ----------");
@@ -271,6 +282,9 @@ public class DirigibleInitializer {
 		return services;
 	}
 
+	/**
+	 * Destory.
+	 */
 	public void destory() {
 		logger.info("Shutting down Eclipse Dirigible Platform...");
 

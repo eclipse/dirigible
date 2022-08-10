@@ -21,8 +21,10 @@ import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBui
  */
 public class HanaLastValueIdentityBuilder extends LastValueIdentityBuilder {
 
+	/** The Constant PATTERN_SELECT_LAST_VALUE_IDENTITY. */
 	private static final String PATTERN_SELECT_LAST_VALUE_IDENTITY = "SELECT CURRENT_IDENTITY_VALUE() FROM ";
 
+	/** The args. */
 	private String[] args = null;
 
 	/**
@@ -41,6 +43,11 @@ public class HanaLastValueIdentityBuilder extends LastValueIdentityBuilder {
 		this.args = args;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()

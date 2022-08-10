@@ -20,17 +20,23 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 
+/**
+ * The Class SummaryOfSalesByQuarters.
+ */
 @EdmEntityType(name = "Summary_of_Sales_by_Quarter")
 @EdmEntitySet(name = "Summary_of_Sales_by_Quarters", container = "NorthwindEntities")
 public class SummaryOfSalesByQuarters {
 
+	/** The shipped date. */
 	@EdmProperty(type = EdmType.DATE_TIME)
 	private Date shippedDate;
 
+	/** The order id. */
 	@EdmKey
 	@EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
 	private Integer orderId;
 
+	/** The subtotal. */
 	@EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(precision = 19, scale = 4))
 	private Double subtotal;
 }

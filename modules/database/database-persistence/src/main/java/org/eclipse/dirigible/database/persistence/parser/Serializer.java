@@ -19,17 +19,17 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import com.google.gson.Gson;
 
 /**
- * Serialization Utility
+ * Serialization Utility.
  */
 public class Serializer {
 
+	/** The gson. */
 	private static Gson gson = new Gson();
 
 	/**
-	 * Serializes a table model
-	 * 
-	 * @param tableModel
-	 *            the model
+	 * Serializes a table model.
+	 *
+	 * @param tableModel            the model
 	 * @return the serialized model
 	 */
 	public static String serializeTableModel(PersistenceTableModel tableModel) {
@@ -41,10 +41,9 @@ public class Serializer {
 	}
 
 	/**
-	 * Serializes a POJO instance
-	 * 
-	 * @param pojo
-	 *            the POJO instance
+	 * Serializes a POJO instance.
+	 *
+	 * @param pojo            the POJO instance
 	 * @return the serialized POJO instance
 	 */
 	public static String serializePojo(Object pojo) {
@@ -55,6 +54,12 @@ public class Serializer {
 		}
 	}
 
+	/**
+	 * Serialize column model.
+	 *
+	 * @param columnModel the column model
+	 * @return the string
+	 */
 	public static String serializeColumnModel(PersistenceTableColumnModel columnModel) {
 		try {
 			return gson.toJson(columnModel);
@@ -63,6 +68,12 @@ public class Serializer {
 		}
 	}
 
+	/**
+	 * Serialize list of objects.
+	 *
+	 * @param objects the objects
+	 * @return the string
+	 */
 	public static String serializeListOfObjects(List<Object> objects) {
 		if (objects == null || objects.isEmpty()) {
 			return "List is empty or null";

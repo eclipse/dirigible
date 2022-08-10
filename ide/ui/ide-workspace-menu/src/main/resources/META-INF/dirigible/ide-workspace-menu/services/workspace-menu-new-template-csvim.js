@@ -9,17 +9,11 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.database.ds.model.util;
-
-import java.util.List;
-
-public class DBModelUtils {
-
-    public static String generateHashedName(List<String> values){
-        StringBuilder hashedName = new StringBuilder("");
-        for(String val : values){
-            hashedName.append(val);
-        }
-        return String.valueOf(hashedName.toString().hashCode());
-    }
-}
+exports.getTemplate = function () {
+    return {
+        "name": "cvsim",
+        "label": "CSVIM file",
+        "extension": "csvim",
+        "data": '[]'
+    };
+};

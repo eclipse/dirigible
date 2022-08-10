@@ -54,7 +54,7 @@ public class DeleteRecordTest {
 	}
 
 	/**
-	 * Select column and where clause in case sensitive mode
+	 * Select column and where clause in case sensitive mode.
 	 */
 	@Test
 	public void deleteWehereWithSpecialCharsCaseSensitive() {
@@ -73,6 +73,9 @@ public class DeleteRecordTest {
 		}
 	}
 
+	/**
+	 * Delete wehere with special chars case sensitive W ith equal condition.
+	 */
 	@Test
 	public void deleteWehereWithSpecialCharsCaseSensitiveWIthEqualCondition() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
@@ -89,6 +92,10 @@ public class DeleteRecordTest {
 			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
 		}
 	}
+	
+	/**
+	 * Delete wehere with special chars case sensitive with in condition.
+	 */
 	@Test
 	public void deleteWehereWithSpecialCharsCaseSensitiveWithInCondition() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");

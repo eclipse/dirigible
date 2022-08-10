@@ -24,12 +24,16 @@ import java.util.List;
  */
 public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(AlterTableBuilder.class);
 
+    /** The action. */
     private String action = null;
 
+    /** The foreign keys. */
     private List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<CreateTableForeignKeyBuilder>();
 
+    /** The unique indices. */
     private List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<CreateTableUniqueIndexBuilder>();
 
     /**
@@ -42,17 +46,32 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         super(dialect, table);
     }
 
+    /**
+     * Adds the.
+     *
+     * @return the alter table builder
+     */
     public AlterTableBuilder add() {
         this.action = KEYWORD_ADD;
         return this;
     }
 
 
+    /**
+     * Alter.
+     *
+     * @return the alter table builder
+     */
     public AlterTableBuilder alter() {
         this.action = KEYWORD_ALTER;
         return this;
     }
 
+    /**
+     * Drop.
+     *
+     * @return the alter table builder
+     */
     public AlterTableBuilder drop() {
         this.action = KEYWORD_DROP;
         return this;
@@ -68,7 +87,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
     }
 
     /**
-     * Gets the foreignKeys list
+     * Gets the foreignKeys list.
      *
      * @return the foreignKeys
      */
@@ -76,12 +95,17 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         return foreignKeys;
     }
 
+    /**
+     * Gets the unique indices.
+     *
+     * @return the unique indices
+     */
     public List<CreateTableUniqueIndexBuilder> getUniqueIndices() {
         return uniqueIndices;
     }
 
     /**
-     * Foreign Key
+     * Foreign Key.
      *
      * @param name              the name of the foreign key
      * @param columns           the local columns
@@ -104,6 +128,13 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         return this;
     }
 
+    /**
+     * Unique.
+     *
+     * @param name the name
+     * @param columns the columns
+     * @return the alter table builder
+     */
     @Override
     public AlterTableBuilder unique(String name, String[] columns) {
         logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));
@@ -115,11 +146,25 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         return this;
     }
 
+    /**
+     * Unique.
+     *
+     * @param name the name
+     * @param columns the columns
+     * @param type the type
+     * @param order the order
+     * @return the alter table builder
+     */
     @Override
     public AlterTableBuilder unique(String name, String[] columns, String type, String order){
         return unique(name, columns);
     }
 
+    /**
+     * Generate.
+     *
+     * @return the string
+     */
     /*
      * (non-Javadoc)
      * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
@@ -171,6 +216,11 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
     }
 
 
+    /**
+     * Generate foreign key names.
+     *
+     * @param sql the sql
+     */
     protected void generateForeignKeyNames(StringBuilder sql) {
         StringBuilder snippet = new StringBuilder();
         for (CreateTableForeignKeyBuilder foreignKey : this.getForeignKeys()) {

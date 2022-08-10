@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.api.v3.core.test;
 
+/**
+ * The Class ExtendedObject.
+ */
 public class ExtendedObject extends BaseObject {
 
 }

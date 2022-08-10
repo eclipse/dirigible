@@ -20,12 +20,16 @@ import java.util.ArrayList;
  */
 public class WorkspaceSelectionTargetPair {
 
+        /** The source selection. */
         private ArrayList<SelectedNode> sourceSelection;
 
+        /** The source workspace. */
         private String sourceWorkspace;
 
+        /** The target workspace. */
         private String targetWorkspace;
 
+        /** The target. */
         private String target;
 
         /**
@@ -101,6 +105,8 @@ public class WorkspaceSelectionTargetPair {
         }
 
     /**
+     * Skip by path.
+     *
      * @param skipPath the path to skip all inside
      */
         public void skipByPath(String skipPath) {
@@ -115,33 +121,89 @@ public class WorkspaceSelectionTargetPair {
         }
 
 
+    /**
+     * The Class SelectedNode.
+     */
     public class SelectedNode {
+            
+            /** The id. */
             private String id;
+            
+            /** The path. */
             private String path;
+            
+            /** The type. */
             private String type;
+            
+            /** The norootpath. */
             private String norootpath;
+            
+            /** The resolution. */
             private String resolution;
+            
+            /**
+             * Gets the internal path.
+             *
+             * @return the internal path
+             */
             public String getInternalPath() {
                 return norootpath;
             };
+            
+            /**
+             * Gets the node type.
+             *
+             * @return the node type
+             */
             public String getNodeType() {
                 return type;
             }
+            
+            /**
+             * Gets the path.
+             *
+             * @return the path
+             */
             public String getPath() {
                 return path;
             }
+            
+            /**
+             * Sets the path.
+             *
+             * @param newPath the new path
+             */
             public void setPath(String newPath) {
                 path = newPath;
             }
+            
+            /**
+             * Gets the relative path.
+             *
+             * @return the relative path
+             */
             public String getRelativePath() {
                 Path fullpath = Paths.get(path);
                 return fullpath.subpath(2, fullpath.getNameCount()).toString().replaceAll("^/+", "");
             }
+            
+            /**
+             * Gets the resolution.
+             *
+             * @return the resolution
+             */
             public String getResolution() {
                 String defaultResolution = "rename";
                 if (resolution != null) return resolution;
                 return defaultResolution;
             }
+            
+            /**
+             * Sets the resolution.
+             *
+             * @param resolution the resolution
+             * @return the selected node
+             */
             public SelectedNode setResolution(String resolution) {
                 this.resolution = resolution;
                 return this;

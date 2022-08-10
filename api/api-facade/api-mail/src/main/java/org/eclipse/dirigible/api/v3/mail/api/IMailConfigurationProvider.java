@@ -13,6 +13,9 @@ package org.eclipse.dirigible.api.v3.mail.api;
 
 import java.util.Properties;
 
+/**
+ * The Interface IMailConfigurationProvider.
+ */
 public interface IMailConfigurationProvider {
 
     /**
@@ -23,7 +26,7 @@ public interface IMailConfigurationProvider {
      String getName();
 
     /**
-     * Get Properties for MailClient Instance
+     * Get Properties for MailClient Instance.
      *
      * @return MailClient instance
      */

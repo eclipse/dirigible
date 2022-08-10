@@ -11,8 +11,18 @@
  */
 package org.eclipse.dirigible.core.workspace.api;
 
+/**
+ * The Interface IProjectStatusProvider.
+ */
 public interface IProjectStatusProvider {
 	
+	/**
+	 * Gets the project status.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the project status
+	 */
 	ProjectStatus getProjectStatus(String workspace, String project);
 
 }

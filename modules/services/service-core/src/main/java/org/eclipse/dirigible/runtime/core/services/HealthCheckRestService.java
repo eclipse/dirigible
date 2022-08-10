@@ -25,8 +25,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 /**
- * Front-facing service providing the version information
- *
+ * Front-facing service providing the version information.
  */
 @Path("/healthcheck")
 @RolesAllowed({ "Everyone" })
@@ -35,11 +34,21 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class HealthCheckRestService implements IRestService {
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return HealthCheckRestService.class;
 	}
 
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
 	@GET
 	@Path("")
 	@Produces({ "application/json" })

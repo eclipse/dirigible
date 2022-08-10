@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceCreateIdentityProcessor extends AbstractPersistenceProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceCreateIdentityProcessor.class);
 
 	/**
@@ -39,6 +40,13 @@ public class PersistenceCreateIdentityProcessor extends AbstractPersistenceProce
 		super(entityManagerInterceptor);
 	}
 
+	/**
+	 * Generate script.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.

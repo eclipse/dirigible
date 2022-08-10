@@ -19,6 +19,11 @@ import ch.qos.logback.core.AppenderBase;
  */
 public class ConsoleLoggingAppender extends AppenderBase<ILoggingEvent> {
 
+	/**
+	 * Append.
+	 *
+	 * @param event the event
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see ch.qos.logback.core.AppenderBase#append(java.lang.Object)

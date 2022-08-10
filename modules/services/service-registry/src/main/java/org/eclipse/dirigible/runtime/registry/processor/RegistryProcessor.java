@@ -24,10 +24,17 @@ import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
  */
 public class RegistryProcessor {
 
+	/** The Constant REGISTRY. */
 	private static final String REGISTRY = "/registry";
 
+	/** The repository. */
 	private IRepository repository = null;
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);

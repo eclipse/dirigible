@@ -21,8 +21,15 @@ import org.quartz.utils.ConnectionProvider;
  */
 public class DatasourceConnectionProvider implements ConnectionProvider {
 
+	/** The datasource provider. */
 	private DatasourceProvider datasourceProvider;
 
+	/**
+	 * Gets the connection.
+	 *
+	 * @return the connection
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.quartz.utils.ConnectionProvider#getConnection()
@@ -32,6 +39,11 @@ public class DatasourceConnectionProvider implements ConnectionProvider {
 		return this.datasourceProvider.getDatasource().getConnection();
 	}
 
+	/**
+	 * Initialize.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.quartz.utils.ConnectionProvider#initialize()
@@ -43,6 +55,11 @@ public class DatasourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
+	/**
+	 * Shutdown.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.quartz.utils.ConnectionProvider#shutdown()

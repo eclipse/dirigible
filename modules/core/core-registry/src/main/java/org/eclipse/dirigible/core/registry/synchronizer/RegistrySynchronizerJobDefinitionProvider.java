@@ -16,14 +16,25 @@ import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 
+/**
+ * The Class RegistrySynchronizerJobDefinitionProvider.
+ */
 public class RegistrySynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_REGISTRY. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_REGISTRY = "DIRIGIBLE_JOB_EXPRESSION_REGISTRY";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_REGISTRY_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_REGISTRY_SYNCHRONIZER_JOB = "dirigible-internal-registry-synchronizer-job";
 	
+	/** The Constant REGISTRY_SYNCHRONIZER_JOB. */
 	static final String REGISTRY_SYNCHRONIZER_JOB = "Registry Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	@Override
 	public JobDefinition getJobDefinition() {
 		JobDefinition jobDefinition = new JobDefinition();

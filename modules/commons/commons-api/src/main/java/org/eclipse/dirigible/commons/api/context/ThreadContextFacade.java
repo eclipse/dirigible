@@ -27,14 +27,19 @@ import org.slf4j.LoggerFactory;
  */
 public class ThreadContextFacade {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ThreadContextFacade.class);
 
+    /** The Constant STACKED_CONTEXT. */
     private static final ThreadLocal<Map<Integer, Map<String, Object>>> STACKED_CONTEXT = new ThreadLocal<>();
 
+    /** The Constant STACKED_CLOSEABLES. */
     private static final ThreadLocal<Map<Integer, Map<String, AutoCloseable>>> STACKED_CLOSEABLES = new ThreadLocal<>();
 
+    /** The Constant UUID_GENERATOR. */
     private static final AtomicLong UUID_GENERATOR = new AtomicLong(Long.MIN_VALUE);
 
+    /** The Constant STACK_ID. */
     private static final ThreadLocal<Integer> STACK_ID = new ThreadLocal<>();
 
     /**
@@ -62,6 +67,11 @@ public class ThreadContextFacade {
         logger.trace("Scripting context {} has been set up", Thread.currentThread().hashCode());
     }
 
+    /**
+     * Collect parent objects.
+     *
+     * @return the map
+     */
     private static Map<String, Object> collectParentObjects() {
         Map<String, Object> allParentObjects = new HashMap<>();
 
@@ -193,7 +203,7 @@ public class ThreadContextFacade {
     }
 
     /**
-     * Add a closeable object to the map
+     * Add a closeable object to the map.
      *
      * @param closeable the closeable object
      */
@@ -216,21 +226,41 @@ public class ThreadContextFacade {
         }
     }
 
+    /**
+     * Stacked context is empty.
+     *
+     * @return true, if successful
+     */
     private static boolean stackedContextIsEmpty() {
         Map<Integer, Map<String, Object>> stackedContext = STACKED_CONTEXT.get();
         return stackedContext == null || stackedContext.isEmpty();
     }
 
+    /**
+     * Stacked context is not empty.
+     *
+     * @return true, if successful
+     */
     private static boolean stackedContextIsNotEmpty() {
         Map<Integer, Map<String, Object>> stackedContext = STACKED_CONTEXT.get();
         return stackedContext != null && !stackedContext.isEmpty();
     }
 
+    /**
+     * Stacked closeables is empty.
+     *
+     * @return true, if successful
+     */
     private static boolean stackedCloseablesIsEmpty() {
         Map<Integer, Map<String, AutoCloseable>> stackedCloseables = STACKED_CLOSEABLES.get();
         return stackedCloseables == null || stackedCloseables.isEmpty();
     }
 
+    /**
+     * Stacked closeables is not empty.
+     *
+     * @return true, if successful
+     */
     private static boolean stackedCloseablesIsNotEmpty() {
         Map<Integer, Map<String, AutoCloseable>> stackedCloseables = STACKED_CLOSEABLES.get();
         return stackedCloseables != null && !stackedCloseables.isEmpty();

@@ -26,14 +26,21 @@ import org.slf4j.LoggerFactory;
  */
 public class BpmModule extends AbstractDirigibleModule {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(BpmModule.class);
 
+	/** The Constant BPM_PROVIDERS. */
 	private static final ServiceLoader<IBpmProvider> BPM_PROVIDERS = ServiceLoader.load(IBpmProvider.class);
 
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "BPM Module";
 
+	/** The provider. */
 	private static IBpmProvider provider;
 
+	/**
+	 * Configure.
+	 */
 	/*
 	 * (non-Javadoc)
 	 *
@@ -58,6 +65,11 @@ public class BpmModule extends AbstractDirigibleModule {
 		}
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 *
@@ -71,7 +83,7 @@ public class BpmModule extends AbstractDirigibleModule {
 	}
 
 	/**
-	 * The bound process engine
+	 * The bound process engine.
 	 *
 	 * @return the process engine
 	 */
@@ -83,7 +95,7 @@ public class BpmModule extends AbstractDirigibleModule {
 	}
 	
 	/**
-	 * The bound process engine provider
+	 * The bound process engine provider.
 	 *
 	 * @return the process engine provider
 	 */

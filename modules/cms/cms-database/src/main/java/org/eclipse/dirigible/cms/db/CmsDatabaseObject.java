@@ -18,20 +18,28 @@ import java.util.Date;
  */
 public abstract class CmsDatabaseObject {
 
+	/** The repository. */
 	private CmsDatabaseRepository repository;
 
+	/** The name. */
 	private String name;
 
+	/** The path. */
 	private String path;
 
+	/** The permissions. */
 	private int permissions;
 
+	/** The created by. */
 	private String createdBy;
 
+	/** The created at. */
 	private Date createdAt;
 
+	/** The modified by. */
 	private String modifiedBy;
 
+	/** The modified at. */
 	private Date modifiedAt;
 
 	/**

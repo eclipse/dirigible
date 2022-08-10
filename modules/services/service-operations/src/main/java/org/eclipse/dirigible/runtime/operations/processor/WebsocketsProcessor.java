@@ -18,10 +18,20 @@ import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
 import org.eclipse.dirigible.core.websockets.definition.WebsocketDefinition;
 import org.eclipse.dirigible.core.websockets.service.WebsocketsCoreService;
 
+/**
+ * The Class WebsocketsProcessor.
+ */
 public class WebsocketsProcessor {
 	
+	/** The websockets core service. */
 	private WebsocketsCoreService websocketsCoreService = new WebsocketsCoreService();
 	
+	/**
+	 * List.
+	 *
+	 * @return the string
+	 * @throws WebsocketsException the websockets exception
+	 */
 	public String list() throws WebsocketsException {
 		
 		List<WebsocketDefinition> websockets = websocketsCoreService.getWebsockets();

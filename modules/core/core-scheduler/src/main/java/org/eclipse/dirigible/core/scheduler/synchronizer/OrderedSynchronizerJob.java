@@ -22,6 +22,11 @@ public class OrderedSynchronizerJob extends AbstractSynchronizerJob {
 	/** The ordered synchronizer. */
 	private OrderedSynchronizer orderedSynchronizer = new OrderedSynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -31,6 +36,11 @@ public class OrderedSynchronizerJob extends AbstractSynchronizerJob {
 		return orderedSynchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return OrderedSynchronizerJobDefinitionProvider.ORDERED_SYNCHRONIZER_JOB;

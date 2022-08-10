@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceInsertProcessor.class);
 
 	/**
@@ -55,6 +56,13 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 		super(entityManagerInterceptor);
 	}
 
+	/**
+	 * Generate script.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.
@@ -139,19 +147,14 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 	/**
 	 * Sets the generated values.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @param pojo
-	 *            the pojo
-	 * @throws NoSuchFieldException
-	 *             the no such field exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
-	 * @throws SQLException
-	 *             the SQL exception
-	 * @throws IOException
+	 * @param connection            the connection
+	 * @param tableModel            the table model
+	 * @param pojo            the pojo
+	 * @return true, if successful
+	 * @throws NoSuchFieldException             the no such field exception
+	 * @throws IllegalAccessException             the illegal access exception
+	 * @throws SQLException             the SQL exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private boolean setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
 			throws NoSuchFieldException, IllegalAccessException, SQLException, IOException {

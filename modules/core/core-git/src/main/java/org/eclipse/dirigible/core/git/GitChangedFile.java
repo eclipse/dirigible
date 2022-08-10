@@ -12,18 +12,19 @@
 package org.eclipse.dirigible.core.git;
 
 /**
- * Changed File representation POJO
- *
+ * Changed File representation POJO.
  */
 public class GitChangedFile {
 	
+	/** The path. */
 	private String path;
 	
+	/** The type. */
 	private int type;
 
 	/**
-	 * The constructor
-	 * 
+	 * The constructor.
+	 *
 	 * @param path the full path
 	 * @param type the change type
 	 */
@@ -34,8 +35,8 @@ public class GitChangedFile {
 	}
 
 	/**
-	 * Getter for path
-	 * 
+	 * Getter for path.
+	 *
 	 * @return the path
 	 */
 	public String getPath() {
@@ -43,8 +44,8 @@ public class GitChangedFile {
 	}
 
 	/**
-	 * Setter for path
-	 * 
+	 * Setter for path.
+	 *
 	 * @param path the path to set
 	 */
 	public void setPath(String path) {
@@ -52,8 +53,8 @@ public class GitChangedFile {
 	}
 
 	/**
-	 * Getter for type
-	 * 
+	 * Getter for type.
+	 *
 	 * @return the type
 	 */
 	public int getType() {
@@ -61,8 +62,8 @@ public class GitChangedFile {
 	}
 
 	/**
-	 * Setter for type
-	 * 
+	 * Setter for type.
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(int type) {

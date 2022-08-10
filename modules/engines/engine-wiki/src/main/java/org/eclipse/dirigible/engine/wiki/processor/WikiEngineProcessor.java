@@ -20,6 +20,7 @@ import org.eclipse.dirigible.repository.api.IResource;
  */
 public class WikiEngineProcessor {
 
+	/** The wiki engine executor. */
 	private WikiEngineExecutor wikiEngineExecutor = new WikiEngineExecutor();
 
 	/**
@@ -58,8 +59,8 @@ public class WikiEngineProcessor {
 	/**
 	 * Render content.
 	 *
-	 * @param content
-	 *            the content
+	 * @param path the path
+	 * @param content            the content
 	 * @return the string
 	 */
 	public String renderContent(String path, String content) {

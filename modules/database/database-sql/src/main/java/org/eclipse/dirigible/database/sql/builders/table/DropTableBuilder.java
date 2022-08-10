@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
  */
 public class DropTableBuilder extends AbstractDropSqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DropTableBuilder.class);
 
+	/** The table. */
 	private String table = null;
 
 	/**
@@ -38,6 +40,11 @@ public class DropTableBuilder extends AbstractDropSqlBuilder {
 		this.table = table;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
@@ -72,8 +79,8 @@ public class DropTableBuilder extends AbstractDropSqlBuilder {
 	}
 	
 	/**
-	 * Getter for the table
-	 * 
+	 * Getter for the table.
+	 *
 	 * @return the table
 	 */
 	public String getTable() {

@@ -16,21 +16,40 @@ package org.eclipse.dirigible.database.persistence.model;
  */
 public class PersistenceTableRelationModel {
 
+    /** The from table name. */
     private String fromTableName;
 
+    /** The to table name. */
     private String toTableName;
 
+    /** The fk column name. */
     private String fkColumnName;
 
+    /** The pk column name. */
     private String pkColumnName;
     
+    /** The fk name. */
     private String fkName;
     
+    /** The pk name. */
     private String pkName;
 
+    /**
+     * Instantiates a new persistence table relation model.
+     */
     public PersistenceTableRelationModel() {
     }
 
+    /**
+     * Instantiates a new persistence table relation model.
+     *
+     * @param fromTableName the from table name
+     * @param toTableName the to table name
+     * @param fkColumnName the fk column name
+     * @param pkColumnName the pk column name
+     * @param fkName the fk name
+     * @param pkName the pk name
+     */
     public PersistenceTableRelationModel(String fromTableName, String toTableName, String fkColumnName, String pkColumnName, String fkName, String pkName) {
         this.fromTableName = fromTableName;
         this.toTableName = toTableName;
@@ -44,6 +63,8 @@ public class PersistenceTableRelationModel {
      * Gets the name of the table with the foreign key.
      * <p>
      * the new columns
+     *
+     * @return the from table name
      */
     public String getFromTableName() {
         return fromTableName;
@@ -52,7 +73,7 @@ public class PersistenceTableRelationModel {
     /**
      * Sets the name of the table with the foreign key.
      *
-     * @param fromTableName
+     * @param fromTableName the new from table name
      */
     public void setFromTableName(String fromTableName) {
         this.fromTableName = fromTableName;
@@ -60,6 +81,8 @@ public class PersistenceTableRelationModel {
 
     /**
      * Gets the name of the table with the primary key.
+     *
+     * @return the to table name
      */
     public String getToTableName() {
         return toTableName;
@@ -68,7 +91,7 @@ public class PersistenceTableRelationModel {
     /**
      * Sets the name of the table with the primary key.
      *
-     * @param toTableName
+     * @param toTableName the new to table name
      */
     public void setToTableName(String toTableName) {
         this.toTableName = toTableName;
@@ -76,6 +99,8 @@ public class PersistenceTableRelationModel {
 
     /**
      * Gets the name of the foreign key column.
+     *
+     * @return the fk column name
      */
     public String getFkColumnName() {
         return fkColumnName;
@@ -84,7 +109,7 @@ public class PersistenceTableRelationModel {
     /**
      * Sets the name of the foreign key column.
      *
-     * @param fkColumnName
+     * @param fkColumnName the new fk column name
      */
     public void setFkColumnName(String fkColumnName) {
         this.fkColumnName = fkColumnName;
@@ -92,6 +117,8 @@ public class PersistenceTableRelationModel {
 
     /**
      * Gets the name of the primary key column.
+     *
+     * @return the pk column name
      */
     public String getPkColumnName() {
         return pkColumnName;
@@ -100,7 +127,7 @@ public class PersistenceTableRelationModel {
     /**
      * Sets the name of the primary key column.
      *
-     * @param pkColumnName
+     * @param pkColumnName the new pk column name
      */
     public void setPkColumnName(String pkColumnName) {
         this.pkColumnName = pkColumnName;
@@ -108,6 +135,8 @@ public class PersistenceTableRelationModel {
     
     /**
      * Gets the name of the foreign key.
+     *
+     * @return the fk name
      */
     public String getFkName() {
         return fkName;
@@ -116,7 +145,7 @@ public class PersistenceTableRelationModel {
     /**
      * Sets the name of the foreign key.
      *
-     * @param fkName
+     * @param fkName the new fk name
      */
     public void setFkName(String fkName) {
         this.fkName = fkName;
@@ -124,6 +153,8 @@ public class PersistenceTableRelationModel {
 
     /**
      * Gets the name of the primary key.
+     *
+     * @return the pk name
      */
     public String getPkName() {
         return pkName;
@@ -132,7 +163,7 @@ public class PersistenceTableRelationModel {
     /**
      * Sets the name of the primary key.
      *
-     * @param pkName
+     * @param pkName the new pk name
      */
     public void setPkName(String pkName) {
         this.pkName = pkName;

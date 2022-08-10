@@ -36,6 +36,7 @@ public interface IJavascriptEngineExecutor extends IScriptEngineExecutor {
 	/** The Constant JAVASCRIPT_TYPE_GRAALVM. */
 	public static final String JAVASCRIPT_TYPE_GRAALVM = "graalvm";
 
+	/** The Constant JAVASCRIPT_TYPE_GRAALIUM. */
 	public static final String JAVASCRIPT_TYPE_GRAALIUM = "graalium";
 
 	/** The Constant JAVASCRIPT_TYPE_DEFAULT. */
@@ -47,6 +48,14 @@ public interface IJavascriptEngineExecutor extends IScriptEngineExecutor {
 	/** The Constant CONTEXT. */
 	public static final String CONTEXT = "__context";
 
+	/**
+	 * Execute service module.
+	 *
+	 * @param module the module
+	 * @param executionContext the execution context
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceModule(java.lang.String,

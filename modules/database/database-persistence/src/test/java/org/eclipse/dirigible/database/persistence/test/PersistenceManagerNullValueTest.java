@@ -65,20 +65,45 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 		}
 	}
 
+	/**
+	 * Creates the table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void createTableForPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		persistenceManager.tableCreate(connection, MultiOrder.class);
 	}
 
+	/**
+	 * Exists table.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @return true, if successful
+	 */
 	private boolean existsTable(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		return persistenceManager.tableExists(connection, MultiOrder.class);
 	}
 
+	/**
+	 * Insert pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		MultiOrder order = new MultiOrder();
 		order.setSubject("Subject 1");
 		persistenceManager.insert(connection, order);
 	}
 
+	/**
+	 * Insert second pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void insertSecondPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		MultiOrder order = new MultiOrder();
 		order.setSubject("Subject 2");
@@ -87,6 +112,12 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 		persistenceManager.insert(connection, order);
 	}
 
+	/**
+	 * Find all pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void findAllPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		List<MultiOrder> list = persistenceManager.findAll(connection, MultiOrder.class);
 
@@ -107,6 +138,12 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 
 	}
 
+	/**
+	 * Update pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void updatePojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		List<MultiOrder> list = persistenceManager.findAll(connection, MultiOrder.class);
 		MultiOrder order = list.get(0);
@@ -118,6 +155,12 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 		assertEquals("New description", order.getDescription());
 	}
 
+	/**
+	 * Update pojo with null key.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void updatePojoWithNullKey(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		try {
 			List<MultiOrder> list = persistenceManager.findAll(connection, MultiOrder.class);
@@ -130,6 +173,12 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 		}
 	}
 
+	/**
+	 * Drop table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 */
 	private void dropTableForPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		persistenceManager.tableDrop(connection, MultiOrder.class);
 	}

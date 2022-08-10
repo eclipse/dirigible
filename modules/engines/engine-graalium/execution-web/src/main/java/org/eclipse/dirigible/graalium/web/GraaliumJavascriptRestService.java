@@ -17,14 +17,32 @@ import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class GraaliumJavascriptRestService.
+ */
 @Path("/graalium")
 public class GraaliumJavascriptRestService extends AbstractRestService implements IRestService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GraaliumJavascriptRestService.class.getCanonicalName());
+    
+    /** The Constant HTTP_PATH_MATCHER. */
     private static final String HTTP_PATH_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}";
-    private static final String HTTP_PATH_WITH_PARAM_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}/{projectFilePathParam}";
+    
+    /** The Constant HTTP_PATH_WITH_PARAM_MATCHER. */
+    private static final String HTTP_PATH_WITH_PARAM_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}/{projectFilePathParam:.*}";
+    
+    /** The request handler. */
     private final GraaliumJavascriptHandler requestHandler = new GraaliumJavascriptHandler();
 
+    /**
+     * Gets the.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param debug the debug
+     * @return the response
+     */
     @GET
     @Path(HTTP_PATH_MATCHER)
     public Response get(
@@ -35,6 +53,15 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, debug != null);
     }
 
+    /**
+     * Gets the.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param debug the debug
+     * @return the response
+     */
     @GET
     @Path(HTTP_PATH_WITH_PARAM_MATCHER)
     public Response get(
@@ -46,6 +73,14 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
     }
 
+    /**
+     * Post.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param debug the debug
+     * @return the response
+     */
     @POST
     @Path(HTTP_PATH_MATCHER)
     public Response post(
@@ -56,6 +91,15 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, debug != null);
     }
 
+    /**
+     * Post.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param debug the debug
+     * @return the response
+     */
     @POST
     @Path(HTTP_PATH_WITH_PARAM_MATCHER)
     public Response post(
@@ -67,6 +111,14 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
     }
 
+    /**
+     * Put.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param debug the debug
+     * @return the response
+     */
     @PUT
     @Path(HTTP_PATH_MATCHER)
     public Response put(
@@ -77,6 +129,15 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, debug != null);
     }
 
+    /**
+     * Put.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param debug the debug
+     * @return the response
+     */
     @PUT
     @Path(HTTP_PATH_WITH_PARAM_MATCHER)
     public Response put(
@@ -88,6 +149,14 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
     }
 
+    /**
+     * Patch.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param debug the debug
+     * @return the response
+     */
     @PATCH
     @Path(HTTP_PATH_MATCHER)
     public Response patch(
@@ -98,6 +167,15 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, debug != null);
     }
 
+    /**
+     * Patch.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param debug the debug
+     * @return the response
+     */
     @PATCH
     @Path(HTTP_PATH_WITH_PARAM_MATCHER)
     public Response patch(
@@ -109,6 +187,14 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
     }
 
+    /**
+     * Delete.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param debug the debug
+     * @return the response
+     */
     @DELETE
     @Path(HTTP_PATH_MATCHER)
     public Response delete(
@@ -119,6 +205,15 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, debug != null);
     }
 
+    /**
+     * Delete.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param debug the debug
+     * @return the response
+     */
     @DELETE
     @Path(HTTP_PATH_WITH_PARAM_MATCHER)
     public Response delete(
@@ -130,6 +225,14 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
     }
 
+    /**
+     * Head.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param debug the debug
+     * @return the response
+     */
     @HEAD
     @Path(HTTP_PATH_MATCHER)
     public Response head(
@@ -140,6 +243,15 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, debug != null);
     }
 
+    /**
+     * Head.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param debug the debug
+     * @return the response
+     */
     @HEAD
     @Path(HTTP_PATH_WITH_PARAM_MATCHER)
     public Response head(
@@ -151,20 +263,47 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
         return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
     }
 
+    /**
+     * Execute java script.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param debug the debug
+     * @return the response
+     */
     private Response executeJavaScript(String projectName, String projectFilePath, boolean debug) {
         return executeJavaScript(projectName, projectFilePath, "", debug);
     }
 
+    /**
+     * Execute java script.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param debug the debug
+     * @return the response
+     */
     private Response executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
         requestHandler.handleRequest(projectName, projectFilePath, projectFilePathParam, debug);
         return Response.ok().build();
     }
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return GraaliumJavascriptRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

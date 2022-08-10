@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TableDropProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TableDropProcessor.class);
 
 	/**
@@ -87,6 +88,13 @@ public class TableDropProcessor {
 		}
 	}
 
+	/**
+	 * Execute update.
+	 *
+	 * @param connection the connection
+	 * @param sql the sql
+	 * @throws SQLException the SQL exception
+	 */
 	private static void executeUpdate(Connection connection, String sql) throws SQLException {
 		PreparedStatement statement;
 		logger.info(sql);

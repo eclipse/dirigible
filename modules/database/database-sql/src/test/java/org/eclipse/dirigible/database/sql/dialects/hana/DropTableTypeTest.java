@@ -11,14 +11,16 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.junit.Test;
+
+/**
+ * The Class DropTableTypeTest.
+ */
 public class DropTableTypeTest {
 
     /**

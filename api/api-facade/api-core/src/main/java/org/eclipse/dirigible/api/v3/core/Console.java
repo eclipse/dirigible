@@ -15,70 +15,68 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Console logger class used in the {@link ConsoleFacade}
+ * Console logger class used in the {@link ConsoleFacade}.
  */
 public class Console {
 
+	/**
+	 * Instantiates a new console.
+	 */
 	Console() {
 	}
 
+	/** The logger. */
 	private static Logger logger = LoggerFactory.getLogger(Console.class);
 
 	/**
-	 * Prints a log message
+	 * Prints a log message.
 	 *
-	 * @param message
-	 *            the log message
+	 * @param message the log message
 	 */
 	public void log(String message) {
 		logger.info(message);
 	}
 
 	/**
-	 * Prints an information message
+	 * Prints an information message.
 	 *
-	 * @param message
-	 *            the log message
+	 * @param message the log message
 	 */
 	public void info(String message) {
 		logger.info(message);
 	}
 
 	/**
-	 * Prints a warning message
+	 * Prints a warning message.
 	 *
-	 * @param message
-	 *            the log message
+	 * @param message the log message
 	 */
 	public void warn(String message) {
 		logger.warn(message);
 	}
 
 	/**
-	 * Prints an error message
+	 * Prints an error message.
 	 *
-	 * @param message
-	 *            the log message
+	 * @param message the log message
 	 */
 	public void error(String message) {
 		logger.error(message);
 	}
 
 	/**
-	 * Prints a debug message
+	 * Prints a debug message.
 	 *
-	 * @param message
-	 *            the log message
+	 * @param message the log message
 	 */
 	public void debug(String message) {
 		logger.debug(message);
 	}
 
 	/**
-	 * Prints a trace message
+	 * Prints a trace message.
 	 *
-	 * @param message
-	 *            the log message
+	 * @param message the log message
 	 */
 	public void trace(String message) {
 		logger.trace(message);

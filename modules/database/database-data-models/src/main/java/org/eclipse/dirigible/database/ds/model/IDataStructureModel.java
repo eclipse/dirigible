@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.database.ds.model;
 
+/**
+ * The Interface IDataStructureModel.
+ */
 public interface IDataStructureModel {
 	
 	/** File extension for *.table files */
@@ -30,24 +33,31 @@ public interface IDataStructureModel {
 	/** File extension for *.schema files */
 	public static final String FILE_EXTENSION_CHANGELOG = ".changelog";
 	
-	/** Type table */
+	/**  Type table. */
 	public static final String TYPE_TABLE = "TABLE";
-	/** Type view */
+	
+	/**  Type view. */
 	public static final String TYPE_VIEW = "VIEW";
-	/** Type replace */
+	
+	/**  Type replace. */
 	public static final String TYPE_REPLACE = "REPLACE";
-	/** Type append */
+	
+	/**  Type append. */
 	public static final String TYPE_APPEND = "APPEND";
-	/** Type delete */
+	
+	/**  Type delete. */
 	public static final String TYPE_DELETE = "DELETE";
-	/** Type update */
+	
+	/**  Type update. */
 	public static final String TYPE_UPDATE = "UPDATE";
-	/** Type schema */
+	
+	/**  Type schema. */
 	public static final String TYPE_SCHEMA = "SCHEMA";
-	/** Type changelog */
+	
+	/**  Type changelog. */
 	public static final String TYPE_CHANGELOG = "CHANGELOG";
 	
-	/** Whether or not to use case sensitive syntax for table or view names and column names */
+	/**  Whether or not to use case sensitive syntax for table or view names and column names. */
 	public static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";
 
 }

@@ -56,17 +56,37 @@ import org.eclipse.dirigible.core.indexing.api.IndexingException;
  */
 public class IndexingCoreService implements IIndexingCoreService {
 
+	/** The Constant DIRIGIBLE_INDEXING_ROOT_FOLDER. */
 	private static final String DIRIGIBLE_INDEXING_ROOT_FOLDER = "DIRIGIBLE_INDEXING_ROOT_FOLDER";
+	
+	/** The Constant DIRIGIBLE_INDEXING_MAX_RESULTS. */
 	private static final String DIRIGIBLE_INDEXING_MAX_RESULTS = "DIRIGIBLE_INDEXING_MAX_RESULTS";
+	
+	/** The Constant FIELD_CONTENTS. */
 	private static final String FIELD_CONTENTS = "contents";
+	
+	/** The Constant FIELD_MODIFIED. */
 	private static final String FIELD_MODIFIED = "modified";
+	
+	/** The Constant FIELD_LOCATION. */
 	private static final String FIELD_LOCATION = "location";
+	
+	/** The Constant US. */
 	private static final String US = "_";
+	
+	/** The Constant BS. */
 	private static final String BS = "\\";
+	
+	/** The Constant SLASH. */
 	private static final String SLASH = "/";
+	
+	/** The Constant DOT. */
 	private static final String DOT = ".";
 
+	/** The root folder. */
 	private static String ROOT_FOLDER;
+	
+	/** The max results. */
 	private static int MAX_RESULTS;
 
 	static {
@@ -75,6 +95,16 @@ public class IndexingCoreService implements IIndexingCoreService {
 		MAX_RESULTS = Integer.parseInt(Configuration.get(DIRIGIBLE_INDEXING_MAX_RESULTS, "100"));
 	}
 
+	/**
+	 * Adds the.
+	 *
+	 * @param index the index
+	 * @param location the location
+	 * @param contents the contents
+	 * @param lastModified the last modified
+	 * @param parameters the parameters
+	 * @throws IndexingException the indexing exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.indexing.api.IIndexingCoreService#add(java.lang.String, java.lang.String, byte[],
@@ -119,6 +149,14 @@ public class IndexingCoreService implements IIndexingCoreService {
 		}
 	}
 
+	/**
+	 * Search.
+	 *
+	 * @param index the index
+	 * @param term the term
+	 * @return the string
+	 * @throws IndexingException the indexing exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.indexing.api.IIndexingCoreService#search(java.lang.String, java.lang.String)
@@ -162,6 +200,14 @@ public class IndexingCoreService implements IIndexingCoreService {
 		}
 	}
 
+	/**
+	 * Before.
+	 *
+	 * @param index the index
+	 * @param date the date
+	 * @return the string
+	 * @throws IndexingException the indexing exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.indexing.api.IIndexingCoreService#before(java.lang.String, long)
@@ -171,6 +217,14 @@ public class IndexingCoreService implements IIndexingCoreService {
 		return between(index, new Date(0).getTime(), date);
 	}
 
+	/**
+	 * After.
+	 *
+	 * @param index the index
+	 * @param date the date
+	 * @return the string
+	 * @throws IndexingException the indexing exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.indexing.api.IIndexingCoreService#after(java.lang.String, long)
@@ -180,6 +234,15 @@ public class IndexingCoreService implements IIndexingCoreService {
 		return between(index, date, new Date().getTime());
 	}
 
+	/**
+	 * Between.
+	 *
+	 * @param index the index
+	 * @param lower the lower
+	 * @param upper the upper
+	 * @return the string
+	 * @throws IndexingException the indexing exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.indexing.api.IIndexingCoreService#between(java.lang.String, long, long)

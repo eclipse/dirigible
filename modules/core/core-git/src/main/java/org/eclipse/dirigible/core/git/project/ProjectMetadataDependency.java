@@ -16,12 +16,16 @@ package org.eclipse.dirigible.core.git.project;
  */
 public class ProjectMetadataDependency {
 
+	/** The guid. */
 	private String guid;
 
+	/** The type. */
 	private String type;
 
+	/** The url. */
 	private String url;
 
+	/** The branch. */
 	private String branch;
 
 	/**

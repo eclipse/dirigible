@@ -29,6 +29,9 @@ import java.util.*;
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.REQUESTED_RANGE_NOT_SATISFIABLE;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateDateTimeExpressions;
 
+/**
+ * The Class SQLQueryBuilder.
+ */
 public class SQLQueryBuilder {
 
     /**
@@ -36,17 +39,38 @@ public class SQLQueryBuilder {
      */
     public static final int DEFAULT_SERVER_PAGING_SIZE = 1000;
 
+    /** The table binding. */
     private final EdmTableBindingProvider tableBinding;
+    
+    /** The chain. */
     private final SQLInterceptorChain chain = new SQLInterceptorChain();
 
+    /**
+     * Instantiates a new SQL query builder.
+     *
+     * @param tableBindnig the table bindnig
+     */
     public SQLQueryBuilder(EdmTableBindingProvider tableBindnig) {
         this.tableBinding = tableBindnig;
     }
 
+    /**
+     * Adds the interceptor.
+     *
+     * @param interceptor the interceptor
+     */
     public void addInterceptor(SQLInterceptor interceptor){
         chain.addInterceptor(interceptor);
     }
 
+    /**
+     * Builds the select count query.
+     *
+     * @param uri the uri
+     * @param context the context
+     * @return the SQL select builder
+     * @throws ODataException the o data exception
+     */
     public SQLSelectBuilder buildSelectCountQuery(final UriInfo uri, ODataContext context) throws ODataException {
         EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLSelectBuilder q = new SQLSelectBuilder(tableBinding);
@@ -55,6 +79,14 @@ public class SQLQueryBuilder {
         return chain.onRead(q, uri, context);
     }
 
+    /**
+     * Builds the select entity query.
+     *
+     * @param uri the uri
+     * @param context the context
+     * @return the SQL select builder
+     * @throws ODataException the o data exception
+     */
     public SQLSelectBuilder buildSelectEntityQuery(final UriInfo uri, ODataContext context) throws ODataException {
         EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLSelectBuilder q = new SQLSelectBuilder(tableBinding);
@@ -66,10 +98,27 @@ public class SQLQueryBuilder {
         return chain.onRead(q, uri, context);
     }
 
+    /**
+     * Builds the select entity set query.
+     *
+     * @param uri the uri
+     * @param context the context
+     * @return the SQL select builder
+     * @throws ODataException the o data exception
+     */
     public SQLSelectBuilder buildSelectEntitySetQuery(final UriInfo uri, ODataContext context) throws ODataException {
         return buildSelectEntitySetQuery(uri, Collections.emptyList(), context);
     }
 
+    /**
+     * Builds the select entity set query.
+     *
+     * @param uri the uri
+     * @param readIdsForExpand the read ids for expand
+     * @param context the context
+     * @return the SQL select builder
+     * @throws ODataException the o data exception
+     */
     public SQLSelectBuilder buildSelectEntitySetQuery(final UriInfo uri, List<String> readIdsForExpand, ODataContext context) throws ODataException {
         EdmEntityType target = uri.getTargetEntitySet().getEntityType();
 
@@ -105,6 +154,14 @@ public class SQLQueryBuilder {
         return chain.onRead(q, uri, context);
     }
 
+    /**
+     * Builds the select entity set ids for top and expand query.
+     *
+     * @param uri the uri
+     * @param context the context
+     * @return the SQL select builder
+     * @throws ODataException the o data exception
+     */
     public SQLSelectBuilder buildSelectEntitySetIdsForTopAndExpandQuery(final UriInfo uri, ODataContext context) throws ODataException {
         SQLSelectBuilder q = new SQLSelectBuilder(tableBinding);
         EdmEntityType target = uri.getTargetEntitySet().getEntityType();
@@ -139,14 +196,32 @@ public class SQLQueryBuilder {
         return chain.onRead(q, uri, context);
     }
 
+    /**
+     * Gets the table binding.
+     *
+     * @return the table binding
+     */
     public EdmTableBindingProvider getTableBinding() {
         return tableBinding;
     }
 
+    /**
+     * Gets the entity paging size.
+     *
+     * @param targetType the target type
+     * @return the entity paging size
+     */
     public Integer getEntityPagingSize(EdmEntityType targetType) {
         return DEFAULT_SERVER_PAGING_SIZE;
     }
 
+    /**
+     * Gets the key property.
+     *
+     * @param type the type
+     * @return the key property
+     * @throws EdmException the edm exception
+     */
     private EdmProperty getKeyProperty(EdmEntityType type) throws EdmException {
         List<String> keyProperties = type.getKeyPropertyNames();
         if (keyProperties.size() > 1) {
@@ -156,6 +231,13 @@ public class SQLQueryBuilder {
         return (EdmProperty) type.getProperty(keyProperties.get(0));
     }
 
+    /**
+     * Builds the select items for primary key.
+     *
+     * @param target the target
+     * @return the list
+     * @throws EdmException the edm exception
+     */
     private List<SelectItem> buildSelectItemsForPrimaryKey(final EdmEntityType target) throws EdmException {
         List<SelectItem> result = new ArrayList<>();
         List<String> keyProperties = target.getKeyPropertyNames();
@@ -187,6 +269,15 @@ public class SQLQueryBuilder {
         return result;
     }
 
+    /**
+     * Where clause from key predicates.
+     *
+     * @param query the query
+     * @param type the type
+     * @param keyPredicates the key predicates
+     * @return the SQL where clause
+     * @throws EdmException the edm exception
+     */
     private static SQLWhereClause whereClauseFromKeyPredicates(SQLSelectBuilder query, EdmStructuralType type,
                                                                final List<KeyPredicate> keyPredicates) throws EdmException {
         StringBuilder whereClause = new StringBuilder();
@@ -220,6 +311,13 @@ public class SQLQueryBuilder {
         }
     }
 
+    /**
+     * Calculate needs serverside paging.
+     *
+     * @param uri the uri
+     * @return true, if successful
+     * @throws EdmException the edm exception
+     */
     private boolean calculateNeedsServersidePaging(UriInfo uri) throws EdmException {
         final Integer top = uri.getTop();
         return top == null || top > getEntityPagingSize(uri.getTargetEntitySet().getEntityType());
@@ -228,6 +326,9 @@ public class SQLQueryBuilder {
     /**
      * Calculates the effective value for skip which is based on $skip and
      * $skipToken.
+     *
+     * @param uri the uri
+     * @return the integer
      */
     private static Integer calculateEffectiveSkip(final UriInfo uri) {
         String skipTokenString = uri.getSkipToken();
@@ -260,6 +361,15 @@ public class SQLQueryBuilder {
         return effectiveSkip;
     }
     
+    /**
+     * Builds the insert entity query.
+     *
+     * @param uri the uri
+     * @param entry the entry
+     * @param context the context
+     * @return the SQL insert builder
+     * @throws ODataException the o data exception
+     */
     public SQLInsertBuilder buildInsertEntityQuery(final UriInfo uri, ODataEntry entry, ODataContext context) throws ODataException {
         EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLInsertBuilder q = new SQLInsertBuilder(tableBinding);
@@ -267,6 +377,15 @@ public class SQLQueryBuilder {
         return chain.onCreate(q, uri, context);
     }
     
+    /**
+     * Builds the delete entity query.
+     *
+     * @param uri the uri
+     * @param keys the keys
+     * @param context the context
+     * @return the SQL delete builder
+     * @throws ODataException the o data exception
+     */
     public SQLDeleteBuilder buildDeleteEntityQuery(final UriInfo uri, Map<String, Object> keys, ODataContext context) throws ODataException {
         EdmEntityType target = uri.getStartEntitySet().getEntityType();
         SQLDeleteBuilder q = new SQLDeleteBuilder(tableBinding);
@@ -274,6 +393,16 @@ public class SQLQueryBuilder {
         return chain.onDelete(q, uri, context);
     }
 
+	/**
+	 * Builds the update entity query.
+	 *
+	 * @param uri the uri
+	 * @param entry the entry
+	 * @param uriKeys the uri keys
+	 * @param context the context
+	 * @return the SQL update builder
+	 * @throws ODataException the o data exception
+	 */
 	public SQLUpdateBuilder buildUpdateEntityQuery(UriInfo uri, ODataEntry entry, Map<String, Object> uriKeys, ODataContext context) throws ODataException {
 		EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLUpdateBuilder q = new SQLUpdateBuilder(tableBinding, uriKeys);

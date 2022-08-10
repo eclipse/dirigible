@@ -16,14 +16,19 @@ package org.eclipse.dirigible.core.workspace.json;
  */
 public class FileDescriptor {
 
+	/** The name. */
 	private String name;
 
+	/** The path. */
 	private String path;
 
+	/** The type. */
 	private String type = "file";
 
+	/** The content type. */
 	private String contentType;
 	
+	/** The status. */
 	private String status;
 
 	/**
@@ -65,8 +70,8 @@ public class FileDescriptor {
 	}
 	
 	/**
-	 * Get the type
-	 * 
+	 * Get the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {

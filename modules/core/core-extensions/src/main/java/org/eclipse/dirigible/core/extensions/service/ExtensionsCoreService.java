@@ -39,12 +39,20 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class ExtensionsCoreService implements IExtensionsCoreService {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/** The extension point persistence manager. */
 	private PersistenceManager<ExtensionPointDefinition> extensionPointPersistenceManager = new PersistenceManager<ExtensionPointDefinition>();
 
+	/** The extension persistence manager. */
 	private PersistenceManager<ExtensionDefinition> extensionPersistenceManager = new PersistenceManager<ExtensionDefinition>();
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @return the data source
+	 */
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -54,6 +62,15 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 
 	// Extension Points
 
+	/**
+	 * Creates the extension point.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param description the description
+	 * @return the extension point definition
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#createExtensionPoint(java.lang.String,
@@ -84,6 +101,13 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the extension point.
+	 *
+	 * @param location the location
+	 * @return the extension point
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#getExtensionPoint(java.lang.String)
@@ -105,6 +129,13 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the extension point by name.
+	 *
+	 * @param name the name
+	 * @return the extension point by name
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#getExtensionPointByName(java.lang.String)
@@ -138,6 +169,12 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Removes the extension point.
+	 *
+	 * @param location the location
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#removeExtensionPoint(java.lang.String)
@@ -159,6 +196,14 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Update extension point.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param description the description
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#updateExtensionPoint(java.lang.String,
@@ -184,6 +229,12 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the extension points.
+	 *
+	 * @return the extension points
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#getExtensionPoints()
@@ -207,6 +258,16 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 
 	// Extensions
 
+	/**
+	 * Creates the extension.
+	 *
+	 * @param location the location
+	 * @param module the module
+	 * @param extensionPoint the extension point
+	 * @param description the description
+	 * @return the extension definition
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#createExtension(java.lang.String,
@@ -238,6 +299,13 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the extension.
+	 *
+	 * @param location the location
+	 * @return the extension
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#getExtension(java.lang.String)
@@ -259,6 +327,12 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Removes the extension.
+	 *
+	 * @param location the location
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#removeExtension(java.lang.String)
@@ -280,6 +354,15 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Update extension.
+	 *
+	 * @param location the location
+	 * @param module the module
+	 * @param extensionPoint the extension point
+	 * @param description the description
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#updateExtension(java.lang.String,
@@ -306,6 +389,12 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the extensions.
+	 *
+	 * @return the extensions
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#getExtensions()
@@ -327,6 +416,13 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Gets the extensions by extension point.
+	 *
+	 * @param extensionPoint the extension point
+	 * @return the extensions by extension point
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -352,6 +448,13 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
+	/**
+	 * Exists extension point.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#existsExtensionPoint(java.lang.String)
@@ -361,6 +464,13 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		return getExtensionPoint(location) != null;
 	}
 
+	/**
+	 * Exists extension.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws ExtensionsException the extensions exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#existsExtension(java.lang.String)
@@ -370,6 +480,12 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		return getExtension(location) != null;
 	}
 
+	/**
+	 * Parses the extension point.
+	 *
+	 * @param json the json
+	 * @return the extension point definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#parseExtensionPoint(java.lang.String)
@@ -379,6 +495,12 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		return GsonHelper.GSON.fromJson(json, ExtensionPointDefinition.class);
 	}
 
+	/**
+	 * Parses the extension.
+	 *
+	 * @param json the json
+	 * @return the extension definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#parseExtension(java.lang.String)
@@ -388,6 +510,12 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		return GsonHelper.GSON.fromJson(json, ExtensionDefinition.class);
 	}
 
+	/**
+	 * Parses the extension point.
+	 *
+	 * @param json the json
+	 * @return the extension point definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#parseExtensionPoint(byte[])
@@ -398,6 +526,12 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 				ExtensionPointDefinition.class);
 	}
 
+	/**
+	 * Parses the extension.
+	 *
+	 * @param json the json
+	 * @return the extension definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService#parseExtension(byte[])
@@ -407,6 +541,12 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ExtensionDefinition.class);
 	}
 
+	/**
+	 * Serialize extension point.
+	 *
+	 * @param extensionPointDefinition the extension point definition
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -418,6 +558,12 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		return GsonHelper.GSON.toJson(extensionPointDefinition);
 	}
 
+	/**
+	 * Serialize extension.
+	 *
+	 * @param extensionDefinition the extension definition
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see

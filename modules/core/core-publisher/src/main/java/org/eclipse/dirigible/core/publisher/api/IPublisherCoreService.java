@@ -119,9 +119,9 @@ public interface IPublisherCoreService extends ICoreService {
 	public List<PublishRequestDefinition> getPublishRequests() throws PublisherException;
 	
 	/**
-	 * Delete publish requests older than an hour
-	 * 
-	 * @throws SchedulerException
+	 * Delete publish requests older than an hour.
+	 *
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public void deleteOldPublishRequests() throws SchedulerException;
 
@@ -189,9 +189,9 @@ public interface IPublisherCoreService extends ICoreService {
 	public Timestamp getLatestPublishLog() throws PublisherException;
 	
 	/**
-	 * Delete publish logs older than an hour
-	 * 
-	 * @throws SchedulerException
+	 * Delete publish logs older than an hour.
+	 *
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public void deleteOldPublishLogs() throws SchedulerException;
 

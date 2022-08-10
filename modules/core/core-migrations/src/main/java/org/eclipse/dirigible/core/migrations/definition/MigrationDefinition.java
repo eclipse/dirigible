@@ -25,38 +25,50 @@ import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 @Table(name = "DIRIGIBLE_MIGRATIONS")
 public class MigrationDefinition implements IArtefactDefinition {
 
+	/** The location. */
 	@Id
 	@Column(name = "MIGRATION_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 	
+	/** The project. */
 	@Column(name = "MIGRATION_PROJECT", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String project;
 	
+	/** The major. */
 	@Column(name = "MIGRATION_MAJOR", columnDefinition = "INTEGER", nullable = false)
 	private int major;
 	
+	/** The minor. */
 	@Column(name = "MIGRATION_MINOR", columnDefinition = "INTEGER", nullable = false)
 	private int minor;
 	
+	/** The micro. */
 	@Column(name = "MIGRATION_MICRO", columnDefinition = "INTEGER", nullable = false)
 	private int micro;
 	
+	/** The handler. */
 	@Column(name = "MIGRATION_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String handler;
 	
+	/** The engine. */
 	@Column(name = "MIGRATION_ENGINE", columnDefinition = "VARCHAR", nullable = false, length = 100)
 	private String engine;
 
+	/** The description. */
 	@Column(name = "MIGRATION_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
+	/** The created by. */
 	@Column(name = "MIGRATION_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "MIGRATION_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
 	/**
+	 * Gets the location.
+	 *
 	 * @return the location
 	 */
 	public String getLocation() {
@@ -64,6 +76,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the location.
+	 *
 	 * @param location the location to set
 	 */
 	public void setLocation(String location) {
@@ -71,6 +85,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the project.
+	 *
 	 * @return the project
 	 */
 	public String getProject() {
@@ -78,6 +94,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the project.
+	 *
 	 * @param project the project to set
 	 */
 	public void setProject(String project) {
@@ -85,6 +103,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the major.
+	 *
 	 * @return the major
 	 */
 	public int getMajor() {
@@ -92,6 +112,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the major.
+	 *
 	 * @param major the major to set
 	 */
 	public void setMajor(int major) {
@@ -99,6 +121,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the minor.
+	 *
 	 * @return the minor
 	 */
 	public int getMinor() {
@@ -106,6 +130,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the minor.
+	 *
 	 * @param minor the minor to set
 	 */
 	public void setMinor(int minor) {
@@ -113,6 +139,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the micro.
+	 *
 	 * @return the micro
 	 */
 	public int getMicro() {
@@ -120,6 +148,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the micro.
+	 *
 	 * @param micro the micro to set
 	 */
 	public void setMicro(int micro) {
@@ -127,6 +157,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the handler.
+	 *
 	 * @return the handler
 	 */
 	public String getHandler() {
@@ -134,6 +166,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the handler.
+	 *
 	 * @param handler the handler to set
 	 */
 	public void setHandler(String handler) {
@@ -141,6 +175,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the engine.
+	 *
 	 * @return the engine
 	 */
 	public String getEngine() {
@@ -148,6 +184,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the engine.
+	 *
 	 * @param engine the engine to set
 	 */
 	public void setEngine(String engine) {
@@ -155,6 +193,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the description.
+	 *
 	 * @return the description
 	 */
 	public String getDescription() {
@@ -162,6 +202,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the description.
+	 *
 	 * @param description the description to set
 	 */
 	public void setDescription(String description) {
@@ -169,6 +211,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the created by.
+	 *
 	 * @return the createdBy
 	 */
 	public String getCreatedBy() {
@@ -176,6 +220,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the created by.
+	 *
 	 * @param createdBy the createdBy to set
 	 */
 	public void setCreatedBy(String createdBy) {
@@ -183,6 +229,8 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Gets the created at.
+	 *
 	 * @return the createdAt
 	 */
 	public Timestamp getCreatedAt() {
@@ -190,12 +238,19 @@ public class MigrationDefinition implements IArtefactDefinition {
 	}
 
 	/**
+	 * Sets the created at.
+	 *
 	 * @param createdAt the createdAt to set
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -213,6 +268,12 @@ public class MigrationDefinition implements IArtefactDefinition {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -254,11 +315,21 @@ public class MigrationDefinition implements IArtefactDefinition {
 		return true;
 	}
 
+	/**
+	 * Gets the artefact name.
+	 *
+	 * @return the artefact name
+	 */
 	@Override
 	public String getArtefactName() {
 		return getLocation();
 	}
 
+	/**
+	 * Gets the artefact location.
+	 *
+	 * @return the artefact location
+	 */
 	@Override
 	public String getArtefactLocation() {
 		return getLocation();

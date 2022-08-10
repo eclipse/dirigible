@@ -46,31 +46,32 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 /**
- * Front facing REST service serving the BPM related resources and operations
+ * Front facing REST service serving the BPM related resources and operations.
  */
 @Path("/ide/bpm")
 @Api(value = "IDE - BPM", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class BpmRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(BpmRestService.class);
 
+	/** The processor. */
 	private BpmProcessor processor = new BpmProcessor();
 	
+	/** The workspace processor. */
 	private WorkspaceProcessor workspaceProcessor = new WorkspaceProcessor();
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
 	/**
-	 * Get the BPM model source
+	 * Get the BPM model source.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
+	 * @param workspace            the workspace
+	 * @param project            the project
+	 * @param path            the path
 	 * @return the response
 	 * @throws JsonProcessingException exception
 	 */
@@ -105,14 +106,11 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 	}
 	
 	/**
-	 * Save the BPM model source
+	 * Save the BPM model source.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
+	 * @param workspace            the workspace
+	 * @param project            the project
+	 * @param path            the path
 	 * @param payload the payload
 	 * @return the response
 	 * @throws URISyntaxException in case of an error
@@ -140,10 +138,10 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 
 	
 	/**
-	 * Get the Stencil-Set
+	 * Get the Stencil-Set.
 	 *
 	 * @return the response
-	 * @throws IOException 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@GET
 	@Path("stencil-sets")
@@ -166,6 +164,11 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 		return Response.ok().entity(stencilSets).build();
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
@@ -175,6 +178,11 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 		return BpmRestService.class;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

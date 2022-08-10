@@ -21,23 +21,54 @@ import java.util.SortedSet;
 import liquibase.resource.AbstractResourceAccessor;
 import liquibase.resource.InputStreamList;
 
+/**
+ * The Class ChangelogResourceAccessor.
+ */
 public class ChangelogResourceAccessor extends AbstractResourceAccessor {
 	
+	/** The location. */
 	private URI location;
+    
+    /** The stream. */
     private InputStream stream;
     
+    /**
+     * Instantiates a new changelog resource accessor.
+     *
+     * @param location the location
+     * @param stream the stream
+     */
     public ChangelogResourceAccessor(URI location, InputStream stream) {
         super();
         this.location = location;
         this.stream = stream;
     }
 
+	/**
+	 * Open streams.
+	 *
+	 * @param relativeTo the relative to
+	 * @param streamPath the stream path
+	 * @return the input stream list
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public InputStreamList openStreams(String relativeTo, String streamPath) throws IOException {
 		InputStreamList inputStreamList = new InputStreamList(location, stream);
         return inputStreamList;
 	}
 
+	/**
+	 * List.
+	 *
+	 * @param relativeTo the relative to
+	 * @param path the path
+	 * @param recursive the recursive
+	 * @param includeFiles the include files
+	 * @param includeDirectories the include directories
+	 * @return the sorted set
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public SortedSet<String> list(String relativeTo, String path, boolean recursive, boolean includeFiles,
 			boolean includeDirectories) throws IOException {
@@ -45,6 +76,11 @@ public class ChangelogResourceAccessor extends AbstractResourceAccessor {
 		return null;
 	}
 
+	/**
+	 * Describe locations.
+	 *
+	 * @return the sorted set
+	 */
 	@Override
 	public SortedSet<String> describeLocations() {
 		// TODO Auto-generated method stub

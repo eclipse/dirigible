@@ -47,16 +47,27 @@ import java.util.Objects;
 @ApiResponses({@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden")})
 public class EditorRestService extends AbstractRestService implements IRestService {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(EditorRestService.class);
 
+    /** The repository. */
     private IRepository repository = null;
 
+    /** The Constant PRETTIER_CONFIG_FILE_NAME. */
     private static final String PRETTIER_CONFIG_FILE_NAME = ".prettierrc.json";
+    
+    /** The Constant PRETTIER_CONFIG_CONTENT_TYPE. */
     private static final String PRETTIER_CONFIG_CONTENT_TYPE = "application/json";
 
+    /** The response. */
     @Context
     private HttpServletResponse response;
     
+    /**
+     * Gets the repository.
+     *
+     * @return the repository
+     */
     protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -65,11 +76,12 @@ public class EditorRestService extends AbstractRestService implements IRestServi
 	}
 
     /**
-     * Finds all prettier config file paths inside a project
+     * Finds all prettier config file paths inside a project.
      *
      * @param workspaceName the workspace
      * @param projectName   the project to search the config file in
      * @param filePath      the config file name with extension
+     * @param request the request
      * @return the found prettier config paths
      */
     @GET
@@ -109,28 +121,69 @@ public class EditorRestService extends AbstractRestService implements IRestServi
 
     }
 
+    /**
+     * Creates the prettier config not found error response.
+     *
+     * @param reason the reason
+     * @param queryPath the query path
+     * @return the response
+     */
     private Response createPrettierConfigNotFoundErrorResponse(String reason, String queryPath) {
         String errorMessage = String.format("%s: %s", reason, queryPath);
         logger.error(errorMessage);
         return createErrorResponseNotFound(errorMessage);
     }
 
+    /**
+     * Checks if is path normalized.
+     *
+     * @param queryPath the query path
+     * @return true, if is path normalized
+     */
     private boolean isPathNormalized(String queryPath) {
         return Objects.equals(FilenameUtils.normalize(queryPath), queryPath);
     }
 
+    /**
+     * Checks if is resource in directory.
+     *
+     * @param directory the directory
+     * @param resourceName the resource name
+     * @return true, if is resource in directory
+     */
     private boolean isResourceInDirectory(ICollection directory, String resourceName) {
         return directory.getResource(resourceName).exists();
     }
 
+    /**
+     * Join path parts.
+     *
+     * @param delimiter the delimiter
+     * @param args the args
+     * @return the string
+     */
     private String joinPathParts(String delimiter, String... args) {
         return delimiter + String.join(delimiter, args);
     }
 
+    /**
+     * Checks if is sub path.
+     *
+     * @param superPath the super path
+     * @param subPath the sub path
+     * @return true, if is sub path
+     */
     private boolean isSubPath(String superPath, String subPath) {
         return subPath.startsWith(superPath);
     }
 
+    /**
+     * Gets the config file content.
+     *
+     * @param directory the directory
+     * @param configFileName the config file name
+     * @return the config file content
+     */
     private String getConfigFileContent(ICollection directory, String configFileName) {
         IResource config = directory.getResource(configFileName);
         if (config.exists()) {
@@ -139,11 +192,21 @@ public class EditorRestService extends AbstractRestService implements IRestServi
         return null;
     }
 
+    /**
+     * Gets the logger.
+     *
+     * @return the logger
+     */
     @Override
     protected Logger getLogger() {
         return logger;
     }
 
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
     @Override
     public Class<? extends IRestService> getType() {
         return EditorRestService.class;

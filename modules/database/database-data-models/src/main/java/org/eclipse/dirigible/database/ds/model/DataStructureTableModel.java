@@ -20,12 +20,15 @@ import java.util.List;
  */
 public class DataStructureTableModel extends DataStructureModel {
 
+	/** The columns. */
 	@Transient
 	private List<DataStructureTableColumnModel> columns = new ArrayList<DataStructureTableColumnModel>();
 
+	/** The constraints. */
 	@Transient
 	private DataStructureTableConstraintsModel constraints = new DataStructureTableConstraintsModel();
 
+	/** The indexes. */
 	@Transient
 	private List<DataStructureTableIndexModel> indexes = new ArrayList<DataStructureTableIndexModel>();
 

@@ -23,20 +23,34 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * The Class ExportGeneratorTest.
+ */
 public class ExportGeneratorTest extends AbstractDirigibleTest {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(GraalVMCustomTest.class);
 
+    /** The graal VM javascript engine executor. */
     private GraalVMJavascriptEngineExecutor graalVMJavascriptEngineExecutor;
 
+    /** The generator. */
     private ExportGenerator generator;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         this.graalVMJavascriptEngineExecutor = new GraalVMJavascriptEngineExecutor();
         this.generator = new ExportGenerator(this.graalVMJavascriptEngineExecutor);
     }
 
+    /**
+     * Generate api utils exports.
+     */
     @Test
     public void generateApiUtilsExports() {
         String testApi = "@dirigible-v4/utils";

@@ -33,6 +33,9 @@ import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class DestinationsFacade.
+ */
 public class DestinationsFacade {
 	
 	/** The Constant DIRIGIBLE_DESTINATIONS_PROVIDER. */
@@ -56,12 +59,27 @@ public class DestinationsFacade {
 	/** The Constant DESTINATIONS. */
 	public static final String DESTINATIONS = "destinations"; //$NON-NLS-1$
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DestinationsFacade.class);
 	
-	/** Internal destinations repository */
+	/**  Internal destinations repository. */
 	private static IRepository destinationsRepository;
 	
 	
+	/**
+	 * Gets the.
+	 *
+	 * @param name the name
+	 * @return the string
+	 * @throws NoSuchMethodException the no such method exception
+	 * @throws SecurityException the security exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws InvocationTargetException the invocation target exception
+	 * @throws NamingException the naming exception
+	 * @throws RepositoryReadException the repository read exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static String get(String name) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NamingException, RepositoryReadException, IOException {
 		String destinationProvider = Configuration.get(DIRIGIBLE_DESTINATIONS_PROVIDER);
 		if (destinationProvider == null) {
@@ -87,6 +105,20 @@ public class DestinationsFacade {
 		}
 	}
 	
+	/**
+	 * Sets the.
+	 *
+	 * @param name the name
+	 * @param content the content
+	 * @throws NoSuchMethodException the no such method exception
+	 * @throws SecurityException the security exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws InvocationTargetException the invocation target exception
+	 * @throws NamingException the naming exception
+	 * @throws RepositoryReadException the repository read exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void set(String name, String content) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NamingException, RepositoryReadException, IOException {
 		String destinationProvider = Configuration.get(DIRIGIBLE_DESTINATIONS_PROVIDER);
 		if (destinationProvider == null) {
@@ -112,6 +144,11 @@ public class DestinationsFacade {
 		}
 	}
 	
+	/**
+	 * Gets the destinations repostiory.
+	 *
+	 * @return the destinations repostiory
+	 */
 	private static synchronized IRepository getDestinationsRepostiory() {
 		if (destinationsRepository == null) {
 			String rootFolder = Configuration.get(DIRIGIBLE_DESTINATIONS_INTERNAL_ROOT_FOLDER);
@@ -126,6 +163,18 @@ public class DestinationsFacade {
 	}
 	
 
+	/**
+	 * Initialize from destination.
+	 *
+	 * @param destinationName the destination name
+	 * @return the map
+	 * @throws NamingException the naming exception
+	 * @throws NoSuchMethodException the no such method exception
+	 * @throws SecurityException the security exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws InvocationTargetException the invocation target exception
+	 */
 	public static Map initializeFromDestination(String destinationName) throws NamingException, NoSuchMethodException,
 			SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		logger.debug(String.format("Lookup Destination: %s", destinationName));
@@ -139,7 +188,7 @@ public class DestinationsFacade {
 	}
 
 	/**
-	 * Retrieve the Connectivity Configuration from the target platform
+	 * Retrieve the Connectivity Configuration from the target platform.
 	 *
 	 * @return the managed connectivity service proxy
 	 * @throws NamingException exception

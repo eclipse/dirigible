@@ -29,13 +29,20 @@ import org.slf4j.LoggerFactory;
  */
 public class WorkspacesCoreService implements IWorkspacesCoreService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WorkspacesCoreService.class);
 
 	/** The Constant DEFAULT_WORKSPACE_NAME. */
 	private static final String DEFAULT_WORKSPACE_NAME = "workspace";
 
+	/** The repository. */
 	private IRepository repository = null;
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -43,6 +50,12 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 		return repository;
 	}
 
+	/**
+	 * Creates the workspace.
+	 *
+	 * @param name the name
+	 * @return the i workspace
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService#createWorkspace(java.lang.String)
@@ -55,6 +68,12 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 		return new Workspace(collection);
 	}
 
+	/**
+	 * Gets the workspace.
+	 *
+	 * @param name the name
+	 * @return the workspace
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService#getWorkspace(java.lang.String)
@@ -66,6 +85,11 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 		return new Workspace(collection);
 	}
 
+	/**
+	 * Gets the workspaces.
+	 *
+	 * @return the workspaces
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService#getWorkspaces()
@@ -89,6 +113,11 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 		return workspaces;
 	}
 
+	/**
+	 * Delete workspace.
+	 *
+	 * @param name the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService#deleteWorkspace(java.lang.String)

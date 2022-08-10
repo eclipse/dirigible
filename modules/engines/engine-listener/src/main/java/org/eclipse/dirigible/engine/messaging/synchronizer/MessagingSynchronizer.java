@@ -42,22 +42,34 @@ import org.slf4j.LoggerFactory;
  */
 public class MessagingSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MessagingSynchronizer.class);
 
+	/** The Constant LISTENERS_PREDELIVERED. */
 	private static final Map<String, ListenerDefinition> LISTENERS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, ListenerDefinition>());
 
+	/** The Constant LISTENERS_SYNCHRONIZED. */
 	private static final List<String> LISTENERS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+	
+	/** The Constant LISTENERS_MODIFIED. */
 	private static final List<String> LISTENERS_MODIFIED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The messaging core service. */
 	private MessagingCoreService messagingCoreService = new MessagingCoreService();
 
+	/** The messaging manager. */
 	private SchedulerManager messagingManager = new SchedulerManager();
 	
+	/** The synchronizer name. */
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
+	/** The Constant LISTENER_ARTEFACT. */
 	private static final ListenerSynchronizationArtefactType LISTENER_ARTEFACT = new ListenerSynchronizationArtefactType();
 
+	/**
+	 * Synchronize.
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -131,6 +143,11 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -144,6 +161,12 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing Listeners from Registry.");
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
@@ -160,6 +183,11 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 
 	}
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
@@ -184,6 +212,9 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done cleaning up Listeners.");
 	}
 
+	/**
+	 * Start listeners.
+	 */
 	private void startListeners() {
 		logger.trace("Start Listeners...");
 		
@@ -237,11 +268,19 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done starting Listeners.");
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		LISTENERS_SYNCHRONIZED.clear();
 		LISTENERS_MODIFIED.clear();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Listeners...");
 		// Listeners
@@ -251,6 +290,12 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing predelivered Listeners.");
 	}
 
+	/**
+	 * Synchronize listener.
+	 *
+	 * @param listenerDefinition the listener definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeListener(ListenerDefinition listenerDefinition) throws SynchronizationException {
 		try {
 			if (!messagingCoreService.existsListener(listenerDefinition.getLocation())) {

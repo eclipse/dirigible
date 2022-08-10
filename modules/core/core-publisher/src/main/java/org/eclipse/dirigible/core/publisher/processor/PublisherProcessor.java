@@ -30,12 +30,20 @@ import org.slf4j.LoggerFactory;
  */
 public class PublisherProcessor {
 
+	/** The logger. */
 	private Logger logger = LoggerFactory.getLogger(PublisherProcessor.class);
 
+	/** The publish core service. */
 	private PublisherCoreService publishCoreService = new PublisherCoreService();
 
+	/** The repository. */
 	private IRepository repository = null;
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected synchronized IRepository getRepository() {
 		if (repository == null) {
 			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);

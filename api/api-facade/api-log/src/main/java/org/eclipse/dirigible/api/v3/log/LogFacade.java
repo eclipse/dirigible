@@ -32,12 +32,19 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
  */
 public class LogFacade implements IScriptingFacade {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(LogFacade.class);
 
+	/** The Constant APP_LOGGER_NAME_PREFX. */
 	private static final String APP_LOGGER_NAME_PREFX = "app";
+	
+	/** The Constant APP_LOGGER_NAME_SEPARATOR. */
 	private static final String APP_LOGGER_NAME_SEPARATOR = ".";
 
+	/** The Constant om. */
 	private static final ObjectMapper om = new ObjectMapper();
+	
+	/** The Constant objectArrayType. */
 	private static final ArrayType objectArrayType = TypeFactory.defaultInstance().constructArrayType(Object.class);
 
 	/**

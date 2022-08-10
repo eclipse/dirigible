@@ -21,11 +21,17 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class IDECoreSynchronizerJob extends AbstractSynchronizerJob {
 
+	/** The Constant TIMEOUT_TIME. */
 	private static final int TIMEOUT_TIME = 10;
 
 	/** The extensions synchronizer. */
 	private IDECoreSynchronizer synchronizer = new IDECoreSynchronizer();
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
@@ -35,16 +41,31 @@ public class IDECoreSynchronizerJob extends AbstractSynchronizerJob {
 		return synchronizer;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return IDECoreSynchronizerJobDefinitionProvider.IDE_CORE_SYNCHRONIZER_JOB;
 	}
 
+	/**
+	 * Gets the timeout.
+	 *
+	 * @return the timeout
+	 */
 	@Override
 	protected int getTimeout() {
 		return TIMEOUT_TIME;
 	}
 	
+	/**
+	 * Gets the timeout unit.
+	 *
+	 * @return the timeout unit
+	 */
 	@Override
 	protected TimeUnit getTimeoutUnit() {
 		return TimeUnit.MINUTES;

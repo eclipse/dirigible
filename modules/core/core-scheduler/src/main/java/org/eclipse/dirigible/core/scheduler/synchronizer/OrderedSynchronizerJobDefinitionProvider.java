@@ -21,12 +21,20 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  */
 public class OrderedSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
+	/** The Constant DIRIGIBLE_JOB_EXPRESSION_ORDERED. */
 	private static final String DIRIGIBLE_JOB_EXPRESSION_ORDERED = "DIRIGIBLE_JOB_EXPRESSION_ORDERED";
 	
+	/** The Constant DIRIGIBLE_INTERNAL_ORDERED_SYNCHRONIZER_JOB. */
 	private static final String DIRIGIBLE_INTERNAL_ORDERED_SYNCHRONIZER_JOB = "dirigible-internal-ordered-synchronizer-job";
 	
+	/** The Constant ORDERED_SYNCHRONIZER_JOB. */
 	static final String ORDERED_SYNCHRONIZER_JOB = "Ordered Synchronizer Job";
 
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()

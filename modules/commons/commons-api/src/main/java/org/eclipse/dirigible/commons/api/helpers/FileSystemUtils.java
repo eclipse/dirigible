@@ -47,18 +47,40 @@ import org.slf4j.LoggerFactory;
  */
 public class FileSystemUtils {
 
+	/** The Constant FOLDER_TARGET. */
 	private static final String FOLDER_TARGET = "target";
+	
+	/** The Constant PREFIX_DOT. */
 	private static final String PREFIX_DOT = ".";
+	
+	/** The Constant PROJECT_JSON. */
 	private static final String PROJECT_JSON = "project.json";
+	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FileSystemUtils.class);
+	
+	/** The Constant SEPARATOR. */
 	private static final String SEPARATOR = "/";
+	
+	/** The Constant DOT_GIT. */
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
+	
+	/** The Constant PROJECT_METADATA_FILE_NAME. */
 	public static final String PROJECT_METADATA_FILE_NAME = PROJECT_JSON; //$NON-NLS-1$
 
+	/** The git root folder. */
 	private static String GIT_ROOT_FOLDER;
+	
+	/** The Constant DIRIGIBLE_GIT_ROOT_FOLDER. */
 	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
+	
+	/** The Constant DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER. */
 	private static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$
+	
+	/** The Constant REPOSITORY_GIT_FOLDER. */
 	private static final String REPOSITORY_GIT_FOLDER = "dirigible" + File.separator + "repository" + File.separator + DOT_GIT;
+	
+	/** The Constant DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER. */
 	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = FOLDER_TARGET + File.separator + REPOSITORY_GIT_FOLDER; //$NON-NLS-1$
 
 	static {
@@ -451,7 +473,7 @@ public class FileSystemUtils {
 	}
 
 	/**
-	 * List files including symbolic links
+	 * List files including symbolic links.
 	 *
 	 * @param directory the source directory
 	 * @return the list of files
@@ -473,7 +495,7 @@ public class FileSystemUtils {
 	}
 
 	/**
-	 * Force create directory and all its parents
+	 * Force create directory and all its parents.
 	 *
 	 * @param firstSegment the first segment
 	 * @param segments the rest segments
@@ -488,6 +510,13 @@ public class FileSystemUtils {
 		return Files.createDirectories(dir).toFile();
 	}
 
+	/**
+	 * Delete directory.
+	 *
+	 * @param firstSegment the first segment
+	 * @param segments the segments
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void deleteDirectory(String firstSegment, String ...segments) throws IOException  {
 		Path dir = Paths.get(firstSegment, segments);
 		File file = new File(String.valueOf(dir));
@@ -495,7 +524,7 @@ public class FileSystemUtils {
 	}
 
 	/**
-	 * Returns the directory by segments
+	 * Returns the directory by segments.
 	 *
 	 * @param firstSegment the first segment
 	 * @param segments the rest segments
@@ -510,7 +539,7 @@ public class FileSystemUtils {
 	}
 
 	/**
-	 * Generate the local repository name
+	 * Generate the local repository name.
 	 *
 	 * @param repositoryURI the URI odf the repository
 	 * @return the generated local name
@@ -528,7 +557,7 @@ public class FileSystemUtils {
 	}
 
 	/**
-	 * Get the directory for git
+	 * Get the directory for git.
 	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
@@ -538,6 +567,13 @@ public class FileSystemUtils {
 		return FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace);
 	}
 
+	/**
+	 * Gets the git repositories.
+	 *
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @return the git repositories
+	 */
 	public static List<String> getGitRepositories(String user, String workspace) {
 		File gitRoot = getGitDirectory(user, workspace);
 		if (gitRoot == null) {
@@ -549,8 +585,9 @@ public class FileSystemUtils {
 				.map(e -> e.getName())
 				.collect(Collectors.toList());
 	}
+	
 	/**
-	 * Get the directory for git
+	 * Get the directory for git.
 	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
@@ -563,7 +600,7 @@ public class FileSystemUtils {
 	}
 
 	/**
-	 * Get the directory for git
+	 * Get the directory for git.
 	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
@@ -576,7 +613,7 @@ public class FileSystemUtils {
 	}
 	
 	/**
-	 * Get the directory for git for deep projects
+	 * Get the directory for git for deep projects.
 	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
@@ -601,6 +638,13 @@ public class FileSystemUtils {
 		return null;
 	}
 	
+	/**
+	 * Check subfolder.
+	 *
+	 * @param rootFolder the root folder
+	 * @param repositoryName the repository name
+	 * @return the file
+	 */
 	private static File checkSubfolder(File rootFolder, String repositoryName) {
 		if (rootFolder.getName().startsWith(PREFIX_DOT)
 				|| rootFolder.getName().equals(FOLDER_TARGET)) {
@@ -634,16 +678,38 @@ public class FileSystemUtils {
 		return null;
 	}
 
+	/**
+	 * Gets the git repository projects.
+	 *
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param repositoryName the repository name
+	 * @return the git repository projects
+	 */
 	public static List<String> getGitRepositoryProjects(String user, String workspace, String repositoryName) {
 		List<File> projects = getGitRepositoryProjectsFiles(user, workspace, repositoryName);
 		return projects.stream().map(e -> e.getName()).collect(Collectors.toList());
 	}
 
+	/**
+	 * Gets the git repository projects files.
+	 *
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param repositoryName the repository name
+	 * @return the git repository projects files
+	 */
 	public static List<File> getGitRepositoryProjectsFiles(String user, String workspace, String repositoryName) {
 		File gitRepository = getGitDirectoryByRepositoryName(user, workspace, repositoryName);
 		return getGitRepositoryProjects(gitRepository);
 	}
 
+    /**
+     * Gets the git repository projects.
+     *
+     * @param gitRepository the git repository
+     * @return the git repository projects
+     */
     public static List<File> getGitRepositoryProjects(File gitRepository) {
         EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
         ProjectsFinder projectsFinder = new ProjectsFinder();
@@ -658,15 +724,32 @@ public class FileSystemUtils {
         return gitProjects;
     }
 
+    /**
+     * The Class ProjectsFinder.
+     */
     private static class ProjectsFinder extends SimpleFileVisitor<Path> {
 
-    	private List<File> projects = new ArrayList<File>();
+    	/** The projects. */
+	    private List<File> projects = new ArrayList<File>();
 
-    	public List<File> getProjects() {
+    	/**
+	     * Gets the projects.
+	     *
+	     * @return the projects
+	     */
+	    public List<File> getProjects() {
 			return projects;
 		}
 
-    	@Override
+    	/**
+	     * Visit file.
+	     *
+	     * @param path the path
+	     * @param attrs the attrs
+	     * @return the file visit result
+	     * @throws IOException Signals that an I/O exception has occurred.
+	     */
+	    @Override
     	public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
     		File file = path.toFile();
     		if (file.exists() && file.isFile() && file.getName().equals(PROJECT_METADATA_FILE_NAME)) {
@@ -675,55 +758,116 @@ public class FileSystemUtils {
     		return CONTINUE;
     	}
 
-    	@Override
+    	/**
+	     * Visit file failed.
+	     *
+	     * @param file the file
+	     * @param exc the exc
+	     * @return the file visit result
+	     * @throws IOException Signals that an I/O exception has occurred.
+	     */
+	    @Override
     	public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
     		logger.error(exc.getMessage(), exc);
     		return CONTINUE;
     	}
     }
     
+	/**
+	 * The Class Finder.
+	 */
 	private static class Finder extends SimpleFileVisitor<Path> {
 
-	    private final PathMatcher matcher;
-	    private List<String> files = new ArrayList<String>();
+	    /** The matcher. */
+    	private final PathMatcher matcher;
+	    
+    	/** The files. */
+    	private List<String> files = new ArrayList<String>();
 
-	    Finder(String pattern) {
+	    /**
+    	 * Instantiates a new finder.
+    	 *
+    	 * @param pattern the pattern
+    	 */
+    	Finder(String pattern) {
 	        matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
 	    }
 
-	    void find(Path file) {
+	    /**
+    	 * Find.
+    	 *
+    	 * @param file the file
+    	 */
+    	void find(Path file) {
 	        Path name = file.getFileName();
 	        if (name != null && matcher.matches(name)) {
 	        	files.add(file.toString());
 	        }
 	    }
 
-	    void done() {
+	    /**
+    	 * Done.
+    	 */
+    	void done() {
 	    }
 
-	    @Override
+	    /**
+    	 * Visit file.
+    	 *
+    	 * @param file the file
+    	 * @param attrs the attrs
+    	 * @return the file visit result
+    	 */
+    	@Override
 	    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
 	        find(file);
 	        return CONTINUE;
 	    }
 
-	    @Override
+	    /**
+    	 * Pre visit directory.
+    	 *
+    	 * @param dir the dir
+    	 * @param attrs the attrs
+    	 * @return the file visit result
+    	 */
+    	@Override
 	    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 	        find(dir);
 	        return CONTINUE;
 	    }
 
-	    @Override
+	    /**
+    	 * Visit file failed.
+    	 *
+    	 * @param file the file
+    	 * @param exc the exc
+    	 * @return the file visit result
+    	 */
+    	@Override
 	    public FileVisitResult visitFileFailed(Path file, IOException exc) {
 	        logger.error(exc.getMessage(), exc);
 	        return CONTINUE;
 	    }
 
-	    public List<String> getFiles() {
+	    /**
+    	 * Gets the files.
+    	 *
+    	 * @return the files
+    	 */
+    	public List<String> getFiles() {
 			return files;
 		}
 	}
 
+	/**
+	 * Find.
+	 *
+	 * @param root the root
+	 * @param pattern the pattern
+	 * @return the list
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static final List<String> find(String root, String pattern) throws IOException {
 		 Path startingDir = Paths.get(root);
 		 Finder finder = new Finder(pattern);

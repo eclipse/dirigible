@@ -22,23 +22,31 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multipl
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 
+/**
+ * The Class Category.
+ */
 @EdmEntityType(name = "Category")
 @EdmEntitySet(name = "Categories", container = "NorthwindEntities")
 public class Category {
 
+	/** The category id. */
 	@EdmKey
 	@EdmProperty(name = "CategoryID", facets = @EdmFacets(nullable = false))
 	private Integer categoryId;
 
+	/** The category name. */
 	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 15))
 	private String categoryName;
 
+	/** The description. */
 	@EdmProperty
 	private String description;
 
+	/** The picture. */
 	@EdmProperty(type = EdmType.BINARY)
 	private String picture;
 
+	/** The products. */
 	@EdmNavigationProperty( //
 			toMultiplicity = Multiplicity.MANY, //
 			toType = Product.class, //

@@ -23,10 +23,18 @@ import org.slf4j.LoggerFactory;
  */
 public class DataStructuresClasspathContentHandler extends AbstractClasspathContentHandler {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataStructuresClasspathContentHandler.class);
 
+	/** The data structures synchronizer. */
 	private DataStructuresSynchronizer dataStructuresSynchronizer = new DataStructuresSynchronizer();
 
+	/**
+	 * Checks if is valid.
+	 *
+	 * @param path the path
+	 * @return true, if is valid
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#isValid(java.lang.String)
@@ -76,6 +84,11 @@ public class DataStructuresClasspathContentHandler extends AbstractClasspathCont
 		return false;
 	}
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#getLogger()

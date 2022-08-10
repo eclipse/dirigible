@@ -22,14 +22,25 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * The Class MetadataPublisherHandler.
+ */
 public class MetadataPublisherHandler implements IPublisherHandler {
 
+    /** The Constant REGISTRY_PUBLIC. */
     protected static final String REGISTRY_PUBLIC = IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR;
 
+    /** The Constant PERCENT. */
     private static final String PERCENT = "%";
 
+    /** The data source. */
     private DataSource dataSource = null;
     
+    /**
+     * Gets the data source.
+     *
+     * @return the data source
+     */
     protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
@@ -37,6 +48,16 @@ public class MetadataPublisherHandler implements IPublisherHandler {
 		return dataSource;
 	}
 
+    /**
+     * Removes the metadata.
+     *
+     * @param persistenceManager the persistence manager
+     * @param table the table
+     * @param column the column
+     * @param location the location
+     * @param includeLeadingSeparator the include leading separator
+     * @throws SchedulerException the scheduler exception
+     */
     protected void removeMetadata(PersistenceManager persistenceManager, String table, String column, String location, boolean includeLeadingSeparator) throws SchedulerException {
         try (Connection connection = getDataSource().getConnection()) {
             SqlFactory sqlFactory = SqlFactory.getNative(connection);
@@ -52,6 +73,13 @@ public class MetadataPublisherHandler implements IPublisherHandler {
         }
     }
 
+    /**
+     * Gets the location query param.
+     *
+     * @param location the location
+     * @param includeLeadingSeparator the include leading separator
+     * @return the location query param
+     */
     private String getLocationQueryParam(String location, boolean includeLeadingSeparator) {
         StringBuilder locationQueryParamSB = new StringBuilder();
 
@@ -66,21 +94,46 @@ public class MetadataPublisherHandler implements IPublisherHandler {
         return locationQueryParamSB.toString();
     }
 
+	/**
+	 * Before publish.
+	 *
+	 * @param location the location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Override
 	public void beforePublish(String location) throws SchedulerException {
 		
 	}
 
+	/**
+	 * After publish.
+	 *
+	 * @param workspaceLocation the workspace location
+	 * @param registryLocation the registry location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Override
 	public void afterPublish(String workspaceLocation, String registryLocation) throws SchedulerException {
 		
 	}
 
+	/**
+	 * Before unpublish.
+	 *
+	 * @param location the location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Override
 	public void beforeUnpublish(String location) throws SchedulerException {
 		
 	}
 
+	/**
+	 * After unpublish.
+	 *
+	 * @param location the location
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Override
 	public void afterUnpublish(String location) throws SchedulerException {
 		

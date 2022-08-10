@@ -18,8 +18,10 @@ import java.util.Map;
  */
 public class GenerationTemplateParameters {
 	
+	/** The template. */
 	private String template;
 	
+	/** The parameters. */
 	private Map<String, Object> parameters;
 
 	/**

@@ -11,9 +11,20 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.processor;
 
+/**
+ * The Enum ExecutableFileType.
+ */
 public enum ExecutableFileType {
+    
+    /** The javascript esm. */
     JAVASCRIPT_ESM,
+    
+    /** The javascript node cjs. */
     JAVASCRIPT_NODE_CJS,
+    
+    /** The javascript dirigible cjs. */
     JAVASCRIPT_DIRIGIBLE_CJS,
+    
+    /** The typescript. */
     TYPESCRIPT
 }

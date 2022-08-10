@@ -14,10 +14,22 @@ package org.eclipse.dirigible.engine.js.service;
 import org.eclipse.dirigible.engine.js.processor.JavascriptEngineProcessor;
 import org.eclipse.dirigible.repository.api.IRepository;
 
+/**
+ * The Class DefaultJavascriptHandler.
+ */
 public class DefaultJavascriptHandler implements JavascriptHandler {
 
+    /** The processor. */
     private final JavascriptEngineProcessor processor = new JavascriptEngineProcessor();
 
+    /**
+     * Handle request.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param debug the debug
+     */
     @Override
     public void handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
         String path = projectName + IRepository.SEPARATOR + projectFilePath + IRepository.SEPARATOR + projectFilePathParam;

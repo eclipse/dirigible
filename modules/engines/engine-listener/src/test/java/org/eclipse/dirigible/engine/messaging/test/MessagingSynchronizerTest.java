@@ -39,12 +39,16 @@ import org.junit.Test;
  */
 public class MessagingSynchronizerTest extends AbstractDirigibleTest {
 
+	/** The messaging core service. */
 	private IMessagingCoreService messagingCoreService;
 
+	/** The messaging synchronizer. */
 	private MessagingSynchronizer messagingSynchronizer;
 
+	/** The messaging manager. */
 	private SchedulerManager messagingManager;
 
+	/** The repository. */
 	private IRepository repository;
 
 	/**

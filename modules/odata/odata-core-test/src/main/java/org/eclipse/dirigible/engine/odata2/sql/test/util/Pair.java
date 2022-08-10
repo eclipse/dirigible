@@ -14,17 +14,25 @@ package org.eclipse.dirigible.engine.odata2.sql.test.util;
 import java.io.Serializable;
 
 /**
- * Pair
+ * Pair.
  *
  * @param <T> t
  * @param <U> u
  */
 public class Pair<T, U> implements Serializable {
+    
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 8719382431393826469L;
 
+    /** The first. */
     private final T first;
+    
+    /** The second. */
     private final U second;
 
+    /**
+     * Instantiates a new pair.
+     */
     // To Support Ion Serialization
     private Pair() {
         this.first = null;
@@ -32,6 +40,8 @@ public class Pair<T, U> implements Serializable {
     }
 
     /**
+     * Instantiates a new pair.
+     *
      * @param a a
      * @param b b
      */
@@ -41,6 +51,8 @@ public class Pair<T, U> implements Serializable {
     }
 
     /**
+     * Gets the first.
+     *
      * @return T
      */
     public T getFirst() {
@@ -48,18 +60,27 @@ public class Pair<T, U> implements Serializable {
     }
 
     /**
+     * Gets the second.
+     *
      * @return U
      */
     public U getSecond() {
         return second;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "[" + first + ", " + second + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /**
+     * Creates the.
+     *
      * @param <T> T
      * @param <U> U
      * @param a a
@@ -71,6 +92,8 @@ public class Pair<T, U> implements Serializable {
     }
 
     /**
+     * Null pair.
+     *
      * @param <T> T
      * @param <U> U
      * @return Pair
@@ -80,9 +103,15 @@ public class Pair<T, U> implements Serializable {
         return (Pair<T, U>) NULL_PAIR;
     }
 
+    /** The Constant NULL_PAIR. */
     @SuppressWarnings("rawtypes")
     public static final Pair NULL_PAIR = new Pair<Object, Object>(null, null);
 
+    /**
+     * Hash code.
+     *
+     * @return the int
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -92,6 +121,12 @@ public class Pair<T, U> implements Serializable {
         return result;
     }
 
+    /**
+     * Equals.
+     *
+     * @param obj the obj
+     * @return true, if successful
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
  */
 public class DropSynonymBuilder extends AbstractDropSqlBuilder {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DropSynonymBuilder.class);
 
+	/** The synonym. */
 	private String synonym = null;
 
 	/**
@@ -38,6 +40,11 @@ public class DropSynonymBuilder extends AbstractDropSqlBuilder {
 		this.synonym = synonym;
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

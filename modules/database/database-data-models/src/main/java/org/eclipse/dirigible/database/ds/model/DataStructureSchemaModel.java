@@ -21,14 +21,17 @@ import javax.persistence.Transient;
  */
 public class DataStructureSchemaModel extends DataStructureContentModel {
 	
+	/** The tables. */
 	@Transient
 	private List<DataStructureTableModel> tables = new ArrayList<DataStructureTableModel>();
 
+	/** The views. */
 	@Transient
 	private List<DataStructureViewModel> views = new ArrayList<DataStructureViewModel>();
 
 	/**
-	 * Get the tables
+	 * Get the tables.
+	 *
 	 * @return the tables list
 	 */
 	public List<DataStructureTableModel> getTables() {
@@ -36,7 +39,8 @@ public class DataStructureSchemaModel extends DataStructureContentModel {
 	}
 
 	/**
-	 * Get the views
+	 * Get the views.
+	 *
 	 * @return the views list
 	 */
 	public List<DataStructureViewModel> getViews() {

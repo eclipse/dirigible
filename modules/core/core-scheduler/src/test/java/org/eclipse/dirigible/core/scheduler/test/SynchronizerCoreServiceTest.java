@@ -65,8 +65,8 @@ public class SynchronizerCoreServiceTest extends AbstractDirigibleTest {
 	/**
 	 * Gets the synchronizer state.
 	 *
-	 * @throws SchedulerException
-	 *             the scheduler exception
+	 * @return the synchronizer state
+	 * @throws SchedulerException             the scheduler exception
 	 */
 	@Test
 	public void getSynchronizerState() throws SchedulerException {

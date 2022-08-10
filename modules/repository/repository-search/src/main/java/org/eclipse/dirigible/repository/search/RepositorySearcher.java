@@ -55,8 +55,12 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class RepositorySearcher.
+ */
 public class RepositorySearcher {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RepositorySearcher.class);
 
 	/** The Constant DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER. */
@@ -68,30 +72,51 @@ public class RepositorySearcher {
 	/** The Constant DIRIGIBLE_REPOSITORY_SEARCH_INDEX_LOCATION. */
 	public static final String DIRIGIBLE_REPOSITORY_SEARCH_INDEX_LOCATION = "DIRIGIBLE_REPOSITORY_SEARCH_INDEX_LOCATION"; //$NON-NLS-1$
 
+	/** The Constant CURRENT_DIR. */
 	private static final String CURRENT_DIR = ".";
+	
+	/** The Constant CURRENT_INDEX. */
 	private static final String CURRENT_INDEX = "dirigible" + IRepository.SEPARATOR + "repository"
 			+ IRepository.SEPARATOR + "index";
 
+	/** The Constant FIELD_CONTENTS. */
 	private static final String FIELD_CONTENTS = "contents";
+	
+	/** The Constant FIELD_MODIFIED. */
 	private static final String FIELD_MODIFIED = "modified";
+	
+	/** The Constant FIELD_LOCATION. */
 	private static final String FIELD_LOCATION = "location";
 
+	/** The Constant MAX_RESULTS. */
 	private static final int MAX_RESULTS = 1000;
 
+	/** The repository. */
 	private IRepository repository;
 
+	/** The root. */
 	private String root;
 
+	/** The index. */
 	private String index;
 
+	/** The timer. */
 	private Timer timer;
 
+	/** The seconds. */
 	private int seconds = 30;
 
+	/** The last updated. */
 	private Date lastUpdated = new Date(0);
 
+	/** The count updated. */
 	private volatile int countUpdated = 0;
 
+	/**
+	 * Instantiates a new repository searcher.
+	 *
+	 * @param repository the repository
+	 */
 	public RepositorySearcher(IRepository repository) {
 		this.repository = repository;
 
@@ -123,7 +148,14 @@ public class RepositorySearcher {
 		timer.schedule(new ReindexTask(), 30000, seconds * 1000);
 	}
 
+	/**
+	 * The Class ReindexTask.
+	 */
 	class ReindexTask extends TimerTask {
+		
+		/**
+		 * Run.
+		 */
 		@Override
 		public void run() {
 			synchronized (RepositorySearcher.class) {
@@ -139,6 +171,15 @@ public class RepositorySearcher {
 		}
 	}
 
+	/**
+	 * Adds the.
+	 *
+	 * @param location the location
+	 * @param contents the contents
+	 * @param lastModified the last modified
+	 * @param parameters the parameters
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	private void add(String location, byte[] contents, long lastModified, Map<String, String> parameters)
 			throws RepositoryWriteException {
 		String indexName = index;
@@ -174,14 +215,12 @@ public class RepositorySearcher {
 	}
 
 	/**
-	 * Search for a given term in the text files content
-	 * 
-	 * @param term
-	 *            the term
+	 * Search for a given term in the text files content.
+	 *
+	 * @param term            the term
 	 * @return the list of the paths of resources which content matching the
 	 *         search term
-	 * @throws RepositoryReadException
-	 *             in case of an error
+	 * @throws RepositoryReadException             in case of an error
 	 */
 	public List<String> search(String term) throws RepositoryReadException {
 		List<String> results = new ArrayList<String>();
@@ -221,6 +260,9 @@ public class RepositorySearcher {
 		}
 	}
 
+	/**
+	 * Reindex.
+	 */
 	private void reindex() {
 		synchronized (RepositorySearcher.class) {
 			long start = System.currentTimeMillis();
@@ -239,6 +281,9 @@ public class RepositorySearcher {
 		}
 	}
 
+	/**
+	 * Force reindex.
+	 */
 	public void forceReindex() {
 		synchronized (RepositorySearcher.class) {
 			this.lastUpdated = new Date(0);
@@ -247,6 +292,11 @@ public class RepositorySearcher {
 		}
 	}
 	
+	/**
+	 * Gets the root.
+	 *
+	 * @return the root
+	 */
 	public String getRoot() {
 		return root;
 	}

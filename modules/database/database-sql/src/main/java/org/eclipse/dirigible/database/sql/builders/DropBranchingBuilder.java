@@ -106,6 +106,11 @@ public class DropBranchingBuilder extends AbstractSqlBuilder {
 		return new DropTableTypeBuilder(getDialect(), tableType);
 	}
 
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()

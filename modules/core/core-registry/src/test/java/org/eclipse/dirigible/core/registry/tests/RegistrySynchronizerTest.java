@@ -23,8 +23,12 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * The Class RegistrySynchronizerTest.
+ */
 public class RegistrySynchronizerTest extends AbstractDirigibleTest {
 
+	/** The Constant DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER. */
 	private static final String DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER = System.getProperty("user.dir") + "/target";
 
 	/** The synchronizer. */
@@ -47,6 +51,11 @@ public class RegistrySynchronizerTest extends AbstractDirigibleTest {
 		Configuration.update();
 	}
 
+	/**
+	 * Synchronize registry test.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void synchronizeRegistryTest() throws Exception {
 		String expectedText = "My Data";

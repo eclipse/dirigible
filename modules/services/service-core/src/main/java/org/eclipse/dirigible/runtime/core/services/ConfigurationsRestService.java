@@ -30,8 +30,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 /**
- * Front-facing service providing the version information
- *
+ * Front-facing service providing the version information.
  */
 @Path("/core/configurations")
 @RolesAllowed({ "Operator" })
@@ -40,11 +39,21 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class ConfigurationsRestService implements IRestService {
 	
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return ConfigurationsRestService.class;
 	}
 
+	/**
+	 * Gets the configurations.
+	 *
+	 * @return the configurations
+	 */
 	@GET
 	@Path("")
 	@Produces({ "application/json" })

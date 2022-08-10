@@ -25,10 +25,15 @@ import org.slf4j.LoggerFactory;
  */
 public class CmsManagedModule extends AbstractDirigibleModule {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CmsManagedModule.class);
 
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "CMS Managed Module";
 
+	/**
+	 * Configure.
+	 */
 	/*
 	 * (non-Javadoc)
 	 *
@@ -47,6 +52,11 @@ public class CmsManagedModule extends AbstractDirigibleModule {
 		}
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	/*
 	 * (non-Javadoc)
 	 *
