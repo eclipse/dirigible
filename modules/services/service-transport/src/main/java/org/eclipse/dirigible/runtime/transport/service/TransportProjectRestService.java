@@ -294,7 +294,7 @@ public class TransportProjectRestService extends AbstractRestService implements 
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@POST
-	@Path("/fileimport/{workspace}/{project}/{folder}")
+	@Path("/fileimport/{workspace}/{project}/{folder:.*}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Import File to Folder")

@@ -95,7 +95,7 @@ importView.controller('ImportViewController', [
                         'Content-Type': 'multipart/form-data',
                         'Content-Transfer-Encoding': 'base64'
                     };
-                    item.url = new UriBuilder().path(transportApi.getFileImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).build();
+                    item.url = new UriBuilder().path(transportApi.getFileImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).path('/').build();
                 }
             }
         };
