@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-database-parent</artifactId>
-		<version>6.3.16</version>
+		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-sql</artifactId>
-			<version>6.3.16</version>
+			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.eclipse.persistence</groupId>
@@ -39,7 +39,7 @@
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-h2</artifactId>
-			<version>6.3.16</version>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
 		<dependency>
