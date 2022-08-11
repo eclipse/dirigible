@@ -24,6 +24,7 @@ import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
+import org.eclipse.dirigible.database.sql.dialects.hana.HanaCreateBranchingBuilder;
 
 /**
  * The H2 SQL Dialect.
@@ -299,5 +300,19 @@ public class H2SqlDialect extends
 	public Set<String> getFunctionsNames() {
 		return FUNCTIONS;
 	}
+	
+	/**
+	 * Creates the.
+	 *
+	 * @return the h 2 create branching builder
+	 */
+	/*
+     * (non-Javadoc)
+     * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
+     */
+    @Override
+    public H2CreateBranchingBuilder create() {
+        return new H2CreateBranchingBuilder(this);
+    }
 
 }

@@ -380,8 +380,8 @@ public class WorkspaceProcessor {
      * @param project the project
      * @return the project descriptor
      */
-    public ProjectDescriptor renderProjectTree(IProject project) {
-        return WorkspaceJsonHelper.describeProject(project, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
+    public ProjectDescriptor renderProjectTree(String workspace, IProject project) {
+        return WorkspaceJsonHelper.describeProject(workspace, project, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
                 "");
     }
 
@@ -391,8 +391,8 @@ public class WorkspaceProcessor {
      * @param folder the folder
      * @return the folder descriptor
      */
-    public FolderDescriptor renderFolderTree(IFolder folder) {
-        return WorkspaceJsonHelper.describeFolder(folder, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
+    public FolderDescriptor renderFolderTree(String workspace, IFolder folder) {
+        return WorkspaceJsonHelper.describeFolder(workspace, folder, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
                 "");
     }
 
@@ -402,8 +402,8 @@ public class WorkspaceProcessor {
      * @param file the file
      * @return the file descriptor
      */
-    public FileDescriptor renderFileDescription(IFile file) {
-        return WorkspaceJsonHelper.describeFile(file, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
+    public FileDescriptor renderFileDescription(String workspace, IFile file) {
+        return WorkspaceJsonHelper.describeFile(workspace, file, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
     }
 
     /**
@@ -415,7 +415,7 @@ public class WorkspaceProcessor {
     public List<FileDescriptor> renderFileDescriptions(List<IFile> files) {
         List<FileDescriptor> fileDescriptors = new ArrayList<>();
         for (IFile file : files) {
-            fileDescriptors.add(renderFileDescription(file));
+            fileDescriptors.add(renderFileDescription("", file));
         }
         return fileDescriptors;
     }

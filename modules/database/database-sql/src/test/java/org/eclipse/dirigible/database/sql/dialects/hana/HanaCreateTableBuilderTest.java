@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.Table;
+import org.eclipse.dirigible.database.sql.TableStatements;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -218,7 +218,7 @@ public class HanaCreateTableBuilderTest {
    */
   @Test
   public void testCreateTableWithIndexes() {
-    Table table = SqlFactory.getNative(new HanaSqlDialect())
+    TableStatements table = SqlFactory.getNative(new HanaSqlDialect())
         .create()
         .rowTable("CUSTOMERS")
         .column("ID", DataType.INTEGER, true, false, false)

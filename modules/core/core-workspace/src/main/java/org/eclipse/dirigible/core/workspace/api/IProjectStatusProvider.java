@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.core.workspace.api;
 
+import java.io.IOException;
+
 /**
  * The Interface IProjectStatusProvider.
  */
@@ -24,5 +26,15 @@ public interface IProjectStatusProvider {
 	 * @return the project status
 	 */
 	ProjectStatus getProjectStatus(String workspace, String project);
+	
+	/**
+	 * Gets the project git folder.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the project git folder
+	 * @throws IOException 
+	 */
+	String getProjectGitFolder(String workspace, String project) throws IOException;
 
 }

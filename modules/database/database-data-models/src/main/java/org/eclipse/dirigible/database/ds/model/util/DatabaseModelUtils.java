@@ -16,9 +16,11 @@ import java.util.List;
 import org.eclipse.dirigible.database.ds.model.DataStructureSchemaModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableColumnModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintForeignKeyModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableIndexModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableIndexModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
 
@@ -58,6 +60,9 @@ public class DatabaseModelUtils {
 			}
 			for (PersistenceTableRelationModel relation : model.getRelations()) {
 				tableModel.getConstraints().getForeignKeys().add(new DataStructureTableConstraintForeignKeyModel(relation.getToTableName(), new String[] {relation.getFkColumnName()}));
+			}
+			for (PersistenceTableIndexModel index : model.getIndices()) {
+				tableModel.getIndexes().add(new DataStructureTableIndexModel(index.getName(), index.getType(), index.getUnique(), index.getColumns()));
 			}
 			return tableModel;
 		}

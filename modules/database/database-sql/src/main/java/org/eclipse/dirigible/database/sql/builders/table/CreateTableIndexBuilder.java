@@ -29,9 +29,6 @@ public class CreateTableIndexBuilder extends AbstractCreateTableConstraintBuilde
     /** The unique. */
     private Boolean unique;
 
-    /** The index columns. */
-    private Set<String> indexColumns ;
-
     /**
      * Instantiates a new abstract create table constraint builder.
      *
@@ -96,21 +93,4 @@ public class CreateTableIndexBuilder extends AbstractCreateTableConstraintBuilde
         this.unique = unique;
     }
 
-    /**
-     * Gets the index columns.
-     *
-     * @return the index columns
-     */
-    public Set<String> getIndexColumns() {
-        return indexColumns;
-    }
-
-    /**
-     * Sets the index columns.
-     *
-     * @param indexColumns the new index columns
-     */
-    public void setIndexColumns(Set<String> indexColumns) {
-        this.indexColumns = indexColumns;
-    }
 }

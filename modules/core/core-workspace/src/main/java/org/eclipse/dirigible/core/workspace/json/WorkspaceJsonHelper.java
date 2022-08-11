@@ -11,10 +11,14 @@
  */
 package org.eclipse.dirigible.core.workspace.json;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.dirigible.core.workspace.api.IProjectStatusProvider;
@@ -25,11 +29,16 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Workspace Json Helper.
  */
 public class WorkspaceJsonHelper {
+	
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(WorkspaceJsonHelper.class);
 	
 	/** The status providers. */
 	private static ServiceLoader<IProjectStatusProvider> statusProviders = ServiceLoader.load(IProjectStatusProvider.class);
@@ -52,7 +61,7 @@ public class WorkspaceJsonHelper {
 		List<ICollection> collections = collection.getCollections();
 		Map<String, ProjectStatus> projectStatusCache = new HashMap<String, ProjectStatus>();
 		for (ICollection childCollection : collections) {
-			workspacePojo.getProjects().add(describeProject(childCollection, removePathPrefix, addPathPrefix, projectStatusCache));
+			workspacePojo.getProjects().add(describeProject(workspacePojo.getName(), childCollection, removePathPrefix, addPathPrefix, projectStatusCache));
 		}
 
 		return workspacePojo;
@@ -92,8 +101,8 @@ public class WorkspaceJsonHelper {
 	 *            the add path prefix
 	 * @return the project descriptor
 	 */
-	public static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix) {
-		return describeProject(collection, removePathPrefix, addPathPrefix, new HashMap<String, ProjectStatus>());
+	public static ProjectDescriptor describeProject(String workspace, ICollection collection, String removePathPrefix, String addPathPrefix) {
+		return describeProject(workspace, collection, removePathPrefix, addPathPrefix, new HashMap<String, ProjectStatus>());
 	}
 
 	/**
@@ -105,13 +114,13 @@ public class WorkspaceJsonHelper {
 	 * @param projectStatusCache the project status cache
 	 * @return the project descriptor
 	 */
-	private static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix, Map<String, ProjectStatus> projectStatusCache) {
+	public static ProjectDescriptor describeProject(String workspace, ICollection collection, String removePathPrefix, String addPathPrefix, Map<String, ProjectStatus> projectStatusCache) {
 		ProjectDescriptor projectPojo = new ProjectDescriptor();
 		projectPojo.setName(collection.getName());
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
 
-		ProjectStatus status = getProjectStatus(collection, projectPojo, repositoryPath, projectStatusCache);
+		ProjectStatus status = getProjectStatus(workspace, collection, projectPojo, repositoryPath, projectStatusCache);
 		
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
@@ -134,8 +143,8 @@ public class WorkspaceJsonHelper {
 	 * @param repositoryPath the repository path
 	 * @return the project status
 	 */
-	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath) {
-		return getProjectStatus(collection, projectPojo, repositoryPath, new HashMap<String, ProjectStatus>());
+	private static ProjectStatus getProjectStatus(String workspace, ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath) {
+		return getProjectStatus(workspace, collection, projectPojo, repositoryPath, new HashMap<String, ProjectStatus>());
 	}
 
 	/**
@@ -147,21 +156,68 @@ public class WorkspaceJsonHelper {
 	 * @param projectStatusCache the project status cache
 	 * @return the project status
 	 */
-	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath, Map<String, ProjectStatus> projectStatusCache) {
+	private static ProjectStatus getProjectStatus(String workspace, ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath, Map<String, ProjectStatus> projectStatusCache) {
 		Pair<Boolean, String> gitInfo = WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString());
 		projectPojo.setGit(gitInfo.getLeft());
 		projectPojo.setGitName(gitInfo.getRight());
-		ProjectStatus status = null;
-		if (projectStatusCache.containsKey(projectPojo.getGitName())) {
-			status = projectStatusCache.get(projectPojo.getGitName());
-		} else if (projectPojo.isGit()) {
+		if (projectPojo.isGit()) {
+			String git = "";
 			for (IProjectStatusProvider statusProvider : statusProviders) {
-				status = statusProvider.getProjectStatus(collection.getParent().getName(), collection.getName());
-				projectStatusCache.put(projectPojo.getGitName(), status);
-				break;
+				try {
+					git = statusProvider.getProjectGitFolder(workspace, projectPojo.getName());
+				} catch (IOException e) {
+					logger.warn(git);
+				}
+			}
+			ProjectStatus status = null;
+			if (projectStatusCache.containsKey(projectPojo.getGitName())) {
+				status = projectStatusCache.get(projectPojo.getGitName());
+				status = remapPaths(projectPojo.getName(), git, status);
+			} else 
+				if (projectPojo.isGit()) {
+				for (IProjectStatusProvider statusProvider : statusProviders) {
+					status = statusProvider.getProjectStatus(collection.getParent().getName(), collection.getName());
+					projectStatusCache.put(projectPojo.getGitName(), status);
+					status = remapPaths(projectPojo.getName(), git, status);
+					break;
+				}
+			}
+			return status;
+		}
+		return null;
+	}
+	
+	private static ProjectStatus remapPaths(String project, String git, ProjectStatus status) {
+		ProjectStatus result = new ProjectStatus(
+			project,
+			git,
+			canonizePaths(git, project, status.getAdded()),
+			canonizePaths(git, project, status.getChanged()),
+			canonizePaths(git, project, status.getRemoved()),
+			canonizePaths(git, project, status.getMissing()),
+			canonizePaths(git, project, status.getModified()),
+			canonizePaths(git, project, status.getConflicting()),
+			canonizePaths(git, project, status.getUntracked()),
+			canonizePaths(git, project, status.getUntrackedFolders()));
+		return result;
+	}
+
+	/**
+	 * Canonize paths.
+	 *
+	 * @param git the heading
+	 * @param names the names
+	 * @return the sets the
+	 */
+	private static Set<String> canonizePaths(String git, String project, Set<String> names) {
+		Set<String> paths = new HashSet<>();
+		for (String name : names) {
+			if (name.indexOf(project) >= 0) {
+				name = name.substring(name.indexOf(project) + project.length() + 1);				
+				paths.add(git + name);
 			}
 		}
-		return status;
+		return paths;
 	}
 	
 	/**
@@ -199,11 +255,11 @@ public class WorkspaceJsonHelper {
 	 *            the add path prefix
 	 * @return the folder descriptor
 	 */
-	public static FolderDescriptor describeFolder(ICollection collection, String removePathPrefix, String addPathPrefix) {
+	public static FolderDescriptor describeFolder(String workspace, ICollection collection, String removePathPrefix, String addPathPrefix) {
 		ProjectDescriptor projectPojo = getProjectForStatus(collection, removePathPrefix, addPathPrefix);
 		RepositoryPath repositoryPath = new RepositoryPath(removePathPrefix + projectPojo.getPath());
 		
-		ProjectStatus status = getProjectStatus(collection.getRepository().getCollection(repositoryPath.toString()), projectPojo, repositoryPath);
+		ProjectStatus status = getProjectStatus(workspace, collection.getRepository().getCollection(repositoryPath.toString()), projectPojo, repositoryPath);
 		return describeFolder(collection, removePathPrefix, addPathPrefix, status);
 	}
 
@@ -248,7 +304,7 @@ public class WorkspaceJsonHelper {
 			
 			String path = folderPojo.getPath().substring(1);
 			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove workspace name
-			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove project name
+			//path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove project name
 			
 			if (status.getUntrackedFolders().contains(path)) {
 				folderPojo.setStatus(Status.U.name());
@@ -278,11 +334,11 @@ public class WorkspaceJsonHelper {
 	 *            the add path prefix
 	 * @return the file descriptor
 	 */
-	public static FileDescriptor describeFile(IResource resource, String removePathPrefix, String addPathPrefix) {
+	public static FileDescriptor describeFile(String workspace, IResource resource, String removePathPrefix, String addPathPrefix) {
 		ProjectDescriptor projectPojo = getProjectForStatus(resource.getParent(), removePathPrefix, addPathPrefix);
 		RepositoryPath repositoryPath = new RepositoryPath(removePathPrefix + projectPojo.getPath());
 		
-		ProjectStatus status = getProjectStatus(resource.getRepository().getCollection(repositoryPath.toString()), projectPojo, repositoryPath);
+		ProjectStatus status = getProjectStatus(workspace, resource.getRepository().getCollection(repositoryPath.toString()), projectPojo, repositoryPath);
 		return describeFile(resource, removePathPrefix, addPathPrefix, status);
 	}
 	
@@ -306,22 +362,28 @@ public class WorkspaceJsonHelper {
 		resourcePojo.setContentType(resource.getContentType());
 		if (status != null) {
 			
-			String path = resourcePojo.getPath().substring(1);
-			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove workspace name
-			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove project name
-			
-			if (status.getAdded().contains(path)) {
-				resourcePojo.setStatus(Status.A.name());
-			} else if (status.getChanged().contains(path) 
-					|| status.getModified().contains(path)
-					|| status.getMissing().contains(path)) {
-				resourcePojo.setStatus(Status.M.name());
-			} else if (status.getConflicting().contains(path)) {
-				resourcePojo.setStatus(Status.C.name());
-			} else if (status.getRemoved().contains(path)) {
-				resourcePojo.setStatus(Status.D.name());
-			} else if (status.getUntracked().contains(path)) {
-				resourcePojo.setStatus(Status.U.name());
+			try {
+				String path = new File(resource.getRepository().getInternalResourcePath(resource.getPath())).getCanonicalPath();
+				
+//			String path = resourcePojo.getPath().substring(1);
+//			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove workspace name
+				//path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove project name
+				
+				if (status.getAdded().contains(path)) {
+					resourcePojo.setStatus(Status.A.name());
+				} else if (status.getChanged().contains(path) 
+						|| status.getModified().contains(path)
+						|| status.getMissing().contains(path)) {
+					resourcePojo.setStatus(Status.M.name());
+				} else if (status.getConflicting().contains(path)) {
+					resourcePojo.setStatus(Status.C.name());
+				} else if (status.getRemoved().contains(path)) {
+					resourcePojo.setStatus(Status.D.name());
+				} else if (status.getUntracked().contains(path)) {
+					resourcePojo.setStatus(Status.U.name());
+				}
+			} catch (IOException e) {
+				logger.warn(e.getMessage());
 			}
 		}
 		return resourcePojo;

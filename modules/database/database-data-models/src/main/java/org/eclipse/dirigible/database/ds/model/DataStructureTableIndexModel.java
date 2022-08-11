@@ -22,24 +22,39 @@ public class DataStructureTableIndexModel {
     private String name ;
     
     /** The index type. */
-    private String indexType;
-    
-    /** The order. */
-    private String order;
+    private String type;
     
     /** The unique. */
     private Boolean unique;
     
     /** The index columns. */
-    private Set<String> indexColumns;
+    private Set<String> columns;
 
     /**
      * Instantiates a new data structure table index model.
      */
     public DataStructureTableIndexModel() {
     }
-
+    
     /**
+     * Instantiates a new data structure table index model.
+     *
+     * @param name the name
+     * @param type the type
+     * @param unique the unique
+     * @param columns the columns
+     */
+    public DataStructureTableIndexModel(String name, String type, Boolean unique, Set<String> columns) {
+		super();
+		this.name = name;
+		this.type = type;
+		this.unique = unique;
+		this.columns = columns;
+	}
+
+
+
+	/**
      * Gets the name.
      *
      * @return the name
@@ -62,35 +77,17 @@ public class DataStructureTableIndexModel {
      *
      * @return the index type
      */
-    public String getIndexType() {
-        return indexType;
+    public String getType() {
+        return type;
     }
 
     /**
      * Sets the index type.
      *
-     * @param indexType the new index type
+     * @param type the new type
      */
-    public void setIndexType(String indexType) {
-        this.indexType = indexType;
-    }
-
-    /**
-     * Gets the order.
-     *
-     * @return the order
-     */
-    public String getOrder() {
-        return order;
-    }
-
-    /**
-     * Sets the order.
-     *
-     * @param order the new order
-     */
-    public void setOrder(String order) {
-        this.order = order;
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
@@ -116,16 +113,16 @@ public class DataStructureTableIndexModel {
      *
      * @return the index columns
      */
-    public Set<String> getIndexColumns() {
-        return indexColumns;
+    public Set<String> getColumns() {
+        return columns;
     }
 
     /**
      * Sets the index columns.
      *
-     * @param indexColumns the new index columns
+     * @param columns the new index columns
      */
-    public void setIndexColumns(Set<String> indexColumns) {
-        this.indexColumns = indexColumns;
+    public void setColumns(Set<String> columns) {
+        this.columns = columns;
     }
 }

@@ -368,7 +368,7 @@ public class GitProcessor {
 	 */
 	public ProjectDescriptor renderWorkspaceProject(IWorkspace workspace, String projectName) {
 		IProject project = workspace.getProject(projectName);
-		return WorkspaceJsonHelper.describeProject(project, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
+		return WorkspaceJsonHelper.describeProject(workspace.getName(), project, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
 	}
 
 	/**

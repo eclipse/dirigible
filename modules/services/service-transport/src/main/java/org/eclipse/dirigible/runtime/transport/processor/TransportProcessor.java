@@ -197,6 +197,25 @@ public class TransportProcessor {
 	public byte[] exportSnapshot() {
 		return getRepository().exportZip(IRepositoryStructure.SEPARATOR, true);
 	}
+	
+	/**
+	 * Import files to folder.
+	 *
+	 * @param workspaceName the workspace name
+	 * @param projectName the project name
+	 * @param pathInProject the path in project
+	 * @param content the content
+	 */
+	public void importFileToPath(String workspaceName, String projectName, String pathInProject, byte[] content) {
+		IWorkspace workspace = getWorkspace(workspaceName);
+		String projectPath = workspace.getProject(projectName).getPath();
+		String importPath = projectPath + IRepositoryStructure.SEPARATOR  + pathInProject;
+		if (getRepository().hasResource(importPath)) {
+			getRepository().getResource(importPath).setContent(content);
+		} else {
+			getRepository().createResource(importPath, content);
+		}
+	}
 
 	
 }

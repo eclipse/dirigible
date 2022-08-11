@@ -39,6 +39,9 @@ public class PersistenceTableModel {
 
     /** The relations. */
     private List<PersistenceTableRelationModel> relations = new ArrayList<>();
+    
+    /** The relations. */
+    private List<PersistenceTableIndexModel> indices = new ArrayList<>();
 
     /**
      * Instantiates a new persistence table model.
@@ -46,11 +49,13 @@ public class PersistenceTableModel {
      * @param tableName the table name
      * @param columns the columns
      * @param relations the relations
+     * @param indices the indices
      */
-    public PersistenceTableModel(String tableName, List<PersistenceTableColumnModel> columns, List<PersistenceTableRelationModel> relations) {
+    public PersistenceTableModel(String tableName, List<PersistenceTableColumnModel> columns, List<PersistenceTableRelationModel> relations, List<PersistenceTableIndexModel> indices) {
         this.tableName = tableName;
         this.columns = columns;
         this.relations = relations;
+        this.indices = indices;
     }
 
     /**
@@ -168,6 +173,24 @@ public class PersistenceTableModel {
     public void setRelations(List<PersistenceTableRelationModel> relations) {
         this.relations = relations;
     }
+    
+    /**
+	 * Gets the indices.
+	 *
+	 * @return the indices
+	 */
+	public List<PersistenceTableIndexModel> getIndices() {
+		return indices;
+	}
+
+	/**
+	 * Sets the indices.
+	 *
+	 * @param indices the new indices
+	 */
+	public void setIndices(List<PersistenceTableIndexModel> indices) {
+		this.indices = indices;
+	}
 
     /**
      * Equals.
@@ -194,4 +217,6 @@ public class PersistenceTableModel {
     public int hashCode() {
         return Objects.hash(className, tableName, schemaName);
     }
+
+	
 }
