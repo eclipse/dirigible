@@ -1,3 +1,11 @@
+{{- if .Values.serviceAccount.create }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ required "Missing service account name" .Values.serviceAccount.name }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
+---  
 {{- if .Values.volume.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -44,12 +52,12 @@ spec:
             - sh
             - -c
             - for i in {1..15}; do echo "Waiting for database creation ..."; sleep 2; done;
-        # - name: check-db-ready
-        #   image: postgres:9.6.5
-        #   command:
-        #     - sh
-        #     - -c
-        #     - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database; sleep 2; done;
+        - name: check-db-ready
+          image: postgres:9.6.5
+          command:
+            - sh
+            - -c
+            - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database; sleep 2; done;
         {{- else if .Values.volume.enabled }}
         - name: wait-volume-ready
           image: busybox:1.28
@@ -60,16 +68,26 @@ spec:
         {{- end }}
       containers:
         - name: {{ required "Missing chart name" .Chart.Name }}
-          {{- if .Values.volume.enabled }}
           volumeMounts:
+          - name: dirigible-temp-data
+            mountPath: /usr/local/tomcat/target
+          {{- if .Values.volume.enabled }}
           - name: {{ include "dirigible.fullname" . }}-volume
             mountPath: /usr/local/tomcat/target/dirigible/repository
           {{- end }}
           env:
+            {{- if eq .Values.dirigible.terminalEnabled false }}
+            - name: DIRIGIBLE_TERMINAL_ENABLED
+              value: disable
+            {{- end }}
             {{- if .Values.kyma.enabled }}
             - name: DIRIGIBLE_HOST
               value: https://{{ required "Missing release name" .Release.Name }}.{{ required "Missing Kyma apirule host" .Values.kyma.apirule.host }}
             {{- end }}
+            {{- if .Values.istio.enabled }}
+            - name: DIRIGIBLE_HOST
+              value: https://{{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+            {{- end}}
             {{- if .Values.database.enabled }}
             - name: DIRIGIBLE_DATABASE_PROVIDER
               value: custom
@@ -92,6 +110,37 @@ spec:
             - name: DIRIGIBLE_SCHEDULER_MEMORY_STORE
               value: "true"
             {{- end }}
+            {{- if .Values.gke.cloudSQL }}
+            - name: DIRIGIBLE_DATABASE_PROVIDER
+              value: custom
+            - name: DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES
+              value: POSTGRE
+            - name: DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT
+              value: POSTGRE
+            - name: POSTGRE_DRIVER
+              value: org.postgresql.Driver
+            - name: POSTGRE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Missing GKE secret" .Values.gke.secretNameDirigible }}
+                  key: postgre_url
+            - name: POSTGRE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Missing GKE secret"  .Values.gke.secretNameDirigible }}
+                  key: username
+            - name: POSTGRE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Missing GKE secret"  .Values.gke.secretNameDirigible  }}
+                  key: password
+            - name: DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE
+              value: "false"
+            - name: DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE
+              value: "true"
+            - name: DIRIGIBLE_SCHEDULER_MEMORY_STORE
+              value: "true"
+            {{- end }}
             {{- if .Values.keycloak.enabled }}
             - name: DIRIGIBLE_KEYCLOAK_CONFIDENTIAL_PORT
               value: "443"
@@ -107,6 +156,9 @@ spec:
             {{- else if .Values.kyma.apirule.host }}
             - name: DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL
               value: https://{{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing Kyma api rule host" .Values.kyma.apirule.host }}/auth/
+            {{- else if .Values.istio.enabled }}
+            - name: DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL
+              value: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}/auth/
             {{- else }}
             - name: DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL
               value: https://{{ required "Missing Keycloak name" .Values.keycloak.name }}/auth/
@@ -142,8 +194,25 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- if .Values.volume.enabled }}
+        {{- if .Values.gke.cloudSQL }}
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.28.0 # make sure the use the latest version
+          command:
+            - "/cloud_sql_proxy"
+            - "-ip_address_types=PRIVATE"
+            - "-log_debug_stdout"
+            - "-instances={{ required "Missing GCP project id" .Values.gke.projectId }}:{{ required "Missing GCP region" .Values.gke.region }}:{{ required "Missing GCP Cloud SQL Keycloak instance name" .Values.gke.dirigibleSqlInstanceName }}=tcp:5432"
+          securityContext:
+            runAsNonRoot: true
+          resources:
+            requests:
+               memory: "128Mi"
+               cpu: "100m"
+        {{- end}}
       volumes:
+        - name: dirigible-temp-data
+          emptyDir: {}
+      {{- if .Values.volume.enabled }}
         - name: {{ include "dirigible.fullname" . }}-volume
           persistentVolumeClaim:
             claimName: {{ include "dirigible.fullname" . }}-claim
@@ -320,7 +389,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: {{ required "Missing Istio gateway name" .Values.istio.gatewayName }}
+  name: {{ required "Missing release name" .Release.Name }}-gateway
 spec:
   selector:
     istio: ingressgateway # use Istio default gateway implementation
@@ -330,26 +399,56 @@ spec:
       name: {{ required "Missing Istio server port name" .Values.istio.serversPortName }}
       protocol: {{ required "Missing Istio server port protocol" .Values.istio.serversPortProtocol }}
     hosts:
-    - {{ .Values.istio.serversHost | quote }}
+    - {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+    {{- if .Values.istio.httpsRedirect }}
+    tls:
+      httpsRedirect: true
+    {{- end}}
+  {{- if .Values.istio.enableHttps }}
+  - port:
+      number: 443
+      name: https-443
+      protocol: HTTPS
+    hosts:
+    - {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+    tls:
+      mode: SIMPLE 
+      credentialName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+  {{- end }}
 
 ---
-
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: {{ required "Missing Istio virtual service name" .Values.istio.virtualserviceName }}
+  name: {{ required "Missing release name" .Release.Name }}
 spec:
   hosts:
-  - {{ required "Missing Istio virtual service hosts" .Values.istio.virtualserviceHosts | quote }}
+  - {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
   gateways:
-  - {{ required "Missing Istio virtual service gateways" .Values.istio.virtualserviceGateways }}
+  - {{ required "Missing release name" .Release.Name }}-gateway
   http:
   - match:
     - uri:
         regex: /.*
     route:
     - destination:
-        host: {{ required "Missing Istio virtual service destination" .Values.istio.virtualserviceDestination }}
+        host: {{ required "Missing release name" .Release.Name }}.{{ required "Missing release namespace" .Release.Namespace }}.svc.cluster.local
         port:
-          number: {{ required "Missing Istio virtual service port" .Values.istio.virtualservicePort }}           
+          number: 8080
+{{- if .Values.istio.enableHttps }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dirigible
+  namespace: istio-ingress
+spec:
+  secretName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+  issuerRef: 
+    name: letsencrypt
+    kind: ClusterIssuer
+  commonName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+  dnsNames: 
+  - {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+{{- end }}
 {{- end }}

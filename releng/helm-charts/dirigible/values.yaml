@@ -25,12 +25,12 @@ fullNameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: false
+  create: true
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name:
+  name: dirigible-sa
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -92,6 +92,7 @@ affinity: {}
 dirigible:
   # Image for custom Dirigible installation
   image: ""
+  terminalEnabled: false
 
 volume:
   # Enable volume for Dirigible
@@ -122,12 +123,31 @@ kyma:
     # Host where Kyma to expose Dirigible  
     host: ""
 
+gke:
+  # Enable GCP Cloud SQL
+  cloudSQL: false
+  # Project Id where is installed Cloud SQL
+  projectId:
+  # Region for Cloud SQL
+  region:
+  # Instance name for Dirigible Cloud SQL
+  dirigibleSqlInstanceName: dirigible
+  # Instance name for Keycloak Cloud SQL
+  keycloakSqlInstanceName: keycloak
+  # Secret name for login credential for Dirigible Cloud SQL
+  secretNameDirigible: dirigible-db
+  # Secret name for login credential for Keycloak Cloud SQL
+  secretNameKeycloak: keycloak-db
 
 keycloak:
   # Enable keycloak configuration
   enabled: false
   # Install keycloak
   install: false
+  # Specifies whether a service account should be created
+  serviceAccountCreate: true
+  # Service Account for Keycloak deployment
+  serviceAccountName: keycloak-sa
   # Name for the instance
   name: keycloak
   # Image for Keycloak installation
@@ -145,7 +165,7 @@ keycloak:
   # Database for the Keycloak
   database:
     # Enabled property to install Postgre  
-    enabled: true
+    enabled: false
     # Image for Postgre database  
     image: postgres:13
     # Storage for Postgre database
@@ -158,8 +178,6 @@ keycloak:
 # Enable Istio configuration
 istio:
   enabled: false
-  # Istio gateway name
-  gatewayName: gateway
   # Istio servers port number
   serversPortNumber: 80
   # Istio servers port name
@@ -167,9 +185,12 @@ istio:
   # Istio servers port protocol
   serversPortProtocol: HTTP
   # Istio servers host
-  serversHost: "*"
-  # Istio virtual service name
-  virtualserviceName: dirigible
+  dirigibleServerHost: "dirigible"
+  keycloakServerHost: "keycloak"
+  # Istio https redirect
+  httpsRedirect: false
+  # Https configuration
+  enableHttps: false
   # Istio virtual service hosts
   virtualserviceHosts: "*"
   # Istio virtual service gateways

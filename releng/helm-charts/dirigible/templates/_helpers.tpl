@@ -52,12 +52,23 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
-Create the name of the service account to use
+Create the name of the Dirigible service account to use
 */}}
 {{- define "dirigible.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
     {{ default (include "dirigible.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the Keycloak service account to use
+*/}}
+{{- define "keycloak.serviceAccountName" -}}
+{{- if .Values.keycloak.serviceAccountCreate -}}
+    {{ default (include "dirigible.fullname" .) .Values.keycloak.serviceAccountName }}
+{{- else -}}
+    {{ default "default" .Values.keycloak.serviceAccountName}}
 {{- end -}}
 {{- end -}}
