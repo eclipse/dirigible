@@ -10,6 +10,6 @@ COPY src/main/webapp/META-INF/context.xml /usr/local/tomcat/webapps/ROOT/META-IN
 COPY src/main/webapp/WEB-INF/keycloak.json /usr/local/tomcat/webapps/ROOT/WEB-INF/
 COPY src/main/webapp/WEB-INF/keycloak.json /usr/local/tomcat/webapps/ROOT/WEB-INF/
 
-RUN wget https://repo1.maven.org/maven2/org/postgresql/postgresql/42.1.4/postgresql-42.1.4.jar -P /usr/local/tomcat/lib/
+RUN wget https://repo1.maven.org/maven2/org/postgresql/postgresql/42.4.1/postgresql-42.4.1.jar -P /usr/local/tomcat/lib/
 
 ENV DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT=0.0.0.0:8081
