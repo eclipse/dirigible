@@ -283,10 +283,13 @@ public class GitProcessor {
 	 * @throws GitConnectorException in case of an error
 	 */
 	public GitProjectLocalBranches getLocalBranches(String workspace, String project) throws GitConnectorException {
-		GitProjectLocalBranches branches = new GitProjectLocalBranches();
 		IGitConnector gitConnector = getGitConnector(workspace, project);
-		branches.setLocal(gitConnector.getLocalBranches());
-		return branches;
+		if (gitConnector != null) {
+			GitProjectLocalBranches branches = new GitProjectLocalBranches();
+			branches.setLocal(gitConnector.getLocalBranches());
+			return branches;
+		}
+		return null;
 	}
 	
 	/**
@@ -298,10 +301,13 @@ public class GitProcessor {
 	 * @throws GitConnectorException in case of an error
 	 */
 	public GitProjectRemoteBranches getRemoteBranches(String workspace, String project) throws GitConnectorException {
-		GitProjectRemoteBranches branches = new GitProjectRemoteBranches();
 		IGitConnector gitConnector = getGitConnector(workspace, project);
-		branches.setRemote(gitConnector.getRemoteBranches());
-		return branches;
+		if (gitConnector != null) {
+			GitProjectRemoteBranches branches = new GitProjectRemoteBranches();
+			branches.setRemote(gitConnector.getRemoteBranches());
+			return branches;
+		}
+		return null;
 	}
 	
 	/**
@@ -380,10 +386,13 @@ public class GitProcessor {
 	 * @throws GitConnectorException in case of an error
 	 */
 	public GitProjectChangedFiles getUnstagedFiles(String workspace, String project) throws GitConnectorException {
-		GitProjectChangedFiles gitProjectChangedFiles = new GitProjectChangedFiles();
 		IGitConnector gitConnector = getGitConnector(workspace, project);
-		gitProjectChangedFiles.setFiles(gitConnector.getUnstagedChanges());
-		return gitProjectChangedFiles;
+		if (gitConnector != null) {
+			GitProjectChangedFiles gitProjectChangedFiles = new GitProjectChangedFiles();
+			gitProjectChangedFiles.setFiles(gitConnector.getUnstagedChanges());
+			return gitProjectChangedFiles;
+		}
+		return null;
 	}
 
 	/**
@@ -395,10 +404,13 @@ public class GitProcessor {
 	 * @throws GitConnectorException in case of an error
 	 */
 	public GitProjectChangedFiles getStagedFiles(String workspace, String project) throws GitConnectorException {
-		GitProjectChangedFiles gitProjectChangedFiles = new GitProjectChangedFiles();
 		IGitConnector gitConnector = getGitConnector(workspace, project);
-		gitProjectChangedFiles.setFiles(gitConnector.getStagedChanges());
-		return gitProjectChangedFiles;
+		if (gitConnector != null) {
+			GitProjectChangedFiles gitProjectChangedFiles = new GitProjectChangedFiles();
+			gitProjectChangedFiles.setFiles(gitConnector.getStagedChanges());
+			return gitProjectChangedFiles;
+		}
+		return null;
 	}
 	
 	/**
@@ -412,28 +424,30 @@ public class GitProcessor {
 	public void addFileToIndex(String workspace, String repositoryName, String paths) throws GitConnectorException {
 		try {
 			IGitConnector gitConnector = getGitConnector(workspace, repositoryName);
-			List<File> projects = GitFileUtils.getGitRepositoryProjectsFiles(workspace, repositoryName);
-
-			String[] files = paths.split(",");
-			for (String file : files) {
-				File projectFile = null;
-				String projectLocation = null;
-				for (File next : projects) {
-					projectLocation = extractProjectLocation(next);
-					if (file.startsWith(projectLocation)) {
-						projectFile = next;
-						break;
+			if (gitConnector != null) {
+				List<File> projects = GitFileUtils.getGitRepositoryProjectsFiles(workspace, repositoryName);
+	
+				String[] files = paths.split(",");
+				for (String file : files) {
+					File projectFile = null;
+					String projectLocation = null;
+					for (File next : projects) {
+						projectLocation = extractProjectLocation(next);
+						if (file.startsWith(projectLocation)) {
+							projectFile = next;
+							break;
+						}
 					}
-				}
-				if (projectFile == null) {
-					throw new IllegalArgumentException("Project not found in git repository [" + repositoryName + "] for file [" + file + "]");
-				}
-				String fileLocation = projectFile.getPath() + File.separator + file.substring(projectLocation.length());
-				File canonicalFile = new File(fileLocation).getCanonicalFile();
-				if (canonicalFile.exists()) {
-					gitConnector.add(file);
-				} else {
-					gitConnector.addDeleted(file);
+					if (projectFile == null) {
+						throw new IllegalArgumentException("Project not found in git repository [" + repositoryName + "] for file [" + file + "]");
+					}
+					String fileLocation = projectFile.getPath() + File.separator + file.substring(projectLocation.length());
+					File canonicalFile = new File(fileLocation).getCanonicalFile();
+					if (canonicalFile.exists()) {
+						gitConnector.add(file);
+					} else {
+						gitConnector.addDeleted(file);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -452,9 +466,11 @@ public class GitProcessor {
 	public void revertToHeadRevision(String workspace, String project, String paths) throws GitConnectorException {
 		try {
 			IGitConnector gitConnector = getGitConnector(workspace, project);
-			String[] files = paths.split(",");
-			for (String file : files) {
-				gitConnector.revert(file);
+			if (gitConnector != null) {
+				String[] files = paths.split(",");
+				for (String file : files) {
+					gitConnector.revert(file);
+				}
 			}
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
@@ -471,7 +487,10 @@ public class GitProcessor {
 	 */
 	public ProjectOriginUrls getOriginUrls(String workspace, String project) throws GitConnectorException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
-		return gitConnector.getOriginUrls();
+		if (gitConnector != null) {
+			return gitConnector.getOriginUrls();
+		}
+		return null;
 	}
 
 	/**
@@ -486,7 +505,9 @@ public class GitProcessor {
 	 */
 	public void setFetchUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
-		gitConnector.setFetchUrl(url);
+		if (gitConnector != null) {
+			gitConnector.setFetchUrl(url);
+		}
 	}
 
 	/**
@@ -515,9 +536,11 @@ public class GitProcessor {
 	public void removeFileFromIndex(String workspace, String project, String paths) throws GitConnectorException {
 		try {
 			IGitConnector gitConnector = getGitConnector(workspace, project);
-			String[] files = paths.split(",");
-			for (String file : files) {
-				gitConnector.remove(file);
+			if (gitConnector != null) {
+				String[] files = paths.split(",");
+				for (String file : files) {
+					gitConnector.remove(file);
+				}
 			}
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
@@ -536,28 +559,31 @@ public class GitProcessor {
 	public GitDiffModel getFileDiff(String workspace, String repositoryName, String path) throws GitConnectorException {
 		try {
 			IGitConnector gitConnector = getGitConnector(workspace, repositoryName);
-			File project = getProjectFile(workspace, repositoryName, path);
-			String projectLocation = extractProjectLocation(project);
-			String filePath = null;
-			if (projectLocation.length() > 0 && path.startsWith(projectLocation)) {
-				filePath = path.substring(projectLocation.length());
-			} else {
-				File gitRepo = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
-				boolean isRootProject = gitRepo.getCanonicalPath().equals(project.getCanonicalPath());
-				if (!isRootProject || path.startsWith(project.getName())) {
-					filePath = path.substring(path.indexOf("/") + 1);
+			if (gitConnector != null) {
+				File project = getProjectFile(workspace, repositoryName, path);
+				String projectLocation = extractProjectLocation(project);
+				String filePath = null;
+				if (projectLocation.length() > 0 && path.startsWith(projectLocation)) {
+					filePath = path.substring(projectLocation.length());
 				} else {
-					filePath = path;
+					File gitRepo = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
+					boolean isRootProject = gitRepo.getCanonicalPath().equals(project.getCanonicalPath());
+					if (!isRootProject || path.startsWith(project.getName())) {
+						filePath = path.substring(path.indexOf("/") + 1);
+					} else {
+						filePath = path;
+					}
 				}
+				IFile file = getProject(workspace, project.getName()).getFile(filePath);
+				String original = getOriginalFileContent(project, filePath, gitConnector);
+				String modified = getModifiedFileContent(file);
+				GitDiffModel diffModel = new GitDiffModel(original, modified);
+				return diffModel;
 			}
-			IFile file = getProject(workspace, project.getName()).getFile(filePath);
-			String original = getOriginalFileContent(project, filePath, gitConnector);
-			String modified = getModifiedFileContent(file);
-			GitDiffModel diffModel = new GitDiffModel(original, modified);
-			return diffModel;
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
 		}
+		return null;
 	}
 
 	/**
@@ -659,11 +685,14 @@ public class GitProcessor {
 	public List<GitCommitInfo> getHistory(String workspace, String project, String path) throws GitConnectorException {
 		try {
 			IGitConnector gitConnector = getGitConnector(workspace, project);
-			List<GitCommitInfo> history = gitConnector.getHistory(path);
-			return history;
+			if (gitConnector != null) {
+				List<GitCommitInfo> history = gitConnector.getHistory(path);
+				return history;
+			}
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
 		}
+		return null;
 	}
 
 	/**
@@ -693,12 +722,17 @@ public class GitProcessor {
 		try {
 			IWorkspace workspaceObject = getWorkspace(workspace);
 			if (workspaceObject.getRepository() instanceof FileSystemRepository) {
-				String gitDirectory = getGitRepository(workspace, repositoryName).getCanonicalPath();
-				if (Paths.get(Paths.get(gitDirectory).toString(), DOT_GIT).toFile().exists()) {
-					IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory);
-					return gitConnector;
+				File gitDirectoryFile = getGitRepository(workspace, repositoryName);
+				if (gitDirectoryFile != null) {
+						String gitDirectory	= gitDirectoryFile.getCanonicalPath();
+					if (Paths.get(Paths.get(gitDirectory).toString(), DOT_GIT).toFile().exists()) {
+						IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory);
+						return gitConnector;
+					} else {
+						throw new GitConnectorException("Not a Git project directory");
+					}
 				} else {
-					throw new GitConnectorException("Not a Git project directory");
+					return null;
 				}
 			} else {
 				throw new GitConnectorException("Not a file based repository used, hence no git support");

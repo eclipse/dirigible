@@ -652,7 +652,11 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		}
 
 		ProjectOriginUrls originUrls = processor.getOriginUrls(workspace, project);
-		return Response.ok(originUrls).build();
+		if (originUrls != null) {
+			return Response.ok(originUrls).build();
+		} else {
+			return createErrorResponseBadRequest("Not a git project");
+		}
 	}
 
 	/**
@@ -738,7 +742,11 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		GitDiffModel diff = processor.getFileDiff(workspace, repositoryName, path);
-		return Response.ok().entity(GsonHelper.GSON.toJson(diff)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		if (diff != null) {
+			return Response.ok().entity(GsonHelper.GSON.toJson(diff)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		} else {
+			return createErrorResponseBadRequest("Not a git project");
+		}
 	}
 
 	/**
@@ -763,7 +771,11 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		List<GitCommitInfo> history = processor.getHistory(workspace, project, path);
-		return Response.ok().entity(GsonHelper.GSON.toJson(history)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		if (history != null) {
+			return Response.ok().entity(GsonHelper.GSON.toJson(history)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		} else {
+			return createErrorResponseBadRequest("Not a git project");
+		}
 	}
 
 	/**
