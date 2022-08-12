@@ -155,7 +155,7 @@ spec:
               value: "true"
             - name: DIRIGIBLE_SCHEDULER_MEMORY_STORE
               value: "true"
-            {{- end }}            
+            {{- end }}
             {{- if .Values.keycloak.enabled }}
             - name: DIRIGIBLE_KEYCLOAK_CONFIDENTIAL_PORT
               value: "443"

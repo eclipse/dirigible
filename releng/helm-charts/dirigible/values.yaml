@@ -184,8 +184,6 @@ keycloak:
 # Enable Istio configuration
 istio:
   enabled: false
-  # Istio gateway name
-  gatewayName: gateway
   # Istio servers port number
   serversPortNumber: 80
   # Istio servers port name
@@ -199,8 +197,6 @@ istio:
   httpsRedirect: false
   # Https configuration
   enableHttps: false
-  # Istio virtual service name
-  virtualserviceName: dirigible
   # Istio virtual service hosts
   virtualserviceHosts: "*"
   # Istio virtual service gateways
