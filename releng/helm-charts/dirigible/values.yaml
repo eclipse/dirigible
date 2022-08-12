@@ -165,7 +165,7 @@ keycloak:
   # Replica count for Keycloak
   replicaCount: 1
   # Realm is property which realm to use
-  realm: master
+  realm: dirigible
   # ClientId is property for client 
   clientId: dirigible
   # Database for the Keycloak
