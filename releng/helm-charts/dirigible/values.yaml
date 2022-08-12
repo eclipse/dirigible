@@ -113,7 +113,7 @@ database:
   # Driver for Postgre 
   driver: org.postgresql.Driver
   # Username for database
-  username: master
+  username: dirigible
   # Password for database username
   password: dirigible
   # Storage for Postgre database
@@ -165,7 +165,7 @@ keycloak:
   # Replica count for Keycloak
   replicaCount: 1
   # Realm is property which realm to use
-  realm: dirigible
+  realm: master
   # ClientId is property for client 
   clientId: dirigible
   # Database for the Keycloak
