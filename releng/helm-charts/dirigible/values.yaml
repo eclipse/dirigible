@@ -92,7 +92,13 @@ affinity: {}
 dirigible:
   # Image for custom Dirigible installation
   image: ""
+  # Disable terminal in web
   terminalEnabled: false
+  # Change deployment strategy type
+  strategyType: Recreate
+  # Default user and password for dirigible
+  username: dirigible
+  password: dirigible
 
 volume:
   # Enable volume for Dirigible
