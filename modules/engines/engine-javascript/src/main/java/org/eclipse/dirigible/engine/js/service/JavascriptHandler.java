@@ -23,6 +23,7 @@ public interface JavascriptHandler {
      * @param projectFilePath the project file path
      * @param projectFilePathParam the project file path param
      * @param debug the debug
+     * @return the object
      */
-    void handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug);
+    Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug);
 }

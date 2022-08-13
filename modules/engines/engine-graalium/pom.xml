@@ -30,7 +30,9 @@
     <modules>
         <module>execution</module>
         <module>execution-core</module>
-        <module>execution-web</module>
+        <module>execution-handler</module>
+        <module>execution-service</module>
+        <module>execution-engine</module>
     </modules>
 
 </project>

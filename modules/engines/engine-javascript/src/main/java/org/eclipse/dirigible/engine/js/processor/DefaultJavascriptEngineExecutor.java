@@ -133,14 +133,14 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	}
 
 	/**
-	 * Gets the javascript engine.
+	 * Gets the JavaScript engine.
 	 *
-	 * @return the javascript engine
+	 * @return the JavaScript engine
 	 * @throws ScriptingException the scripting exception
 	 */
 	private IJavascriptEngineExecutor getJavascriptEngine() throws ScriptingException {
 
-		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_GRAALVM);
+		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_GRAALIUM);
 
 		for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
 			if (next.getType().equals(javascriptEngineType)) {
@@ -155,14 +155,14 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		// backup
 		try {
 			try {
-				return (IJavascriptEngineExecutor) Class.forName("org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor").newInstance();
+				return (IJavascriptEngineExecutor) Class.forName("org.eclipse.dirigible.graalium.service.GraaliumJavascriptEngineExecutor").newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
 				logger.error(e.getMessage(), e);
 			}
 		} catch (ClassNotFoundException e) {
-			throw new ScriptingException("No Javascript Engine registered. The default GraalJS is also not available.");
+			throw new ScriptingException("No JavaScript Engine registered. The default Graalium is also not available.");
 		}
-		logger.error(format("Default Javascript Engine Executor not found."));
+		logger.error(format("Default JavaScript Engine Executor not found."));
 		return null;
 	}
 

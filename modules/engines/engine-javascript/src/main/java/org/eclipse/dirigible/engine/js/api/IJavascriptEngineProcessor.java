@@ -21,11 +21,10 @@ public interface IJavascriptEngineProcessor {
 	/**
 	 * Execute service.
 	 *
-	 * @param module
-	 *            the module
-	 * @throws ScriptingException
-	 *             the scripting exception
+	 * @param module            the module
+	 * @return the object
+	 * @throws ScriptingException             the scripting exception
 	 */
-	public void executeService(String module) throws ScriptingException;
+	public Object executeService(String module) throws ScriptingException;
 
 }

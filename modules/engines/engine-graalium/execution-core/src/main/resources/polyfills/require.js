@@ -1,4 +1,4 @@
-const DirigibleSourceProvider = Java.type("org.eclipse.dirigible.graalium.core.dirigible.modules.DirigibleSourceProvider");
+const DirigibleSourceProvider = Java.type("org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider");
 const dirigibleSourceProvider = new DirigibleSourceProvider();
 
 var Require = (function (modulePath) {

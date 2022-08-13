@@ -29,10 +29,11 @@ public class DefaultJavascriptHandler implements JavascriptHandler {
      * @param projectFilePath the project file path
      * @param projectFilePathParam the project file path param
      * @param debug the debug
+     * @return the object
      */
     @Override
-    public void handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
+    public Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
         String path = projectName + IRepository.SEPARATOR + projectFilePath + IRepository.SEPARATOR + projectFilePathParam;
-        processor.executeService(path);
+        return processor.executeService(path);
     }
 }
