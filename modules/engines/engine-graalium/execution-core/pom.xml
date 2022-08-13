@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>dirigible-engine-graalium</artifactId>
-    <groupId>org.eclipse.dirigible</groupId>
-    <version>7.0.0-SNAPSHOT</version>
-  </parent>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>dirigible-engine-graalium</artifactId>
+		<groupId>org.eclipse.dirigible</groupId>
+		<version>7.0.0-SNAPSHOT</version>
+	</parent>
 
-  <artifactId>dirigible-engine-graalium-execution-core</artifactId>
-  <name>Engine - Graalium - Execution - Core</name>
+	<artifactId>dirigible-engine-graalium-execution-core</artifactId>
+	<name>Engine - Graalium - Execution - Core</name>
 
-  <properties>
-    <license.skip>true</license.skip>
-  </properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-api</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-repository-api</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-engine-graalium-execution</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+	</dependencies>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.eclipse.dirigible</groupId>
-      <artifactId>dirigible-commons-api</artifactId>
-      <version>7.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.dirigible</groupId>
-      <artifactId>dirigible-repository-api</artifactId>
-      <version>7.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.dirigible</groupId>
-      <artifactId>dirigible-engine-graalium-execution</artifactId>
-      <version>7.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>${gson.version}</version>
-    </dependency>
-  </dependencies>
+	<properties>
+		<license.header.location>../../../../licensing-header.txt</license.header.location>
+	</properties>
 
 </project>

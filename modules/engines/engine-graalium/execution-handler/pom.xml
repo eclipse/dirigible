@@ -12,10 +12,6 @@
     <artifactId>dirigible-engine-graalium-execution-handler</artifactId>
     <name>Engine - Graalium - Handler</name>
 
-    <properties>
-        <license.skip>true</license.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -33,5 +29,9 @@
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
+    
+    <properties>
+		<license.header.location>../../../../licensing-header.txt</license.header.location>
+	</properties>
 
 </project>

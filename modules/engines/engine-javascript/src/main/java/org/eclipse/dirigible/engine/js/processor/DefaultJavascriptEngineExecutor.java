@@ -18,7 +18,6 @@ import java.util.ServiceLoader;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.engine.api.EngineExecutorFactory;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.slf4j.Logger;
@@ -155,7 +154,7 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		// backup
 		try {
 			try {
-				return (IJavascriptEngineExecutor) Class.forName("org.eclipse.dirigible.graalium.service.GraaliumJavascriptEngineExecutor").newInstance();
+				return (IJavascriptEngineExecutor) Class.forName("org.eclipse.dirigible.graalium.engine.GraaliumJavascriptEngineExecutor").newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
 				logger.error(e.getMessage(), e);
 			}
