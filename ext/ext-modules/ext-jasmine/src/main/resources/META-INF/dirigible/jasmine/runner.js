@@ -9,30 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-(function () {
-	'use strict';
-
-	var QUnit;
-	if (this) {
-		QUnit = this.QUnit || require("qunit/qunit");
-	} else {
-		QUnit = require("qunit/qunit");
-	}
-
-	var data = {
-		tests: [],
-		moduleTests: []
-	};
-
-	QUnit.moduleDone(function (details) {
-		data.moduleTests.push(details);
-	});
-	QUnit.testDone(function (details) {
-		data.tests.push(details);
-	});
-	QUnit.done(function (details) {
-		data.testSuite = details;
-		console.info(JSON.stringify(data));
-	});
-
-})();
+var runner = require('jasmine/test-runner');
+for (var propertyName in runner) {
+    exports[propertyName] = runner[propertyName];
+}

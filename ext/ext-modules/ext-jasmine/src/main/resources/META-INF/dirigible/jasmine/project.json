@@ -3,13 +3,13 @@
     "repository":{
         "type":"git",
         "branch":"master",
-        "url":"https://github.com/dirigiblelabs/jasmin.git"
+        "url":"https://github.com/dirigiblelabs/ext-jasmine.git"
     },
     "dependencies": [
         {
             "guid":"test",
             "type": "git",
-            "url": "https://github.com/dirigiblelabs/api-v3-test.git",
+            "url": "https://github.com/dirigiblelabs/api-test.git",
             "branch":"master"
     	}
 	]
