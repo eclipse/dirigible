@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.engine.js.graalvm.service;
+package org.eclipse.dirigible.tests;
 
 import java.io.IOException;
 
@@ -27,36 +27,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * The Class GraalVMApiSuiteTest.
- */
 public class GraaliumCustomTest extends AbstractApiSuiteTest {
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GraaliumCustomTest.class);
-
-	/** The repository. */
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-
-	/** The GraalVM javascript engine executor. */
-	private GraaliumJavascriptEngineExecutor graaliumJavascriptEngineExecutor;
-
-	/**
-	 * Sets the up.
-	 *
-	 * @throws Exception the exception
-	 */
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
-	 */
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
-		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-		this.graaliumJavascriptEngineExecutor = new GraaliumJavascriptEngineExecutor();
-	}
-
+	
 	/**
 	 * Register modules.
 	 */
@@ -77,14 +52,14 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 	@Test
 	public void customPackage() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 		
-		String testModule = "graalvm/customPackage.js";
+		String testModule = "graalium/customPackage.js";
 		
 		try {
 			ThreadContextFacade.setUp();
 
 			logger.info("API test starting... " + testModule);
 
-			runTest(graaliumJavascriptEngineExecutor, repository, testModule);
+			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
 			logger.info("API test passed successfully: " + testModule);
 				 
 		} finally {
@@ -104,7 +79,7 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 	@Test
 	public void customPackageImport() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 		
-		String testModule = "graalvm/customPackageImport.js";
+		String testModule = "graalium/customPackageImport.js";
 
 		try {
 			ThreadContextFacade.setUp();
@@ -112,7 +87,7 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 			logger.info("API test starting... " + testModule);
 
 			Object result = null;
-			runTest(graaliumJavascriptEngineExecutor, repository, testModule);
+			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
 
 			logger.info("API test passed successfully: " + testModule);
 				 
@@ -130,7 +105,7 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 	 */
 	@Test
 	public void dirigibleApiEcmaImport() throws ContextException, IOException, ScriptingException {
-		String testModule = "graalvm/ecmascript/importDirigibleApi.mjs";
+		String testModule = "graalium/ecmascript/importDirigibleApi.mjs";
 
 		try {
 			ThreadContextFacade.setUp();
@@ -138,7 +113,7 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 			logger.info("API test starting... " + testModule);
 
 			Object result = null;
-			runTest(graaliumJavascriptEngineExecutor, repository, testModule);
+			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
 
 			logger.info("API test passed successfully: " + testModule);
 
@@ -147,29 +122,30 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 		}
 	}
 
-	/**
-	 * Relative path ecma import.
-	 *
-	 * @throws ContextException the context exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ScriptingException the scripting exception
-	 */
-	@Test
-	public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
-		String testModule = "graalvm/ecmascript/relativeImports/l12/l12.mjs";
+//	/**
+//	 * Relative path ecma import.
+//	 *
+//	 * @throws ContextException the context exception
+//	 * @throws IOException Signals that an I/O exception has occurred.
+//	 * @throws ScriptingException the scripting exception
+//	 */
+//	@Test
+//	public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
+//		String testModule = "graalium/ecmascript/relativeImports/l12/l12.mjs";
+//
+//		try {
+//			ThreadContextFacade.setUp();
+//
+//			logger.info("API test starting... " + testModule);
+//
+//			Object result = null;
+//			runTest(graaliumJavascriptEngineExecutor, repository, testModule);
+//
+//			logger.info("API test passed successfully: " + testModule);
+//
+//		} finally {
+//			ThreadContextFacade.tearDown();
+//		}
+//	}
 
-		try {
-			ThreadContextFacade.setUp();
-
-			logger.info("API test starting... " + testModule);
-
-			Object result = null;
-			runTest(graaliumJavascriptEngineExecutor, repository, testModule);
-
-			logger.info("API test passed successfully: " + testModule);
-
-		} finally {
-			ThreadContextFacade.tearDown();
-		}
-	}
 }

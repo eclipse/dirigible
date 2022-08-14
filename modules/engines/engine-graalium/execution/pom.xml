@@ -9,6 +9,7 @@
 
 	<artifactId>dirigible-engine-graalium-execution</artifactId>
 	<name>Engine - Graalium - Execution</name>
+	<packaging>jar</packaging>
 
 	<dependencies>
 		<dependency>

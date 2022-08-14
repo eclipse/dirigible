@@ -32,6 +32,7 @@ import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
+import org.eclipse.dirigible.graalium.engine.GraaliumJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
@@ -56,6 +57,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
 
     /** The repository. */
     private IRepository repository;
+    
+    /** The Graalium javascript engine executor. */
+	private GraaliumJavascriptEngineExecutor graaliumJavascriptEngineExecutor;
 
     /**
      * Sets the up.
@@ -66,7 +70,21 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
     public void setUp() throws Exception {
         this.extensionsCoreService = new ExtensionsCoreService();
         this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+        this.graaliumJavascriptEngineExecutor = new GraaliumJavascriptEngineExecutor();
     }
+    
+    /**
+     * Gets the repository.
+     *
+     * @return the repository
+     */
+    public IRepository getRepository() {
+		return repository;
+	}
+    
+    public IJavascriptEngineExecutor getJavascriptEngineExecutor() {
+		return graaliumJavascriptEngineExecutor;
+	}
 
     /**
      * Register modules.
@@ -79,8 +97,8 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         // v4
         registerModulesV4();
 
-        // Apache Spark
-        sparkRegisterModule();
+//        // Apache Spark
+//        sparkRegisterModule();
 
         // Apache Cassandra
         cassandraRegisterModule();
@@ -367,19 +385,19 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
     }
 
-    /**
-     * Spark register module.
-     */
-    protected void sparkRegisterModule() {
-        sparkRegisterModulesUtils();
-    }
+//    /**
+//     * Spark register module.
+//     */
+//    protected void sparkRegisterModule() {
+//        sparkRegisterModulesUtils();
+//    }
 
-    /**
-     * Spark register modules utils.
-     */
-    private void sparkRegisterModulesUtils() {
-        TEST_MODULES.add("ext/spark/client.js");
-    }
+//    /**
+//     * Spark register modules utils.
+//     */
+//    private void sparkRegisterModulesUtils() {
+//        TEST_MODULES.add("ext/spark/client.js");
+//    }
 
     /**
      * Cassandra register module.

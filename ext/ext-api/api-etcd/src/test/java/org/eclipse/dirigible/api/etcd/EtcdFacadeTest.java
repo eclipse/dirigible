@@ -30,7 +30,7 @@ import com.google.common.base.Charsets;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+//import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * The Class EtcdFacadeTest.
@@ -38,7 +38,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public class EtcdFacadeTest {
 
 	/** The Constant etcd. */
-	@RegisterExtension static final EtcdCluster etcd = new EtcdClusterExtension("test-etcd", 1);
+//	@RegisterExtension 
+	static final EtcdCluster etcd = new EtcdClusterExtension("test-etcd", 1);
 
 	/**
 	 * Sets the up.

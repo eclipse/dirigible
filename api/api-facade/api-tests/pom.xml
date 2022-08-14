@@ -106,6 +106,24 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-spark</artifactId>
             <version>7.0.0-SNAPSHOT</version>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.apache.logging.log4j</groupId>
+            		<artifactId>log4j-slf4j-impl</artifactId>
+            	</exclusion>
+            	<exclusion>
+            		<groupId>org.apache.logging.log4j</groupId>
+            		<artifactId>log4j-core</artifactId>
+            	</exclusion>
+            	<exclusion>
+            		<groupId>org.apache.logging.log4j</groupId>
+            		<artifactId>log4j-api</artifactId>
+            	</exclusion>
+            	<exclusion>
+            		<groupId>org.apache.logging.log4j</groupId>
+            		<artifactId>log4j-1.2-api</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -151,6 +169,12 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-etcd</artifactId>
             <version>7.0.0-SNAPSHOT</version>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.junit.jupiter</groupId>
+            		<artifactId>junit-jupiter</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -227,33 +251,39 @@
             <artifactId>dirigible-api-javascript-messaging</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ext-elasticsearch</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<version>${hamcrest.all.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>${mockito.version}</version>
+		</dependency>
+		
+		<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-engine-javascript-graalium</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>${hamcrest.all.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <version>1.17.3</version>
-            <scope>compile</scope>
-        </dependency>
+        
     </dependencies>
 
     <properties>

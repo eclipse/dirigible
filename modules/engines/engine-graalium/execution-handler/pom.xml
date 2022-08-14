@@ -11,6 +11,7 @@
 
     <artifactId>dirigible-engine-graalium-execution-handler</artifactId>
     <name>Engine - Graalium - Handler</name>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

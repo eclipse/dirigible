@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.engine.js.graalvm.service;
+package org.eclipse.dirigible.tests;
 
 import java.io.IOException;
 
@@ -17,36 +17,20 @@ import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
-import org.eclipse.dirigible.graalium.engine.GraaliumJavascriptEngineExecutor;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
 import org.junit.Test;
 import org.testcontainers.containers.CassandraContainer;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
+
 import utils.TestContainerConstants;
 
-/**
- * The Class GraalVMApiSuiteTest.
- */
 public class GraaliumApiSuiteTest extends AbstractApiSuiteTest {
 
-	/** The repository. */
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-
-	/** The GraalVM javascript engine executor. */
-	private GraaliumJavascriptEngineExecutor graalVMJavascriptEngineExecutor;
-
-	/**
-	 * Sets the up.
-	 *
-	 * @throws Exception the exception
-	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
 	 */
@@ -54,8 +38,6 @@ public class GraaliumApiSuiteTest extends AbstractApiSuiteTest {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-		this.graalVMJavascriptEngineExecutor = new GraaliumJavascriptEngineExecutor();
 
 		if(Boolean.parseBoolean(Configuration.get(TestContainerConstants.CASSANDRA_POM_CONST,"false"))){
 			CassandraContainer cassandra = new CassandraContainer(TestContainerConstants.CASSANDRA_DOCKER_IMEGE);
@@ -94,9 +76,6 @@ public class GraaliumApiSuiteTest extends AbstractApiSuiteTest {
 //		}
 	}
 
-	/**
-	 * Register modules.
-	 */
 	@Override
 	public void registerModules() {
 		registerModulesV4();
@@ -105,9 +84,9 @@ public class GraaliumApiSuiteTest extends AbstractApiSuiteTest {
 			cassandraRegisterModule();
 		}
 
-		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.SPARK_POM_CONST, "false"))) {
-			sparkRegisterModule();
-		}
+//		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.SPARK_POM_CONST, "false"))) {
+//			sparkRegisterModule();
+//		}
 		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.RABBITMQ_POM_CONST, "false"))) {
 			registerModulesRabbitMQ();
 		}
@@ -133,7 +112,7 @@ public class GraaliumApiSuiteTest extends AbstractApiSuiteTest {
 	 */
 	@Test
 	public void runSuite() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
-		super.runSuite(this.graalVMJavascriptEngineExecutor, repository);
+		super.runSuite(getJavascriptEngineExecutor(), getRepository());
 	}
-
+	
 }
