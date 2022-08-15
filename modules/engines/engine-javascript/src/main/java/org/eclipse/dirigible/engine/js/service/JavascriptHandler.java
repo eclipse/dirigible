@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.engine.js.service;
 
+import java.util.Map;
+
 /**
  * The Interface JavascriptHandler.
  */
@@ -22,8 +24,9 @@ public interface JavascriptHandler {
      * @param projectName the project name
      * @param projectFilePath the project file path
      * @param projectFilePathParam the project file path param
+     * @param parameters the parameters
      * @param debug the debug
      * @return the object
      */
-    Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug);
+    Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, Map<Object, Object> parameters, boolean debug);
 }

@@ -40,12 +40,11 @@ public class JavascriptEngineProcessor implements IJavascriptEngineProcessor {
      */
     /*
      * (non-Javadoc)
-     * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String)
+     * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String, java.util.Map)
      */
     @Override
-    public Object executeService(String module) throws ScriptingException {
-        Map<Object, Object> executionContext = new HashMap<>();
-		return getEngineExecutor().executeServiceModule(module, executionContext);
+    public Object executeService(String module, Map<Object, Object> parameters) throws ScriptingException {
+		return getEngineExecutor().executeServiceModule(module, parameters);
     }
 
     /**

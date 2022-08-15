@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.engine.js.service;
 
+import java.util.Map;
+
 import org.eclipse.dirigible.engine.js.processor.JavascriptEngineProcessor;
 import org.eclipse.dirigible.repository.api.IRepository;
 
@@ -32,8 +34,8 @@ public class DefaultJavascriptHandler implements JavascriptHandler {
      * @return the object
      */
     @Override
-    public Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
+    public Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, Map<Object, Object> parameters, boolean debug) {
         String path = projectName + IRepository.SEPARATOR + projectFilePath + IRepository.SEPARATOR + projectFilePathParam;
-        return processor.executeService(path);
+        return processor.executeService(path, parameters);
     }
 }

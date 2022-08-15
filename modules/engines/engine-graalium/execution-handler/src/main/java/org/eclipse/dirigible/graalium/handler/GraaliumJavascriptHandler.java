@@ -19,6 +19,7 @@ import org.graalvm.polyglot.Value;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Map;
 
 /**
  * The Class GraaliumJavascriptHandler.
@@ -38,7 +39,7 @@ public class GraaliumJavascriptHandler implements JavascriptHandler {
      * @return the object
      */
     @Override
-    public Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
+    public Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, Map<Object, Object> parameters, boolean debug) {
         try {
             if (HttpRequestFacade.isValid()) {
                 HttpRequestFacade.setAttribute(HttpRequestFacade.ATTRIBUTE_REST_RESOURCE_PATH, projectFilePathParam);
@@ -50,8 +51,10 @@ public class GraaliumJavascriptHandler implements JavascriptHandler {
             }
 
             Path jsCodePath = dirigibleSourceProvider.getAbsoluteSourcePath(projectName, projectFilePath);
-            Value value = new DirigibleJavascriptCodeRunner(debug).run(jsCodePath);
-            return transformValue(value);
+            try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(parameters, debug)) {
+            	Value value = runner.run(jsCodePath);
+            	return transformValue(value);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

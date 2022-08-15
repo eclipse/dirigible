@@ -297,7 +297,7 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
      * @return the response
      */
     private Response executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
-        javascriptHandler.handleRequest(projectName, projectFilePath, projectFilePathParam, debug);
+        javascriptHandler.handleRequest(projectName, projectFilePath, projectFilePathParam, null, debug);
         return Response.ok().build();
     }
 
