@@ -39,8 +39,8 @@
 
     	<dependency>
 			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
-			<version>1.7</version>
+			<artifactId>velocity-engine-core</artifactId>
+			<version>${velocity.version}</version>
 			<type>jar</type>
 		</dependency>
     </dependencies>

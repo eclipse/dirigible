@@ -67,7 +67,20 @@
 		    <groupId>com.vladsch.flexmark</groupId>
 		    <artifactId>flexmark-all</artifactId>
 		    <version>${flexmark.version}</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>com.ibm.icu</groupId>
+		    		<artifactId>icu4j</artifactId>
+		    	</exclusion>
+		    </exclusions>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.ibm.icu</groupId>
+			<artifactId>icu4j</artifactId>
+			<version>${icu4j.version}</version>
+		</dependency>
+		
     </dependencies>
 
     <properties>
