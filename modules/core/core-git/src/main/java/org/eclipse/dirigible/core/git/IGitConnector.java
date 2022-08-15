@@ -185,6 +185,63 @@ public interface IGitConnector {
 	 */
 	void createBranch(String name, String startPoint)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException;
+	
+	/**
+	 * Deletes the branch.
+	 *
+	 * @param name the name
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
+	 */
+	void deleteBranch(String name)
+			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException;
+	
+	/**
+	 * Renames the branch.
+	 *
+	 * @param oldName the oldName
+	 * @param newName the newName
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
+	 */
+	void renameBranch(String oldName, String newName)
+			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException;
+	
+	/**
+	 * Creates new remote branch from a particular start point.
+	 *
+	 * @param name
+	 *            the branch name
+	 * @param startPoint
+	 *            valid tree-ish object example: "5c15e8", "master", "HEAD",
+	 *            "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
+	 * @throws RefAlreadyExistsException
+	 *             Already Exists Exception
+	 * @throws RefNotFoundException
+	 *             Ref Not Found Exception
+	 * @throws InvalidRefNameException
+	 *             Invalid Ref Name Exception
+	 * @throws GitAPIException
+	 *             Git API Exception
+	 */
+	void createRemoteBranch(String name, String startPoint, String username, String password)
+			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException;
+	
+	/**
+	 * Deletes the remote branch.
+	 *
+	 * @param name the name
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
+	 */
+	void deleteRemoteBranch(String name, String username, String password)
+			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException;
 
 	/**
 	 * Checkout to a valid tree-ish object example: "5c15e8", "master", "HEAD",
@@ -395,4 +452,5 @@ public interface IGitConnector {
 	 * @throws GitConnectorException in case of exception
 	 */
 	List<GitCommitInfo> getHistory(String path) throws GitConnectorException;
+
 }

@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class InitCommand {
 
     /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(PullCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(InitCommand.class);
 
 
     /**

@@ -32,6 +32,7 @@ import org.eclipse.dirigible.core.git.command.PushCommand;
 import org.eclipse.dirigible.core.git.command.ResetCommand;
 import org.eclipse.dirigible.core.git.command.ShareCommand;
 import org.eclipse.dirigible.core.git.command.UpdateDependenciesCommand;
+import org.eclipse.dirigible.core.git.model.BaseGitModel;
 import org.eclipse.dirigible.core.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.core.git.model.GitCloneModel;
 import org.eclipse.dirigible.core.git.model.GitDiffModel;
@@ -60,6 +61,9 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.lib.Constants;
 
 /**
@@ -755,6 +759,104 @@ public class GitProcessor {
 			return GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
 		}
 		throw new GitConnectorException("Not a file based repository used, hence no git support");
+	}
+
+	/**
+	 * Creates the local branch.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param branch the branch
+	 * @throws GitConnectorException the git connector exception
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
+	 */
+	public void createLocalBranch(String workspace, String project, String branch) throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		if (gitConnector != null) {
+			gitConnector.createBranch(branch, "HEAD");
+		}
+	}
+	
+	/**
+	 * Delete the local branch.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param branch the branch
+	 * @throws GitConnectorException the git connector exception
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
+	 */
+	public void deleteLocalBranch(String workspace, String project, String branch) throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		if (gitConnector != null) {
+			gitConnector.deleteBranch(branch);
+		}
+	}
+	
+	/**
+	 * Rename the local branch.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param oldName the oldName
+	 * @param newName the newName
+	 * @throws GitConnectorException the git connector exception
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
+	 */
+	public void renameLocalBranch(String workspace, String project, String oldName, String newName) throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		if (gitConnector != null) {
+			gitConnector.renameBranch(oldName, newName);
+		}
+	}
+
+	/**
+	 * Creates the remote branch.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param branch the branch
+	 * @param model the model
+	 * @throws GitConnectorException the git connector exception
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
+	 */
+	public void createRemoteBranch(String workspace, String project, String branch, BaseGitModel model) throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		if (gitConnector != null) {
+			gitConnector.createRemoteBranch(branch, "HEAD", model.getUsername(), model.getPassword());
+		}
+	}
+
+	/**
+	 * Delete remote branch.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param branch the branch
+	 * @param model the model
+	 * @throws GitConnectorException the git connector exception
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
+	 */
+	public void deleteRemoteBranch(String workspace, String project, String branch, BaseGitModel model) throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		if (gitConnector != null) {
+			gitConnector.deleteRemoteBranch(branch, model.getUsername(), model.getPassword());
+		}
 	}
 
 

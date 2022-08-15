@@ -264,6 +264,49 @@ public class GitFacade implements IScriptingFacade {
     public static void createBranch(String workspaceName, String repositoryName, String branchName, String startingPoint) throws GitAPIException, IOException, GitConnectorException {
         getConnector(workspaceName, repositoryName).createBranch(branchName, startingPoint);
     }
+    
+    /**
+     * Delete the branch.
+     *
+     * @param workspaceName the workspace name
+     * @param repositoryName the repository name
+     * @param branchName the branch name
+     * @throws GitAPIException the git API exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws GitConnectorException the git connector exception
+     */
+    public static void deleteBranch(String workspaceName, String repositoryName, String branchName, String startingPoint) throws GitAPIException, IOException, GitConnectorException {
+        getConnector(workspaceName, repositoryName).deleteBranch(branchName);
+    }
+    
+    /**
+     * Creates the remote branch.
+     *
+     * @param workspaceName the workspace name
+     * @param repositoryName the repository name
+     * @param branchName the branch name
+     * @param startingPoint the starting point
+     * @throws GitAPIException the git API exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws GitConnectorException the git connector exception
+     */
+    public static void createRemoteBranch(String workspaceName, String repositoryName, String branchName, String startingPoint, String username, String password) throws GitAPIException, IOException, GitConnectorException {
+        getConnector(workspaceName, repositoryName).createRemoteBranch(branchName, startingPoint, username, password);
+    }
+    
+    /**
+     * Delete the remote branch.
+     *
+     * @param workspaceName the workspace name
+     * @param repositoryName the repository name
+     * @param branchName the branch name
+     * @throws GitAPIException the git API exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws GitConnectorException the git connector exception
+     */
+    public static void deleteRemoteBranch(String workspaceName, String repositoryName, String branchName, String startingPoint, String username, String password) throws GitAPIException, IOException, GitConnectorException {
+        getConnector(workspaceName, repositoryName).deleteRemoteBranch(branchName, username, password);
+    }
 
     /**
      * Hard reset.
