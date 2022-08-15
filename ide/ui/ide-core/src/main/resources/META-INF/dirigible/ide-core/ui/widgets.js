@@ -568,7 +568,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 pre: function (scope) {
                     scope.getClasses = function () {
                         let classList = [];
-                        if (scope.compact === 'true') classList.push('fd-checkbox--compact');
+                        if (scope.compact === 'true') {
+                            classList.push('fd-radio--compact');
+                        }
                         if (scope.state) classList.push(`is-${scope.state}`);
                         if (scope.dgDisabled === 'true') classList.push('is-disabled');
                         return classList.join(' ');

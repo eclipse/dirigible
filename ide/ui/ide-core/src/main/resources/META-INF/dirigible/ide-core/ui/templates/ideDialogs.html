@@ -116,8 +116,9 @@
                                     {{ item.label }}
                                 </fd-form-label>
                                 <fd-form-input-message-group dg-inactive="{{ item.error ? false : true }}">
-                                    <fd-input id="{{ item.id }}" type="text" placeholder="{{ item.placeholder}}"
-                                        state="{{ item.error ? 'error' : '' }}" name="{{ 'i' + item.id }}"
+                                    <fd-input id="{{ item.id }}" type="{{ item.inputType ? item.inputType : 'text' }}"
+                                        placeholder="{{ item.placeholder}}" state="{{ item.error ? 'error' : '' }}"
+                                        name="{{ 'i' + item.id }}"
                                         ng-required="{{ isRequired(item.id, item.required) }}" ng-model="item.value"
                                         ng-trim="false" ng-minlength="item.minlength || 0"
                                         ng-maxlength="item.maxlength || -1" dg-input-rules="item.inputRules || {}"
@@ -166,11 +167,8 @@
                 <div ng-show="formDialog.loader && formDialog.loadingMessage">
                     <strong>Status: </strong>{{ formDialog.loadingMessage }}
                 </div>
-                <div class="fd-dialog__loader fd-busy-indicator--l" ng-show="formDialog.loader" aria-label="loading">
-                    <div class="fd-busy-indicator--circle-0"></div>
-                    <div class="fd-busy-indicator--circle-1"></div>
-                    <div class="fd-busy-indicator--circle-2"></div>
-                </div>
+                <fd-busy-indicator class="fd-margin-top--sm fd-margin-bottom--tiny" dg-size="l"
+                    ng-show="formDialog.loader"></fd-busy-indicator>
             </div>
             <footer ng-hide="formDialog.loader" ng-if="formDialog.buttons.length > 0"
                 class="fd-dialog__footer fd-bar fd-bar--footer">
@@ -225,7 +223,7 @@
             <div class="fd-dialog__body fd-scrollbar fd-dialog__body--no-vertical-padding">
                 <fieldset class="fd-fieldset" ng-if="selectDialog.isSingleChoice">
                     <ul class="fd-list fd-list--selection fd-list--compact fd-list--no-border"
-                        aria-label="selection list" role="listbox">
+                        aria-label="selection list single choice" role="listbox">
                         <li role="option" tabindex="0" class="fd-list__item" ng-repeat="item in selectDialog.listItems"
                             ng-hide="item.hidden">
                             <div class="fd-form-item fd-list__form-item">

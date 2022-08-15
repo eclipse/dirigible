@@ -142,7 +142,7 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
                     url += '/js';
                     break;
                 case 'xsjs':
-                    url += '/xsjs';
+                    url += '/xsk';
                     break;
                 case 'md':
                     url += '/wiki';
