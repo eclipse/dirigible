@@ -19,6 +19,7 @@ import java.util.function.BiConsumer;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.graalium.handler.GraaliumJavascriptHandler;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
@@ -51,12 +52,20 @@ public class GraaliumJavascriptEngineExecutor extends AbstractJavascriptExecutor
 
 	@Override
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
-		return executeService(code, executionContext, false, true);
+		String path = storeToRegistry(code);
+		return executeService(path, executionContext, false, true);
 	}
 
 	@Override
 	public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
-		return executeService(code, executionContext, false, false);
+		String path = storeToRegistry(code);
+		return executeService(path, executionContext, false, false);
+	}
+	
+	private String storeToRegistry(String code) {
+		RepositoryPath path = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC,  "__generated__", code.hashCode() + ".js");
+		getRepository().createResource(path.build(), code.getBytes());
+		return path.constructPathFrom(2);
 	}
 
 	@Override
