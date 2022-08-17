@@ -13,9 +13,6 @@ package org.eclipse.dirigible.database.sql.dialects.hana;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
-import org.eclipse.dirigible.database.sql.builders.table.CreateTemporaryTableBuilder;
-import org.eclipse.dirigible.database.sql.builders.tableType.CreateTableTypeBuilder;
 
 /**
  * The HANA Create Branching Builder.
@@ -44,7 +41,7 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 */
 	@Override
 	public HanaCreateTableBuilder table(String table) {
-		return new HanaCreateTableBuilder(this.getDialect(), table, true);
+		return new HanaCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_COLUMN);
 	}
 
 	/**
@@ -56,13 +53,16 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 */
 	@Override
 	public HanaCreateTableBuilder table(String table, String tableType) {
-		if(tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)){
-			return this.columnTable(table);
-		}else if (tableType.equalsIgnoreCase(KEYWORD_ROWSTORE)){
-			return this.rowTable(table);
-		} else {
+		if(tableType.equalsIgnoreCase(KEYWORD_COLUMN)
+				|| tableType.equalsIgnoreCase(KEYWORD_ROW)
+				|| tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY)
+				|| tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY_COLUMN)
+		){
+			return new HanaCreateTableBuilder(this.getDialect(), table, tableType);
+		}
+		else {
 			throw new IllegalStateException(String.format("Unsupported table type is defined for table %s", table));
-	}
+		}
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 * @return the creates the table builder
 	 */
 	public HanaCreateTableBuilder columnTable(String table) {
-		return new HanaCreateTableBuilder(this.getDialect(), table, true);
+		return new HanaCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_COLUMN);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 * @return the creates the table builder
 	 */
 	public HanaCreateTableBuilder rowTable(String table) {
-		return new HanaCreateTableBuilder(this.getDialect(), table, false);
+		return new HanaCreateTableBuilder(this.getDialect(), table, ISqlDialect.KEYWORD_ROW);
 	}
 
 	/**
