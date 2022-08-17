@@ -43,11 +43,15 @@ import java.lang.reflect.InvocationTargetException;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class JavascriptRestService extends AbstractRestService implements IRestService {
 
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(JavascriptRestService.class.getCanonicalName());
 	
 	/** The Constant DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME. */
 	private static final String DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME = "DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME";
+
+	/** The Constant DEFAULT_DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME. */
+	private static final String DEFAULT_DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME = "org.eclipse.dirigible.graalium.handler.GraaliumJavascriptHandler";
 	
 	/** The Constant HTTP_PATH_MATCHER. */
 	private static final String HTTP_PATH_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}";
@@ -324,7 +328,7 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 	 * @return the javascript handler
 	 */
 	private JavascriptHandler getJavascriptHandler() {
-		String javascriptHandlerClassName = Configuration.get(DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME, null);
+		String javascriptHandlerClassName = Configuration.get(DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME, DEFAULT_DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME);
 		if (javascriptHandlerClassName == null) {
 			return new DefaultJavascriptHandler();
 		}
