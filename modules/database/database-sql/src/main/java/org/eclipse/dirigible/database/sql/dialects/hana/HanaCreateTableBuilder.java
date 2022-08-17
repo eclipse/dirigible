@@ -31,8 +31,8 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HanaCreateTableBuilder.class);
 	
-	/** The is column table. */
-	private final boolean isColumnTable;
+	/** The table type. */
+	private String tableType = "";
 	
 	/**
 	 * Instantiates a new hana create table builder.
@@ -41,12 +41,13 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 	 *            the dialect
 	 * @param table
 	 *            the table
-	 * @param isColumnTable
-	 *            the is column table
+	 * @param tableType
+	 * 			  the table type
 	 */
-	public HanaCreateTableBuilder(ISqlDialect dialect, String table, boolean isColumnTable) {
+
+	public HanaCreateTableBuilder(ISqlDialect dialect, String table, String tableType) {
 		super(dialect, table);
-		this.isColumnTable = isColumnTable;
+		this.tableType = tableType;
 	}
 
 	/**
@@ -61,7 +62,22 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 	@Override
 	protected void generateTable(StringBuilder sql) {
 		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable()) : this.getTable();
-		sql.append(SPACE).append(isColumnTable ? KEYWORD_COLUMN : KEYWORD_ROW).append( SPACE ).append(KEYWORD_TABLE).append(SPACE)
+		String tableType = "";
+
+		if (this.tableType.equalsIgnoreCase(KEYWORD_COLUMN)) {
+			tableType = KEYWORD_COLUMN;
+		}
+		else if (this.tableType.equalsIgnoreCase(KEYWORD_ROW)) {
+			tableType = KEYWORD_ROW;
+		}
+		else if (this.tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY)) {
+			tableType = METADATA_GLOBAL_TEMPORARY;
+		}
+		else if (this.tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY_COLUMN)) {
+			tableType = METADATA_GLOBAL_TEMPORARY_COLUMN;
+		}
+		
+		sql.append(SPACE).append(tableType).append( SPACE ).append(KEYWORD_TABLE).append(SPACE)
 				.append(tableName);
 	}
 

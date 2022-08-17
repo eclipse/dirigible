@@ -472,6 +472,12 @@ public interface ISqlKeywords {
     public static final String METADATA_GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
 
     /**
+     * The Constant METADATA_GLOBAL_TEMPORARY_COLUMN.
+     */
+    public static final String METADATA_GLOBAL_TEMPORARY_COLUMN = "GLOBAL TEMPORARY COLUMN"; //$NON-NLS-1$
+
+
+    /**
      * The Constant METADATA_SYNONYM.
      */
     public static final String METADATA_SYNONYM = "SYNONYM"; //$NON-NLS-1$
@@ -511,6 +517,16 @@ public interface ISqlKeywords {
      * The Constant KEYWORD_ROWSTORE.
      */
     public static final String KEYWORD_ROWSTORE = "ROWSTORE";
+
+    /**
+     * The Constant KEYWORD_GLOBAL_TEMPORARY.
+     */
+    public static final String KEYWORD_GLOBAL_TEMPORARY = "GLOBAL_TEMPORARY";
+
+    /**
+     * The Constant KEYWORD_GLOBAL_TEMPORARY_COLUMN.
+     */
+    public static final String KEYWORD_GLOBAL_TEMPORARY_COLUMN = "GLOBAL_TEMPORARY_COLUMN";
 
     /** The Constant KEYWORD_LIKE. */
     public static final String KEYWORD_LIKE = "LIKE";
