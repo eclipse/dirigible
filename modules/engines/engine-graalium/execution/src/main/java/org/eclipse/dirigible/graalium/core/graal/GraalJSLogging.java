@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.graalium.core.graal;
 
 import java.io.IOException;
@@ -31,8 +42,8 @@ public class GraalJSLogging extends OutputStream {
 
 	    /**
 	     * The number of valid bytes in the buffer. This value is always in the
-	     * range <tt>0</tt> through <tt>buf.length</tt>; elements
-	     * <tt>buf[0]</tt> through <tt>buf[count-1]</tt> contain valid byte
+	     * range <code>0</code> through <code>buf.length</code>; elements
+	     * <code>buf[0]</code> through <code>buf[count-1]</code> contain valid byte
 	     * data.
 	     */
 	    protected int count;
