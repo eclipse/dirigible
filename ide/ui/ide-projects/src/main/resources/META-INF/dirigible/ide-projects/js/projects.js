@@ -1204,7 +1204,7 @@ projectsView.controller('ProjectsViewController', [
                         msg.data.formData[0].value,
                     ).then(function (response) {
                         if (response.status === 201) {
-                            if (msg.data.formData[0].value !== $scope.selectedWorkspace.name)
+                            if (msg.data.formData[0].value === $scope.selectedWorkspace.name)
                                 $scope.reloadWorkspace(); // Temp
                             messageHub.setStatusMessage(`Duplicated '${originalPath}'`);
                         } else {

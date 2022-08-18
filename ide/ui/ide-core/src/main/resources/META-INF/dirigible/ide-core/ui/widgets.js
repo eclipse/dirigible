@@ -819,7 +819,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdPopover', ['uuid', function (uuid) {
         /**
          * dgAlign: String - Relative position of the popover. Possible values are "left" and "right". If not provided, left is assumed.
-         * closeInnerclick: Boolean - If the popover should close when there is a click event inside it. Default is true.
+         * closeInnerclick: Boolean - If the popover should close when there is a click event inside it(*1). Default is true.
+         * 
+         * Comments:
+         * *1 - If the body contains an element that doesn't focus, you will have to add `tabindex="0"` to the first child in the body.
          */
         return {
             restrict: 'E',

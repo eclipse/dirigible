@@ -278,15 +278,24 @@ angular.module('ideMessageHub', [])
             let showDialogWindow = function (
                 dialogWindowId = "",
                 params,
-                callbackTopic = null
+                callbackTopic = null,
+                closable = true,
             ) {
                 if (params !== undefined && !(typeof params === 'object' && !Array.isArray(params) && params !== null))
                     throw Error("showDialogWindow: params must be an object");
                 messageHub.post({
                     dialogWindowId: dialogWindowId,
                     params: params,
-                    callbackTopic: callbackTopic
+                    callbackTopic: callbackTopic,
+                    closable: closable
                 }, 'ide.dialogWindow');
+            };
+            let closeDialogWindow = function (dialogWindowId = "") {
+                if (dialogWindowId === undefined)
+                    throw Error("closeDialogWindow: you must provide an ID");
+                messageHub.post({
+                    dialogWindowId: dialogWindowId,
+                }, 'ide.dialogWindow.close');
             };
             let openView = function (viewId, params) {
                 if (viewId === undefined)
@@ -518,6 +527,7 @@ angular.module('ideMessageHub', [])
                 hideBusyDialog: hideBusyDialog,
                 showSelectDialog: showSelectDialog,
                 showDialogWindow: showDialogWindow,
+                closeDialogWindow: closeDialogWindow,
                 openView: openView,
                 openPerspective: openPerspective,
                 openEditor: openEditor,

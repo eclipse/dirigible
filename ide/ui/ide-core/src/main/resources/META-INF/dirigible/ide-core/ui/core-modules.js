@@ -795,7 +795,8 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     dialogWindowId: "",
                     callbackTopic: null,
                     link: "",
-                    parameters: ""
+                    parameters: "",
+                    closable: true,
                 };
 
                 scope.showAlert = function () {
@@ -1000,7 +1001,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 };
 
                 scope.hideWindow = function () {
-                    if (scope.window.callbackTopic) messageHub.trigger(scope.dialog.callbackTopic, true);
+                    if (scope.window.callbackTopic) messageHub.triggerEvent(scope.window.callbackTopic, true);
                     ideDialogWindow.classList.remove("fd-dialog--active");
                     windows.shift();
                     scope.window.link = "";
@@ -1322,6 +1323,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                                         callbackTopic: data.callbackTopic,
                                         link: dialogWindows[i].link,
                                         params: JSON.stringify(data.params),
+                                        closable: data.closable,
                                     });
                                     break;
                                 }
@@ -1333,6 +1335,25 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                             } else console.error(
                                 "Dialog Window Error: There is no window dialog with such id."
                             );
+                        });
+                    },
+                    true
+                );
+
+                messageHub.onDidReceiveMessage(
+                    "ide.dialogWindow.close",
+                    function (data) {
+                        scope.$apply(function () {
+                            if (data.dialogWindowId === scope.window.dialogWindowId) {
+                                scope.hideWindow();
+                            } else {
+                                for (let i = 0; i < windows.length; i++) {
+                                    if (windows[i].dialogWindowId === data.dialogWindowId) {
+                                        windows.splice(i, 1);
+                                        break;
+                                    }
+                                }
+                            }
                         });
                     },
                     true

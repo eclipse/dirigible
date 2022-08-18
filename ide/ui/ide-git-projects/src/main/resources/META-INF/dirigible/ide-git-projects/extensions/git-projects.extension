@@ -1,0 +1,5 @@
+{
+    "module": "ide-git-projects/services/git-projects-view.js",
+    "extensionPoint": "ide-view",
+    "description": "Git Projects View"
+}

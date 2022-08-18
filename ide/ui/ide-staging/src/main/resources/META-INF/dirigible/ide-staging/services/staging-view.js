@@ -10,15 +10,14 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-	id: "staging",
-	factory: "frame",
-	region: "center-bottom",
-	label: "Staging",
-	link: "../ide-git/git/staging.html"
+    id: "staging",
+    label: "Staging",
+    factory: "frame",
+    region: "bottom",
+    link: "../ide-staging/staging.html"
 };
-
 if (typeof exports !== 'undefined') {
-	exports.getView = function () {
-		return viewData;
-	}
+    exports.getView = function () {
+        return viewData;
+    }
 }

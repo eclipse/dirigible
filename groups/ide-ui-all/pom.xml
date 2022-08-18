@@ -107,6 +107,11 @@
             <artifactId>dirigible-ide-ui-repository-service</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
+      <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ide-ui-git-service</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-search</artifactId>
@@ -145,6 +150,21 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-git</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
+      <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ide-ui-git-projects</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
+      <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ide-ui-git-branches</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
+      <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ide-ui-staging</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
