@@ -10,15 +10,14 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-	id: "git",
-	factory: "frame",
-	region: "left",
-	label: "Git",
-	link: "../ide-git/git/git.html"
+    id: "gitProjects",
+    label: "Git Projects",
+    factory: "frame",
+    region: "left",
+    link: "../ide-git-projects/git-projects.html"
 };
-
 if (typeof exports !== 'undefined') {
-	exports.getView = function () {
-		return viewData;
-	}
+    exports.getView = function () {
+        return viewData;
+    }
 }

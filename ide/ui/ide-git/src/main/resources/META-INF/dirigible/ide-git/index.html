@@ -41,7 +41,7 @@
             .controller('GitController', ["$scope", "messageHub", function ($scope, messageHub) {
 
                 $scope.layoutModel = {
-                    views: ['git', 'diff', 'staging', 'history', 'console']
+                    views: ['gitProjects', 'branchesLocal', 'branchesRemote', 'diff', 'staging', 'history', 'console']
                 };
 
                 let getParameterByName = function (name) {

@@ -24,6 +24,9 @@
 		<module>ide-database-menu</module>
 		<module>ide-deploy-manager</module>
 		<module>ide-git</module>
+	  <module>ide-git-projects</module>
+	  <module>ide-git-branches</module>
+	  <module>ide-staging</module>
 		<module>ide-preview</module>
 		<module>ide-problems</module>
 		<module>ide-projects</module>
@@ -34,6 +37,7 @@
 		<module>ide-generate-service</module>
 	  <module>ide-registry-service</module>
 	  <module>ide-repository-service</module>
+	  <module>ide-git-service</module>
 		<module>ide-search</module>
 		<module>ide-import</module>
 		<module>ide-properties</module>

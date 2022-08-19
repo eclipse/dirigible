@@ -154,6 +154,18 @@ body {
 .dg-list-border {
   border: solid var(--sapList_BorderWidth, 0.0625rem) var(--sapList_BorderColor, #3a4552);
 }
+.dg-list-border-top {
+  border-top: solid var(--sapList_BorderWidth, 0.0625rem) var(--sapList_BorderColor, #3a4552);
+}
+.dg-list-border-bottom {
+  border-bottom: solid var(--sapList_BorderWidth, 0.0625rem) var(--sapList_BorderColor, #3a4552);
+}
+.dg-list-border-left {
+  border-left: solid var(--sapList_BorderWidth, 0.0625rem) var(--sapList_BorderColor, #3a4552);
+}
+.dg-list-border-right {
+  border-right: solid var(--sapList_BorderWidth, 0.0625rem) var(--sapList_BorderColor, #3a4552);
+}
 .dg-border-bottom {
   border-bottom: solid 0.0625rem var(--sapGroup_TitleBorderColor, #d9d9d9);
 }
@@ -219,6 +231,9 @@ body {
   top: auto;
   left: 100%;
   bottom: var(--sapGroup_BorderWidth);
+}
+.dg-popover-text--multiline .fd-text {
+  white-space: normal;
 }
 /* fd-page helper classes */
 .dg-page__content-card {
