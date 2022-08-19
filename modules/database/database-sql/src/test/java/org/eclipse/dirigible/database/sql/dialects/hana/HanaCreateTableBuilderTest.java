@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.dirigible.database.sql.DataType;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.TableStatements;
 import org.hamcrest.MatcherAssert;
@@ -236,6 +237,33 @@ public class HanaCreateTableBuilderTest {
 
     MatcherAssert.assertThat("Indices equality without order",
         table.getCreateIndicesStatements(), Matchers.containsInAnyOrder(expected.toArray()));
+  }
+
+  @Test
+  public void testCreateGlobalTemporaryTable() {
+    String sql = SqlFactory.getNative(new HanaSqlDialect())
+            .create()
+            .table("CUSTOMERS", ISqlKeywords.KEYWORD_GLOBAL_TEMPORARY)
+            .column("ID", DataType.INTEGER, true, false, false)
+            .column("FIRST_NAME", DataType.VARCHAR, false, false, true, "(20)")
+            .column("LAST_NAME", DataType.VARCHAR, false, true, false, "(30)")
+            .build();
+
+    assertNotNull(sql);
+    assertEquals("CREATE GLOBAL TEMPORARY TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
+  }
+
+  @Test
+  public void testCreateGlobalTemporaryColumnTable() {
+    String sql = SqlFactory.getNative(new HanaSqlDialect())
+            .create()
+            .table("CUSTOMERS", ISqlKeywords.KEYWORD_GLOBAL_TEMPORARY_COLUMN)
+            .column("FIRST_NAME", DataType.VARCHAR, false, false, true, "(20)")
+            .column("LAST_NAME", DataType.VARCHAR, false, true, false, "(30)")
+            .build();
+
+    assertNotNull(sql);
+    assertEquals("CREATE GLOBAL TEMPORARY COLUMN TABLE CUSTOMERS ( FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
   }
 
 }
