@@ -46,21 +46,21 @@ public class GraalTSCodeRunner implements TypescriptCodeRunner<Source, Value> {
         return new GraalTSCodeRunner(codeRunner);
     }
 
-    /**
-     * Run.
-     *
-     * @param codeFilePath the code file path
-     * @return the value
-     */
-    @Override
-    public Value run(Path codeFilePath) {
-        String codeFilePathString = codeFilePath.toString();
-        TypescriptCompiler typescriptCompiler = new TypescriptCompiler(codeRunner.getCurrentWorkingDirectoryPath());
-        typescriptCompiler.compile(codeFilePathString);
-        String compiledCodeFilePathString = codeFilePathString.replace(".ts", ".js");
-        Path compiledCodeFilePath = Path.of(compiledCodeFilePathString);
-        return codeRunner.run(compiledCodeFilePath);
-    }
+//    /**
+//     * Run.
+//     *
+//     * @param codeFilePath the code file path
+//     * @return the value
+//     */
+//    @Override
+//    public Value run(Path codeFilePath) {
+//        String codeFilePathString = codeFilePath.toString();
+//        TypescriptCompiler typescriptCompiler = new TypescriptCompiler(codeRunner.getCurrentWorkingDirectoryPath());
+//        typescriptCompiler.compile(codeFilePathString);
+//        String compiledCodeFilePathString = codeFilePathString.replace(".ts", ".js");
+//        Path compiledCodeFilePath = Path.of(compiledCodeFilePathString);
+//        return codeRunner.run(compiledCodeFilePath);
+//    }
 
     /**
      * Run.

@@ -28,9 +28,10 @@ import java.nio.file.Path;
 @CalledFromJS
 public class DirigibleSourceProvider {
     
-    /** The Constant REPOSITORY. */
-    private static final IRepository REPOSITORY = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-
+    static IRepository getRepository() {
+    	return (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+    }
+    
     /**
      * Gets the absolute source path.
      *
@@ -41,7 +42,7 @@ public class DirigibleSourceProvider {
     public Path getAbsoluteSourcePath(String projectName, String projectFileName) {
         String projectFilePath = Path.of(projectName, projectFileName).toString();
         String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
-        String absoluteSourcePathString = REPOSITORY.getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
+        String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
         return Path.of(absoluteSourcePathString);
     }
 
@@ -58,32 +59,20 @@ public class DirigibleSourceProvider {
     /**
      * Gets the source.
      *
-     * @param projectName the project name
-     * @param projectFileName the project file name
+     * @param sourceFilePath the project file path
      * @return the source
      */
-    public String getSource(String projectName, String projectFileName) {
-        Path projectFilePath = Path.of(projectName, projectFileName);
-        return getSource(projectFilePath.toString());
-    }
+    public String getSource(String sourceFilePath) {
+        sourceFilePath = withDefaultFileExtensionIfNecessary(sourceFilePath);
 
-    /**
-     * Gets the source.
-     *
-     * @param projectFilePath the project file path
-     * @return the source
-     */
-    public String getSource(String projectFilePath) {
-        projectFilePath = withDefaultFileExtensionIfNecessary(projectFilePath);
-
-        String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
+        String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(sourceFilePath);
 
         byte[] maybeContentFromRepository = tryGetFromRepository(internalRepositoryRelativeSourcePath);
         if (maybeContentFromRepository != null) {
             return new String(maybeContentFromRepository, StandardCharsets.UTF_8);
         }
 
-        byte[] maybeContentFromClassLoader = tryGetFromClassLoader(internalRepositoryRelativeSourcePath, projectFilePath);
+        byte[] maybeContentFromClassLoader = tryGetFromClassLoader(internalRepositoryRelativeSourcePath, sourceFilePath);
         if (maybeContentFromClassLoader != null) {
             return new String(maybeContentFromClassLoader, StandardCharsets.UTF_8);
         }
@@ -116,7 +105,7 @@ public class DirigibleSourceProvider {
      * @return the byte[]
      */
     private static byte[] tryGetFromRepository(String repositoryFilePathString) {
-        IResource resource = REPOSITORY.getResource(repositoryFilePathString);
+        IResource resource = getRepository().getResource(repositoryFilePathString);
         if (!resource.exists()) {
             return null;
         }
@@ -136,7 +125,7 @@ public class DirigibleSourceProvider {
                 byte[] content = null;
                 if (bundled != null) {
                     content = bundled.readAllBytes();
-                    REPOSITORY.createResource(repositoryAwareFilePathString, content);
+                    getRepository().createResource(repositoryAwareFilePathString, content);
                 }
                 return content;
             }

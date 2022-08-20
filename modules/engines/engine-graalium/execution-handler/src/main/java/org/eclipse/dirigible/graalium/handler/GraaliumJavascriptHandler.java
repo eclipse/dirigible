@@ -11,20 +11,26 @@
  */
 package org.eclipse.dirigible.graalium.handler;
 
-import org.eclipse.dirigible.engine.js.service.JavascriptHandler;
-import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
-import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
-import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
-import org.graalvm.polyglot.Value;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
+
+import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
+import org.eclipse.dirigible.engine.js.service.JavascriptHandler;
+import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class GraaliumJavascriptHandler.
  */
 public class GraaliumJavascriptHandler implements JavascriptHandler {
+	
+	/** The Constant logger. */
+    private static final Logger logger = LoggerFactory.getLogger(GraaliumJavascriptHandler.class);
 
     /** The dirigible source provider. */
     private final DirigibleSourceProvider dirigibleSourceProvider = new DirigibleSourceProvider();
@@ -45,17 +51,22 @@ public class GraaliumJavascriptHandler implements JavascriptHandler {
                 HttpRequestFacade.setAttribute(HttpRequestFacade.ATTRIBUTE_REST_RESOURCE_PATH, projectFilePathParam);
             }
 
-            String maybeJSCode = dirigibleSourceProvider.getSource(projectName, projectFilePath);
+            String sourceFilePath = Path.of(projectName, projectFilePath).toString();
+			String maybeJSCode = dirigibleSourceProvider.getSource(sourceFilePath);
             if (maybeJSCode == null) {
                 throw new IOException("JavaScript source code for project name '" + projectName + "' and file name '" + projectFilePath + " could not be found");
             }
 
-            Path jsCodePath = dirigibleSourceProvider.getAbsoluteSourcePath(projectName, projectFilePath);
+            Path absoluteSourcePath = dirigibleSourceProvider.getAbsoluteSourcePath(projectName, projectFilePath);
             try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(parameters, debug)) {
-            	Value value = runner.run(jsCodePath);
+            	Source source = runner.prepareSource(absoluteSourcePath);
+            	runner.getGraalJSInterceptor().onBeforeRun(sourceFilePath, absoluteSourcePath, source, runner.getCodeRunner().getGraalContext());
+            	Value value = runner.run(source);
+            	runner.getGraalJSInterceptor().onAfterRun(sourceFilePath, absoluteSourcePath, source, runner.getCodeRunner().getGraalContext(), value);
             	return transformValue(value);
             }
         } catch (Exception e) {
+        	logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -91,5 +102,9 @@ public class GraaliumJavascriptHandler implements JavascriptHandler {
 			return value.asTimeZone();
 		}
 		return null;
+	}
+	
+	public DirigibleSourceProvider getSourceProvider() {
+		return dirigibleSourceProvider;
 	}
 }

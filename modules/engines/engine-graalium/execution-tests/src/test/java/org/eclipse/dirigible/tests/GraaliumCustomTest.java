@@ -139,7 +139,7 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 //			logger.info("API test starting... " + testModule);
 //
 //			Object result = null;
-//			runTest(graaliumJavascriptEngineExecutor, repository, testModule);
+//			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
 //
 //			logger.info("API test passed successfully: " + testModule);
 //

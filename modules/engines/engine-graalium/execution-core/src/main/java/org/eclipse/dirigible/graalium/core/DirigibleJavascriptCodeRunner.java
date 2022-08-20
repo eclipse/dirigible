@@ -13,17 +13,21 @@ package org.eclipse.dirigible.graalium.core;
 
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.function.Consumer;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleContextGlobalObject;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleEngineTypeGlobalObject;
+import org.eclipse.dirigible.graalium.core.graal.GraalJSInterceptor;
 import org.eclipse.dirigible.graalium.core.javascript.GraalJSCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.JavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleModuleResolver;
 import org.eclipse.dirigible.graalium.core.polyfills.RequirePolyfill;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
@@ -33,7 +37,16 @@ import org.graalvm.polyglot.Value;
 public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Source, Value> {
 
     /** The code runner. */
-    private final JavascriptCodeRunner<Source, Value> codeRunner;
+    private final GraalJSCodeRunner codeRunner;
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS. */
+    private static final ServiceLoader<DirigibleJavascriptHooksProvider> DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS = ServiceLoader.load(DirigibleJavascriptHooksProvider.class);
+    
+    /** The Constant DIRIGIBLE_JAVASCRIPT_INTERCEPTORS. */
+    private static final ServiceLoader<GraalJSInterceptor> DIRIGIBLE_JAVASCRIPT_INTERCEPTORS = ServiceLoader.load(GraalJSInterceptor.class);
+    
+    /** The interceptor. */
+    private final GraalJSInterceptor interceptor;
 
     /**
      * Instantiates a new dirigible javascript code runner.
@@ -45,6 +58,19 @@ public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Sourc
         Path workingDirectoryPath = getDirigibleWorkingDirectory();
         Path cachePath = workingDirectoryPath.resolve("caches");
         Path coreModulesESMProxiesCachePath = cachePath.resolve("core-modules-proxies-cache");
+        
+        Consumer<Context.Builder> onBeforeContextCreatedListener = null;
+        Consumer<Context> onAfterContextCreatedListener = null;
+        if (DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator().hasNext()) {
+        	DirigibleJavascriptHooksProvider dirigibleJavascriptHooksProvider = DIRIGIBLE_JAVASCRIPT_HOOKS_PROVIDERS.iterator().next();
+        	onBeforeContextCreatedListener = dirigibleJavascriptHooksProvider.getOnBeforeContextCreatedListener(); 
+        	onAfterContextCreatedListener = dirigibleJavascriptHooksProvider.getOnAfterContextCreatedListener();
+        }
+        if (DIRIGIBLE_JAVASCRIPT_INTERCEPTORS.iterator().hasNext()) {
+        	interceptor = DIRIGIBLE_JAVASCRIPT_INTERCEPTORS.iterator().next();
+        } else {
+        	interceptor = new DirigibleJavascriptInterceptor(this);	
+        }
 
         codeRunner = GraalJSCodeRunner.newBuilder(workingDirectoryPath, cachePath)
                 .addJSPolyfill(new RequirePolyfill())
@@ -52,8 +78,20 @@ public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Sourc
                 .addGlobalObject(new DirigibleEngineTypeGlobalObject())
                 .addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath))
                 .waitForDebugger(debug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
+                .addOnBeforeContextCreatedListener(onBeforeContextCreatedListener != null ? onBeforeContextCreatedListener : null)
+                .addOnAfterContextCreatedListener(onAfterContextCreatedListener != null ? onAfterContextCreatedListener : null)
+                .setInterceptor(interceptor)
                 .build();
     }
+    
+    /**
+     * Gets the code runner.
+     *
+     * @return the code runner
+     */
+    public GraalJSCodeRunner getCodeRunner() {
+		return codeRunner;
+	}
 
     /**
      * Should enable debug.
@@ -79,11 +117,11 @@ public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Sourc
      * Run.
      *
      * @param codeFilePath the code file path
-     * @return the value
+     * @return the source
      */
     @Override
-    public Value run(Path codeFilePath) {
-        return codeRunner.run(codeFilePath);
+    public Source prepareSource(Path codeFilePath) {
+        return codeRunner.prepareSource(codeFilePath);
     }
 
     /**
@@ -104,4 +142,13 @@ public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Sourc
     public void close() {
         codeRunner.close();
     }
+
+	/**
+	 * Gets the graal JS interceptor.
+	 *
+	 * @return the graal JS interceptor
+	 */
+	public GraalJSInterceptor getGraalJSInterceptor() {
+		return interceptor;
+	}
 }

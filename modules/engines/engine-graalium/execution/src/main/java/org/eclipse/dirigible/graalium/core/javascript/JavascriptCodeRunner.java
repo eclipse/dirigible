@@ -11,7 +11,10 @@
  */
 package org.eclipse.dirigible.graalium.core.javascript;
 
+import java.nio.file.Path;
+
 import org.eclipse.dirigible.graalium.core.CodeRunner;
+import org.graalvm.polyglot.Source;
 
 /**
  * The Interface JavascriptCodeRunner.
@@ -20,4 +23,13 @@ import org.eclipse.dirigible.graalium.core.CodeRunner;
  * @param <TResult> the generic type
  */
 public interface JavascriptCodeRunner<TSource, TResult> extends CodeRunner<TSource, TResult> {
+
+	/**
+	 * Prepare the source.
+	 *
+	 * @param codeFilePath the code file path
+	 * @return the source
+	 */
+	Source prepareSource(Path codeFilePath);
+
 }

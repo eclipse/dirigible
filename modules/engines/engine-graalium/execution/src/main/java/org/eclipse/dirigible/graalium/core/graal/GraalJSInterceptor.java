@@ -9,29 +9,18 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.graalium.core;
+package org.eclipse.dirigible.graalium.core.graal;
 
 import java.nio.file.Path;
 
-/**
- * The Interface CodeRunner.
- *
- * @param <TSource> the generic type
- * @param <TResult> the generic type
- */
-public interface CodeRunner<TSource, TResult> extends AutoCloseable {
-	
-    /**
-     * Run.
-     *
-     * @param codeSource the code source
-     * @return the t result
-     */
-    TResult run(TSource codeSource);
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
 
-    /**
-     * Close.
-     */
-    @Override
-    void close();
+public interface GraalJSInterceptor {
+
+	void onBeforeRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context);
+	
+	void onAfterRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context, Value value);
+
 }

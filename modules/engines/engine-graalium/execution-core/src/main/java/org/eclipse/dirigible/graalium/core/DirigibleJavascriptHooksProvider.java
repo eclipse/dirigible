@@ -11,27 +11,28 @@
  */
 package org.eclipse.dirigible.graalium.core;
 
-import java.nio.file.Path;
+import java.util.function.Consumer;
+
+import org.graalvm.polyglot.Context;
 
 /**
- * The Interface CodeRunner.
- *
- * @param <TSource> the generic type
- * @param <TResult> the generic type
+ * The Interface DirigibleJavascriptHooksProvider.
  */
-public interface CodeRunner<TSource, TResult> extends AutoCloseable {
+public interface DirigibleJavascriptHooksProvider {
 	
-    /**
-     * Run.
-     *
-     * @param codeSource the code source
-     * @return the t result
-     */
-    TResult run(TSource codeSource);
+	/**
+	 * Gets the on before context created listener.
+	 *
+	 * @return the on before context created listener
+	 */
+	Consumer<Context.Builder> getOnBeforeContextCreatedListener();
+	
+	/**
+	 * Gets the on after context created listener.
+	 *
+	 * @return the on after context created listener
+	 */
+	Consumer<Context> getOnAfterContextCreatedListener();
 
-    /**
-     * Close.
-     */
-    @Override
-    void close();
+
 }
