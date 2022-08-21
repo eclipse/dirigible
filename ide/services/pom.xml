@@ -24,6 +24,7 @@
 		<module>ide-terminal</module>
 		<module>ide-workspaces</module>
 		<module>ide-bpm</module>
+		<module>ide-templating</module>
 	</modules>
 
 	<properties>

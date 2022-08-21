@@ -18,7 +18,6 @@
 		<module>templating-javascript</module>
 		<module>templating-mustache</module>
 		<module>templating-velocity</module>
-		<module>ide-templating</module>
 	</modules>
 
 	<properties>
