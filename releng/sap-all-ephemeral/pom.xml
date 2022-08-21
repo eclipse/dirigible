@@ -87,7 +87,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-core-git</artifactId>
+					<artifactId>dirigible-git-core</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -149,7 +149,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-core-git</artifactId>
+					<artifactId>dirigible-git-core</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -162,7 +162,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-core-git</artifactId>
+					<artifactId>dirigible-git-core</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -234,7 +234,7 @@
 		 		</exclusion>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-core-git</artifactId>
+					<artifactId>dirigible-git-core</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>

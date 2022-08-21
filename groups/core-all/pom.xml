@@ -38,7 +38,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-git</artifactId>
+            <artifactId>dirigible-git-core</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>

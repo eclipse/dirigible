@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-core-parent</artifactId>
+		<artifactId>dirigible-git-parent</artifactId>
 		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Git</name>
-	<artifactId>dirigible-core-git</artifactId>
+	<name>Git - Core</name>
+	<artifactId>dirigible-git-core</artifactId>
     <packaging>jar</packaging>
 
     <build>

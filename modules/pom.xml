@@ -15,19 +15,20 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<module>engines</module>
-		<module>services</module>
-		<module>repository</module>
+		<module>bpm</module>
+		<module>cms</module>
+		<module>commons</module>
 		<module>core</module>
 		<module>database</module>
-		<module>commons</module>
-		<module>cms</module>
-		<module>bpm</module>
-		<module>security</module>
-		<module>odata</module>
-		<module>templating</module>
+		<module>engines</module>
+		<module>git</module>
 		<module>mail</module>
+		<module>odata</module>
+		<module>repository</module>
+		<module>security</module>
+		<module>services</module>
 		<module>spring</module>
+		<module>templating</module>
 	</modules>
 
 	<properties>
