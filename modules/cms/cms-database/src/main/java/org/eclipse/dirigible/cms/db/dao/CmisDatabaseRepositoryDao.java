@@ -77,11 +77,25 @@ public class CmisDatabaseRepositoryDao {
 	/** The Constant OBJECT_TYPE_BINARY. */
 	static final int OBJECT_TYPE_BINARY = 2;
 
+	private CmsDatabaseRepository repository;
+	
 	/** The repository. */
-	private CmsDatabaseRepository repository = (CmsDatabaseRepository) StaticObjects.get(StaticObjects.CMS_DATABASE_REPOSITORY);
+	private CmsDatabaseRepository getRepository() {
+		if (this.repository == null) {
+			return (CmsDatabaseRepository) StaticObjects.get(StaticObjects.CMS_DATABASE_REPOSITORY);
+		}
+		return this.repository;
+	}
 
+	private DataSource datasource;
+	
 	/** The datasource. */
-	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource getDatasource() {
+		if (this.datasource == null) {
+			return (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return this.datasource;
+	}
 
 	/**
 	 * Instantiates a new database repository dao.
@@ -101,15 +115,6 @@ public class CmisDatabaseRepositoryDao {
 	public CmisDatabaseRepositoryDao(CmsDatabaseRepository repository, DataSource datasource) {
 		this.repository = repository;
 		this.datasource = datasource;
-	}
-
-	/**
-	 * Gets the repository.
-	 *
-	 * @return the repository
-	 */
-	public CmsDatabaseRepository getRepository() {
-		return this.repository;
 	}
 
 	/**
@@ -198,7 +203,7 @@ public class CmisDatabaseRepositoryDao {
 	 * @throws SQLException the SQL exception
 	 */
 	private Connection openConnection() throws SQLException {
-		return datasource.getConnection();
+		return getDatasource().getConnection();
 	}
 
 	/**
