@@ -78,7 +78,7 @@
         </dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-core-templating</artifactId>
+			<artifactId>dirigible-templating-core</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
     </dependencies>

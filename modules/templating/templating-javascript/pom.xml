@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Templating - Javascript</name>
-	<artifactId>dirigible-core-templating-javascript</artifactId>
+	<name>Templating - Javascript</name>
+	<artifactId>dirigible-templating-javascript</artifactId>
     <packaging>jar</packaging>
 
     <build>

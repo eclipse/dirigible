@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Generation - Velocity</name>
-	<artifactId>dirigible-core-templating-velocity</artifactId>
+	<name>Generation - Velocity</name>
+	<artifactId>dirigible-templating-velocity</artifactId>
     <packaging>jar</packaging>
 
     <build>
@@ -33,7 +33,7 @@
     <dependencies>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-core-templating</artifactId>
+			<artifactId>dirigible-templating-core</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
 

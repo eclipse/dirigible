@@ -38,22 +38,22 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-templating</artifactId>
+            <artifactId>dirigible-templating-core</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-templating-mustache</artifactId>
+            <artifactId>dirigible-templating-mustache</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-templating-velocity</artifactId>
+            <artifactId>dirigible-templating-velocity</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-templating-javascript</artifactId>
+            <artifactId>dirigible-templating-javascript</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
