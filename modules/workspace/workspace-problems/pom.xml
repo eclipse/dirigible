@@ -9,8 +9,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Core - Problems</name>
-    <artifactId>dirigible-core-problems</artifactId>
+    <name>Workspace - Problems</name>
+    <artifactId>dirigible-workspace-problems</artifactId>
     <packaging>jar</packaging>
 
     <build>

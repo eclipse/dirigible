@@ -142,7 +142,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-indexing</artifactId>
+            <artifactId>dirigible-workspace-indexing</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -9,16 +9,16 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Parent</name>
-	<artifactId>dirigible-core-parent</artifactId>
+	<name>Workspace - Parent</name>
+	<artifactId>dirigible-workspace-parent</artifactId>
     <packaging>pom</packaging>
 
 	<modules>
-		<module>core-extensions</module>
-		<module>core-messaging</module>
-		<module>core-scheduler</module>
-		<module>core-security</module>
-		<module>core-websockets</module>
+		<module>workspace-indexing</module>
+		<module>workspace-problems</module>
+		<module>workspace-publisher</module>
+		<module>workspace-registry</module>
+		<module>workspace-core</module>
 	</modules>
 
 	<properties>

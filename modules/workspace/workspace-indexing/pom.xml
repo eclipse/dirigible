@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Indexing</name>
-	<artifactId>dirigible-core-indexing</artifactId>
+	<name>Workspace - Indexing</name>
+	<artifactId>dirigible-workspace-indexing</artifactId>
     <packaging>jar</packaging>
 
     <build>

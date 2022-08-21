@@ -30,6 +30,7 @@
 		<module>services</module>
 		<module>spring</module>
 		<module>templating</module>
+		<module>workspace</module>
 	</modules>
 
 	<properties>

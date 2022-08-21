@@ -154,7 +154,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-core-publisher</artifactId>
+			<artifactId>dirigible-workspace-publisher</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>

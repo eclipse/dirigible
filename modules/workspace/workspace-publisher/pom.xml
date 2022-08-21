@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Workspace</name>
-	<artifactId>dirigible-core-workspace</artifactId>
+	<name>Workspace - Publisher</name>
+	<artifactId>dirigible-workspace-publisher</artifactId>
     <packaging>jar</packaging>
 
     <build>
@@ -37,6 +37,21 @@
 			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
+		    <groupId>org.eclipse.persistence</groupId>
+		    <artifactId>jakarta.persistence</artifactId>
+		    <version>${persistence.api.version}</version>
+		</dependency>
+		<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-database-persistence</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-core-scheduler</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
             <version>7.0.0-SNAPSHOT</version>
@@ -48,10 +63,10 @@
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-local</artifactId>
+            <artifactId>dirigible-api-facade-core</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
-    	
+
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
@@ -60,10 +75,16 @@
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-derby</artifactId>
+			<artifactId>dirigible-database-h2</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-local</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 	<properties>
