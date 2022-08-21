@@ -99,7 +99,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-core-migrations</artifactId>
+					<artifactId>dirigible-migrations-core</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-core-parent</artifactId>
+		<artifactId>dirigible-migrations-parent</artifactId>
 		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Migrations</name>
-	<artifactId>dirigible-core-migrations</artifactId>
+	<name>Migrations - Core</name>
+	<artifactId>dirigible-migrations-core</artifactId>
     <packaging>jar</packaging>
 
     <build>

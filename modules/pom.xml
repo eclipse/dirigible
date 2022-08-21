@@ -23,6 +23,7 @@
 		<module>engines</module>
 		<module>git</module>
 		<module>mail</module>
+		<module>migrations</module>
 		<module>odata</module>
 		<module>repository</module>
 		<module>security</module>
