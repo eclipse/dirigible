@@ -60,6 +60,7 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
@@ -716,12 +717,16 @@ public class GitConnector implements IGitConnector {
 			RevWalk walk = new RevWalk(git.getRepository());
 			try {
 				for (Ref branch : branches) {
-					RevCommit commit = walk.parseCommit(branch.getObjectId());
-					GitBranch gitBranch = new GitBranch(getShortBranchName(branch), true, false,
-							commit.getId().getName(), commit.getId().abbreviate(7).name(),
-							format.format(commit.getAuthorIdent().getWhen()), commit.getShortMessage(),
-							commit.getAuthorIdent().getName());
-					result.add(gitBranch);
+					try {
+						RevCommit commit = walk.parseCommit(branch.getObjectId());
+						GitBranch gitBranch = new GitBranch(getShortBranchName(branch), true, false,
+								commit.getId().getName(), commit.getId().abbreviate(7).name(),
+								format.format(commit.getAuthorIdent().getWhen()), commit.getShortMessage(),
+								commit.getAuthorIdent().getName());
+						result.add(gitBranch);
+					} catch (MissingObjectException e) {
+						// pass
+					}
 				}
 			} finally {
 				walk.close();
