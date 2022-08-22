@@ -11,6 +11,7 @@
  */
 let extensions = require('core/v4/extensions');
 let response = require('http/v4/response');
+let uuid = require('utils/v4/uuid');
 
 let editors = [];
 let editorExtensions = extensions.getExtensions('ide-editor');
@@ -62,4 +63,12 @@ editors = editors.sort(function (a, b) {
 });
 
 response.setContentType("application/json");
+setETag();
 response.println(JSON.stringify(editors));
+
+function setETag() {
+	let maxAge = 30 * 24 * 60 * 60;
+	let etag = uuid.random();
+	response.setHeader("ETag", etag);
+	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
+}

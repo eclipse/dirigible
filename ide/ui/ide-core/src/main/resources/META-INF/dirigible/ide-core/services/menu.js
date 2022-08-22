@@ -12,6 +12,7 @@
 const request = require("http/v4/request");
 const extensions = require('core/v4/extensions');
 const response = require('http/v4/response');
+const uuid = require('utils/v4/uuid');
 
 const menuExtensionId = request.getParameter("id");
 let mainmenu = [];
@@ -33,4 +34,12 @@ mainmenu.sort(function (p, n) {
 	return (parseInt(p.order) - parseInt(n.order));
 });
 response.setContentType("application/json");
+setETag();
 response.println(JSON.stringify(mainmenu));
+
+function setETag() {
+	let maxAge = 30 * 24 * 60 * 60;
+	let etag = uuid.random();
+	response.setHeader("ETag", etag);
+	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
+}

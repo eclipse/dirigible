@@ -11,6 +11,7 @@
  */
 let extensions = require('core/v4/extensions');
 let response = require('http/v4/response');
+let uuid = require('utils/v4/uuid');
 
 let views = [];
 let viewExtensions = extensions.getExtensions('ide-view');
@@ -46,4 +47,12 @@ for (let i = 0; i < viewExtensions.length; i++) {
 	}
 }
 response.setContentType("application/json");
+setETag();
 response.println(JSON.stringify(views));
+
+function setETag() {
+	let maxAge = 30 * 24 * 60 * 60;
+	let etag = uuid.random();
+	response.setHeader("ETag", etag);
+	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
+}

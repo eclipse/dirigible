@@ -13,6 +13,7 @@
 
 let extensions = require('core/v4/extensions');
 let response = require('http/v4/response');
+let uuid = require('utils/v4/uuid');
 
 let rs = require("http/v4/rs");
 
@@ -22,6 +23,7 @@ rs.service()
 		let templates = getTemplates();
 		templates = sortTemplates(templates);
 		response.setContentType("application/json");
+		setETag();
 		response.println(JSON.stringify(templates));
 	})
 	.resource("extensions")
@@ -30,7 +32,8 @@ rs.service()
 		let fileExtensions = [];
 		templates.forEach(template => { if (template.extension) fileExtensions.push(template.extension); });
 		let uniqueFileExtensions = [...new Set(fileExtensions)]
-    response.setContentType("application/json");
+		response.setContentType("application/json");
+		setETag();
 		response.println(JSON.stringify(uniqueFileExtensions));
 	})
 	.resource("count")
@@ -38,7 +41,8 @@ rs.service()
 		let templates = getTemplates();
 		let count = 0;
 		templates.forEach(template => { if (!template.extension) count++; });
-    response.setContentType("application/json");
+		response.setContentType("application/json");
+		setETag();
 		response.println(JSON.stringify(count));
 	})
 	.resource("countFileTemplates")
@@ -46,7 +50,8 @@ rs.service()
 		let templates = getTemplates();
 		let count = 0;
 		templates.forEach(template => { if (template.extension) count++; });
-    response.setContentType("application/json");
+		response.setContentType("application/json");
+		setETag();
 		response.println(JSON.stringify(count));
 
 	})
@@ -88,4 +93,11 @@ function sortTemplates(templates) {
 		}
 		return 0;
 	});
+}
+
+function setETag() {
+	let maxAge = 30 * 24 * 60 * 60;
+	let etag = uuid.random();
+	response.setHeader("ETag", etag);
+	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
 }
