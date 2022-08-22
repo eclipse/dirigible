@@ -43,7 +43,7 @@ public class WebClasspathContentHandler extends AbstractClasspathContentHandler 
 	protected boolean isValid(String path) {
 		try {
 			if (path.endsWith(IWebCoreService.FILE_PROJECT_JSON)) {
-				webSynchronizer.registerPredeliveredWeb(path);
+				webSynchronizer.registerPredeliveredProject(path);
 				return true;
 			}
 		} catch (IOException e) {

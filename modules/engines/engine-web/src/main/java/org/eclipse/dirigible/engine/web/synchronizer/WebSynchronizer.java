@@ -124,11 +124,11 @@ public class WebSynchronizer extends AbstractSynchronizer {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void registerPredeliveredWeb(String webPath) throws IOException {
+	public void registerPredeliveredProject(String webPath) throws IOException {
 		InputStream in = WebSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + webPath);
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-			WebModel webModel = webCoreService.parseWeb(webPath, json);
+			WebModel webModel = webCoreService.parseProject(webPath, json);
 			WEB_PREDELIVERED.put(webPath, webModel);
 		} finally {
 			if (in != null) {

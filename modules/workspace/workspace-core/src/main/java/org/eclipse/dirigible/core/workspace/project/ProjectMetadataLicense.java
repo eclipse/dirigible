@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.core.git.project;
+package org.eclipse.dirigible.core.workspace.project;
 
 /**
  * The ProjectMetadataLicense serialization object.

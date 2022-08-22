@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.core.git.project;
+package org.eclipse.dirigible.core.workspace.project;
 
 /**
  * The ProjectMetadata representation of the project.json file.
@@ -18,6 +18,9 @@ public class ProjectMetadata {
 
 	/** The Constant PROJECT_METADATA_FILE_NAME. */
 	public static final String PROJECT_METADATA_FILE_NAME = "project.json"; //$NON-NLS-1$
+	
+	/** The Constant PROJECT_METADATA_ARTEFACT_TYPE. */
+	public static final String PROJECT_METADATA_ARTEFACT_TYPE = "PROJECT"; //$NON-NLS-2$
 
 	/** The guid. */
 	private String guid;

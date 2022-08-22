@@ -25,19 +25,28 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
+import org.eclipse.dirigible.core.workspace.project.ProjectMetadata;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.engine.web.api.IWebCoreService;
 import org.eclipse.dirigible.engine.web.api.WebCoreException;
 import org.eclipse.dirigible.engine.web.models.WebModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class WebCoreService.
  */
 public class WebCoreService implements IWebCoreService {
+	
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(WebCoreService.class);
 	
 	/** The data source. */
 	private DataSource dataSource = null;
@@ -248,7 +257,7 @@ public class WebCoreService implements IWebCoreService {
 	 * @return the web model
 	 */
 	@Override
-	public WebModel parseWeb(String path, String json) {
+	public WebModel parseProject(String path, String json) {
 		WebModel result = GsonHelper.GSON.fromJson(json, WebModel.class);
 		result.setLocation(path);
 		setName(path, result);
@@ -286,8 +295,33 @@ public class WebCoreService implements IWebCoreService {
 			result.setGuid(name);
 		} else {
 			if (!result.getGuid().equals(name)) {
-				throw new RuntimeException(format("The name of the project folder must the same as the 'guid' property in the 'project.json' - [{0}] and [{1}]", name, result.getGuid()));
+				String error = format("The name of the project folder must the same as the 'guid' property in the 'project.json' - [{0}] and [{1}]", name, result.getGuid());
+				logProblem(error, ERROR_TYPE_WEB, path, ProjectMetadata.PROJECT_METADATA_ARTEFACT_TYPE);
+				throw new RuntimeException(error);
 			}
+		}
+	}
+	
+	/** The Constant ERROR_TYPE_WEB. */
+	private static final String ERROR_TYPE_WEB = "WEB";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-engine-web";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, WebCoreService.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error("There is an issue with logging of the Errors.");
+			logger.error(e.getMessage());
 		}
 	}
 

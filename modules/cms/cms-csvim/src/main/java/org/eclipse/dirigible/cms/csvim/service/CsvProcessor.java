@@ -446,7 +446,7 @@ public class CsvProcessor {
 	private static void logProcessorErrors(String errorMessage, String errorType, String location, String artifactType) {
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE,
-					"CsvProcessor", IProblemsConstants.PROGRAM_DEFAULT);
+					CsvProcessor.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
 			logger.error("There is an issue with logging of the Errors.");
 			logger.error(e.getMessage());

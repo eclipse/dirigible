@@ -14,7 +14,7 @@ package org.eclipse.dirigible.core.git.model;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
+import org.eclipse.dirigible.core.workspace.project.ProjectMetadataManager;
 
 import io.swagger.annotations.ApiModelProperty;
 

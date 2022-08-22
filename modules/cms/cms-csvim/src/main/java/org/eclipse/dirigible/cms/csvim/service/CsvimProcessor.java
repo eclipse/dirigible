@@ -461,7 +461,7 @@ public class CsvimProcessor {
 	 */
 	private static void logProcessorErrors(String errorMessage, String errorType, String location, String artifactType) {
 		try {
-			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, "CsvimProcessor", IProblemsConstants.PROGRAM_DEFAULT);
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, CsvimProcessor.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
 			logger.error("There is an issue with logging of the Errors.");
 			logger.error(e.getMessage());
