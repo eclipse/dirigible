@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService;
 import org.eclipse.dirigible.core.migrations.api.MigrationsException;
@@ -33,6 +35,7 @@ import org.eclipse.dirigible.core.migrations.artefacts.MigrationSynchronizationA
 import org.eclipse.dirigible.core.migrations.definition.MigrationDefinition;
 import org.eclipse.dirigible.core.migrations.definition.MigrationStatusDefinition;
 import org.eclipse.dirigible.core.migrations.service.MigrationsCoreService;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
@@ -185,14 +188,20 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 						migrationDefinition.getMajor(), migrationDefinition.getMinor(), migrationDefinition.getMicro(),
 						migrationDefinition.getHandler(), migrationDefinition.getEngine(), migrationDefinition.getDescription());
 				logger.info("Synchronized a new Migration procedure from location: {}", migrationDefinition.getLocation());
+				applyArtefactState(migrationDefinition, MIGRATION_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				MigrationDefinition existing = migrationsCoreService.getMigration(migrationDefinition.getLocation());
 				if (!migrationDefinition.equals(existing)) {
+					migrationsCoreService.updateMigration(migrationDefinition.getLocation(), migrationDefinition.getProject(), 
+							migrationDefinition.getMajor(), migrationDefinition.getMinor(), migrationDefinition.getMicro(),
+							migrationDefinition.getHandler(), migrationDefinition.getEngine(), migrationDefinition.getDescription());
 					logger.error("Modified Migration procedure was met during synchronization!");
+					applyArtefactState(migrationDefinition, MIGRATION_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 				}
 			}
 			MIGRATIONS_SYNCHRONIZED.add(migrationDefinition.getLocation());
 		} catch (MigrationsException e) {
+			logProblem(e.getMessage(), ERROR_TYPE, migrationDefinition.getLocation(), MIGRATION_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -354,5 +363,27 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 	@Override
 	public int getPriority() {
 		return 300;
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "MIGRATION";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-migrations-core";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, MigrationsSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error(e.getMessage(), e.getMessage());
+		}
 	}
 }

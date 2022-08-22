@@ -33,10 +33,13 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
 import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.commons.api.topology.TopologicalSorter;
 import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType;
@@ -483,26 +486,29 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			if (!dataStructuresCoreService.existsTable(tableModel.getLocation())) {
 				DataStructureTableModel duplicated = dataStructuresCoreService.getTableByName(tableModel.getName());
 				if (duplicated != null) {
-					
 					String message = format("Table [{0}] defined by the model at: [{1}] has already been defined by the model at: [{2}]", tableModel.getName(),
 							tableModel.getLocation(), duplicated.getLocation());
 					applyArtefactState(tableModel, TABLE_ARTEFACT, ArtefactState.FATAL, message);
-					throw new SynchronizationException(
-							message);
+					logProblem(message, ERROR_TYPE, tableModel.getLocation(), TABLE_ARTEFACT.getId());
+					throw new SynchronizationException(message);
 				}
 				dataStructuresCoreService.createTable(tableModel.getLocation(), tableModel.getName(), tableModel.getHash());
 				DATA_STRUCTURE_MODELS.put(tableModel.getName(), tableModel);
 				logger.info("Synchronized a new Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());
+				applyArtefactState(tableModel, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				DataStructureTableModel existing = dataStructuresCoreService.getTable(tableModel.getLocation());
 				if (!tableModel.equals(existing)) {
 					dataStructuresCoreService.updateTable(tableModel.getLocation(), tableModel.getName(), tableModel.getHash());
 					DATA_STRUCTURE_MODELS.put(tableModel.getName(), tableModel);
 					logger.info("Synchronized a modified Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());
+					applyArtefactState(tableModel, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			TABLES_SYNCHRONIZED.add(tableModel.getLocation());
 		} catch (DataStructuresException e) {
+			applyArtefactState(tableModel, TABLE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, tableModel.getLocation(), TABLE_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -527,16 +533,20 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				dataStructuresCoreService.createView(viewModel.getLocation(), viewModel.getName(), viewModel.getHash());
 				DATA_STRUCTURE_MODELS.put(viewModel.getName(), viewModel);
 				logger.info("Synchronized a new View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());
+				applyArtefactState(viewModel, VIEW_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				DataStructureViewModel existing = dataStructuresCoreService.getView(viewModel.getLocation());
 				if (!viewModel.equals(existing)) {
 					dataStructuresCoreService.updateView(viewModel.getLocation(), viewModel.getName(), viewModel.getHash());
 					DATA_STRUCTURE_MODELS.put(viewModel.getName(), viewModel);
 					logger.info("Synchronized a modified View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());
+					applyArtefactState(viewModel, VIEW_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			VIEWS_SYNCHRONIZED.add(viewModel.getLocation());
 		} catch (DataStructuresException e) {
+			applyArtefactState(viewModel, VIEW_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, viewModel.getLocation(), VIEW_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -682,6 +692,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			SCHEMA_SYNCHRONIZED.add(schemaModel.getLocation());
 		} catch (DataStructuresException e) {
 			applyArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, schemaModel.getLocation(), SCHEMA_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -1484,6 +1495,28 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	 */
 	public void executeViewDrop(Connection connection, DataStructureViewModel viewModel) throws SQLException {
 		ViewDropProcessor.execute(connection, viewModel);
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "DATABASE";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-database-data-structures";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, DataStructuresSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error(e.getMessage(), e.getMessage());
+		}
 	}
 
 }

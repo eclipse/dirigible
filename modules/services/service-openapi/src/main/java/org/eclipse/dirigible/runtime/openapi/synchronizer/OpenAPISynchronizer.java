@@ -13,11 +13,9 @@ package org.eclipse.dirigible.runtime.openapi.synchronizer;
 
 import static java.text.MessageFormat.format;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,6 +24,9 @@ import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
@@ -181,6 +182,7 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 			OPENAPI_SYNCHRONIZED.add(openAPIDefinition.getLocation());
 		} catch (OpenAPIException e) {
 			applyArtefactState(openAPIDefinition, OPENAPI_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, openAPIDefinition.getLocation(), OPENAPI_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -259,5 +261,27 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 		}
 
 		logger.trace("Done cleaning up OpenAPI.");
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "OPENAPI";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-service-operations";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, OpenAPISynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error(e.getMessage(), e.getMessage());
+		}
 	}
 }

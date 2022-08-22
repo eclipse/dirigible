@@ -34,12 +34,15 @@ import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
 import org.eclipse.dirigible.bpm.api.BpmException;
 import org.eclipse.dirigible.bpm.flowable.BpmProviderFlowable;
 import org.eclipse.dirigible.bpm.flowable.api.IBpmCoreService;
 import org.eclipse.dirigible.bpm.flowable.artefacts.BpmSynchronizationArtefactType;
 import org.eclipse.dirigible.bpm.flowable.definition.BpmDefinition;
 import org.eclipse.dirigible.bpm.flowable.service.BpmCoreService;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
@@ -206,6 +209,7 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 			BPMN_SYNCHRONIZED.put(bpmDefinition.getLocation(), bpmDefinition);
 		} catch (BpmException e) {
 			applyArtefactState(bpmDefinition, BPM_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, bpmDefinition.getLocation(), BPM_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -324,5 +328,27 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 			}
 		}
 
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "BPM";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-bpm-flowable";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, BpmSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error(e.getMessage(), e.getMessage());
+		}
 	}
 }

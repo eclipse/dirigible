@@ -23,10 +23,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
-import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService;
 import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
 import org.eclipse.dirigible.core.websockets.artefacts.WebsocketSynchronizationArtefactType;
@@ -37,7 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Class ExtensionsSynchronizer.
+ * The Class WebsocketsSynchronizer.
  */
 public class WebsocketsSynchronizer extends AbstractSynchronizer {
 
@@ -182,6 +185,7 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 			WEBSOCKETS_SYNCHRONIZED.add(websocketDefinition.getLocation());
 		} catch (WebsocketsException e) {
 			applyArtefactState(websocketDefinition, WEBSOCKET_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, websocketDefinition.getLocation(), WEBSOCKET_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -255,4 +259,27 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 
 		logger.trace("Done cleaning up Websockets.");
 	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "WEBSOCKET";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-core-websockets";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, WebsocketsSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error(e.getMessage(), e.getMessage());
+		}
+	}
+	
 }

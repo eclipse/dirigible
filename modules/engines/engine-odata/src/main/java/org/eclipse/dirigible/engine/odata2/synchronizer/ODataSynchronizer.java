@@ -11,7 +11,25 @@
  */
 package org.eclipse.dirigible.engine.odata2.synchronizer;
 
+import static java.text.MessageFormat.format;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
@@ -25,25 +43,15 @@ import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
 import org.eclipse.dirigible.engine.odata2.service.ODataCoreService;
+import org.eclipse.dirigible.engine.odata2.transformers.DefaultTableMetadataProvider;
 import org.eclipse.dirigible.engine.odata2.transformers.OData2ODataHTransformer;
 import org.eclipse.dirigible.engine.odata2.transformers.OData2ODataMTransformer;
 import org.eclipse.dirigible.engine.odata2.transformers.OData2ODataXTransformer;
-import org.eclipse.dirigible.engine.odata2.transformers.DefaultTableMetadataProvider;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import java.util.*;
-
-import static java.text.MessageFormat.format;
 
 /**
  * The OData Synchronizer.
@@ -267,15 +275,19 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 			if (!odataCoreService.existsSchema(schemaDefinition.getLocation())) {
 				odataCoreService.createSchema(schemaDefinition.getLocation(), schemaDefinition.getContent());
 				logger.info("Synchronized a new OData Schema from location: {}", schemaDefinition.getLocation());
+				applyArtefactState(schemaDefinition, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				ODataSchemaDefinition existing = odataCoreService.getSchema(schemaDefinition.getLocation());
 				if (!schemaDefinition.equals(existing)) {
 					odataCoreService.updateSchema(schemaDefinition.getLocation(), schemaDefinition.getContent());
 					logger.info("Synchronized a modified OData Schema from location: {}", schemaDefinition.getLocation());
+					applyArtefactState(schemaDefinition, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			SCHEMAS_SYNCHRONIZED.add(schemaDefinition.getLocation());
 		} catch (ODataException e) {
+			applyArtefactState(schemaDefinition, ODATA_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, schemaDefinition.getLocation(), ODATA_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -291,15 +303,19 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 			if (!odataCoreService.existsMapping(mappingDefinition.getLocation())) {
 				odataCoreService.createMapping(mappingDefinition.getLocation(), mappingDefinition.getContent());
 				logger.info("Synchronized a new OData Mapping from location: {}", mappingDefinition.getLocation());
+				applyArtefactState(mappingDefinition, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				ODataMappingDefinition existing = odataCoreService.getMapping(mappingDefinition.getLocation());
 				if (!mappingDefinition.equals(existing)) {
 					odataCoreService.updateMapping(mappingDefinition.getLocation(), mappingDefinition.getContent());
 					logger.info("Synchronized a modified OData Mapping from location: {}", mappingDefinition.getLocation());
+					applyArtefactState(mappingDefinition, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			MAPPINGS_SYNCHRONIZED.add(mappingDefinition.getLocation());
 		} catch (ODataException e) {
+			applyArtefactState(mappingDefinition, ODATA_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, mappingDefinition.getLocation(), ODATA_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -318,16 +334,20 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 				odataCoreService.createOData(odataModel.getLocation(), odataModel.getNamespace(), odataModel.getHash());
 				ODATA_MODELS.put(odataModel.getNamespace(), odataModel);
 				logger.info("Synchronized a new OData with namespace [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());
+				applyArtefactState(odataModel, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				ODataDefinition existing = odataCoreService.getOData(odataModel.getLocation());
 				if (!odataModel.equals(existing)) {
 					odataCoreService.updateOData(odataModel.getLocation(), odataModel.getNamespace(), odataModel.getHash());
 					ODATA_MODELS.put(odataModel.getNamespace(), odataModel);
 					logger.info("Synchronized a modified OData file [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());
+					applyArtefactState(odataModel, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			ODATA_SYNCHRONIZED.add(odataModel.getLocation());
 		} catch (ODataException e) {
+			applyArtefactState(odataModel, ODATA_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, odataModel.getLocation(), ODATA_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -582,6 +602,28 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 	@Override
 	public int getPriority() {
 		return 500;
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "ODATA";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-engine-odata";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, ODataSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error(e.getMessage(), e.getMessage());
+		}
 	}
 	
 }

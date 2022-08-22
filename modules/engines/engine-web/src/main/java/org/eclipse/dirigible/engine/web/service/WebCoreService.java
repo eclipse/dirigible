@@ -296,14 +296,14 @@ public class WebCoreService implements IWebCoreService {
 		} else {
 			if (!result.getGuid().equals(name)) {
 				String error = format("The name of the project folder must the same as the 'guid' property in the 'project.json' - [{0}] and [{1}]", name, result.getGuid());
-				logProblem(error, ERROR_TYPE_WEB, path, ProjectMetadata.PROJECT_METADATA_ARTEFACT_TYPE);
+				logProblem(error, ERROR_TYPE, path, ProjectMetadata.PROJECT_METADATA_ARTEFACT_TYPE);
 				throw new RuntimeException(error);
 			}
 		}
 	}
 	
 	/** The Constant ERROR_TYPE_WEB. */
-	private static final String ERROR_TYPE_WEB = "WEB";
+	private static final String ERROR_TYPE = "WEB";
 	
 	/** The Constant MODULE. */
 	private static final String MODULE = "dirigible-engine-web";
@@ -320,8 +320,7 @@ public class WebCoreService implements IWebCoreService {
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, WebCoreService.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error("There is an issue with logging of the Errors.");
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e.getMessage());
 		}
 	}
 

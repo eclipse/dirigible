@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.artefacts.ExtensionPointSynchronizationArtefactType;
@@ -30,6 +32,7 @@ import org.eclipse.dirigible.core.extensions.artefacts.ExtensionSynchronizationA
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
@@ -225,6 +228,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 			EXTENSION_POINTS_SYNCHRONIZED.add(extensionPointDefinition.getLocation());
 		} catch (ExtensionsException e) {
 			applyArtefactState(extensionPointDefinition, EXTENSION_POINT_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, extensionPointDefinition.getLocation(), EXTENSION_POINT_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -256,6 +260,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 			EXTENSIONS_SYNCHRONIZED.add(extensionDefinition.getLocation());
 		} catch (ExtensionsException e) {
 			applyArtefactState(extensionDefinition, EXTENSION_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, extensionDefinition.getLocation(), EXTENSION_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -343,5 +348,27 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		}
 
 		logger.trace("Done cleaning up Extension Points and Extensions.");
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "EXTENSIONS";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-core-extensions";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, ExtensionsSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error(e.getMessage(), e.getMessage());
+		}
 	}
 }

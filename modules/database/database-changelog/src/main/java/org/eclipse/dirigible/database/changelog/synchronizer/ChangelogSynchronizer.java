@@ -32,7 +32,10 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
@@ -244,6 +247,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 			CHANGELOG_SYNCHRONIZED.add(changelogModel.getLocation());
 		} catch (DataStructuresException e) {
 			applyArtefactState(changelogModel, CHANGELOG_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, changelogModel.getLocation(), CHANGELOG_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -434,6 +438,28 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	@Override
 	public int getPriority() {
 		return 100;
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "CHANGELOG";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-database-changelog";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, ChangelogSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error(e.getMessage(), e.getMessage());
+		}
 	}
 
 }

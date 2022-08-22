@@ -71,6 +71,11 @@
 			<artifactId>dirigible-engine-javascript</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-log</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
 
     	<dependency>
 		    <groupId>org.flowable</groupId>
@@ -121,7 +126,6 @@
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
-    	
 		<dependency>
 		    <groupId>com.h2database</groupId>
 		    <artifactId>h2</artifactId>

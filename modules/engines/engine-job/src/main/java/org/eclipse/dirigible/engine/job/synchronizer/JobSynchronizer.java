@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
@@ -282,6 +285,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 						jobDefinition.getHandler(), jobDefinition.getEngine(), jobDefinition.getDescription(), jobDefinition.getExpression(),
 						jobDefinition.isSingleton(), jobDefinition.getParameters());
 				logger.info("Synchronized a new Job [{}] from group: {}", jobDefinition.getName(), jobDefinition.getGroup());
+				applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				JobDefinition existing = schedulerCoreService.getJob(jobDefinition.getName());
 				if (!jobDefinition.equals(existing)) {
@@ -289,11 +293,35 @@ public class JobSynchronizer extends AbstractSynchronizer {
 							jobDefinition.getHandler(), jobDefinition.getEngine(), jobDefinition.getDescription(), jobDefinition.getExpression(),
 							jobDefinition.isSingleton(), jobDefinition.getParameters());
 					logger.info("Synchronized a modified Job [{}] from group: {}", jobDefinition.getName(), jobDefinition.getGroup());
+					applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			JOBS_SYNCHRONIZED.add(jobDefinition.getName());
 		} catch (SchedulerException e) {
+			logProblem(e.getMessage(), ERROR_TYPE, jobDefinition.getName(), JOB_ARTEFACT.getId());
 			throw new SynchronizationException(e);
+		}
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "JOB";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-engine-job";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, JobSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error(e.getMessage(), e.getMessage());
 		}
 	}
 
