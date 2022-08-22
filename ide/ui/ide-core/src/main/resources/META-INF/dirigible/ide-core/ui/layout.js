@@ -67,6 +67,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 $scope.views = [];
                 $scope.explorerTabs = [];
                 $scope.bottomTabs = [];
+                $scope.rightTabs = [];
                 $scope.centerSplittedTabViews = {
                     direction: 'horizontal',
                     panes: [
@@ -77,7 +78,11 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     ]
                 };
 
-                $scope.layoutSettings = $scope.viewsLayoutModel.layoutSettings || {};
+                $scope.layoutSettings = {
+                    explorerTabsSize: 20,
+                    rightTabsSize: 20,
+                    ...($scope.viewsLayoutModel.layoutSettings || {})
+                };
                 $scope.selection = {
                     selectedBottomTab: null
                 };
@@ -103,7 +108,8 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                             if (v) ret.push(v);
                             return ret;
                         };
-                        const byLeftRegion = view => view.region.startsWith('left')
+                        const byLeftRegion = view => view.region.startsWith('left');
+                        const byRightRegion = view => view.region.startsWith('right');
                         const byBottomRegion = view => view.region === 'center-bottom' || view.region === 'bottom';
                         const byCenterRegion = view => view.region === 'center-top' || view.region === 'center-middle' || view.region === 'center';
 
@@ -124,6 +130,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                             $scope.explorerTabs = savedState.explorer.tabs.filter(viewExists);
                             $scope.bottomTabs = savedState.bottom.tabs.filter(viewExists);
+                            $scope.rightTabs = (savedState.right || { tabs: [] }).tabs.filter(viewExists);
 
                             let newlyAddedViews, removedViewsIds;
                             let initialOpenViewsChanged = !angular.equals(savedState.initialOpenViews, $scope.initialOpenViews);
@@ -134,6 +141,10 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                                 $scope.explorerTabs = $scope.explorerTabs
                                     .filter(x => !removedViewsIds.includes(x.id))
                                     .concat(newlyAddedViews.filter(byLeftRegion).map(mapViewToTab));
+
+                                $scope.rightTabs = $scope.rightTabs
+                                    .filter(x => !removedViewsIds.includes(x.id))
+                                    .concat(newlyAddedViews.filter(byRightRegion).map(mapViewToTab));
 
                                 $scope.bottomTabs = $scope.bottomTabs
                                     .filter(x => !removedViewsIds.includes(x.id))
@@ -160,6 +171,10 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                             $scope.explorerTabs = openViews
                                 .filter(byLeftRegion)
+                                .map(mapViewToTab);
+
+                            $scope.rightTabs = openViews
+                                .filter(byRightRegion)
                                 .map(mapViewToTab);
 
                             $scope.bottomTabs = openViews
@@ -290,6 +305,9 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                         initialOpenViews: $scope.initialOpenViews,
                         explorer: {
                             tabs: $scope.explorerTabs.map(({ id, type, label, path, hidden, loadType, params }) => ({ id, type, label, path, hidden, loadType, params }))
+                        },
+                        right: {
+                            tabs: $scope.rightTabs.map(({ id, type, label, path, loadType, params }) => ({ id, type, label, path, loadType, params }))
                         },
                         bottom: {
                             tabs: $scope.bottomTabs.map(({ id, type, label, path, loadType, params }) => ({ id, type, label, path, loadType, params })),
@@ -894,6 +912,16 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                                 $scope.explorerTabs.push(explorerViewTab);
                             }
 
+                        } else if (view.region.startsWith('right')) {
+                            let rightViewTab = findView($scope.rightTabs, view);
+                            if (rightViewTab) {
+                                rightViewTab.expanded = true;
+                            } else {
+                                rightViewTab = mapViewToTab(view);
+                                rightViewTab.expanded = true;
+                                $scope.rightTabs.push(rightViewTab);
+                            }
+
                         } else if (view.region === 'center-middle' || view.region === 'center-top' || view.region === 'center') {
                             let result = findCenterSplittedTabView(view.id);
                             let currentTabsView = result ? result.tabsView : getCurrentCenterSplittedTabViewPane();
@@ -978,6 +1006,22 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }
                 }
 
+                function calcAutoSize() {
+                    let sizes = $scope.panes.map(pane => pane.size);
+                    let fixedSizeTotal = sizes.reduce((sum, size) => size !== 'auto' ? sum + Number(size) : sum, 0);
+                    let autoSizeCount = sizes.reduce((count, size) => size === 'auto' ? count + 1 : count, 0);
+                    let autoSize = 0;
+                    if (fixedSizeTotal < 100 && autoSizeCount > 0) {
+                        autoSize = (100 - fixedSizeTotal) / autoSizeCount;
+                    }
+                    return autoSize;
+                }
+
+                function getPaneSizes() {
+                    let autoSize = calcAutoSize();
+                    return $scope.panes.map(pane => pane.size === 'auto' ? autoSize : Number(pane.size));
+                }
+
                 $scope.$watch('direction', function (newDirection, oldDirection) {
                     if (oldDirection)
                         $element.removeClass(oldDirection);
@@ -1001,7 +1045,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                         return;
                     }
 
-                    let sizes = $scope.panes.map(pane => pane.size || 0);
+                    let sizes = getPaneSizes();// $scope.panes.map(pane => pane.size || 0);
 
                     normalizeSizes(sizes);
 
@@ -1049,7 +1093,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                                     let size = Math.floor(sizes[i]);
                                     if (size === 0) {
                                         let pane = $scope.panes[i];
-                                        sizes[i] = pane.lastSize || pane.size;
+                                        sizes[i] = pane.lastSize || (pane.size == 'auto' ? calcAutoSize() : Number(pane.size));
                                         normalizeSizes(sizes, i);
                                         $scope.split.setSizes(sizes);
                                     }
@@ -1077,7 +1121,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                 let paneData = scope.paneData = {
                     element: element,
-                    size: Number(scope.size),
+                    size: scope.size,
                     minSize: Number(scope.minSize),
                     snapOffset: Number(scope.snapOffset)
                 };

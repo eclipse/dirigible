@@ -13,7 +13,7 @@ const viewData = {
     id: "staging",
     label: "Staging",
     factory: "frame",
-    region: "bottom",
+    region: "right",
     link: "../ide-staging/staging.html"
 };
 if (typeof exports !== 'undefined') {

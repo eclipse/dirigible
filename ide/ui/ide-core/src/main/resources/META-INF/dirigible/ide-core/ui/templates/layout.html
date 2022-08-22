@@ -1,13 +1,13 @@
 <div class="dg-perspective-view">
     <split direction="horizontal" ng-transclude>
-        <split-pane ng-if="explorerTabs.length > 0" size="20" min-size="0" snap-offset="100" class="pane-left"
-            ng-transclude>
+        <split-pane ng-if="explorerTabs.length > 0" size="{{ layoutSettings.explorerTabsSize }}" min-size="0"
+            snap-offset="100" class="pane-left" ng-transclude>
             <explorer-toolbar items="explorerTabs"></explorer-toolbar>
             <accordion>
                 <accordion-pane ng-repeat="view in explorerTabs | filter:{hidden:'!true'}" view="view"></accordion-pane>
             </accordion>
         </split-pane>
-        <split-pane size="80" min-size="100" snap-offset="0" ng-transclude>
+        <split-pane size="auto" min-size="100" snap-offset="0" ng-transclude>
             <split direction="vertical" state="splitPanesState.main" ng-transclude>
                 <split-pane ng-if="!layoutSettings.hideEditorsPane" size="70" min-size="0" snap-offset="0"
                     class="pane-center" ng-transclude>
@@ -39,6 +39,12 @@
                     </tabs>
                 </split-pane>
             </split>
+        </split-pane>
+        <split-pane ng-if="rightTabs.length > 0" size="{{ layoutSettings.rightTabsSize }}" min-size="0"
+            snap-offset="100" class="pane-right" ng-transclude>
+            <accordion>
+                <accordion-pane ng-repeat="view in rightTabs | filter:{hidden:'!true'}" view="view"></accordion-pane>
+            </accordion>
         </split-pane>
     </split>
 </div>

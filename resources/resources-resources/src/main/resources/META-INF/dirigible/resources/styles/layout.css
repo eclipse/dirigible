@@ -173,7 +173,8 @@
 
 /** Layout styles **/
 
-.dg-split-pane.pane-left {
+.dg-split-pane.pane-left,
+.dg-split-pane.pane-right {
   background-color: transparent;
   display: flex;
   flex-direction: column;
