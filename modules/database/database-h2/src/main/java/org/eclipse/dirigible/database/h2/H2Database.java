@@ -71,11 +71,11 @@ public class H2Database extends AbstractDatabase {
 	 *             in case the database cannot be created
 	 */
 	public H2Database(String rootFolder) throws H2DatabaseException {
-		logger.debug("Initializing the embedded H2 datasource...");
+		if (logger.isDebugEnabled()) {logger.debug("Initializing the embedded H2 datasource...");}
 
 		initialize();
 
-		logger.debug("Embedded H2 datasource initialized.");
+		if (logger.isDebugEnabled()) {logger.debug("Embedded H2 datasource initialized.");}
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class H2Database extends AbstractDatabase {
 	@Override
 	public void initialize() {
 		Configuration.loadModuleConfig("/dirigible-database-h2.properties");
-		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
+		if (logger.isDebugEnabled()) {logger.debug(this.getClass().getCanonicalName() + " module initialized.");}
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class H2Database extends AbstractDatabase {
 	 * @return the data source
 	 */
 	protected DataSource createDataSource(String name) {
-		logger.debug("Creating an embedded H2 datasource...");
+		if (logger.isDebugEnabled()) {logger.debug("Creating an embedded H2 datasource...");}
 		synchronized (H2Database.class) {
 			try {
 				String h2Root = prepareRootFolder(name);
@@ -183,7 +183,7 @@ public class H2Database extends AbstractDatabase {
 
 					HikariDataSource ds = new HikariDataSource(config);
 
-					logger.warn("Embedded H2 at: {}", h2Root);
+					if (logger.isWarnEnabled()) {logger.warn("Embedded H2 at: {}", h2Root);}
 
 					DATASOURCES.put(name, ds);
 					return ds;

@@ -72,7 +72,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 
             return createODataSingleProcessorService(edmProvider, singleProcessor);
         } catch (org.eclipse.dirigible.engine.odata2.api.ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             throw new ODataException(e);
         }
     }
@@ -106,7 +106,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
          */
         @Override
         public ODataResponse handleError(ODataErrorContext context) throws ODataApplicationException {
-            logger.error(context.getMessage(), context.getException());
+        	if (logger.isErrorEnabled()) {logger.error(context.getMessage(), context.getException());}
             return EntityProvider.writeErrorDocument(context);
         }
     }

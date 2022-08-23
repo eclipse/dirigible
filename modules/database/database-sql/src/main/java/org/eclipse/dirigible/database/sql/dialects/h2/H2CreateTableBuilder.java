@@ -53,9 +53,9 @@ public class H2CreateTableBuilder extends CreateTableBuilder<H2CreateTableBuilde
 	 */
 	public H2CreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable,
 			Boolean isUnique, Boolean isIdentity, Boolean isFuzzyIndexEnabled, String... args) {
-		logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: "
+		if (logger.isTraceEnabled()) {logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: "
 				+ isPrimaryKey + ", isNullable: " + isNullable + ", isUnique: " + isUnique + ", isIdentity: "
-				+ isIdentity + ", args: " + Arrays.toString(args));
+				+ isIdentity + ", args: " + Arrays.toString(args));}
 		String[] definition;
 		if (isIdentity) {
 			definition = new String[] { name};

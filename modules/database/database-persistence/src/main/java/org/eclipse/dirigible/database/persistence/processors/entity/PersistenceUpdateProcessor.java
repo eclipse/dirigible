@@ -78,7 +78,7 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 				.toString());
 
 		String sql = updateBuilder.toString();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -96,8 +96,8 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 	 *             the persistence exception
 	 */
 	public int update(Connection connection, PersistenceTableModel tableModel, T pojo) throws PersistenceException {
-		logger.trace("update -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
-				+ Serializer.serializePojo(pojo));
+		if (logger.isTraceEnabled()) {logger.trace("update -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
+				+ Serializer.serializePojo(pojo));}
 		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -112,8 +112,8 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 			setValue(preparedStatement, tableModel.getColumns().size(), id);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

@@ -157,9 +157,9 @@ public class GraalJSLogging extends OutputStream {
 	        System.arraycopy(buf, 0, theBytes, 0, count);
 
 	        if (isError) {
-	            logger.error(new String(theBytes));
+	        	if (logger.isErrorEnabled()) {logger.error(new String(theBytes));}
 	        } else {
-	            logger.info(new String(theBytes));
+	        	if (logger.isInfoEnabled()) {logger.info(new String(theBytes));}
 	        }
 
 	        reset();

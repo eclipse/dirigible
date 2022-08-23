@@ -64,7 +64,7 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 	public IWorkspace createWorkspace(String name) {
 		ICollection collection = getWorkspace(name);
 		collection.create();
-		logger.info("Workspace created [{}]", collection.getPath());
+		if (logger.isInfoEnabled()) {logger.info("Workspace created [{}]", collection.getPath());}
 		return new Workspace(collection);
 	}
 
@@ -126,7 +126,7 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 	public void deleteWorkspace(String name) {
 		ICollection collection = getWorkspace(name);
 		collection.delete();
-		logger.info("Workspace deleted [{}]", collection.getPath());
+		if (logger.isInfoEnabled()) {logger.info("Workspace deleted [{}]", collection.getPath());}
 	}
 
 	/**

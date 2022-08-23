@@ -47,7 +47,7 @@ public class WebClasspathContentHandler extends AbstractClasspathContentHandler 
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Web at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered Web at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

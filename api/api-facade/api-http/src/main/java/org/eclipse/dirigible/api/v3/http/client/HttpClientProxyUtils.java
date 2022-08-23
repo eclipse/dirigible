@@ -68,7 +68,7 @@ public class HttpClientProxyUtils {
 		try {
 			setProxySettings();
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 
@@ -103,7 +103,7 @@ public class HttpClientProxyUtils {
 				setProxyIfNeeded(httpClientBuilder);
 				httpClient = httpClientBuilder.build();
 			} catch (Exception e) {
-				logger.error("Error occurred when trying to create a TRUST ALL HTTP Client", e);
+				if (logger.isErrorEnabled()) {logger.error("Error occurred when trying to create a TRUST ALL HTTP Client", e);}
 				httpClient = HttpClients.createDefault();
 			}
 		} else {

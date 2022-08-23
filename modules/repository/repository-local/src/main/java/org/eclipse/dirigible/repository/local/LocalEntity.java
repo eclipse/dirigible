@@ -150,7 +150,7 @@ public abstract class LocalEntity implements IEntity {
 		try {
 			return this.repository.getRepositoryDao().getObjectByPath(getPath());
 		} catch (LocalRepositoryException ex) {
-			logger.error(ex.getMessage(), ex);
+			if (logger.isErrorEnabled()) {logger.error(ex.getMessage(), ex);}
 			return null;
 		}
 	}

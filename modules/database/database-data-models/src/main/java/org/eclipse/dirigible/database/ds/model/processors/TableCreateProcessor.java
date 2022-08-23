@@ -59,7 +59,7 @@ public class TableCreateProcessor {
 		if (caseSensitive) {
 			tableName = "\"" + tableName + "\"";
 		}
-		logger.info("Processing Create Table: " + tableName);
+		if (logger.isInfoEnabled()) {logger.info("Processing Create Table: " + tableName);}
 		CreateTableBuilder createTableBuilder = SqlFactory.getNative(connection).create().table(tableName);
 		List<DataStructureTableColumnModel> columns = tableModel.getColumns();
 		List<DataStructureTableIndexModel> indexes = tableModel.getIndexes();
@@ -186,15 +186,15 @@ public class TableCreateProcessor {
 		}
 
 		final String sql = createTableBuilder.build();
-		logger.info(sql);
+		if (logger.isInfoEnabled()) {logger.info(sql);}
 		String[] parts = sql.split(CreateTableBuilder.STATEMENT_DELIMITER);
 		for (String part : parts) {
 			PreparedStatement statement = connection.prepareStatement(part);
 			try {
 				statement.executeUpdate();
 			} catch (SQLException e) {
-				logger.error(sql);
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(sql);}
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				throw new SQLException(e.getMessage(), e);
 			} finally {
 				if (statement != null) {

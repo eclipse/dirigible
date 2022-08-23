@@ -83,7 +83,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 *            the new select
 	 */
 	protected void setSelect(String select) {
-		logger.trace("setSelect: " + select);
+		if (logger.isTraceEnabled()) {logger.trace("setSelect: " + select);}
 		this.select = select;
 	}
 
@@ -95,7 +95,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the view builder
 	 */
 	public CreateViewBuilder column(String name) {
-		logger.trace("column: " + name);
+		if (logger.isTraceEnabled()) {logger.trace("column: " + name);}
 		this.columns.add(name);
 		return this;
 	}
@@ -108,7 +108,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the view builder
 	 */
 	public CreateViewBuilder asSelect(String select) {
-		logger.trace("asSelect: " + select);
+		if (logger.isTraceEnabled()) {logger.trace("asSelect: " + select);}
 		this.select = select;
 		return this;
 	}
@@ -141,7 +141,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 
 		String generated = sql.toString();
 
-		logger.trace("generated: " + generated);
+		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
 		return generated;
 	}

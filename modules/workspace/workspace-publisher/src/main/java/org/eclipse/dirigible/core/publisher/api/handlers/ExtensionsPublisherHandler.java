@@ -104,15 +104,15 @@ public class ExtensionsPublisherHandler implements IPublisherHandler {
             String[] modules = ExtensionsServiceFacade.getExtensions(extensionPoint);
             for (String module : modules) {
                 try {
-                    logger.trace("Workspace {} Extension: {} triggered...", state, module);
+                	if (logger.isTraceEnabled()) {logger.trace("Workspace {} Extension: {} triggered...", state, module);}
                     ScriptEngineExecutorsManager.executeServiceModule("javascript", module, context);
-                    logger.trace("Workspace {} Extension: {} finshed.", state, module);
+                    if (logger.isTraceEnabled()) {logger.trace("Workspace {} Extension: {} finshed.", state, module);}
                 } catch (Exception | Error e) {
-                    logger.error(e.getMessage(), e);
+                	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
                 }
             }
         } catch (ExtensionsException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         }
 	}
 

@@ -146,7 +146,7 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 				try {
 					return next.getClass().newInstance();
 				} catch (InstantiationException | IllegalAccessException e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				}
 			}
 		}
@@ -156,12 +156,12 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			try {
 				return (IJavascriptEngineExecutor) Class.forName("org.eclipse.dirigible.graalium.engine.GraaliumJavascriptEngineExecutor").newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			}
 		} catch (ClassNotFoundException e) {
 			throw new ScriptingException("No JavaScript Engine registered. The default Graalium is also not available.");
 		}
-		logger.error(format("Default JavaScript Engine Executor not found."));
+		if (logger.isErrorEnabled()) {logger.error(format("Default JavaScript Engine Executor not found."));}
 		return null;
 	}
 

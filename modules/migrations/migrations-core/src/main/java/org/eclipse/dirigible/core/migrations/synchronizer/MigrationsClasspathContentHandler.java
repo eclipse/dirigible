@@ -47,7 +47,7 @@ public class MigrationsClasspathContentHandler extends AbstractClasspathContentH
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Migrations artifact at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered Migrations artifact at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

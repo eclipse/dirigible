@@ -72,7 +72,7 @@ public class XTerminalWebsocketService {
 	public synchronized static void runTTYD() {
 		if (!started) {
 			if (Configuration.isAnonymousModeEnabled()) {
-				logger.warn("[ws:terminal] " + FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);
+				if (logger.isWarnEnabled()) {logger.warn("[ws:terminal] " + FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
 				return;
 			}
 			try {
@@ -165,7 +165,7 @@ public class XTerminalWebsocketService {
 		if (Configuration.isAnonymousModeEnabled() || !Configuration.isTerminalEnabled()) {
 			try {
 				session.getBasicRemote().sendText(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE, true);
-				logger.warn(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);
+				if (logger.isWarnEnabled()) {logger.warn(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
 			} catch (IOException e) {
 				logger.error("[ws:terminal] " + e.getMessage(), e);
 			}
@@ -177,7 +177,7 @@ public class XTerminalWebsocketService {
 			return;
 		}
 		
-		logger.debug("[ws:terminal] onOpen: " + session.getId());
+		if (logger.isDebugEnabled()) {logger.debug("[ws:terminal] onOpen: " + session.getId());}
 		try {
 			XTerminalWebsocketClientEndpoint clientEndPoint = startClientWebsocket(session);
 			SESSION_TO_CLIENT.put(session.getId(), clientEndPoint);
@@ -202,7 +202,7 @@ public class XTerminalWebsocketService {
 	 */
 	@OnMessage
 	public void onMessage(ByteBuffer message, Session session) {
-		logger.trace("[ws:terminal] onMessage: " + new String(message.array()));
+		if (logger.isTraceEnabled()) {logger.trace("[ws:terminal] onMessage: " + new String(message.array()));}
 		
 		XTerminalWebsocketClientEndpoint clientEndPoint = SESSION_TO_CLIENT.get(session.getId());
 		
@@ -224,7 +224,7 @@ public class XTerminalWebsocketService {
 	 */
 	@OnError
 	public void onError(Session session, Throwable throwable) {
-		logger.info(String.format("[ws:terminal] Session %s error %s", session.getId(), throwable.getMessage()));
+		if (logger.isInfoEnabled()) {logger.info(String.format("[ws:terminal] Session %s error %s", session.getId(), throwable.getMessage()));}
 		logger.error("[ws:terminal] " + throwable.getMessage(), throwable);
 	}
 
@@ -238,7 +238,7 @@ public class XTerminalWebsocketService {
 	 */
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
-		logger.trace(String.format("[ws:terminal] Session %s closed because of %s", session.getId(), closeReason));
+		if (logger.isTraceEnabled()) {logger.trace(String.format("[ws:terminal] Session %s closed because of %s", session.getId(), closeReason));}
 		OPEN_SESSIONS.remove(session.getId());
 		XTerminalWebsocketClientEndpoint clientEndPoint = SESSION_TO_CLIENT.remove(session.getId());
 		try {
@@ -319,7 +319,7 @@ public class XTerminalWebsocketService {
 		    				    String line;
 	
 		    				    while ((line = input.readLine()) != null) {
-		    				    	logger.debug("[ws:terminal] " + line);
+		    				    	if (logger.isDebugEnabled()) {logger.debug("[ws:terminal] " + line);}
 		    				    }
 		    				}
 		                } catch (IOException e) {

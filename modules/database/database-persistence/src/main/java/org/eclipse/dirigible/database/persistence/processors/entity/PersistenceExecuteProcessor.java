@@ -73,7 +73,7 @@ public class PersistenceExecuteProcessor<T> extends AbstractPersistenceProcessor
 	 * @return the int
 	 */
 	public int execute(Connection connection, String sql, List<Object> values) {
-		logger.trace("execute -> connection: " + connection.hashCode() + ", sql: " + sql + ", values: " + Serializer.serializeListOfObjects(values));
+		if (logger.isTraceEnabled()) {logger.trace("execute -> connection: " + connection.hashCode() + ", sql: " + sql + ", values: " + Serializer.serializeListOfObjects(values));}
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = openPreparedStatement(connection, sql);
@@ -85,8 +85,8 @@ public class PersistenceExecuteProcessor<T> extends AbstractPersistenceProcessor
 			}
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new PersistenceException(e);
 		} finally {
 			closePreparedStatement(preparedStatement);

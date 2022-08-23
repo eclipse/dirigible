@@ -130,7 +130,7 @@ public class EditorRestService extends AbstractRestService implements IRestServi
      */
     private Response createPrettierConfigNotFoundErrorResponse(String reason, String queryPath) {
         String errorMessage = String.format("%s: %s", reason, queryPath);
-        logger.error(errorMessage);
+        if (logger.isErrorEnabled()) {logger.error(errorMessage);}
         return createErrorResponseNotFound(errorMessage);
     }
 

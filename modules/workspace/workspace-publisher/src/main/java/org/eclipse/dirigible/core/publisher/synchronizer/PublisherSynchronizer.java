@@ -77,12 +77,12 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	@Override
 	public void synchronize() {
 		synchronized (PublisherSynchronizer.class) {
-			logger.trace("Publishing...");
+			if (logger.isTraceEnabled()) {logger.trace("Publishing...");}
 			try {
 				List<PublishRequestDefinition> publishRequestDefinitions = getPendingPublishedRequests();
 
 				if (publishRequestDefinitions.isEmpty()) {
-					logger.trace("Nothing to publish.");
+					if (logger.isTraceEnabled()) {logger.trace("Nothing to publish.");}
 					return;
 				}
 
@@ -96,9 +96,9 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 
 				cleanup();
 			} catch (Exception e) {
-				logger.error("Publishing failed.", e);
+				if (logger.isErrorEnabled()) {logger.error("Publishing failed.", e);}
 			}
-			logger.trace("Done publishing.");
+			if (logger.isTraceEnabled()) {logger.trace("Done publishing.");}
 		}
 	}
 
@@ -138,7 +138,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 				String targetLocation = new RepositoryPath(currentRegistry, path).toString();
 				unpublishLocations.add(targetLocation);
 			} else {
-				logger.error("Publishing error: Unknown command; " + publishRequestDefinition.getCommand());
+				if (logger.isErrorEnabled()) {logger.error("Publishing error: Unknown command; " + publishRequestDefinition.getCommand());}
 			}
 		}
 	}
@@ -167,13 +167,13 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	public void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing published artefacts in Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing published artefacts in Registry...");}
 
 		publishResources();
 		
 		unpublishResources();
 
-		logger.trace("Done synchronizing published artefacts in Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing published artefacts in Registry.");}
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 						// publish
 						publishResource(entry);
 					} catch (SynchronizationException e) {
-						logger.error("Failed to publish: " + entry.getKey(), e);
+						if (logger.isErrorEnabled()) {logger.error("Failed to publish: " + entry.getKey(), e);}
 					}
 
 					for (IPublisherHandler next : publisherHandlers) {
@@ -285,7 +285,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 						// unpublish
 						unpublishResource(entry);
 					} catch (SynchronizationException e) {
-						logger.error("Failed to unpublish: " + entry, e);
+						if (logger.isErrorEnabled()) {logger.error("Failed to unpublish: " + entry, e);}
 					}
 
 					for (IPublisherHandler next : publisherHandlers) {

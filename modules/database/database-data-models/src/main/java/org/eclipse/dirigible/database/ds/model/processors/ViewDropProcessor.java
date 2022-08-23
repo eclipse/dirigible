@@ -43,16 +43,16 @@ public class ViewDropProcessor {
 		if (caseSensitive) {
 			viewName = "\"" + viewName + "\"";
 		}
-		logger.info("Processing Drop View: " + viewName);
+		if (logger.isInfoEnabled()) {logger.info("Processing Drop View: " + viewName);}
 		if (SqlFactory.getNative(connection).exists(connection, viewName)) {
 			String sql = SqlFactory.getNative(connection).drop().view(viewName).build();
-			logger.info(sql);
+			if (logger.isInfoEnabled()) {logger.info(sql);}
 			PreparedStatement statement = connection.prepareStatement(sql);
 			try {
 				statement.executeUpdate();
 			} catch (SQLException e) {
-				logger.error(sql);
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(sql);}
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			} finally {
 				if (statement != null) {
 					statement.close();

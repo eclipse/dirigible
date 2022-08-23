@@ -94,7 +94,7 @@ public class KymaModule extends AbstractDirigibleModule {
 		String applicationHost = Configuration.get(ENV_DIRIGIBLE_HOST);
 
 		if (url == null || clientId == null || clientSecret == null || verificationKey == null || applicationHost == null) {
-			logger.error(ERROR_MESSAGE_NO_OAUTH_CONFIGURATION);
+			if (logger.isErrorEnabled()) {logger.error(ERROR_MESSAGE_NO_OAUTH_CONFIGURATION);}
 			throw new InvalidStateException(ERROR_MESSAGE_NO_OAUTH_CONFIGURATION);
 		}
 
@@ -121,7 +121,7 @@ public class KymaModule extends AbstractDirigibleModule {
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URL, url);
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
 		} else {
-			logger.warn(WARN_MESSAGE_NO_DESTINATION_CONFIGURATION);
+			if (logger.isWarnEnabled()) {logger.warn(WARN_MESSAGE_NO_DESTINATION_CONFIGURATION);}
 		}
 
 	}
@@ -144,7 +144,7 @@ public class KymaModule extends AbstractDirigibleModule {
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_RFC_PORT, "20001");
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_SOCKS5_PROXY_PORT, "20004");
 		} else {
-			logger.warn(WARN_MESSAGE_NO_CONNECTIVITY_CONFIGURATION);
+			if (logger.isWarnEnabled()) {logger.warn(WARN_MESSAGE_NO_CONNECTIVITY_CONFIGURATION);}
 		}
 
 	}

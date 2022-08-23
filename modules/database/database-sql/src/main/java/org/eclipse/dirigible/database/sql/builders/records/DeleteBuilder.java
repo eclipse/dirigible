@@ -51,7 +51,7 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 	 * @return the delete builder
 	 */
 	public DeleteBuilder from(String table) {
-		logger.trace("from: " + table);
+		if (logger.isTraceEnabled()) {logger.trace("from: " + table);}
 		this.table = table;
 		return this;
 	}
@@ -64,7 +64,7 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 	 * @return the delete builder
 	 */
 	public DeleteBuilder where(String condition) {
-		logger.trace("where: " + condition);
+		if (logger.isTraceEnabled()) {logger.trace("where: " + condition);}
 		wheres.add(OPEN + condition + CLOSE);
 		return this;
 	}
@@ -93,7 +93,7 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 
 		String generated = sql.toString();
 
-		logger.trace("generated: " + generated);
+		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
 		return generated;
 	}

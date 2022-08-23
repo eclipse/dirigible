@@ -56,7 +56,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 				return httpSession;
 			}
 		} catch (ContextException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 		return null;
 	}

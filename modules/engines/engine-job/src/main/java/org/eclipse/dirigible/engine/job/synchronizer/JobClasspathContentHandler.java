@@ -47,7 +47,7 @@ public class JobClasspathContentHandler extends AbstractClasspathContentHandler 
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Job at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered Job at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

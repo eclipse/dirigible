@@ -62,7 +62,7 @@ public abstract class AbstractExceptionHandler<T extends Throwable> implements E
 	 * @param exception the exception
 	 */
 	protected void logErrorMessage(Logger logger, T exception) {
-		logger.error(exception.getMessage(), exception);
+		if (logger.isErrorEnabled()) {logger.error(exception.getMessage(), exception);}
 	}
 
 	/**

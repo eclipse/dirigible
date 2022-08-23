@@ -61,7 +61,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 		try {
 			return (HttpServletRequest) ThreadContextFacade.get(HttpServletRequest.class.getCanonicalName());
 		} catch (ContextException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 		return null;
 	}

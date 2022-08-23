@@ -49,7 +49,7 @@ public class WikiClasspathContentHandler extends AbstractClasspathContentHandler
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Wiki at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered Wiki at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

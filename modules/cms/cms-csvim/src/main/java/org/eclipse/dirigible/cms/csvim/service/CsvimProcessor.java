@@ -307,7 +307,7 @@ public class CsvimProcessor {
 		} catch (SQLException e) {
 			String csvRecordValue = csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "<empty>";
 			logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-			logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);
+			if (logger.isErrorEnabled()) {logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);}
 		}
 	}
 
@@ -336,7 +336,7 @@ public class CsvimProcessor {
 		} catch (SQLException e) {
 			String csvRecordValue = csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "<empty>";
 			logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-			logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);
+			if (logger.isErrorEnabled()) {logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);}
 		}
 	}
 
@@ -395,7 +395,7 @@ public class CsvimProcessor {
 		} catch (SQLException sqlException) {
 			String errorMessage = String.format("Error occurred while trying to read metadata for table [%s].", tableName);
 			logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-			logger.error(errorMessage, sqlException);
+			if (logger.isErrorEnabled()) {logger.error(errorMessage, sqlException);}
 		}
 		return null;
 	}
@@ -415,7 +415,7 @@ public class CsvimProcessor {
 		} catch (IOException e) {
 			String errorMessage = String.format("Error occurred while trying to parse data from CSV file [%s].", csvFileDefinition.getFile());
 			logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-			logger.error(errorMessage, e);
+			if (logger.isErrorEnabled()) {logger.error(errorMessage, e);}
 		}
 
 		return null;
@@ -463,8 +463,8 @@ public class CsvimProcessor {
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, CsvimProcessor.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error("There is an issue with logging of the Errors.");
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error("There is an issue with logging of the Errors.");}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 	}
 	
@@ -551,7 +551,7 @@ public class CsvimProcessor {
 		try {
 			return databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
 		} catch (SQLException sqlException) {
-			logger.error(String.format("Error occurred while trying to read table metadata for table with name: %s", tableName), sqlException);
+			if (logger.isErrorEnabled()) {logger.error(String.format("Error occurred while trying to read table metadata for table with name: %s", tableName), sqlException);}
 		}
 		return null;
 	}

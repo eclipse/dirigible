@@ -60,7 +60,7 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 			logger.info("API test starting... " + testModule);
 
 			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
-			logger.info("API test passed successfully: " + testModule);
+			if (logger.isInfoEnabled()) {logger.info("API test passed successfully: " + testModule);}
 				 
 		} finally {
 			ThreadContextFacade.tearDown();
@@ -89,7 +89,7 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 			Object result = null;
 			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
 
-			logger.info("API test passed successfully: " + testModule);
+			if (logger.isInfoEnabled()) {logger.info("API test passed successfully: " + testModule);}
 				 
 		} finally {
 			ThreadContextFacade.tearDown();
@@ -115,7 +115,7 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 			Object result = null;
 			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
 
-			logger.info("API test passed successfully: " + testModule);
+			if (logger.isInfoEnabled()) {logger.info("API test passed successfully: " + testModule);}
 
 		} finally {
 			ThreadContextFacade.tearDown();
@@ -136,12 +136,12 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 //		try {
 //			ThreadContextFacade.setUp();
 //
-//			logger.info("API test starting... " + testModule);
+//			if (logger.isInfoEnabled()) {logger.info("API test starting... " + testModule);}
 //
 //			Object result = null;
 //			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
 //
-//			logger.info("API test passed successfully: " + testModule);
+//			if (logger.isInfoEnabled()) {logger.info("API test passed successfully: " + testModule);}
 //
 //		} finally {
 //			ThreadContextFacade.tearDown();

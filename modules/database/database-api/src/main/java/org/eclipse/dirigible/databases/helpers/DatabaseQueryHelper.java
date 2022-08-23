@@ -127,8 +127,8 @@ public class DatabaseQueryHelper {
 				callback.updateDone(preparedStatement.getUpdateCount());
 			}
 		} catch (Exception e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.error(e);
 		} finally {
 			try {
@@ -136,7 +136,7 @@ public class DatabaseQueryHelper {
 					resultSet.close();
 				}
 			} catch (SQLException e) {
-				logger.warn(e.getMessage(), e);
+				if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 			}
 		}
 	}
@@ -169,8 +169,8 @@ public class DatabaseQueryHelper {
 				}
 			} while (hasMoreResults);
 		} catch (Exception e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.error(e);
 		} finally {
 			try {
@@ -181,7 +181,7 @@ public class DatabaseQueryHelper {
 					resultSet.close();
 				}
 			} catch (SQLException e) {
-				logger.warn(e.getMessage(), e);
+				if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 			}
 		}
 	}
@@ -267,7 +267,7 @@ public class DatabaseQueryHelper {
 					resultSet.close();
 				}
 			} catch (SQLException e) {
-				logger.warn(e.getMessage(), e);
+				if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 			}
 		}
 	}

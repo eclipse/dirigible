@@ -45,11 +45,11 @@ public class EngineExecutorFactory {
 				try {
 					return next.getClass().newInstance();
 				} catch (InstantiationException | IllegalAccessException e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				}
 			}
 		}
-		logger.error(format("Executor of Type {0} does not exist.", type));
+		if (logger.isErrorEnabled()) {logger.error(format("Executor of Type {0} does not exist.", type));}
 		return null;
 	}
 	

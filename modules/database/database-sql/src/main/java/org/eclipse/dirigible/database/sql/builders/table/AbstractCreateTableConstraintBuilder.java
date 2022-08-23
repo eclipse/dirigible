@@ -108,7 +108,7 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	 * @return the constraint
 	 */
 	public CONSTRAINT column(String column) {
-		logger.trace("column: " + column);
+		if (logger.isTraceEnabled()) {logger.trace("column: " + column);}
 		this.columns.add(column);
 		return (CONSTRAINT) this;
 	}

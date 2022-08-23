@@ -92,14 +92,14 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				IResource sourceResource = projectObject.getRepository().getResource(sourcePath);
 				if (sourceResource.exists()) {
 					byte[] input = sourceResource.getContent();
-					logger.trace("Generating using template from the Registry: " + sourcePath);
+					if (logger.isTraceEnabled()) {logger.trace("Generating using template from the Registry: " + sourcePath);}
 					generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
 				} else {
 					InputStream in = GenerationProcessor.class.getResourceAsStream("/META-INF/dirigible" + source.getLocation());
 					try {
 						if (in != null) {
 							byte[] input = IOUtils.toByteArray(in);
-							logger.trace("Generating using built-in template: " + source.getLocation());
+							if (logger.isTraceEnabled()) {logger.trace("Generating using built-in template: " + source.getLocation());}
 							generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
 						} else {
 							throw new ScriptingException(
@@ -327,14 +327,14 @@ public class GenerationProcessor extends WorkspaceProcessor {
 					IResource sourceResource = projectObject.getRepository().getResource(sourcePath);
 					if (sourceResource.exists()) {
 						byte[] input = sourceResource.getContent();
-						logger.trace("Generating using template from the Registry: " + sourcePath);
+						if (logger.isTraceEnabled()) {logger.trace("Generating using template from the Registry: " + sourcePath);}
 						generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
 					} else {
 						InputStream in = GenerationProcessor.class.getResourceAsStream("/META-INF/dirigible" + source.getLocation());
 						try {
 							if (in != null) {
 								byte[] input = IOUtils.toByteArray(in);
-								logger.trace("Generating using built-in template: " + source.getLocation());
+								if (logger.isTraceEnabled()) {logger.trace("Generating using built-in template: " + source.getLocation());}
 								generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
 							} else {
 								throw new ScriptingException(

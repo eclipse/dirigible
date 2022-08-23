@@ -135,7 +135,7 @@ public class OpenAPIRestService extends AbstractRestService implements IRestServ
 			Version version = new VersionProcessor().getVersion();
 			info.setVersion(version.getProductVersion());
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			info.setVersion("6.0.0");
 		}
 		swagger.info(info);

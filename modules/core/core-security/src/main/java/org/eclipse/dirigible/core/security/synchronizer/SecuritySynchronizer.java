@@ -87,7 +87,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized (SecuritySynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Roles and Access artifacts...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing Roles and Access artifacts...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -103,17 +103,17 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable Roles: {0}, Immutable Accesses: {1}, Mutable Roles: {2}, Mutable Accesses: {3}", 
 								immutableRolesCount, immutableAccessCount, mutableRolesCount, mutableAccessCount));
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Roles and Access artifacts failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Roles and Access artifacts failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Roles and Access files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Roles and Access files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Roles and Access artifacts.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Roles and Access artifacts.");}
 			}
 		}
 	}
@@ -195,7 +195,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	 *             the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered Roles and Access artifacts...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered Roles and Access artifacts...");}
 
 		// Roles
 		for (RoleDefinition[] roleDefinitions : ROLES_PREDELIVERED.values()) {
@@ -212,7 +212,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			}
 		}
 
-		logger.trace("Done synchronizing predelivered Roles and Access artifacts.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered Roles and Access artifacts.");}
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		try {
 			if (!securityCoreService.existsRole(roleDefinition.getName())) {
 				securityCoreService.createRole(roleDefinition.getName(), roleDefinition.getLocation(), roleDefinition.getDescription());
-				logger.info("Synchronized a new Role [{}] from location: {}", roleDefinition.getName(), roleDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Role [{}] from location: {}", roleDefinition.getName(), roleDefinition.getLocation());}
 				applyArtefactState(roleDefinition, ROLE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				RoleDefinition existing = securityCoreService.getRole(roleDefinition.getName());
@@ -239,7 +239,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 						throw new SynchronizationException(errorMessage);
 					}
 					securityCoreService.updateRole(roleDefinition.getName(), roleDefinition.getLocation(), roleDefinition.getDescription());
-					logger.info("Synchronized a modified Role [{}] from location: {}", roleDefinition.getName(), roleDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Role [{}] from location: {}", roleDefinition.getName(), roleDefinition.getLocation());}
 					applyArtefactState(roleDefinition, ROLE_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -264,8 +264,8 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			if (!securityCoreService.existsAccessDefinition(accessDefinition.getScope(), accessDefinition.getPath(), accessDefinition.getMethod(), accessDefinition.getRole())) {
 				securityCoreService.createAccessDefinition(accessDefinition.getLocation(), accessDefinition.getScope(), accessDefinition.getPath(), accessDefinition.getMethod(),
 						accessDefinition.getRole(), accessDefinition.getDescription(), accessDefinition.getHash());
-				logger.info("Synchronized a new Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
-						accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
+						accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());}
 				applyArtefactState(accessDefinition, ACCESS_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				AccessDefinition existing = securityCoreService.getAccessDefinition(accessDefinition.getScope(), accessDefinition.getPath(), accessDefinition.getMethod(),
@@ -280,8 +280,8 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 					}
 					securityCoreService.updateAccessDefinition(existing.getId(), accessDefinition.getLocation(), accessDefinition.getScope(), accessDefinition.getPath(),
 							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getDescription(), accessDefinition.getHash());
-					logger.info("Synchronized a modified Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
-							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
+							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());}
 					applyArtefactState(accessDefinition, ACCESS_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -304,11 +304,11 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing Extension Points and Extensions from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing Extension Points and Extensions from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing Extension Points and Extensions from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Extension Points and Extensions from Registry.");}
 	}
 
 	/**
@@ -339,7 +339,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			try {
 				securityCoreService.dropModifiedAccessDefinitions(getRegistryPath(resource), hash);
 			} catch (AccessException e) {
-				logger.error("Error deleting the modified Access Definitions", e);
+				if (logger.isErrorEnabled()) {logger.error("Error deleting the modified Access Definitions", e);}
 			}
 			
 			for (AccessDefinition accessDefinition : accessDefinitions) {
@@ -362,7 +362,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up Roles and Access artifacts...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up Roles and Access artifacts...");}
 		super.cleanup();
 
 		try {
@@ -370,7 +370,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			for (RoleDefinition roleDefinition : roleDefinitions) {
 				if (!ACCESS_SYNCHRONIZED.contains(roleDefinition.getLocation())) {
 					securityCoreService.removeRole(roleDefinition.getName());
-					logger.warn("Cleaned up Role [{}] from location: {}", roleDefinition.getName(), roleDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up Role [{}] from location: {}", roleDefinition.getName(), roleDefinition.getLocation());}
 				}
 			}
 
@@ -378,15 +378,15 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			for (AccessDefinition accessDefinition : accessDefinitions) {
 				if (!ACCESS_SYNCHRONIZED.contains(accessDefinition.getLocation())) {
 					securityCoreService.removeAccessDefinition(accessDefinition.getId());
-					logger.warn("Cleaned up Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
-							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
+							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());}
 				}
 			}
 		} catch (AccessException e) {
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up Roles and Access artifacts.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up Roles and Access artifacts.");}
 	}
 	
 	/** The Constant ERROR_TYPE. */
@@ -407,7 +407,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, SecuritySynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error(e.getMessage(), e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
 		}
 	}
 }

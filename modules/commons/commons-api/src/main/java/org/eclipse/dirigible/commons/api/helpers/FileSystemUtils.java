@@ -234,11 +234,11 @@ public class FileSystemUtils {
 
 				// if (Files.exists(dir)) {
 				if (dir.toFile().exists()) {
-					logger.trace(String.format("Deleting directory: %s", dir));
+					if (logger.isTraceEnabled()) {logger.trace(String.format("Deleting directory: %s", dir));}
 					try {
 						Files.delete(dir);
 					} catch (java.nio.file.NoSuchFileException e) {
-						logger.trace(String.format("Directory already has been deleted: %s", dir));
+						if (logger.isTraceEnabled()) {logger.trace(String.format("Directory already has been deleted: %s", dir));}
 					}
 				}
 				return FileVisitResult.CONTINUE;
@@ -253,11 +253,11 @@ public class FileSystemUtils {
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				// if (Files.exists(file)) {
 				if (file.toFile().exists()) {
-					logger.trace(String.format("Deleting file: %s", file));
+					if (logger.isTraceEnabled()) {logger.trace(String.format("Deleting file: %s", file));}
 					try {
 						Files.delete(file);
 					} catch (java.nio.file.NoSuchFileException e) {
-						logger.trace(String.format("File already has been deleted: %s", file));
+						if (logger.isTraceEnabled()) {logger.trace(String.format("File already has been deleted: %s", file));}
 					}
 				}
 				return FileVisitResult.CONTINUE;
@@ -265,7 +265,7 @@ public class FileSystemUtils {
 
 			@Override
 			public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-				logger.error(String.format("Error in file: %s", file), exc);
+				if (logger.isErrorEnabled()) {logger.error(String.format("Error in file: %s", file), exc);}
 				return FileVisitResult.CONTINUE;
 			}
 		});
@@ -285,7 +285,7 @@ public class FileSystemUtils {
 			try {
 				FileUtils.forceMkdir(folder.getCanonicalFile());
 			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				return false;
 			}
 			return true;
@@ -424,7 +424,7 @@ public class FileSystemUtils {
 			File file = path.toFile();
 			return file.exists() && file.getCanonicalFile().getName().equals(file.getName());
 		} catch (java.nio.file.InvalidPathException | IOException e) {
-			logger.warn(e.getMessage());
+			if (logger.isWarnEnabled()) {logger.warn(e.getMessage());}
 			return false;
 		}
 
@@ -717,7 +717,7 @@ public class FileSystemUtils {
             Files.walkFileTree(Paths.get(gitRepository.getAbsolutePath()), opts, Integer.MAX_VALUE, projectsFinder);
         }
         catch (IOException e) {
-            logger.error(e.getMessage(), (Throwable)e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), (Throwable)e);}
         }
         List<File> gitProjects = projectsFinder.getProjects();
 
@@ -768,7 +768,7 @@ public class FileSystemUtils {
 	     */
 	    @Override
     	public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-    		logger.error(exc.getMessage(), exc);
+	    	if (logger.isErrorEnabled()) {logger.error(exc.getMessage(), exc);}
     		return CONTINUE;
     	}
     }
@@ -846,7 +846,7 @@ public class FileSystemUtils {
     	 */
     	@Override
 	    public FileVisitResult visitFileFailed(Path file, IOException exc) {
-	        logger.error(exc.getMessage(), exc);
+    		if (logger.isErrorEnabled()) {logger.error(exc.getMessage(), exc);}
 	        return CONTINUE;
 	    }
 

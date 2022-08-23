@@ -73,7 +73,7 @@ public class XTerminalWebsocketClientEndpoint {
      */
     @OnOpen
     public void onOpen(Session session) {
-    	logger.info("[ws:terminal-client] connected: " + session.getId());
+    	if (logger.isInfoEnabled()) {logger.info("[ws:terminal-client] connected: " + session.getId());}
         this.session = session;
     }
  
@@ -87,7 +87,7 @@ public class XTerminalWebsocketClientEndpoint {
      */
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-    	logger.info("[ws:terminal-client] disconnected: " + session.getId());
+    	if (logger.isInfoEnabled()) {logger.info("[ws:terminal-client] disconnected: " + session.getId());}
         this.session = null;
     }
  

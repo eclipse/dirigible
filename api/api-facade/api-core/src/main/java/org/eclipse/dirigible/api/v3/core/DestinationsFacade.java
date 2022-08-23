@@ -85,7 +85,7 @@ public class DestinationsFacade {
 		if (destinationProvider == null) {
 			destinationProvider = DIRIGIBLE_DESTINATIONS_PROVIDER_LOCAL;
 		}
-		logger.debug(String.format("Destinations Provider for GET operation: %s", destinationProvider));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("Destinations Provider for GET operation: %s", destinationProvider));}
 		if (DIRIGIBLE_DESTINATIONS_PROVIDER_LOCAL.equals(destinationProvider)) {
 			String fullName = name + ".properties";
 			IRepository repository = getDestinationsRepostiory();
@@ -124,7 +124,7 @@ public class DestinationsFacade {
 		if (destinationProvider == null) {
 			destinationProvider = DIRIGIBLE_DESTINATIONS_PROVIDER_LOCAL;
 		}
-		logger.debug(String.format("Destinations Provider for SET operation: %s", destinationProvider));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("Destinations Provider for SET operation: %s", destinationProvider));}
 		if (DIRIGIBLE_DESTINATIONS_PROVIDER_LOCAL.equals(destinationProvider)) {
 			String fullName = name + ".properties";
 			IRepository repository = getDestinationsRepostiory();
@@ -177,13 +177,13 @@ public class DestinationsFacade {
 	 */
 	public static Map initializeFromDestination(String destinationName) throws NamingException, NoSuchMethodException,
 			SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		logger.debug(String.format("Lookup Destination: %s", destinationName));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("Lookup Destination: %s", destinationName));}
 		Object connectivityService = lookupConnectivityConfiguration();
 		Method configurationMethod = connectivityService.getClass().getMethod("getConfiguration", String.class);
 		Object destinationConfiguration = configurationMethod.invoke(connectivityService, destinationName);
 		Method propertiesMethod = destinationConfiguration.getClass().getMethod("getAllProperties");
 		Map destinationPropeties = (Map) propertiesMethod.invoke(destinationConfiguration);
-		logger.debug(String.format("Destination Properties: %s", destinationPropeties.toString()));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("Destination Properties: %s", destinationPropeties.toString()));}
 		return destinationPropeties;
 	}
 

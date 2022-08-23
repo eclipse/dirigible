@@ -51,7 +51,7 @@ public class PersistenceManagerGeneratedValueIdentityTest extends AbstractPersis
 			database = "derby";
 		}
 		if (!SUPPORTED_DIALECTS.contains(database)) {
-			logger.warn("Skipped IDENTITY test for database: " + database);
+			if (logger.isWarnEnabled()) {logger.warn("Skipped IDENTITY test for database: " + database);}
 			return;
 		}
 

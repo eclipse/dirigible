@@ -75,7 +75,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized (JobSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Jobs...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing Jobs...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -89,17 +89,17 @@ public class JobSynchronizer extends AbstractSynchronizer {
 						clearCache();
 						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Jobs failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Jobs failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Jobs files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Jobs files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Jobs.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Jobs.");}
 				afterSynchronizing();
 			}
 		}
@@ -151,11 +151,11 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing Jobs from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing Jobs from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing Jobs from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Jobs from Registry.");}
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up Jobs...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up Jobs...");}
 		super.cleanup();
 
 		try {
@@ -199,14 +199,14 @@ public class JobSynchronizer extends AbstractSynchronizer {
 			for (JobDefinition jobDefinition : jobDefinitions) {
 				if (!JOBS_SYNCHRONIZED.contains(jobDefinition.getName())) {
 					schedulerCoreService.removeJob(jobDefinition.getName());
-					logger.warn("Cleaned up Job [{}] from group: {}", jobDefinition.getName(), jobDefinition.getGroup());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up Job [{}] from group: {}", jobDefinition.getName(), jobDefinition.getGroup());}
 				}
 			}
 		} catch (SchedulerException e) {
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up Jobs.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up Jobs.");}
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	 * @throws SchedulerException the scheduler exception
 	 */
 	private void startJobs() throws SchedulerException {
-		logger.trace("Start Jobs...");
+		if (logger.isTraceEnabled()) {logger.trace("Start Jobs...");}
 
 		for (String jobName : JOBS_SYNCHRONIZED) {
 			if (!SchedulerManager.existsJob(jobName)) {
@@ -224,7 +224,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 					SchedulerManager.scheduleJob(jobDefinition);
 					applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 				} catch (SchedulerException e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.FAILED_CREATE, e.getMessage());
 				}
 			}
@@ -242,13 +242,13 @@ public class JobSynchronizer extends AbstractSynchronizer {
 					}
 				}
 			} catch (SchedulerException e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.FAILED_DELETE, e.getMessage());
 			}
 		}
 
-		logger.trace("Running Jobs: " + runningJobs.size());
-		logger.trace("Done starting Jobs.");
+		if (logger.isTraceEnabled()) {logger.trace("Running Jobs: " + runningJobs.size());}
+		if (logger.isTraceEnabled()) {logger.trace("Done starting Jobs.");}
 	}
 
 	/**
@@ -264,12 +264,12 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	 * @throws SynchronizationException the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered Jobs...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered Jobs...");}
 		// Jobs
 		for (JobDefinition jobDefinition : JOBS_PREDELIVERED.values()) {
 			synchronizeJob(jobDefinition);
 		}
-		logger.trace("Done synchronizing predelivered Jobs.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered Jobs.");}
 	}
 
 	/**
@@ -284,7 +284,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 				schedulerCoreService.createJob(jobDefinition.getName(), jobDefinition.getGroup(), jobDefinition.getClazz(),
 						jobDefinition.getHandler(), jobDefinition.getEngine(), jobDefinition.getDescription(), jobDefinition.getExpression(),
 						jobDefinition.isSingleton(), jobDefinition.getParameters());
-				logger.info("Synchronized a new Job [{}] from group: {}", jobDefinition.getName(), jobDefinition.getGroup());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Job [{}] from group: {}", jobDefinition.getName(), jobDefinition.getGroup());}
 				applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				JobDefinition existing = schedulerCoreService.getJob(jobDefinition.getName());
@@ -292,7 +292,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 					schedulerCoreService.updateJob(jobDefinition.getName(), jobDefinition.getGroup(), jobDefinition.getClazz(),
 							jobDefinition.getHandler(), jobDefinition.getEngine(), jobDefinition.getDescription(), jobDefinition.getExpression(),
 							jobDefinition.isSingleton(), jobDefinition.getParameters());
-					logger.info("Synchronized a modified Job [{}] from group: {}", jobDefinition.getName(), jobDefinition.getGroup());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Job [{}] from group: {}", jobDefinition.getName(), jobDefinition.getGroup());}
 					applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -321,7 +321,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, JobSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error(e.getMessage(), e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
 		}
 	}
 

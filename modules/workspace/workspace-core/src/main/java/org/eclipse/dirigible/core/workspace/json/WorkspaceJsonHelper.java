@@ -172,7 +172,7 @@ public class WorkspaceJsonHelper {
 						git = findRootGit(git);
 					}
 				} catch (IOException e) {
-					logger.warn(git);
+					if (logger.isWarnEnabled()) {logger.warn(git);}
 				}
 			}
 			ProjectStatus status = null;
@@ -338,7 +338,7 @@ public class WorkspaceJsonHelper {
 					folderPojo.setStatus(Status.U.name());
 				}
 			} catch (IOException e) {
-				logger.warn(e.getMessage());
+				if (logger.isWarnEnabled()) {logger.warn(e.getMessage());}
 			}
 		}
 		List<ICollection> collections = collection.getCollections();
@@ -408,7 +408,7 @@ public class WorkspaceJsonHelper {
 					resourcePojo.setStatus(Status.U.name());
 				}
 			} catch (IOException e) {
-				logger.warn(e.getMessage());
+				if (logger.isWarnEnabled()) {logger.warn(e.getMessage());}
 			}
 		}
 		return resourcePojo;

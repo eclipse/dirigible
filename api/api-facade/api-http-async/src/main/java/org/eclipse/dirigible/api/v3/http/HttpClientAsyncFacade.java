@@ -356,7 +356,7 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 					try {
 						getDefaultEngineExecutor().executeServiceCode(completeCallback, executionContext);
 					} catch (ScriptingException e) {
-						logger.error(e.getMessage(), e);
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					}
 				}
 			};

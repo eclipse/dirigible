@@ -58,7 +58,7 @@ public class TableAlterProcessor {
 		if (caseSensitive) {
 			tableName = "\"" + tableName + "\"";
 		}
-		logger.info("Processing Alter Table: " + tableName);
+		if (logger.isInfoEnabled()) {logger.info("Processing Alter Table: " + tableName);}
 		
 		Map<String, String> columnDefinitions = new HashMap<String, String>();
 		DatabaseMetaData dmd = connection.getMetaData();
@@ -155,13 +155,13 @@ public class TableAlterProcessor {
 	private static void executeAlterBuilder(Connection connection, AlterTableBuilder alterTableBuilder)
 			throws SQLException {
 		final String sql = alterTableBuilder.build();
-		logger.info(sql);
+		if (logger.isInfoEnabled()) {logger.info(sql);}
 		PreparedStatement statement = connection.prepareStatement(sql);
 		try {
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new SQLException(e.getMessage(), e);
 		} finally {
 			if (statement != null) {

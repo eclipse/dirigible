@@ -230,7 +230,7 @@ public class DirigibleSpringConfiguration {
 			Version version = new VersionProcessor().getVersion();
 			openApiFeature.setVersion(version.getProductVersion());
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			openApiFeature.setVersion("3.0.0");
 		}
 		openApiFeature.setSwaggerUiConfig(new SwaggerUiConfig().url("/a/services/v4/openapi.json"));

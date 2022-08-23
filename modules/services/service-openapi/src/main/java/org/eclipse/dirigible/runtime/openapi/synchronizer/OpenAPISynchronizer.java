@@ -76,7 +76,7 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized (OpenAPISynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing OpenAPIs...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing OpenAPIs...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -89,17 +89,17 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 						clearCache();
 						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for OpenAPIs failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for OpenAPIs failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for OpenAPIs files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for OpenAPIs files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing OpenAPIs.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing OpenAPIs.");}
 			}
 		}
 	}
@@ -151,12 +151,12 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 	 * @throws SynchronizationException the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered OpenAPIs...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered OpenAPIs...");}
 		// OpenAPI
 		for (OpenAPIDefinition openAPIDefinition : OPENAPI_PREDELIVERED.values()) {
 			synchronizeOpenAPI(openAPIDefinition);
 		}
-		logger.trace("Done synchronizing predelivered OpenAPIs.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered OpenAPIs.");}
 	}
 
 	/**
@@ -169,13 +169,13 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 		try {
 			if (!openAPICoreService.existsOpenAPI(openAPIDefinition.getLocation())) {
 				openAPICoreService.createOpenAPI(openAPIDefinition.getLocation(), openAPIDefinition.getHash());
-				logger.info("Synchronized a new OpenAPI from location: {}", openAPIDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new OpenAPI from location: {}", openAPIDefinition.getLocation());}
 				applyArtefactState(openAPIDefinition, OPENAPI_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				OpenAPIDefinition existing = openAPICoreService.getOpenAPI(openAPIDefinition.getLocation());
 				if (!openAPIDefinition.equals(existing)) {
 					openAPICoreService.updateOpenAPI(openAPIDefinition.getLocation(), openAPIDefinition.getHash());
-					logger.info("Synchronized a modified OpenAPI from location: {}", openAPIDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified OpenAPI from location: {}", openAPIDefinition.getLocation());}
 					applyArtefactState(openAPIDefinition, OPENAPI_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -198,11 +198,11 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing OpenAPI from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing OpenAPI from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing OpenAPI from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing OpenAPI from Registry.");}
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up OpenAPI...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up OpenAPI...");}
 		super.cleanup();
 
 		try {
@@ -253,14 +253,14 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 			for (OpenAPIDefinition openAPIDefinition : openAPIDefinitions) {
 				if (!OPENAPI_SYNCHRONIZED.contains(openAPIDefinition.getLocation())) {
 					openAPICoreService.removeOpenAPI(openAPIDefinition.getLocation());
-					logger.warn("Cleaned up OpenAPI from location: {}", openAPIDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up OpenAPI from location: {}", openAPIDefinition.getLocation());}
 				}
 			}
 		} catch (OpenAPIException e) {
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up OpenAPI.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up OpenAPI.");}
 	}
 	
 	/** The Constant ERROR_TYPE. */
@@ -281,7 +281,7 @@ public class OpenAPISynchronizer extends AbstractSynchronizer {
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, OpenAPISynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error(e.getMessage(), e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
 		}
 	}
 }

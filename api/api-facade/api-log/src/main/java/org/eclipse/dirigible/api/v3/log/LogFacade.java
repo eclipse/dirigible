@@ -81,7 +81,7 @@ public class LogFacade implements IScriptingFacade {
 		final org.slf4j.Logger logger = getLogger(loggerName);
 
 		if (!(logger instanceof ch.qos.logback.classic.Logger)) {
-			LOGGER.error("Logger with name {} is not of type " + ch.qos.logback.classic.Logger.class.getName(), loggerName);
+			if (LOGGER.isErrorEnabled()) {LOGGER.error("Logger with name {} is not of type " + ch.qos.logback.classic.Logger.class.getName(), loggerName);}
 			return;
 		}
 
@@ -111,7 +111,7 @@ public class LogFacade implements IScriptingFacade {
 					args = null;
 				}
 			} catch (IOException e) {
-				LOGGER.error("Cannot parse log arguments[" + logArguments + "] for logger[" + loggerName + "]", e);
+				if (LOGGER.isErrorEnabled()) {LOGGER.error("Cannot parse log arguments[" + logArguments + "] for logger[" + loggerName + "]", e);}
 			}
 		}
 		// https://www.slf4j.org/faq.html#paramException

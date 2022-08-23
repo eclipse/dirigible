@@ -47,16 +47,16 @@ public class ResetCommand {
 	 */
 	public void execute(String workspace, List<String> repositories) throws GitConnectorException {
 		if (repositories.size() == 0) {
-			logger.warn("No repository is selected for the Reset action");
+			if (logger.isWarnEnabled()) {logger.warn("No repository is selected for the Reset action");}
 		}
 
 		for (String repositoryName : repositories) {
 			if (verifier.verify(workspace, repositoryName)) {
-				logger.debug(String.format("Start reseting repository [%s]...", repositoryName));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("Start reseting repository [%s]...", repositoryName));}
 				hardReset(workspace, repositoryName);
-				logger.debug(String.format("Reset of the repository [%s] finished.", repositoryName));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("Reset of the repository [%s] finished.", repositoryName));}
 			} else {
-				logger.warn(String.format("Project [%s] is local only. Select a previously cloned repository for Reset operation.", repositoryName));
+				if (logger.isWarnEnabled()) {logger.warn(String.format("Project [%s] is local only. Select a previously cloned repository for Reset operation.", repositoryName));}
 			}
 		}
 
@@ -80,13 +80,13 @@ public class ResetCommand {
 			try {
 				gitConnector.hardReset();
 			} catch (GitAPIException e) {
-				logger.debug(e.getMessage(), e.getMessage());
+				if (logger.isDebugEnabled()) {logger.debug(e.getMessage(), e.getMessage());}
 			}
 
 			String message = String.format("Repository [%s] successfully reset.", repositoryName);
-			logger.info(message);
+			if (logger.isInfoEnabled()) {logger.info(message);}
 		} catch (IOException | GitConnectorException e) {
-			logger.error(errorMessage, e);
+			if (logger.isErrorEnabled()) {logger.error(errorMessage, e);}
 			throw new GitConnectorException(errorMessage, e);
 		}
 	}

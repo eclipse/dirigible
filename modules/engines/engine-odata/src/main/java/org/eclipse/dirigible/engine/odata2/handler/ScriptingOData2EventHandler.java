@@ -87,7 +87,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             context.put("entry", entry);
             executeHandlers(handlers, context);
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         } catch (ScriptingException e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
@@ -120,7 +120,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             context.put("entry", entry);
             executeHandlers(handlers, context);
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         } catch (ScriptingException e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
@@ -183,7 +183,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             ODataResponse response = EntityProvider.writeText(responseMessage);
             return response;
         } catch (EdmException | ODataException | EntityProviderException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         } catch (ScriptingException e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
@@ -209,7 +209,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
             return handlers.size() > 0;
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         }
         return false;
     }
@@ -242,7 +242,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             context.put("entry", entry);
             executeHandlers(handlers, context);
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         } catch (ScriptingException e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
@@ -277,7 +277,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             context.put("entry", entry);
             executeHandlers(handlers, context);
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         } catch (ScriptingException e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
@@ -329,7 +329,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             ODataResponse response = EntityProvider.writeText(responseMessage);
             return response;
         } catch (EdmException | ODataException | EntityProviderException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         } catch (ScriptingException e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
@@ -356,7 +356,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
             return handlers.size() > 0;
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         }
         return false;
     }
@@ -382,7 +382,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             context.put("contentType", contentType);
             executeHandlers(handlers, context);
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         } catch (ScriptingException e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
@@ -410,7 +410,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             context.put("contentType", contentType);
             executeHandlers(handlers, context);
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         } catch (ScriptingException e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
@@ -434,7 +434,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
             return handlers.size() > 0;
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         }
         return false;
     }
@@ -462,7 +462,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             ODataResponse response = EntityProvider.writeText(responseMessage);
             return response;
         } catch (EdmException | ODataException | EntityProviderException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         } catch (ScriptingException e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
@@ -486,7 +486,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
             return handlers.size() > 0;
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         }
         return false;
     }
@@ -582,7 +582,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
             return handlers.size() > 0;
         } catch (EdmException | ODataException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         }
         return false;
     }

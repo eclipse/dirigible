@@ -86,7 +86,7 @@ public class DataTransferManager {
 		try {
 			BATCH_SIZE = Integer.parseInt(Configuration.get(DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE, DEFAULT_BATCH_SIZE));
 		} catch (NumberFormatException e1) {
-			logger.warn("Wrong configuration for " + DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE);
+			if (logger.isWarnEnabled()) {logger.warn("Wrong configuration for " + DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE);}
 		}
 		
 		handler.transferStarted(configuration);
@@ -108,14 +108,14 @@ public class DataTransferManager {
 				
 			} catch (SQLException e) {
 				String error = "Error occured when trying to connect to the target database";
-				logger.error(error, e);
+				if (logger.isErrorEnabled()) {logger.error(error, e);}
 				handler.transferFailed(error);
 				throw new DataTransferException(e);
 			}	
 			
 		} catch (SQLException e) {
 			String error = "Error occured when trying to connect to the source database";
-			logger.error(error, e);
+			if (logger.isErrorEnabled()) {logger.error(error, e);}
 			handler.transferFailed(error);
 			throw new DataTransferException(e);
 		}
@@ -173,7 +173,7 @@ public class DataTransferManager {
 			if (handler.isStopped()) {
 				return;
 			}
-			logger.info(String.format("Data transfer of table %s has been started...", tableModel.getTableName()));
+			if (logger.isInfoEnabled()) {logger.info(String.format("Data transfer of table %s has been started...", tableModel.getTableName()));}
 			handler.tableTransferStarted(tableModel.getTableName());
 			try {
 				
@@ -338,13 +338,13 @@ public class DataTransferManager {
 				}
 				
 				String message = String.format("Data of table %s has been transferred successfully.", tableModel.getTableName());
-				logger.info(message);
+				if (logger.isInfoEnabled()) {logger.info(message);}
 				
 				handler.tableTransferFinished(tableModel.getTableName(), transferedRecords);
 				
 			} catch(Exception e) {
 				String error = "Error occured while transferring the data for table: " + tableModel.getTableName();
-				logger.error(error, e);
+				if (logger.isErrorEnabled()) {logger.error(error, e);}
 				handler.tableTransferFailed(tableModel.getTableName(), error + " -> " + e.getMessage());
 			}
 		}

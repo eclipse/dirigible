@@ -96,7 +96,7 @@ public class TimeLimited {
 		try {
 			return Integer.parseInt(defaultTimeout);
 		} catch (NumberFormatException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			return Integer.parseInt(DEFAULT_TIMEOUT);
 		}
 	}

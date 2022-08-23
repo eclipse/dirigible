@@ -45,26 +45,26 @@ public abstract class AbstractSynchronizerJob implements Job, ISynchronizerJob {
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		final long startTime = System.currentTimeMillis();
-		logger.trace("Synchronizer [{}] started execution at: {}...", getName(), new Date(startTime));
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizer [{}] started execution at: {}...", getName(), new Date(startTime));}
 		try {
 	      TimeLimited.runWithTimeout(new Runnable() {
 	        @Override
 	        public void run() {
 	        	getSynchronizer().synchronize();
 	      		HealthStatus.getInstance().getJobs().setStatus(getName(), JobStatus.Succeeded); // context.getJobDetail().getKey().getName()
-	      		logger.trace("Synchronizer [{}] execution passed successfully for {} ms...", getName(), System.currentTimeMillis() - startTime);
+	      		if (logger.isTraceEnabled()) {logger.trace("Synchronizer [{}] execution passed successfully for {} ms...", getName(), System.currentTimeMillis() - startTime);}
 	        }
 	      }, getTimeout(), getTimeoutUnit());
 	    } catch (TimeoutException e) {
-	    	logger.error("Synchronizer [{}] got timeout during execution at: {}", getName(), new Date(System.currentTimeMillis()));
-	    	logger.error(e.getMessage(), e);
+	    	if (logger.isErrorEnabled()) {logger.error("Synchronizer [{}] got timeout during execution at: {}", getName(), new Date(System.currentTimeMillis()));}
+	    	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 	    	HealthStatus.getInstance().getJobs().setStatus(getName(), JobStatus.Failed);
 	    } catch(Exception e) {
-	    	logger.error("Synchronizer [{}] failed during execution at: {}", getName(), new Date(System.currentTimeMillis()));
-	    	logger.error(e.getMessage(), e);
+	    	if (logger.isErrorEnabled()) {logger.error("Synchronizer [{}] failed during execution at: {}", getName(), new Date(System.currentTimeMillis()));}
+	    	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 	    	HealthStatus.getInstance().getJobs().setStatus(getName(), JobStatus.Failed);
 	    }
-		logger.trace("Synchronizer [{}] ended execution for {} ms...", getName(), System.currentTimeMillis() - startTime);
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizer [{}] ended execution for {} ms...", getName(), System.currentTimeMillis() - startTime);}
 	}
 
 	/**

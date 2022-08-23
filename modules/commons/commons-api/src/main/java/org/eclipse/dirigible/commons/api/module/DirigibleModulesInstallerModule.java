@@ -42,10 +42,10 @@ public class DirigibleModulesInstallerModule {
 	 * Configure.
 	 */
 	public static synchronized void configure() {
-		logger.debug("Initializing Dirigible Modules...");
+		if (logger.isDebugEnabled()) {logger.debug("Initializing Dirigible Modules...");}
 
 		while (!Configuration.LOADED) {
-			logger.info("Waiting for Dirigible Configuration to be initialized");
+			if (logger.isInfoEnabled()) {logger.info("Waiting for Dirigible Configuration to be initialized");}
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -73,16 +73,16 @@ public class DirigibleModulesInstallerModule {
 		});
 
 		for (AbstractDirigibleModule next: sortedDirigibleModules) {
-			logger.debug(format("Installing Dirigible Module [{0}] ...", next.getName()));
+			if (logger.isDebugEnabled()) {logger.debug(format("Installing Dirigible Module [{0}] ...", next.getName()));}
 			try {
 				next.configure();
 			} catch (Throwable e) {
-				logger.error(format("Failed installing Dirigible Module [{0}].", next.getName()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Failed installing Dirigible Module [{0}].", next.getName()), e);}
 			}
-			logger.debug(format("Done installing Dirigible Module [{0}].", next.getName()));
+			if (logger.isDebugEnabled()) {logger.debug(format("Done installing Dirigible Module [{0}].", next.getName()));}
 			modules.add(next.getName());
 		}
-		logger.debug("Done initializing Dirigible Modules.");
+		if (logger.isDebugEnabled()) {logger.debug("Done initializing Dirigible Modules.");}
 	}
 	
 	/**

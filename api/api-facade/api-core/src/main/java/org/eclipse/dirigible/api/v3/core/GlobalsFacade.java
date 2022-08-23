@@ -32,9 +32,9 @@ public class GlobalsFacade implements IScriptingFacade {
 	 * @return the string value
 	 */
 	public static final String get(String name) {
-		logger.trace("API - GlobalsFacade.get() -> begin");
+		if (logger.isTraceEnabled()) {logger.trace("API - GlobalsFacade.get() -> begin");}
 		String value = System.getProperty(name);
-		logger.trace("API - GlobalsFacade.get() -> end");
+		if (logger.isTraceEnabled()) {logger.trace("API - GlobalsFacade.get() -> end");}
 		return value;
 	}
 
@@ -47,9 +47,9 @@ public class GlobalsFacade implements IScriptingFacade {
 	 *            the value
 	 */
 	public static final void set(String name, String value) {
-		logger.trace("API - GlobalsFacade.set() -> begin");
+		if (logger.isTraceEnabled()) {logger.trace("API - GlobalsFacade.set() -> begin");}
 		System.setProperty(name, value);
-		logger.trace("API - GlobalsFacade.set() -> end");
+		if (logger.isTraceEnabled()) {logger.trace("API - GlobalsFacade.set() -> end");}
 	}
 
 	/**
@@ -58,9 +58,9 @@ public class GlobalsFacade implements IScriptingFacade {
 	 * @return the string
 	 */
 	public static final String list() {
-		logger.trace("API - GlobalsFacade.get() -> begin");
+		if (logger.isTraceEnabled()) {logger.trace("API - GlobalsFacade.get() -> begin");}
 		String value = GsonHelper.GSON.toJson(System.getProperties());
-		logger.trace("API - GlobalsFacade.get() -> end");
+		if (logger.isTraceEnabled()) {logger.trace("API - GlobalsFacade.get() -> end");}
 		return value;
 	}
 

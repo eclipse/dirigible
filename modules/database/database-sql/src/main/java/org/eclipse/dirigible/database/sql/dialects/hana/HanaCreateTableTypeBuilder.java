@@ -88,7 +88,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
 
         String generated = sql.toString();
 
-        logger.trace("generated: " + generated);
+        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
         return generated;
     }
@@ -191,8 +191,8 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
      */
     @Override
     public CreateTableTypeBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, String args) {
-        logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey + ", isNullable: "
-                + isNullable + OPEN + args + CLOSE );
+    	if (logger.isTraceEnabled()) {logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey + ", isNullable: "
+                + isNullable + OPEN + args + CLOSE );}
         
         if (type == null) {
         	throw new SqlException("The type of the column cannot be null.");

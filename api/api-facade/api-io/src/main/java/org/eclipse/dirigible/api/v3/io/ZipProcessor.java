@@ -44,7 +44,7 @@ public class ZipProcessor {
         try {
             zipFolder(source, target);
         } catch (Exception e) {
-           logger.error(e.getMessage());
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
         }
     }
 
@@ -60,7 +60,7 @@ public class ZipProcessor {
         try {
             unzipFolder(source, target);
         } catch (IOException e) {
-            logger.error(e.getMessage());
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
         }
 
     }

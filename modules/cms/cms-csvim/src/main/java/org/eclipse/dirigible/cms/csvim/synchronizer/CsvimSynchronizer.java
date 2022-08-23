@@ -118,7 +118,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 	public void synchronize() {
 		synchronized (CsvimSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing CSVIM files...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing CSVIM files...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						if (isSynchronizerSuccessful(
@@ -142,17 +142,17 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 									"Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
 						}
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for CSVIM failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for CSVIM failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for CSVIM files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for CSVIM files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing CSVIM files.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing CSVIM files.");}
 				afterSynchronizing();
 			}
 		}
@@ -228,7 +228,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 	 * @throws SynchronizationException the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered CSVIM files...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered CSVIM files...");}
 		// CSVIM
 		for (CsvimDefinition csvimDefinition : CSVIM_PREDELIVERED.values()) {
 			synchronizeCsvim(csvimDefinition);
@@ -237,7 +237,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		for (CsvDefinition csvDefinition : CSV_PREDELIVERED.values()) {
 			synchronizeCsv(csvDefinition);
 		}
-		logger.trace("Done synchronizing predelivered CSVIM files.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered CSVIM files.");}
 	}
 
 	/**
@@ -251,13 +251,13 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 			if (!csvimCoreService.existsCsvim(csvimDefinition.getLocation())) {
 				csvimCoreService.createCsvim(csvimDefinition.getLocation(), csvimDefinition.getHash());
 				CSVIM_MODELS.put(csvimDefinition.getLocation(), csvimDefinition);
-				logger.info("Synchronized a new CSVIM from location: {}", csvimDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new CSVIM from location: {}", csvimDefinition.getLocation());}
 				applyArtefactState(csvimDefinition, CSVIM_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				CsvimDefinition existing = csvimCoreService.getCsvim(csvimDefinition.getLocation());
 				if (!csvimDefinition.equals(existing)) {
 					csvimCoreService.updateCsvim(csvimDefinition.getLocation(), csvimDefinition.getHash());
-					logger.info("Synchronized a modified CSVIM file from location: {}", csvimDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified CSVIM file from location: {}", csvimDefinition.getLocation());}
 					CSVIM_MODELS.put(csvimDefinition.getLocation(), csvimDefinition);
 					applyArtefactState(csvimDefinition, CSVIM_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
@@ -279,13 +279,13 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 		try {
 			if (!csvimCoreService.existsCsv(csvDefinition.getLocation())) {
 				csvimCoreService.createCsv(csvDefinition.getLocation(), csvDefinition.getHash());
-				logger.info("Synchronized a new CSV from location: {}", csvDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new CSV from location: {}", csvDefinition.getLocation());}
 				applyArtefactState(csvDefinition, CSV_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				CsvDefinition existing = csvimCoreService.getCsv(csvDefinition.getLocation());
 				if (!csvDefinition.equals(existing)) {
 					csvimCoreService.updateCsv(csvDefinition.getLocation(), csvDefinition.getHash(), false);
-					logger.info("Synchronized a modified CSV file from location: {}", csvDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified CSV file from location: {}", csvDefinition.getLocation());}
 					applyArtefactState(csvDefinition, CSV_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -309,11 +309,11 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing CSVIM files from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing CSVIM files from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing CSVIM files from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing CSVIM files from Registry.");}
 	}
 
 	/**
@@ -363,7 +363,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up CSVIM files...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up CSVIM files...");}
 		super.cleanup();
 
 		try {
@@ -371,14 +371,14 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 			for (CsvimDefinition csvimDefinition : csvimDefinitions) {
 				if (!CSVIM_SYNCHRONIZED.contains(csvimDefinition.getLocation())) {
 					csvimCoreService.removeCsvim(csvimDefinition.getLocation());
-					logger.warn("Cleaned up CSVIM file from location: {}", csvimDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up CSVIM file from location: {}", csvimDefinition.getLocation());}
 				}
 			}
 			List<CsvDefinition> csvDefinitions = csvimCoreService.getCsvs();
 			for (CsvDefinition csvDefinition : csvDefinitions) {
 				if (!CSV_SYNCHRONIZED.contains(csvDefinition.getLocation())) {
 					csvimCoreService.removeCsv(csvDefinition.getLocation());
-					logger.warn("Cleaned up CSV file from location: {}", csvDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up CSV file from location: {}", csvDefinition.getLocation());}
 				}
 			}
 
@@ -386,7 +386,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up CSVIM files.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up CSVIM files.");}
 	}
 
 	/**
@@ -398,7 +398,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 				executeCsvim(CSVIM_MODELS.get(csvimArtifactKey), connection);
 			}
 		} catch (SQLException e) {
-			logger.error("Error occurred while importing the data from CSVIM files", e);
+			if (logger.isErrorEnabled()) {logger.error("Error occurred while importing the data from CSVIM files", e);}
 		}
 	}
 
@@ -428,7 +428,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 				}
 				String hash = content != null ? DigestUtils.md5Hex(content.getBytes()) : null;
 				if (hash == null) {
-					logger.error("CSV content not found for file [" + csvFileDefinition.getFile() + "]");
+					if (logger.isErrorEnabled()) {logger.error("CSV content not found for file [" + csvFileDefinition.getFile() + "]");}
 				} else if (hash.equals(csvDefinition.getHash())
 						&& csvDefinition.getImported()) {
 					continue;
@@ -436,9 +436,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 				csvimProcessor.process(csvFileDefinition, content, connection);
 				csvimCoreService.updateCsv(csvFileDefinition.getFile(), hash, true);
 			} catch (SQLException | CsvimException | IOException e) {
-				logger.error(
-						String.format("An error occurred while trying to execute the data import: %s", e.getMessage()),
-						e);
+				if (logger.isErrorEnabled()) {logger.error(String.format("An error occurred while trying to execute the data import: %s", e.getMessage()), e);}
 			}
 		}
 	}

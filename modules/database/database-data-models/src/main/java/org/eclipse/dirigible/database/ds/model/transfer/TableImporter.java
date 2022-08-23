@@ -90,7 +90,7 @@ public class TableImporter {
 	 * @throws ParseException the parse exception
 	 */
 	private void insertRecords(Connection connection, List<String[]> records, String tableName) throws SQLException, ParseException {
-		logger.debug("Start importing data for the table: {} ...", tableName);
+		if (logger.isDebugEnabled()) {logger.debug("Start importing data for the table: {} ...", tableName);}
 		InsertBuilder insertBuilder = new InsertBuilder(SqlFactory.deriveDialect(connection));
 	    insertBuilder.into(tableName);
 	    
@@ -108,7 +108,7 @@ public class TableImporter {
 		for (String[] record : records) {
 			rn++;
 			if (record.length > availableTableColumns.size()) {
-				logger.error("Columns count in the provided data record is bigger than the available columns number in the target table: {}. Skipped record number: {}", tableName, rn);
+				if (logger.isErrorEnabled()) {logger.error("Columns count in the provided data record is bigger than the available columns number in the target table: {}. Skipped record number: {}", tableName, rn);}
 			}
 			for (int i = 0; i < record.length; i++) {
 				TableColumn tableColumn = availableTableColumns.get(i);
@@ -165,7 +165,7 @@ public class TableImporter {
 		if (recordsInBatch != 0) {
 			insertStatement.executeBatch();
 		}
-		logger.debug("Done importing data for the table: {}, records: {}", tableName, rn);
+		if (logger.isDebugEnabled()) {logger.debug("Done importing data for the table: {}, records: {}", tableName, rn);}
 	}
 
 	/**

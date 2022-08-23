@@ -44,7 +44,7 @@ public class VelocityGenerationEngine implements IGenerationEngine {
 		try {
 			engine.init();
 		} catch (Throwable e) {
-			// logger.error(e.getMessage(), e);
+			// if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			e.printStackTrace();
 		}
 	}

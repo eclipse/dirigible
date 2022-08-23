@@ -55,7 +55,7 @@ public class CreateTableCheckBuilder extends AbstractCreateTableConstraintBuilde
 	 * @return the creates the table check builder
 	 */
 	public CreateTableCheckBuilder expression(String expression) {
-		logger.trace("expression: " + expression);
+		if (logger.isTraceEnabled()) {logger.trace("expression: " + expression);}
 		this.expression = expression;
 		return this;
 	}

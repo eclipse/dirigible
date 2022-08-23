@@ -51,7 +51,7 @@ public class InitCommand {
         } catch (GitAPIException e) {
             String errorMessage = "An error occurred while initializing repository.";
             errorMessage += " " + e.getMessage();
-            logger.error(errorMessage);
+            if (logger.isErrorEnabled()) {logger.error(errorMessage);}
             throw new GitConnectorException(errorMessage, e);
         }
     }

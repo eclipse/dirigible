@@ -140,13 +140,13 @@ public class SchedulerManager {
 					schedulerFactory = new StdSchedulerFactory(quartzProperties);
 					scheduler = schedulerFactory.getScheduler();
 					String message = "Scheduler has been created.";
-					logger.info(message);
+					if (logger.isInfoEnabled()) {logger.info(message);}
 				}
 			}
 		} catch (org.quartz.SchedulerException e) {
 			throw new SchedulerException(e);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 
@@ -174,7 +174,7 @@ public class SchedulerManager {
 			try {
 				scheduler.shutdown(true);
 				String message = "Scheduler has been shut down.";
-				logger.info(message);
+				if (logger.isInfoEnabled()) {logger.info(message);}
 				scheduler = null;
 			} catch (org.quartz.SchedulerException e) {
 				throw new SchedulerException(e);
@@ -195,7 +195,7 @@ public class SchedulerManager {
 			}
 			try {
 				scheduler.start();
-				logger.info("Scheduler has been started.");
+				if (logger.isInfoEnabled()) {logger.info("Scheduler has been started.");}
 			} catch (org.quartz.SchedulerException e) {
 				throw new SchedulerException(e);
 			}
@@ -238,11 +238,11 @@ public class SchedulerManager {
 				}
 				scheduler.scheduleJob(job, trigger);
 
-				logger.info("Scheduled Job: [{}] of group: [{}] at: [{}]", jobDefinition.getName(), jobDefinition.getGroup(),
-						jobDefinition.getExpression());
+				if (logger.isInfoEnabled()) {logger.info("Scheduled Job: [{}] of group: [{}] at: [{}]", jobDefinition.getName(), jobDefinition.getGroup(),
+						jobDefinition.getExpression());}
 			}
 		} catch (ObjectAlreadyExistsException e) {
-			logger.warn(e.getMessage());
+			if (logger.isWarnEnabled()) {logger.warn(e.getMessage());}
 		} catch (ClassNotFoundException e) {
 			throw new SchedulerException("Invalid class name for the job", e);
 		} catch (org.quartz.SchedulerException e) {
@@ -270,10 +270,10 @@ public class SchedulerManager {
 			if (scheduler.checkExists(triggerKey)) {
 				scheduler.unscheduleJob(triggerKey);
 				scheduler.deleteJob(jobKey);
-				logger.info("Unscheduled Job: [{}] of group: [{}]", name, group);
+				if (logger.isInfoEnabled()) {logger.info("Unscheduled Job: [{}] of group: [{}]", name, group);}
 			}
 		} catch (ObjectAlreadyExistsException e) {
-			logger.warn(e.getMessage());
+			if (logger.isWarnEnabled()) {logger.warn(e.getMessage());}
 		} catch (org.quartz.SchedulerException e) {
 			throw new SchedulerException(e);
 		}

@@ -60,12 +60,12 @@ public class CheckoutCommand {
 	public void execute(final IWorkspace workspace, GitCheckoutModel model) throws GitConnectorException {
 		boolean atLeastOne = false;
 		if (verifier.verify(workspace.getName(), model.getProject())) {
-			logger.debug(String.format("Start checkout %s repository and %s branch...", model.getProject(), model.getBranch()));
+			if (logger.isDebugEnabled()) {logger.debug(String.format("Start checkout %s repository and %s branch...", model.getProject(), model.getBranch()));}
 			boolean checkedout = checkoutProjectFromGitRepository(workspace, model);
 			atLeastOne = atLeastOne ? atLeastOne : checkedout;
 			logger.debug(String.format("Pull of the repository %s finished.", model.getProject()));
 		} else {
-			logger.warn(String.format("Project %s is local only. Select a previously cloned project for Checkout operation.", model.getProject()));
+			if (logger.isWarnEnabled()) {logger.warn(String.format("Project %s is local only. Select a previously cloned project for Checkout operation.", model.getProject()));}
 		}
 
 		if (atLeastOne && model.isPublish()) {
@@ -97,18 +97,18 @@ public class CheckoutCommand {
 			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace.getName(), model.getProject());
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
-			logger.debug(String.format("Starting checkout of the repository [%s] and branch %s ...", model.getProject(), model.getBranch()));
+			if (logger.isDebugEnabled()) {logger.debug(String.format("Starting checkout of the repository [%s] and branch %s ...", model.getProject(), model.getBranch()));}
 			gitConnector.checkout(model.getBranch());
-			logger.debug(String.format("Checkout of the repository %s and branch %s finished.", model.getProject(), model.getBranch()));
+			if (logger.isDebugEnabled()) {logger.debug(String.format("Checkout of the repository %s and branch %s finished.", model.getProject(), model.getBranch()));}
 
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
-			logger.debug(String.format("Number of conflicting files in the repository [%s]: %d.", model.getProject(), numberOfConflictingFiles));
+			if (logger.isDebugEnabled()) {logger.debug(String.format("Number of conflicting files in the repository [%s]: %d.", model.getProject(), numberOfConflictingFiles));}
 			
 			if (numberOfConflictingFiles > 0) {
 				String message = String.format(
 					"Repository [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
 					model.getProject(), numberOfConflictingFiles);
-				logger.error(message);
+				if (logger.isErrorEnabled()) {logger.error(message);}
 			}
 		} catch (IOException | GitAPIException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
@@ -122,7 +122,7 @@ public class CheckoutCommand {
 			} else {
 				errorMessage += " " + e.getMessage();
 			}
-			logger.error(errorMessage);
+			if (logger.isErrorEnabled()) {logger.error(errorMessage);}
 			throw new GitConnectorException(errorMessage, e);
 		}
 		return true;
@@ -144,9 +144,9 @@ public class CheckoutCommand {
 					if (project.getName().equals(pulledProject)) {
 						try {
 							publisherCoreService.createPublishRequest(workspace.getName(), pulledProject);
-							logger.info(String.format("Project [%s] has been published", project.getName()));
+							if (logger.isInfoEnabled()) {logger.info(String.format("Project [%s] has been published", project.getName()));}
 						} catch (PublisherException e) {
-							logger.error(String.format("An error occurred while publishing the pulled project [%s]", project.getName()), e);
+							if (logger.isInfoEnabled()) {logger.error(String.format("An error occurred while publishing the pulled project [%s]", project.getName()), e);}
 						}
 						break;
 					}

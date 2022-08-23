@@ -69,12 +69,12 @@ public class ExecuteCommand implements Runnable {
     	if (workspace == null) {
     		workspace = Configuration.get(DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE);
 			if (workspace == null) {
-	    		logger.error("Workspace parameter is missing\nUsage: -w or --workspace");
+				if (logger.isErrorEnabled()) {logger.error("Workspace parameter is missing\nUsage: -w or --workspace");}
 	    		return;
 			}
     	}
     	if (file == null) {
-    		logger.error("File parameter is missing\nUsage: -f or --file");
+    		if (logger.isErrorEnabled()) {logger.error("File parameter is missing\nUsage: -f or --file");}
     		return;
     	}
     	Properties properties = new Properties();
@@ -86,7 +86,7 @@ public class ExecuteCommand implements Runnable {
 				if (index > 0) {
     				properties.put(pair.substring(0, index), pair.substring(index + 1));
     			} else {
-    				logger.error("Invalid context parameter\nUsage: name=value");
+    				if (logger.isErrorEnabled()) {logger.error("Invalid context parameter\nUsage: name=value");}
     			}
     	     }
     	}
@@ -96,12 +96,12 @@ public class ExecuteCommand implements Runnable {
     	try {
     		DirigibleCLIApplication.DIRIGIBLE.load(workspace);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
     	try {
     		DirigibleCLIApplication.DIRIGIBLE.execute(type, file, properties);
 		} catch (ScriptingException | ContextException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
     	if (exit != null && exit) {
     		DirigibleCLIApplication.DIRIGIBLE.destroy();

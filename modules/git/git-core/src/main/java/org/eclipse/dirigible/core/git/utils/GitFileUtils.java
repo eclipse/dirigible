@@ -339,9 +339,9 @@ public class GitFileUtils {
 				gitConnector.getBranch();
 				return true;
 			}
-			logger.error("Not a file system based repository used with git");
+			if (logger.isErrorEnabled()) {logger.error("Not a file system based repository used with git");}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			return false;
 		}
 		return false;

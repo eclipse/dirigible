@@ -65,7 +65,7 @@ public class AnonymousRestService extends AbstractRestService implements IRestSe
 		try {
 			processor.setName(identifier);
 		} catch (ContextException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			return createErrorResponseInternalServerError(ANONYMOUS_ACCESS_FAILED);
 		}
 		response.sendRedirect(HOME_LOCATION);
