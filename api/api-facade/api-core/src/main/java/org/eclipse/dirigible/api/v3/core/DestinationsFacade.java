@@ -178,13 +178,18 @@ public class DestinationsFacade {
 	public static Map initializeFromDestination(String destinationName) throws NamingException, NoSuchMethodException,
 			SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if (logger.isDebugEnabled()) {logger.debug(String.format("Lookup Destination: %s", destinationName));}
-		Object connectivityService = lookupConnectivityConfiguration();
-		Method configurationMethod = connectivityService.getClass().getMethod("getConfiguration", String.class);
-		Object destinationConfiguration = configurationMethod.invoke(connectivityService, destinationName);
-		Method propertiesMethod = destinationConfiguration.getClass().getMethod("getAllProperties");
-		Map destinationPropeties = (Map) propertiesMethod.invoke(destinationConfiguration);
-		if (logger.isDebugEnabled()) {logger.debug(String.format("Destination Properties: %s", destinationPropeties.toString()));}
-		return destinationPropeties;
+			Object connectivityService = lookupConnectivityConfiguration();
+			if (connectivityService != null) {
+			Method configurationMethod = connectivityService.getClass().getMethod("getConfiguration", String.class);
+			Object destinationConfiguration = configurationMethod.invoke(connectivityService, destinationName);
+			if (destinationConfiguration != null) {
+			Method propertiesMethod = destinationConfiguration.getClass().getMethod("getAllProperties");
+				Map destinationPropeties = (Map) propertiesMethod.invoke(destinationConfiguration);
+				if (logger.isDebugEnabled()) {logger.debug(String.format("Destination Properties: %s", destinationPropeties.toString()));}
+				return destinationPropeties;
+			}
+		}
+		return null;
 	}
 
 	/**

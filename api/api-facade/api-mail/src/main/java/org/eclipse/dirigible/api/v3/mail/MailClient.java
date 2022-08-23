@@ -85,38 +85,41 @@ public class MailClient {
 			default:
 				throw new IllegalStateException("Unexpected transport property: " + transportProperty);
 		}
+		
+		try {
+			String proxyType = this.properties.getProperty("ProxyType");
+			if (proxyType != null && proxyType.equals("OnPremise")) {
+				Socket socket =
+						new ConnectivitySocks5ProxySocket(getTransportProperty(transportProperty, "socks.host"),
+								getTransportProperty(transportProperty, "socks.port"),
+								getTransportProperty(transportProperty, "proxy.user"),
+								getTransportProperty(transportProperty, "proxy.password", " "));
+	
+				socket.connect(new InetSocketAddress(getTransportProperty(transportProperty, "host"),
+						Integer.parseInt(getTransportProperty(transportProperty, "port"))));
+	
+				transport.connect(socket);
+			} else {
+				transport.connect(
+					this.properties.getProperty(MAIL_USER),
+					this.properties.getProperty(MAIL_PASSWORD)
+				);
+			}
+	
+			MimeMessage mimeMessage = createMimeMessage(session, from, to, cc, bcc, subject, parts);
+			mimeMessage.saveChanges();
+			String messageId = mimeMessage.getMessageID();
+			transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
+			String finalReply = transport.getLastServerResponse();
+			Map mailResult = new HashMap();
+			mailResult.put("messageId", messageId);
+			mailResult.put("finalReply", finalReply);
 
-		String proxyType = this.properties.getProperty("ProxyType");
-		if (proxyType != null && proxyType.equals("OnPremise")) {
-			Socket socket =
-					new ConnectivitySocks5ProxySocket(getTransportProperty(transportProperty, "socks.host"),
-							getTransportProperty(transportProperty, "socks.port"),
-							getTransportProperty(transportProperty, "proxy.user"),
-							getTransportProperty(transportProperty, "proxy.password", " "));
-
-			socket.connect(new InetSocketAddress(getTransportProperty(transportProperty, "host"),
-					Integer.parseInt(getTransportProperty(transportProperty, "port"))));
-
-			transport.connect(socket);
-		} else {
-			transport.connect(
-				this.properties.getProperty(MAIL_USER),
-				this.properties.getProperty(MAIL_PASSWORD)
-			);
+			return mailResult;
+		} finally {
+			transport.close();
 		}
-
-		MimeMessage mimeMessage = createMimeMessage(session, from, to, cc, bcc, subject, parts);
-		mimeMessage.saveChanges();
-		String messageId = mimeMessage.getMessageID();
-		transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
-		String finalReply = transport.getLastServerResponse();
-		transport.close();
-
-		Map mailResult = new HashMap();
-		mailResult.put("messageId", messageId);
-		mailResult.put("finalReply", finalReply);
-
-		return mailResult;
+		
 	}
 
 	/**
