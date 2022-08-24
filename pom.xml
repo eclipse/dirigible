@@ -727,7 +727,7 @@
 		<okhttp3.version>4.10.0</okhttp3.version>
 		<slf4j.version>2.0.0</slf4j.version>
 		<slf4j.simple.version>1.7.12</slf4j.simple.version>
-		<logback.version>1.2.11</logback.version>
+		<logback.version>1.3.0-beta0</logback.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.1.214</h2database.version>
 		<postgresql.version>42.4.2</postgresql.version>
