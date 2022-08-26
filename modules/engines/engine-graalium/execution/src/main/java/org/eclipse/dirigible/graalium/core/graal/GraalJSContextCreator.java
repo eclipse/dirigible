@@ -19,9 +19,11 @@ import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.EnvironmentAccess;
 import org.graalvm.polyglot.HostAccess;
 
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * The Class GraalJSContextCreator.
@@ -70,6 +72,7 @@ public class GraalJSContextCreator {
      * @param moduleResolvers the module resolvers
      * @param onBeforeContextCreatedHook the on before context created hook
      * @param onAfterContextCreatedHook the on after context created hook
+     * @param delegateFileSystem the file system to delegate to
      * @return the context
      */
     public Context createContext(
@@ -78,12 +81,16 @@ public class GraalJSContextCreator {
             DownloadableModuleResolver downloadableModuleResolver,
             List<ModuleResolver> moduleResolvers,
             Consumer<Context.Builder> onBeforeContextCreatedHook,
-            Consumer<Context> onAfterContextCreatedHook
+            Consumer<Context> onAfterContextCreatedHook,
+            Function<Path, Path> onRealPathNotFound,
+            FileSystem delegateFileSystem
     ) {
         GraalJSFileSystem graalJSFileSystem = new GraalJSFileSystem(
                 workingDirectoryPath,
                 moduleResolvers,
-                downloadableModuleResolver
+                downloadableModuleResolver,
+                onRealPathNotFound,
+                delegateFileSystem
         );
 
         Context.Builder contextBuilder = Context.newBuilder()

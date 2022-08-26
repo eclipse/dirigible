@@ -24,6 +24,7 @@ import org.eclipse.dirigible.graalium.core.graal.GraalJSInterceptor;
 import org.eclipse.dirigible.graalium.core.javascript.GraalJSCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.JavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleModuleResolver;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
 import org.eclipse.dirigible.graalium.core.polyfills.RequirePolyfill;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -78,8 +79,9 @@ public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Sourc
                 .addGlobalObject(new DirigibleEngineTypeGlobalObject())
                 .addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath))
                 .waitForDebugger(debug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
-                .addOnBeforeContextCreatedListener(onBeforeContextCreatedListener != null ? onBeforeContextCreatedListener : null)
-                .addOnAfterContextCreatedListener(onAfterContextCreatedListener != null ? onAfterContextCreatedListener : null)
+                .addOnBeforeContextCreatedListener(onBeforeContextCreatedListener)
+                .addOnAfterContextCreatedListener(onAfterContextCreatedListener)
+                .setOnRealPathNotFound(p -> new DirigibleSourceProvider().unpackedToFileSystem(p, workingDirectoryPath.relativize(p)))
                 .setInterceptor(interceptor)
                 .build();
     }

@@ -12,6 +12,9 @@
 package org.eclipse.dirigible.tests;
 
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
@@ -122,30 +125,34 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 		}
 	}
 
-//	/**
-//	 * Relative path ecma import.
-//	 *
-//	 * @throws ContextException the context exception
-//	 * @throws IOException Signals that an I/O exception has occurred.
-//	 * @throws ScriptingException the scripting exception
-//	 */
-//	@Test
-//	public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
-//		String testModule = "graalium/ecmascript/relativeImports/l12/l12.mjs";
-//
-//		try {
-//			ThreadContextFacade.setUp();
-//
-//			logger.info("API test starting... " + testModule);
-//
-//			Object result = null;
-//			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
-//
-//			logger.info("API test passed successfully: " + testModule);
-//
-//		} finally {
-//			ThreadContextFacade.tearDown();
-//		}
-//	}
+	/**
+	 * Relative path ecma import.
+	 *
+	 * @throws ContextException the context exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 */
+	@Test
+	public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
+
+//		var uri = URI.create("file:///Users/vladimirmutafov/work/dirigible");
+//		var fs = FileSystems.newFileSystem(uri, null);
+
+		String testModule = "graalium/ecmascript/relativeImports/l12/l12.mjs";
+
+		try {
+			ThreadContextFacade.setUp();
+
+			logger.info("API test starting... " + testModule);
+
+			Object result = null;
+			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
+
+			logger.info("API test passed successfully: " + testModule);
+
+		} finally {
+			ThreadContextFacade.tearDown();
+		}
+	}
 
 }
