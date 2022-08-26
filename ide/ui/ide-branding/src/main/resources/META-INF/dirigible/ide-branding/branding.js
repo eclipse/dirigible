@@ -19,4 +19,5 @@ const brandingInfo = {
         favicon16: '/services/v4/web/resources/images/favicon-16x16.png',
     },
     logo: '/services/v4/web/resources/images/dirigible.svg',
+    keyPrefix: 'dirigible'
 };

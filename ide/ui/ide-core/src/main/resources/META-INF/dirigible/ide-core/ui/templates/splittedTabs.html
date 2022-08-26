@@ -5,7 +5,7 @@
                 remove-tab="onRemoveTab(pane)" split-tabs="onSplitTabs(direction, pane)" ng-transclude>
             </splitted-tabs>
             <tabs ng-if="!!pane.tabs" selected-pane="pane.selectedTab" remove-tab="onRemoveTab(pane)" closable="true"
-                focused="isFocused(pane)">
+                focused="isFocused(pane)" hide-tabs="hideTabs">
                 <buttons ng-if="canSplit(pane)" class="dg-split-pane-buttons">
                     <button class="fd-button fd-button--compact fd-button--transparent"
                         ng-click="splitVertically(pane)">
