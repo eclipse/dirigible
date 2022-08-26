@@ -17,10 +17,13 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 /**
  * The Class DirigibleSourceProvider.
@@ -132,5 +135,17 @@ public class DirigibleSourceProvider {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public Path unpackedToFileSystem(Path pathToUnpack, Path pathToLookup) {
+        try (InputStream bundled = DirigibleSourceProvider.class.getResourceAsStream("/META-INF/dirigible/" + pathToLookup.toString())) {
+            Files.createDirectories(pathToUnpack.getParent());
+            Files.createFile(pathToUnpack);
+            Files.copy(bundled, pathToUnpack, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return pathToUnpack;
     }
 }

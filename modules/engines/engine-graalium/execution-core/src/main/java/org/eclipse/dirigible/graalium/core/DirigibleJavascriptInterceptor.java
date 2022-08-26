@@ -25,7 +25,7 @@ public class DirigibleJavascriptInterceptor implements GraalJSInterceptor {
 	
 	/** The code runner. */
 	private DirigibleJavascriptCodeRunner codeRunner;
-	
+
 	/**
 	 * Gets the code runner.
 	 *
@@ -33,10 +33,6 @@ public class DirigibleJavascriptInterceptor implements GraalJSInterceptor {
 	 */
 	public DirigibleJavascriptCodeRunner getCodeRunner() {
 		return codeRunner;
-	}
-	
-	public void setCodeRunner(DirigibleJavascriptCodeRunner codeRunner) {
-		this.codeRunner = codeRunner;
 	}
 	
 	/**

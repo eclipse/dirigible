@@ -122,30 +122,30 @@ public class GraaliumCustomTest extends AbstractApiSuiteTest {
 		}
 	}
 
-//	/**
-//	 * Relative path ecma import.
-//	 *
-//	 * @throws ContextException the context exception
-//	 * @throws IOException Signals that an I/O exception has occurred.
-//	 * @throws ScriptingException the scripting exception
-//	 */
-//	@Test
-//	public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
-//		String testModule = "graalium/ecmascript/relativeImports/l12/l12.mjs";
-//
-//		try {
-//			ThreadContextFacade.setUp();
-//
-//			if (logger.isInfoEnabled()) {logger.info("API test starting... " + testModule);}
-//
-//			Object result = null;
-//			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
-//
-//			if (logger.isInfoEnabled()) {logger.info("API test passed successfully: " + testModule);}
-//
-//		} finally {
-//			ThreadContextFacade.tearDown();
-//		}
-//	}
+	/**
+	 * Relative path ecma import.
+	 *
+	 * @throws ContextException the context exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 */
+	@Test
+	public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
+		String testModule = "graalium/ecmascript/relativeImports/l12/l12.mjs";
+
+		try {
+			ThreadContextFacade.setUp();
+
+			if (logger.isInfoEnabled()) {logger.info("API test starting... " + testModule);}
+
+			Object result = null;
+			runTest(getJavascriptEngineExecutor(), getRepository(), testModule);
+
+			if (logger.isInfoEnabled()) {logger.info("API test passed successfully: " + testModule);}
+
+		} finally {
+			ThreadContextFacade.tearDown();
+		}
+	}
 
 }

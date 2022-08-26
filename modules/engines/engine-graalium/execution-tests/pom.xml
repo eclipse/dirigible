@@ -11,6 +11,18 @@
 
     <artifactId>dirigible-engine-graalium-execution-tests</artifactId>
     <name>Engine - Graalium - Execution - Tests</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>13</source>
+                    <target>13</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <packaging>jar</packaging>
     
     <profiles>
