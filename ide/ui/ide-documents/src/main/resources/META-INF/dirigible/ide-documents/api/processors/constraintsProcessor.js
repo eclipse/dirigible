@@ -17,9 +17,9 @@ let bytes = require("io/v4/bytes");
 let streams = require("io/v4/streams");
 
 const INTERNAL_FOLDER = "__internal";
-const INTERNAL_FOLDER_LOCATION = "/" + INTERNAL_FOLDER;
+const INTERNAL_FOLDER_LOCATION = INTERNAL_FOLDER;
 const ACCESS_CONSTRAINTS_FILE = "roles-access.json";
-const ACCESS_CONSTRAINTS_FILE_LOCATION = "/" + INTERNAL_FOLDER + "/" + ACCESS_CONSTRAINTS_FILE;
+const ACCESS_CONSTRAINTS_FILE_LOCATION = INTERNAL_FOLDER + "/" + ACCESS_CONSTRAINTS_FILE;
 
 function updateAccessDefinitionsInCMS(data) {
     let folder = folderUtils.getFolder(INTERNAL_FOLDER_LOCATION);
