@@ -64,7 +64,7 @@ public class DataTransferWebsocketService {
 	 */
 	@OnOpen
 	public void onOpen(Session session) {
-		logger.debug(String.format("[ws:transfer] Session %s openned.", session.getId()));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:transfer] Session %s openned.", session.getId()));}
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class DataTransferWebsocketService {
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		logger.debug(String.format("[ws:ws:transfer] Session %s received message: %s.", session.getId(), message));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:ws:transfer] Session %s received message: %s.", session.getId(), message));}
 		IDataTransferCallbackHandler maybeHandler = HANDLERS.get(session.getId());
 		if (message != null && message.startsWith("{")) {
 			// start
@@ -100,9 +100,7 @@ public class DataTransferWebsocketService {
 								HANDLERS.remove(session.getId());
 								//reader.close();
 							} catch (DataTransferException e) {
-								logger.error(e.getMessage(), e);
-//							} catch (IOException e) {
-//								logger.error(e.getMessage(), e);
+								if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 							}
 						}
 					}).start();
@@ -113,16 +111,16 @@ public class DataTransferWebsocketService {
 								try {
 									session.getBasicRemote().sendText(line);
 								} catch (IOException e) {
-									logger.error(e.getMessage(), e);
+									if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 								}
 							});
 						}
 					}).start();
 					
 			} catch (JsonSyntaxException e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			}
 		} else {
 			if ("stop".equalsIgnoreCase(message)) {
@@ -143,8 +141,8 @@ public class DataTransferWebsocketService {
 	 */
 	@OnError
 	public void onError(Session session, Throwable throwable) {
-		logger.error(String.format("[ws:ws:transfer] Session %s error %s", session.getId(), throwable.getMessage()));
-		logger.error("[ws:ws:transfer] " + throwable.getMessage(), throwable);
+		if (logger.isErrorEnabled()) {logger.error(String.format("[ws:ws:transfer] Session %s error %s", session.getId(), throwable.getMessage()));}
+		if (logger.isErrorEnabled()) {logger.error("[ws:ws:transfer] " + throwable.getMessage(), throwable);}
 	}
 
 	/**
@@ -155,7 +153,7 @@ public class DataTransferWebsocketService {
 	 */
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
-		logger.debug(String.format("[ws:ws:transfer] Session %s closed because of %s", session.getId(), closeReason));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:ws:transfer] Session %s closed because of %s", session.getId(), closeReason));}
 	}
 
 }

@@ -45,10 +45,10 @@ public class CmsInternalModule extends AbstractDirigibleModule {
 		String cmsProvider = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_PROVIDER, ICmsProvider.DIRIGIBLE_CMS_PROVIDER_INTERNAL);
 
 		if (CmsProviderInternal.TYPE.equals(cmsProvider)) {
-			logger.trace(format("Installing CMS Provider [{0}:{1}] ...", CmsProviderInternal.TYPE, CmsProviderInternal.NAME));
+			if (logger.isTraceEnabled()) {logger.trace(format("Installing CMS Provider [{0}:{1}] ...", CmsProviderInternal.TYPE, CmsProviderInternal.NAME));}
 			CmsProviderInternal instance = new CmsProviderInternal();
 			StaticObjects.set(StaticObjects.CMS_PROVIDER, instance);
-			logger.trace(format("Done installing CMS Provider [{0}:{1}].", CmsProviderInternal.TYPE, CmsProviderInternal.NAME));
+			if (logger.isTraceEnabled()) {logger.trace(format("Done installing CMS Provider [{0}:{1}].", CmsProviderInternal.TYPE, CmsProviderInternal.NAME));}
 		}
 	}
 

@@ -66,7 +66,7 @@ public class GraaliumJavascriptHandler implements JavascriptHandler {
             	return transformValue(value);
             }
         } catch (Exception e) {
-        	logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             throw new RuntimeException(e);
         }
     }

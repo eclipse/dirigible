@@ -47,9 +47,7 @@ public class PDFFacade {
 	 * @return the byte[]
 	 */
 	public static byte[] generate(String template, String data) {
-		if (logger.isInfoEnabled()) {
-			logger.info("Generating PDF from template: [\n{}\n] and data: [\n{}\n]", template, data);
-		}
+		if (logger.isInfoEnabled()) {logger.info("Generating PDF from template: [\n{}\n] and data: [\n{}\n]", template, data);}
 
 		try {
 			StreamSource templateSource = new StreamSource(IOUtils.toInputStream(template, Charset.defaultCharset()));
@@ -69,7 +67,7 @@ public class PDFFacade {
 			transformer.transform(dataSource, result);
 			return baos.toByteArray();
 		} catch (FOPException | TransformerException e) {
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 			throw new PDFException(e.getMessage(), e);
 		}
 	}

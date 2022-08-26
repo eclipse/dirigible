@@ -2,12 +2,20 @@
 
 .dg-split {
   height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
 .dg-split.horizontal {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
   flex-direction: row;
 }
 .dg-split.vertical {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
 }
 .dg-split .gutter {
@@ -35,7 +43,11 @@
 }
 .dg-split .gutter.gutter-horizontal:hover::after {
   background-color: var(--sapActiveColor, #0854a0);
+  -webkit-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
   transition: background-color 0.3s ease;
+  -webkit-transition-delay: 0.3s;
+  -o-transition-delay: 0.3s;
   transition-delay: 0.3s;
 }
 .dg-split .gutter.gutter-vertical::after {
@@ -47,7 +59,11 @@
 }
 .dg-split .gutter.gutter-vertical:hover::after {
   background-color: var(--sapActiveColor, #0854a0);
+  -webkit-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
   transition: background-color 0.3s ease;
+  -webkit-transition-delay: 0.3s;
+  -o-transition-delay: 0.3s;
   transition-delay: 0.3s;
 }
 .dg-split-pane {
@@ -58,27 +74,53 @@
 /** Tabs View **/
 
 .dg-tabs {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
   height: 100%;
 }
 .dg-tabs .dg-tabs-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   background-color: var(--sapObjectHeader_Background, #fff);
 }
 .dg-tabs .dg-tabs-list .dg-tabs-list-buttons {
   white-space: nowrap;
+  -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 .dg-tabs .dg-tabs-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
   min-height: 0;
 }
-.dg-tabs .fd-tabs {
-  flex-wrap: nowrap;
+.dg-tabs .dg-tabs-content > .ng-scope {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
+}
+.dg-tabs .fd-tabs {
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
   display: inline-flex;
+  -webkit-box-shadow: none;
   box-shadow: none;
   width: 0;
 }
@@ -139,6 +181,8 @@
 /** Accordion View **/
 
 .dg-accordion {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
   height: 100px;
 }
@@ -165,6 +209,8 @@
   font-weight: 600;
 }
 .dg-accordion .fd-panel__content {
+  -webkit-transition: height 0.2s;
+  -o-transition: height 0.2s;
   transition: height 0.2s;
   padding: 0;
   margin: 0;
@@ -176,7 +222,12 @@
 .dg-split-pane.pane-left,
 .dg-split-pane.pane-right {
   background-color: transparent;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
 }
 .dg-split-pane.pane-center {

@@ -59,7 +59,7 @@ public class DatabaseResource extends DatabaseEntity implements IResource {
 
 			}
 		} catch (RepositoryReadException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 

@@ -212,7 +212,7 @@ public class SecurityFilter implements Filter {
 	 */
 	private void forbidden(String uri, String message, HttpServletResponse response) throws IOException {
 		String error = String.format("Requested URI [%s] is forbidden: %s", uri, message);
-		logger.warn(error);
+		if (logger.isWarnEnabled()) {logger.warn(error);}
 		error = EscapeFacade.escapeHtml4(error);
 		error = EscapeFacade.escapeJavascript(error);
 		response.sendError(HttpServletResponse.SC_FORBIDDEN, error);

@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class WrappedDataSource implements DataSource {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(WrappedDataSource.class);
+	private static final Logger logger = LoggerFactory.getLogger(WrappedDataSource.class);
 
 	/** The Constant DATABASE_NAME_HDB. */
 	private static final String DATABASE_NAME_HDB = "HDB";
@@ -84,10 +84,10 @@ public class WrappedDataSource implements DataSource {
 
 		if (databaseName.equals(DATABASE_NAME_HDB)) {
 			String userName = UserFacade.getName();
-			LOGGER.debug("Setting APPLICATIONUSER:{} for connection: {}", userName, connection);
+			if (logger.isDebugEnabled()) {logger.debug("Setting APPLICATIONUSER:{} for connection: {}", userName, connection);}
 			connection.setClientInfo("APPLICATIONUSER", userName);
 
-			LOGGER.debug("Setting XS_APPLICATIONUSER:{} for connection: {}", userName, connection);
+			if (logger.isDebugEnabled()) {logger.debug("Setting XS_APPLICATIONUSER:{} for connection: {}", userName, connection);}
 			connection.setClientInfo("XS_APPLICATIONUSER", userName);
 		}
 

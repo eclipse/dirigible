@@ -14,6 +14,10 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
         COLLAPSED: 1
     })
     .constant('perspective', perspectiveData)
+    .constant('layoutConstants', {
+        version: 1.0,
+        stateKey: 'ide.layout.state'
+    })
     .directive('view', ['Views', 'perspective', function (Views, perspective) {
         return {
             restrict: 'E',
@@ -50,7 +54,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
             template: '<iframe loading="{{loadType}}" ng-src="{{path}}" data-parameters="{{getParams()}}"></iframe>'
         }
     }])
-    .directive('ideLayout', ['Views', 'Editors', 'SplitPaneState', 'messageHub', 'perspective', function (Views, Editors, SplitPaneState, messageHub, perspective) {
+    .directive('ideLayout', ['Views', 'Editors', 'SplitPaneState', 'messageHub', 'perspective', 'layoutConstants', 'branding', function (Views, Editors, SplitPaneState, messageHub, perspective, layoutConstants, branding) {
         return {
             restrict: 'E',
             replace: true,
@@ -63,6 +67,8 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                 const VIEW = 'view';
                 const EDITOR = 'editor';
+
+                const layoutStateKey = `${branding.keyPrefix}.${layoutConstants.stateKey}.${perspective.id}`;
 
                 $scope.views = [];
                 $scope.explorerTabs = [];
@@ -79,15 +85,22 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 };
 
                 $scope.layoutSettings = {
-                    explorerTabsSize: 20,
-                    rightTabsSize: 20,
+                    explorerPaneSize: 23,
+                    rightPaneSize: 23,
+                    bottomPaneSize: 30,
+                    hideEditorsPane: false,
+                    hideCenterTabs: false,
+                    hideBottomTabs: false,
                     ...($scope.viewsLayoutModel.layoutSettings || {})
                 };
                 $scope.selection = {
                     selectedBottomTab: null
                 };
                 $scope.splitPanesState = {
-                    main: []
+                    main: [
+                        $scope.layoutSettings.bottomPaneSize === 100 ? SplitPaneState.COLLAPSED : SplitPaneState.EXPANDED,
+                        $scope.layoutSettings.bottomPaneSize === 0 ? SplitPaneState.COLLAPSED : SplitPaneState.EXPANDED
+                    ]
                 }
 
                 $scope.initialOpenViews = $scope.viewsLayoutModel.views;
@@ -96,7 +109,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 let closingFileArgs;
                 let reloadingFileArgs;
                 let eventHandlers = $scope.viewsLayoutModel.events;
-                // let viewSettings = $scope.viewsLayoutModel.viewSettings;
+                let viewSettings = $scope.viewsLayoutModel.viewSettings || {};
 
                 if (perspective.id && perspective.name) {
                     Views.get().then(function (views) {
@@ -108,18 +121,26 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                             if (v) ret.push(v);
                             return ret;
                         };
+                        const mapViewToTabById = (v) => {
+                            if (v.type !== VIEW) return v;
+                            let view = views.find(x => x.id === v.id);
+                            return view ? { ...v, ...mapViewToTab(view) } : v;
+                        }
                         const byLeftRegion = view => view.region.startsWith('left');
                         const byRightRegion = view => view.region.startsWith('right');
                         const byBottomRegion = view => view.region === 'center-bottom' || view.region === 'bottom';
                         const byCenterRegion = view => view.region === 'center-top' || view.region === 'center-middle' || view.region === 'center';
 
                         const savedState = loadLayoutState();
-                        if (savedState) {
+                        if (savedState && !hasMajorVersionChanged(savedState)) {
                             const restoreCenterSplittedTabViews = function (state, removedViewsIds) {
                                 if (state.panes) {
                                     state.panes.forEach(pane => restoreCenterSplittedTabViews(pane, removedViewsIds));
                                 } else {
-                                    state.tabs = state.tabs.filter(v => v.type === EDITOR || (viewExists(v) && (!removedViewsIds || !removedViewsIds.includes(v.id))));
+                                    state.tabs = state.tabs
+                                        .filter(v => v.type === EDITOR || (viewExists(v) && (!removedViewsIds || !removedViewsIds.includes(v.id))))
+                                        .map(mapViewToTabById);
+
                                     if (!state.tabs.some(x => x.id === state.selectedTab)) {
                                         state.selectedTab = null;
                                     }
@@ -128,9 +149,9 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                                 return state;
                             }
 
-                            $scope.explorerTabs = savedState.explorer.tabs.filter(viewExists);
-                            $scope.bottomTabs = savedState.bottom.tabs.filter(viewExists);
-                            $scope.rightTabs = (savedState.right || { tabs: [] }).tabs.filter(viewExists);
+                            $scope.explorerTabs = savedState.explorer.tabs.filter(viewExists).map(mapViewToTabById);
+                            $scope.bottomTabs = savedState.bottom.tabs.filter(viewExists).map(mapViewToTabById);
+                            $scope.rightTabs = (savedState.right || { tabs: [] }).tabs.filter(viewExists).map(mapViewToTabById);
 
                             let newlyAddedViews, removedViewsIds;
                             let initialOpenViewsChanged = !angular.equals(savedState.initialOpenViews, $scope.initialOpenViews);
@@ -157,6 +178,13 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                                 $scope.centerSplittedTabViews.panes[0].tabs.push(...newlyAddedViews.filter(byCenterRegion).map(mapViewToTab));
                             }
 
+                            forEachCenterSplittedTabView(pane => {
+                                pane.tabs = pane.tabs.map(applyCenterViewSettings);
+                            });
+
+                            $scope.explorerTabs = $scope.explorerTabs.map(applySideViewSettings);
+                            $scope.rightTabs = $scope.rightTabs.map(applySideViewSettings);
+
                             if ($scope.bottomTabs.some(x => x.id === savedState.bottom.selected))
                                 $scope.selection.selectedBottomTab = savedState.bottom.selected;
 
@@ -171,11 +199,13 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                             $scope.explorerTabs = openViews
                                 .filter(byLeftRegion)
-                                .map(mapViewToTab);
+                                .map(mapViewToTab)
+                                .map(applySideViewSettings);
 
                             $scope.rightTabs = openViews
                                 .filter(byRightRegion)
-                                .map(mapViewToTab);
+                                .map(mapViewToTab)
+                                .map(applySideViewSettings);
 
                             $scope.bottomTabs = openViews
                                 .filter(byBottomRegion)
@@ -183,7 +213,8 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                             $scope.centerSplittedTabViews.panes[0].tabs = openViews
                                 .filter(byCenterRegion)
-                                .map(mapViewToTab);
+                                .map(mapViewToTab)
+                                .map(applyCenterViewSettings);
                         }
 
                         $scope.focusedTabView = getFirstCenterSplittedTabViewPane($scope.centerSplittedTabViews);
@@ -270,13 +301,46 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     return $scope.splitPanesState.main.length < 2 || $scope.splitPanesState.main[1] == SplitPaneState.COLLAPSED;
                 }
 
+                $scope.sideViewStateChanged = function () {
+                    saveLayoutState();
+                }
+
+                function hasMajorVersionChanged(savedState) {
+                    const newVersion = parseInt(layoutConstants.version);
+                    const oldVersion = parseInt(savedState.version);
+                    return newVersion > oldVersion;
+                }
+
                 function loadLayoutState() {
-                    let savedState = localStorage.getItem(`DIRIGIBLE.IDE.LAYOUT.state.${perspective.id}`);
-                    if (savedState !== null) {
-                        return JSON.parse(savedState);
+                    let savedState = localStorage.getItem(layoutStateKey);
+
+                    if (savedState === null) {
+                        //fall back on the obosolete key
+                        //TODO: code to be removed at some point
+                        const obosoleteKey = `DIRIGIBLE.IDE.LAYOUT.state.${perspective.id}`;
+                        savedState = localStorage.getItem(obosoleteKey);
+                        if (savedState !== null) {
+                            localStorage.setItem(layoutStateKey, savedState);
+                            localStorage.removeItem(obosoleteKey);
+                        }
                     }
 
-                    return null;
+                    let state = null;
+
+                    if (savedState !== null) {
+                        try {
+                            state = JSON.parse(savedState);
+
+                            if (state.version === undefined)
+                                state.version = 1.0;
+
+                        } catch (ex) {
+                            console.error(`Failed to parse layout state: ${ex.message}, state: ${savedState}`);
+                            return null;
+                        }
+                    }
+
+                    return state;
                 }
 
                 function saveLayoutState() {
@@ -294,7 +358,11 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                             }
                         } else {
                             ret = {
-                                tabs: parent.tabs.map(x => ({ id: x.id, type: x.type, label: x.label, path: x.path, loadType: x.loadType, params: x.params })),
+                                tabs: parent.tabs.map(({ id, type, label, path, loadType, params }) => {
+                                    return type === VIEW ?
+                                        { id, type } :
+                                        { id, type, label, path, loadType, params };
+                                }),
                                 selectedTab: parent.selectedTab
                             };
                         }
@@ -302,23 +370,22 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }
 
                     let state = {
+                        version: layoutConstants.version,
                         initialOpenViews: $scope.initialOpenViews,
                         explorer: {
-                            tabs: $scope.explorerTabs.map(({ id, type, label, path, hidden, loadType, params }) => ({ id, type, label, path, hidden, loadType, params }))
+                            tabs: $scope.explorerTabs.map(({ id, type, hidden, expanded }) => ({ id, type, hidden, expanded }))
                         },
                         right: {
-                            tabs: $scope.rightTabs.map(({ id, type, label, path, loadType, params }) => ({ id, type, label, path, loadType, params }))
+                            tabs: $scope.rightTabs.map(({ id, type, expanded }) => ({ id, type, expanded }))
                         },
                         bottom: {
-                            tabs: $scope.bottomTabs.map(({ id, type, label, path, loadType, params }) => ({ id, type, label, path, loadType, params })),
+                            tabs: $scope.bottomTabs.map(({ id, type }) => ({ id, type })),
                             selected: $scope.selection.selectedBottomTab
                         },
                         center: saveCenterSplittedTabViews($scope.centerSplittedTabViews)
                     };
 
-                    // console.debug(`Saving DIRIGIBLE.IDE.LAYOUT state`);
-
-                    localStorage.setItem(`DIRIGIBLE.IDE.LAYOUT.state.${perspective.id}`, JSON.stringify(state));
+                    localStorage.setItem(layoutStateKey, JSON.stringify(state));
                 }
 
                 function updateSplitPanesState(args) {
@@ -341,6 +408,31 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                         loadType: view.settings.loadType,
                         params: view.params,
                     };
+                }
+
+                function applySideViewSettings(view, index) {
+                    const settings = viewSettings[view.id];
+                    if (settings || index === 0) {
+                        return {
+                            expanded: settings && settings.expanded !== undefined ? settings.expanded : index === 0,  // the first view is expanded by default unless explicitly specified
+                            ...view
+                        }
+                    }
+                    return view;
+                }
+
+                function applyCenterViewSettings(view) {
+                    if (view.type !== VIEW)
+                        return view;
+
+                    const settings = viewSettings[view.id];
+                    if (settings) {
+                        return {
+                            closable: settings.closable === undefined ? true : settings.closable,
+                            ...view
+                        }
+                    }
+                    return view;
                 }
 
                 function findCenterSplittedTabView(id, pane = null, parent = null, indexInParent = -1) {
@@ -376,7 +468,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     return $scope.focusedTabView || getFirstCenterSplittedTabViewPane($scope.centerSplittedTabViews);
                 }
 
-                function forEachCenterSplittedTabView(callback, parent) {
+                function forEachCenterSplittedTabView(callback, parent = undefined) {
                     let parentNode = parent || $scope.centerSplittedTabViews;
 
                     if (parentNode.tabs) {
@@ -704,8 +796,14 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                 messageHub.onDidReceiveMessage('editor.focus.gained', function (msg) {
                     const file = msg.data.file;
-                    $scope.focusedTabView = findCenterSplittedTabView(file).tabsView;
-                    $scope.$digest();
+                    const result = findCenterSplittedTabView(file);
+                    if (result) {
+                        $scope.$apply(() => {
+                            $scope.focusedTabView = result.tabsView;
+                        });
+                    } else {
+                        console.warn(`Tabview for file '${file}' not found`);
+                    }
                 }, true);
 
                 function shortenCenterTabsLabels() {
@@ -1214,9 +1312,6 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 }
 
                 this.addView = function (view) {
-                    if (views.length === 0)
-                        view.expanded = true;
-
                     views.push(view);
 
                     updateContentHeights();
@@ -1255,7 +1350,8 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
             replace: true,
             require: '^accordion',
             scope: {
-                view: '<'
+                view: '=',
+                stateChanged: '&'
             },
             link: function (scope, element, attrs, accordionCtrl) {
                 accordionCtrl.addView(scope.view);
@@ -1263,11 +1359,13 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 scope.toggleView = function (view) {
                     if (!view.expanded) {
                         view.expanded = true;
+                        scope.stateChanged({ expanded: view.expanded });
                         $timeout(accordionCtrl.updateHeights);
                     } else {
                         accordionCtrl.updateHeights(view);
                         $timeout(function () {
                             view.expanded = false;
+                            scope.stateChanged({ expanded: view.expanded });
                         }, 200);
                     }
                 }
@@ -1307,7 +1405,8 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
             scope: {
                 selectedPane: '=',
                 focused: '<',
-                closable: '@',
+                closable: '<',
+                hideTabs: '<',
                 removeTab: '&',
             },
             controller: ['$scope', '$element', 'messageHub', function ($scope, $element, messageHub) {
@@ -1315,6 +1414,10 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                 $scope.isPaneSelected = function (pane) {
                     return pane.id === $scope.selectedPane;
+                }
+
+                $scope.isPaneClosable = function (pane) {
+                    return $scope.closable && (pane.closable === undefined || pane.closable);
                 }
 
                 $scope.select = function (pane) {
@@ -1529,7 +1632,8 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 focusedPane: '<',
                 removeTab: '&',
                 moveTab: '&',
-                splitTabs: '&'
+                splitTabs: '&',
+                hideTabs: '<'
             },
             link: function (scope) {
                 scope.onRemoveTab = function (pane) {

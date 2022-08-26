@@ -1,12 +1,12 @@
 <div class="dg-tabs">
-  <div class="dg-tabs-list">
+  <div ng-show="!hideTabs" class="dg-tabs-list">
     <ul class="fd-tabs" role="tablist" ng-class="{'dg-blured': focused !== undefined && !focused}">
       <li ng-repeat="pane in panes" aria-selected="{{isPaneSelected(pane)}}" role="tab" class="fd-tabs__item"
         ng-class="{'dirty': pane.dirty}">
         <a class="fd-tabs__link" href="" ng-click="tabClick(pane, $event)" title="{{pane.id}}">
           <span class="fd-tabs__tag">
             {{pane.label}} <span class="description">{{pane.description}}</span>
-            <button ng-show="closable"
+            <button ng-show="isPaneClosable(pane)"
               class="fd-button fd-button--transparent fd-button--compact fd-message-strip__close" aria-label="Close">
               <i class="sap-icon--decline"></i>
             </button>

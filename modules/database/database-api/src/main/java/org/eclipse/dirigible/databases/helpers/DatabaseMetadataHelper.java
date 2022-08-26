@@ -777,7 +777,7 @@ public class DatabaseMetadataHelper {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
+					if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				}
 			}
 		}
@@ -808,7 +808,7 @@ public class DatabaseMetadataHelper {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
+					if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				}
 			}
 		}
@@ -839,7 +839,7 @@ public class DatabaseMetadataHelper {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
+					if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				}
 			}
 		}
@@ -870,7 +870,7 @@ public class DatabaseMetadataHelper {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
+					if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				}
 			}
 		}
@@ -894,7 +894,7 @@ public class DatabaseMetadataHelper {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
+					if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				}
 			}
 		}

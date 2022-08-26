@@ -114,7 +114,7 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 	public void synchronize() {
 		synchronized (ODataSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing OData Schemas and Mappings...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing OData Schemas and Mappings...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
@@ -138,17 +138,17 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 							failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
 						}
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for OData Schemas and Mappings failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for OData Schemas and Mappings failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for OData files Schemas and Mappings failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for OData files Schemas and Mappings failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing OData Schemas and Mappings.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing OData Schemas and Mappings.");}
 			}
 		}
 	}
@@ -244,7 +244,7 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 	 * @throws SynchronizationException the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered OData Schemas and Mappings...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered OData Schemas and Mappings...");}
 		// Schemas
 		for (ODataSchemaDefinition schemaDefinition : SCHEMAS_PREDELIVERED.values()) {
 			synchronizeSchema(schemaDefinition);
@@ -258,10 +258,10 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 			try {
 				synchronizeOData(odata);
 			} catch (Exception e) {
-				logger.error(format("Update odata [{0}] skipped due to an error: {1}", odata, e.getMessage()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Update odata [{0}] skipped due to an error: {1}", odata, e.getMessage()), e);}
 			}
 		}
-		logger.trace("Done synchronizing predelivered OData Schemas and Mappings.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered OData Schemas and Mappings.");}
 	}
 
 	/**
@@ -274,13 +274,13 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		try {
 			if (!odataCoreService.existsSchema(schemaDefinition.getLocation())) {
 				odataCoreService.createSchema(schemaDefinition.getLocation(), schemaDefinition.getContent());
-				logger.info("Synchronized a new OData Schema from location: {}", schemaDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new OData Schema from location: {}", schemaDefinition.getLocation());}
 				applyArtefactState(schemaDefinition, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				ODataSchemaDefinition existing = odataCoreService.getSchema(schemaDefinition.getLocation());
 				if (!schemaDefinition.equals(existing)) {
 					odataCoreService.updateSchema(schemaDefinition.getLocation(), schemaDefinition.getContent());
-					logger.info("Synchronized a modified OData Schema from location: {}", schemaDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified OData Schema from location: {}", schemaDefinition.getLocation());}
 					applyArtefactState(schemaDefinition, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -302,13 +302,13 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		try {
 			if (!odataCoreService.existsMapping(mappingDefinition.getLocation())) {
 				odataCoreService.createMapping(mappingDefinition.getLocation(), mappingDefinition.getContent());
-				logger.info("Synchronized a new OData Mapping from location: {}", mappingDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new OData Mapping from location: {}", mappingDefinition.getLocation());}
 				applyArtefactState(mappingDefinition, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				ODataMappingDefinition existing = odataCoreService.getMapping(mappingDefinition.getLocation());
 				if (!mappingDefinition.equals(existing)) {
 					odataCoreService.updateMapping(mappingDefinition.getLocation(), mappingDefinition.getContent());
-					logger.info("Synchronized a modified OData Mapping from location: {}", mappingDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified OData Mapping from location: {}", mappingDefinition.getLocation());}
 					applyArtefactState(mappingDefinition, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -333,14 +333,14 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 			if (!odataCoreService.existsOData(odataModel.getLocation())) {
 				odataCoreService.createOData(odataModel.getLocation(), odataModel.getNamespace(), odataModel.getHash());
 				ODATA_MODELS.put(odataModel.getNamespace(), odataModel);
-				logger.info("Synchronized a new OData with namespace [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new OData with namespace [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());}
 				applyArtefactState(odataModel, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				ODataDefinition existing = odataCoreService.getOData(odataModel.getLocation());
 				if (!odataModel.equals(existing)) {
 					odataCoreService.updateOData(odataModel.getLocation(), odataModel.getNamespace(), odataModel.getHash());
 					ODATA_MODELS.put(odataModel.getNamespace(), odataModel);
-					logger.info("Synchronized a modified OData file [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified OData file [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());}
 					applyArtefactState(odataModel, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -363,11 +363,11 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing OData Schemas and Mappings from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing OData Schemas and Mappings from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing OData Schemas and Mappings from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing OData Schemas and Mappings from Registry.");}
 	}
 
 	/**
@@ -430,7 +430,7 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up OData Schemas and Mappings...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up OData Schemas and Mappings...");}
 		super.cleanup();
 
 		IRepository repository = getRepository();
@@ -441,7 +441,7 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 					// Only if it really does not exists. The schema can come from different sources e.g. generated from another artifact
 					if (!repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + schemaDefinition.getLocation()).exists()) {
 						odataCoreService.removeSchema(schemaDefinition.getLocation());
-						logger.warn("Cleaned up OData Schema from location: {}", schemaDefinition.getLocation());
+						if (logger.isWarnEnabled()) {logger.warn("Cleaned up OData Schema from location: {}", schemaDefinition.getLocation());}
 					}
 				}
 			}
@@ -454,7 +454,7 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 					location = location.indexOf("#") > 1 ? location.substring(0, location.indexOf("#")) : location;
 					if (!repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + location).exists()) {
 						odataCoreService.removeMapping(mappingDefinition.getLocation());
-						logger.warn("Cleaned up OData Mapping from location: {}", mappingDefinition.getLocation());
+						if (logger.isWarnEnabled()) {logger.warn("Cleaned up OData Mapping from location: {}", mappingDefinition.getLocation());}
 					}
 				}
 			}
@@ -463,14 +463,14 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 			for (ODataDefinition odataModel : odataModels) {
 				if (!ODATA_SYNCHRONIZED.contains(odataModel.getLocation())) {
 					odataCoreService.removeOData(odataModel.getLocation());
-					logger.warn("Cleaned up OData file with namespace [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up OData file with namespace [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());}
 				}
 			}
 		} catch (ODataException e) {
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up OData Schemas and Mappings.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up OData Schemas and Mappings.");}
 	}
 	
 	
@@ -483,7 +483,7 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		// Update OData
 		
 		if (ODATA_MODELS.isEmpty()) {
-			logger.trace("No OData to update.");
+			if (logger.isTraceEnabled()) {logger.trace("No OData to update.");}
 			return;
 		}
 
@@ -503,7 +503,7 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 					odataCoreService.removeHandlers(model.getLocation());
 					applyArtefactState(model, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_DELETE);
 				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					errors.add(e.getMessage());
 					applyArtefactState(model, ODATA_ARTEFACT, ArtefactState.FAILED_DELETE, e.getMessage());
 				}
@@ -539,7 +539,7 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 			}
 			
 		} catch (Exception e) {
-			logger.error(concatenateListOfStrings(errors, "\n---\n"), e);
+			if (logger.isErrorEnabled()) {logger.error(concatenateListOfStrings(errors, "\n---\n"), e);}
 		}
 		
 	}
@@ -622,7 +622,7 @@ public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedS
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, ODataSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error(e.getMessage(), e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
 		}
 	}
 	

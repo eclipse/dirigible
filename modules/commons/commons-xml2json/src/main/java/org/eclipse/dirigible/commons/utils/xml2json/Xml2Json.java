@@ -176,10 +176,10 @@ public class Xml2Json {
 									reorganizeAddAttributes(childNode, attrs);
 								}
 							} else if (existing instanceof JsonObject) {
-								logger.error("Found object, but expected primitive or array");
+								if (logger.isErrorEnabled()) {logger.error("Found object, but expected primitive or array");}
 							}
 						} else {
-							logger.error("Expected element, but it does not exist");
+							if (logger.isErrorEnabled()) {logger.error("Expected element, but it does not exist");}
 						}
 						// remove it from the list
 						ADDED_BY_VALUE.remove(childNode);
@@ -205,7 +205,7 @@ public class Xml2Json {
 				String base64 = Base64.getEncoder().encodeToString(childNode.getNodeValue().getBytes(StandardCharsets.UTF_8));
 				parentJson.addProperty(childNode.getNodeName(), base64);
 			} else {
-				logger.error("Unsupported node type: {}", childNode.getNodeType());
+				if (logger.isErrorEnabled()) {logger.error("Unsupported node type: {}", childNode.getNodeType());}
 			}
 		}
 	}
@@ -311,7 +311,7 @@ public class Xml2Json {
 				objectJson.addProperty(entry.getKey().toString(), entry.getValue().toString().replace(EQ, EMPTY));
 			}
 		} else {
-			logger.error("Expected object, found element or null");
+			if (logger.isErrorEnabled()) {logger.error("Expected object, found element or null");}
 		}
 		REORGANIZED.remove(childNode.hashCode() + EMPTY);
 	}
@@ -395,7 +395,7 @@ public class Xml2Json {
 					}
 				}
 			} else {
-				logger.error("Unhandled element");
+				if (logger.isErrorEnabled()) {logger.error("Unhandled element");}
 			}
 		}
 	}

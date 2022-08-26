@@ -47,7 +47,7 @@ public class BpmClasspathContentHandler extends AbstractClasspathContentHandler 
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered BPMN at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered BPMN at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

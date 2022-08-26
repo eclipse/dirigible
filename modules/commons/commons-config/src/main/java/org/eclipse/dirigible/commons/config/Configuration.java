@@ -139,14 +139,14 @@ public class Configuration {
 				} finally {
 					in.close();
 				}
-				logger.debug("Configuration loaded: " + path);
+				if (logger.isDebugEnabled()) {logger.debug("Configuration loaded: " + path);}
 			} else if (!path.equals(CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES)) {					
 				throw new IOException(format(ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST, path));
 			} else {
-				logger.debug(format(ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST, path));
+				if (logger.isDebugEnabled()) {logger.debug(format(ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST, path));}
 			}
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 

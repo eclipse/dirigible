@@ -99,7 +99,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder start(Integer start) {
-        logger.trace("start: " + start);
+    	if (logger.isTraceEnabled()) {logger.trace("start: " + start);}
         this.start = start;
         return this;
     }
@@ -111,7 +111,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder increment(int increment) {
-        logger.trace("increment: " + increment);
+    	if (logger.isTraceEnabled()) {logger.trace("increment: " + increment);}
         this.increment = increment;
         return this;
     }
@@ -123,7 +123,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder maxvalue(Integer maxvalue) {
-        logger.trace("maxvalue: " + maxvalue);
+    	if (logger.isTraceEnabled()) {logger.trace("maxvalue: " + maxvalue);}
         this.maxvalue = maxvalue;
         return this;
     }
@@ -135,7 +135,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder nomaxvalue(Boolean nomaxvalue) {
-        logger.trace("nomaxvalue: " + nomaxvalue);
+    	if (logger.isTraceEnabled()) {logger.trace("nomaxvalue: " + nomaxvalue);}
         this.nomaxvalue = nomaxvalue;
         return this;
     }
@@ -147,7 +147,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder minvalue(Integer minvalue) {
-        logger.trace("minvalue: " + minvalue);
+    	if (logger.isTraceEnabled()) {logger.trace("minvalue: " + minvalue);}
         this.minvalue = minvalue;
         return this;
     }
@@ -159,7 +159,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder nominvalue(Boolean nominvalue) {
-        logger.trace("nominvalue: " + nominvalue);
+    	if (logger.isTraceEnabled()) {logger.trace("nominvalue: " + nominvalue);}
         this.nominvalue = nominvalue;
         return this;
     }
@@ -171,7 +171,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder cycles(Boolean cycles) {
-        logger.trace("cycles: " + cycles);
+    	if (logger.isTraceEnabled()) {logger.trace("cycles: " + cycles);}
         this.cycles = cycles;
         return this;
     }
@@ -183,7 +183,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder resetBy(String resetBy) {
-        logger.trace("resetBy: " + resetBy);
+    	if (logger.isTraceEnabled()) {logger.trace("resetBy: " + resetBy);}
         this.resetBy = resetBy;
         return this;
     }
@@ -195,7 +195,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder publicc(Boolean publicc) {
-        logger.trace("public: " + publicc);
+    	if (logger.isTraceEnabled()) {logger.trace("public: " + publicc);}
         this.publicc = publicc;
         return this;
     }
@@ -241,7 +241,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 
         String generated = sql.toString();
 
-        logger.trace("generated: " + generated);
+        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
         return generated;
     }

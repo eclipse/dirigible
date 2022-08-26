@@ -100,7 +100,7 @@ public class CmsDatabaseRepository implements IRepository {
 	@Override
 	public void initialize() {
 		Configuration.loadModuleConfig("/dirigible-repository-database.properties");
-		logger.trace(this.getClass().getCanonicalName() + " module initialized.");
+		if (logger.isTraceEnabled()) {logger.trace(this.getClass().getCanonicalName() + " module initialized.");}
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class CmsDatabaseRepository implements IRepository {
 		logger.trace("entering getRoot"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(IRepository.SEPARATOR);
 		CmsDatabaseCollection dbCollection = new CmsDatabaseCollection(this, wrapperPath);
-		logger.trace("exiting getRoot"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting getRoot");} //$NON-NLS-1$
 		return dbCollection;
 	}
 
@@ -125,10 +125,10 @@ public class CmsDatabaseRepository implements IRepository {
 	 */
 	@Override
 	public ICollection getCollection(String path) {
-		logger.trace("entering getCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering getCollection");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		CmsDatabaseCollection dbCollection = new CmsDatabaseCollection(this, wrapperPath);
-		logger.trace("exiting getCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting getCollection");} //$NON-NLS-1$
 		return dbCollection;
 	}
 
@@ -141,11 +141,11 @@ public class CmsDatabaseRepository implements IRepository {
 	 */
 	@Override
 	public boolean hasCollection(String path) throws RepositoryReadException {
-		logger.trace("entering hasCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering hasCollection");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final ICollection dbCollection = new CmsDatabaseCollection(this, wrapperPath);
 		boolean result = dbCollection.exists();
-		logger.trace("exiting hasCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting hasCollection");} //$NON-NLS-1$
 		return result;
 	}
 
@@ -157,10 +157,10 @@ public class CmsDatabaseRepository implements IRepository {
 	 */
 	@Override
 	public IResource getResource(String path) {
-		logger.trace("entering getResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering getResource");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		CmsDatabaseResource dbResource = new CmsDatabaseResource(this, wrapperPath);
-		logger.trace("exiting getResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting getResource");} //$NON-NLS-1$
 		return dbResource;
 	}
 
@@ -173,11 +173,11 @@ public class CmsDatabaseRepository implements IRepository {
 	 */
 	@Override
 	public boolean hasResource(String path) throws RepositoryReadException {
-		logger.trace("entering hasResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering hasResource");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource dbResource = new CmsDatabaseResource(this, wrapperPath);
 		boolean result = dbResource.exists();
-		logger.trace("exiting hasResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting hasResource");} //$NON-NLS-1$
 		return result;
 	}
 
@@ -190,11 +190,11 @@ public class CmsDatabaseRepository implements IRepository {
 	 */
 	@Override
 	public ICollection createCollection(String path) throws RepositoryWriteException {
-		logger.trace("entering createCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering createCollection");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final CmsDatabaseCollection dbCollection = new CmsDatabaseCollection(this, wrapperPath);
 		dbCollection.create();
-		logger.trace("exiting createCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting createCollection");} //$NON-NLS-1$
 		return dbCollection;
 	}
 
@@ -206,11 +206,11 @@ public class CmsDatabaseRepository implements IRepository {
 	 */
 	@Override
 	public void removeCollection(String path) throws RepositoryWriteException {
-		logger.trace("entering removeCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering removeCollection");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final ICollection dbCollection = new CmsDatabaseCollection(this, wrapperPath);
 		dbCollection.delete();
-		logger.trace("exiting removeCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting removeCollection");} //$NON-NLS-1$
 	}
 
 	/**
@@ -222,11 +222,11 @@ public class CmsDatabaseRepository implements IRepository {
 	 */
 	@Override
 	public IResource createResource(String path) throws RepositoryWriteException {
-		logger.trace("entering createResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering createResource");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource dbResource = new CmsDatabaseResource(this, wrapperPath);
 		dbResource.create();
-		logger.trace("exiting createResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting createResource");} //$NON-NLS-1$
 		return dbResource;
 	}
 
@@ -240,11 +240,11 @@ public class CmsDatabaseRepository implements IRepository {
 	 */
 	@Override
 	public IResource createResource(String path, byte[] content) throws RepositoryWriteException {
-		logger.trace("entering createResource with Content"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering createResource with Content");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource dbResource = new CmsDatabaseResource(this, wrapperPath);
 		dbResource.setContent(content);
-		logger.trace("exiting createResource with Content"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting createResource with Content");} //$NON-NLS-1$
 		return dbResource;
 	}
 
@@ -277,14 +277,14 @@ public class CmsDatabaseRepository implements IRepository {
 	@Override
 	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override)
 			throws RepositoryWriteException {
-		logger.trace("entering createResource with Content"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering createResource with Content");} //$NON-NLS-1$
 		try {
 			getRepositoryDao().createFile(path, content, isBinary, contentType, override);
 		} catch (CmsDatabaseRepositoryException e) {
 			throw new RepositoryWriteException(e);
 		}
 		final IResource resource = getResource(path);
-		logger.trace("exiting createResource with Content"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting createResource with Content");} //$NON-NLS-1$
 		return resource;
 	}
 
@@ -296,11 +296,11 @@ public class CmsDatabaseRepository implements IRepository {
 	 */
 	@Override
 	public void removeResource(String path) throws RepositoryWriteException {
-		logger.trace("entering removeResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering removeResource");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource dbResource = new CmsDatabaseResource(this, wrapperPath);
 		dbResource.delete();
-		logger.trace("exiting removeResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting removeResource");} //$NON-NLS-1$
 	}
 
 	/**
@@ -349,7 +349,7 @@ public class CmsDatabaseRepository implements IRepository {
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName)
 			throws RepositoryImportException {
 		if (zipInputStream == null) {
-			logger.error(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
+			if (logger.isErrorEnabled()) {logger.error(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);}
 			throw new RepositoryImportException(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
 		}
 		RepositoryZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
@@ -394,11 +394,10 @@ public class CmsDatabaseRepository implements IRepository {
 	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter)
 			throws RepositoryImportException {
 		if (data == null) {
-			logger.error(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
+			if (logger.isErrorEnabled()) {logger.error(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);}
 			throw new RepositoryImportException(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
 		}
-		RepositoryZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName,
-				filter);
+		RepositoryZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName, filter);
 	}
 
 	/**

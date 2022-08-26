@@ -50,7 +50,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 		try {
 			return (HttpServletResponse) ThreadContextFacade.get(HttpServletResponse.class.getCanonicalName());
 		} catch (ContextException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 		return null;
 	}
@@ -78,7 +78,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 		try {
 			response.getOutputStream().print(text);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 
@@ -142,7 +142,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 		try {
 			response.getOutputStream().println(text);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 
@@ -206,7 +206,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 		try {
 			response.getOutputStream().write(bytes);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 
@@ -224,7 +224,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 			byte[] bytes = BytesHelper.jsonToBytes(input);
 			response.getOutputStream().write(bytes);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 
@@ -266,7 +266,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 		try {
 			response.getOutputStream().flush();
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 

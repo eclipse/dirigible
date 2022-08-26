@@ -74,11 +74,11 @@ public final class StaticObjects {
 	 * @return the object
 	 */
 	public static final Object get(String key) {
-		logger.trace("Getting static object by key: " + key);
+		if (logger.isTraceEnabled()) {logger.trace("Getting static object by key: " + key);}
 		Object object = OBJECTS.get(key);
 		if (object == null) {
 			String message = "Static object by key: " + key + " is null";
-			logger.error(message);
+			if (logger.isErrorEnabled()) {logger.error(message);}
 			new Exception(message).printStackTrace();
 		}
 		return object;
@@ -91,7 +91,7 @@ public final class StaticObjects {
 	 * @param object the object
 	 */
 	public static final void set(String key, Object object) {
-		logger.info("Setting static object by key: " + key);
+		if (logger.isInfoEnabled()) {logger.info("Setting static object by key: " + key);}
 		OBJECTS.put(key, object);
 	}
 	
@@ -102,7 +102,7 @@ public final class StaticObjects {
 	 * @return true, if successful
 	 */
 	public static final boolean exists(String key) {
-		logger.trace("Exists static object by key: " + key);
+		if (logger.isTraceEnabled()) {logger.trace("Exists static object by key: " + key);}
 		Object object = OBJECTS.get(key);
 		if (object == null) {
 			return false;

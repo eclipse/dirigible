@@ -159,7 +159,7 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 		}
 
 		String sql = createTableBuilder.build();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -175,7 +175,7 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 	 *             the persistence exception
 	 */
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-		logger.trace("create -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+		if (logger.isTraceEnabled()) {logger.trace("create -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));}
 		int result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -184,8 +184,8 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 			preparedStatement = openPreparedStatement(connection, sql);
 			result = preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

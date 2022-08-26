@@ -47,7 +47,7 @@ public class MessagingClasspathContentHandler extends AbstractClasspathContentHa
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Listener at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered Listener at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

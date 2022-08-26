@@ -60,7 +60,7 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
 
         String generated = sql.toString();
 
-        logger.trace("generated: " + generated);
+        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
         return generated;
     }

@@ -80,7 +80,7 @@ public class DerbyAlterTableBuilder extends AlterTableBuilder {
         }
 
         String generated = sql.toString().trim();
-        logger.trace("generated: " + generated);
+        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
         return generated;
     }

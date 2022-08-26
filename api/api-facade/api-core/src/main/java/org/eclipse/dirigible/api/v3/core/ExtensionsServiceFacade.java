@@ -43,14 +43,14 @@ public class ExtensionsServiceFacade implements IScriptingFacade {
 	 *             the extensions exception
 	 */
 	public static final String[] getExtensions(String extensionPointName) throws ExtensionsException {
-		logger.trace("API - ExtensionsServiceFacade.getExtensions() -> begin");
+		if (logger.isTraceEnabled()) {logger.trace("API - ExtensionsServiceFacade.getExtensions() -> begin");}
 		List<ExtensionDefinition> extensionDefinitions = extensionsCoreService.getExtensionsByExtensionPoint(extensionPointName);
 		String[] extensions = new String[extensionDefinitions.size()];
 		int i = 0;
 		for (ExtensionDefinition extensionDefinition : extensionDefinitions) {
 			extensions[i++] = extensionDefinition.getModule();
 		}
-		logger.trace("API - ExtensionsServiceFacade.getExtensions() -> end");
+		if (logger.isTraceEnabled()) {logger.trace("API - ExtensionsServiceFacade.getExtensions() -> end");}
 		return extensions;
 	}
 
@@ -62,14 +62,14 @@ public class ExtensionsServiceFacade implements IScriptingFacade {
 	 *             the extensions exception
 	 */
 	public static final String[] getExtensionPoints() throws ExtensionsException {
-		logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> begin");
+		if (logger.isTraceEnabled()) {logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> begin");}
 		List<ExtensionPointDefinition> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();
 		String[] extensionPoints = new String[extensionPointDefinitions.size()];
 		int i = 0;
 		for (ExtensionPointDefinition extensionPointDefinition : extensionPointDefinitions) {
 			extensionPoints[i++] = extensionPointDefinition.getName();
 		}
-		logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> end");
+		if (logger.isTraceEnabled()) {logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> end");}
 		return extensionPoints;
 	}
 

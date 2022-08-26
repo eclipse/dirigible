@@ -111,7 +111,7 @@ public class TopologyDataStructureModelWrapper implements ITopologicallySortable
 		for (DataStructureDependencyModel dependency: this.model.getDependencies()) {
 			String dependencyName = dependency.getName();
 			if (!wrappers.containsKey(dependencyName)) {
-				logger.warn("Dependency is not present in this cycle: " + dependencyName);
+				if (logger.isWarnEnabled()) {logger.warn("Dependency is not present in this cycle: " + dependencyName);}
 			} else {
 				dependencies.add(wrappers.get(dependencyName));
 			}
@@ -141,7 +141,7 @@ public class TopologyDataStructureModelWrapper implements ITopologicallySortable
 						executeTableCreate(connection, (DataStructureTableModel) model);
 						applyArtefactState(this.model, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 					} else {
-						logger.warn(format("Table [{0}] already exists during the update process", this.model.getName()));
+						if (logger.isWarnEnabled()) {logger.warn(format("Table [{0}] already exists during the update process", this.model.getName()));}
 						if (SqlFactory.getNative(connection).count(connection, model.getName()) != 0) {
 							executeTableAlter(connection, (DataStructureTableModel) model);
 							applyArtefactState(this.model, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
@@ -166,7 +166,7 @@ public class TopologyDataStructureModelWrapper implements ITopologicallySortable
 							executeTableDrop(connection, (DataStructureTableModel) this.model);
 						} else {
 							String message = format("Table [{1}] cannot be deleted during the update process, because it is not empty", this.model.getName());
-							logger.warn(message);
+							if (logger.isWarnEnabled()) {logger.warn(message);}
 							applyArtefactState(this.model, TABLE_ARTEFACT, ArtefactState.FAILED, message);
 						}
 					}
@@ -195,7 +195,7 @@ public class TopologyDataStructureModelWrapper implements ITopologicallySortable
 			}
 			return true;
 		} catch (SQLException e) {
-			logger.warn("Failed on trying to complete the artefact: " + e.getMessage());
+			if (logger.isWarnEnabled()) {logger.warn("Failed on trying to complete the artefact: " + e.getMessage());}
 			return false;
 		}
 	}

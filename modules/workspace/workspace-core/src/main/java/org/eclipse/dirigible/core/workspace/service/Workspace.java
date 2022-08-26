@@ -110,7 +110,7 @@ public class Workspace extends Folder implements IWorkspace {
 			try {
 				org.apache.commons.io.FileUtils.deleteDirectory(gitFolder.getParentFile());
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			}
 		}
 		this.removeCollection(name);

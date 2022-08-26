@@ -55,7 +55,7 @@ public class CmsProviderDatabase implements ICmsProvider {
 		
 		if (CmsDatabaseRepository.TYPE.equals(repositoryProvider)) {
 			cmsDatabaseRepository = createInstance(dataSourceType, dataSourceName);
-			logger.info("Bound CMS Database Repository as the CMS Repository for this instance.");
+			if (logger.isInfoEnabled()) {logger.info("Bound CMS Database Repository as the CMS Repository for this instance.");}
 		}
 
 		if (cmsDatabaseRepository == null) {
@@ -73,8 +73,8 @@ public class CmsProviderDatabase implements ICmsProvider {
 	 * @return the repository
 	 */
 	private CmsDatabaseRepository createInstance(String dataSourceType, String dataSourceName) {
-		logger.info("Creating CMS Database Repository...");
-		logger.info("Data source name [{}]", dataSourceName);
+		if (logger.isInfoEnabled()) {logger.info("Creating CMS Database Repository...");}
+		if (logger.isInfoEnabled()) {logger.info("Data source name [{}]", dataSourceName);}
 		CmsDatabaseRepository databaseRepository = null;
 		ServiceLoader<IDatabase> DATABASES = ServiceLoader.load(IDatabase.class);
 		DataSource dataSource = null;
@@ -90,7 +90,7 @@ public class CmsProviderDatabase implements ICmsProvider {
 				break;
 			}
 		}
-		logger.info("CMS Database Repository created.");
+		if (logger.isInfoEnabled()) {logger.info("CMS Database Repository created.");}
 		return databaseRepository;
 	}
 

@@ -78,7 +78,7 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 			insertBuilder.column(columnModel.getName());
 		}
 		String sql = insertBuilder.build();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -96,8 +96,8 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 	 *             the persistence exception
 	 */
 	public Object insert(Connection connection, PersistenceTableModel tableModel, T pojo) throws PersistenceException {
-		logger.trace("insert -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
-				+ Serializer.serializePojo(pojo));
+		if (logger.isTraceEnabled()) {logger.trace("insert -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
+				+ Serializer.serializePojo(pojo));}
 		Object result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -135,8 +135,8 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 				}
 			}
 		} catch (Exception e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);
@@ -158,8 +158,8 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 	 */
 	private boolean setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
 			throws NoSuchFieldException, IllegalAccessException, SQLException, IOException {
-		logger.trace("setGeneratedValues -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
-				+ ", pojo: " + Serializer.serializePojo(pojo));
+		if (logger.isTraceEnabled()) {logger.trace("setGeneratedValues -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+				+ ", pojo: " + Serializer.serializePojo(pojo));}
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey() && (columnModel.getGenerated() != null)) {
 				long id = -1;

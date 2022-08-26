@@ -53,7 +53,7 @@ public class ExtensionsClasspathContentHandler extends AbstractClasspathContentH
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Extension Point or Extension at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered Extension Point or Extension at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

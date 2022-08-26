@@ -44,7 +44,7 @@ import java.util.List;
 public class ProblemsCoreService implements IProblemsCoreService {
 
     /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProblemsCoreService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProblemsCoreService.class);
     
     /** The data source. */
     private DataSource dataSource = null;
@@ -112,7 +112,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
         ProblemsModel problemsModel = getProblem(location, type, line, column);
         if (problemsModel == null) {
             createProblem(problemToPersist);
-            LOGGER.error("Created a new Problem: " +problemToPersist.toJson());
+            if (logger.isErrorEnabled()) {logger.error("Created a new Problem: " +problemToPersist.toJson());}
         } else {
             if (!problemsModel.equals(problemToPersist)) {
                 problemsModel.setCategory(category);
@@ -120,7 +120,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
                 problemsModel.setSource(source);
                 problemsModel.setProgram(program);
                 updateProblem(problemsModel);
-                LOGGER.error("Updated an existing Problem: " +problemsModel.toJson());
+                if (logger.isErrorEnabled()) {logger.error("Updated an existing Problem: " +problemsModel.toJson());}
             }
         }
     }

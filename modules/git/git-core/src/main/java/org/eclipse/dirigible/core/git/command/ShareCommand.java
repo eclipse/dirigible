@@ -90,15 +90,15 @@ public class ShareCommand {
 
 			if (!isExistingGitRepository) {
 				try {
-					logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", model.getRepository(), model.getUsername(), model.getBranch(), tempGitDirectory.getCanonicalPath()));
+					if (logger.isDebugEnabled()) {logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", model.getRepository(), model.getUsername(), model.getBranch(), tempGitDirectory.getCanonicalPath()));}
 					GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), model.getRepository(), model.getUsername(), model.getPassword(), model.getBranch());
-					logger.debug(String.format("Cloning repository %s finished.", model.getRepository()));
+					if (logger.isDebugEnabled()) {logger.debug(String.format("Cloning repository %s finished.", model.getRepository()));}
 				} catch (Throwable e) {
 					GitFileUtils.deleteGitDirectory(user, workspace.getName(), repositoryName);
 					throw e;
 				}
 			} else {
-				logger.debug(String.format("Sharing to existing git repository %s, with username %s for branch %s in the directory %s ...", model.getRepository(), model.getUsername(), model.getBranch(), tempGitDirectory.getCanonicalPath()));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("Sharing to existing git repository %s, with username %s for branch %s in the directory %s ...", model.getRepository(), model.getUsername(), model.getBranch(), tempGitDirectory.getCanonicalPath()));}
 			}
 
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(tempGitDirectory.getCanonicalPath());
@@ -136,7 +136,7 @@ public class ShareCommand {
 			GitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, projectPath);
 
 			String message = String.format("Project [%s] successfully shared.", project.getName());
-			logger.info(message);
+			if (logger.isInfoEnabled()) {logger.info(message);}
 		} catch (IOException | GitAPIException | PublisherException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
 			if (rootCause != null) {
@@ -149,7 +149,7 @@ public class ShareCommand {
 			} else {
 				errorMessage += " " + e.getMessage();
 			}
-			logger.error(errorMessage);
+			if (logger.isErrorEnabled()) {logger.error(errorMessage);}
 			throw new GitConnectorException(errorMessage, e);
 		}
 	}

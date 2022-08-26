@@ -55,13 +55,13 @@ public class BpmModule extends AbstractDirigibleModule {
 			throw new IllegalStateException("No BPM Process Engine available");
 		}
 		for (IBpmProvider next : BPM_PROVIDERS) {
-			logger.trace(format("Installing BPM Provider [{0}:{1}] ...", next.getType(), next.getName()));
+			if (logger.isTraceEnabled()) {logger.trace(format("Installing BPM Provider [{0}:{1}] ...", next.getType(), next.getName()));}
 			if (next.getType().equals(bpmProvider)) {
 				StaticObjects.set(StaticObjects.BPM_PROVIDER, next);
 				provider = next;
 				break;
 			}
-			logger.trace(format("Done installing BPM Provider [{0}:{1}].", next.getType(), next.getName()));
+			if (logger.isTraceEnabled()) {logger.trace(format("Done installing BPM Provider [{0}:{1}].", next.getType(), next.getName()));}
 		}
 	}
 

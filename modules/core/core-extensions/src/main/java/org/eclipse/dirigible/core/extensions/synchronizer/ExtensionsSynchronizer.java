@@ -86,7 +86,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized (ExtensionsSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Extension Points and Extensions...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing Extension Points and Extensions...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -102,17 +102,17 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable Extension Points: {0}, Immutable Extensions: {1}, Mutable Extension Points: {2}, Mutable Extensions: {3}", 
 								immutableExtensionPointsCount, immutableExtensionsCount, mutableExtensionPointsCount, mutableExtensionsCount));
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Extension Points and Extensions failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Extension Points and Extensions failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Extension Points and Extensions files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Extension Points and Extensions files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Extension Points and Extensions.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Extension Points and Extensions.");}
 				afterSynchronizing();
 			}
 		}
@@ -189,7 +189,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	 * @throws SynchronizationException the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered Extension Points and Extensions...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered Extension Points and Extensions...");}
 		// Extension Points
 		for (ExtensionPointDefinition extensionPointDefinition : EXTENSION_POINTS_PREDELIVERED.values()) {
 			synchronizeExtensionPoint(extensionPointDefinition);
@@ -198,7 +198,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		for (ExtensionDefinition extensionDefinition : EXTENSIONS_PREDELIVERED.values()) {
 			synchronizeExtension(extensionDefinition);
 		}
-		logger.trace("Done synchronizing predelivered Extension Points and Extensions.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered Extension Points and Extensions.");}
 	}
 
 	/**
@@ -212,16 +212,16 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 			if (!extensionsCoreService.existsExtensionPoint(extensionPointDefinition.getLocation())) {
 				extensionsCoreService.createExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getName(),
 						extensionPointDefinition.getDescription());
-				logger.info("Synchronized a new Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
-						extensionPointDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
+						extensionPointDefinition.getLocation());}
 				applyArtefactState(extensionPointDefinition, EXTENSION_POINT_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				ExtensionPointDefinition existing = extensionsCoreService.getExtensionPoint(extensionPointDefinition.getLocation());
 				if (!extensionPointDefinition.equals(existing)) {
 					extensionsCoreService.updateExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getName(),
 							extensionPointDefinition.getDescription());
-					logger.info("Synchronized a modified Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
-							extensionPointDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
+							extensionPointDefinition.getLocation());}
 					applyArtefactState(extensionPointDefinition, EXTENSION_POINT_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -244,16 +244,16 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 			if (!extensionsCoreService.existsExtension(extensionDefinition.getLocation())) {
 				extensionsCoreService.createExtension(extensionDefinition.getLocation(), extensionDefinition.getModule(),
 						extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
-				logger.info("Synchronized a new Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(),
-						extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(),
+						extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());}
 				applyArtefactState(extensionDefinition, EXTENSION_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				ExtensionDefinition existing = extensionsCoreService.getExtension(extensionDefinition.getLocation());
 				if (!extensionDefinition.equals(existing)) {
 					extensionsCoreService.updateExtension(extensionDefinition.getLocation(), extensionDefinition.getModule(),
 							extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
-					logger.info("Synchronized a modified Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(),
-							extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(),
+							extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());}
 					applyArtefactState(extensionDefinition, EXTENSION_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -276,11 +276,11 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing Extension Points and Extensions from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing Extension Points and Extensions from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing Extension Points and Extensions from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Extension Points and Extensions from Registry.");}
 	}
 
 	/**
@@ -322,7 +322,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up Extension Points and Extensions...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up Extension Points and Extensions...");}
 		super.cleanup();
 
 		try {
@@ -330,8 +330,8 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 			for (ExtensionPointDefinition extensionPointDefinition : extensionPointDefinitions) {
 				if (!EXTENSION_POINTS_SYNCHRONIZED.contains(extensionPointDefinition.getLocation())) {
 					extensionsCoreService.removeExtensionPoint(extensionPointDefinition.getLocation());
-					logger.warn("Cleaned up Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
-							extensionPointDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
+							extensionPointDefinition.getLocation());}
 				}
 			}
 
@@ -339,15 +339,15 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 			for (ExtensionDefinition extensionDefinition : extensionDefinitions) {
 				if (!EXTENSIONS_SYNCHRONIZED.contains(extensionDefinition.getLocation())) {
 					extensionsCoreService.removeExtension(extensionDefinition.getLocation());
-					logger.warn("Cleaned up Extension for Module [{}] from location: {}", extensionDefinition.getModule(),
-							extensionDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up Extension for Module [{}] from location: {}", extensionDefinition.getModule(),
+							extensionDefinition.getLocation());}
 				}
 			}
 		} catch (ExtensionsException e) {
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up Extension Points and Extensions.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up Extension Points and Extensions.");}
 	}
 	
 	/** The Constant ERROR_TYPE. */
@@ -368,7 +368,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, ExtensionsSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error(e.getMessage(), e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
 		}
 	}
 }

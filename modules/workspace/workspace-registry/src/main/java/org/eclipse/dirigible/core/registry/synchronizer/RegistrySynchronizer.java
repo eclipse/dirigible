@@ -62,14 +62,14 @@ public class RegistrySynchronizer extends AbstractSynchronizer {
 			try {
 				rootFolder = Configuration.get(DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER);
 				if (rootFolder != null) {
-					logger.trace("Synchronizing registry.");
+					if (logger.isTraceEnabled()) {logger.trace("Synchronizing registry.");}
 					synchronizeRegistry();
 					synchronizeResources();
 					cleanup();
-					logger.trace("Done synchronizing registry.");
+					if (logger.isTraceEnabled()) {logger.trace("Done synchronizing registry.");}
 				}
 			} catch (Exception e) {
-				logger.error("Synchronizing registry failed.", e);
+				if (logger.isErrorEnabled()) {logger.error("Synchronizing registry failed.", e);}
 			}
 		}
 	}

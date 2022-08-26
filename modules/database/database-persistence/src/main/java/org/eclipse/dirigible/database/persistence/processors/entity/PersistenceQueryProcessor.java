@@ -86,7 +86,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 			}
 		}
 		String sql = selectBuilder.toString();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -110,7 +110,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 		}
 		selectBuilder.forUpdate();
 		String sql = selectBuilder.build();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -126,7 +126,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	protected String generateScriptFindAll(Connection connection, PersistenceTableModel tableModel) {
 		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
 		String sql = selectBuilder.toString();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -146,8 +146,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 *             the persistence exception
 	 */
 	public T find(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id) throws PersistenceException {
-		logger.trace("find -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName() + ", id: " + id);
+		if (logger.isTraceEnabled()) {logger.trace("find -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName() + ", id: " + id);}
 		String sql = generateScriptFind(connection, tableModel);
 		return get(connection, tableModel, clazz, id, sql);
 	}
@@ -168,8 +168,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 *             the persistence exception
 	 */
 	public T lock(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id) throws PersistenceException {
-		logger.trace("lock -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName() + ", id: " + id);
+		if (logger.isTraceEnabled()) {logger.trace("lock -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName() + ", id: " + id);}
 		String sql = generateScriptLock(connection, tableModel);
 		return get(connection, tableModel, clazz, id, sql);
 	}
@@ -192,8 +192,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 *             the persistence exception
 	 */
 	protected T get(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id, String sql) throws PersistenceException {
-		logger.trace("get -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName() + ", id: " + id + ", sql: " + sql);
+		if (logger.isTraceEnabled()) {logger.trace("get -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName() + ", id: " + id + ", sql: " + sql);}
 		T result = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -237,8 +237,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 *             the persistence exception
 	 */
 	public List<T> findAll(Connection connection, PersistenceTableModel tableModel, Class<T> clazz) throws PersistenceException {
-		logger.trace("findAll -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName());
+		if (logger.isTraceEnabled()) {logger.trace("findAll -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName());}
 		List<T> result = new ArrayList<T>();
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -284,8 +284,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 * @return the list
 	 */
 	public List<T> query(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, String sql, List<Object> values) {
-		logger.trace("query -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName() + ", sql: " + sql + ", values: " + Serializer.serializeListOfObjects(values));
+		if (logger.isTraceEnabled()) {logger.trace("query -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName() + ", sql: " + sql + ", values: " + Serializer.serializeListOfObjects(values));}
 		List<T> result = new ArrayList<T>();
 		PreparedStatement preparedStatement = null;
 		try {

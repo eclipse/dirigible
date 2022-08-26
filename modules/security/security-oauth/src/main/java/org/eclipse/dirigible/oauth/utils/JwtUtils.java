@@ -677,7 +677,7 @@ public class JwtUtils {
 			} catch (Exception e) {
 				isValid = false;
 				removeSessionToken(request);
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			}
 		}
 

@@ -52,7 +52,7 @@ public class ODataClasspathContentHandler extends AbstractClasspathContentHandle
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered OData Schema or Mapping at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered OData Schema or Mapping at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

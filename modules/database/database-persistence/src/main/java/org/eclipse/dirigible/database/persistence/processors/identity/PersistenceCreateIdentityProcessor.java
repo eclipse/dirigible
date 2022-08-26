@@ -69,7 +69,7 @@ public class PersistenceCreateIdentityProcessor extends AbstractPersistenceProce
 	 *             the persistence exception
 	 */
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-		logger.trace("create -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+		if (logger.isTraceEnabled()) {logger.trace("create -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));}
 		PersistenceManager<Identity> persistenceManager = new PersistenceManager<Identity>();
 		if (!persistenceManager.tableExists(connection, Identity.class)) {
 			persistenceManager.tableCreate(connection, Identity.class);

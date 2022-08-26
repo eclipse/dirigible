@@ -42,7 +42,7 @@ public class HealthStatus {
 	public static HealthStatus getInstance() {
 		if (!INSTANCE.status.equals(Status.Ready) && (System.currentTimeMillis() - INSTANCE.started) > TimeLimited.getTimeoutInMillis()) {
 			INSTANCE.status = Status.Ready;
-			logger.warn("Health status: one or more synchronizers still in progress...");
+			if (logger.isWarnEnabled()) {logger.warn("Health status: one or more synchronizers still in progress...");}
 		}
 		return INSTANCE;
 	}

@@ -71,7 +71,7 @@ public class PublisherProcessor {
 		}
 		PublishRequestDefinition publishRequestDefinition = publishCoreService.createPublishRequest(workspacePath.toString(), path,
 				IRepositoryStructure.PATH_REGISTRY_PUBLIC);
-		logger.debug("Publishing request created [{}]", publishRequestDefinition.getId());
+		if (logger.isDebugEnabled()) {logger.debug("Publishing request created [{}]", publishRequestDefinition.getId());}
 		// force synchronization ?
 		PublisherSynchronizer.forceSynchronization();
 		return publishRequestDefinition.getId();
@@ -96,7 +96,7 @@ public class PublisherProcessor {
 			path = "";
 		}
 		PublishRequestDefinition publishRequestDefinition = publishCoreService.createUnpublishRequest(workspacePath.toString(), path);
-		logger.debug("Unpublishing request created [{}]", publishRequestDefinition.getId());
+		if (logger.isDebugEnabled()) {logger.debug("Unpublishing request created [{}]", publishRequestDefinition.getId());}
 		// force synchronization ?
 		PublisherSynchronizer.forceSynchronization();
 		return publishRequestDefinition.getId();

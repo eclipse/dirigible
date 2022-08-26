@@ -141,13 +141,13 @@ public class BpmProviderFlowable implements IBpmProvider {
 	public ProcessEngine getProcessEngine() {
 		synchronized (BpmProviderFlowable.class) {
 			if (processEngine == null) {
-				logger.info("Initializng the Flowable Process Engine...");
+				if (logger.isInfoEnabled()) {logger.info("Initializng the Flowable Process Engine...");}
 
 				ProcessEngineConfiguration cfg = null;
 				String dataSourceName = Configuration.get(DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME);
 
 				if (dataSourceName != null) {
-					logger.info("Initializng the Flowable Process Engine with JNDI datasource name");
+					if (logger.isInfoEnabled()) {logger.info("Initializng the Flowable Process Engine with JNDI datasource name");}
 					cfg = new StandaloneProcessEngineConfiguration().setDataSourceJndiName(dataSourceName);
 				} else {
 					String driver = Configuration.get(DIRIGIBLE_FLOWABLE_DATABASE_DRIVER);
@@ -156,17 +156,17 @@ public class BpmProviderFlowable implements IBpmProvider {
 					String password = Configuration.get(DIRIGIBLE_FLOWABLE_DATABASE_PASSWORD);
 
 					if (driver != null && url != null) {
-						logger.info("Initializng the Flowable Process Engine with environment variables datasource parameters");
+						if (logger.isInfoEnabled()) {logger.info("Initializng the Flowable Process Engine with environment variables datasource parameters");}
 						cfg = new StandaloneProcessEngineConfiguration().setJdbcUrl(url).setJdbcUsername(user)
 								.setJdbcPassword(password).setJdbcDriver(driver);
 					} else {
 						String useDefault = Configuration.get(DIRIGIBLE_FLOWABLE_USE_SYSTEM_DATASOURCE, "true");
 						DataSource dataSource = null;
 						if (Boolean.parseBoolean(useDefault)) {
-							logger.info("Initializng the Flowable Process Engine with the System DataSource (SystemDB)");
+							if (logger.isInfoEnabled()) {logger.info("Initializng the Flowable Process Engine with the System DataSource (SystemDB)");}
 							dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 						} else {
-							logger.info("Initializng the Flowable Process Engine with the Default DataSource (DefaultDB)");
+							if (logger.isInfoEnabled()) {logger.info("Initializng the Flowable Process Engine with the Default DataSource (DefaultDB)");}
 							dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 						}
 						cfg = new StandaloneProcessEngineConfiguration().setDataSource(dataSource);
@@ -179,7 +179,7 @@ public class BpmProviderFlowable implements IBpmProvider {
 						: ProcessEngineConfiguration.DB_SCHEMA_UPDATE_FALSE);
 
 				processEngine = cfg.buildProcessEngine();
-				logger.info("Done initializng the Flowable Process Engine.");
+				if (logger.isInfoEnabled()) {logger.info("Done initializng the Flowable Process Engine.");}
 			}
 		}
 		return processEngine;
@@ -193,7 +193,7 @@ public class BpmProviderFlowable implements IBpmProvider {
 	 */
 	@Override
 	public String deployProcess(String location) {
-		logger.debug("Deploying a BPMN process from location: " + location);
+		if (logger.isDebugEnabled()) {logger.debug("Deploying a BPMN process from location: " + location);}
 		RepositoryService repositoryService = getProcessEngine().getRepositoryService();
 		Deployment deployment = null;
 		if (!location.startsWith(IRepositoryStructure.SEPARATOR))
@@ -228,8 +228,8 @@ public class BpmProviderFlowable implements IBpmProvider {
 				}
 			}
 		}
-		logger.info(format("Process deployed with deployment id: [{0}] and process key: [{1}]", deployment.getId(), deployment.getKey()));
-		logger.debug("Done deploying a BPMN process from location: " + location);
+		if (logger.isInfoEnabled()) {logger.info(format("Process deployed with deployment id: [{0}] and process key: [{1}]", deployment.getId(), deployment.getKey()));}
+		if (logger.isDebugEnabled()) {logger.debug("Done deploying a BPMN process from location: " + location);}
 		return deployment.getId();
 	}
 	
@@ -253,22 +253,22 @@ public class BpmProviderFlowable implements IBpmProvider {
 	 */
 	@Override
 	public String startProcess(String key, String parameters) {
-		logger.debug("Starting a BPMN process by key: " + key);
+		if (logger.isDebugEnabled()) {logger.debug("Starting a BPMN process by key: " + key);}
 		RuntimeService runtimeService = getProcessEngine().getRuntimeService();
 		Map<String, Object> variables = GsonHelper.GSON.fromJson(parameters, HashMap.class);
 		ProcessInstance processInstance;
 		try {
 			processInstance = runtimeService.startProcessInstanceByKey(key, variables);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			List<ProcessDefinition> processDefinitions = processEngine.getRepositoryService().createProcessDefinitionQuery().list();
 			logger.error("Available process definitions:");
 			for (ProcessDefinition processDefinition : processDefinitions) {
-				logger.error(format("Deployment: [{0}] with key: [{1}] and name: [{2}]", processDefinition.getDeploymentId(), processDefinition.getKey(), processDefinition.getName()));
+				if (logger.isErrorEnabled()) {logger.error(format("Deployment: [{0}] with key: [{1}] and name: [{2}]", processDefinition.getDeploymentId(), processDefinition.getKey(), processDefinition.getName()));}
 			}
 			return null;
 		}
-		logger.debug("Done starting a BPMN process by key: " + key);
+		if (logger.isDebugEnabled()) {logger.debug("Done starting a BPMN process by key: " + key);}
 		return processInstance.getId();
 	}
 

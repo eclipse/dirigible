@@ -61,7 +61,7 @@ public class SchedulerInitializer {
 	 */
 	public void initialize() throws SchedulerException, SQLException, IOException {
 
-		logger.trace("Initializing Job Scheduler Service...");
+		if (logger.isTraceEnabled()) {logger.trace("Initializing Job Scheduler Service...");}
 
 		initializeScheduler();
 
@@ -73,21 +73,21 @@ public class SchedulerInitializer {
 
 		startScheduler();
 
-		logger.trace("Done initializing Job Scheduler Service.");
+		if (logger.isTraceEnabled()) {logger.trace("Done initializing Job Scheduler Service.");}
 	}
 
 	/**
 	 * Schedule internal jobs.
 	 */
 	private void scheduleInternalJobs() {
-		logger.trace("Initializing the Internal Jobs...");
+		if (logger.isTraceEnabled()) {logger.trace("Initializing the Internal Jobs...");}
 		ServiceLoader<IJobDefinitionProvider> jobDefinitionProviders = ServiceLoader.load(IJobDefinitionProvider.class);
 		for (IJobDefinitionProvider next : jobDefinitionProviders) {
 			HealthStatus.getInstance().getJobs().setStatus(next.getJobDefinition().getDescription(), JobStatus.Running);
 		}
 		for (IJobDefinitionProvider next : jobDefinitionProviders) {
 			JobDefinition jobDefinition = next.getJobDefinition();
-			logger.trace(format("Initializing the Internal Job [{0}] in group [{1}]...", jobDefinition.getDescription(), jobDefinition.getGroup()));
+			if (logger.isTraceEnabled()) {logger.trace(format("Initializing the Internal Job [{0}] in group [{1}]...", jobDefinition.getDescription(), jobDefinition.getGroup()));}
 			try {
 				JobDefinition found = schedulerCoreService.getJob(jobDefinition.getDescription());
 				if (found == null) {
@@ -95,11 +95,11 @@ public class SchedulerInitializer {
 					scheduleJob(jobDefinition);
 				}
 			} catch (Throwable e) {
-				logger.error(format("Failed installing Internal Job [{0}] in group [{1}].", jobDefinition.getDescription(), jobDefinition.getGroup()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Failed installing Internal Job [{0}] in group [{1}].", jobDefinition.getDescription(), jobDefinition.getGroup()), e);}
 			}
-			logger.trace(format("Done installing Internal Job [{0}] in group [{1}].", jobDefinition.getDescription(), jobDefinition.getGroup()));
+			if (logger.isTraceEnabled()) {logger.trace(format("Done installing Internal Job [{0}] in group [{1}].", jobDefinition.getDescription(), jobDefinition.getGroup()));}
 		}
-		logger.trace("Done initializing the Internal Jobs.");
+		if (logger.isTraceEnabled()) {logger.trace("Done initializing the Internal Jobs.");}
 
 	}
 
@@ -110,10 +110,10 @@ public class SchedulerInitializer {
 	 *             the scheduler exception
 	 */
 	private void scheduleSystemJob() throws SchedulerException {
-		logger.info(format("Initializing the System Job ..."));
+		if (logger.isInfoEnabled()) {logger.info(format("Initializing the System Job ..."));}
 		JobDefinition systemJobDefinition = SystemJob.getSystemJobDefinition();
 		scheduleJob(systemJobDefinition);
-		logger.info(format("Done initializing the System Job."));
+		if (logger.isInfoEnabled()) {logger.info(format("Done initializing the System Job."));}
 	}
 
 	/**
@@ -149,22 +149,22 @@ public class SchedulerInitializer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void initializeScheduler() throws SchedulerException, SQLException, IOException {
-		logger.info("Initializing the Scheduler...");
+		if (logger.isInfoEnabled()) {logger.info("Initializing the Scheduler...");}
 		
-		logger.info("Initializing the Quartz database...");
+		if (logger.isInfoEnabled()) {logger.info("Initializing the Quartz database...");}
 		quartzDatabaseLayoutInitializer.initialize();
-		logger.info("Initializing the Quartz database done.");
+		if (logger.isInfoEnabled()) {logger.info("Initializing the Quartz database done.");}
 		
-		logger.info("Initializing the Synchronizer database...");
+		if (logger.isInfoEnabled()) {logger.info("Initializing the Synchronizer database...");}
 		synchronizerDatabaseLayoutInitializer.initialize();
-		logger.info("Initializing the Synchronizer database done.");
+		if (logger.isInfoEnabled()) {logger.info("Initializing the Synchronizer database done.");}
 		
-		logger.info("Initializing the Repository from Master...");
+		if (logger.isInfoEnabled()) {logger.info("Initializing the Repository from Master...");}
 		masterToRepositoryInitializer.initialize();
-		logger.info("Initializing the Repository from Master done.");
+		if (logger.isInfoEnabled()) {logger.info("Initializing the Repository from Master done.");}
 		
 		SchedulerManager.createScheduler();
-		logger.info("Initializing the Scheduler done.");
+		if (logger.isInfoEnabled()) {logger.info("Initializing the Scheduler done.");}
 	}
 
 	/**

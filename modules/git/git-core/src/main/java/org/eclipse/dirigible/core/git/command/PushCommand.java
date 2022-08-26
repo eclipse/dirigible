@@ -61,11 +61,11 @@ public class PushCommand {
 		}
 		for (String repositoryName : model.getProjects()) {
 			if (verifier.verify(workspace.getName(), repositoryName)) {
-				logger.debug(String.format("Start pushing repository [%s]...", repositoryName));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("Start pushing repository [%s]...", repositoryName));}
 				pushProjectToGitRepository(workspace, repositoryName, model);
-				logger.debug(String.format("Push of the repository [%s] finished.", repositoryName));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("Push of the repository [%s] finished.", repositoryName));}
 			} else {
-				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.", repositoryName));
+				if (logger.isWarnEnabled()) {logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.", repositoryName));}
 			}
 		}
 
@@ -104,21 +104,21 @@ public class PushCommand {
 			try {
 				gitConnector.pull(model.getUsername(), model.getPassword());
 			} catch (GitAPIException e) {
-				logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+				if (logger.isDebugEnabled()) {logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());}
 			}
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
 			if (numberOfConflictingFiles == 0) {
 				
 				gitConnector.push(model.getUsername(), model.getPassword());
 
-				logger.info(String.format("Repository [%s] has been pushed to remote repository.", repositoryName));
+				if (logger.isInfoEnabled()) {logger.info(String.format("Repository [%s] has been pushed to remote repository.", repositoryName));}
 			} else {
 				String statusLineMessage = String.format("Project has %d conflicting file(s).", numberOfConflictingFiles);
-				logger.warn(statusLineMessage);
+				if (logger.isWarnEnabled()) {logger.warn(statusLineMessage);}
 				String message = String.format(
 						"Project has %d conflicting file(s). Please merge to [%s] and then continue working on project.",
 						numberOfConflictingFiles, gitRepositoryBranch);
-				logger.warn(message);
+				if (logger.isWarnEnabled()) {logger.warn(message);}
 			}
 		} catch (IOException | GitAPIException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
@@ -132,7 +132,7 @@ public class PushCommand {
 			} else {
 				errorMessage += " " + e.getMessage();
 			}
-			logger.error(errorMessage);
+			if (logger.isErrorEnabled()) {logger.error(errorMessage);}
 			throw new GitConnectorException(errorMessage, e);
 		}
 	}

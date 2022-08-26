@@ -80,7 +80,7 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 	public void synchronize() {
 		synchronized (MigrationsSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Migrations artifacts...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing Migrations artifacts...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
@@ -98,17 +98,17 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 							failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
 						}
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Migrations artifacts failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Migrations artifacts failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Migrations files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Migrations files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Migrations artifacts.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Migrations artifacts.");}
 				afterSynchronizing();
 			}
 		}
@@ -163,14 +163,14 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 	 *             the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered Migrations artifacts...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered Migrations artifacts...");}
 
 		// Migrations
 		for (MigrationDefinition migrationDefinition : MIGRATIONS_PREDELIVERED.values()) {
 			synchronizeMigration(migrationDefinition);
 		}
 
-		logger.trace("Done synchronizing predelivered Migrations artifacts.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered Migrations artifacts.");}
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 				migrationsCoreService.createMigration(migrationDefinition.getLocation(), migrationDefinition.getProject(), 
 						migrationDefinition.getMajor(), migrationDefinition.getMinor(), migrationDefinition.getMicro(),
 						migrationDefinition.getHandler(), migrationDefinition.getEngine(), migrationDefinition.getDescription());
-				logger.info("Synchronized a new Migration procedure from location: {}", migrationDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Migration procedure from location: {}", migrationDefinition.getLocation());}
 				applyArtefactState(migrationDefinition, MIGRATION_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				MigrationDefinition existing = migrationsCoreService.getMigration(migrationDefinition.getLocation());
@@ -195,7 +195,7 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 					migrationsCoreService.updateMigration(migrationDefinition.getLocation(), migrationDefinition.getProject(), 
 							migrationDefinition.getMajor(), migrationDefinition.getMinor(), migrationDefinition.getMicro(),
 							migrationDefinition.getHandler(), migrationDefinition.getEngine(), migrationDefinition.getDescription());
-					logger.error("Modified Migration procedure was met during synchronization!");
+					if (logger.isErrorEnabled()) {logger.error("Modified Migration procedure was met during synchronization!");}
 					applyArtefactState(migrationDefinition, MIGRATION_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 				}
 			}
@@ -217,11 +217,11 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing Migrations from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing Migrations from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing Migrations from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Migrations from Registry.");}
 	}
 
 	/**
@@ -256,7 +256,7 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up Roles and Access artifacts...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up Roles and Access artifacts...");}
 		super.cleanup();
 
 		try {
@@ -264,7 +264,7 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 			for (MigrationDefinition migrationDefinition : migrationDefinitions) {
 				if (!MIGRATIONS_SYNCHRONIZED.contains(migrationDefinition.getLocation())) {
 					migrationsCoreService.removeMigration(migrationDefinition.getLocation());
-					logger.warn("Cleaned up Migration definition from location: {}", migrationDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up Migration definition from location: {}", migrationDefinition.getLocation());}
 				}
 			}
 
@@ -272,14 +272,14 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up Migrations artifacts.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up Migrations artifacts.");}
 	}
 	
 	/**
 	 * Start migrations.
 	 */
 	private void startMigrations() {
-		logger.trace("Start running Migrations...");
+		if (logger.isTraceEnabled()) {logger.trace("Start running Migrations...");}
 
 		List<String> migratedProjects = new ArrayList<String>();
 		for (String migrationLocation : MIGRATIONS_SYNCHRONIZED) {
@@ -335,14 +335,14 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 				}
 				migratedProjects.add(project);
 			} catch (MigrationsException | ScriptingException e) {
-				logger.error("Migration procedure for project {} artifacts failed.", project);
-				logger.error("Migration procedure error: ", e);
+				if (logger.isErrorEnabled()) {logger.error("Migration procedure for project {} artifacts failed.", project);}
+				if (logger.isErrorEnabled()) {logger.error("Migration procedure error: ", e);}
 				applyArtefactState(currentMigration, MIGRATION_ARTEFACT, ArtefactState.FAILED_CREATE, e.getMessage());
 			}
 			
 		}
 
-		logger.trace("Done running Migrations.");
+		if (logger.isTraceEnabled()) {logger.trace("Done running Migrations.");}
 	}
 
 	/**
@@ -383,7 +383,7 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, MigrationsSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error(e.getMessage(), e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
 		}
 	}
 }

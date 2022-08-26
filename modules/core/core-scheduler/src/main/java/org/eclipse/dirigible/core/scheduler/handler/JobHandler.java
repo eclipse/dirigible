@@ -80,7 +80,7 @@ public class JobHandler implements Job {
 		try {
 			triggered = schedulerCoreService.jobTriggered(name, module);
 		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 		return triggered;
 	}
@@ -97,7 +97,7 @@ public class JobHandler implements Job {
 		try {
 			schedulerCoreService.jobFailed(name, module, triggered.getId(), new Date(triggered.getTriggeredAt().getTime()), e.getMessage());
 		} catch (SchedulerException se) {
-			logger.error(se.getMessage(), se);
+			if (logger.isErrorEnabled()) {logger.error(se.getMessage(), se);}
 		}
 	}
 	
@@ -112,7 +112,7 @@ public class JobHandler implements Job {
 		try {
 			schedulerCoreService.jobFinished(name, module, triggered.getId(), new Date(triggered.getTriggeredAt().getTime()));
 		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 	

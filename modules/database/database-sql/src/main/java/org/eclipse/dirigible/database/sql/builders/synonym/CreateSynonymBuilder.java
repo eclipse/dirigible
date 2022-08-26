@@ -52,7 +52,7 @@ public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the synonym builder
 	 */
 	public CreateSynonymBuilder forSource(String source) {
-		logger.trace("source: " + source);
+		if (logger.isTraceEnabled()) {logger.trace("source: " + source);}
 		this.source = source;
 		return this;
 	}
@@ -82,7 +82,7 @@ public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 
 		String generated = sql.toString();
 
-		logger.trace("generated: " + generated);
+		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
 		return generated;
 	}

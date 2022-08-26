@@ -74,7 +74,7 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 	 * @return created table foreign key builder
 	 */
 	public CreateTableForeignKeyBuilder referencedTable(String referencedTable) {
-		logger.trace("referencedTable: " + referencedTable);
+		if (logger.isTraceEnabled()) {logger.trace("referencedTable: " + referencedTable);}
 		this.referencedTable = referencedTable;
 		return this;
 	}
@@ -87,7 +87,7 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 	 * @return created table foreign key builder
 	 */
 	public CreateTableForeignKeyBuilder referencedColumn(String referencedColumn) {
-		logger.trace("referencedColumn: " + referencedColumn);
+		if (logger.isTraceEnabled()) {logger.trace("referencedColumn: " + referencedColumn);}
 		this.referencedColumns.add(referencedColumn);
 		return this;
 	}
@@ -108,7 +108,7 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 	 * @return created table foreign key builder
 	 */
 	public CreateTableForeignKeyBuilder referencedTableSchema(String referencedTableSchema) {
-		logger.trace("setReferencedTableSchema: " + referencedTableSchema);
+		if (logger.isTraceEnabled()) {logger.trace("setReferencedTableSchema: " + referencedTableSchema);}
 		this.referencedTableSchema = referencedTableSchema;
 		return this;
 	}

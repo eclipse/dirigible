@@ -42,7 +42,7 @@ public class GitProjectStatusProvider implements IProjectStatusProvider {
 		try {
 			return statusCommand.execute(workspace, project);
 		} catch (GitConnectorException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 		return null;
 	}

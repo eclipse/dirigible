@@ -50,11 +50,11 @@ public class ManagedDatabase extends AbstractDatabase {
 	 * The default constructor.
 	 */
 	public ManagedDatabase() {
-		logger.debug("Initializing the managed datasources...");
+		if (logger.isDebugEnabled()) {logger.debug("Initializing the managed datasources...");}
 
 		initialize();
 
-		logger.debug("Managed datasources initialized.");
+		if (logger.isDebugEnabled()) {logger.debug("Managed datasources initialized.");}
 	}
 
 	/**
@@ -69,18 +69,18 @@ public class ManagedDatabase extends AbstractDatabase {
 		Configuration.loadModuleConfig("/dirigible-database-managed.properties");
 		String managedDataSourcesList = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_MANAGED_DATASOURCES);
 		if ((managedDataSourcesList != null) && !"".equals(managedDataSourcesList)) {
-			logger.trace("Managed datasources list: " + managedDataSourcesList);
+			if (logger.isTraceEnabled()) {logger.trace("Managed datasources list: " + managedDataSourcesList);}
 			StringTokenizer tokens = new StringTokenizer(managedDataSourcesList, ",");
 			while (tokens.hasMoreTokens()) {
 				String name = tokens.nextToken();
-				logger.info("Lookup a managed datasource with name: " + name);
+				if (logger.isInfoEnabled()) {logger.info("Lookup a managed datasource with name: " + name);}
 				DataSource dataSource = lookupDataSource(name);
 				DATASOURCES.put(name, dataSource);
 			}
 		} else {
-			logger.warn("No managed datasources configured");
+			if (logger.isWarnEnabled()) {logger.warn("No managed datasources configured");}
 		}
-		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
+		if (logger.isDebugEnabled()) {logger.debug(this.getClass().getCanonicalName() + " module initialized.");}
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class ManagedDatabase extends AbstractDatabase {
 			}
 			return null;
 		} catch (NamingException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new ManagedDatabaseException(e);
 		}
 	}

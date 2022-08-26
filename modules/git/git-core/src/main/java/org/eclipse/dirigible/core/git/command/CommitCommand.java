@@ -53,11 +53,11 @@ public class CommitCommand {
 		}
 		for (String repositoryName : model.getProjects()) {
 			if (verifier.verify(workspace.getName(), repositoryName)) {
-				logger.debug(String.format("Start committing repository [%s]...", repositoryName));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("Start committing repository [%s]...", repositoryName));}
 				commitProjectToGitRepository(workspace, repositoryName, model);
-				logger.debug(String.format("Commit of the repository [%s] finished.", repositoryName));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("Commit of the repository [%s] finished.", repositoryName));}
 			} else {
-				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Commit operation.", repositoryName));
+				if (logger.isWarnEnabled()) {logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Commit operation.", repositoryName));}
 			}
 		}
 
@@ -101,7 +101,7 @@ public class CommitCommand {
 			} else {
 				errorMessage += " " + e.getMessage();
 			}
-			logger.error(errorMessage);
+			if (logger.isErrorEnabled()) {logger.error(errorMessage);}
 			throw new GitConnectorException(errorMessage, e);
 		}
 	}

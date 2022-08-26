@@ -124,7 +124,7 @@ public class OAuthFilter extends AbstractOAuthFilter {
 				ThreadContextFacade.tearDown();
 			}
 		} catch (ContextException e) {
-			logger.info("Error while setting userName from XSUAA Filter.", e);
+			if (logger.isInfoEnabled()) {logger.info("Error while setting userName from XSUAA Filter.", e);}
 		}
 	}
 
@@ -148,7 +148,7 @@ public class OAuthFilter extends AbstractOAuthFilter {
 					}
 				}
 			} catch (ServletException | AccessException e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			}
 		}
 		return false;

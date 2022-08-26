@@ -59,7 +59,7 @@ public class DataTransferReverseTableProcessor {
 			}
 		} else {
 			String error = schemaName + " does not exist in the target database";
-			logger.error(error);
+			if (logger.isErrorEnabled()) {logger.error(error);}
 			if (handler != null) {
 				handler.metadataLoadingError(error);
 			}

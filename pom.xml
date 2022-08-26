@@ -727,10 +727,10 @@
 		<okhttp3.version>4.10.0</okhttp3.version>
 		<slf4j.version>2.0.0</slf4j.version>
 		<slf4j.simple.version>1.7.12</slf4j.simple.version>
-		<logback.version>1.2.11</logback.version>
+		<logback.version>1.3.0-beta0</logback.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.1.214</h2database.version>
-		<postgresql.version>42.4.2</postgresql.version>
+		<postgresql.version>42.5.0</postgresql.version>
 		<derby.version>10.15.2.0</derby.version>
 		<derbytools.version>10.15.2.0</derbytools.version>
 		<activemq.version>5.17.1</activemq.version>
@@ -788,7 +788,9 @@
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.42</wikitext.version>
-    	<flexmark.version>0.64.0</flexmark.version>
+		<flexmark.version>0.64.0</flexmark.version>
+		<sonar.organization>eclipse</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
 		<profile.content.phase>none</profile.content.phase>
 

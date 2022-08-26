@@ -496,10 +496,10 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
                     extensionsCoreService.createExtensionPoint("/test_extpoint1", "test_extpoint1", "Test");
                     extensionsCoreService.createExtension("/test_ext1", "/test_ext_module1", "test_extpoint1", "Test");
 
-                    logger.info("API test starting... " + testModule);
+                    if (logger.isInfoEnabled()) {logger.info("API test starting... " + testModule);}
 
                     runTest(executor, repository, testModule);
-                    logger.info("API test passed successfully: " + testModule);
+                    if (logger.isInfoEnabled()) {logger.info("API test passed successfully: " + testModule);}
 
                 } finally {
                     extensionsCoreService.removeExtension("/test_ext1");

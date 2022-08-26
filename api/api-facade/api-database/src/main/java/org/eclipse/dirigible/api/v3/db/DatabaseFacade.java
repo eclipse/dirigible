@@ -699,7 +699,7 @@ public class DatabaseFacade implements IScriptingFacade {
 				return getNextVal(sequence, connection);
 			} catch (SQLException e) {
 				// assuming the sequence does not exists first time, hence create it implicitly
-				logger.warn( format("Implicitly creating a Sequence [{0}] due to: [{1}]", sequence, e.getMessage()));
+				if (logger.isWarnEnabled()) {logger.warn( format("Implicitly creating a Sequence [{0}] due to: [{1}]", sequence, e.getMessage()));}
 				createSequenceInternal(sequence, connection);
 				return getNextVal(sequence, connection);
 			} catch (IllegalStateException e) {

@@ -51,10 +51,10 @@ public class UpdateDependenciesCommand extends CloneCommand {
 				if (model.isPublish()) {
 					publishProjects(workspace, clonedProjects);
 				}
-				logger.info(String.format("Project's [%s] dependencies has been updated successfully.", selectedProject.getName()));
+				if (logger.isInfoEnabled()) {logger.info(String.format("Project's [%s] dependencies has been updated successfully.", selectedProject.getName()));}
 			} catch (IOException | GitConnectorException e) {
 				String errorMessage = String.format("Error occured while updating dependencies of the project [%s]", selectedProject.getName());
-				logger.error(errorMessage, e);
+				if (logger.isErrorEnabled()) {logger.error(errorMessage, e);}
 				throw new GitConnectorException(errorMessage, e);
 			}
 		}

@@ -45,10 +45,10 @@ public class CmsManagedModule extends AbstractDirigibleModule {
 		String cmsProvider = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_PROVIDER);
 
 		if (CmsProviderManaged.TYPE.equals(cmsProvider)) {
-			logger.trace(format("Installing CMS Provider [{0}:{1}] ...", CmsProviderManaged.TYPE, CmsProviderManaged.NAME));
+			if (logger.isTraceEnabled()) {logger.trace(format("Installing CMS Provider [{0}:{1}] ...", CmsProviderManaged.TYPE, CmsProviderManaged.NAME));}
 			CmsProviderManaged instance = new CmsProviderManaged();
 			StaticObjects.set(StaticObjects.CMS_PROVIDER, instance);
-			logger.trace(format("Done installing CMS Provider [{0}:{1}].", CmsProviderManaged.TYPE, CmsProviderManaged.NAME));
+			if (logger.isTraceEnabled()) {logger.trace(format("Done installing CMS Provider [{0}:{1}].", CmsProviderManaged.TYPE, CmsProviderManaged.NAME));}
 		}
 	}
 

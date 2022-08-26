@@ -33,16 +33,16 @@ public class ContextFacade implements IScriptingFacade {
 	 * @return the string
 	 */
 	public static final Object get(String name) {
-		logger.trace("API - ContextFacade.get() -> begin");
+		if (logger.isTraceEnabled()) {logger.trace("API - ContextFacade.get() -> begin");}
 		Object contextValue;
 		try {
 			contextValue = ThreadContextFacade.get(name);
 		} catch (ContextException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new IllegalStateException(e);
 		}
 		//String value = contextValue != null ? contextValue.toString() : null;
-		logger.trace("API - ContextFacade.get() -> end");
+		if (logger.isTraceEnabled()) {logger.trace("API - ContextFacade.get() -> end");}
 		return contextValue;
 	}
 
@@ -55,14 +55,14 @@ public class ContextFacade implements IScriptingFacade {
 	 *            the value
 	 */
 	public static final void set(String name, Object value) {
-		logger.trace("API - ContextFacade.set() -> begin");
+		if (logger.isTraceEnabled()) {logger.trace("API - ContextFacade.set() -> begin");}
 		try {
 			ThreadContextFacade.set(name, value);
 		} catch (ContextException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new IllegalStateException(e);
 		}
-		logger.trace("API - ContextFacade.set() -> end");
+		if (logger.isTraceEnabled()) {logger.trace("API - ContextFacade.set() -> end");}
 	}
 
 }

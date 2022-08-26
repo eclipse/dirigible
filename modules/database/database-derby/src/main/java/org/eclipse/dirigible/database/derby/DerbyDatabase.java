@@ -72,11 +72,11 @@ public class DerbyDatabase extends AbstractDatabase {
 	 *             in case the database cannot be created
 	 */
 	public DerbyDatabase(String rootFolder) throws DerbyDatabaseException {
-		logger.debug("Initializing the embedded Derby datasource...");
+		if (logger.isDebugEnabled()) {logger.debug("Initializing the embedded Derby datasource...");}
 
 		initialize();
 
-		logger.debug("Embedded Derby datasource initialized.");
+		if (logger.isDebugEnabled()) {logger.debug("Embedded Derby datasource initialized.");}
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class DerbyDatabase extends AbstractDatabase {
 	@Override
 	public void initialize() {
 		Configuration.loadModuleConfig("/dirigible-database-derby.properties");
-		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
+		if (logger.isDebugEnabled()) {logger.debug(this.getClass().getCanonicalName() + " module initialized.");}
 	}
 
 	/**
@@ -151,12 +151,12 @@ public class DerbyDatabase extends AbstractDatabase {
 	 * @return the data source
 	 */
 	protected DataSource createDataSource(String name) {
-		logger.debug(String.format("Creating an embedded Derby datasource %s ...", name));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("Creating an embedded Derby datasource %s ...", name));}
 
 		synchronized (DerbyDatabase.class) {
 			try {
 				String derbyRoot = prepareRootFolder(name);
-				logger.warn(String.format("Embedded Derby at: %s", derbyRoot));
+				if (logger.isWarnEnabled()) {logger.warn(String.format("Embedded Derby at: %s", derbyRoot));}
 
 				HikariConfig config = new HikariConfig();
 				config.setDriverClassName("org.apache.derby.jdbc.EmbeddedDriver");
@@ -167,7 +167,7 @@ public class DerbyDatabase extends AbstractDatabase {
 				DATASOURCES.put(name, ds);
 				return ds;
 			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				throw new DerbyDatabaseException(e);
 			}
 		}

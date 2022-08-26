@@ -59,7 +59,7 @@ public class MainVerticle extends AbstractVerticle {
 		vertx.createHttpServer().requestHandler(router).listen(httpPort, http -> {
 			if (http.succeeded()) {
 				startPromise.complete();
-				logger.info("HTTP server started on port: " + httpPort);
+				if (logger.isInfoEnabled()) {logger.info("HTTP server started on port: " + httpPort);}
 			} else {
 				startPromise.fail(http.cause());
 			}
@@ -69,9 +69,9 @@ public class MainVerticle extends AbstractVerticle {
 	private String resolveWorkspace() {
 		String workspace = Configuration.get(DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE);
 		if (workspace == null) {
-			logger.warn("Workspace parameter is missing.");
-			logger.warn("Use DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE environment variable.");
-			logger.warn("Default folder 'workspace' will be used in this case.");
+			if (logger.isWarnEnabled()) {logger.warn("Workspace parameter is missing.");}
+			if (logger.isWarnEnabled()) {logger.warn("Use DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE environment variable.");}
+			if (logger.isWarnEnabled()) {logger.warn("Default folder 'workspace' will be used in this case.");}
 			workspace = "workspace";
 		}
 		return workspace;
@@ -81,7 +81,7 @@ public class MainVerticle extends AbstractVerticle {
 		try {
     		DIRIGIBLE.load(workspace);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 	
@@ -91,7 +91,7 @@ public class MainVerticle extends AbstractVerticle {
 		try {
 			httpPort = Integer.parseInt(port);
 		} catch(Throwable t) {
-			logger.error(t.getMessage(), t);
+			if (logger.isErrorEnabled()) {logger.error(t.getMessage(), t);}
 		}
 		return httpPort;
 	}

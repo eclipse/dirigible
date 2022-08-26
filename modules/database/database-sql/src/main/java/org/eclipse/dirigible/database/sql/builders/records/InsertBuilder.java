@@ -57,7 +57,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 * @return the insert builder
 	 */
 	public InsertBuilder into(String table) {
-		logger.trace("into: " + table);
+		if (logger.isTraceEnabled()) {logger.trace("into: " + table);}
 		this.table = table;
 		return this;
 	}
@@ -70,7 +70,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 * @return the insert builder
 	 */
 	public InsertBuilder column(String name) {
-		logger.trace("column: " + name);
+		if (logger.isTraceEnabled()) {logger.trace("column: " + name);}
 		this.columns.add(name);
 		return this;
 	}
@@ -83,7 +83,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 * @return the insert builder
 	 */
 	public InsertBuilder value(String value) {
-		logger.trace("value: " + value);
+		if (logger.isTraceEnabled()) {logger.trace("value: " + value);}
 		this.values.add(value);
 		return this;
 	}
@@ -96,7 +96,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 * @return the insert builder
 	 */
 	public InsertBuilder select(String select) {
-		logger.trace("select: " + select);
+		if (logger.isTraceEnabled()) {logger.trace("select: " + select);}
 		this.select = select;
 		return this;
 	}
@@ -132,7 +132,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 
 		String generated = sql.toString();
 
-		logger.trace("generated: " + generated);
+		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
 		return generated;
 	}

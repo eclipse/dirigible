@@ -211,7 +211,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	public void synchronize() {
 		synchronized (DataStructuresSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Data Structures...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing Data Structures...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -244,17 +244,17 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 								immutableTablesCount, immutableViewsCount, immutableSchemaCount, immutableReplaceCount, immutableAppendCount, immutableDeleteCount, immutableUpdateCount,
 								mutableTablesCount, mutableViewsCount, mutableSchemaCount, mutableReplaceCount, mutableAppendCount, mutableDeleteCount, mutableUpdateCount));
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Data Structures failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Data Structures failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Data Structures files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Data Structures files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Data Structures.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Data Structures.");}
 				afterSynchronizing();
 			}
 		}
@@ -413,13 +413,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	 *             the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered Data Structures...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered Data Structures...");}
 		// Tables
 		for (DataStructureTableModel tableModel : TABLES_PREDELIVERED.values()) {
 			try {
 				synchronizeTable(tableModel);
 			} catch (Exception e) {
-				logger.error(format("Table [{0}] skipped due to an error: {1}", tableModel.getLocation(), e.getMessage()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Table [{0}] skipped due to an error: {1}", tableModel.getLocation(), e.getMessage()), e);}
 			}
 		}
 		// Views
@@ -427,7 +427,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			try {
 				synchronizeView(viewModel);
 			} catch (Exception e) {
-				logger.error(format("View [{0}] skipped due to an error: {1}", viewModel.getLocation(), e.getMessage()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("View [{0}] skipped due to an error: {1}", viewModel.getLocation(), e.getMessage()), e);}
 			}
 		}
 		// Replace
@@ -435,7 +435,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			try {
 				synchronizeReplace(data);
 			} catch (Exception e) {
-				logger.error(format("Replace data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Replace data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);}
 			}
 		}
 		// Append
@@ -443,7 +443,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			try {
 				synchronizeAppend(data);
 			} catch (Exception e) {
-				logger.error(format("Append data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Append data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);}
 			}
 		}
 		// Delete
@@ -451,7 +451,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			try {
 				synchronizeDelete(data);
 			} catch (Exception e) {
-				logger.error(format("Delete data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Delete data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);}
 			}
 		}
 		// Update
@@ -459,7 +459,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			try {
 				synchronizeUpdate(data);
 			} catch (Exception e) {
-				logger.error(format("Update data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Update data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);}
 			}
 		}
 		// Schema
@@ -467,10 +467,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			try {
 				synchronizeSchema(schema);
 			} catch (Exception e) {
-				logger.error(format("Update schema [{0}] skipped due to an error: {1}", schema, e.getMessage()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Update schema [{0}] skipped due to an error: {1}", schema, e.getMessage()), e);}
 			}
 		}
-		logger.trace("Done synchronizing predelivered Data Structures.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered Data Structures.");}
 	}
 
 	/**
@@ -494,14 +494,14 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				}
 				dataStructuresCoreService.createTable(tableModel.getLocation(), tableModel.getName(), tableModel.getHash());
 				DATA_STRUCTURE_MODELS.put(tableModel.getName(), tableModel);
-				logger.info("Synchronized a new Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());}
 				applyArtefactState(tableModel, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				DataStructureTableModel existing = dataStructuresCoreService.getTable(tableModel.getLocation());
 				if (!tableModel.equals(existing)) {
 					dataStructuresCoreService.updateTable(tableModel.getLocation(), tableModel.getName(), tableModel.getHash());
 					DATA_STRUCTURE_MODELS.put(tableModel.getName(), tableModel);
-					logger.info("Synchronized a modified Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());}
 					applyArtefactState(tableModel, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -532,14 +532,14 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				}
 				dataStructuresCoreService.createView(viewModel.getLocation(), viewModel.getName(), viewModel.getHash());
 				DATA_STRUCTURE_MODELS.put(viewModel.getName(), viewModel);
-				logger.info("Synchronized a new View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());}
 				applyArtefactState(viewModel, VIEW_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				DataStructureViewModel existing = dataStructuresCoreService.getView(viewModel.getLocation());
 				if (!viewModel.equals(existing)) {
 					dataStructuresCoreService.updateView(viewModel.getLocation(), viewModel.getName(), viewModel.getHash());
 					DATA_STRUCTURE_MODELS.put(viewModel.getName(), viewModel);
-					logger.info("Synchronized a modified View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());}
 					applyArtefactState(viewModel, VIEW_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -564,13 +564,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			if (!dataStructuresCoreService.existsReplace(dataModel.getLocation())) {
 				dataStructuresCoreService.createReplace(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
 				DATA_STRUCTURE_REPLACE_MODELS.put(dataModel.getName(), dataModel);
-				logger.info("Synchronized a new Replace Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Replace Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 			} else {
 				DataStructureDataReplaceModel existing = dataStructuresCoreService.getReplace(dataModel.getLocation());
 				if (!dataModel.equals(existing)) {
 					dataStructuresCoreService.updateReplace(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
 					DATA_STRUCTURE_REPLACE_MODELS.put(dataModel.getName(), dataModel);
-					logger.info("Synchronized a modified Replace Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Replace Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 				}
 			}
 			REPLACE_SYNCHRONIZED.add(dataModel.getLocation());
@@ -592,13 +592,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			if (!dataStructuresCoreService.existsAppend(dataModel.getLocation())) {
 				dataStructuresCoreService.createAppend(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
 				DATA_STRUCTURE_APPEND_MODELS.put(dataModel.getName(), dataModel);
-				logger.info("Synchronized a new Append Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Append Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 			} else {
 				DataStructureDataAppendModel existing = dataStructuresCoreService.getAppend(dataModel.getLocation());
 				if (!dataModel.equals(existing)) {
 					dataStructuresCoreService.updateAppend(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
 					DATA_STRUCTURE_APPEND_MODELS.put(dataModel.getName(), dataModel);
-					logger.info("Synchronized a modified Append Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Append Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 				}
 			}
 			APPEND_SYNCHRONIZED.add(dataModel.getLocation());
@@ -620,13 +620,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			if (!dataStructuresCoreService.existsDelete(dataModel.getLocation())) {
 				dataStructuresCoreService.createDelete(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
 				DATA_STRUCTURE_DELETE_MODELS.put(dataModel.getName(), dataModel);
-				logger.info("Synchronized a new Delete Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Delete Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 			} else {
 				DataStructureDataDeleteModel existing = dataStructuresCoreService.getDelete(dataModel.getLocation());
 				if (!dataModel.equals(existing)) {
 					dataStructuresCoreService.updateDelete(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
 					DATA_STRUCTURE_DELETE_MODELS.put(dataModel.getName(), dataModel);
-					logger.info("Synchronized a modified Delete Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Delete Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 				}
 			}
 			DELETE_SYNCHRONIZED.add(dataModel.getLocation());
@@ -648,13 +648,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			if (!dataStructuresCoreService.existsUpdate(dataModel.getLocation())) {
 				dataStructuresCoreService.createUpdate(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
 				DATA_STRUCTURE_UPDATE_MODELS.put(dataModel.getName(), dataModel);
-				logger.info("Synchronized a new Update Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Update Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 			} else {
 				DataStructureDataUpdateModel existing = dataStructuresCoreService.getUpdate(dataModel.getLocation());
 				if (!dataModel.equals(existing)) {
 					dataStructuresCoreService.updateUpdate(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
 					DATA_STRUCTURE_UPDATE_MODELS.put(dataModel.getName(), dataModel);
-					logger.info("Synchronized a modified Update Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Update Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 				}
 			}
 			UPDATE_SYNCHRONIZED.add(dataModel.getLocation());
@@ -677,7 +677,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				dataStructuresCoreService.createSchema(schemaModel.getLocation(), schemaModel.getName(), schemaModel.getHash());
 				DATA_STRUCTURE_SCHEMA_MODELS.put(schemaModel.getName(), schemaModel);
 				addDataStructureModelsFromSchema(schemaModel);
-				logger.info("Synchronized a new Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());}
 				applyArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				DataStructureSchemaModel existing = dataStructuresCoreService.getSchema(schemaModel.getLocation());
@@ -685,7 +685,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					dataStructuresCoreService.updateSchema(schemaModel.getLocation(), schemaModel.getName(), schemaModel.getHash());
 					DATA_STRUCTURE_SCHEMA_MODELS.put(schemaModel.getName(), schemaModel);
 					addDataStructureModelsFromSchema(schemaModel);
-					logger.info("Synchronized a modified Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());}
 					applyArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
@@ -722,11 +722,11 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing Data Structures from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing Data Structures from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing Data Structures from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Data Structures from Registry.");}
 	}
 
 	/**
@@ -811,7 +811,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up Data Structures...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up Data Structures...");}
 		super.cleanup();
 
 		try {
@@ -823,7 +823,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					if (!TABLES_SYNCHRONIZED.contains(tableModel.getLocation())) {
 						dataStructuresCoreService.removeTable(tableModel.getLocation());
 						executeTableDrop(connection, tableModel);
-						logger.warn("Cleaned up Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());
+						if (logger.isWarnEnabled()) {logger.warn("Cleaned up Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());}
 					}
 				}
 
@@ -832,7 +832,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					if (!VIEWS_SYNCHRONIZED.contains(viewModel.getLocation())) {
 						dataStructuresCoreService.removeView(viewModel.getLocation());
 						executeViewDrop(connection, viewModel);
-						logger.warn("Cleaned up View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());
+						if (logger.isWarnEnabled()) {logger.warn("Cleaned up View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());}
 					}
 				}
 
@@ -840,7 +840,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				for (DataStructureDataReplaceModel dataModel : dataReplaceModels) {
 					if (!REPLACE_SYNCHRONIZED.contains(dataModel.getLocation())) {
 						dataStructuresCoreService.removeReplace(dataModel.getLocation());
-						logger.warn("Cleaned up Replace Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+						if (logger.isWarnEnabled()) {logger.warn("Cleaned up Replace Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 					}
 				}
 
@@ -848,7 +848,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				for (DataStructureDataAppendModel dataModel : dataAppendModels) {
 					if (!APPEND_SYNCHRONIZED.contains(dataModel.getLocation())) {
 						dataStructuresCoreService.removeAppend(dataModel.getLocation());
-						logger.warn("Cleaned up Append Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+						if (logger.isWarnEnabled()) {logger.warn("Cleaned up Append Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 					}
 				}
 
@@ -856,7 +856,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				for (DataStructureDataDeleteModel dataModel : dataDeleteModels) {
 					if (!DELETE_SYNCHRONIZED.contains(dataModel.getLocation())) {
 						dataStructuresCoreService.removeDelete(dataModel.getLocation());
-						logger.warn("Cleaned up Delete Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+						if (logger.isWarnEnabled()) {logger.warn("Cleaned up Delete Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 					}
 				}
 
@@ -864,7 +864,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				for (DataStructureDataUpdateModel dataModel : dataUpdateModels) {
 					if (!UPDATE_SYNCHRONIZED.contains(dataModel.getLocation())) {
 						dataStructuresCoreService.removeUpdate(dataModel.getLocation());
-						logger.warn("Cleaned up Update Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+						if (logger.isWarnEnabled()) {logger.warn("Cleaned up Update Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());}
 					}
 				}
 				
@@ -872,7 +872,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				for (DataStructureSchemaModel schemaModel : schemaModels) {
 					if (!SCHEMA_SYNCHRONIZED.contains(schemaModel.getLocation())) {
 						dataStructuresCoreService.removeSchema(schemaModel.getLocation());
-						logger.warn("Cleaned up Schema Data file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
+						if (logger.isWarnEnabled()) {logger.warn("Cleaned up Schema Data file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());}
 					}
 				}
 			} finally {
@@ -884,7 +884,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up Data Structures.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up Data Structures.");}
 	}
 
 	/**
@@ -893,7 +893,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	private void updateDatabaseSchema() {
 
 		if (DATA_STRUCTURE_MODELS.isEmpty()) {
-			logger.trace("No Data Structures to update.");
+			if (logger.isTraceEnabled()) {logger.trace("No Data Structures to update.");}
 			return;
 		}
 
@@ -924,7 +924,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_VIEW_DROP.toString());
 					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_VIEW_DROP.toString(), VIEW_ARTEFACT, ArtefactState.FAILED_DELETE);
 				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					errors.add(e.getMessage());
 				}
 				
@@ -933,7 +933,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_TABLE_FOREIGN_KEYS_DROP.toString());
 					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_TABLE_FOREIGN_KEYS_DROP.toString(), TABLE_ARTEFACT, ArtefactState.FAILED_DELETE);
 				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					errors.add(e.getMessage());
 				}
 				
@@ -942,7 +942,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_TABLE_DROP.toString());
 					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_TABLE_DROP.toString(), TABLE_ARTEFACT, ArtefactState.FAILED_DELETE);
 				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					errors.add(e.getMessage());
 				}
 				
@@ -954,7 +954,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_TABLE_CREATE.toString());
 					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_TABLE_CREATE.toString(), TABLE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE);
 				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					errors.add(e.getMessage());
 				}
 				
@@ -963,7 +963,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_TABLE_FOREIGN_KEYS_CREATE.toString());
 					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_TABLE_FOREIGN_KEYS_CREATE.toString(), TABLE_ARTEFACT, ArtefactState.FAILED_CREATE);
 				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					errors.add(e.getMessage());
 				}
 				
@@ -972,7 +972,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_VIEW_CREATE.toString());
 					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_VIEW_CREATE.toString(), VIEW_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE);
 				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					errors.add(e.getMessage());
 				}
 				
@@ -982,10 +982,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				}
 			}
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			errors.add(e.getMessage());
 		} finally {
-			logger.error(concatenateListOfStrings(errors, "\n---\n"));
+			if (logger.isErrorEnabled()) {logger.error(concatenateListOfStrings(errors, "\n---\n"));}
 		}
 	}
 
@@ -1002,7 +1002,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		if (results.size() > 0) {
 			for (TopologyDataStructureModelWrapper result : results) {
 				String errorMessage = String.format("Undepleted: %s in operation: %s", result.getId(), flow);
-				logger.error(errorMessage);
+				if (logger.isErrorEnabled()) {logger.error(errorMessage);}
 				errors.add(errorMessage);
 				applyArtefactState(result.getModel(), artefact, state, errorMessage);
 			}
@@ -1045,7 +1045,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				executeReplaceUpdate(model);
 				applyArtefactState(model, REPLACE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				applyArtefactState(model, REPLACE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			}
 		}
@@ -1057,7 +1057,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				executeAppendUpdate(model);
 				applyArtefactState(model, APPEND_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				applyArtefactState(model, APPEND_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			}
 		}
@@ -1069,7 +1069,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				executeDeleteUpdate(model);
 				applyArtefactState(model, DELETE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				applyArtefactState(model, DELETE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			}
 		}
@@ -1081,7 +1081,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 				executeUpdateUpdate(model);
 				applyArtefactState(model, UPDATE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				applyArtefactState(model, UPDATE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			}
 		}
@@ -1095,7 +1095,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	 * @throws Exception             in case of database error
 	 */
 	public void executeReplaceUpdate(DataStructureDataReplaceModel model) throws Exception {
-		logger.info("Processing rows in mode 'replace': " + model.getLocation());
+		if (logger.isInfoEnabled()) {logger.info("Processing rows in mode 'replace': " + model.getLocation());}
 
 		byte[] content = model.getContent().getBytes();
 
@@ -1118,7 +1118,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	 * @throws Exception             in case of database error
 	 */
 	public void executeAppendUpdate(DataStructureDataAppendModel model) throws Exception {
-		logger.info("Processing rows in mode 'append': " + model.getLocation());
+		if (logger.isInfoEnabled()) {logger.info("Processing rows in mode 'append': " + model.getLocation());}
 		String tableName = model.getName();
 		int tableRowsCount = getTableRowsCount(tableName);
 		if (tableRowsCount == 0) {
@@ -1142,7 +1142,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	 * @throws Exception             in case of database error
 	 */
 	public void executeDeleteUpdate(DataStructureDataDeleteModel model) throws Exception {
-		logger.info("Processing rows in mode 'delete': " + model.getLocation());
+		if (logger.isInfoEnabled()) {logger.info("Processing rows in mode 'delete': " + model.getLocation());}
 		String tableName = model.getName();
 		String primaryKey = getPrimaryKey(tableName);
 		byte[] content = model.getContent().getBytes();
@@ -1162,7 +1162,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	 * @throws Exception             in case of database error
 	 */
 	public void executeUpdateUpdate(DataStructureDataUpdateModel model) throws Exception {
-		logger.info("Processing rows in mode 'update': " + model.getLocation());
+		if (logger.isInfoEnabled()) {logger.info("Processing rows in mode 'update': " + model.getLocation());}
 		String tableName = model.getName();
 		String primaryKey = getPrimaryKey(tableName);
 		byte[] content = model.getContent().getBytes();
@@ -1269,7 +1269,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					deleteStatement.setObject(1, record[0]);
 					deleteStatement.execute();
 				} else {
-					logger.error(String.format("Skipping deletion of an empty data row for table: %s", tableName));
+					if (logger.isErrorEnabled()) {logger.error(String.format("Skipping deletion of an empty data row for table: %s", tableName));}
 				}
 			}
 
@@ -1310,7 +1310,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 						tableDataInserter.insert();
 					}
 				} else {
-					logger.error(String.format("Skipping update of an empty data row for table: %s", tableName));
+					if (logger.isErrorEnabled()) {logger.error(String.format("Skipping update of an empty data row for table: %s", tableName));}
 				}
 			}
 
@@ -1389,7 +1389,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	 *             the SQL exception
 	 */
 	public void executeTableUpdate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
-		logger.info("Processing Update Table: " + tableModel.getName());
+		if (logger.isInfoEnabled()) {logger.info("Processing Update Table: " + tableModel.getName());}
 		if (SqlFactory.getNative(connection).exists(connection, tableModel.getName())) {
 			if (SqlFactory.getNative(connection).count(connection, tableModel.getName()) == 0) {
 				executeTableDrop(connection, tableModel);
@@ -1515,7 +1515,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, DataStructuresSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error(e.getMessage(), e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
 		}
 	}
 

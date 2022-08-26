@@ -57,7 +57,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	 * @return the update builder
 	 */
 	public UpdateBuilder table(String table) {
-		logger.trace("table: " + table);
+		if (logger.isTraceEnabled()) {logger.trace("table: " + table);}
 		this.table = table;
 		return this;
 	}
@@ -72,7 +72,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	 * @return the update builder
 	 */
 	public UpdateBuilder set(String column, String value) {
-		logger.trace("set: " + column + ", value: " + value);
+		if (logger.isTraceEnabled()) {logger.trace("set: " + column + ", value: " + value);}
 		values.put(column, value);
 		return this;
 	}
@@ -85,7 +85,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	 * @return the update builder
 	 */
 	public UpdateBuilder where(String condition) {
-		logger.trace("where: " + condition);
+		if (logger.isTraceEnabled()) {logger.trace("where: " + condition);}
 		wheres.add(OPEN + condition + CLOSE);
 		return this;
 	}
@@ -117,7 +117,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 
 		String generated = sql.toString();
 
-		logger.trace("generated: " + generated);
+		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
 		return generated;
 	}

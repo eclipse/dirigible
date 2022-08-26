@@ -63,9 +63,9 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 			DatabaseRepository databaseRepository = createInstance(dataSourceType, dataSourceName);
 			StaticObjects.set(StaticObjects.DATABASE_REPOSITORY, databaseRepository);
 			StaticObjects.set(StaticObjects.REPOSITORY, databaseRepository);
-			logger.info("Bound Database Repository as the Repository for this instance.");
+			if (logger.isInfoEnabled()) {logger.info("Bound Database Repository as the Repository for this instance.");}
 			
-			logger.info("No master repository provider supported in case of a database repository setup.");
+			if (logger.isInfoEnabled()) {logger.info("No master repository provider supported in case of a database repository setup.");}
 			String masterType = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_PROVIDER);
 			if (masterType == null) {
 				StaticObjects.set(StaticObjects.MASTER_REPOSITORY, new DummyMasterRepository());
@@ -81,8 +81,8 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 	 * @return the repository
 	 */
 	private DatabaseRepository createInstance(String dataSourceType, String dataSourceName) {
-		logger.debug("creating Database Repository...");
-		logger.debug("Data source name [{}]", dataSourceName);
+		if (logger.isDebugEnabled()) {logger.debug("creating Database Repository...");}
+		if (logger.isDebugEnabled()) {logger.debug("Data source name [{}]", dataSourceName);}
 		DatabaseRepository databaseRepository = null;
 		ServiceLoader<IDatabase> DATABASES = ServiceLoader.load(IDatabase.class);
 		for (IDatabase next : DATABASES) {
@@ -95,7 +95,7 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 				break;
 			}
 		}
-		logger.debug("Database Repository created.");
+		if (logger.isDebugEnabled()) {logger.debug("Database Repository created.");}
 		return databaseRepository;
 	}
 

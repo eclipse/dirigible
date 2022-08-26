@@ -24,25 +24,6 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
         state: []
     };
 
-    this.iframe.addEventListener("load", () => {
-        const previewEl = document.querySelector('.preview');
-        const elementStyle = getComputedStyle(previewEl);
-        let iframeDocument = this.iframe.contentDocument || this.iframe.contentWindow.document;
-        if (iframeDocument) {
-            const bodyElements = iframeDocument.getElementsByTagName("body");
-            const body = bodyElements.length === 1 && bodyElements[0];
-            if (body.outerText) {
-                body.style.color = elementStyle.color;
-                body.style['font-family'] = elementStyle['font-family'];
-            }
-            const preElements = iframeDocument.getElementsByTagName('pre');
-            const pre = preElements.length === 1 && preElements[0];
-            if (pre) {
-                pre.style.color = elementStyle.color;
-            }
-        }
-    });
-
     this.reload = function () {
         let iframeDocument = this.iframe.contentDocument || this.contentWindow.document;
         if (iframeDocument) {
@@ -142,7 +123,7 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
                     url += '/js';
                     break;
                 case 'xsjs':
-                    url += '/xsk';
+                    url += '/xsjs';
                     break;
                 case 'md':
                     url += '/wiki';

@@ -411,11 +411,11 @@ public class FilesFacade {
 	
 //					if (Files.exists(dir)) {
 					if (dir.toFile().exists()) {
-						logger.trace(String.format("Deleting directory: %s", dir));
+						if (logger.isTraceEnabled()) {logger.trace(String.format("Deleting directory: %s", dir));}
 						try {
 							Files.delete(dir);
 						} catch (java.nio.file.NoSuchFileException e) {
-							logger.trace(String.format("Directory already has been deleted: %s", dir));
+							if (logger.isTraceEnabled()) {logger.trace(String.format("Directory already has been deleted: %s", dir));}
 						}
 					}
 					return FileVisitResult.CONTINUE;
@@ -430,11 +430,11 @@ public class FilesFacade {
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 //					if (Files.exists(file)) {
 					if (file.toFile().exists()) {
-						logger.trace(String.format("Deleting file: %s", file));
+						if (logger.isTraceEnabled()) {logger.trace(String.format("Deleting file: %s", file));}
 						try {
 							Files.delete(file);
 						} catch (java.nio.file.NoSuchFileException e) {
-							logger.trace(String.format("File already has been deleted: %s", file));
+							if (logger.isTraceEnabled()) {logger.trace(String.format("File already has been deleted: %s", file));}
 						}
 					}
 					return FileVisitResult.CONTINUE;
@@ -442,7 +442,7 @@ public class FilesFacade {
 	
 				@Override
 				public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-					logger.error(String.format("Error in file: %s", file), exc);
+					if (logger.isErrorEnabled()) {logger.error(String.format("Error in file: %s", file), exc);}
 					return FileVisitResult.CONTINUE;
 				}
 			});

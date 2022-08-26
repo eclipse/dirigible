@@ -155,7 +155,7 @@ public abstract class FileSystemRepository implements IRepository {
 		}
 		this.repositoryDao = new LocalRepositoryDao(this);
 
-		logger.debug(String.format("Creating File-based Repository Client for: %s ...", root));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("Creating File-based Repository Client for: %s ...", root));}
 		try {
 			initializeRepository(root);
 			this.repositorySearcher = new RepositorySearcher(this);
@@ -213,10 +213,10 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public ICollection getRoot() {
-		logger.trace("entering getRoot"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering getRoot");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(IRepository.SEPARATOR);
 		LocalCollection localCollection = new LocalCollection(this, wrapperPath);
-		logger.trace("exiting getRoot"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting getRoot");} //$NON-NLS-1$
 		return localCollection;
 	}
 
@@ -233,11 +233,11 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public ICollection createCollection(String path) throws RepositoryWriteException {
-		logger.trace("entering createCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering createCollection");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final LocalCollection localCollection = new LocalCollection(this, wrapperPath);
 		localCollection.create();
-		logger.trace("exiting createCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting createCollection");} //$NON-NLS-1$
 		return localCollection;
 	}
 
@@ -253,10 +253,10 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public ICollection getCollection(String path) {
-		logger.trace("entering getCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering getCollection");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		LocalCollection localCollection = new LocalCollection(this, wrapperPath);
-		logger.trace("exiting getCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting getCollection");} //$NON-NLS-1$
 		return localCollection;
 	}
 
@@ -272,11 +272,11 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public void removeCollection(String path) throws RepositoryWriteException {
-		logger.trace("entering removeCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering removeCollection");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final ICollection collection = new LocalCollection(this, wrapperPath);
 		collection.delete();
-		logger.trace("exiting removeCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting removeCollection");} //$NON-NLS-1$
 	}
 
 	/**
@@ -292,11 +292,11 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public boolean hasCollection(String path) throws RepositoryReadException {
-		logger.trace("entering hasCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering hasCollection");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final ICollection collection = new LocalCollection(this, wrapperPath);
 		boolean result = collection.exists();
-		logger.trace("exiting hasCollection"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting hasCollection");} //$NON-NLS-1$
 		return result;
 	}
 
@@ -313,11 +313,11 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public IResource createResource(String path) throws RepositoryWriteException {
-		logger.trace("entering createResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering createResource");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource resource = new LocalResource(this, wrapperPath);
 		resource.create();
-		logger.trace("exiting createResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting createResource");} //$NON-NLS-1$
 		return resource;
 	}
 
@@ -335,11 +335,11 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public IResource createResource(String path, byte[] content) throws RepositoryWriteException {
-		logger.trace("entering createResource with Content"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering createResource with Content");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource resource = new LocalResource(this, wrapperPath);
 		resource.setContent(content);
-		logger.trace("exiting createResource with Content"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting createResource with Content");} //$NON-NLS-1$
 		return resource;
 	}
 
@@ -382,7 +382,7 @@ public abstract class FileSystemRepository implements IRepository {
 	@Override
 	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override)
 			throws RepositoryWriteException {
-		logger.trace("entering createResource with Content"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering createResource with Content");} //$NON-NLS-1$
 		try {
 			final RepositoryPath wrapperPath = new RepositoryPath(path);
 			getRepositoryDao().createFile(wrapperPath.toString(), content, isBinary, contentType);
@@ -390,7 +390,7 @@ public abstract class FileSystemRepository implements IRepository {
 			throw new RepositoryWriteException(e);
 		}
 		final IResource resource = getResource(path);
-		logger.trace("exiting createResource with Content"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting createResource with Content");} //$NON-NLS-1$
 		return resource;
 	}
 
@@ -406,10 +406,10 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public IResource getResource(String path) {
-		logger.trace("entering getResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering getResource");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		LocalResource resource = new LocalResource(this, wrapperPath);
-		logger.trace("exiting getResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting getResource");} //$NON-NLS-1$
 		return resource;
 	}
 
@@ -425,11 +425,11 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public void removeResource(String path) throws RepositoryWriteException {
-		logger.trace("entering removeResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering removeResource");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource resource = new LocalResource(this, wrapperPath);
 		resource.delete();
-		logger.trace("exiting removeResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting removeResource");} //$NON-NLS-1$
 	}
 
 	/**
@@ -445,11 +445,11 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public boolean hasResource(String path) throws RepositoryReadException {
-		logger.trace("entering hasResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering hasResource");} //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource resource = new LocalResource(this, wrapperPath);
 		boolean result = resource.exists();
-		logger.trace("exiting hasResource"); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("exiting hasResource");} //$NON-NLS-1$
 		return result;
 	}
 
@@ -527,7 +527,7 @@ public abstract class FileSystemRepository implements IRepository {
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName)
 			throws RepositoryImportException {
 		if (zipInputStream == null) {
-			logger.error("Provided Zip Input Stream cannot be null");
+			if (logger.isErrorEnabled()) {logger.error("Provided Zip Input Stream cannot be null");}
 			throw new RepositoryImportException("Provided Zip Input Stream cannot be null");
 		}
 		RepositoryZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
@@ -585,11 +585,10 @@ public abstract class FileSystemRepository implements IRepository {
 	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter)
 			throws RepositoryImportException {
 		if (data == null) {
-			logger.error("Provided Zip Data cannot be null");
+			if (logger.isErrorEnabled()) {logger.error("Provided Zip Data cannot be null");}
 			throw new RepositoryImportException("Provided Zip Data cannot be null");
 		}
-		RepositoryZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName,
-				filter);
+		RepositoryZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName, filter);
 	}
 
 	/**

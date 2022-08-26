@@ -219,13 +219,13 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	 */
 	public void execute() throws InterruptedException, IOException {
 		countDownLatch = new CountDownLatch(requestsCounter);
-		CloseableHttpAsyncClient httpClient = HttpAsyncClients.createDefault();
-		httpClient.start();
-		for (AsyncHttpRequest next : asyncHttpRequests) {
-			httpClient.execute(next.getRequest(), next.getCallback());
+		try (CloseableHttpAsyncClient httpClient = HttpAsyncClients.createDefault()) {
+			httpClient.start();
+			for (AsyncHttpRequest next : asyncHttpRequests) {
+				httpClient.execute(next.getRequest(), next.getCallback());
+			}
+			countDownLatch.await();
 		}
-		countDownLatch.await();
-		httpClient.close();
 	}
 
 	/**
@@ -356,7 +356,7 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 					try {
 						getDefaultEngineExecutor().executeServiceCode(completeCallback, executionContext);
 					} catch (ScriptingException e) {
-						logger.error(e.getMessage(), e);
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					}
 				}
 			};

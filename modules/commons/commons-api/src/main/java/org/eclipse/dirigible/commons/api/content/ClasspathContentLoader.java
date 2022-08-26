@@ -49,7 +49,7 @@ public class ClasspathContentLoader {
 				ServiceLoader<IClasspathContentHandler> contentHandlers = ServiceLoader.load(IClasspathContentHandler.class);
 				for (IClasspathContentHandler contentHandler : contentHandlers) {
 					String message = "Registering Content Handler: " + contentHandler.getClass().getCanonicalName();
-					logger.info(message);
+					if (logger.isInfoEnabled()) {logger.info(message);}
 				}
 				Enumeration<URL> urls = ClasspathContentLoader.class.getClassLoader().getResources("META-INF");
 				while (urls.hasMoreElements()) {
@@ -64,7 +64,7 @@ public class ClasspathContentLoader {
 								for (IClasspathContentHandler contentHandler : contentHandlers) {
 									if (entry.startsWith(ROOT)) {
 										contentHandler.accept(entry.substring(ROOT.length()));
-										logger.debug("resource found: " + entry);
+										if (logger.isDebugEnabled()) {logger.debug("resource found: " + entry);}
 									}
 								}
 							}

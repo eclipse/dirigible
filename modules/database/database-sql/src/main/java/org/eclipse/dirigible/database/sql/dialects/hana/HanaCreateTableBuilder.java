@@ -92,7 +92,7 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
      */
     @Override
     public HanaCreateTableBuilder unique(String name, String[] columns, String type, String order){
-        logger.trace("unique: " + name + ", columns" + Arrays.toString(columns) + ", indexType " + type + ", order " + order);
+    	if (logger.isTraceEnabled()) {logger.trace("unique: " + name + ", columns" + Arrays.toString(columns) + ", indexType " + type + ", order " + order);}
         CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
         for (String column : columns) {
             uniqueIndex.column(column);
@@ -116,7 +116,7 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 	 */
 	public HanaCreateTableBuilder index(String name, Boolean isUnique, String order, String indexType, Set<String> indexColumns) {
 
-			logger.trace("index: " + name + ", columns" + indexColumns);
+		if (logger.isTraceEnabled()) {logger.trace("index: " + name + ", columns" + indexColumns);}
 			CreateTableIndexBuilder index = new CreateTableIndexBuilder(this.getDialect(), name);
 			index.setIndexType(indexType);
 			index.setOrder(order);

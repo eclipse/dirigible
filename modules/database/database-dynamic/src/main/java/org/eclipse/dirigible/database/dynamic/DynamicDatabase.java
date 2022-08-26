@@ -50,11 +50,11 @@ public class DynamicDatabase extends AbstractDatabase {
 	 * The default constructor.
 	 */
 	public DynamicDatabase() {
-		logger.debug("Initializing the dynamic datasources...");
+		if (logger.isDebugEnabled()) {logger.debug("Initializing the dynamic datasources...");}
 
 		initialize();
 
-		logger.debug("Dynamic datasources initialized.");
+		if (logger.isDebugEnabled()) {logger.debug("Dynamic datasources initialized.");}
 	}
 
 	/**
@@ -66,8 +66,7 @@ public class DynamicDatabase extends AbstractDatabase {
 	 */
 	@Override
 	public void initialize() {
-		//Configuration.load("/dirigible-database-dynamic.properties");
-		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
+		if (logger.isDebugEnabled()) {logger.debug(this.getClass().getCanonicalName() + " module initialized.");}
 	}
 
 	/**
@@ -104,7 +103,7 @@ public class DynamicDatabase extends AbstractDatabase {
 	public static DataSource createDataSource(String name, String databaseDriver, String databaseUrl, String databaseUsername, String databasePassword, String databaseConnectionProperties) throws IOException {
 		DataSource dataSource = DATASOURCES.get(name);
 		if (dataSource != null) {
-			logger.warn(String.format("Dynamic datasource with name [%s] already exists.", name));
+			if (logger.isWarnEnabled()) {logger.warn(String.format("Dynamic datasource with name [%s] already exists.", name));}
 			return dataSource;
 		}
 		if ((databaseDriver != null) && (databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {

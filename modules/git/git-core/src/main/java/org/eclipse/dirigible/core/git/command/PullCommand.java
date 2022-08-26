@@ -66,14 +66,14 @@ public class PullCommand {
 		boolean atLeastOne = false;
 		for (String repositoryName : model.getProjects()) {
 			if (verifier.verify(workspace.getName(), repositoryName)) {
-				logger.debug(String.format("Start pulling %s repository...", repositoryName));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("Start pulling %s repository...", repositoryName));}
 				boolean pulled = pullProjectFromGitRepository(workspace, repositoryName, model);
 				atLeastOne = atLeastOne ? atLeastOne : pulled;
-				logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("Pull of the repository %s finished.", repositoryName));}
 				List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
 				pulledProjects.addAll(projects);
 			} else {
-				logger.warn(String.format("Project %s is local only. Select a previously cloned project for Pull operation.", repositoryName));
+				if (logger.isWarnEnabled()) {logger.warn(String.format("Project %s is local only. Select a previously cloned project for Pull operation.", repositoryName));}
 			}
 		}
 
@@ -109,18 +109,18 @@ public class PullCommand {
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
 			String gitRepositoryBranch = gitConnector.getBranch();
-			logger.debug(String.format("Starting pull of the repository [%s] for the branch %s...", repositoryName, gitRepositoryBranch));
+			if (logger.isDebugEnabled()) {logger.debug(String.format("Starting pull of the repository [%s] for the branch %s...", repositoryName, gitRepositoryBranch));}
 			gitConnector.pull(model.getUsername(), model.getPassword());
-			logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
+			if (logger.isDebugEnabled()) {logger.debug(String.format("Pull of the repository %s finished.", repositoryName));}
 
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
-			logger.debug(String.format("Number of conflicting files in the repository [%s]: %d.", repositoryName, numberOfConflictingFiles));
+			if (logger.isDebugEnabled()) {logger.debug(String.format("Number of conflicting files in the repository [%s]: %d.", repositoryName, numberOfConflictingFiles));}
 			
 			if (numberOfConflictingFiles > 0) {
 				String message = String.format(
 					"Repository [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
 					repositoryName, numberOfConflictingFiles);
-				logger.error(message);
+				if (logger.isErrorEnabled()) {logger.error(message);}
 			}
 		} catch (IOException | GitAPIException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
@@ -134,7 +134,7 @@ public class PullCommand {
 			} else {
 				errorMessage += " " + e.getMessage();
 			}
-			logger.error(errorMessage);
+			if (logger.isErrorEnabled()) {logger.error(errorMessage);}
 			throw new GitConnectorException(errorMessage, e);
 		}
 		return true;
@@ -156,9 +156,9 @@ public class PullCommand {
 					if (project.getName().equals(pulledProject)) {
 						try {
 							publisherCoreService.createPublishRequest(workspace.getName(), pulledProject);
-							logger.info(String.format("Project [%s] has been published", project.getName()));
+							if (logger.isInfoEnabled()) {logger.info(String.format("Project [%s] has been published", project.getName()));}
 						} catch (PublisherException e) {
-							logger.error(String.format("An error occurred while publishing the pulled project [%s]", project.getName()), e);
+							if (logger.isErrorEnabled()) {logger.error(String.format("An error occurred while publishing the pulled project [%s]", project.getName()), e);}
 						}
 						break;
 					}

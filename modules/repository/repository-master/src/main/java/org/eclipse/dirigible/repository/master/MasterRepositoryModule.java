@@ -55,18 +55,18 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 		if (masterType.equals(FileSystemMasterRepository.TYPE)) {
 			Configuration.loadModuleConfig("/dirigible-repository-master-fs.properties");
 			StaticObjects.set(StaticObjects.MASTER_REPOSITORY, createFileSystemInstance());
-			logger.info("Bound File System Repository as the Master Repository for this instance.");
+			if (logger.isInfoEnabled()) {logger.info("Bound File System Repository as the Master Repository for this instance.");}
 		} else if (masterType.equals(JarMasterRepository.TYPE)) {
 			Configuration.loadModuleConfig("/dirigible-repository-master-jar.properties");
 			StaticObjects.set(StaticObjects.MASTER_REPOSITORY, createJarInstance());
-			logger.info("Bound Jar Repository as the Master Repository for this instance.");
+			if (logger.isInfoEnabled()) {logger.info("Bound Jar Repository as the Master Repository for this instance.");}
 		} else if (masterType.equals(ZipMasterRepository.TYPE)) {
 			Configuration.loadModuleConfig("/dirigible-repository-master-zip.properties");
 			StaticObjects.set(StaticObjects.MASTER_REPOSITORY, createZipInstance());
-			logger.info("Bound Zip Repository as the Master Repository for this instance.");
+			if (logger.isInfoEnabled()) {logger.info("Bound Zip Repository as the Master Repository for this instance.");}
 		} else if (masterType != null) {
 			StaticObjects.set(StaticObjects.MASTER_REPOSITORY, new DummyMasterRepository());
-			logger.error("Unknown master repository provider configured: " + masterType);
+			if (logger.isErrorEnabled()) {logger.error("Unknown master repository provider configured: " + masterType);}
 		}
 		
 	}
@@ -77,10 +77,10 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 	 * @return the master repository
 	 */
 	private IMasterRepository createFileSystemInstance() {
-		logger.debug("creating FileSystem Master Repository...");
+		if (logger.isDebugEnabled()) {logger.debug("creating FileSystem Master Repository...");}
 		String rootFolder = Configuration.get(FileSystemMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER);
 		FileSystemMasterRepository fileSystemMasterRepository = new FileSystemMasterRepository(rootFolder);
-		logger.debug("FileSystem Mater Repository created.");
+		if (logger.isDebugEnabled()) {logger.debug("FileSystem Mater Repository created.");}
 		return fileSystemMasterRepository;
 	}
 	
@@ -90,16 +90,16 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 	 * @return the master repository
 	 */
 	private IMasterRepository createJarInstance() {
-		logger.debug("creating Jar Master Repository...");
+		if (logger.isDebugEnabled()) {logger.debug("creating Jar Master Repository...");}
 		String jar = Configuration.get(JarMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH);
 		JarMasterRepository jarMasterRepository;
 		try {
 			jarMasterRepository = new JarMasterRepository(jar);
 		} catch (LocalRepositoryException | IOException e) {
-			logger.error("Jar Mater Repository failed", e);
+			if (logger.isErrorEnabled()) {logger.error("Jar Mater Repository failed", e);}
 			throw new IllegalStateException(e);
 		}
-		logger.debug("Jar Mater Repository created.");
+		if (logger.isDebugEnabled()) {logger.debug("Jar Mater Repository created.");}
 		return jarMasterRepository;
 	}
 	
@@ -109,10 +109,10 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 	 * @return the master repository
 	 */
 	private IMasterRepository createZipInstance() {
-		logger.debug("creating Zip Master Repository...");
+		if (logger.isDebugEnabled()) {logger.debug("creating Zip Master Repository...");}
 		String zip = Configuration.get(ZipMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION);
 		ZipMasterRepository zipMasterRepository = new ZipMasterRepository(zip);
-		logger.debug("Zip Mater Repository created.");
+		if (logger.isDebugEnabled()) {logger.debug("Zip Mater Repository created.");}
 		return zipMasterRepository;
 	}
 

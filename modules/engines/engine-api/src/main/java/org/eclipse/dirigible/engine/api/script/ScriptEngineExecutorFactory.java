@@ -45,11 +45,11 @@ public class ScriptEngineExecutorFactory {
 				try {
 					return next.getClass().getDeclaredConstructor().newInstance();
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				}
 			}
 		}
-		logger.error(format("Script Executor of Type {0} does not exist.", type));
+		if (logger.isErrorEnabled()) {logger.error(format("Script Executor of Type {0} does not exist.", type));}
 		return null;
 	}
 	

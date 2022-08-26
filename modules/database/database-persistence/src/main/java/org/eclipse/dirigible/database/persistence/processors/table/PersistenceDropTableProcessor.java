@@ -59,7 +59,7 @@ public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor 
 		DropTableBuilder dropTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).drop().table(tableModel.getTableName());
 
 		String sql = dropTableBuilder.toString();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -75,7 +75,7 @@ public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor 
 	 *             the persistence exception
 	 */
 	public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-		logger.trace("drop -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+		if (logger.isTraceEnabled()) {logger.trace("drop -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));}
 		int result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -84,8 +84,8 @@ public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor 
 			preparedStatement = openPreparedStatement(connection, sql);
 			result = preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

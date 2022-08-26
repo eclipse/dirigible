@@ -121,7 +121,7 @@ public class WebsocketClient {
      */
     @OnError
     public void processError(Throwable t) throws ScriptingException {
-    	logger.error(t.getMessage(), t);
+    	if (logger.isErrorEnabled()) {logger.error(t.getMessage(), t);}
     	Map<Object, Object> context = new HashMap<>();
     	context.put("error", t.getMessage());
     	context.put("method", "onerror");

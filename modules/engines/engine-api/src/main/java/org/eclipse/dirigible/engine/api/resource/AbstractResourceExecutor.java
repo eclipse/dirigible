@@ -124,7 +124,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 
 		String repositoryPath = createResourcePath(root, module, extension);
 		final String logMsg = String.format("There is no resource at the specified path: %s", repositoryPath);
-		logger.error(logMsg);
+		if (logger.isErrorEnabled()) {logger.error(logMsg);}
 		throw new RepositoryNotFoundException(logMsg);
 	}
 
@@ -225,7 +225,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		}
 
 		final String logMsg = String.format("There is no collection [%s] at the specified Service path: %s", collection.getName(), repositoryPath);
-		logger.error(logMsg);
+		if (logger.isErrorEnabled()) {logger.error(logMsg);}
 		throw new RepositoryException(logMsg);
 	}
 
@@ -269,7 +269,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		}
 
 		final String logMsg = String.format("There is no collection [%s] at the specified path: %s", resource.getName(), repositoryPath);
-		logger.error(logMsg);
+		if (logger.isErrorEnabled()) {logger.error(logMsg);}
 		throw new RepositoryException(logMsg);
 
 	}

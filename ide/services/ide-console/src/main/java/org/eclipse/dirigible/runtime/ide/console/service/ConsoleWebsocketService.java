@@ -48,7 +48,7 @@ public class ConsoleWebsocketService {
 	@OnOpen
 	public void onOpen(Session session) {
 		OPEN_SESSIONS.put(session.getId(), session);
-		logger.debug(String.format("[ws:console] Session %s openned.", session.getId()));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:console] Session %s openned.", session.getId()));}
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class ConsoleWebsocketService {
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		logger.debug(String.format("[ws:console] Session %s received message: %s.", session.getId(), message));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:console] Session %s received message: %s.", session.getId(), message));}
 	}
 
 	/**
@@ -74,8 +74,8 @@ public class ConsoleWebsocketService {
 	 */
 	@OnError
 	public void onError(Session session, Throwable throwable) {
-		logger.error(String.format("[ws:console] Session %s error %s", session.getId(), throwable.getMessage()));
-		logger.error("[ws:console] " + throwable.getMessage(), throwable);
+		if (logger.isErrorEnabled()) {logger.error(String.format("[ws:console] Session %s error %s", session.getId(), throwable.getMessage()));}
+		if (logger.isErrorEnabled()) {logger.error("[ws:console] " + throwable.getMessage(), throwable);}
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class ConsoleWebsocketService {
 	 */
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
-		logger.debug(String.format("[ws:console] Session %s closed because of %s", session.getId(), closeReason));
+		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:console] Session %s closed because of %s", session.getId(), closeReason));}
 		OPEN_SESSIONS.remove(session.getId());
 	}
 

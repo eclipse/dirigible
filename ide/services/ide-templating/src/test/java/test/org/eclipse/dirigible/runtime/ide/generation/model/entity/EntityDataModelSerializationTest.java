@@ -79,7 +79,7 @@ public class EntityDataModelSerializationTest {
 		root.setEntities(entities);
 		model.setModel(root);
 		String json = GsonHelper.GSON.toJson(model);
-		logger.info(json);
+		if (logger.isInfoEnabled()) {logger.info(json);}
 	}
 	
 	/**

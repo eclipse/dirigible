@@ -184,7 +184,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         // TODO do we really need to select the entities?
         String sql = sqlQuery.buildSelect(createSQLContext(connection));
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            logger.info(sql);
+        	if (logger.isInfoEnabled()) {logger.info(sql);}
             setParamsOnStatement(preparedStatement, sqlQuery.getStatementParams());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 // TODO do we need to assert that resultSet.next() == true and subsequently
@@ -218,7 +218,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
     protected PreparedStatement createSelectStatement(SQLSelectBuilder selectQuery, final Connection connection)
             throws SQLException, ODataException {
         String sql = selectQuery.buildSelect(createSQLContext(connection));
-        logger.info(sql);
+        if (logger.isInfoEnabled()) {logger.info(sql);}
 
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -296,9 +296,9 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             }
             List<String> readIdsForExpand = new ArrayList<>();
             if (OData2Utils.hasExpand((UriInfo) uriInfo)) {
-                logger.debug("Reading the ids that will be used for $expand");
+            	if (logger.isDebugEnabled()) {logger.debug("Reading the ids that will be used for $expand");}
                 readIdsForExpand = readIdsForExpand(uriInfo);
-                logger.info("Using IDs for $expand: {}", readIdsForExpand);
+                if (logger.isInfoEnabled()) {logger.info("Using IDs for $expand: {}", readIdsForExpand);}
             }
 
             SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntitySetQuery((UriInfo) uriInfo, readIdsForExpand, getContext());
@@ -554,7 +554,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                             new ResultSetReader.ExpandAccumulator(currentTargetEntity), //
                             contentType);
                 } catch (Throwable t) {
-                    logger.error("Unable to get back the created entity", t);
+                	if (logger.isErrorEnabled()) {logger.error("Unable to get back the created entity", t);}
                 }
             }
         } catch (Exception e) {
@@ -779,7 +779,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
      */
     protected PreparedStatement createPreparedStatement(Connection connection, SQLStatement statement) throws ODataException, SQLException {
         String sql = statement.sql();
-        logger.info("SQL Statement: {}", sql);
+        if (logger.isInfoEnabled()) {logger.info("SQL Statement: {}", sql);}
 
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         setParamsOnStatement(preparedStatement, statement.getStatementParams());
@@ -794,7 +794,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
      * @throws SQLException the SQL exception
      */
     public void setParamsOnStatement(PreparedStatement preparedStatement, List<SQLStatementParam> params) throws SQLException {
-        logger.debug("SQL Params: {}", params);
+    	if (logger.isDebugEnabled()) {logger.debug("SQL Params: {}", params);}
         SQLUtils.setParamsOnStatement(preparedStatement, params);
     }
 

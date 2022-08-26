@@ -43,7 +43,7 @@ import com.zaxxer.hikari.HikariDataSource;
 public class DefinedDatabase extends AbstractDatabase {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefinedDatabase.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefinedDatabase.class);
 
 	/** The Constant NAME. */
 	public static final String NAME = "basic";
@@ -61,11 +61,11 @@ public class DefinedDatabase extends AbstractDatabase {
 	 * The default constructor.
 	 */
 	public DefinedDatabase() {
-		LOGGER.debug("Initializing the defined datasources...");
+		if (logger.isDebugEnabled()) {logger.debug("Initializing the defined datasources...");}
 
 		initialize();
 
-		LOGGER.debug("Defined datasources initialized.");
+		if (logger.isDebugEnabled()) {logger.debug("Defined datasources initialized.");}
 	}
 
 	/**
@@ -79,17 +79,7 @@ public class DefinedDatabase extends AbstractDatabase {
 	public void initialize() {
 		Configuration.loadModuleConfig("/dirigible-database-defined.properties");
 		
-//		try {
-//			List<DatabaseDefinition> databases = databasesCoreService.getDatabases();
-//			for (DatabaseDefinition database : databases) {
-//				LOGGER.info("Initializing a defined datasource with name: " + database.getName());
-//				initializeDataSource(database.getName());
-//			}
-//		} catch (DatabasesException e) {
-//			LOGGER.error(e.getMessage(), e);
-//		}
-		
-		LOGGER.debug(this.getClass().getCanonicalName() + " module initialized.");
+		if (logger.isDebugEnabled()) {logger.debug(this.getClass().getCanonicalName() + " module initialized.");}
 	}
 
 	
@@ -224,11 +214,11 @@ public class DefinedDatabase extends AbstractDatabase {
 		try {
 			List<DatabaseDefinition> databases = databasesCoreService.getDatabases();
 			for (DatabaseDefinition database : databases) {
-				LOGGER.info("Initializing a defined datasource with name: " + database.getName());
+				if (logger.isInfoEnabled()) {logger.info("Initializing a defined datasource with name: " + database.getName());}
 				initializeDataSource(database.getName());
 			}
 		} catch (DatabasesException e) {
-			LOGGER.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 		datasources.putAll(DATASOURCES);
 		return datasources;
