@@ -49,6 +49,9 @@ body {
   bottom: 0;
 }
 /* General helper classes */
+.dg-none {
+  display: none;
+}
 .dg-fill-parent {
   width: 100%;
   height: 100%;
@@ -253,6 +256,10 @@ body {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
+}
+/* Menu fixes and additions */
+.dg-submenu--left {
+  margin: .25rem 0 0 .25rem;
 }
 /* fd-form-layout-grid-container fixes */
 .fd-container.fd-form-layout-grid-container .fd-row .fd-col {
