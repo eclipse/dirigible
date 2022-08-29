@@ -595,7 +595,7 @@ public class DatabaseProcessor {
 	 * @throws DatabasesException the databases exception
 	 */
 	public void updateDefinedDatabase(DatabaseDefinition definition) throws DatabasesException {
-		databasesCoreService.createDatabase(definition);
+		databasesCoreService.updateDatabase(definition);
 	}
 	
 	/**
