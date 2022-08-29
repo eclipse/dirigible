@@ -18,25 +18,17 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
           fetch-depth: 0
       - name: Set Check Status
-        id: initcheck
         uses: actions/github-script@v5.1.1
         with:
           script: |
-            const args = {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head_sha: `${{ github.event.workflow_run.head_sha }}`,
-              name: 'SonarCloud Check',
-              target_url: `${{ github.event.workflow_run.html_url }}`,
-              details_url: `${{ github.event.workflow_run.html_url }}`,
-              status: 'in_progress'
-            };
-            console.log("Arguments:", args);
-            let result = await github.rest.checks.create(args);
-            console.log("Result:", result);
-            return {
-              check_run_id: result.data.id
-            };
+            await github.rest.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: `${{ github.event.workflow_run.head_sha }}`,
+                context: 'SonarCloud Check',
+                target_url: `${{ github.event.workflow_run.html_url }}`,
+                state: "pending"
+            });
       - name: Download Dirigible PR Number
         if: github.event.workflow_run.event == 'pull_request'
         uses: actions/github-script@v5.1.1
@@ -114,7 +106,7 @@ jobs:
       - name: SonarCloud Scan on PR
         if: github.event.workflow_run.event == 'pull_request'
         run: |
-          [ "$SONAR_TOKEN" ] && SONAR_ARG="-B sonar:sonar -Dsonar.projectKey=dirigibletest_dirigible -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }} -Dsonar.pullrequest.key=${{ fromJson(steps.get_pr_data.outputs.data).number }} -Dsonar.pullrequest.branch=${{ fromJson(steps.get_pr_data.outputs.data).head.ref }} -Dsonar.pullrequest.base=${{ fromJson(steps.get_pr_data.outputs.data).base.ref }}" 
+          [ "$SONAR_TOKEN" ] && SONAR_ARG="-B sonar:sonar -Dsonar.projectKey=org.eclipse.dirigible -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }} -Dsonar.pullrequest.key=${{ fromJson(steps.get_pr_data.outputs.data).number }} -Dsonar.pullrequest.branch=${{ fromJson(steps.get_pr_data.outputs.data).head.ref }} -Dsonar.pullrequest.base=${{ fromJson(steps.get_pr_data.outputs.data).base.ref }}" 
           mvn $SONAR_ARG
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -122,23 +114,20 @@ jobs:
       - name: SonarCloud Scan on Push
         if: github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.event.repository.full_name
         run: |
-          [ "$SONAR_TOKEN" ] && SONAR_ARG="-B sonar:sonar -Dsonar.projectKey=dirigibletest_dirigible -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }} -Dsonar.branch.name=${{ github.event.workflow_run.head_branch }}" 
+          [ "$SONAR_TOKEN" ] && SONAR_ARG="-B sonar:sonar -Dsonar.projectKey=org.eclipse.dirigible -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }} -Dsonar.branch.name=${{ github.event.workflow_run.head_branch }}" 
           mvn $SONAR_ARG
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Complete Check Status
         uses: actions/github-script@v5.1.1
-        if: always()
         with:
           script: |
-            let args = {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              check_run_id: ${{ fromJSON(steps.initcheck.outputs.result).check_run_id }},
-              status: 'completed',
-              conclusion: '${{ job.status }}'
-            };
-            console.log("Arguments:", args);
-            let result = await github.rest.checks.update(args);
-            console.log("Result:", result);
+            await github.rest.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: `${{ github.event.workflow_run.head_sha }}`,
+                context: 'SonarCloud Check',
+                target_url: `${{ github.event.workflow_run.html_url }}`,
+                state: '${{ job.status }}'
+            });

@@ -25,7 +25,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
     - name: Maven Build
       run: mvn clean install
-    - name: PR Number
+    - name: Get PR Number
       run: echo ${{ github.event.number }} > dirigible-pr.txt
     - name: Upload Dirigible PR Number
       uses: actions/upload-artifact@v3.1.0
