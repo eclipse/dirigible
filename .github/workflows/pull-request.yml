@@ -7,6 +7,7 @@ on:
       - master
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -16,5 +17,32 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 13
+    - name: Cache Maven Packages
+      uses: actions/cache@v1
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
     - name: Maven Build
-      run: mvn clean install -Dmaven.javadoc.skip=false
+      run: mvn clean install
+    - name: PR Number
+      run: echo ${{ github.event.number }} > dirigible-pr.txt
+    - name: Upload Dirigible PR Number
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: dirigible-pr
+        path: ${{ github.workspace }}/dirigible-pr.txt
+    - name: Upload Dirigible Compiled Sources
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: dirigible-sources
+        path: |
+          ${{ github.workspace }}/target/classes
+          ${{ github.workspace }}/target/test-classes
+          ${{ github.workspace }}/**/target/classes
+          ${{ github.workspace }}/**/target/test-classes
+          ${{ github.workspace }}/**/**/target/classes
+          ${{ github.workspace }}/**/**/target/test-classes
+          ${{ github.workspace }}/**/**/**/target/classes
+          ${{ github.workspace }}/**/**/**/target/test-classes
+          ${{ github.workspace }}/coverage

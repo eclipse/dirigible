@@ -1,0 +1,144 @@
+name: Sonar
+'on':
+  workflow_run:
+    workflows:
+      - Push
+      - Pull Request
+    types:
+      - completed
+jobs:
+  analyze:
+    name: Analyze Project
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+      - name: Set Check Status
+        id: initcheck
+        uses: actions/github-script@v5.1.1
+        with:
+          script: |
+            const args = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: `${{ github.event.workflow_run.head_sha }}`,
+              name: 'SonarCloud Check',
+              target_url: `${{ github.event.workflow_run.html_url }}`,
+              details_url: `${{ github.event.workflow_run.html_url }}`,
+              status: 'in_progress'
+            };
+            console.log("Arguments:", args);
+            let result = await github.rest.checks.create(args);
+            console.log("Result:", result);
+            return {
+              check_run_id: result.data.id
+            };
+      - name: Download Dirigible PR Number
+        if: github.event.workflow_run.event == 'pull_request'
+        uses: actions/github-script@v5.1.1
+        with:
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "dirigible-pr"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/dirigible-pr.zip`, Buffer.from(download.data));
+      - name: Unzip Dirigible PR Number
+        if: github.event.workflow_run.event == 'pull_request'
+        run: unzip -o dirigible-pr.zip
+      - name: Read PR Number
+        if: github.event.workflow_run.event == 'pull_request'
+        id: pr_number
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./dirigible-pr.txt
+      - name: Request GitHub API for PR Data
+        if: github.event.workflow_run.event == 'pull_request'
+        uses: octokit/request-action@v2.x
+        id: get_pr_data
+        with:
+          route: GET /repos/${{ github.event.repository.full_name }}/pulls/${{ steps.pr_number.outputs.content }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout Base Branch
+        if: github.event.workflow_run.event == 'pull_request'
+        run: |
+          git remote add upstream ${{ github.event.repository.clone_url }}
+          git fetch upstream
+          git checkout -B ${{ fromJson(steps.get_pr_data.outputs.data).base.ref }} upstream/${{ fromJson(steps.get_pr_data.outputs.data).base.ref }}
+          git checkout ${{ github.event.workflow_run.head_branch }}
+          git clean -ffdx && git reset --hard HEAD
+      - name: Download Dirigible Compiled Sources
+        uses: actions/github-script@v5.1.1
+        with:
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "dirigible-sources"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/dirigible-sources.zip`, Buffer.from(download.data));
+      - name: Unzip Dirigible Compiled Source
+        run: unzip -o dirigible-sources.zip
+      - name: Cache SonarCloud Packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: SonarCloud Scan on PR
+        if: github.event.workflow_run.event == 'pull_request'
+        run: |
+          [ "$SONAR_TOKEN" ] && SONAR_ARG="-B sonar:sonar -Dsonar.projectKey=dirigibletest_dirigible -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }} -Dsonar.pullrequest.key=${{ fromJson(steps.get_pr_data.outputs.data).number }} -Dsonar.pullrequest.branch=${{ fromJson(steps.get_pr_data.outputs.data).head.ref }} -Dsonar.pullrequest.base=${{ fromJson(steps.get_pr_data.outputs.data).base.ref }}" 
+          mvn $SONAR_ARG
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: SonarCloud Scan on Push
+        if: github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.event.repository.full_name
+        run: |
+          [ "$SONAR_TOKEN" ] && SONAR_ARG="-B sonar:sonar -Dsonar.projectKey=dirigibletest_dirigible -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }} -Dsonar.branch.name=${{ github.event.workflow_run.head_branch }}" 
+          mvn $SONAR_ARG
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Complete Check Status
+        uses: actions/github-script@v5.1.1
+        if: always()
+        with:
+          script: |
+            let args = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              check_run_id: ${{ fromJSON(steps.initcheck.outputs.result).check_run_id }},
+              status: 'completed',
+              conclusion: '${{ job.status }}'
+            };
+            console.log("Arguments:", args);
+            let result = await github.rest.checks.update(args);
+            console.log("Result:", result);

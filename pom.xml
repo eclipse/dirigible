@@ -160,6 +160,30 @@
 							</dependency>
 						</dependencies>
 					</plugin>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco.version}</version>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<formats>
+										<format>XML</format>
+									</formats>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -517,6 +541,7 @@
 		<module>ext</module>
 		<module>groups</module>
 		<module>releng</module>
+		<module>coverage</module>
     </modules>
 	<dependencies>
 		<dependency>
@@ -789,8 +814,20 @@
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.42</wikitext.version>
 		<flexmark.version>0.64.0</flexmark.version>
+
 		<sonar.organization>eclipse</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.projectName>dirigible</sonar.projectName>
+		<sonar.coverage.exclusions>**/*.js,**/*.mjs,**/*.xsjs</sonar.coverage.exclusions>
+		<sonar.cpd.exclusions>**/releng/**/*.*</sonar.cpd.exclusions>
+		<sonar.coverage.jacoco.xmlReportPaths>
+			${project.basedir}/coverage/target/site/jacoco-aggregate/jacoco.xml,
+			${project.basedir}/../coverage/target/site/jacoco-aggregate/jacoco.xml,
+			${project.basedir}/../../coverage/target/site/jacoco-aggregate/jacoco.xml,
+			${project.basedir}/../../../coverage/target/site/jacoco-aggregate/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
+
+		<jacoco.version>0.8.8</jacoco.version>
 
 		<profile.content.phase>none</profile.content.phase>
 

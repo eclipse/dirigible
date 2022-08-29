@@ -7,6 +7,7 @@ on:
       - master
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -23,8 +24,28 @@ jobs:
         install: true
     - name: Set Multi-Builder Docker Buildx
       run: docker buildx create --use --name multi-builder --platform linux/arm64,linux/amd64,linux/arm64/v8
+    - name: Cache Maven Packages
+      uses: actions/cache@v1
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
     - name: Maven Build
-      run: mvn clean install -Dmaven.javadoc.skip=false
+      run: mvn clean install
+    - name: Upload Dirigible Compiled Sources
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: dirigible-sources
+        path: |
+          ${{ github.workspace }}/target/classes
+          ${{ github.workspace }}/target/test-classes
+          ${{ github.workspace }}/**/target/classes
+          ${{ github.workspace }}/**/target/test-classes
+          ${{ github.workspace }}/**/**/target/classes
+          ${{ github.workspace }}/**/**/target/test-classes
+          ${{ github.workspace }}/**/**/**/target/classes
+          ${{ github.workspace }}/**/**/**/target/test-classes
+          ${{ github.workspace }}/coverage
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
     - name: Push Anonymous
