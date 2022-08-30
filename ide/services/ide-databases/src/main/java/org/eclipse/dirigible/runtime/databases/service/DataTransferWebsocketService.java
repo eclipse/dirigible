@@ -64,7 +64,9 @@ public class DataTransferWebsocketService {
 	 */
 	@OnOpen
 	public void onOpen(Session session) {
-		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:transfer] Session %s openned.", session.getId()));}
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("[ws:transfer] Session %s openned.", session.getId()));
+		}
 	}
 
 	/**
@@ -75,7 +77,9 @@ public class DataTransferWebsocketService {
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:ws:transfer] Session %s received message: %s.", session.getId(), message));}
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("[ws:ws:transfer] Session %s received message: %s.", session.getId(), message));
+		}
 		IDataTransferCallbackHandler maybeHandler = HANDLERS.get(session.getId());
 		if (message != null && message.startsWith("{")) {
 			// start
@@ -90,37 +94,46 @@ public class DataTransferWebsocketService {
 				PipedOutputStream pos = new PipedOutputStream();
 				PipedInputStream pis = new PipedInputStream(pos, 1024);
 				BufferedReader reader = new BufferedReader(new InputStreamReader(pis));
-					Writer writer = new BufferedWriter(new OutputStreamWriter(pos));
-					final IDataTransferCallbackHandler handler = new WriterDataTransferCallbackHandler(writer, session.getId() + new Date().getTime());
-					HANDLERS.put(session.getId(), handler);
-					new Thread(new Runnable() {
-						public void run() {
-							try {
-								processor.transferData(definition, handler);
-								HANDLERS.remove(session.getId());
-								//reader.close();
-							} catch (DataTransferException e) {
-								if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+				Writer writer = new BufferedWriter(new OutputStreamWriter(pos));
+				final IDataTransferCallbackHandler handler = new WriterDataTransferCallbackHandler(writer,
+						session.getId() + new Date().getTime());
+				HANDLERS.put(session.getId(), handler);
+				new Thread(new Runnable() {
+					public void run() {
+						try {
+							processor.transferData(definition, handler);
+							HANDLERS.remove(session.getId());
+							// reader.close();
+						} catch (DataTransferException e) {
+							if (logger.isErrorEnabled()) {
+								logger.error(e.getMessage(), e);
 							}
 						}
-					}).start();
-					
-					new Thread(new Runnable() {
-						public void run() {
-							reader.lines().forEach(line -> {
-								try {
-									session.getBasicRemote().sendText(line);
-								} catch (IOException e) {
-									if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+					}
+				}).start();
+
+				new Thread(new Runnable() {
+					public void run() {
+						reader.lines().forEach(line -> {
+							try {
+								session.getBasicRemote().sendText(line);
+							} catch (IOException e) {
+								if (logger.isErrorEnabled()) {
+									logger.error(e.getMessage(), e);
 								}
-							});
-						}
-					}).start();
-					
+							}
+						});
+					}
+				}).start();
+
 			} catch (JsonSyntaxException e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage(), e);
+				}
 			} catch (IOException e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage(), e);
+				}
 			}
 		} else {
 			if ("stop".equalsIgnoreCase(message)) {
@@ -141,8 +154,13 @@ public class DataTransferWebsocketService {
 	 */
 	@OnError
 	public void onError(Session session, Throwable throwable) {
-		if (logger.isErrorEnabled()) {logger.error(String.format("[ws:ws:transfer] Session %s error %s", session.getId(), throwable.getMessage()));}
-		if (logger.isErrorEnabled()) {logger.error("[ws:ws:transfer] " + throwable.getMessage(), throwable);}
+		if (logger.isErrorEnabled()) {
+			logger.error(
+					String.format("[ws:ws:transfer] Session %s error %s", session.getId(), throwable.getMessage()));
+		}
+		if (logger.isErrorEnabled()) {
+			logger.error("[ws:ws:transfer] " + throwable.getMessage(), throwable);
+		}
 	}
 
 	/**
@@ -153,7 +171,10 @@ public class DataTransferWebsocketService {
 	 */
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
-		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:ws:transfer] Session %s closed because of %s", session.getId(), closeReason));}
+		if (logger.isDebugEnabled()) {
+			logger.debug(
+					String.format("[ws:ws:transfer] Session %s closed because of %s", session.getId(), closeReason));
+		}
 	}
 
 }

@@ -28,6 +28,12 @@
 		<module>database-databases</module>
 		<module>database-defined</module>
 		<module>database-data-transfer</module>
+		<module>database-sql-derby</module>
+		<module>database-sql-h2</module>
+		<module>database-sql-hana</module>
+		<module>database-sql-mysql</module>
+		<module>database-sql-postgres</module>
+		<module>database-sql-sybase</module>
 	</modules>
 
 	<properties>

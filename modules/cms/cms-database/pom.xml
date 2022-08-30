@@ -54,12 +54,6 @@
 		</dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api-test</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-zip</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
@@ -89,6 +83,24 @@
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
         
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-api-test</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-database-sql-h2</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-database-sql-derby</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+    	</dependency>
         <dependency>
 		    <groupId>org.apache.derby</groupId>
 		    <artifactId>derby</artifactId>

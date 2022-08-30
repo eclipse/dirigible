@@ -526,7 +526,9 @@ public class GitProcessor {
 	 */
 	public void setPushUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
-		gitConnector.setPushUrl(url);
+		if (gitConnector != null) {
+			gitConnector.setPushUrl(url);
+		}
 	}
 
 	/**

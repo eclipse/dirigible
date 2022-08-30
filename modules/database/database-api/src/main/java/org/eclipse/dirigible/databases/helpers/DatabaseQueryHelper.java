@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
  * Convenience class for common DataSource operations.
  * An instance represents a single DataSource.
  */
-@SuppressWarnings("javadoc")
 public class DatabaseQueryHelper {
 
 	/** The Constant logger. */
@@ -115,29 +114,21 @@ public class DatabaseQueryHelper {
 	 *            the callback
 	 */
 	public static void executeSingleStatement(Connection connection, String sql, boolean isQuery, RequestExecutionCallback callback) {
-		ResultSet resultSet = null;
-		PreparedStatement preparedStatement = null;
 		try {
-			preparedStatement = connection.prepareStatement(sql);
-			if (isQuery) {
-				resultSet = preparedStatement.executeQuery();
-				callback.queryDone(resultSet);
-			} else {
-				preparedStatement.executeUpdate();
-				callback.updateDone(preparedStatement.getUpdateCount());
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				if (isQuery) {
+					try (ResultSet resultSet = preparedStatement.executeQuery()) {
+						callback.queryDone(resultSet);
+					}
+				} else {
+					preparedStatement.executeUpdate();
+					callback.updateDone(preparedStatement.getUpdateCount());
+				}
 			}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(sql);}
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.error(e);
-		} finally {
-			try {
-				if (resultSet != null) {
-					resultSet.close();
-				}
-			} catch (SQLException e) {
-				if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
-			}
 		}
 	}
 
@@ -155,28 +146,25 @@ public class DatabaseQueryHelper {
 	 */
 	public static void executeSingleProcedure(Connection connection, String sql, RequestExecutionCallback callback) {
 		ResultSet resultSet = null;
-		CallableStatement callableStatement = null;
 		try {
-			callableStatement = connection.prepareCall(sql);
-			resultSet = callableStatement.executeQuery();
-			boolean hasMoreResults = false;
-			do {
-				callback.queryDone(resultSet);
-				resultSet.close();
-				hasMoreResults = callableStatement.getMoreResults();
-				if (hasMoreResults) {					
-					resultSet = callableStatement.getResultSet();
-				}
-			} while (hasMoreResults);
+			try (CallableStatement callableStatement = connection.prepareCall(sql)) {
+				resultSet = callableStatement.executeQuery();
+				boolean hasMoreResults = false;
+				do {
+					callback.queryDone(resultSet);
+					resultSet.close();
+					hasMoreResults = callableStatement.getMoreResults();
+					if (hasMoreResults) {					
+						resultSet = callableStatement.getResultSet();
+					}
+				} while (hasMoreResults);
+			}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(sql);}
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.error(e);
 		} finally {
 			try {
-				if (callableStatement != null) {
-					callableStatement.close();
-				}
 				if (resultSet != null) {
 					resultSet.close();
 				}
@@ -245,30 +233,22 @@ public class DatabaseQueryHelper {
 	 *            the callback
 	 */
 	public static void executeQueryStatement(Connection connection, String sql, ResultSetIteratorCallback callback) {
-		ResultSet resultSet = null;
-		PreparedStatement preparedStatement = null;
 		try {
-			preparedStatement = connection.prepareStatement(sql);
-			resultSet = preparedStatement.executeQuery();
-			int columnsCount = resultSet.getMetaData().getColumnCount();
-			List<NavigableMap<String, Object>> table = new ArrayList<NavigableMap<String, Object>>();
-			NavigableMap<String, Object> row = new TreeMap<String, Object>();
-			for (int i = 1; i <= columnsCount; i++) {
-				row.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
-				callback.onRowConstruction(connection, row);
-				table.add(row);
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				try (ResultSet resultSet = preparedStatement.executeQuery()) {
+					int columnsCount = resultSet.getMetaData().getColumnCount();
+					List<NavigableMap<String, Object>> table = new ArrayList<NavigableMap<String, Object>>();
+					NavigableMap<String, Object> row = new TreeMap<String, Object>();
+					for (int i = 1; i <= columnsCount; i++) {
+						row.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
+						callback.onRowConstruction(connection, row);
+						table.add(row);
+					}
+					callback.onQueryDone(connection, table);
+				}
 			}
-			callback.onQueryDone(connection, table);
 		} catch (Exception e) {
 			callback.onError(connection, e);
-		} finally {
-			try {
-				if (resultSet != null) {
-					resultSet.close();
-				}
-			} catch (SQLException e) {
-				if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
-			}
 		}
 	}
 

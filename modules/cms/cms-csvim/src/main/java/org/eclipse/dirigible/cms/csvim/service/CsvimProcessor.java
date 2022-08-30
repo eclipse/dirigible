@@ -305,7 +305,7 @@ public class CsvimProcessor {
 				csvProcessor.insert(csvRecordDefinitions, csvFileDefinition);
 			}
 		} catch (SQLException e) {
-			String csvRecordValue = csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "<empty>";
+			String csvRecordValue = e.getMessage();
 			logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
 			if (logger.isErrorEnabled()) {logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);}
 		}
@@ -334,7 +334,7 @@ public class CsvimProcessor {
 				csvProcessor.update(csvRecordDefinitions, csvFileDefinition);
 			}
 		} catch (SQLException e) {
-			String csvRecordValue = csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "<empty>";
+			String csvRecordValue = e.getMessage();
 			logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
 			if (logger.isErrorEnabled()) {logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);}
 		}
@@ -476,15 +476,18 @@ public class CsvimProcessor {
 	 * @return the pk name for CSV record
 	 */
 	private String getPkNameForCSVRecord(String tableName, List<String> headerNames) {
-		List<PersistenceTableColumnModel> columnModels = getTableMetadata(tableName).getColumns();
-		if (headerNames.size() > 0) {
-			String pkColumnName = columnModels.stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().get().getName();
-			return pkColumnName;
-		}
-
-		for (int i = 0; i < columnModels.size(); i++) {
-			if (columnModels.get(i).isPrimaryKey()) {
-				return columnModels.get(i).getName();
+		PersistenceTableModel tableModel = getTableMetadata(tableName);
+		if (tableModel != null) {
+			List<PersistenceTableColumnModel> columnModels = tableModel.getColumns();
+			if (headerNames.size() > 0) {
+				String pkColumnName = columnModels.stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().get().getName();
+				return pkColumnName;
+			}
+	
+			for (int i = 0; i < columnModels.size(); i++) {
+				if (columnModels.get(i).isPrimaryKey()) {
+					return columnModels.get(i).getName();
+				}
 			}
 		}
 
@@ -500,17 +503,20 @@ public class CsvimProcessor {
 	 * @return the pk value for CSV record
 	 */
 	private String getPkValueForCSVRecord(CSVRecord csvRecord, String tableName, List<String> headerNames) {
-		List<PersistenceTableColumnModel> columnModels = getTableMetadata(tableName).getColumns();
-		if (headerNames.size() > 0) {
-			String pkColumnName = columnModels.stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().get().getName();
-			int csvRecordPkValueIndex = headerNames.indexOf(pkColumnName);
-			return csvRecordPkValueIndex >= 0 ? csvRecord.get(csvRecordPkValueIndex) : null;
-		}
-
-		for (int i = 0; i < csvRecord.size(); i++) {
-			boolean isColumnPk = columnModels.get(i).isPrimaryKey();
-			if (isColumnPk && !StringUtils.isEmpty(csvRecord.get(i))) {
-				return csvRecord.get(i);
+		PersistenceTableModel tableModel = getTableMetadata(tableName);
+		if (tableModel != null) {
+			List<PersistenceTableColumnModel> columnModels = tableModel.getColumns();
+			if (headerNames.size() > 0) {
+				String pkColumnName = columnModels.stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().get().getName();
+				int csvRecordPkValueIndex = headerNames.indexOf(pkColumnName);
+				return csvRecordPkValueIndex >= 0 ? csvRecord.get(csvRecordPkValueIndex) : null;
+			}
+	
+			for (int i = 0; i < csvRecord.size(); i++) {
+				boolean isColumnPk = columnModels.get(i).isPrimaryKey();
+				if (isColumnPk && !StringUtils.isEmpty(csvRecord.get(i))) {
+					return csvRecord.get(i);
+				}
 			}
 		}
 

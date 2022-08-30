@@ -469,7 +469,6 @@ public class FileSystemUtils {
 			return false;
 		}
 		return path.toFile().isDirectory();
-		// return Files.isDirectory(path);
 	}
 
 	/**
@@ -688,7 +687,11 @@ public class FileSystemUtils {
 	 */
 	public static List<String> getGitRepositoryProjects(String user, String workspace, String repositoryName) {
 		List<File> projects = getGitRepositoryProjectsFiles(user, workspace, repositoryName);
-		return projects.stream().map(e -> e.getName()).collect(Collectors.toList());
+		if (projects != null) {
+			return projects.stream().map(e -> e.getName()).collect(Collectors.toList());
+		}
+		if (logger.isWarnEnabled()) {logger.warn(String.format("Cannot enumerate the projects under a git folder for user, workspace and path: %s, %s, %s", user, workspace, repositoryName));}
+		return new ArrayList<String>();
 	}
 
 	/**
@@ -711,17 +714,20 @@ public class FileSystemUtils {
      * @return the git repository projects
      */
     public static List<File> getGitRepositoryProjects(File gitRepository) {
-        EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-        ProjectsFinder projectsFinder = new ProjectsFinder();
-        try {
-            Files.walkFileTree(Paths.get(gitRepository.getAbsolutePath()), opts, Integer.MAX_VALUE, projectsFinder);
-        }
-        catch (IOException e) {
-        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), (Throwable)e);}
-        }
-        List<File> gitProjects = projectsFinder.getProjects();
-
-        return gitProjects;
+    	if (gitRepository != null) {
+	        EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+	        ProjectsFinder projectsFinder = new ProjectsFinder();
+	        try {
+	            Files.walkFileTree(Paths.get(gitRepository.getAbsolutePath()), opts, Integer.MAX_VALUE, projectsFinder);
+	        }
+	        catch (IOException e) {
+	        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), (Throwable)e);}
+	        }
+	        List<File> gitProjects = projectsFinder.getProjects();
+	
+	        return gitProjects;
+    	}
+    	return null;
     }
 
     /**

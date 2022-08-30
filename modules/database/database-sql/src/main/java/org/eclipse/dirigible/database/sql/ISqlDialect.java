@@ -358,4 +358,13 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @return the string for creating the Fuzzy Search Index
 	 */
 	public String getFuzzySearchIndex();
+	
+	/**
+	 * Returns the escape symbol
+	 *
+	 * @return the string for escape symbol
+	 */
+	public String getEscapeSymbol();
+	
+	
 }

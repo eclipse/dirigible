@@ -47,8 +47,13 @@ import org.slf4j.LoggerFactory;
 		)
 public class XTerminalWebsocketService {
 
+	private static final String TERMINAL_PREFIX = "[ws:terminal] ";
+
 	/** The Constant FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE. */
 	private static final String FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE = "Feature 'Terminal' is disabled in this mode.";
+	
+	/** The Constant PERMISSIONS_FAILED. */
+	private static final String PERMISSIONS_FAILED = "Failed to set permissions on file";
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(XTerminalWebsocketService.class);
@@ -72,7 +77,7 @@ public class XTerminalWebsocketService {
 	public synchronized static void runTTYD() {
 		if (!started) {
 			if (Configuration.isAnonymousModeEnabled()) {
-				if (logger.isWarnEnabled()) {logger.warn("[ws:terminal] " + FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
+				if (logger.isWarnEnabled()) {logger.warn(TERMINAL_PREFIX + FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
 				return;
 			}
 			try {
@@ -85,10 +90,15 @@ public class XTerminalWebsocketService {
 						// ttyd binary should be placed in advance to $CATALINA_HOME/bin
 						
 						createShellScript(ttydShell, "./ttyd -p 9000 bash");
-						ttydShell.setExecutable(true);
-						File ttydExecutable = new File("./ttyd");
-						createExecutable(XTerminalWebsocketService.class.getResourceAsStream("/ttyd_linux.x86_64_1.6.0"), ttydExecutable);
-						ttydExecutable.setExecutable(true);
+						if (ttydShell.setExecutable(true)) {
+							File ttydExecutable = new File("./ttyd");
+							createExecutable(XTerminalWebsocketService.class.getResourceAsStream("/ttyd_linux.x86_64_1.6.0"), ttydExecutable);
+							if (!ttydExecutable.setExecutable(true)) {
+								if (logger.isWarnEnabled()) {logger.warn(TERMINAL_PREFIX + PERMISSIONS_FAILED);}
+							}
+						} else {
+							if (logger.isWarnEnabled()) {logger.warn(TERMINAL_PREFIX + PERMISSIONS_FAILED);}
+						}
 					}
 				} else if (os.indexOf("mac") >= 0) {
 					command = "bash -c ./ttyd.sh";
@@ -112,7 +122,7 @@ public class XTerminalWebsocketService {
 				new Thread(processRunnable).start();
 				
 			} catch (IOException e) {
-				logger.error("[ws:terminal] " + e.getMessage(), e);
+				logger.error(TERMINAL_PREFIX + e.getMessage(), e);
 			}
 			started = true;
 		}
@@ -127,12 +137,8 @@ public class XTerminalWebsocketService {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private static void createShellScript(File file, String command) throws FileNotFoundException, IOException {
-		FileOutputStream fos = new FileOutputStream(file);
-		try {
+		try (FileOutputStream fos = new FileOutputStream(file)) {
 			IOUtils.write(command, fos, Charset.defaultCharset());
-		} finally {
-			fos.flush();
-		    fos.close();
 		}
 	}
 	
@@ -145,12 +151,8 @@ public class XTerminalWebsocketService {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private static void createExecutable(InputStream in, File file) throws FileNotFoundException, IOException {
-		FileOutputStream fos = new FileOutputStream(file);
-		try {
+		try (FileOutputStream fos = new FileOutputStream(file)) {
 			IOUtils.copy(in, fos);
-		} finally {
-			fos.flush();
-		    fos.close();
 		}
 	}
 	
@@ -167,12 +169,12 @@ public class XTerminalWebsocketService {
 				session.getBasicRemote().sendText(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE, true);
 				if (logger.isWarnEnabled()) {logger.warn(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
 			} catch (IOException e) {
-				logger.error("[ws:terminal] " + e.getMessage(), e);
+				logger.error(TERMINAL_PREFIX + e.getMessage(), e);
 			}
 			try {
 				session.close();
 			} catch (IOException e) {
-				logger.error("[ws:terminal] " + e.getMessage(), e);
+				logger.error(TERMINAL_PREFIX + e.getMessage(), e);
 			}
 			return;
 		}
@@ -182,11 +184,11 @@ public class XTerminalWebsocketService {
 			XTerminalWebsocketClientEndpoint clientEndPoint = startClientWebsocket(session);
 			SESSION_TO_CLIENT.put(session.getId(), clientEndPoint);
 		} catch (URISyntaxException e) {
-			logger.error("[ws:terminal] " + e.getMessage(), e);
+			logger.error(TERMINAL_PREFIX + e.getMessage(), e);
 			try {
 				session.close();
 			} catch (IOException e1) {
-				logger.error("[ws:terminal] " + e.getMessage(), e);
+				logger.error(TERMINAL_PREFIX + e.getMessage(), e);
 			}
 		}
 		OPEN_SESSIONS.put(session.getId(), session);
@@ -225,7 +227,7 @@ public class XTerminalWebsocketService {
 	@OnError
 	public void onError(Session session, Throwable throwable) {
 		if (logger.isInfoEnabled()) {logger.info(String.format("[ws:terminal] Session %s error %s", session.getId(), throwable.getMessage()));}
-		logger.error("[ws:terminal] " + throwable.getMessage(), throwable);
+		logger.error(TERMINAL_PREFIX + throwable.getMessage(), throwable);
 	}
 
 	/**
@@ -246,7 +248,7 @@ public class XTerminalWebsocketService {
 				clientEndPoint.getSession().close();
 			}
 		} catch (IOException e) {
-			logger.error("[ws:terminal] " + e.getMessage(), e);
+			logger.error(TERMINAL_PREFIX + e.getMessage(), e);
 		}
 	}
 
@@ -265,9 +267,7 @@ public class XTerminalWebsocketService {
         // add listener
         clientEndPoint.addMessageHandler(new XTerminalWebsocketClientEndpoint.MessageHandler() {
             public void handleMessage(ByteBuffer message) throws IOException {
-            	synchronized(session) {
-            		session.getBasicRemote().sendBinary(message);
-            	}
+            	session.getBasicRemote().sendBinary(message);
             }
         });
         
@@ -319,11 +319,11 @@ public class XTerminalWebsocketService {
 		    				    String line;
 	
 		    				    while ((line = input.readLine()) != null) {
-		    				    	if (logger.isDebugEnabled()) {logger.debug("[ws:terminal] " + line);}
+		    				    	if (logger.isDebugEnabled()) {logger.debug(TERMINAL_PREFIX + line);}
 		    				    }
 		    				}
 		                } catch (IOException e) {
-		                	logger.error("[ws:terminal] " + e.getMessage(), e);
+		                	logger.error(TERMINAL_PREFIX + e.getMessage(), e);
 						}
 		            }
 		        });
@@ -338,11 +338,11 @@ public class XTerminalWebsocketService {
 		    				    String line;
 
 		    				    while ((line = input.readLine()) != null) {
-		    				    	logger.error("[ws:terminal] " + line);
+		    				    	logger.error(TERMINAL_PREFIX + line);
 		    				    }
 		    				}
 		                } catch (IOException e) {
-		                	logger.error("[ws:terminal] " + e.getMessage(), e);
+		                	logger.error(TERMINAL_PREFIX + e.getMessage(), e);
 						}
 		            }
 		        });
@@ -350,7 +350,7 @@ public class XTerminalWebsocketService {
 				
 //				logger.info("[ws:terminal] " + process.exitValue());
 			} catch (IOException e) {
-				logger.error("[ws:terminal] " + e.getMessage(), e);
+				logger.error(TERMINAL_PREFIX + e.getMessage(), e);
 			}
 			
 		}

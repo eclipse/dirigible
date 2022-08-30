@@ -183,7 +183,7 @@ public class WorkspaceProcessor {
             isGitProject = projectFile.exists() && FileUtils.isSymlink(projectFile);
         }
 
-        if (isGitProject) {
+        if (isGitProject && projectFile != null) {
             Files.delete(projectFile.toPath());
         } else {
             workspaceObject.deleteProject(project);
