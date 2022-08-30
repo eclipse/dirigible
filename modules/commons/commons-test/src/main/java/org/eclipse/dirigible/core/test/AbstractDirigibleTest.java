@@ -33,7 +33,7 @@ public abstract class AbstractDirigibleTest {
 	 */
 	@Before
 	public void beforeEveryMethod() throws IOException {
-		Configuration.setSystemProperty("DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT", "./target/derby_test_database");
+		//Configuration.set("DIRIGIBLE_DATABASE_H2_URL", "jdbc:h2:mem:tests");
 		DirigibleModulesInstallerModule.configure();
 	}
 

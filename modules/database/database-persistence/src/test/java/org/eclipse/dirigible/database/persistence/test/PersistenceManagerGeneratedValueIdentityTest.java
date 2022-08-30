@@ -48,7 +48,7 @@ public class PersistenceManagerGeneratedValueIdentityTest extends AbstractPersis
 	public void orderedCrudTests() throws SQLException {
 		String database = System.getProperty("database");
 		if (database == null) {
-			database = "derby";
+			database = "h2";
 		}
 		if (!SUPPORTED_DIALECTS.contains(database)) {
 			if (logger.isWarnEnabled()) {logger.warn("Skipped IDENTITY test for database: " + database);}

@@ -34,6 +34,7 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
+import java.lang.IllegalStateException;
 
 /**
  * The Class GraalJSCodeRunner.

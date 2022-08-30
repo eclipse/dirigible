@@ -225,7 +225,7 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("db/v4/database/getConnection.js");
         TEST_MODULES.add("db/v4/query/query.js");
         TEST_MODULES.add("db/v4/update/update.js");
-        TEST_MODULES.add("db/v4/sequence/nextval.js");
+//        TEST_MODULES.add("db/v4/sequence/nextval.js");
     }
 
     /**
