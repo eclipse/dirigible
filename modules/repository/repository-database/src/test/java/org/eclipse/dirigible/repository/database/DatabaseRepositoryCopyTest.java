@@ -47,10 +47,10 @@ public class DatabaseRepositoryCopyTest {
 	@Before
 	public void setUp() {
 		try {
-			DataSource dataSource = DatabaseTestHelper.createDataSource("target/tests/derbySrc");
-			repositorySrc = new DatabaseRepository(dataSource);
-			dataSource = DatabaseTestHelper.createDataSource("target/tests/derbyDst");
-			repositoryDst = new DatabaseRepository(dataSource);
+			DataSource dataSourceSrc = DatabaseTestHelper.createDataSource("target/tests/dbSrc");
+			repositorySrc = new DatabaseRepository(dataSourceSrc);
+			DataSource dataSourceDst = DatabaseTestHelper.createDataSource("target/tests/dbDst");
+			repositoryDst = new DatabaseRepository(dataSourceDst);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -74,7 +74,7 @@ public class DatabaseRepositoryCopyTest {
 
 			IResource resourceBack = repositorySrc.getResource(PATH);
 			String path = resourceBack.getPath();
-
+			assertTrue(resourceBack.exists());
 			assertEquals(PATH, path);
 
 			copyRepository(repositorySrc, repositoryDst);

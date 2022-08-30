@@ -12,16 +12,14 @@
 package org.eclipse.dirigible.repository.database;
 
 import static java.text.MessageFormat.format;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.derby.jdbc.EmbeddedDataSource;
+import org.eclipse.dirigible.database.h2.H2Database;
 
 /**
  * The Class DatabaseTestHelper.
@@ -39,47 +37,13 @@ public class DatabaseTestHelper {
 	 */
 	public static DataSource createDataSource(String name) throws Exception {
 		try {
-			Properties databaseProperties = new Properties();
-			InputStream in = DatabaseTestHelper.class.getResourceAsStream("/database.properties");
-			if (in != null) {
-				try {
-					databaseProperties.load(in);
-				} finally {
-					if (in != null) {
-						in.close();
-					}
-				}
-			}
-			String database = System.getProperty("database");
-			if (database == null) {
-				database = "derby";
-			}
-
-			if ("derby".equals(database)) {
-				DataSource embeddedDataSource = new EmbeddedDataSource();
-				String derbyRoot = prepareRootFolder(name);
-				((EmbeddedDataSource) embeddedDataSource).setDatabaseName(derbyRoot);
-				((EmbeddedDataSource) embeddedDataSource).setCreateDatabase("create");
-				((EmbeddedDataSource) embeddedDataSource).setConnectionAttributes("name=" + name);
-				return embeddedDataSource;
-			}
-			BasicDataSource basicDataSource = new BasicDataSource();
-			String databaseDriver = databaseProperties.getProperty(database + ".driver");
-			basicDataSource.setDriverClassName(databaseDriver);
-			String databaseUrl = databaseProperties.getProperty(database + ".url");
-			basicDataSource.setUrl(databaseUrl);
-			String databaseUsername = databaseProperties.getProperty(database + ".username");
-			basicDataSource.setUsername(databaseUsername);
-			String databasePassword = databaseProperties.getProperty(database + ".password");
-			basicDataSource.setPassword(databasePassword);
-			basicDataSource.setDefaultAutoCommit(true);
-			basicDataSource.setAccessToUnderlyingConnectionAllowed(true);
-
-			return basicDataSource;
-
-		} catch (IOException e) {
-			throw new Exception(e);
+			H2Database h2Database = new H2Database();
+			return h2Database.getDataSource(name);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
 		}
+		return null;
 	}
 
 	/**

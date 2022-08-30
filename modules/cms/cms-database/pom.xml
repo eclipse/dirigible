@@ -91,39 +91,21 @@
         </dependency>
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-sql-h2</artifactId>
+			<artifactId>dirigible-database-h2</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-sql-derby</artifactId>
+			<artifactId>dirigible-database-sql-h2</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
-        <dependency>
-		    <groupId>org.apache.derby</groupId>
-		    <artifactId>derby</artifactId>
-		    <version>10.14.2.0</version>
-		    <scope>test</scope>
-		</dependency>
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-dbcp2</artifactId>
-		    <version>${commons-dbcp2.version}</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		    <version>${postgresql.version}</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>com.h2database</groupId>
-		    <artifactId>h2</artifactId>
-		    <version>${h2database.version}</version>
-		    <scope>test</scope>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2database.version}</version>
+			<scope>test</scope>
 		</dependency>
     </dependencies>
 
