@@ -731,8 +731,6 @@
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.1.214</h2database.version>
 		<postgresql.version>42.5.0</postgresql.version>
-		<derby.version>10.15.2.0</derby.version>
-		<derbytools.version>10.15.2.0</derbytools.version>
 		<activemq.version>5.17.1</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.12.v20180830</jetty.version>
