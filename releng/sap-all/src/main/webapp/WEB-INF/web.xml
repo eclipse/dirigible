@@ -288,6 +288,10 @@
 	    </auth-constraint>
 	</security-constraint>
 	
+	<session-config>
+		<session-timeout>1440</session-timeout>
+	</session-config>
+	
 	<!-- Security roles -->
 	<security-role>
 	    <role-name>Everyone</role-name>

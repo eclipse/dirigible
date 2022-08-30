@@ -250,6 +250,10 @@
 	        <role-name>Operator</role-name>
 	    </auth-constraint>
 	</security-constraint>
+	
+	<session-config>
+		<session-timeout>1440</session-timeout>
+	</session-config>
 
 	<!-- Security roles -->
 	<security-role>
