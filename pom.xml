@@ -733,7 +733,7 @@
 		<postgresql.version>42.5.0</postgresql.version>
 		<activemq.version>5.17.1</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
-		<jetty.version>9.4.12.v20180830</jetty.version>
+		<jetty.version>9.4.48.v20220622</jetty.version>
 		<lucene.version>9.3.0</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.7.2</flowable.version>
