@@ -98,8 +98,7 @@ public class VelocityGenerationEngine implements IGenerationEngine {
 			writer.flush();
 			return baos.toByteArray();
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new IOException("Could not evaluate template by Velocity: " + location, ex);
+			throw new IOException("Could not evaluate template by Velocity [" + location + "]: " + ex.getMessage(), ex);
 		} finally {
 			try {
 				in.close();
