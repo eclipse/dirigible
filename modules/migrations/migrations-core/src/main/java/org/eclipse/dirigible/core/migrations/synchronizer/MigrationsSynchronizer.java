@@ -322,15 +322,17 @@ public class MigrationsSynchronizer extends AbstractSynchronizer implements IOrd
 					}
 					lastMigration = migration;
 				}
-				if (migrationStatusDefinition == null) {
-					migrationsCoreService.createMigrationStatus(project, lastMigration.getMajor(), lastMigration.getMinor(), lastMigration.getMicro(), 
-							lastMigration.getLocation());
-				} else {
-					if (migrationStatusDefinition.getMajor() != lastMigration.getMajor()
-							|| migrationStatusDefinition.getMinor() != lastMigration.getMinor()
-							|| migrationStatusDefinition.getMicro() != lastMigration.getMicro()) {
-						migrationsCoreService.updateMigrationStatus(project, lastMigration.getMajor(), lastMigration.getMinor(), lastMigration.getMicro(), 
+				if (lastMigration != null) {
+					if (migrationStatusDefinition == null) {
+						migrationsCoreService.createMigrationStatus(project, lastMigration.getMajor(), lastMigration.getMinor(), lastMigration.getMicro(), 
 								lastMigration.getLocation());
+					} else {
+						if (migrationStatusDefinition.getMajor() != lastMigration.getMajor()
+								|| migrationStatusDefinition.getMinor() != lastMigration.getMinor()
+								|| migrationStatusDefinition.getMicro() != lastMigration.getMicro()) {
+							migrationsCoreService.updateMigrationStatus(project, lastMigration.getMajor(), lastMigration.getMinor(), lastMigration.getMicro(), 
+									lastMigration.getLocation());
+						}
 					}
 				}
 				migratedProjects.add(project);

@@ -101,21 +101,11 @@ public class RepositoryFileUtils {
 					}
 				}
 
-				InputStream in = null;
-				FileOutputStream out = null;
-				try {
-					in = new ByteArrayInputStream(((IResource) entity).getContent());
+				try (InputStream in = new ByteArrayInputStream(((IResource) entity).getContent())) {
 					File outputFile = new File(tempDirectory, resourcePath);
-
-					out = new FileOutputStream(outputFile);
-					IOUtils.copy(in, out);
-				} finally {
-					if (in != null) {
-						in.close();
-					}
-					if (out != null) {
+					try (FileOutputStream out = new FileOutputStream(outputFile)) {
+						IOUtils.copy(in, out);
 						out.flush();
-						out.close();
 					}
 				}
 			}

@@ -62,7 +62,7 @@ public class CheckoutCommand {
 		if (verifier.verify(workspace.getName(), model.getProject())) {
 			if (logger.isDebugEnabled()) {logger.debug(String.format("Start checkout %s repository and %s branch...", model.getProject(), model.getBranch()));}
 			boolean checkedout = checkoutProjectFromGitRepository(workspace, model);
-			atLeastOne = atLeastOne ? atLeastOne : checkedout;
+			atLeastOne = checkedout;
 			logger.debug(String.format("Pull of the repository %s finished.", model.getProject()));
 		} else {
 			if (logger.isWarnEnabled()) {logger.warn(String.format("Project %s is local only. Select a previously cloned project for Checkout operation.", model.getProject()));}
@@ -109,6 +109,7 @@ public class CheckoutCommand {
 					"Repository [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
 					model.getProject(), numberOfConflictingFiles);
 				if (logger.isErrorEnabled()) {logger.error(message);}
+				throw new GitConnectorException(message);
 			}
 		} catch (IOException | GitAPIException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();

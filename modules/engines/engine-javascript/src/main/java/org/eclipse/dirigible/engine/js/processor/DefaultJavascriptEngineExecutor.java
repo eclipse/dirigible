@@ -161,8 +161,9 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		} catch (ClassNotFoundException e) {
 			throw new ScriptingException("No JavaScript Engine registered. The default Graalium is also not available.");
 		}
-		if (logger.isErrorEnabled()) {logger.error(format("Default JavaScript Engine Executor not found."));}
-		return null;
+		String error = "Default JavaScript Engine Executor not found.";
+		if (logger.isErrorEnabled()) {logger.error(error);}
+		throw new ScriptingException(error);
 	}
 
 	/**

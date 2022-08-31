@@ -77,12 +77,17 @@ import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The GitConnector utility is used for simplified communication with Git SCM
  * server.
  */
 public class GitConnector implements IGitConnector {
+	
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(GitConnector.class);
 
 	/** The git. */
 	private final Git git;
@@ -648,7 +653,7 @@ public class GitConnector implements IGitConnector {
 //	}
 
 	/** The Constant format. */
-	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
 	 * Gets the local branches.
@@ -854,7 +859,7 @@ public class GitConnector implements IGitConnector {
 				try {
 					in.close();
 				} catch (IOException e) {
-					throw new GitConnectorException(e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);};
 				}
 			}
 			if (treeWalk != null) {
