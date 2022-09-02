@@ -25,44 +25,202 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
     }
     $scope.listDatabases();
 
-    $scope.newDatabase = function () {
-        $scope.database = {};
-        $scope.database.username = "";
-        $scope.database.password = "";
-        $scope.isNew = true;
+    $scope.getDatabaseDetailsFormItems = (values = {}, isNew = true) => {
+        let ret = [];
+
+        if (isNew) ret.push({
+            id: 'name',
+            type: 'input',
+            label: 'Name',
+            required: true,
+            placeholder: 'Enter name...',
+            value: values['name'] || ''
+        });
+
+        ret.push(
+            {
+                id: 'driver',
+                type: 'dropdown',
+                label: 'Driver',
+                required: true,
+                placeholder: 'Select driver...',
+                value: values['driver'],
+                items: $scope.drivers.map(x => ({ label: x.text, value: x.value }))
+            },
+            {
+                id: 'url',
+                type: 'input',
+                label: 'URL',
+                required: true,
+                placeholder: 'Enter url...',
+                value: values['url'] || ''
+            },
+            {
+                id: 'username',
+                type: 'input',
+                label: 'Username',
+                required: true,
+                placeholder: 'Enter username...',
+                value: values['username'] || ''
+            },
+            {
+                id: 'password',
+                type: 'input',
+                inputType: 'password',
+                label: 'Password',
+                required: true,
+                placeholder: 'Enter password...',
+                value: values['password'] || ''
+            },
+            {
+                id: 'parameters',
+                type: 'input',
+                label: 'Parameters',
+                required: true,
+                placeholder: 'Enter parameters...',
+                value: values['parameters'] || ''
+            }
+        );
+        return ret;
     }
 
-    $scope.createDatabase = function () {
-        $http.post('/services/v4/ide/database', JSON.stringify($scope.database))
-            .then(function (response) {
-                $scope.listDatabases();
-            }, function (response) {
-                console.error(response.data);
-            });
+    $scope.newDatabase = function () {
+        messageHub.showFormDialog(
+            'createDatabaseDialog',
+            'New Database',
+            $scope.getDatabaseDetailsFormItems(),
+            [{
+                id: 'btnOK',
+                type: 'emphasized',
+                label: 'Create',
+                whenValid: true
+            },
+            {
+                id: 'btnCancel',
+                type: 'transparent',
+                label: 'Close',
+            }],
+            'ide-databases.database.create',
+            'Please, wait...'
+        );
     }
+
+    messageHub.onDidReceiveMessage(
+        'ide-databases.database.create',
+        function (msg) {
+            if (msg.data.buttonId === 'btnOK') {
+                let database = msg.data.formData.reduce((ret, item) => {
+                    ret[item.id] = item.value;
+                    return ret;
+                }, {});
+                $http.post('/services/v4/ide/database', JSON.stringify(database))
+                    .then(function (response) {
+                        messageHub.hideFormDialog('createDatabaseDialog');
+                        $scope.listDatabases();
+                    }, function (response) {
+                        messageHub.updateFormDialog(
+                            'createDatabaseDialog',
+                            msg.data.formData,
+                            'Please, wait...',
+                            response.data
+                        );
+                    });
+            } else {
+                messageHub.hideFormDialog('createDatabaseDialog');
+            }
+        },
+        true
+    );
 
     $scope.editDatabase = function (database) {
-        $scope.database = database;
-        $scope.isNew = false;
+        $scope.database = {
+            id: database.id,
+            name: database.name
+        };
+
+        messageHub.showFormDialog(
+            'editDatabaseDialog',
+            `Edit Database ${database.name}`,
+            $scope.getDatabaseDetailsFormItems(database, false),
+            [{
+                id: 'btnOK',
+                type: 'emphasized',
+                label: 'Update',
+                whenValid: true
+            },
+            {
+                id: 'btnCancel',
+                type: 'transparent',
+                label: 'Close',
+            }],
+            'ide-databases.database.edit',
+            'Please, wait...'
+        );
     }
+
+    messageHub.onDidReceiveMessage(
+        'ide-databases.database.edit',
+        function (msg) {
+            if (msg.data.buttonId === 'btnOK') {
+                let database = msg.data.formData.reduce((ret, item) => {
+                    ret[item.id] = item.value;
+                    return ret;
+                }, {});
+                $http.put('/services/v4/ide/database/' + $scope.database.id, JSON.stringify({ name: $scope.database.name, ...database }))
+                    .then(function (response) {
+                        messageHub.hideFormDialog('editDatabaseDialog');
+                        $scope.listDatabases();
+                    }, function (response) {
+                        messageHub.updateFormDialog(
+                            'editDatabaseDialog',
+                            msg.data.formData,
+                            'Please, wait...',
+                            response.data
+                        );
+                    });
+            } else {
+                messageHub.hideFormDialog('editDatabaseDialog');
+            }
+        },
+        true
+    );
 
     $scope.deleteDatabase = function (database) {
-        $http.delete('/services/v4/ide/database/' + database.id)
-            .then(function (response) {
-                $scope.listDatabases();
-            }, function (response) {
-                console.error(response.data);
-            });
+        $scope.database = {
+            id: database.id
+        };
+
+        messageHub.showDialog(
+            'Delete Database',
+            'Are you sure you want to delete the selected database?',
+            [{
+                id: 'btnOK',
+                type: 'emphasized',
+                label: 'OK',
+            },
+            {
+                id: 'btnCancel',
+                type: 'transparent',
+                label: 'Cancel',
+            }],
+            'ide-databases.database.delete'
+        );
     }
 
-    $scope.updateDatabase = function () {
-        $http.put('/services/v4/ide/database/' + $scope.database.id, JSON.stringify($scope.database))
-            .then(function (response) {
-                $scope.listDatabases();
-            }, function (response) {
-                console.error(response.data);
-            });
-    }
+    messageHub.onDidReceiveMessage(
+        'ide-databases.database.delete',
+        function (msg) {
+            if (msg.data === 'btnOK' && $scope.database.id) {
+                $http.delete('/services/v4/ide/database/' + $scope.database.id)
+                    .then(function (response) {
+                        $scope.listDatabases();
+                    }, function (response) {
+                        console.error(response.data);
+                    });
+            }
+        },
+        true
+    );
 
     $scope.drivers = [];
     $scope.drivers.push({ "text": "H2 - org.h2.Driver", "value": "org.h2.Driver" });

@@ -234,439 +234,165 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             scope: {
                 menuExtId: '@',
             },
-            link: function (scope, element) {
-                let isMenuOpen = false;
-                scope.themes = [];
-                scope.currentTheme = theming.getCurrentTheme();
-                scope.user = User.get();
-                let menuBackdrop = element[0].querySelector(".dg-menu__backdrop");
-                let themePopover = element[0].querySelector("#themePopover");
-                let themePopoverButton = element[0].querySelector("#themePopoverButton");
-                let userPopover = element[0].querySelector("#userPopover");
-                let userPopoverButton = element[0].querySelector("#userPopoverButton");
-
-                menuBackdrop.addEventListener('click', function (event) {
-                    event.stopPropagation();
-                    scope.backdropEvent();
-                });
-
-                menuBackdrop.addEventListener('contextmenu', function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    scope.backdropEvent();
-                });
-
-                function toggleThemePopover(hidden = true) {
-                    isMenuOpen = !hidden;
-                    if (hidden) {
-                        themePopover.classList.add("dg-hidden");
-                        themePopover.setAttribute("aria-expanded", false);
-                        themePopover.setAttribute("aria-hidden", true);
-                        themePopoverButton.setAttribute("aria-expanded", false);
-                    } else {
-                        themePopover.classList.remove("dg-hidden");
-                        themePopover.setAttribute("aria-expanded", true);
-                        themePopover.setAttribute("aria-hidden", false);
-                        themePopoverButton.setAttribute("aria-expanded", true);
-                    }
-                }
-
-                function toggleUserPopover(hidden = true) {
-                    isMenuOpen = !hidden;
-                    if (hidden) {
-                        userPopover.classList.add("dg-hidden");
-                        userPopover.setAttribute("aria-expanded", false);
-                        userPopover.setAttribute("aria-hidden", true);
-                        userPopoverButton.setAttribute("aria-expanded", false);
-                    } else {
-                        userPopover.classList.remove("dg-hidden");
-                        userPopover.setAttribute("aria-expanded", true);
-                        userPopover.setAttribute("aria-hidden", false);
-                        userPopoverButton.setAttribute("aria-expanded", true);
-                    }
-                }
-
-                function loadMenu() {
-                    Menu.query({ id: scope.menuExtId }).$promise
-                        .then(function (data) {
-                            scope.menu = data;
-                        });
-                }
-
-                scope.branding = branding;
-
-                scope.showBackdrop = function () {
-                    menuBackdrop.classList.remove("dg-hidden");
-                };
-
-                scope.hideBackdrop = function () {
-                    menuBackdrop.classList.add("dg-hidden");
-                };
-
-                scope.backdropEvent = function () {
-                    messageHub.triggerEvent('header-menu.closeAll', true);
-                    if (isMenuOpen) {
-                        if (!themePopover.classList.contains("dg-hidden")) {
-                            toggleThemePopover(true);
+            link: {
+                pre: function (scope) {
+                    scope.menuClick = function (item) {
+                        if (item.action === 'openView') {
+                            messageHub.openView(item.id, item.data);
+                        } else if (item.action === 'openPerspective') {
+                            messageHub.openPerspective(item.link);
+                        } else if (item.action === 'openDialogWindow') {
+                            messageHub.showDialogWindow(item.dialogId);
+                        } else if (item.action === 'open') {
+                            window.open(item.data, '_blank');
+                        } else if (item.event) {
+                            messageHub.postMessage(item.event, item.data, true);
                         }
-                        if (!userPopover.classList.contains("dg-hidden")) {
-                            toggleUserPopover(true);
-                        }
-                    }
-                    scope.hideBackdrop();
-                };
+                    };
+                }, post: function (scope, element) {
+                    scope.themes = [];
+                    scope.currentTheme = theming.getCurrentTheme();
+                    scope.user = User.get();
 
-                messageHub.onDidReceiveMessage(
-                    'ide-header.menuOpened',
-                    function () {
-                        if (isMenuOpen) {
-                            if (!themePopover.classList.contains("dg-hidden")) {
-                                toggleThemePopover(true);
-                            }
-                            if (!userPopover.classList.contains("dg-hidden")) {
-                                toggleUserPopover(true);
+                    function loadMenu() {
+                        Menu.query({ id: scope.menuExtId }).$promise
+                            .then(function (data) {
+                                scope.menu = data;
+                            });
+                    }
+
+                    scope.branding = branding;
+
+                    messageHub.onDidReceiveMessage(
+                        'ide.themesLoaded',
+                        function () {
+                            scope.themes = theming.getThemes();
+                        },
+                        true
+                    );
+
+                    if (scope.menuExtId)
+                        loadMenu.call(scope);
+
+                    scope.setTheme = function (themeId, name) {
+                        scope.currentTheme.id = themeId;
+                        scope.currentTheme.name = name;
+                        theming.setTheme(themeId);
+                    };
+
+                    scope.resetTheme = function () {
+                        scope.resetViews();
+                        for (let cookie in $cookies.getAll()) {
+                            if (cookie.startsWith("DIRIGIBLE")) {
+                                $cookies.remove(cookie, { path: "/" });
                             }
                         }
-                        scope.showBackdrop();
-                    },
-                    true
-                );
+                    };
 
-                messageHub.onDidReceiveMessage(
-                    'ide-header.menuClosed',
-                    function () {
-                        if (!isMenuOpen) scope.hideBackdrop();
-                    },
-                    true
-                );
+                    scope.resetViews = function () {
+                        localStorage.clear();
+                        theming.reset();
+                        location.reload();
+                    };
 
-                messageHub.onDidReceiveMessage(
-                    'ide.themesLoaded',
-                    function () {
-                        scope.themes = theming.getThemes();
-                    },
-                    true
-                );
-
-                if (scope.menuExtId)
-                    loadMenu.call(scope);
-
-                scope.menuClick = function (item) {
-                    if (item.action === 'openView') {
-                        messageHub.openView(item.id, item.data);
-                    } else if (item.action === 'openPerspective') {
-                        messageHub.openPerspective(item.link);
-                    } else if (item.action === 'openDialogWindow') {
-                        messageHub.showDialogWindow(item.dialogId);
-                    } else if (item.action === 'open') {
-                        window.open(item.data, '_blank');
-                    } else if (item.event) {
-                        messageHub.postMessage(item.event, item.data, true);
-                    }
-                };
-
-                scope.themeButtonClicked = function () {
-                    toggleUserPopover(true);
-                    if (themePopover.classList.contains("dg-hidden")) {
-                        scope.showBackdrop();
-                        messageHub.triggerEvent('header-menu.closeAll', true);
-                        toggleThemePopover(false);
-                    } else {
-                        scope.hideBackdrop();
-                        toggleThemePopover(true);
-                    }
-                };
-
-                scope.userButtonClicked = function () {
-                    toggleThemePopover(true);
-                    if (userPopover.classList.contains("dg-hidden")) {
-                        scope.showBackdrop();
-                        messageHub.triggerEvent('header-menu.closeAll', true);
-                        toggleUserPopover(false);
-                    } else {
-                        scope.hideBackdrop();
-                        toggleUserPopover(true);
-                    }
-                };
-
-                scope.setTheme = function (themeId, name) {
-                    scope.currentTheme.id = themeId;
-                    scope.currentTheme.name = name;
-                    theming.setTheme(themeId);
-                    toggleThemePopover(true);
-                };
-
-                scope.resetTheme = function () {
-                    scope.resetViews();
-                    for (let cookie in $cookies.getAll()) {
-                        if (cookie.startsWith("DIRIGIBLE")) {
-                            $cookies.remove(cookie, { path: "/" });
-                        }
-                    }
-                };
-
-                scope.resetViews = function () {
-                    localStorage.clear();
-                    theming.reset();
-                    location.reload();
-                };
+                    scope.logout = function () {
+                        location.replace('/logout');
+                    };
+                }
             },
-            templateUrl: '/services/v4/web/ide-core/ui/templates/ideHeader.html'
+            templateUrl: '/services/v4/web/ide-core/ui/templates/ideHeader.html',
         };
     }])
-    .directive("headerHamburgerMenu", ['messageHub', function (messageHub) {
+    .directive("headerHamburgerMenu", [function () {
         return {
-            restrict: "E",
-            replace: true,
+            restrict: "A",
+            replace: false,
             scope: {
                 menuList: "<",
                 menuHandler: "&",
             },
-            link: function (scope, element) {
-                let isMenuOpen = false;
+            link: function (scope) {
                 scope.menuHandler = scope.menuHandler();
-
-                messageHub.onDidReceiveMessage(
-                    'header-menu.closeAll',
-                    function () {
-                        if (isMenuOpen) scope.hideAllMenus();
-                    },
-                    true
-                );
-
-                scope.menuClicked = function (menuButton) {
-                    let menu = menuButton.parentElement.querySelector(".fd-menu");
-                    if (menu.classList.contains("dg-hidden")) {
-                        scope.hideAllSubmenus(menu);
-                        scope.hideAllMenus();
-                        let offset = menuButton.getBoundingClientRect();
-                        menu.style.top = `${offset.bottom}px`;
-                        menu.style.left = `${offset.left}px`;
-                        menu.classList.remove("dg-hidden");
-                        messageHub.triggerEvent('ide-header.menuOpened', true);
-                        isMenuOpen = true;
-                    } else {
-                        menu.classList.add("dg-hidden");
-                        messageHub.triggerEvent('ide-header.menuClosed', true);
-                        isMenuOpen = false;
-                    }
-                };
-
-                scope.hideAllMenus = function () {
-                    let menus = element[0].querySelectorAll(".fd-menu");
-                    for (let i = 0; i < menus.length; i++) {
-                        if (!menus[i].classList.contains("dg-hidden")) menus[i].classList.add("dg-hidden");
-                    }
-                    messageHub.triggerEvent('ide-header.menuClosed', true);
-                    isMenuOpen = false;
-                };
-
-                scope.hideAllSubmenus = function () {
-                    let submenus = element[0].querySelectorAll('.fd-menu__sublist[aria-hidden="false"]');
-                    let submenusLinks = element[0].querySelectorAll('.is-expanded');
-                    for (let i = 0; i < submenus.length; i++)
-                        submenus[i].setAttribute("aria-hidden", true);
-                    for (let i = 0; i < submenusLinks.length; i++) {
-                        submenusLinks[i].setAttribute("aria-expanded", false);
-                        submenusLinks[i].classList.remove("is-expanded");
-                    }
-                };
-
-                scope.showSubmenu = function (submenuId) {
-                    scope.hideAllSubmenus();
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    let submenus = submenu.querySelectorAll('.fd-menu__sublist');
-                    let submenusLinks = submenu.querySelectorAll('.is-expanded');
-                    for (let i = 0; i < submenus.length; i++)
-                        submenus[i].setAttribute("aria-hidden", true);
-                    for (let i = 0; i < submenusLinks.length; i++) {
-                        submenusLinks[i].setAttribute("aria-expanded", false);
-                        submenusLinks[i].classList.remove("is-expanded");
-                    }
-                    let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                    submenuLink.setAttribute("aria-expanded", true);
-                    submenuLink.classList.add("is-expanded");
-                    submenu.setAttribute("aria-hidden", false);
-                };
             },
-            templateUrl: "/services/v4/web/ide-core/ui/templates/headerHamburgerMenu.html",
+            template: `<fd-popover compact="true">
+    <fd-popover-control>
+        <fd-button fd-tool-header-button compact="true" dg-type="transparent" glyph="sap-icon--menu2"
+            aria-label="main menu button">
+        </fd-button>
+    </fd-popover-control>
+    <fd-popover-body no-arrow="true" can-scroll="false">
+        <fd-menu no-backdrop="true">
+            <fd-menu-sublist ng-repeat="menuItem in menuList track by $index" title="{{ menuItem.label }}"
+                can-scroll="isScrollable(item.items)">
+                <header-submenu sublist="menuItem.items" menu-handler="menuHandler"></header-submenu>
+            </fd-menu-sublist>
+        </fd-menu>
+    </fd-popover-body>
+</fd-popover>`,
         };
     }])
-    .directive("headerMenu", ['messageHub', function (messageHub) {
+    .directive("headerMenu", [function () {
         return {
-            restrict: "E",
-            replace: true,
+            restrict: "A",
+            replace: false,
             scope: {
                 menuList: "<",
                 menuHandler: "&",
             },
-            link: function (scope, element) {
-                let isMenuOpen = false;
-                let openedMenuId = "";
+            link: function (scope) {
                 scope.menuHandler = scope.menuHandler();
-
-                messageHub.onDidReceiveMessage(
-                    'header-menu.closeAll',
-                    function () {
-                        if (isMenuOpen) {
-                            scope.hideAllMenus();
-                            scope.hideAllSubmenus();
-                        }
-                    },
-                    true
-                );
-
-                scope.isScrollable = function (menuItems) {
-                    for (let i = 0; i < menuItems.length; i++)
-                        if (menuItems[i].items) return '';
-                    return 'fd-menu--overflow fd-scrollbar dg-headermenu--overflow';
-                }
-
-                scope.menuHovered = function () {
-                    if (openedMenuId !== "") {
-                        let oldSubmenu = element[0].querySelector(`#${openedMenuId}`);
-                        let oldSubmenuLink = element[0].querySelector(`span[aria-controls="${openedMenuId}"]`);
-                        oldSubmenuLink.setAttribute("aria-expanded", false);
-                        oldSubmenuLink.classList.remove("is-expanded");
-                        oldSubmenu.setAttribute("aria-hidden", true);
-                        openedMenuId = "";
-                    }
-                };
-
-                scope.menuClicked = function (menuButton) {
-                    let menu = menuButton.parentElement.querySelector(".fd-menu");
-                    if (menu.classList.contains("dg-hidden")) {
-                        scope.hideAllSubmenus(menu);
-                        scope.hideAllMenus();
-                        let offset = menuButton.getBoundingClientRect();
-                        menu.style.top = `${offset.bottom}px`;
-                        menu.style.left = `${offset.left}px`;
-                        menu.classList.remove("dg-hidden");
-                        messageHub.triggerEvent('ide-header.menuOpened', true);
-                        isMenuOpen = true;
+                scope.isScrollable = function (items) {
+                    if (items) {
+                        for (let i = 0; i < items.length; i++)
+                            if (items[i].items) return false;
                     } else {
-                        menu.classList.add("dg-hidden");
-                        messageHub.triggerEvent('ide-header.menuClosed', true);
-                        isMenuOpen = false;
+                        for (let i = 0; i < scope.menuList.length; i++)
+                            if (scope.menuList[i].items) return false;
                     }
-                };
-
-                scope.hideAllMenus = function () {
-                    let menus = element[0].querySelectorAll(".fd-menu");
-                    for (let i = 0; i < menus.length; i++) {
-                        if (!menus[i].classList.contains("dg-hidden")) menus[i].classList.add("dg-hidden");
-                    }
-                    messageHub.triggerEvent('ide-header.menuClosed', true);
-                    isMenuOpen = false;
-                };
-
-                scope.hideAllSubmenus = function () {
-                    let submenus = element[0].querySelectorAll('.fd-menu__sublist[aria-hidden="false"]');
-                    let submenusLinks = element[0].querySelectorAll('.is-expanded');
-                    for (let i = 0; i < submenus.length; i++)
-                        submenus[i].setAttribute("aria-hidden", true);
-                    for (let i = 0; i < submenusLinks.length; i++) {
-                        submenusLinks[i].setAttribute("aria-expanded", false);
-                        submenusLinks[i].classList.remove("is-expanded");
-                    }
-                };
-
-                scope.showSubmenu = function (submenuId) {
-                    scope.hideAllSubmenus();
-                    openedMenuId = submenuId;
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    let submenus = submenu.querySelectorAll('.fd-menu__sublist');
-                    let submenusLinks = submenu.querySelectorAll('.is-expanded');
-                    for (let i = 0; i < submenus.length; i++)
-                        submenus[i].setAttribute("aria-hidden", true);
-                    for (let i = 0; i < submenusLinks.length; i++) {
-                        submenusLinks[i].setAttribute("aria-expanded", false);
-                        submenusLinks[i].classList.remove("is-expanded");
-                    }
-                    let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                    submenuLink.setAttribute("aria-expanded", true);
-                    submenuLink.classList.add("is-expanded");
-                    submenu.setAttribute("aria-hidden", false);
-                };
-
-                scope.menuItemClick = function (item, subItem) {
-                    scope.hideAllMenus();
-                    scope.menuHandler(item, subItem);
+                    return true;
                 };
             },
-            templateUrl: "/services/v4/web/ide-core/ui/templates/headerMenu.html",
+            template: `<div fd-tool-header-element ng-repeat="menuItem in menuList track by $index">
+                <fd-popover compact="true">
+                    <fd-popover-control>
+                        <fd-button fd-tool-header-button compact="true" dg-label="{{ menuItem.label }}" dg-type="transparent"
+                            is-menu="true" aria-label="menu button {{ menuItem.label }}">
+                        </fd-button>
+                    </fd-popover-control>
+                    <fd-popover-body no-arrow="true" can-scroll="isScrollable()">
+                        <fd-menu no-backdrop="true">
+                            <fd-menu-item ng-repeat-start="item in menuItem.items track by $index" ng-if="!item.items"
+                                title="{{ item.label }}" ng-click="menuHandler(item)">
+                            </fd-menu-item>
+                            <fd-menu-sublist ng-if="item.items" title="{{ item.label }}" can-scroll="isScrollable(item.items)">
+                                <header-submenu sublist="item.items" menu-handler="menuHandler"></header-submenu>
+                            </fd-menu-sublist>
+                            <fd-menu-separator ng-if="item.divider" ng-repeat-end></fd-menu-separator>
+                        </fd-menu>
+                    </fd-popover-body>
+                </fd-popover>
+            </div>`,
         };
     }])
     .directive("headerSubmenu", function () {
         return {
             restrict: "E",
-            replace: true,
+            replace: false,
             scope: {
-                parentItem: "<",
-                submenuIndex: "<",
-                menuHandler: "&",
-                hideMenuFn: "&",
-                isToplevel: "<",
-                idPrefix: "<",
+                sublist: '<',
+                menuHandler: '&',
             },
-            link: function (scope, element, attr) {
-                let openedMenuId = "";
-                scope.hideMenuFn = scope.hideMenuFn();
+            link: function (scope) {
                 scope.menuHandler = scope.menuHandler();
-
-                scope.isScrollable = function (menuItems) {
-                    for (let i = 0; i < menuItems.length; i++)
-                        if (menuItems[i].items) return "";
-                    return "fd-scrollbar dg-menu__sublist--overflow";
-                }
-
-                scope.menuHovered = function () {
-                    if (openedMenuId !== "" && openedMenuId !== attr["id"]) {
-                        let oldSubmenu = element[0].querySelector(`#${openedMenuId}`);
-                        let oldSubmenuLink = element[0].querySelector(`span[aria-controls="${openedMenuId}"]`);
-                        oldSubmenuLink.setAttribute("aria-expanded", false);
-                        oldSubmenuLink.classList.remove("is-expanded");
-                        oldSubmenu.setAttribute("aria-hidden", true);
-                        openedMenuId = "";
-                    }
-                };
-
-                scope.hideAllSubmenus = function () {
-                    let submenus = element[0].querySelectorAll('.fd-menu__sublist[aria-hidden="false"]');
-                    let submenusLinks = element[0].querySelectorAll('.is-expanded');
-                    for (let i = 0; i < submenus.length; i++)
-                        submenus[i].setAttribute("aria-hidden", true);
-                    for (let i = 0; i < submenusLinks.length; i++) {
-                        submenusLinks[i].setAttribute("aria-expanded", false);
-                        submenusLinks[i].classList.remove("is-expanded");
-                    }
-                };
-
-                scope.showSubmenu = function (submenuId) {
-                    scope.hideAllSubmenus();
-                    openedMenuId = submenuId;
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    let submenus = submenu.querySelectorAll('.fd-menu__sublist');
-                    let submenusLinks = submenu.querySelectorAll('.is-expanded');
-                    for (let i = 0; i < submenus.length; i++)
-                        submenus[i].setAttribute("aria-hidden", true);
-                    for (let i = 0; i < submenusLinks.length; i++) {
-                        submenusLinks[i].setAttribute("aria-expanded", false);
-                        submenusLinks[i].classList.remove("is-expanded");
-                    }
-                    let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                    submenuLink.setAttribute("aria-expanded", true);
-                    submenuLink.classList.add("is-expanded");
-                    submenu.setAttribute("aria-hidden", false);
-                };
-
-                scope.menuItemClick = function (item, subItem) {
-                    scope.hideMenuFn();
-                    if (scope.isToplevel) scope.menuHandler(subItem); // Temp fix for legacy menu api
-                    else scope.menuHandler(item, subItem);
+                scope.isScrollable = function (index) {
+                    for (let i = 0; i < scope.sublist[index].items.length; i++)
+                        if (scope.sublist[index].items[i].items) return false;
+                    return true;
                 };
             },
-            templateUrl: "/services/v4/web/ide-core/ui/templates/headerSubmenu.html",
+            template: `<fd-menu-item ng-repeat-start="item in sublist track by $index" ng-if="!item.items" title="{{ item.label }}" ng-click="menuHandler(item)"></fd-menu-item>
+<fd-menu-sublist ng-if="item.items" title="{{ item.label }}" can-scroll="isScrollable($index)"><header-submenu sublist="item.items" menu-handler="menuHandler"></header-submenu></fd-menu-sublist>
+<fd-menu-separator ng-if="item.divider" ng-repeat-end></fd-menu-separator>`,
         };
     })
     .directive('ideContainer', ['perspective', function (perspective) {

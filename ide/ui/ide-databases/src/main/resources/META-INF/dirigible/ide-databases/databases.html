@@ -45,16 +45,15 @@
     </head>
 
     <body>
-        <div>
-            <div>
-                <fd-scrollbar>
-
-                    <fd-button class="pull-right" dg-type="transparent" glyph="sap-icon--write-new-document" title="New"
-                        aria-label="Edit" ng-click="newDatabase()" aria-hidden="true" data-toggle="modal"
-                        data-target="#dialogDatabase">
-                    </fd-button>
-
-
+        <div class="dg-fill-parent dg-vbox">
+            <fd-toolbar dg-type="solid" dg-size="cozy">
+                <fd-toolbar-spacer></fd-toolbar-spacer>
+                <fd-button dg-type="transparent" glyph="sap-icon--write-new-document" title="New"
+                    aria-label="New Database" ng-click="newDatabase()">
+                </fd-button>
+            </fd-toolbar>
+            <div class="dg-stretch">
+                <fd-scrollbar class="dg-full-height">
                     <table fd-table display-mode="compact">
                         <thead fd-table-header sticky="true">
                             <tr fd-table-row>
@@ -64,8 +63,8 @@
                                 <th fd-table-header-cell>Username</th>
                                 <th fd-table-header-cell>Password</th>
                                 <th fd-table-header-cell>Parameters</th>
-                                <th fd-table-header-cell width="50px">Trigger</th>
-                                <th fd-table-header-cell width="50px">Assign</th>
+                                <th fd-table-header-cell width="50px"></th>
+                                <th fd-table-header-cell width="50px"></th>
                             </tr>
                         </thead>
                         <tbody fd-table-body>
@@ -91,123 +90,21 @@
                                 <td fd-table-cell width="50px">
                                     <div class="tdSingleLine">
                                         <fd-button dg-type="transparent" glyph="sap-icon--edit" title="Edit"
-                                            aria-label="Edit" ng-click="editDatabase(next)" aria-hidden="true"
-                                            data-toggle="modal" data-target="#dialogDatabase">
+                                            aria-label="Edit Database" ng-click="editDatabase(next)">
                                         </fd-button>
                                     </div>
                                 </td>
                                 <td fd-table-cell width="50px">
                                     <div class="tdSingleLine">
                                         <fd-button dg-type="transparent" glyph="sap-icon--delete" title="Delete"
-                                            aria-label="Delete" ng-click="deleteDatabase(next)" aria-hidden="true"
-                                            data-toggle="modal">
+                                            aria-label="Delete Database" ng-click="deleteDatabase(next)">
                                         </fd-button>
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-
-
                 </fd-scrollbar>
             </div>
         </div>
-
-
-
-        <!-- Database Dialog -->
-        <div class="dirigible-modal modal fade container" id="dialogDatabase" tabindex="-1" role="dialog"
-            aria-labelledby="NewAssignLabel" aria-hidden="true" style="background-color: rgb(255 255 255 / 90%)">
-            <div class="fd-margin--md">
-                <fd-fieldset>
-                    <fd-form-group>
-                        <h3 ng-show="isNew">New Database</h3>
-                        <h3 ng-show="!isNew">Edit Database {{database.name}}</h3>
-                        <br>
-                        <fd-form-item horizontal="true" ng-show="isNew">
-                            <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
-                                <fd-form-label for="name" dg-required="true" dg-colon="true">Name</fd-form-label>
-                            </div>
-                            <div class="fd-col fd-col--4 fd-col-md--4 fd-col-lg--4 fd-col-xl--4">
-                                <fd-input id="name" class="fd-input--compact" type="text" placeholder="Enter name"
-                                    ng-model="database.name" required="required">
-                                </fd-input>
-                            </div>
-                        </fd-form-item>
-                        <fd-form-item horizontal="true">
-                            <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
-                                <fd-form-label for="driver" dg-required="true" dg-colon="true">Driver</fd-form-label>
-                            </div>
-                            <div class="fd-col fd-col--4 fd-col-md--4 fd-col-lg--4 fd-col-xl--4">
-                                <fd-select class="dg-full-width" ng-model="database.driver" dropdown-fixed="false"
-                                    ng-change="driverChanged()">
-                                    <fd-option text="{{ driver.text }}" value="driver.value"
-                                        ng-repeat="driver in drivers">
-                                    </fd-option>
-                                </fd-select>
-                            </div>
-                        </fd-form-item>
-                        <fd-form-item horizontal="true">
-                            <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
-                                <fd-form-label for="url" dg-required="true" dg-colon="true">URL</fd-form-label>
-                            </div>
-                            <div class="fd-col fd-col--6 fd-col-md--6 fd-col-lg--6 fd-col-xl--6">
-                                <fd-input id="url" class="fd-input--compact" type="text" placeholder="Enter url"
-                                    ng-model="database.url" required="required">
-                                </fd-input>
-                            </div>
-                        </fd-form-item>
-                        <fd-form-item horizontal="true">
-                            <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
-                                <fd-form-label for="username" dg-required="true" dg-colon="true">Username
-                                </fd-form-label>
-                            </div>
-                            <div class="fd-col fd-col--4 fd-col-md--4 fd-col-lg--4 fd-col-xl--4">
-                                <fd-input id="username" class="fd-input--compact" type="text"
-                                    placeholder="Enter username" ng-model="database.username" required="required">
-                                </fd-input>
-                            </div>
-                        </fd-form-item>
-                        <fd-form-item horizontal="true">
-                            <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
-                                <fd-form-label for="password" dg-required="true" dg-colon="true">Password
-                                </fd-form-label>
-                            </div>
-                            <div class="fd-col fd-col--4 fd-col-md--4 fd-col-lg--4 fd-col-xl--4">
-                                <fd-input id="password" class="fd-input--compact" type="password"
-                                    autocomplete="new-password" placeholder="Enter password"
-                                    ng-model="database.password" required="required">
-                                </fd-input>
-                            </div>
-                        </fd-form-item>
-                        <fd-form-item horizontal="true">
-                            <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
-                                <fd-form-label for="parameters" dg-required="true" dg-colon="true">Parameters
-                                </fd-form-label>
-                            </div>
-                            <div class="fd-col fd-col--10 fd-col-md--10 fd-col-lg--10 fd-col-xl--10">
-                                <fd-input id="parameters" class="fd-input--compact" type="text"
-                                    placeholder="Enter parameters" ng-model="database.parameters" required="required">
-                                </fd-input>
-                            </div>
-                        </fd-form-item>
-                    </fd-form-group>
-                </fd-fieldset>
-
-
-                <div>
-                    <div class="modal-footer">
-                        <button ng-show="isNew" class="fd-button fd-button--compact is-selected"
-                            ng-click="createDatabase()" data-target="#dialogDatabase"
-                            data-dismiss="modal">Create</button>
-                        <button ng-show="!isNew" class="fd-button fd-button--compact is-selected"
-                            ng-click="updateDatabase()" data-target="#dialogDatabase"
-                            data-dismiss="modal">Update</button>
-                        <button class="fd-button fd-button--compact" data-dismiss="modal">Close</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
     </body>
