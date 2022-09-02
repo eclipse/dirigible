@@ -12,6 +12,7 @@ let editorUrl;
 let gitApiUrl;
 let loadingOverview = document.getElementById('loadingOverview');
 let loadingMessage = document.getElementById('loadingMessage');
+let _toggleAutoFormattingActionRegistration = null;
 let lineDecorations = [];
 let useParameters = false; // Temp boolean used for transitioning to new parameter method.
 let parameters = {
@@ -317,17 +318,26 @@ function createSaveAction() {
         run: function (editor) {
             loadingMessage.innerText = 'Saving...';
             if (loadingOverview) loadingOverview.classList.remove("dg-hidden");
-            editor.getAction('editor.action.formatDocument').run().then(() => {
-                let fileIO = new FileIO();
-                fileIO.saveText(editor.getModel().getValue()).then(() => {
-                    lastSavedVersionId = editor.getModel().getAlternativeVersionId();
-                    _dirty = false;
+            if(isAutoFormattingEnabledForCurrentFile()) {
+                editor.getAction('editor.action.formatDocument').run().then(() => {
+                   saveFileContent(editor);
                 });
-                if (loadingOverview) loadingOverview.classList.add("dg-hidden");
-            });
+            }
+            else {
+                saveFileContent(editor);
+            }
         }
     };
 };
+
+function saveFileContent(editor) {
+    let fileIO = new FileIO();
+    fileIO.saveText(editor.getModel().getValue()).then(() => {
+        lastSavedVersionId = editor.getModel().getAlternativeVersionId();
+        _dirty = false;
+    });
+    if (loadingOverview) loadingOverview.classList.add("dg-hidden");
+}
 
 function createSearchAction() {
     return {
@@ -456,6 +466,83 @@ function createCloseAllAction() {
         }
     };
 };
+
+function createToggleAutoFormattingAction() {
+    return {
+        // An unique identifier of the contributed action.
+        id: 'dirigible-toggle-auto-formatting',
+
+        // A label of the action that will be presented to the user.
+        label: isAutoFormattingEnabledForCurrentFile() ? "Disable Auto-Formatting" : "Enable Auto-Formatting",
+
+        // An optional array of keybindings for the action.
+        keybindings: [
+            monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyD
+        ],
+
+        // A precondition for this action.
+        precondition: null,
+
+        // A rule to evaluate on top of the precondition in order to dispatch the keybindings.
+        keybindingContext: null,
+
+        contextMenuGroupId: 'fileIO',
+
+        contextMenuOrder: 1.5,
+
+        // Method that will be executed when the action is triggered.
+        // @param editor The editor instance is passed in as a convinience
+        run: function (editor) {
+            let fileIO = new FileIO();
+            let fileName = fileIO.resolveFileName();
+
+            let filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
+            let filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
+
+            let jsonString = null;
+
+            if(filesWithDisabledFormattingList) {
+                if(filesWithDisabledFormattingList.includes(fileName)) {
+                    let removed = filesWithDisabledFormattingList.filter(entry => entry !== fileName);
+                    jsonString = JSON.stringify(removed);
+                    console.log("Re-enabled auto formatting for file: " + fileName);
+                }
+                else {
+                    filesWithDisabledFormattingList.push(fileName);
+                    jsonString = JSON.stringify(filesWithDisabledFormattingList);
+                    console.log("Disabled auto formatting for file: " + fileName);
+                }
+            }
+            else {
+                let initialFilesWithDisabledFormattingList = new Array(fileName);
+                jsonString = JSON.stringify(initialFilesWithDisabledFormattingList);
+                console.log("Disabled auto formatting for file: " + fileName);
+            }
+
+            window.localStorage.setItem('DIRIGIBLE.filesWithDisabledFormattingList', jsonString);
+            updateAutoFormattingAction(editor);
+        }
+    };
+};
+
+function updateAutoFormattingAction(editor) {
+    _toggleAutoFormattingActionRegistration.dispose();
+    _toggleAutoFormattingActionRegistration = editor.addAction(createToggleAutoFormattingAction());
+}
+
+function isAutoFormattingEnabledForCurrentFile() {
+    let fileIO = new FileIO();
+    let fileName = fileIO.resolveFileName();
+    let filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
+    let filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
+
+    if(filesWithDisabledFormattingList && filesWithDisabledFormattingList.includes(fileName)) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
 
 function loadModuleSuggestions(modulesSuggestions) {
     let xhrModules = new XMLHttpRequest();
@@ -666,6 +753,7 @@ function isDirty(model) {
                             _editor.addAction(createCloseAction());
                             _editor.addAction(createCloseOthersAction());
                             _editor.addAction(createCloseAllAction());
+                            _toggleAutoFormattingActionRegistration = _editor.addAction(createToggleAutoFormattingAction());
                             _editor.onDidChangeCursorPosition(function (e) {
                                 messageHub.post(
                                     {
