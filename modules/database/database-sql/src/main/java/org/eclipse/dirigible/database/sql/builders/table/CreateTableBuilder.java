@@ -362,7 +362,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
                 String foreignKeyName = (isCaseSensitive()) ? encapsulate(foreignKey.getName()) : foreignKey.getName();
                 sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKeyName).append(SPACE);
             }
-            String referencedTableName = (isCaseSensitive()) ? encapsulate(foreignKey.getReferencedTable()) : foreignKey.getReferencedTable();
+            String referencedTableName = (isCaseSensitive()) ? encapsulateDataStructureName(foreignKey.getReferencedTable()) : foreignKey.getReferencedTable();
             sql.append(KEYWORD_FOREIGN).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
                     .append(traverseNames(foreignKey.getColumns())).append(CLOSE).append(SPACE).append(KEYWORD_REFERENCES).append(SPACE);
             if (foreignKey.getReferencedTableSchema() != null) {

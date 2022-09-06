@@ -20,10 +20,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.eclipse.dirigible.database.sql.DataType;
-import org.eclipse.dirigible.database.sql.ISqlKeywords;
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.TableStatements;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.sql.*;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -48,6 +46,25 @@ public class HanaCreateTableBuilderTest {
 
     assertNotNull(sql);
     assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
+  }
+
+  @Test
+  public void createTableCaseSensitiveGeneric() {
+    Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+    try {
+      String sql = SqlFactory.getDefault().create()
+              .table("myapp::test.customers")
+              .column("Id", DataType.INTEGER, Modifiers.PRIMARY_KEY, Modifiers.NOT_NULL, Modifiers.NON_UNIQUE)
+              .column("First_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
+              .column("Last_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
+              .build();
+
+      assertNotNull(sql);
+      assertEquals("CREATE TABLE \"myapp::test.customers\" ( \"Id\" INTEGER NOT NULL PRIMARY KEY , \"First_Name\" VARCHAR (20) NOT NULL UNIQUE , \"Last_Name\" VARCHAR (30) )",
+              sql);
+    } finally {
+      Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+    }
   }
 
   /**

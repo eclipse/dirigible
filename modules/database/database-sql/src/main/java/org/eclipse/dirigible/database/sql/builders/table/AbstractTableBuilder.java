@@ -1859,7 +1859,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param sql the sql
      */
     protected void generateTable(StringBuilder sql) {
-        String tableName = (isCaseSensitive()) ? encapsulate(this.getTable()) : this.getTable();
+        String tableName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getTable()) : this.getTable();
         sql.append(SPACE).append(KEYWORD_TABLE).append(SPACE).append(tableName);
     }
 

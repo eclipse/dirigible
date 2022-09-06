@@ -336,7 +336,7 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	public SelectBuilder genericJoin(String type, String table, String on, String alias) {
 		if (logger.isTraceEnabled()) {logger.trace("genericJoin: " + type + ", table: " + table + ", on: " + on + ", alias: " + alias);}
 		StringBuilder snippet = new StringBuilder();
-		String tableName = (isCaseSensitive()) ? encapsulate(table) : table;
+		String tableName = (isCaseSensitive()) ? encapsulateDataStructureName(table) : table;
 		snippet.append(type).append(SPACE).append(KEYWORD_JOIN).append(SPACE).append(tableName);
 		if (alias != null) {
 			String aliasName = (isCaseSensitive()) ? encapsulate(alias) : alias;
@@ -656,7 +656,7 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	protected String traverseTables() {
 		StringBuilder snippet = new StringBuilder();
 		for (String table : this.tables) {
-			String tableName = (isCaseSensitive()) ? encapsulate(table) : table;
+			String tableName = (isCaseSensitive()) ? encapsulateDataStructureName(table) : table;
 			snippet.append(tableName).append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);

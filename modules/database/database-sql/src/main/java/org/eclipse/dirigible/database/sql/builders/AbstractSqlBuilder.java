@@ -76,7 +76,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	}
 	
 	/**
-	 * Encapsulate the name within qutes.
+	 * Encapsulate the name within quotes.
 	 *
 	 * @param name the name
 	 * @return the encapsulated name
@@ -93,6 +93,22 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 				name = encapsulateMany(name);
 			}
 		}
+		return name;
+	}
+
+	/**
+	 * Encapsulate the data structure name within quotes.
+	 *
+	 * @param name the name
+	 * @return the encapsulated name
+	 */
+	protected String encapsulateDataStructureName(String name) {
+		String escapeSymbol = getEscapeSymbol();
+
+		if (!name.startsWith(escapeSymbol)) {
+			name = escapeSymbol + name + escapeSymbol;
+		}
+
 		return name;
 	}
 	

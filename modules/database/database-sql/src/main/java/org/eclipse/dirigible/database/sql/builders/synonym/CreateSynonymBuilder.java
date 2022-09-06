@@ -94,7 +94,7 @@ public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateSynonym(StringBuilder sql) {
-		String synonymName = (isCaseSensitive()) ? encapsulate(this.getSynonym()) : this.getSynonym();
+		String synonymName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getSynonym()) : this.getSynonym();
 		sql.append(SPACE)/*.append(KEYWORD_PUBLIC).append(SPACE)*/.append(KEYWORD_SYNONYM).append(SPACE).append(synonymName);
 	}
 
@@ -105,7 +105,7 @@ public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateSource(StringBuilder sql) {
-		String sourceName = (isCaseSensitive()) ? encapsulate(this.getSource()) : this.getSource();
+		String sourceName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getSource()) : this.getSource();
 		 sql.append(SPACE)
 			 .append(KEYWORD_FOR)
 			 .append(SPACE)

@@ -153,7 +153,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateView(StringBuilder sql) {
-		String viewName = (isCaseSensitive()) ? encapsulate(this.getView()) : this.getView();
+		String viewName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getView()) : this.getView();
 		sql.append(SPACE).append(KEYWORD_VIEW).append(SPACE).append(viewName);
 	}
 

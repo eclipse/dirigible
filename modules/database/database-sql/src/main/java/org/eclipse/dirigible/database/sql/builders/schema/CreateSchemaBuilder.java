@@ -71,7 +71,7 @@ public class CreateSchemaBuilder extends AbstractCreateSqlBuilder {
      * @param sql the sql
      */
     protected void generateSchema(StringBuilder sql) {
-        String schemaName = (isCaseSensitive()) ? encapsulate(this.getName()) : this.getName();
+        String schemaName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getName()) : this.getName();
         sql.append(SPACE).append(KEYWORD_SCHEMA).append(SPACE).append(schemaName);
     }
 
