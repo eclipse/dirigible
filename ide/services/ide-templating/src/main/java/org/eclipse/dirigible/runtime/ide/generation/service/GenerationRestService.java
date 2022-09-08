@@ -120,49 +120,6 @@ public class GenerationRestService extends AbstractRestService implements IRestS
 	}
 	
 	/**
-	 * Generate file.
-	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @param parameters the parameters
-	 * @param request the request
-	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
-	 * @throws ScriptingException the scripting exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@POST
-	@Path("/model/{workspace}/{project}/{path:.*}")
-	public Response generateModel(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
-			GenerationTemplateModelParameters parameters, @Context HttpServletRequest request) throws URISyntaxException, ScriptingException, IOException {
-		String user = UserFacade.getName();
-		if (user == null) {
-			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
-		}
-
-		if (!processor.existsWorkspace(workspace)) {
-			String error = format("Workspace {0} does not exist.", workspace);
-			return createErrorResponseNotFound(error);
-		}
-
-		if (!processor.existsProject(workspace, project)) {
-			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
-			return createErrorResponseNotFound(error);
-		}
-
-		IFile model = processor.getFile(workspace, project, parameters.getModel());
-		if (!model.exists()) {
-			String error = format("Model file {0} does not exist in Project {1} in Workspace {2}.", parameters.getModel(), project, workspace);
-			return createErrorResponseBadRequest(error);
-		}
-
-		List<IFile> files = processor.generateModel(model, workspace, project, path, parameters);
-		return Response.created(processor.getURI(workspace, project, path)).build();
-	}
-	
-	
-	/**
 	 * Gets the logger.
 	 *
 	 * @return the logger
