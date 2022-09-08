@@ -1,0 +1,53 @@
+<!--
+  The technology platform used for project ${projectName} is Eclipse Dirigible (https://www.dirigible.io/).
+  All the source code is licensed under the Eclipse Public License - v 2.0 (https://www.eclipse.org/legal/epl-v20.html)
+  and maintained at GitHub (https://github.com/eclipse/dirigible).
+-->
+<!DOCTYPE html>
+<html lang="en" ng-app="app" ng-controller="ApplicationController" xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
+        <title dg-brand-title></title>
+        <script type="text/javascript" src="perspective.js"></script>
+        <theme></theme>
+        <script type="text/javascript"
+            src="/services/v4/js/${projectName}/gen/ui/core/services/loader.js?id=application-perspective-js"></script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/${projectName}/gen/ui/core/services/loader.js?id=application-perspective-css" />
+    </head>
+
+    <body>
+        <ide-header menu-ext-id="${projectName}-menu"></ide-header>
+        <ide-container>
+            <ide-layout views-layout-model="layoutModel"></ide-layout>
+        </ide-container>
+        <ide-dialogs></ide-dialogs>
+        <ide-status-bar></ide-status-bar>
+        <script type="text/javascript">
+            angular.module('app', ['ngResource', 'ideLayout', 'ideUI'])
+                .constant('branding', {
+                    name: '${title}',
+                    brand: '${brand}',
+                    brandUrl: '${brandUrl}',
+                    icons: {
+                        faviconIco: '/services/v4/web/resources/images/favicon.ico',
+                        favicon32: '/services/v4/web/resources/images/favicon-32x32.png',
+                        favicon16: '/services/v4/web/resources/images/favicon-16x16.png',
+                    },
+                    logo: '/services/v4/web/resources/images/dirigible.svg',
+                })
+                .controller('ApplicationController', ["$scope", "messageHub", function ($scope, messageHub) {
+
+                    $scope.layoutModel = {
+                        views: [#foreach ($view in $perspectiveViews)'${view}'#if($foreach.hasNext), #end#end]
+                    };
+
+                }]);
+        </script>
+    </body>
+
+</html>

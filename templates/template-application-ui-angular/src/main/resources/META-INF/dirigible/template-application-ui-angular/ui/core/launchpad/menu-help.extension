@@ -1,0 +1,5 @@
+{
+    "module": "${projectName}/gen/ui/core/launchpad/menu-help.js",
+    "extensionPoint": "${projectName}-menu",
+    "description": "${projectName} - Application Menu"
+}

@@ -1,0 +1,5 @@
+{
+    "module": "${projectName}/gen/ui/core/launchpad/Home/view.js",
+    "extensionPoint": "${projectName}-view",
+    "description": "${projectName} - Application View"
+}
