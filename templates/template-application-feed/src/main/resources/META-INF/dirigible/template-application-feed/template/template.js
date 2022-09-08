@@ -9,7 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var daoTemplateManager = require("template-application-dao/template/template");
+const daoTemplateManager = require("template-application-dao/template/template");
+const generateUtils = require("ide-generate-service/template/generateUtils");
+const parameterUtils = require("ide-generate-service/template/parameterUtils");
+
+exports.generate = function (model, parameters) {
+    model = JSON.parse(model).model;
+    let templateSources = exports.getTemplate(parameters).sources;
+    parameterUtils.process(model, parameters)
+    return generateUtils.generateFiles(model, parameters, templateSources);
+};
 
 exports.getTemplate = function (parameters) {
     let daoTemplate = daoTemplateManager.getTemplate(parameters);
@@ -17,15 +26,15 @@ exports.getTemplate = function (parameters) {
     let templateSources = [{
         location: "/template-application-feed/feed/entityFeedSynchronizer.js.template",
         action: "generate",
-        rename: "gen/feed/{{perspectiveName}}/{{fileName}}FeedSynchronizer.js",
+        rename: "gen/feed/{{perspectiveName}}/{{name}}FeedSynchronizer.js",
         engine: "velocity",
-        collection: "models"
+        collection: "feedModels"
     }, {
         location: "/template-application-feed/feed/entityFeed.job.template",
         action: "generate",
-        rename: "gen/feed/{{perspectiveName}}/{{fileName}}Feed.job",
+        rename: "gen/feed/{{perspectiveName}}/{{name}}Feed.job",
         engine: "velocity",
-        collection: "models"
+        collection: "feedModels"
     }];
     templateSources = templateSources.concat(daoTemplate.sources);
 
