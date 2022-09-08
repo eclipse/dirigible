@@ -33,7 +33,7 @@
 				<thead fd-table-header sticky="true">
 					<tr fd-table-row>
 #foreach ($property in $properties)
-#if($property.widgetIsMajor)
+#if(!$property.dataAutoIncrement && $property.widgetIsMajor)
 						<th fd-table-header-cell>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</th>
 #end
 #end
@@ -47,7 +47,7 @@
 					<tr fd-table-row hoverable="true" ng-repeat="next in data"
 						dg-selected="next.${primaryKeysString} === selectedEntity.${primaryKeysString}" ng-click="selectEntity(next)">
 #foreach ($property in $properties) 
-#if($property.widgetIsMajor)
+#if(!$property.dataAutoIncrement && $property.widgetIsMajor)
 #if($property.widgetType == "DROPDOWN")
 						<td fd-table-cell ng-click="openDetails(next)" hoverable="true" activable="true">
 							{{options${property.name}Value(next.${property.name})}}

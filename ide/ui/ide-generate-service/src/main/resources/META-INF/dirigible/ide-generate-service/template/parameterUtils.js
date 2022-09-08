@@ -31,6 +31,7 @@ exports.process = function (model, parameters) {
             if (p.relationshipType === "COMPOSITION" && p.relationshipCardinality === "1_n") {
                 e.masterEntity = p.relationshipEntityName;
                 e.masterEntityId = p.name;
+                p.widgetIsMajor = false;
                 // e.masterEntityPrimaryKey = model.entities.filter(m => m.name === e.masterEntity)[0].properties.filter(k => k.dataPrimaryKey)[0].name;
             }
 
@@ -57,16 +58,12 @@ exports.process = function (model, parameters) {
                         properties: []
                     };
                 }
-                if (e.masterProperties.title == null) {
-                    e.masterProperties.title = {
-                        name: p.name,
-                        widgetType: p.widgetType
-                    };
-                } else {
-                    e.masterProperties.properties.push({
-                        name: p.name,
-                        widgetType: p.widgetType
-                    });
+                if (!p.dataAutoIncrement) {
+                    if (e.masterProperties.title == null) {
+                        e.masterProperties.title = p;
+                    } else {
+                        e.masterProperties.properties.push(p);
+                    }
                 }
             }
         });
