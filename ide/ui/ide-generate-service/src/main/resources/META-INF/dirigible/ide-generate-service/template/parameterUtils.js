@@ -51,7 +51,7 @@ exports.process = function (model, parameters) {
             }
             p.inputRule = p.widgetPattern ? p.widgetPattern : "";
 
-            if (e.layoutType === "MANAGE_MASTER" && p.widgetIsMajor) {
+            if ((e.layoutType === "MANAGE_MASTER" || e.layoutType === "LIST_MASTER") && p.widgetIsMajor) {
                 if (e.masterProperties == null) {
                     e.masterProperties = {
                         title: null,

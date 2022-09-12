@@ -10,37 +10,90 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getSources = function (parameters) {
-	return [{
-		location: "/template-application-ui-angular/ui/perspectives/views/list/index.html.template",
-		action: "generate",
-		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/index.html",
-		engine: "velocity",
-		collection: "uiListModels"
-	}, {
-		location: "/template-application-ui-angular/ui/perspectives/views/list/controller.js.template",
-		action: "generate",
-		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/controller.js",
-		engine: "velocity",
-		collection: "uiListModels"
-	}, {
-		location: "/template-application-ui-angular/ui/perspectives/views/list/extensions/view.js.template",
-		action: "generate",
-		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.js",
-		collection: "uiListModels"
-	}, {
-		location: "/template-application-ui-angular/ui/perspectives/views/list/extensions/view.extension.template",
-		action: "generate",
-		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.extension",
-		collection: "uiListModels"
-	}, {
-		location: "/template-application-ui-angular/ui/perspectives/views/list/extensions/menu/item.extension.template",
-		action: "generate",
-		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.extension",
-		collection: "uiListModels"
-	}, {
-		location: "/template-application-ui-angular/ui/perspectives/views/list/extensions/menu/item.js.template",
-		action: "generate",
-		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.js",
-		collection: "uiListModels"
-	}];
+	return [
+		// Location: "gen/ui/perspective"
+		{
+			location: "/template-application-ui-angular/ui/perspective/index.html",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/{{perspectiveName}}/index.html",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/perspective.extension",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/perspective.extension",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/perspective.js",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/perspective.js",
+			collection: "uiListModels"
+		},
+		// Location: "gen/ui/perspective/list"
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/dialog-window/controller.js.template",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window/controller.js",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/dialog-window/index.html.template",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window/index.html",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/dialog-window/view.extension",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window/view.extension",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/dialog-window/view.js",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/dialog-window/view.js",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/controller.js.template",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/controller.js",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/index.html.template",
+			action: "generate",
+			engine: "velocity",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/index.html",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/tile.extension",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/tile.extension",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/tile.js",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/tile.js",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/view.extension",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/view.extension",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/view.js",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/view.js",
+			collection: "uiListModels"
+		}];
 };

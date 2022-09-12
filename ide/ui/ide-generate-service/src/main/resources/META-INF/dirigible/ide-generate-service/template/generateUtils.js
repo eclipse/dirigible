@@ -101,7 +101,7 @@ function generateCollection(content, template, collection, parameters) {
             Object.assign(templateParameters, collection[i], parameters);
             // TODO Move this to the more generic "generate()" function, with layoutType === "MANAGE_MASTER" check
             templateParameters.perspectiveViews = templateParameters.perspectives[collection[i].perspectiveName].views;
-            if (template.collection === "uiManageMasterModels") {
+            if (template.collection === "uiManageMasterModels" || template.collection === "uiListMasterModels") {
                 collection.filter(e => e.perspectiveName === collection[i].perspectiveName).forEach(e => templateParameters.perspectiveViews.push(e.name + "-details"));
             }
 

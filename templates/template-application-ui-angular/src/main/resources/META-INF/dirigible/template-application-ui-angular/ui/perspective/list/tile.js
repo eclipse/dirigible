@@ -9,10 +9,12 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getSources = function (parameters) {
-	return [{
-		location: "/template-application-ui-angular/ui/extensions/menu.extensionpoint.template",
-		action: "generate",
-		rename: "gen/ui/extensions/menu.extensionpoint"
-	}];
+exports.getTile = function () {
+    return {
+        group: "{{perspectiveName}}",
+        name: "{{name}}",
+        // icon: "file-o",
+        location: "/services/v4/web/{{projectName}}/gen/ui/{{perspectiveName}}/index.html",
+        order: "100"
+    };
 };

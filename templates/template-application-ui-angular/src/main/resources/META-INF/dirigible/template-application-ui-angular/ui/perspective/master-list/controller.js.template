@@ -1,0 +1,125 @@
+#set($dollar = '$')
+angular.module('page', ["ideUI", "ideView", "entityApi"])
+	.config(["messageHubProvider", function (messageHubProvider) {
+		messageHubProvider.eventIdPrefix = '${projectName}.${perspectiveName}.${name}';
+	}])
+	.config(["entityApiProvider", function (entityApiProvider) {
+		entityApiProvider.baseUrl = "/services/v4/js/${projectName}/gen/api/${perspectiveName}/${name}.js";
+	}])
+	.controller('PageController', ['$scope',#if($hasDropdowns) '${dollar}http',#end 'messageHub', 'entityApi', function ($scope,#if($hasDropdowns) ${dollar}http,#end messageHub, entityApi) {
+
+		$scope.dataPage = 1;
+		$scope.dataCount = 0;
+		$scope.dataOffset = 0;
+		$scope.dataLimit = 10;
+		$scope.action = "select";
+
+		function refreshData() {
+			$scope.dataReset = true;
+			$scope.dataPage--;
+		}
+
+		//-----------------Events-------------------//
+		messageHub.onDidReceiveMessage("clearDetails", function (msg) {
+			$scope.$apply(function () {
+				$scope.selectedEntity = null;
+				$scope.action = "select";
+			});
+		});
+
+		//-----------------Events-------------------//
+
+		$scope.loadPage = function () {
+			$scope.selectedEntity = null;
+			entityApi.count().then(function (response) {
+				if (response.status != 200) {
+					messageHub.showAlertError("${name}", `Unable to count ${name}: '${response.message}'`);
+					return;
+				}
+				$scope.dataCount = response.data;
+				$scope.dataPages = Math.ceil($scope.dataCount / $scope.dataLimit);
+				let offset = ($scope.dataPage - 1) * $scope.dataLimit;
+				let limit = $scope.dataLimit;
+				if ($scope.dataReset) {
+					offset = 0;
+					limit = $scope.dataPage * $scope.dataLimit;
+				}
+				entityApi.list(offset, limit).then(function (response) {
+					if (response.status != 200) {
+						messageHub.showAlertError("${name}", `Unable to list ${name}: '${response.message}'`);
+						return;
+					}
+					if ($scope.data == null || $scope.dataReset) {
+						$scope.data = [];
+						$scope.dataReset = false;
+					}
+#if($hasDates)
+
+					response.data.forEach(e => {
+#foreach ($property in $properties)
+#if($property.isDateType)
+						if (e.${property.name}) {
+							e.${property.name} = new Date(e.${property.name});
+						}
+#end
+#end
+					});
+
+#end
+					${dollar}scope.data = ${dollar}scope.data.concat(response.data);
+					$scope.dataPage++;
+				});
+			});
+		};
+		$scope.loadPage($scope.dataPage);
+
+		$scope.selectEntity = function (entity) {
+			$scope.selectedEntity = entity;
+			messageHub.postMessage("entitySelected", {
+				entity: entity,
+				selectedMainEntityId: entity.${primaryKeysString},
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+				options${property.name}: $scope.options${property.name},
+#end
+#end
+			});
+		};
+
+#if($hasDropdowns)
+
+		//----------------Dropdowns-----------------//
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+		$scope.options${property.name} = [];
+#end
+#end
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+
+		${dollar}http.get("/services/v4/js/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}.js").then(function (response) {
+			${dollar}scope.options${property.name} = response.data.map(e => {
+				return {
+					value: e.${property.widgetDropDownKey},
+					text: e.${property.widgetDropDownValue}
+				}
+			});
+		});
+#end
+#end
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+		${dollar}scope.options${property.name}Value = function (optionKey) {
+			for (let i = 0; i < ${dollar}scope.options${property.name}.length; i++) {
+				if (${dollar}scope.options${property.name}[i].value === optionKey) {
+					return ${dollar}scope.options${property.name}[i].text;
+				}
+			}
+			return null;
+		};
+#end
+#end
+		//----------------Dropdowns-----------------//
+#end
+
+	}]);
