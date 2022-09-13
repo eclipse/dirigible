@@ -975,12 +975,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 <ng-transclude ng-if="!canScroll"></ng-transclude>
             </div>`,
         }
-    }]).directive('fdMenu', ['$window', 'backdrop', function ($window, backdrop) {
+    }]).directive('fdMenu', ['$window', 'backdrop', 'classNames', function ($window, backdrop, classNames) {
         /**
          * maxHeight: Number - Maximum height in pixels before it starts scrolling. Default is the height of the window.
          * canScroll: Boolean - Enable/disable scroll menu support. Default is false.
          * show: Boolean - Use this instead of the CSS 'display' property. Otherwise, the menu will not work properly. Default is true.
          * noBackdrop: Boolean - Disables the backdrop. Use only when necessary (for example in popovers). This may break the menu if not used properly. Default is false.
+         * noShadow: Boolean - Removes the shadow effect. When in popover, it's recommended that you set this to true. Otherwise you will get double shadow. Default is false.
          */
         return {
             restrict: 'E',
@@ -991,6 +992,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 canScroll: '<?',
                 show: '<?',
                 noBackdrop: '<?',
+                noShadow: '<?',
             },
             link: {
                 pre: function (scope, element) {
@@ -1012,17 +1014,17 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             else backdrop.deactivate();
                         }
                     });
-                    scope.getClasses = function () {
-                        let classList = [];
-                        if (scope.canScroll) {
-                            classList.push('fd-menu--overflow');
-                            element[0].style.maxHeight = `${scope.maxHeight || scope.defaultHeight}px`;
-                        } else element[0].style.removeProperty('max-height');
-                        return classList.join(' ');
+                    scope.getMenuClasses = function () {
+                        if (scope.canScroll) element[0].style.maxHeight = `${scope.maxHeight || scope.defaultHeight}px`;
+                        else element[0].style.removeProperty('max-height');
+                        return classNames({ 'fd-menu--overflow': scope.canScroll });
                     };
+                    scope.getListClasses = () => classNames({
+                        'fd-menu__list--no-shadow': scope.noShadow
+                    });
                 },
             },
-            template: `<nav aria-label="menu" class="fd-menu" ng-show="show" ng-class="getClasses()"><ul class="fd-menu__list" role="menu" ng-transclude></ul></nav>`
+            template: `<nav aria-label="menu" class="fd-menu" ng-show="show" ng-class="getMenuClasses()"><ul class="fd-menu__list" ng-class="getListClasses()" role="menu" ng-transclude></ul></nav>`
         }
     }]).directive('fdMenuItem', [function () {
         /**
@@ -1324,7 +1326,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: `<tfoot ng-class="getClasses()" ng-transclude></tfoot>`
         }
-    }]).directive('fdTableRow', [function () {
+    }]).directive('fdTableRow', ['classNames', function (classNames) {
         /**
          * dgSelected: Boolean - Whether or not the table row is selected. Defaults to 'false'
          * activable: Boolean - Displays the row as active when clicked. Defaults to 'false'
@@ -1334,31 +1336,23 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'A',
             transclude: true,
             replace: true,
+            require: '?^fdTableGroup',
             scope: {
                 dgSelected: '<',
                 activable: '<',
                 hoverable: '<'
             },
-            link: function (scope, element) {
-                scope.$watch('dgSelected', function () {
-                    if (scope.dgSelected) {
-                        element[0].setAttribute('aria-selected', 'true');
-                    } else {
-                        element[0].removeAttribute('aria-selected');
-                    }
-                })
-                scope.getClasses = function () {
-                    let classList = ['fd-table__row'];
-                    if (scope.activable) {
-                        classList.push('fd-table__cell--activable');
-                    }
-                    if (scope.hoverable) {
-                        classList.push('fd-table__cell--hoverable');
-                    }
-                    return classList.join(' ');
-                };
+            link: function (scope, element, attrs, tableGroupCtrl) {
+                scope.getClasses = () => classNames('fd-table__row', {
+                    'fd-table__cell--activable': scope.activable,
+                    'fd-table__cell--hoverable': scope.hoverable,
+                    'dg-hidden': tableGroupCtrl && tableGroupCtrl.shouldHideRow(element[0])
+                });
+
+                scope.isRowExpanded = () => tableGroupCtrl && tableGroupCtrl.isRowExpanded(element[0])
+                scope.getAriaSelected = () => scope.dgSelected ? 'true' : undefined;
             },
-            template: `<tr ng-class="getClasses()" ng-transclude></tr>`
+            template: `<tr ng-class="getClasses()" ng-attr-aria-selected="{{ getAriaSelected() }}" ng-transclude></tr>`
         }
     }]).directive('fdTableHeaderCell', [function () {
         /**
@@ -1414,7 +1408,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: `<th ng-class="getClasses()" ng-transclude></th>`
         }
-    }]).directive('fdTableCell', [function () {
+    }]).directive('fdTableCell', ['classNames', function (classNames) {
         /**
          * contentType: String - The type of the inner element. Could be one of 'checkbox', 'statusIndicator' or 'any' (default value)
          * fitContent: Boolean - Sets width to fit the cell content
@@ -1429,6 +1423,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'A',
             transclude: true,
             replace: true,
+            require: '?^fdTableGroup',
             scope: {
                 contentType: '@',
                 fitContent: '<',
@@ -1439,44 +1434,31 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 statusIndicator: '@',
                 nestingLevel: '<'
             },
-            link: function (scope, element) {
-                scope.getClasses = function () {
-                    let classList = ['fd-table__cell'];
-                    if (scope.noData) {
-                        classList.push('fd-table__cell--no-data');
-                        element[0].setAttribute('colspan', '100%');
-                    }
-                    switch (scope.contentType) {
-                        case 'checkbox':
-                            classList.push('fd-table__cell--checkbox');
-                            break;
-                        case 'statusIndicator':
-                            classList.push('fd-table__cell--status-indicator');
-                            break;
-                    }
-                    if (scope.statusIndicator) {
-                        classList.push(`fd-table__cell--status-indicator--${scope.statusIndicator}`);
-                    }
-                    if (scope.fitContent) {
-                        classList.push('fd-table__cell--fit-content');
-                    }
-                    if (scope.activable) {
-                        classList.push('fd-table__cell--activable');
-                    }
-                    if (scope.hoverable) {
-                        classList.push('fd-table__cell--hoverable');
-                    }
-                    if (scope.navigated) {
-                        classList.push('fd-table__cell--navigated');
-                    }
-                    return classList.join(' ');
-                };
+            link: function (scope, element, attrs, tableGroupCtrl) {
+                scope.getClasses = () => classNames('fd-table__cell', {
+                    'fd-table__cell--no-data': scope.noData,
+                    'fd-table__cell--checkbox': scope.contentType === 'checkbox',
+                    'fd-table__cell--status-indicator': scope.contentType === 'statusIndicator',
+                    [`fd-table__cell--status-indicator--${scope.statusIndicator}`]: scope.statusIndicator,
+                    'fd-table__cell--fit-content': scope.fitContent,
+                    'fd-table__cell--activable': scope.activable,
+                    'fd-table__cell--hoverable': scope.hoverable,
+                    'fd-table__cell--navigated': scope.navigated
+                });
 
                 if (scope.nestingLevel) {
                     element[0].setAttribute('data-nesting-level', scope.nestingLevel);
+                    if (tableGroupCtrl) {
+                        let rowEl = element.parent()[0];
+                        tableGroupCtrl.addRow(rowEl, scope.nestingLevel);
+
+                        scope.$on('$destroy', function () {
+                            tableGroupCtrl.removeRow(rowEl);
+                        });
+                    }
                 }
             },
-            template: `<td ng-class="getClasses()" ng-transclude></td>`
+            template: `<td ng-class="getClasses()" ng-attr-colspan="{{ noData ? '100%' : undefined }}"  ng-transclude></td>`
         }
     }]).directive('fdTableGroup', [function () {
         return {
@@ -1484,42 +1466,76 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             controller: ['$scope', '$element', function ($scope, $element) {
                 $element.addClass('fd-table--group');
 
-                let groupCells = [];
-                this.addGroupCell = function (element) {
-                    groupCells.push(element);
-                }
+                const findRowIndex = (rowElement) => rows.findIndex(r => r.element === rowElement);
+                let rows = [];
 
-                this.updateNestedRowsVisibility = function (element, expanded) {
-                    let rowExpanded = expanded;
-                    let nestingLevel = $(element).data('nesting-level');
-                    $(element).parent().nextAll('tr')
-                        .each(function () {
-                            const row = $(this);
-                            let cells = row.children('td[data-nesting-level]');
-                            if (cells.length === 0 || nestingLevel >= cells.first().data('nesting-level')) return false;
+                this.addRow = function (rowElement, nestingLevel) {
+                    let index = $(rowElement).index();
+                    rows.splice(index, 0, {
+                        element: rowElement,
+                        nestingLevel
+                    });
+                };
 
-                            if (expanded) {
-                                if (rowExpanded)
-                                    row.removeClass('dg-hidden');
-
-                                const currentRowExpanded = row.attr('aria-expanded');
-                                if (currentRowExpanded !== undefined)
-                                    rowExpanded = currentRowExpanded === 'true';
-                            } else {
-                                row.addClass('dg-hidden');
-                            }
-                        });
-                }
-
-                $element.ready(() => {
-                    groupCells.sort((a, b) => $(b).data('nesting-level') - $(a).data('nesting-level'));
-                    for (let element of groupCells) {
-                        this.updateNestedRowsVisibility(element, $(element).parent().attr('aria-expanded') === 'true');
+                this.removeRow = function (rowElement) {
+                    let index = findRowIndex(rowElement);
+                    if (index >= 0) {
+                        rows.splice(index, 1);
                     }
-                })
+                }
+
+                this.addGroupRow = function (rowElement, nestingLevel, expanded) {
+                    let index = $(rowElement).index();
+                    rows.splice(index, 0, {
+                        groupRow: true,
+                        element: rowElement,
+                        nestingLevel,
+                        expanded
+                    });
+                };
+
+                this.setGroupRowExpanded = function (rowElement, expanded) {
+                    let index = findRowIndex(rowElement);
+                    if (index >= 0) {
+                        rows[index].expanded = expanded;
+                    }
+                }
+
+                this.shouldHideRow = function (rowElement) {
+                    let index = findRowIndex(rowElement);
+                    if (index >= 0) {
+                        let currentRow = rows[index];
+
+                        if (currentRow.nestingLevel === 1)
+                            return false;
+
+                        for (let i = index - 1; i >= 0; i--) {
+                            let row = rows[i];
+
+                            if (row.groupRow && row.nestingLevel < currentRow.nestingLevel && !row.expanded) {
+                                return true;
+                            }
+
+                            if (row.nestingLevel === 1)
+                                break;
+                        }
+                    }
+
+                    return false;
+                }
+
+                this.isRowExpanded = function (rowElement) {
+                    let index = findRowIndex(rowElement);
+                    if (index >= 0) {
+                        let row = rows[index];
+                        return row.groupRow && row.expanded;
+                    }
+
+                    return false;
+                }
             }]
         };
-    }]).directive('fdTableGroupCell', [function () {
+    }]).directive('fdTableGroupCell', ['classNames', function (classNames) {
         /**
          * nestingLevel: Number - The row nesting level (starting from 1) for tables with row groups 
          * expanded: Boolean - Whether the row group is expanded or not
@@ -1533,34 +1549,29 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 expanded: '<'
             },
             require: '^fdTableGroup',
-            link: function (scope, element, attrs, tableCtrl) {
-                tableCtrl.addGroupCell(element);
+            link: function (scope, element, attrs, tableGroupCtrl) {
+                let rowEl = element.parent()[0];
+                tableGroupCtrl.addGroupRow(rowEl, scope.nestingLevel, scope.expanded);
 
-                scope.getClasses = function () {
-                    let classList = ['fd-table__expand'];
-
-                    if (scope.expanded) {
-                        classList.push('fd-table__expand--open');
-                    }
-
-                    return classList.join(' ');
-                };
+                scope.getClasses = () => classNames('fd-table__expand', {
+                    'fd-table__expand--open': scope.expanded
+                });
 
                 scope.toggleExpanded = function () {
                     scope.expanded = !scope.expanded;
-                    updateAriaExpanded();
-                    tableCtrl.updateNestedRowsVisibility(element, scope.expanded);
                 };
 
-                const updateAriaExpanded = function () {
-                    $(element).parent().attr('aria-expanded', scope.expanded ? 'true' : 'false');
-                }
+                scope.$watch('expanded', function () {
+                    tableGroupCtrl.setGroupRowExpanded(element.parent()[0], scope.expanded);
+                });
 
                 if (scope.nestingLevel) {
                     element[0].setAttribute('data-nesting-level', scope.nestingLevel);
                 }
 
-                updateAriaExpanded();
+                scope.$on('$destroy', function () {
+                    tableGroupCtrl.removeRow(rowEl);
+                });
             },
             template: `<td class="fd-table__cell fd-table__cell--group fd-table__cell--expand" colspan="100%" ng-click="toggleExpanded()">
                 <span ng-class="getClasses()"></span>
@@ -2864,7 +2875,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
             }
         }
-    }]).directive('fdComboboxInput', ['uuid', 'classNames', function (uuid, classNames) {
+    }]).directive('fdComboboxInput', ['uuid', 'classNames', '$window', function (uuid, classNames, $window) {
         /**
          * dropdownItems: Array[{ text: String, secondaryText: String, value: Any }] - Items to be filtered in the search input.
          * ngModel: Any|Array[Any] - The value of the selected item. If multiSelect is set to true this must be an array 
@@ -2875,7 +2886,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * message: String - Optional text displayed within the dropdown list
          * inputId: String - Id attribute for input element inside Combobox component
          * dgAriaLabel: String - Aria-label for Combobox
-         * multiSelect: Boolean - When true the combobox allows selecting multiple items
+         * multiSelect: Boolean - When true the combobox allows selecting multiple items,
+         * maxBodyHeight: Number - Maximum body height in pixels before it starts scrolling. Default is the height of the window.
          */
         return {
             restrict: 'EA',
@@ -2890,7 +2902,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 message: '@',
                 inputId: '@',
                 dgAriaLabel: '@',
-                multiSelect: '<'
+                multiSelect: '<',
+                maxBodyHeight: '@'
             },
             link: function (scope, element, attrs, ngModel) {
 
@@ -3120,6 +3133,23 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         scope.$apply(scope.closeDropdown);
                     }
                 });
+
+                scope.$watchCollection('dropdownItems', function (items) {
+                    if (items === undefined || items === null)
+                        scope.dropdownItems = [];
+
+                    scope.filteredDropdownItems = items || [];
+                });
+
+                scope.setDefault = function () {
+                    let rect = element[0].getBoundingClientRect();
+                    scope.defaultHeight = $window.innerHeight - rect.bottom;
+                };
+                scope.setDefault();
+
+                $window.addEventListener('resize', function () {
+                    scope.$apply(function () { scope.setDefault() });
+                });
             },
             template: `<div class="fd-popover" ng-keydown="onKeyDown($event)">
                 <div class="fd-popover__control" ng-attr-disabled="{{ isDisabled() }}" ng-attr-aria-disabled="{{isDisabled() }}" aria-expanded="{{ isBodyExpanded() }}" aria-haspopup="true" aria-controls="{{ bodyId }}">
@@ -3139,7 +3169,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     </fd-input-group>
                 </div>
                 <div ng-if="!dgDisabled" id="{{ bodyId }}" class="fd-popover__body fd-popover__body--no-arrow fd-popover__body--dropdown fd-popover__body--dropdown-fill" aria-hidden="{{ !isBodyExpanded() }}" ng-attr-aria-label="{{ dgAriaLabel }}">
-                    <div class="fd-popover__wrapper">
+                    <div class="fd-popover__wrapper fd-scrollbar" style="max-height:{{ maxBodyHeight || defaultHeight }}px;">
                         <fd-list-message ng-if="message" state="{{ state }}">{{ message }}</fd-list-message>
                         <fd-list class="{{getListClasses()}}" dropdown-mode="true" compact="compact" has-message="!!message">
                             <fd-list-item ng-repeat="item in filteredDropdownItems" role="option" tabindex="0" dg-selected="isSelected(item)" ng-click="onItemClick(item)">

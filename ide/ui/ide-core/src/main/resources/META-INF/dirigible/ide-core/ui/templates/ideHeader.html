@@ -20,7 +20,7 @@
                         </fd-button>
                     </fd-popover-control>
                     <fd-popover-body no-arrow="true" dg-align="right">
-                        <fd-menu no-backdrop="true">
+                        <fd-menu no-backdrop="true" no-shadow="true">
                             <fd-menu-item title="{{ theme.name }}" ng-repeat="theme in themes"
                                 icon-before="{{ theme.id === currentTheme.id ? 'sap-icon--accept' : 'none' }}"
                                 ng-click="setTheme(theme.id, theme.name)"></fd-menu-item>
@@ -37,7 +37,7 @@
                         </fd-button>
                     </fd-popover-control>
                     <fd-popover-body no-arrow="true" dg-align="right" can-scroll="false">
-                        <fd-menu no-backdrop="true">
+                        <fd-menu no-backdrop="true" no-shadow="true">
                             <fd-menu-item title="Logout" ng-click="logout()"></fd-menu-item>
                         </fd-menu>
                     </fd-popover-body>
