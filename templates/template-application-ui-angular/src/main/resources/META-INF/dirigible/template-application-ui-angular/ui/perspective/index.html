@@ -14,10 +14,10 @@
         <title dg-brand-title></title>
         <script type="text/javascript" src="perspective.js"></script>
         <theme></theme>
-        <script type="text/javascript"
-            src="/services/v4/js/${projectName}/gen/ui/core/services/loader.js?id=application-perspective-js"></script>
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=application-perspective-js">
+        </script>
         <link type="text/css" rel="stylesheet"
-            href="/services/v4/js/${projectName}/gen/ui/core/services/loader.js?id=application-perspective-css" />
+            href="/services/v4/js/ide-core/services/loader.js?id=application-perspective-css" />
     </head>
 
     <body>
@@ -39,6 +39,11 @@
                         favicon16: '/services/v4/web/resources/images/favicon-16x16.png',
                     },
                     logo: '/services/v4/web/resources/images/dirigible.svg',
+                })
+                .constant('extensionPoint', {
+                    perspectives: "${projectName}",
+                    views: "${projectName}-view",
+                    dialogWindows: "${projectName}-dialog-window"
                 })
                 .controller('ApplicationController', ["$scope", "messageHub", function ($scope, messageHub) {
 

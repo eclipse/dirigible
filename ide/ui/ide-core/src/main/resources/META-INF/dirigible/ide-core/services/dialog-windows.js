@@ -11,10 +11,12 @@
  */
 let extensions = require('core/v4/extensions');
 let response = require('http/v4/response');
+let request = require('http/v4/request');
 let uuid = require("utils/v4/uuid");
 
 let dialogWindows = [];
-let dialogWindowExtensions = extensions.getExtensions('ide-dialog-window');
+let extensionPoint = request.getParameter('extensionPoint') || 'ide-dialog-window';
+let dialogWindowExtensions = extensions.getExtensions(extensionPoint);
 
 for (let i = 0; i < dialogWindowExtensions.length; i++) {
     let module = dialogWindowExtensions[i];

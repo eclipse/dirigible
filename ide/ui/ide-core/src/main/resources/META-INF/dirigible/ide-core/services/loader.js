@@ -76,6 +76,7 @@ function processScriptRequest(scriptId) {
 
 function getLocations(scriptId) {
     switch (scriptId) {
+        case "application-view-js":
         case "ide-view-js":
             return [
                 "/jquery/3.6.0/jquery.min.js",
@@ -88,7 +89,9 @@ function getLocations(scriptId) {
                 "/ide-core/ui/widgets.js",
                 "/ide-core/ui/view.js",
                 "/ide-core/core/uri-builder.js",
+                "/ide-core/ui/entityApi.js",
             ];
+        case "application-perspective-js":
         case "ide-perspective-js":
             return [
                 "/jquery/3.6.0/jquery.min.js",
@@ -113,12 +116,14 @@ function getLocations(scriptId) {
                 "/es5-shim/4.6.7/es5-shim.min.js",
                 "/angular-file-upload/2.6.1/dist/angular-file-upload.min.js",
             ];
+        case "application-view-css":
         case "ide-view-css":
             return [
                 "/fundamental-styles/0.24.0/dist/fundamental-styles.css",
                 "/resources/styles/core.css",
                 "/resources/styles/widgets.css",
             ];
+        case "application-perspective-css":
         case "ide-perspective-css":
             return [
                 "/fundamental-styles/0.24.0/dist/fundamental-styles.css",

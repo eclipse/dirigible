@@ -1,11 +1,17 @@
 angular.module('ideView', ['ngResource', 'ideTheming'])
     .constant('view', (typeof viewData != 'undefined') ? viewData : (typeof editorData != 'undefined' ? editorData : ''))
-    .factory('Views', ['$resource', function ($resource) {
+    .constant('extensionPoint', {})
+    .factory('Views', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
         let cachedViews;
         let get = function () {
-            if (cachedViews) return cachedViews;
-            else {
-                return $resource('/services/v4/js/ide-core/services/views.js').query().$promise
+            if (cachedViews) {
+                return cachedViews;
+            } else {
+                let url = '/services/v4/js/ide-core/services/views.js';
+                if (extensionPoint && extensionPoint.views) {
+                    url = `${url}?extensionPoint=${extensionPoint.views}`;
+                }
+                return $resource(url).query().$promise
                     .then(function (data) {
                         data = data.map(function (v) {
                             if (!v.id) {

@@ -14,8 +14,13 @@
 angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideMessageHub'])
     .constant('branding', brandingInfo)
     .constant('perspective', perspectiveData)
-    .service('Perspectives', ['$resource', function ($resource) {
-        return $resource('/services/v4/js/ide-core/services/perspectives.js');
+    .constant('extensionPoint', {})
+    .service('Perspectives', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
+        let url = '/services/v4/js/ide-core/services/perspectives.js';
+        if (extensionPoint && extensionPoint.perspectives) {
+            url = `${url}?extensionPoint=${extensionPoint.perspectives}`;
+        }
+        return $resource(url);
     }])
     .service('Menu', ['$resource', function ($resource) {
         return $resource('/services/v4/js/ide-core/services/menu.js');
@@ -34,8 +39,12 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             }
         };
     }])
-    .service('DialogWindows', ['$resource', function ($resource) {
-        return $resource('/services/v4/js/ide-core/services/dialog-windows.js');
+    .service('DialogWindows', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
+        let url = '/services/v4/js/ide-core/services/dialog-windows.js';
+        if (extensionPoint && extensionPoint.dialogWindows) {
+            url = `${url}?extensionPoint=${extensionPoint.dialogWindows}`;
+        }
+        return $resource(url);
     }])
     .filter('removeSpaces', [function () {
         return function (string) {

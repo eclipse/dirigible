@@ -12,12 +12,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
         <title dg-brand-title></title>
-        <script type="text/javascript" src="ui/core/launchpad/perspective.js"></script>
+        <script type="text/javascript" src="ui/launchpad/perspective.js"></script>
         <theme></theme>
-        <script type="text/javascript"
-            src="/services/v4/js/{{projectName}}/gen/ui/core/services/loader.js?id=application-perspective-js"></script>
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=application-perspective-js">
+        </script>
         <link type="text/css" rel="stylesheet"
-            href="/services/v4/js/{{projectName}}/gen/ui/core/services/loader.js?id=application-perspective-css" />
+            href="/services/v4/js/ide-core/services/loader.js?id=application-perspective-css" />
     </head>
 
     <body>
@@ -42,6 +42,11 @@
                         favicon16: '/services/v4/web/resources/images/favicon-16x16.png',
                     },
                     logo: '/services/v4/web/resources/images/dirigible.svg',
+                })
+                .constant('extensionPoint', {
+                    perspectives: "{{projectName}}",
+                    views: "{{projectName}}-view",
+                    dialogWindows: "{{projectName}}-dialog-window"
                 })
                 .config(["messageHubProvider", function (messageHubProvider) {
                     messageHubProvider.eventIdPrefix = '{{projectName}}.launchpad.Home';

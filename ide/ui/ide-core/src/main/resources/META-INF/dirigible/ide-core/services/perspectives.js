@@ -11,10 +11,12 @@
  */
 let extensions = require('core/v4/extensions');
 let response = require('http/v4/response');
+let request = require('http/v4/request');
 let uuid = require('utils/v4/uuid');
 
 let perspectives = [];
-let perspectiveExtensions = extensions.getExtensions('ide-perspective');
+let extensionPoint = request.getParameter('extensionPoint') || 'ide-perspective';
+let perspectiveExtensions = extensions.getExtensions(extensionPoint);
 
 for (let i = 0; i < perspectiveExtensions.length; i++) {
 	let module = perspectiveExtensions[i];

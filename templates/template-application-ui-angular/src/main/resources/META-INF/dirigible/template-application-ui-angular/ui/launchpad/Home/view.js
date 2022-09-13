@@ -9,10 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let user = require('security/v4/user');
-let response = require('http/v4/response');
+const viewData = {
+    id: "home-launchpad",
+    label: "Home Launchpad",
+    factory: "frame",
+    region: "center",
+    link: "/services/v4/web/${projectName}/gen/ui/launchpad/Home/index.html",
+};
 
-response.setContentType("text/plain");
-response.println(user.getName());
-response.flush();
-response.close();
+if (typeof exports !== 'undefined') {
+    exports.getView = function () {
+        return viewData;
+    }
+}

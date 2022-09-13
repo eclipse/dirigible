@@ -13,7 +13,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
         EXPANDED: 0,
         COLLAPSED: 1
     })
-    .constant('perspective', perspectiveData)
+    .constant('perspective', perspectiveData || {})
     .constant('layoutConstants', {
         version: 1.0,
         stateKey: 'ide.layout.state'
