@@ -99,7 +99,7 @@
 									</fd-button>
 								</fd-popover-control>
 								<fd-popover-body dg-align="right">
-									<fd-menu>
+									<fd-menu no-backdrop="true" no-shadow="true">
 										<fd-menu-item title="View Details" ng-click="openDetails(next)"></fd-menu-item>
 									</fd-menu>
 								</fd-popover-body>
