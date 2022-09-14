@@ -61,7 +61,7 @@ app.controller('welcomeCtrl', ['$scope', '$http', 'messageHub', function ($scope
         }))
     ];
 
-    $http.get('/services/v4/js/ide-core/services/templates.js').then(function (response) {
+    $http.get('/services/v4/js/resources-core/services/templates.js').then(function (response) {
         $scope.templates = response.data.filter(value => !value.extension);
         $scope.search.applyFilter();
     });

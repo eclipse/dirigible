@@ -14,7 +14,7 @@ const response = require("http/v4/response");
 const registry = require("platform/v4/registry");
 const uuid = require("utils/v4/uuid");
 
-const COOKIE_PREFIX = "DIRIGIBLE.ide-core.loader.";
+const COOKIE_PREFIX = "DIRIGIBLE.resources-core.loader.";
 
 let scriptId = request.getParameter("id");
 if (scriptId) {
@@ -83,13 +83,13 @@ function getLocations(scriptId) {
                 "/angularjs/1.8.2/angular.min.js",
                 "/angularjs/1.8.2/angular-resource.min.js",
                 "/angular-aria/1.8.2/angular-aria.min.js",
-                "/ide-core/core/message-hub.js",
-                "/ide-core/core/ide-message-hub.js",
-                "/ide-core/ui/theming.js",
-                "/ide-core/ui/widgets.js",
-                "/ide-core/ui/view.js",
-                "/ide-core/core/uri-builder.js",
-                "/ide-core/ui/entityApi.js",
+                "/resources-core/core/message-hub.js",
+                "/resources-core/core/ide-message-hub.js",
+                "/resources-core/ui/theming.js",
+                "/resources-core/ui/widgets.js",
+                "/resources-core/ui/view.js",
+                "/resources-core/core/uri-builder.js",
+                "/resources-core/ui/entityApi.js",
             ];
         case "application-perspective-js":
         case "ide-perspective-js":
@@ -99,17 +99,17 @@ function getLocations(scriptId) {
                 "/angularjs/1.8.2/angular-resource.min.js",
                 "/angularjs/1.8.2/angular-cookies.min.js",
                 "/angular-aria/1.8.2/angular-aria.min.js",
-                "/ide-core/core/message-hub.js",
-                "/ide-core/core/ide-message-hub.js",
+                "/resources-core/core/message-hub.js",
+                "/resources-core/core/ide-message-hub.js",
                 "/ide-branding/branding.js",
                 "/split.js/1.6.5/dist/split.min.js",
-                "/ide-core/ui/editors.js",
-                "/ide-core/ui/core-modules.js",
-                "/ide-core/ui/theming.js",
-                "/ide-core/ui/widgets.js",
-                "/ide-core/ui/view.js",
-                "/ide-core/ui/layout.js",
-                "/ide-core/core/uri-builder.js",
+                "/resources-core/ui/editors.js",
+                "/resources-core/ui/core-modules.js",
+                "/resources-core/ui/theming.js",
+                "/resources-core/ui/widgets.js",
+                "/resources-core/ui/view.js",
+                "/resources-core/ui/layout.js",
+                "/resources-core/core/uri-builder.js",
             ];
         case "file-upload-js":
             return [

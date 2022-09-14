@@ -16,6 +16,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>resources-core</module>
 		<module>resources-goldenlayout</module>
 		<module>resources-fonts</module>
 		<module>resources-dev-tools</module>

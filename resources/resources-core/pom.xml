@@ -4,21 +4,21 @@
 	
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-ide-ui-parent</artifactId>
+		<artifactId>dirigible-resources-parent</artifactId>
 		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - UI - Core</name>
-	<artifactId>dirigible-ide-ui-core</artifactId>
+	<name>Resources - Core</name>
+	<artifactId>dirigible-resources-core</artifactId>
     <packaging>jar</packaging>
 
 	<properties>
 		<profile.content.phase>generate-sources</profile.content.phase> 
-		<content.repository.name>ide-core</content.repository.name>
-		<content.project.name>ide-core</content.project.name>
+		<content.repository.name>resources-core</content.repository.name>
+		<content.project.name>resources-core</content.project.name>
 
-		<license.header.location>../../../licensing-header.txt</license.header.location>
+		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
 
 </project>

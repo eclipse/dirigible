@@ -5,7 +5,7 @@ angular.module('ideEditors', ['ngResource'])
             let editorProviders = {};
             let editorsForContentType = {};
 
-            $http.get('/services/v4/js/ide-core/services/editors.js')
+            $http.get('/services/v4/js/resources-core/services/editors.js')
                 .then(function (response) {
                     for (let i = 0; i < response.data.length; i++) {
                         editorProviders[response.data[i].id] = response.data[i].link;

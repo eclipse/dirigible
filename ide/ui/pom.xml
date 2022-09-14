@@ -17,7 +17,6 @@
 		<module>ide-about</module>
 		<module>ide-branding</module>
 		<module>ide-console</module>
-		<module>ide-core</module>
 		<module>ide-workbench</module>
 		<module>ide-welcome</module>
 		<module>ide-database</module>

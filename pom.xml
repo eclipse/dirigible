@@ -281,7 +281,7 @@
 								<exclude>**/src/main/resources/META-INF/dirigible/ide-swagger/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/ide-database/sql/lib/ace/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/ide-discussions/ui/js/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/ide-core/ui/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/resources-core/ui/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/ide-terminal/js/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/dev-tools/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/template-mobile-hello-world/node_modules/**</exclude>

@@ -16,21 +16,21 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
     .constant('perspective', perspectiveData)
     .constant('extensionPoint', {})
     .service('Perspectives', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
-        let url = '/services/v4/js/ide-core/services/perspectives.js';
+        let url = '/services/v4/js/resources-core/services/perspectives.js';
         if (extensionPoint && extensionPoint.perspectives) {
             url = `${url}?extensionPoint=${extensionPoint.perspectives}`;
         }
         return $resource(url);
     }])
     .service('Menu', ['$resource', function ($resource) {
-        return $resource('/services/v4/js/ide-core/services/menu.js');
+        return $resource('/services/v4/js/resources-core/services/menu.js');
     }])
     .service('User', ['$http', function ($http) {
         return {
             get: function () {
                 let user = {};
                 $http({
-                    url: '/services/v4/js/ide-core/services/user-name.js',
+                    url: '/services/v4/js/resources-core/services/user-name.js',
                     method: 'GET'
                 }).then(function (data) {
                     user.name = data.data;
@@ -40,7 +40,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
         };
     }])
     .service('DialogWindows', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
-        let url = '/services/v4/js/ide-core/services/dialog-windows.js';
+        let url = '/services/v4/js/resources-core/services/dialog-windows.js';
         if (extensionPoint && extensionPoint.dialogWindows) {
             url = `${url}?extensionPoint=${extensionPoint.dialogWindows}`;
         }
@@ -176,7 +176,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     true
                 );
             },
-            templateUrl: '/services/v4/web/ide-core/ui/templates/contextmenu.html'
+            templateUrl: '/services/v4/web/resources-core/ui/templates/contextmenu.html'
         };
     }])
     .directive('ideContextmenuSubmenu', ['$window', function ($window) {
@@ -233,7 +233,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     });
                 };
             },
-            templateUrl: '/services/v4/web/ide-core/ui/templates/contextmenuSubmenu.html'
+            templateUrl: '/services/v4/web/resources-core/ui/templates/contextmenuSubmenu.html'
         };
     }])
     .directive('ideHeader', ['$window', '$cookies', '$resource', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($window, $cookies, $resource, branding, theming, User, Menu, messageHub) {
@@ -309,7 +309,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     };
                 }
             },
-            templateUrl: '/services/v4/web/ide-core/ui/templates/ideHeader.html',
+            templateUrl: '/services/v4/web/resources-core/ui/templates/ideHeader.html',
         };
     }])
     .directive("headerHamburgerMenu", [function () {
@@ -455,7 +455,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     );
                 },
             },
-            templateUrl: '/services/v4/web/ide-core/ui/templates/ideSidebar.html'
+            templateUrl: '/services/v4/web/resources-core/ui/templates/ideSidebar.html'
         }
     }])
     /**
@@ -1094,7 +1094,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     true
                 );
             },
-            templateUrl: '/services/v4/web/ide-core/ui/templates/ideDialogs.html'
+            templateUrl: '/services/v4/web/resources-core/ui/templates/ideDialogs.html'
         }
     }])
     .directive('ideStatusBar', ['messageHub', function (messageHub) {
@@ -1149,6 +1149,6 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     scope.error = null;
                 };
             },
-            templateUrl: '/services/v4/web/ide-core/ui/templates/ideStatusBar.html'
+            templateUrl: '/services/v4/web/resources-core/ui/templates/ideStatusBar.html'
         }
     }]);

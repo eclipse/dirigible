@@ -822,7 +822,7 @@ angular.module('workspace.config', [])
     .constant('WS_SVC_MANAGER_URL', '/services/v4/ide/workspace')
     .constant('PUBLISH_SVC_URL', '/services/v4/ide/publisher/request')
     .constant('EXPORT_SVC_URL', '/services/v4/transport/project')
-    .constant('TEMPLATES_SVC_URL', '/services/v4/js/ide-core/services/templates.js')
+    .constant('TEMPLATES_SVC_URL', '/services/v4/js/resources-core/services/templates.js')
     .constant('GENERATION_SVC_URL', '/services/v4/ide/generate');
 
 angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'angularFileUpload'])
@@ -1024,7 +1024,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         // get file extensions with available generation templates
         let fileExtensions = $.ajax({
             type: "GET",
-            url: '/services/v4/js/ide-core/services/templates.js/extensions',
+            url: '/services/v4/js/resources-core/services/templates.js/extensions',
             cache: false,
             async: false
         }).responseText;
@@ -1032,7 +1032,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         // get available generation templates count
         let templatesCountNonFile = parseInt($.ajax({
             type: "GET",
-            url: '/services/v4/js/ide-core/services/templates.js/count',
+            url: '/services/v4/js/resources-core/services/templates.js/count',
             cache: false,
             async: false
         }).responseText);
