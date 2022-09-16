@@ -787,7 +787,7 @@
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<velocity.version>2.3</velocity.version>
-		<wikitext.version>3.0.42</wikitext.version>
+		<wikitext.version>3.0.43</wikitext.version>
 		<flexmark.version>0.64.0</flexmark.version>
 		<sonar.organization>eclipse</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
