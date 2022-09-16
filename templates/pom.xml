@@ -39,13 +39,6 @@
 		<module>template-mobile-hello-world</module>
 		<module>template-form-builder-angularjs</module>
 		<module>template-application-odata</module>
-		<module>template-openui5-wizard</module>
-		<module>template-openui5-simple-form</module>
-		<module>template-openui5-tiles</module>
-		<module>template-openui5-planning-calendar</module>
-		<module>template-openui5-list</module>
-		<module>template-openui5-master-detail</module>
-		<module>template-openui5-table</module>
 		<module>template-websocket</module>
 		<module>template-application-dao-mongodb</module>
 		<module>template-application-rest-mongodb</module>
