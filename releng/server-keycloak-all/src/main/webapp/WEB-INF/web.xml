@@ -131,6 +131,19 @@
         <auth-method>BASIC</auth-method>
     </login-config>
 
+	<!-- Error Pages -->     
+	<error-page>
+		<error-code>403</error-code>
+		<location>/403.html</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.html</location>
+	</error-page>
+	<error-page>
+		<location>/error.html</location>
+	</error-page>
+	
 	<!-- Landing Page -->
 	<security-constraint>
 		<web-resource-collection>
