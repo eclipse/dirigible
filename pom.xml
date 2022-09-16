@@ -725,7 +725,7 @@
 		<hamcrest.all.version>1.3</hamcrest.all.version>
 		<retrofit.version>1.8.0</retrofit.version>
 		<okhttp3.version>4.10.0</okhttp3.version>
-		<slf4j.version>2.0.0</slf4j.version>
+		<slf4j.version>2.0.1</slf4j.version>
 		<slf4j.simple.version>1.7.12</slf4j.simple.version>
 		<logback.version>1.4.0</logback.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
@@ -774,7 +774,7 @@
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.13.4</jackson.databind.version>
 		<spring.boot.version>2.7.3</spring.boot.version>
-		<spring.boot.slf4j.version>1.7.36</spring.boot.slf4j.version>
+		<spring.boot.slf4j.version>2.0.1</spring.boot.slf4j.version>
 		<spring.boot.logback.version>1.2.11</spring.boot.logback.version>
 		<webjars-locator>0.45</webjars-locator>
 		<keycloak-adapter-bom.version>19.0.2</keycloak-adapter-bom.version>
