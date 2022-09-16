@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitCommitInfo;
 import org.eclipse.dirigible.core.git.GitConnectorException;
@@ -636,7 +637,7 @@ public class GitProcessor {
 	 */
 	private String extractProjectLocation(File project) {
 		StringBuilder projectLocation = new StringBuilder();
-		String projectPath = project.getPath();
+		String projectPath = FilenameUtils.normalize(project.getPath(), true);
 		if (projectPath.indexOf(DOT_GIT) > 0) {
 			String path = projectPath.substring(projectPath.indexOf(DOT_GIT) + DOT_GIT.length() + IRepository.SEPARATOR.length());
 			String[] tokens = path.split(IRepository.SEPARATOR);
