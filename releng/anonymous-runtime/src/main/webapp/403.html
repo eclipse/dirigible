@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ Copyright (c) 2010-2021 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -8,36 +8,41 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="errorPage" ng-controller="ErrorPageController">
 
-<html>
-<head>
-	<meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" href="/services/v4/web/resources/images/favicon.ico" />
+		<title>Access Denied</title>
+		<theme></theme>
+		<script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=application-view-js">
+		</script>
+		<link type="text/css" rel="stylesheet"
+			href="/services/v4/js/resources-core/services/loader.js?id=application-view-css" />
+	</head>
 
-    <title>Eclipse Dirigible &trade; | Error 403</title>
-    
-	<!-- Twitter Bootstrap with Theme Support -->
-	<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
-	
-	<link rel="shortcut icon" type="image/png" href="/services/v4/web/resources/images/favicon.png" />
-</head>
-<body>
-<div class="container">
-    <div class="row">
-    <div class="error-template">
-	    <h3>403 Forbidden</h3>
-	    <div class="error-details">
-		Sorry, an error has occurred, this page is forbidden<br>
-	    </div>
-	    <div class="error-actions">
-		<a href="/" class="btn btn-primary">
-		    <i class="icon-home icon-white"></i> Take Me Home </a>
-		<a href="http://bugs.dirigible.io" class="btn btn-default">
-		    <i class="icon-envelope"></i> Contact Support </a>
-	    </div>
-	</div>
-    </div>
-</div>
-</body>
+	<body class="fd-scrollbar" dg-contextmenu="contextMenuContent">
+
+		<div style="height: 600px; width: 100%;">
+			<fd-message-page glyph="sap-icon--alert">
+				<fd-message-page-title>Access Denied</fd-message-page-title>
+				<fd-message-page-subtitle>
+					<b>The page you're trying to access has resctricted access</b>.
+					<br>
+					Pleace contact your system administrator for more details.
+				</fd-message-page-subtitle>
+			</fd-message-page>
+		</div>
+
+		<script>
+			let errorPage = angular.module('errorPage', ['ideUI', 'ideView']);
+
+			errorPage.controller('ErrorPageController', ['$scope', function ($scope) {
+
+			}]);
+		</script>
+	</body>
+
 </html>
