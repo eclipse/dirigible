@@ -19,6 +19,7 @@ Entity.prototype.dataName = null;
 Entity.prototype.dataQuery = null; // database query in case of a report type of the entity
 Entity.prototype.dataCount = null; // database query for the count of the entities
 Entity.prototype.title = '';
+Entity.prototype.caption = '';
 Entity.prototype.tooltip = '';
 Entity.prototype.icon = 'file-o';
 Entity.prototype.menuLabel = ''; // the visible name of the menu
@@ -37,7 +38,7 @@ Entity.prototype.roleWrite = null;
 Entity.prototype.projectionReferencedModel = null;
 Entity.prototype.projectionReferencedEntity = null;
 
-Entity.prototype.clone = function() {
+Entity.prototype.clone = function () {
 	return mxUtils.clone(this);
 };
 
@@ -78,7 +79,7 @@ Property.prototype.feedPropertyName = null; // the matching property name from t
 Property.prototype.roleRead = null; // the matching property name from the read role
 Property.prototype.roleWrite = null; // the matching property name from the write role
 
-Property.prototype.clone = function() {
+Property.prototype.clone = function () {
 	return mxUtils.clone(this);
 };
 

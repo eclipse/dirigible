@@ -33,7 +33,8 @@
 
         <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
         <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/services/v4/web/resources-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
+        <script type="text/javascript" src="/services/v4/web/resources-core/ui/ui-bootstrap-tpls-0.14.3.min.js">
+        </script>
 
         <!-- Custom IDE Styles -->
         <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
@@ -177,6 +178,13 @@
                                 <div class="col-xs-5">
                                     <input class="form-control" type="text" placeholder="title"
                                         ng-model="ctrl.$scope.$parent.cell.value.title" required="required">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 0.3em;">
+                                <label class="col-xs-3 col-form-label">Caption: </label>
+                                <div class="col-xs-6">
+                                    <textarea class="form-control" placeholder="Description"
+                                        ng-model="ctrl.$scope.$parent.cell.value.caption" rows="3"></textarea>
                                 </div>
                             </div>
                             <div class="row">

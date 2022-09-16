@@ -23,6 +23,7 @@ function createModel(graph) {
 			child.value.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
 			child.value.dataCount = child.value.dataCount ? child.value.dataCount : 'SELECT COUNT(*) AS COUNT FROM ' + JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
 			child.value.title = child.value.title ? child.value.title : child.value.name;
+			child.value.caption = child.value.caption ? child.value.caption : "Manage entity " + child.value.name;
 			child.value.tooltip = child.value.tooltip ? child.value.tooltip : child.value.name;
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
@@ -32,6 +33,7 @@ function createModel(graph) {
 				'" dataQuery="' + _.escape(child.value.dataQuery) +
 				'" type="' + _.escape(child.value.entityType ? child.value.entityType : 'PRIMARY') +
 				'" title="' + _.escape(child.value.title) +
+				'" caption="' + _.escape(child.value.caption) +
 				'" tooltip="' + _.escape(child.value.tooltip) +
 				'" icon="' + _.escape(child.value.icon) +
 				'" menuKey="' + _.escape(child.value.menuKey) +
