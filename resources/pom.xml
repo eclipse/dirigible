@@ -28,6 +28,7 @@
 		<module>resources-theme-quartz-light</module>
 		<module>resources-flowable-libs</module>
 		<module>resources-mxgraph</module>
+		<module>resources-unicons</module>
 	</modules>
 
 	<properties>

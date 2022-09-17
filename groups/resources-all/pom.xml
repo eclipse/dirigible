@@ -73,6 +73,11 @@
             <artifactId>dirigible-resources-mxgraph</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-unicons</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- WebJars -->
         <!-- <dependency>
