@@ -15,7 +15,7 @@ const perspectiveData = {
 	link: "../ide-debugger/index.html",
 	order: "106",
 	image: "bug", // deprecated
-	icon: "../ide-debugger/images/debugger.svg",
+	icon: "/services/v4/web/resources/unicons/bug.svg",
 };
 
 if (typeof exports !== 'undefined') {

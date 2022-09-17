@@ -15,7 +15,7 @@ const perspectiveData = {
 	link: "../ide-documents/index.html",
 	order: "150",
 	image: "clipboard", // deprecated
-	icon: "../ide-documents/images/documents.svg",
+	icon: "/services/v4/web/resources/unicons/book-open.svg",
 };
 if (typeof exports !== 'undefined') {
 	exports.getPerspective = function () {
