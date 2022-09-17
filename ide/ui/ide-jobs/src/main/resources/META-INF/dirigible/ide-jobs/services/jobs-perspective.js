@@ -15,7 +15,7 @@ const perspectiveData = {
     link: "../ide-jobs/index.html",
     order: "750",
     image: "history", // deprecated
-    icon: "../ide-jobs/images/jobs.svg",
+    icon: "/services/v4/web/resources/unicons/clock.svg",
 };
 if (typeof exports !== 'undefined') {
     exports.getPerspective = function () {
