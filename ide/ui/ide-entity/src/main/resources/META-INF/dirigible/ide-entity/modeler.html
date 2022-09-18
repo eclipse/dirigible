@@ -201,7 +201,7 @@
                                         ng-model="ctrl.$scope.$parent.cell.value.icon"
                                         style="font-family: 'FontAwesome', 'Helvetica'">
                                         <option ng-repeat="option in ctrl.icons" id="{{option.name}}"
-                                            value="{{option.name}}" ng-bind-html="option.icon"></option>
+                                            value="{{option.url}}" ng-bind-html="option.name"></option>
                                     </select>
                                 </div>
                             </div>
@@ -823,8 +823,8 @@
                                 <label>Icon</label>
                                 <select class="form-control" name="entityIcon" id="entityIcon"
                                     ng-model="perspectiveEntity.icon" style="font-family: 'FontAwesome', 'Helvetica'">
-                                    <option ng-repeat="option in ctrl.icons" id="{{option.name}}"
-                                        value="{{option.name}}" ng-bind-html="option.icon"></option>
+                                    <option ng-repeat="option in ctrl.icons" id="{{option.name}}" value="{{option.url}}"
+                                        ng-bind-html="option.name"></option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -886,8 +886,8 @@
                                 <!-- <div class="col-xs-5"> -->
                                 <select class="form-control" name="entityIcon" id="entityIcon"
                                     ng-model="sidebarEntity.icon" style="font-family: 'FontAwesome', 'Helvetica'">
-                                    <option ng-repeat="option in ctrl.icons" id="{{option.name}}"
-                                        value="{{option.name}}" ng-bind-html="option.icon"></option>
+                                    <option ng-repeat="option in ctrl.icons" id="{{option.name}}" value="{{option.url}}"
+                                        ng-bind-html="option.name"></option>
                                 </select>
                                 <!-- </div> -->
                             </div>
