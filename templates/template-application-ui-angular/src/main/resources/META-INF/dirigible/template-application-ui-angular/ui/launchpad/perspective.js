@@ -8,7 +8,7 @@ const perspectiveData = {
 	name: "Home",
 	link: "/services/v4/web/${projectName}/gen/index.html",
 	order: "1",
-	// icon: "/services/v4/web/ide/images/workbench.svg",
+	icon: "/services/v4/web/resources/unicons/estate.svg",
 };
 
 if (typeof exports !== 'undefined') {
