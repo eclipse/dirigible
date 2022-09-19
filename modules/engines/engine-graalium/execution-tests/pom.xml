@@ -5,7 +5,7 @@
     <parent>
         <artifactId>dirigible-engine-graalium</artifactId>
         <groupId>org.eclipse.dirigible</groupId>
-        <version>6.3.22</version>
+        <version>6.3.23</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -220,27 +220,27 @@
 	    <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-process</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-api</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-api</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
 
 		<dependency>
@@ -281,27 +281,27 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-api</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-http</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-core</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-javascript</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 		</dependency>
 
 		<dependency>
@@ -314,25 +314,25 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-local</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-h2</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-tests</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -370,7 +370,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-cache</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -390,13 +390,13 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-graalium-execution</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-javascript-graalium</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

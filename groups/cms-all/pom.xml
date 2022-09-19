@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-groups-parent</artifactId>
-        <version>6.3.22</version>
+        <version>6.3.23</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -33,68 +33,68 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-cms-api</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-cms-internal</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-cms-managed</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-cms</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-documents</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-cms</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-documents</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-core</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-documents</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-documents-ext-content-type-ms</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-csv</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-csvim</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-cms-csvim</artifactId>
-            <version>6.3.22</version>
+            <version>6.3.23</version>
         </dependency>
     </dependencies>
 

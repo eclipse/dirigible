@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-api-facade-parent</artifactId>
-		<version>6.3.22</version>
+		<version>6.3.23</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -35,12 +35,12 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-api</artifactId>
-			<version>6.3.22</version>
+			<version>6.3.23</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-net</groupId>

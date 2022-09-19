@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-ext-parent</artifactId>
-		<version>6.3.22</version>
+		<version>6.3.23</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
