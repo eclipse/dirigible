@@ -20,15 +20,28 @@ for (let i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
         location: tile.location,
         caption: tile.caption,
         tooltip: tile.tooltip,
-        order: tile.order
+        order: parseInt(tile.order),
+        groupOrder: parseInt(tile.groupOrder)
     });
 }
 
 for (let next in tiles) {
-    tiles[next] = tiles[next].sort(function (a, b) {
-        var result = a.order - b.order;
-        return result;
-    });
+    tiles[next] = tiles[next].sort((a, b) => a.order - b.order);
 }
 
-response.println(JSON.stringify(tiles));
+let sortedGroups = [];
+for (let next in tiles) {
+    sortedGroups.push({
+        name: next,
+        order: tiles[next][0] && tiles[next][0].groupOrder ? tiles[next][0].groupOrder : 100,
+        tiles: tiles[next]
+    });
+}
+sortedGroups = sortedGroups.sort((a, b) => a.order - b.order);
+
+let sortedTiles = {};
+for (let i = 0; i < sortedGroups.length; i++) {
+    sortedTiles[sortedGroups[i].name] = sortedGroups[i].tiles;
+}
+
+response.println(JSON.stringify(sortedTiles));

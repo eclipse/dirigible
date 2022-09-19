@@ -11,6 +11,7 @@ exports.getTile = function () {
         tooltip: "{{tooltip}}",
         // icon: "file-o",
         location: "/services/v4/web/{{projectName}}/gen/ui/{{perspectiveName}}/index.html",
-        order: "100"
+        order: "{{menuIndex}}",
+        groupOrder: "{{perspectiveOrder}}"
     };
 };
