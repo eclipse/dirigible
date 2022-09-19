@@ -39,8 +39,8 @@ function createModel(graph) {
 				'" menuIndex="' + _.escape(child.value.menuIndex) +
 				'" layoutType="' + _.escape(child.value.layoutType) +
 				'" perspectiveName="' + _.escape(child.value.perspectiveName) +
-				'" perspectiveIcon="' + _.escape(child.value.perspectiveIcon) +
-				'" perspectiveOrder="' + _.escape(child.value.perspectiveOrder) + '"';
+				'" perspectiveIcon="' + getPerspectiveIcon(graph, child) +
+				'" perspectiveOrder="' + getPerspectiveOrder(graph, child) + '"';
 
 			if (child.value.feedUrl && child.value.feedUrl !== "") {
 				child.value.feedUrl = btoa(child.value.feedUrl);
@@ -236,6 +236,32 @@ function createModel(graph) {
 	}
 
 	return model.join('');
+}
+
+function getPerspectiveIcon(graph, child) {
+	let perspectiveName = _.escape(child.value.perspectiveName);
+	let perspectiveIcon = _.escape(child.value.perspectiveIcon);
+	let perspectives = graph.getModel().perspectives || [];
+	for (let i = 0; i < perspectives.length; i++) {
+		if (perspectiveName === _.escape(perspectives[i].id)) {
+			perspectiveIcon = perspectives[i].icon;
+
+		}
+	}
+	return perspectiveIcon;
+}
+
+function getPerspectiveOrder(graph, child) {
+	let perspectiveName = _.escape(child.value.perspectiveName);
+	let perspectiveOrder = _.escape(child.value.perspectiveOrder);
+	let perspectives = graph.getModel().perspectives || [];
+	for (let i = 0; i < perspectives.length; i++) {
+		if (perspectiveName === _.escape(perspectives[i].id)) {
+			perspectiveOrder = perspectives[i].order;
+
+		}
+	}
+	return perspectiveOrder;
 }
 
 // function createModelJson(graph) {
