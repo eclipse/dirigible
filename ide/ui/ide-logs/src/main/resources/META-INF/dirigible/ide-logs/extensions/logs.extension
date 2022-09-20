@@ -1,0 +1,5 @@
+{
+    "module": "ide-logs/services/logs-view.js",
+    "extensionPoint": "ide-view",
+    "description": "Logs View"
+}

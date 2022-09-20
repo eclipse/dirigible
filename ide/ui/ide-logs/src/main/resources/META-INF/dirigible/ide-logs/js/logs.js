@@ -17,18 +17,18 @@ logsView.config(["messageHubProvider", function (messageHubProvider) {
 
 logsView.controller('LogsController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
 
-	const SELECT_LOG_TEXT = "Select log file...";
+	$scope.log = {
+		selectedLog: null,
+		logsList: []
+	};
 
-	$scope.selectedLog = null;
 	$http.get('/services/v4/ops/logs').then(function (response) {
-		$scope.logsList = [SELECT_LOG_TEXT];
-		$scope.logsList.push(...response.data);
-		$scope.selectedLog = SELECT_LOG_TEXT;
+		$scope.log.logsList = response.data.map(x => ({ text: x, value: x }));
 	});
 
 	$scope.logChanged = function () {
-		if ($scope.selectedLog && $scope.selectedLog !== SELECT_LOG_TEXT) {
-			$http.get('/services/v4/ops/logs/' + $scope.selectedLog).then(function (response) {
+		if ($scope.log.selectedLog) {
+			$http.get('/services/v4/ops/logs/' + $scope.log.selectedLog).then(function (response) {
 				$scope.logContent = response.data;
 			});
 		} else {

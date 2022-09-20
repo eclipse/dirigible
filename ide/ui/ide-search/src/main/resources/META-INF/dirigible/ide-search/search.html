@@ -47,7 +47,7 @@
                     </fd-button>
                 </fd-popover-control>
                 <fd-popover-body dg-align="right" no-arrow="true">
-                    <fd-menu no-backdrop="true">
+                    <fd-menu no-backdrop="true" no-shadow="true">
                         <fd-menu-item title="{{ name }}" ng-repeat="name in workspaceNames"
                             is-selected="{{ isSelectedWorkspace(name) }}" ng-click="switchWorkspace(name)">
                         </fd-menu-item>

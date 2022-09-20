@@ -1,0 +1,5 @@
+{
+    "module": "ide-jobs/services/job-assign-window.js",
+    "extensionPoint": "ide-dialog-window",
+    "description": "Assign job window"
+}

@@ -9,13 +9,17 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const logconfigurationsView = angular.module('logconfigurations', ['ideUI', 'ideView', "ngRoute"]);
+const logconfigurationsView = angular.module('logconfigurations', ['ideUI', 'ideView', 'ngRoute']);
 
 logconfigurationsView.config(["messageHubProvider", function (messageHubProvider) {
     messageHubProvider.eventIdPrefix = 'logconfigurations-view';
 }]);
 
 logconfigurationsView.controller('LogConfigurationsController', ['$scope', '$http', '$route', 'messageHub', function ($scope, $http, $route, messageHub) {
+
+    $scope.search = {
+        name: ''
+    }
 
     let logConfigurationsApi = '/services/v4/ops/logconfig';
 
@@ -39,7 +43,6 @@ logconfigurationsView.controller('LogConfigurationsController', ['$scope', '$htt
                 $scope.logConfigurations[i].severity = data.data;
                 $route.reload()
             }
-            ;
     }
     loadLogConfigurations();
 }]);
