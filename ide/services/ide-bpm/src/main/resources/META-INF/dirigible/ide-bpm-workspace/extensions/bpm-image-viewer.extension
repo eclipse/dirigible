@@ -1,0 +1,5 @@
+{
+    "module": "ide-bpm-workspace/services/bpm-image-viewer.js",
+    "extensionPoint": "ide-editor",
+    "description": "BPM Image Viewer"
+}

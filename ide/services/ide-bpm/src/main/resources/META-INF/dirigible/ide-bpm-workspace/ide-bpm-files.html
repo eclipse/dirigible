@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="ide-bpm-files" ng-controller="IDEBpmFilesViewController">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Fake favicon to silent console errors and not waste a get request -->
+		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+
+		<!-- Title directive -->
+		<title dg-view-title></title>
+
+		<!-- View data -->
+		<script type="text/javascript" src="/services/v4/web/ide-bpm-workspace/services/ide-bpm-files-view.js"></script>
+
+		<!-- jQuery -->
+		<script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+		<!-- AngularJS -->
+		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+		<script type="text/javascript" src="/webjars/angular-aria/1.8.2/angular-aria.min.js"></script>
+
+		<!-- Fundamental-styles -->
+		<link type="text/css" rel="stylesheet" href="/webjars/fundamental-styles/0.24.0/dist/fundamental-styles.css">
+		<theme></theme>
+
+		<!-- Dirigible styles -->
+		<link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/core.css" />
+		<link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/widgets.css" />
+
+		<!-- MessageHub -->
+		<script type="text/javascript" src="/services/v4/web/resources-core/core/message-hub.js"></script>
+		<script type="text/javascript" src="/services/v4/web/resources-core/core/ide-message-hub.js"></script>
+
+		<!-- IDE Core UI -->
+		<script type="text/javascript" src="/services/v4/web/resources-core/ui/theming.js"></script>
+		<script type="text/javascript" src="/services/v4/web/resources-core/ui/widgets.js"></script>
+		<script type="text/javascript" src="/services/v4/web/resources-core/ui/view.js"></script>
+
+		<!-- JSTree -->
+		<script type="text/javascript" src="/webjars/jstree/3.3.12/jstree.min.js"></script>
+		<script type="text/javascript" src="/services/v4/web/resources-core/ui/widgets/indicator.plugin.js"></script>
+		<link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/jstree.css" />
+
+		<!-- Project-specific stuff -->
+		<script type="text/javascript" src="js/ide-bpm-files.js"></script>
+
+	</head>
+
+	<body>
+		<div style="display: flex;flex-direction: column;height:100%">
+			<input class="fd-input" type="text" id="treeSearch" ng-keyup="search()" placeholder="Search tree">
+			<br>
+			<div id="jstree_demo" class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar"></div>
+		</div>
+	</body>
+
+</html>
