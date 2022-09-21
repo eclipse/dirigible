@@ -15,6 +15,8 @@ import static java.text.MessageFormat.format;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
@@ -28,11 +30,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.bpm.api.BpmModule;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.eclipse.dirigible.runtime.ide.bpm.processor.BpmProcessor;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
+import org.flowable.engine.ProcessEngine;
+import org.flowable.engine.RepositoryService;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -162,6 +168,46 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 			throw new RepositoryNotFoundException(error);
 		}
 		return Response.ok().entity(stencilSets).build();
+	}
+
+	@GET
+	@Path("/bpm-processes/keys")
+	public Response getProcessesKeys() {
+		ProcessEngine processEngine = ((ProcessEngine) BpmModule.getProcessEngine());
+
+		List<String> keys = processEngine
+				.getRepositoryService()
+				.createProcessDefinitionQuery()
+				.list()
+				.stream()
+				.map(ProcessDefinition::getKey)
+				.collect(Collectors.toList());
+
+		return Response.ok(keys).build();
+	}
+
+	@GET
+	@Path("/bpm-processes/{processDefinitionKey}/image")
+	public Response getProcessImage(
+			@PathParam("processDefinitionKey") String processDefinitionKey
+	) throws IOException {
+		ProcessEngine processEngine = ((ProcessEngine) BpmModule.getProcessEngine());
+		RepositoryService repositoryService = processEngine.getRepositoryService();
+
+		ProcessDefinition process = repositoryService
+				.createProcessDefinitionQuery()
+				.processDefinitionKey(processDefinitionKey)
+				.latestVersion()
+				.singleResult();
+
+		String deploymentId = process.getDeploymentId();
+		String diagramResourceName = process.getDiagramResourceName();
+
+		byte[] imageBytes = repositoryService
+				.getResourceAsStream(deploymentId, diagramResourceName)
+				.readAllBytes();
+
+		return Response.ok(imageBytes, "image/png").build();
 	}
 
 	/**
