@@ -66,7 +66,7 @@
 		<module>ide-listeners-menu</module>
 		<module>ide-data-structures</module>
 		<module>ide-registry</module>
-	  <module>ide-file-manager</module>
+		<module>ide-file-manager</module>
 		<module>ide-plugins</module>
 		<module>ide-websockets</module>
 		<module>ide-websockets-menu</module>
@@ -74,6 +74,7 @@
 		<module>ide-form-builder-menu</module>
 		<module>ide-image</module>
 		<module>ide-bpm</module>
+		<module>ide-bpm-workspace</module>
 		<module>ide-bpm-menu</module>
 		<module>ide-csv</module>
 		<module>ide-csvim</module>

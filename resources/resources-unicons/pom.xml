@@ -15,7 +15,7 @@
 
 	<properties>
 		<profile.content.phase>generate-sources</profile.content.phase> 
-		<content.repository.name>resources-fonts</content.repository.name>
+		<content.repository.name>resources-unicons</content.repository.name>
 		<content.project.name>resources</content.project.name>
 
 		<license.header.location>licensing-header.txt</license.header.location>

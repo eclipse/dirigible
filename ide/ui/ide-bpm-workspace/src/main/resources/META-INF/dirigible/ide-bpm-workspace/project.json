@@ -3,6 +3,6 @@
     "repository": {
         "type": "git",
         "branch": "main",
-        "url": "https://github.com/dirigiblelabs/sample-ide-perspective.git"
+        "url": "https://github.com/dirigiblelabs/ide-bpm.git"
     }
 }
