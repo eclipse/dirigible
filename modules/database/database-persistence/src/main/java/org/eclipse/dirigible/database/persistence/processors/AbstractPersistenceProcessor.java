@@ -142,8 +142,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Truncate value.
 	 *
-	 * @param dataType the data type
-	 * @param dataLength the data length
+	 * @param columnModel the column model
 	 * @param valueObject the value object
 	 * @return the object
 	 */
