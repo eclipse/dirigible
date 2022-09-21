@@ -186,13 +186,6 @@
 		 	<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 
-		<!-- ЕXT -->
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-ext</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-		</dependency>
-
 		<!-- MAIL -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
