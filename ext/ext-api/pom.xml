@@ -24,7 +24,8 @@
 		<module>api-rabbitmq</module>
 		<module>api-redis</module>
 		<module>api-spark</module>
-	</modules>
+		<module>api-qldb</module>
+    </modules>
 
 	<properties>
 		<license.header.location>../../licensing-header.txt</license.header.location>
