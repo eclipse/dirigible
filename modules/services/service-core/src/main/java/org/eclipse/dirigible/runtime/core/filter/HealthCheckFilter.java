@@ -56,7 +56,7 @@ public class HealthCheckFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		boolean isResources = httpRequest.getPathInfo().startsWith("/web/resources");
+		boolean isResources = httpRequest.getPathInfo().startsWith("/web/resources") || httpRequest.getPathInfo().startsWith("/js/resources");
 		boolean isHealthCheck = httpRequest.getPathInfo().startsWith("/healthcheck");
 		boolean isOps = httpRequest.getPathInfo().startsWith("/ops");
 		boolean isWebJars = httpRequest.getPathInfo().startsWith("/webjars");
