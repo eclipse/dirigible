@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-workspace-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>6.3.24</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,7 +34,7 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.24</version>
     	</dependency>
     	<dependency>
 		    <groupId>org.eclipse.persistence</groupId>
@@ -44,45 +44,45 @@
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-persistence</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.24</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-core-scheduler</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.24</version>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.24</version>
         </dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-security</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.24</version>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-core</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.24</version>
         </dependency>
 
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.24</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-h2</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.24</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-local</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.24</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
