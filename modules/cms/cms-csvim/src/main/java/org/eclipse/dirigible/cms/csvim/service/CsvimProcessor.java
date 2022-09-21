@@ -173,7 +173,7 @@ public class CsvimProcessor {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void process(CsvFileDefinition csvFileDefinition, String content, Connection connection) throws CsvimException, SQLException, IOException {
-		String tableName = convertToActualTableName(csvFileDefinition.getTable());
+		String tableName = csvFileDefinition.getTable();
 		CSVParser csvParser = getCsvParser(csvFileDefinition, content);
 		PersistenceTableModel tableMetadata = getTableMetadata(csvFileDefinition);
 		if (tableMetadata == null || csvParser == null) {
@@ -291,7 +291,7 @@ public class CsvimProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFileDefinition csvFileDefinition) throws SQLException {
-		String tableName = convertToActualTableName(csvFileDefinition.getTable());
+		String tableName = csvFileDefinition.getTable();
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
 
 		CsvRecordDefinition csvRecordDefinition = null;
@@ -320,7 +320,7 @@ public class CsvimProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	private void updateCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFileDefinition csvFileDefinition) throws SQLException {
-		String tableName = convertToActualTableName(csvFileDefinition.getTable());
+		String tableName = csvFileDefinition.getTable();
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
 
 		CsvRecordDefinition csvRecordDefinition = null;
@@ -389,7 +389,7 @@ public class CsvimProcessor {
 	 * @return the table metadata
 	 */
 	private PersistenceTableModel getTableMetadata(CsvFileDefinition csvFileDefinition) {
-		String tableName = convertToActualTableName(csvFileDefinition.getTable());
+		String tableName = csvFileDefinition.getTable();
 		try {
 			return databaseMetadataUtil.getTableMetadata(tableName, csvFileDefinition.getSchema());
 		} catch (SQLException sqlException) {
@@ -515,20 +515,6 @@ public class CsvimProcessor {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Convert to actual table name.
-	 *
-	 * @param tableName the table name
-	 * @return the string
-	 */
-	private String convertToActualTableName(String tableName) {
-		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
-		if (caseSensitive) {
-			tableName = "\"" + tableName + "\"";
-		}
-		return tableName;
 	}
 
 	/**
