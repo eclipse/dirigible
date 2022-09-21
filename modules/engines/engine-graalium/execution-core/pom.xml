@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>dirigible-engine-graalium</artifactId>
 		<groupId>org.eclipse.dirigible</groupId>
-		<version>6.3.24</version>
+		<version>7.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>dirigible-engine-graalium-execution-core</artifactId>
@@ -15,17 +15,17 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
-			<version>6.3.24</version>
+			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-api</artifactId>
-			<version>6.3.24</version>
+			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-graalium-execution</artifactId>
-			<version>6.3.24</version>
+			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
