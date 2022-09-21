@@ -1,0 +1,32 @@
+[
+  {
+    "name": "@dirigible/qldb",
+    "description": "Dirigible QLDB module",
+    "isPackageDescription": true,
+    "dtsPath": "qldb/extensions/qldb.d.ts"
+  },
+  {
+    "name": "qldb/QLDBRepository",
+    "description": "QLDB Repository API",
+    "api": "QLDBRepository",
+    "versionedPaths": [
+      "qldb/QLDBRepository"
+    ],
+    "pathDefault": "qldb/QLDBRepository"
+  }
+  ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
