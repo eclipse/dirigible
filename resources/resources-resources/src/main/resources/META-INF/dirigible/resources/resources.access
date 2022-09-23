@@ -1,0 +1,20 @@
+{  
+   "constraints":[  
+      {  
+         "scope":"HTTP",
+         "path":"/resources/",
+         "method":"GET",
+         "roles":[  
+            "Public"
+         ]
+      },
+      {  
+         "scope":"HTTP",
+         "path":"/webjars/",
+         "method":"GET",
+         "roles":[  
+            "Public"
+         ]
+      }
+   ]
+}
