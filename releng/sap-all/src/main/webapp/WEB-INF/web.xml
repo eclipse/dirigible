@@ -237,6 +237,15 @@
 	        <url-pattern>/public/v4/command/*</url-pattern>
 	    </web-resource-collection>
 	</security-constraint>
+	
+	<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>Unprotected Services</web-resource-name>
+	        <url-pattern>/services/v4/web/resources/*</url-pattern>
+	        <url-pattern>/services/v4/web/resources-core/*</url-pattern>
+	        <url-pattern>/services/v4/js/resources-core/*</url-pattern>
+	    </web-resource-collection>
+	</security-constraint>
 
 	<security-constraint>
 	    <web-resource-collection>
