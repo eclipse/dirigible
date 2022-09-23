@@ -14,7 +14,7 @@ image:
   # Repository with Keycloak configuration
   repositoryKeycloak: dirigiblelabs/dirigible-keycloak
   # Pull policy for the repositories
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 # Image pull secrets if you have 
 imagePullSecrets: []
@@ -138,6 +138,10 @@ gke:
   secretNameDirigible: dirigible-db
   # Secret name for login credential for Keycloak Cloud SQL
   secretNameKeycloak: keycloak-db
+  # Dirigible GCP Service account
+  dirigibleServiceAccountName: dirigible-gcp-sa
+  # Dirigible GCP Service account
+  keycloakServiceAccountName: keycloak-gcp-sa
 
 keycloak:
   # Enable keycloak configuration
