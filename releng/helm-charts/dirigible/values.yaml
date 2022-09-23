@@ -14,7 +14,7 @@ image:
   # Repository with Keycloak configuration
   repositoryKeycloak: dirigiblelabs/dirigible-keycloak
   # Pull policy for the repositories
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 # Image pull secrets if you have 
 imagePullSecrets: []
