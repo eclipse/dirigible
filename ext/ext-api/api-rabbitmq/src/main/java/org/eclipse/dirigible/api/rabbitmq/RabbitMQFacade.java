@@ -65,10 +65,9 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 
 			channel.queueDeclare(queue, false, false, false, null);
 			channel.basicPublish("", queue, null, message.getBytes());
-			logger.info("Sent: " + "'" + message + "'" + " to [" + queue + "]");
+			if (logger.isInfoEnabled()) {logger.info("Sent: " + "'" + message + "'" + " to [" + queue + "]");}
 		} catch (IOException e) {
-			logger.error("Error sending message" + e.toString());
-			e.printStackTrace();
+			if (logger.isErrorEnabled()) {logger.error("Error sending message: " + e.toString(),e);}
 		}
 	}
 
@@ -94,9 +93,9 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 			receiverThread.start();
 
 			CONSUMERS.put(location, receiverRunner);
-			logger.info("RabbitMQ receiver created for [" + queue + "]");
+			if (logger.isInfoEnabled()) {logger.info("RabbitMQ receiver created for [" + queue + "]");}
 		} else {
-			logger.warn("RabbitMQ receiver [" + queue + "] has already been started.");
+			if (logger.isWarnEnabled()) {logger.warn("RabbitMQ receiver [" + queue + "] has already been started.");}
 		}
 	}
 
@@ -115,9 +114,9 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 		if (receiverRunner != null) {
 			receiverRunner.stop();
 			CONSUMERS.remove(location);
-			logger.info("RabbitMQ receiver stopped for [" + queue + "]");
+			if (logger.isInfoEnabled()) {logger.info("RabbitMQ receiver stopped for [" + queue + "]");}
 		} else {
-			logger.warn("RabbitMQ receiver [" + queue + "] has not been started yet.");
+			if (logger.isWarnEnabled()) {logger.warn("RabbitMQ receiver [" + queue + "] has not been started yet.");}
 		}
 	}
 
@@ -142,7 +141,7 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 		try {
 			connection = factory.newConnection();
 		} catch (Exception e) {
-			logger.error("Error establishing connection to AMQP" + e.toString());
+			if (logger.isErrorEnabled()) {logger.error("Error establishing connection to AMQP: " + e.toString(), e);}
 		}
 		return connection;
 	}
@@ -158,8 +157,7 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 		try {
 			channel = connection.createChannel();
 		} catch (IOException e) {
-			logger.error("Error creating channel" + e.toString());
-			e.printStackTrace();
+			if (logger.isErrorEnabled()) {logger.error("Error creating channel: " + e.toString(), e);}
 		}
 		return channel;
 	}

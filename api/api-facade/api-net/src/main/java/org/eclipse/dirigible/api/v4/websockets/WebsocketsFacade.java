@@ -65,7 +65,7 @@ public class WebsocketsFacade implements IScriptingFacade {
 	 */
 	public static final Session createWebsocket(String uri, String handler, String engine) throws DeploymentException, IOException {
 		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        logger.debug("Connecting to " + uri);
+		if (logger.isDebugEnabled()) {logger.debug("Connecting to " + uri);}
         WebsocketClient client = new WebsocketClient(handler, engine);
 		Session session = container.connectToServer(client, URI.create(uri));
         return session;

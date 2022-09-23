@@ -94,7 +94,7 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 	private void configureOAuth() {
 		XsuaaEnv xsuaaEnv = CloudFoundryUtils.getXsuaaEnv();
 		if (xsuaaEnv == null || xsuaaEnv.getCredentials() == null) {
-			logger.error(ERROR_MESSAGE_NO_XSUAA);
+			if (logger.isErrorEnabled()) {logger.error(ERROR_MESSAGE_NO_XSUAA);}
 			throw new InvalidStateException(ERROR_MESSAGE_NO_XSUAA);
 		}
 		XsuaaCredentialsEnv xsuaaCredentials = xsuaaEnv.getCredentials();
@@ -142,7 +142,7 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URL, url);
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
 		} else {
-			logger.warn(WARN_MESSAGE_NO_DESTINATION);
+			if (logger.isWarnEnabled()) {logger.warn(WARN_MESSAGE_NO_DESTINATION);}
 		}
 	}
 
@@ -174,7 +174,7 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_SOCKS5_PROXY_PORT, onpremiseSocks5ProxyPort);
 
 		} else {
-			logger.warn(WARN_MESSAGE_NO_CONNECTIVITY);
+			if (logger.isWarnEnabled()) {logger.warn(WARN_MESSAGE_NO_CONNECTIVITY);}
 		}
 	}
 

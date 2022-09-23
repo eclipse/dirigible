@@ -71,7 +71,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      * @return the creates the table builder
      */
     public TABLE_BUILDER primaryKey(String name, String[] columns) {
-        logger.trace("primaryKey: " + name + ", columns" + Arrays.toString(columns));
+    	if (logger.isTraceEnabled()) {logger.trace("primaryKey: " + name + ", columns" + Arrays.toString(columns));}
         if (this.primaryKey != null) {
             throw new SqlException("Setting of primary key must be called only once");
         }
@@ -90,7 +90,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      * @return the creates the table builder
      */
     public TABLE_BUILDER primaryKey(String name, String columns) {
-        logger.trace("primaryKey: " + name + ", columns" + columns);
+    	if (logger.isTraceEnabled()) {logger.trace("primaryKey: " + name + ", columns" + columns);}
         String[] array = splitValues(columns);
         return primaryKey(name, array);
     }
@@ -102,7 +102,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      * @return the creates the table builder
      */
     public TABLE_BUILDER primaryKey(String[] columns) {
-        logger.trace("primaryKey: <unnamed>, columns" + Arrays.toString(columns));
+    	if (logger.isTraceEnabled()) {logger.trace("primaryKey: <unnamed>, columns" + Arrays.toString(columns));}
         return primaryKey(null, columns);
     }
 
@@ -113,7 +113,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      * @return the creates the table builder
      */
     public TABLE_BUILDER primaryKey(String columns) {
-        logger.trace("primaryKey: <unnamed>, columns" + columns);
+    	if (logger.isTraceEnabled()) {logger.trace("primaryKey: <unnamed>, columns" + columns);}
         return primaryKey(null, splitValues(columns));
     }
 
@@ -141,8 +141,8 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      * @return the table builder
      */
     public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String referencedTableSchema, String[] referencedColumns) {
-        logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
-                + ", referencedTableSchema: " + referencedTableSchema + ", referencedColumns: " + Arrays.toString(referencedColumns));
+    	if (logger.isTraceEnabled()) {logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
+                + ", referencedTableSchema: " + referencedTableSchema + ", referencedColumns: " + Arrays.toString(referencedColumns));}
         CreateTableForeignKeyBuilder foreignKey = new CreateTableForeignKeyBuilder(this.getDialect(), name);
         for (String column : columns) {
             foreignKey.column(column);
@@ -168,8 +168,8 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      * @return the creates the table builder
      */
     public TABLE_BUILDER foreignKey(String name, String columns, String referencedTable, String referencedTableSchema, String referencedColumns) {
-        logger.trace("foreignKey: " + name + ", columns" + columns + ", referencedTable: " + referencedTable + ", referencedColumns: "
-                + referencedColumns);
+    	if (logger.isTraceEnabled()) {logger.trace("foreignKey: " + name + ", columns" + columns + ", referencedTable: " + referencedTable + ", referencedColumns: "
+                + referencedColumns);}
         return foreignKey(name, splitValues(columns), referencedTable, referencedTableSchema, splitValues(referencedColumns));
     }
 
@@ -182,7 +182,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      */
     @Override
     public TABLE_BUILDER unique(String name, String[] columns) {
-        logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));
+    	if (logger.isTraceEnabled()) {logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));}
         CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
         for (String column : columns) {
             uniqueIndex.column(column);
@@ -199,7 +199,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      * @return the creates the table builder
      */
     public TABLE_BUILDER unique(String name, String columns) {
-        logger.trace("unique: " + name + ", columns" + columns);
+    	if (logger.isTraceEnabled()) {logger.trace("unique: " + name + ", columns" + columns);}
         return unique(name, splitValues(columns));
     }
 
@@ -225,7 +225,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      * @return the creates the table builder
      */
     public TABLE_BUILDER check(String name, String expression) {
-        logger.trace("check: " + name + ", expression" + expression);
+    	if (logger.isTraceEnabled()) {logger.trace("check: " + name + ", expression" + expression);}
         CreateTableCheckBuilder check = new CreateTableCheckBuilder(this.getDialect(), name);
         check.expression(expression);
         this.checks.add(check);
@@ -242,7 +242,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      * @return the creates the table builder
      */
     public TABLE_BUILDER index(String name, Boolean isUnique, String type, Set<String> columns) {
-    	logger.trace("index: " + name + ", isUnique" + isUnique + ", type" + type + ", columns" + columns);
+    	if (logger.isTraceEnabled()) {logger.trace("index: " + name + ", isUnique" + isUnique + ", type" + type + ", columns" + columns);}
     	CreateTableIndexBuilder index = new CreateTableIndexBuilder(getDialect(), name);
     	index.setIndexType(type);
     	index.setUnique(isUnique);
@@ -266,7 +266,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 			generated = String.join(STATEMENT_DELIMITER, generated, uniqueIndices);
 		}
 
-		logger.trace("generated: " + generated);
+		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
 		return generated;
 	}

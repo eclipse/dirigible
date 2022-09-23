@@ -23,10 +23,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
-import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService;
 import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
 import org.eclipse.dirigible.core.websockets.artefacts.WebsocketSynchronizationArtefactType;
@@ -37,7 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Class ExtensionsSynchronizer.
+ * The Class WebsocketsSynchronizer.
  */
 public class WebsocketsSynchronizer extends AbstractSynchronizer {
 
@@ -71,7 +74,7 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized (WebsocketsSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Websockets...");
+				if (logger.isTraceEnabled()) { logger.trace("Synchronizing Websockets...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -84,17 +87,17 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 						clearCache();
 						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Websockets failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Websockets failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Websockets files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Websockets files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Websockets.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Websockets.");}
 			}
 		}
 	}
@@ -147,12 +150,12 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 	 * @throws SynchronizationException the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered Websockets...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered Websockets...");}
 		// Websockets
 		for (WebsocketDefinition websocketDefinition : WEBSOCKETS_PREDELIVERED.values()) {
 			synchronizeWebsocket(websocketDefinition);
 		}
-		logger.trace("Done synchronizing predelivered Websockets.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered Websockets.");}
 	}
 
 	/**
@@ -166,22 +169,23 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 			if (!websocketsCoreService.existsWebsocket(websocketDefinition.getLocation())) {
 				websocketsCoreService.createWebsocket(websocketDefinition.getLocation(), websocketDefinition.getHandler(),
 						websocketDefinition.getEndpoint(), websocketDefinition.getDescription());
-				logger.info("Synchronized a new Websocket [{}] with Endpoint [{}] from location: {}", websocketDefinition.getHandler(),
-						websocketDefinition.getEndpoint(), websocketDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Websocket [{}] with Endpoint [{}] from location: {}", websocketDefinition.getHandler(),
+						websocketDefinition.getEndpoint(), websocketDefinition.getLocation());}
 				applyArtefactState(websocketDefinition, WEBSOCKET_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				WebsocketDefinition existing = websocketsCoreService.getWebsocket(websocketDefinition.getLocation());
 				if (!websocketDefinition.equals(existing)) {
 					websocketsCoreService.updateWebsocket(websocketDefinition.getLocation(), websocketDefinition.getHandler(),
 							websocketDefinition.getEndpoint(), websocketDefinition.getDescription());
-					logger.info("Synchronized a modified Websocket [{}] with Endpoint [{}] from location: {}", websocketDefinition.getHandler(),
-							websocketDefinition.getEndpoint(), websocketDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Websocket [{}] with Endpoint [{}] from location: {}", websocketDefinition.getHandler(),
+							websocketDefinition.getEndpoint(), websocketDefinition.getLocation());}
 					applyArtefactState(websocketDefinition, WEBSOCKET_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			WEBSOCKETS_SYNCHRONIZED.add(websocketDefinition.getLocation());
 		} catch (WebsocketsException e) {
 			applyArtefactState(websocketDefinition, WEBSOCKET_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, websocketDefinition.getLocation(), WEBSOCKET_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -197,11 +201,11 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing Websockets from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing Websockets from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing Websockets from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Websockets from Registry.");}
 	}
 
 	/**
@@ -237,7 +241,7 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up Websockets...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up Websockets...");}
 		super.cleanup();
 
 		try {
@@ -245,14 +249,37 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 			for (WebsocketDefinition websocketDefinition : websocketDefinitions) {
 				if (!WEBSOCKETS_SYNCHRONIZED.contains(websocketDefinition.getLocation())) {
 					websocketsCoreService.removeWebsocket(websocketDefinition.getLocation());
-					logger.warn("Cleaned up Websocket for Module [{}] from location: {}", websocketDefinition.getHandler(),
-							websocketDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up Websocket for Module [{}] from location: {}", websocketDefinition.getHandler(),
+							websocketDefinition.getLocation());}
 				}
 			}
 		} catch (WebsocketsException e) {
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up Websockets.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up Websockets.");}
 	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "WEBSOCKET";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-core-websockets";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, WebsocketsSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
+		}
+	}
+	
 }

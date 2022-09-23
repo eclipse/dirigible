@@ -32,6 +32,7 @@ import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
+import org.eclipse.dirigible.graalium.engine.GraaliumJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
@@ -56,6 +57,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
 
     /** The repository. */
     private IRepository repository;
+    
+    /** The Graalium javascript engine executor. */
+	private GraaliumJavascriptEngineExecutor graaliumJavascriptEngineExecutor;
 
     /**
      * Sets the up.
@@ -66,7 +70,21 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
     public void setUp() throws Exception {
         this.extensionsCoreService = new ExtensionsCoreService();
         this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+        this.graaliumJavascriptEngineExecutor = new GraaliumJavascriptEngineExecutor();
     }
+    
+    /**
+     * Gets the repository.
+     *
+     * @return the repository
+     */
+    public IRepository getRepository() {
+		return repository;
+	}
+    
+    public IJavascriptEngineExecutor getJavascriptEngineExecutor() {
+		return graaliumJavascriptEngineExecutor;
+	}
 
     /**
      * Register modules.
@@ -79,8 +97,8 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         // v4
         registerModulesV4();
 
-        // Apache Spark
-        sparkRegisterModule();
+//        // Apache Spark
+//        sparkRegisterModule();
 
         // Apache Cassandra
         cassandraRegisterModule();
@@ -207,7 +225,7 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("db/v4/database/getConnection.js");
         TEST_MODULES.add("db/v4/query/query.js");
         TEST_MODULES.add("db/v4/update/update.js");
-        TEST_MODULES.add("db/v4/sequence/nextval.js");
+//        TEST_MODULES.add("db/v4/sequence/nextval.js");
     }
 
     /**
@@ -367,19 +385,19 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
     }
 
-    /**
-     * Spark register module.
-     */
-    protected void sparkRegisterModule() {
-        sparkRegisterModulesUtils();
-    }
+//    /**
+//     * Spark register module.
+//     */
+//    protected void sparkRegisterModule() {
+//        sparkRegisterModulesUtils();
+//    }
 
-    /**
-     * Spark register modules utils.
-     */
-    private void sparkRegisterModulesUtils() {
-        TEST_MODULES.add("ext/spark/client.js");
-    }
+//    /**
+//     * Spark register modules utils.
+//     */
+//    private void sparkRegisterModulesUtils() {
+//        TEST_MODULES.add("ext/spark/client.js");
+//    }
 
     /**
      * Cassandra register module.
@@ -478,10 +496,10 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
                     extensionsCoreService.createExtensionPoint("/test_extpoint1", "test_extpoint1", "Test");
                     extensionsCoreService.createExtension("/test_ext1", "/test_ext_module1", "test_extpoint1", "Test");
 
-                    logger.info("API test starting... " + testModule);
+                    if (logger.isInfoEnabled()) {logger.info("API test starting... " + testModule);}
 
                     runTest(executor, repository, testModule);
-                    logger.info("API test passed successfully: " + testModule);
+                    if (logger.isInfoEnabled()) {logger.info("API test passed successfully: " + testModule);}
 
                 } finally {
                     extensionsCoreService.removeExtension("/test_ext1");

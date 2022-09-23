@@ -48,7 +48,7 @@ public class TableForeignKeysDropProcessor {
 		
 		if (tableModel.getConstraints() != null) {
 			if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
-				logger.info("Processing Alter Table Create Foreign Keys Table: " + tableName);
+				if (logger.isInfoEnabled()) {logger.info("Processing Alter Table Create Foreign Keys Table: " + tableName);}
 				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
 				for (DataStructureTableConstraintForeignKeyModel foreignKey : tableModel.getConstraints().getForeignKeys()) {
 					String foreignKeyName = foreignKey.getName();
@@ -59,13 +59,13 @@ public class TableForeignKeysDropProcessor {
 				}
 				
 				final String sql = alterTableBuilder.build();
-				logger.info(sql);
+				if (logger.isInfoEnabled()) {logger.info(sql);}
 				PreparedStatement statement = connection.prepareStatement(sql);
 				try {
 					statement.executeUpdate();
 				} catch (SQLException e) {
-					logger.error(sql);
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(sql);}
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					throw new SQLException(e.getMessage(), e);
 				} finally {
 					if (statement != null) {

@@ -14,23 +14,17 @@
     <packaging>pom</packaging>
     <name>Engine - Graalium</name>
 
-    <properties>
-        <license.skip>true</license.skip>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
     <modules>
         <module>execution</module>
         <module>execution-core</module>
-        <module>execution-web</module>
+        <module>execution-handler</module>
+        <module>execution-service</module>
+        <module>execution-engine</module>
+        <module>execution-tests</module>
     </modules>
+    
+    <properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+	</properties>
 
 </project>

@@ -81,13 +81,13 @@ public class OData2ODataMTransformer {
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
 
             if (tableMetadata.getTableType() == null) {
-                logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());
+            	if (logger.isErrorEnabled()) {logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());}
                 continue;
             }
 
             List<PersistenceTableColumnModel> idColumns = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).collect(Collectors.toList());
             if (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType())) {
-                logger.error("Table {} doesn't have primary keys {}, so it will be skipped.", entity.getTable(), entity.getName());
+            	if (logger.isErrorEnabled()) {logger.error("Table {} doesn't have primary keys {}, so it will be skipped.", entity.getTable(), entity.getName());}
                 continue;
             }
 

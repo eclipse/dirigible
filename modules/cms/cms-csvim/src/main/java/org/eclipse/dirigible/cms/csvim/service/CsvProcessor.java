@@ -103,12 +103,12 @@ public class CsvProcessor {
 					populateInsertPreparedStatementValues(next, availableTableColumns, preparedStatement);
 					preparedStatement.addBatch();
 				}
-				logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH INSERT for table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));
+				if (logger.isInfoEnabled()) {logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH INSERT for table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));}
 				preparedStatement.executeBatch();
 			} catch(Throwable t) {
 				String errorMessage = String.format("Error occurred while trying to BATCH INSERT CSV records [%s] into table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName);
 				logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-				logger.error(errorMessage, t);
+				if (logger.isErrorEnabled()) {logger.error(errorMessage, t);}
 			}
 		}
 	}
@@ -149,12 +149,12 @@ public class CsvProcessor {
 					executeUpdatePreparedStatement(next, availableTableColumns, preparedStatement);
 					preparedStatement.addBatch();
 				}
-				logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH UPDATED for table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));
+				if (logger.isInfoEnabled()) {logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH UPDATED for table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));}
 				preparedStatement.executeBatch();
 			} catch (Throwable t) {
 				String errorMessage = String.format("Error occurred while trying to BATCH UPDATE CSV records [%s] into table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName);
 				logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-				logger.error(errorMessage, t);
+				if (logger.isErrorEnabled()) {logger.error(errorMessage, t);}
 			}
 		}
 	}
@@ -179,8 +179,7 @@ public class CsvProcessor {
 			deleteBuilder.from(tableName).where(String.format("%s IN (%s)", pkColumnName, String.join(",", ids)));
 			try (PreparedStatement statement = connection.prepareStatement(deleteBuilder.build())) {
 				statement.executeUpdate();
-				logger.info(
-						String.format("Entities with Row Ids: %s from table: %s", String.join(", ", ids), tableName));
+				if (logger.isInfoEnabled()) {logger.info(String.format("Entities with Row Ids: %s from table: %s", String.join(", ", ids), tableName));}
 			}
 		}
 	}
@@ -205,7 +204,7 @@ public class CsvProcessor {
 			deleteBuilder.from(tableName).where(String.format("%s='%s'", pkColumnName, id));
 			try (PreparedStatement statement = connection.prepareStatement(deleteBuilder.build())) {
 				statement.executeUpdate();
-				logger.info(String.format("Entity with Row Id: %s from table: %s", id, tableName));
+				if (logger.isInfoEnabled()) {logger.info(String.format("Entity with Row Id: %s from table: %s", id, tableName));}
 			}
 		}
 	}
@@ -359,7 +358,7 @@ public class CsvProcessor {
 	 */
 	protected void setValue(PreparedStatement preparedStatement, int i, int dataType, String value)
 			throws SQLException {
-		logger.trace("setValue -> i: " + i + ", dataType: " + dataType + ", value: " + value);
+		if (logger.isTraceEnabled()) {logger.trace("setValue -> i: " + i + ", dataType: " + dataType + ", value: " + value);}
 
 		if (value == null) {
 			preparedStatement.setNull(i, dataType);
@@ -446,10 +445,10 @@ public class CsvProcessor {
 	private static void logProcessorErrors(String errorMessage, String errorType, String location, String artifactType) {
 		try {
 			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE,
-					"CsvProcessor", IProblemsConstants.PROGRAM_DEFAULT);
+					CsvProcessor.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error("There is an issue with logging of the Errors.");
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error("There is an issue with logging of the Errors.");}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 	}
 

@@ -114,8 +114,8 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
      * @return the AlterTableBuilder object
      */
     public AlterTableBuilder foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
-        logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
-                + ", referencedColumns: " + Arrays.toString(referencedColumns));
+    	if (logger.isTraceEnabled()) {logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
+                + ", referencedColumns: " + Arrays.toString(referencedColumns));}
         CreateTableForeignKeyBuilder foreignKey = new CreateTableForeignKeyBuilder(this.getDialect(), name);
         for (String column : columns) {
             foreignKey.column(column);
@@ -137,7 +137,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
      */
     @Override
     public AlterTableBuilder unique(String name, String[] columns) {
-        logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));
+    	if (logger.isTraceEnabled()) {logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));}
         CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
         for (String column : columns) {
             uniqueIndex.column(column);
@@ -210,7 +210,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         }
         String generated = sql.append(SEMICOLON).toString().trim();
 
-        logger.trace("generated: " + generated);
+        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
         return generated;
     }

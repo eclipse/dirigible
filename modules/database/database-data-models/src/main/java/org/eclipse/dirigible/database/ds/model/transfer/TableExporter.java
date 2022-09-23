@@ -77,7 +77,7 @@ public class TableExporter {
 
 		if (getTableName() == null) {
 			data = COULD_NOT_RETRIEVE_TABLE_DATA;
-			logger.error(COULD_NOT_RETRIEVE_TABLE_DATA);
+			if (logger.isErrorEnabled()) {logger.error(COULD_NOT_RETRIEVE_TABLE_DATA);}
 			return data;
 		}
 
@@ -95,7 +95,7 @@ public class TableExporter {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_TABLE + getTableName(), e);
+			if (logger.isErrorEnabled()) {logger.error(ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_TABLE + getTableName(), e);}
 		}
 		return data;
 	}
@@ -134,15 +134,15 @@ public class TableExporter {
 			statement.close();
 
 		} catch (SQLException se) {
-			logger.error(se.getMessage(), se);
+			if (logger.isErrorEnabled()) {logger.error(se.getMessage(), se);}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		} finally {
 			if (connection != null) {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				}
 			}
 		}

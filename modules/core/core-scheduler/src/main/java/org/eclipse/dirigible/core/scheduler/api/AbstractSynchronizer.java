@@ -137,7 +137,7 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 			try {
 				synchronizeResource(resource);
 			} catch (Exception e) {
-				logger.error(format("Resource [{0}] skipped due to an error: {1}", resource.getPath(), e.getMessage()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Resource [{0}] skipped due to an error: {1}", resource.getPath(), e.getMessage()), e);}
 			}
 		}
 		List<ICollection> collections = collection.getCollections();
@@ -183,7 +183,7 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		try {
 			synchronizerCoreService.deleteOldSynchronizerStateLogs();
 		} catch (SchedulerException e) {
-			logger.error(format("Error during cleaning up the state log from: [{0}]. Skipped due to an error: {1}", this.getClass().getCanonicalName(), e.getMessage()), e);
+			if (logger.isErrorEnabled()) {logger.error(format("Error during cleaning up the state log from: [{0}]. Skipped due to an error: {1}", this.getClass().getCanonicalName(), e.getMessage()), e);}
 		}
 	}
 	
@@ -259,19 +259,15 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		SynchronizerStateDefinition synchronizerStateDefinition = synchronizerCoreService.getSynchronizerState(name);
 		long currentTimeMillis = System.currentTimeMillis();
 		if (synchronizerStateDefinition == null) {
-			logger.error(format("Invalid state - finishing failed synchronization for: {0}, which has not been initialized yet.", this.getClass().getCanonicalName()));
+			if (logger.isErrorEnabled()) {logger.error(format("Invalid state - finishing failed synchronization for: {0}, which has not been initialized yet.", this.getClass().getCanonicalName()));}
 			synchronizerCoreService.createSynchronizerState(name, ISynchronizerCoreService.STATE_FAILED, message, 
 					0, 0, 0, 0);
 		} else {
 			if (synchronizerStateDefinition.getState() != ISynchronizerCoreService.STATE_IN_PROGRESS) {
-				logger.error(format("Invalid state - finishing failed synchronization for: {0}, which has not been 'in progress'.", this.getClass().getCanonicalName()));
+				if (logger.isErrorEnabled()) {logger.error(format("Invalid state - finishing failed synchronization for: {0}, which has not been 'in progress'.", this.getClass().getCanonicalName()));}
 			}
 			synchronizerStateDefinition.setState(ISynchronizerCoreService.STATE_FAILED);
 			synchronizerStateDefinition.setMessage(message);
-//			synchronizerStateDefinition.setLastTimeFinished(currentTimeMillis);
-//			if (synchronizerStateDefinition.getFirstTimeFinished() != 0) {
-//				synchronizerStateDefinition.setFirstTimeFinished(currentTimeMillis);
-//			}
 			synchronizerCoreService.updateSynchronizerState(synchronizerStateDefinition);
 		}
 	}
@@ -286,11 +282,10 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	protected boolean isSynchronizerSuccessful(String name) throws SchedulerException {
 		boolean ignoreDependencies = Boolean.parseBoolean(Configuration.get(ISynchronizer.DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES, "false"));
 		if (ignoreDependencies) {
-			logger.warn(format("Dependencies skiped for: {0}, due to configuration.", this.getClass().getCanonicalName()));
+			if (logger.isWarnEnabled()) {logger.warn(format("Dependencies skiped for: {0}, due to configuration.", this.getClass().getCanonicalName()));}
 			return true;
 		}
 		SynchronizerStateDefinition synchronizerStateDefinition = synchronizerCoreService.getSynchronizerState(name);
-//		return synchronizerStateDefinition != null && synchronizerStateDefinition.getState() == ISynchronizerCoreService.STATE_SUCCESSFUL;
 		return synchronizerStateDefinition != null 
 				&& synchronizerStateDefinition.getFirstTimeTriggered() != 0 && synchronizerStateDefinition.getFirstTimeFinished() != 0
 				&& synchronizerStateDefinition.getState() != ISynchronizerCoreService.STATE_FAILED;
@@ -334,7 +329,7 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 			String artefactStateMessage = type.getStateMessage(state, message);
 			checkSynchronizerStateArtefactCurrentState(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
 		} else {
-			logger.error("Can't apply artefact state to \"null\" artefact object.");
+			if (logger.isErrorEnabled()) {logger.error("Can't apply artefact state to \"null\" artefact object.");}
 		}
 	}
 
@@ -355,7 +350,7 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 				synchronizerCoreService.createSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
 			}
 		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 
@@ -375,7 +370,7 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 			String artefactStateMessage = type.getStateMessage(state, message);
 			checkSynchronizerStateArtefactCurrentState(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
 		} else {
-			logger.error("Can't apply artefact state to \"null\" artefact object.");
+			if (logger.isErrorEnabled()) {logger.error("Can't apply artefact state to \"null\" artefact object.");}
 		}
 	}
 	

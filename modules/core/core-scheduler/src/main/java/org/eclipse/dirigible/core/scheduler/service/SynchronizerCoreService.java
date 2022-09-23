@@ -27,7 +27,6 @@ import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
-import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateArtefactDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateLogDefinition;

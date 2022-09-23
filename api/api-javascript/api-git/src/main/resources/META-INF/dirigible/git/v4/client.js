@@ -49,6 +49,22 @@ exports.createBranch = function(workspaceName, repositoryName, branchName, start
     return org.eclipse.dirigible.api.v4.git.GitFacade.createBranch(workspaceName, repositoryName, branchName, startingPoint);
 }
 
+exports.deleteBranch = function(workspaceName, repositoryName, branchName) {
+    return org.eclipse.dirigible.api.v4.git.GitFacade.createBranch(workspaceName, repositoryName, branchName);
+}
+
+exports.renameBranch = function(workspaceName, repositoryName, oldName, newName) {
+    return org.eclipse.dirigible.api.v4.git.GitFacade.createBranch(workspaceName, repositoryName, oldName, newName);
+}
+
+exports.createRemoteBranch = function(workspaceName, repositoryName, branchName, startingPoint, username, password) {
+    return org.eclipse.dirigible.api.v4.git.GitFacade.createRemoteBranch(workspaceName, repositoryName, branchName, startingPoint, username, password);
+}
+
+exports.deleteRemoteBranch = function(workspaceName, repositoryName, branchName, username, password) {
+    return org.eclipse.dirigible.api.v4.git.GitFacade.createRemoteBranch(workspaceName, repositoryName, branchName, username, password);
+}
+
 exports.hardReset = function(workspaceName, repositoryName) {
     return org.eclipse.dirigible.api.v4.git.GitFacade.hardReset(workspaceName, repositoryName);
 }

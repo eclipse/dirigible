@@ -23,45 +23,40 @@
         <!-- View data -->
         <script type="text/javascript" src="../services/extensions-view.js"></script>
 
-        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
 
         <script type="text/javascript" src="extensions.js"></script>
 
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
     </head>
 
     <body>
-        <div>
-            <div>
-                <fd-scrollbar>
-                    <table fd-table fd-table-group style="margin-top: 20px">
-                        <thead fd-table-header>
-                            <tr fd-table-row>
-                                <th fd-table-header-cell>#</th>
-                                <th fd-table-header-cell>Location</th>
-                                <th fd-table-header-cell>Module</th>
-                                <th fd-table-header-cell>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody fd-table-body ng-repeat="next in list">
-                            <tr fd-table-row>
-                                <td fd-table-group-cell nesting-level="1" expanded="true">
-                                    <b>{{next.extensionPoint.name}}</b>: {{next.extensionPoint.location}}
-                                </td>
-                            </tr>
-                            <tr fd-table-row ng-repeat="extension in next.extensions">
-                                <td fd-table-cell nesting-level="2">{{$index + 1}}</td>
-                                <td fd-table-cell>{{extension.location}}</td>
-                                <td fd-table-cell>{{extension.module}}</td>
-                                <td fd-table-cell>{{extension.description}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </fd-scrollbar>
-            </div>
-        </div>
-
+        <fd-scrollbar class="dg-fill-parent">
+            <table fd-table fd-table-group>
+                <thead fd-table-header sticky="true">
+                    <tr fd-table-row>
+                        <th fd-table-header-cell>#</th>
+                        <th fd-table-header-cell>Location</th>
+                        <th fd-table-header-cell>Module</th>
+                        <th fd-table-header-cell>Description</th>
+                    </tr>
+                </thead>
+                <tbody fd-table-body>
+                    <tr fd-table-row ng-repeat-start="next in list" hoverable="true">
+                        <td fd-table-group-cell nesting-level="1" expanded="true">
+                            <b>{{next.extensionPoint.name}}</b>: {{next.extensionPoint.location}}
+                        </td>
+                    </tr>
+                    <tr fd-table-row ng-repeat-end ng-repeat="extension in next.extensions">
+                        <td fd-table-cell nesting-level="2">{{$index + 1}}</td>
+                        <td fd-table-cell>{{extension.location}}</td>
+                        <td fd-table-cell>{{extension.module}}</td>
+                        <td fd-table-cell>{{extension.description}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fd-scrollbar>
     </body>
 
 </html>

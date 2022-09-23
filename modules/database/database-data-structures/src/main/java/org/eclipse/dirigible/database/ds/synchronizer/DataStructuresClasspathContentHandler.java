@@ -78,7 +78,7 @@ public class DataStructuresClasspathContentHandler extends AbstractClasspathCont
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Data Structure at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered Data Structure at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

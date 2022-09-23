@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Templating</name>
-	<artifactId>dirigible-core-templating</artifactId>
+	<name>Templating - Core</name>
+	<artifactId>dirigible-templating-core</artifactId>
     <packaging>jar</packaging>
 
     <build>

@@ -146,6 +146,9 @@ public class DBMetadataUtil {
      * @throws SQLException the SQL exception
      */
     public PersistenceTableModel getTableMetadata(String tableName, String schemaName) throws SQLException {
+    	if (tableName == null) {
+    		throw new SQLException("Table name cannot be null while querying for the table metadata");
+    	}
         PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         try (Connection connection = getDataSource().getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
@@ -206,6 +209,9 @@ public class DBMetadataUtil {
      * @return the string
      */
     public String convertSqlTypeToOdataEdmType(String sqlType) {
+    	if (sqlType == null) {
+    		throw new IllegalArgumentException("SQL type cannot be null while converting to EDM type");
+    	}
         String edmColumnType = SQL_TO_ODATA_EDM_TYPES.get(sqlType.toUpperCase());
         if(null != edmColumnType) {
             return edmColumnType;

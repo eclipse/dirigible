@@ -49,23 +49,22 @@ public class JobHandler implements Job {
 		String module = (String) context.getJobDetail().getJobDataMap().get(ISchedulerCoreService.JOB_PARAMETER_HANDLER);
 		String type = (String) context.getJobDetail().getJobDataMap().get(ISchedulerCoreService.JOB_PARAMETER_ENGINE);
 		
-		JobLogDefinition triggered = null;
-		
-		triggered = registerTriggered(name, module, triggered);
-		
-		try {
-			if (type == null) {
-				type = "javascript";
+		JobLogDefinition triggered = registerTriggered(name, module);
+		if (triggered != null) {
+			try {
+				if (type == null) {
+					type = "javascript";
+				}
+				
+				ScriptEngineExecutorsManager.executeServiceModule(type, module, null);
+			} catch (ScriptingException e) {
+				registeredFailed(name, module, triggered, e);
+				
+				throw new JobExecutionException(e);
 			}
 			
-			ScriptEngineExecutorsManager.executeServiceModule(type, module, null);
-		} catch (ScriptingException e) {
-			registeredFailed(name, module, triggered, e);
-			
-			throw new JobExecutionException(e);
+			registeredFinished(name, module, triggered);
 		}
-		
-		registeredFinished(name, module, triggered);
 	}
 
 	/**
@@ -76,11 +75,12 @@ public class JobHandler implements Job {
 	 * @param triggered the triggered
 	 * @return the job log definition
 	 */
-	private JobLogDefinition registerTriggered(String name, String module, JobLogDefinition triggered) {
+	private JobLogDefinition registerTriggered(String name, String module) {
+		JobLogDefinition triggered = null;
 		try {
 			triggered = schedulerCoreService.jobTriggered(name, module);
 		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 		return triggered;
 	}
@@ -97,7 +97,7 @@ public class JobHandler implements Job {
 		try {
 			schedulerCoreService.jobFailed(name, module, triggered.getId(), new Date(triggered.getTriggeredAt().getTime()), e.getMessage());
 		} catch (SchedulerException se) {
-			logger.error(se.getMessage(), se);
+			if (logger.isErrorEnabled()) {logger.error(se.getMessage(), se);}
 		}
 	}
 	
@@ -112,7 +112,7 @@ public class JobHandler implements Job {
 		try {
 			schedulerCoreService.jobFinished(name, module, triggered.getId(), new Date(triggered.getTriggeredAt().getTime()));
 		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 	

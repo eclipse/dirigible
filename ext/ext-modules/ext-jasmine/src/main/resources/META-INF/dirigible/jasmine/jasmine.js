@@ -9,8 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-/* eslint-env node, dirigible */
 var jasmine = require('jasmine/jasmine-2.5.2');
-for(var propertyName in jasmine) {
+for (var propertyName in jasmine) {
 	exports[propertyName] = jasmine[propertyName];
 }

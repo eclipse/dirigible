@@ -173,7 +173,7 @@ public class CsvimProcessor {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void process(CsvFileDefinition csvFileDefinition, String content, Connection connection) throws CsvimException, SQLException, IOException {
-		String tableName = convertToActualTableName(csvFileDefinition.getTable());
+		String tableName = csvFileDefinition.getTable();
 		CSVParser csvParser = getCsvParser(csvFileDefinition, content);
 		PersistenceTableModel tableMetadata = getTableMetadata(csvFileDefinition);
 		if (tableMetadata == null || csvParser == null) {
@@ -291,7 +291,7 @@ public class CsvimProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFileDefinition csvFileDefinition) throws SQLException {
-		String tableName = convertToActualTableName(csvFileDefinition.getTable());
+		String tableName = csvFileDefinition.getTable();
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
 
 		CsvRecordDefinition csvRecordDefinition = null;
@@ -305,9 +305,9 @@ public class CsvimProcessor {
 				csvProcessor.insert(csvRecordDefinitions, csvFileDefinition);
 			}
 		} catch (SQLException e) {
-			String csvRecordValue = csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "<empty>";
+			String csvRecordValue = e.getMessage();
 			logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-			logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);
+			if (logger.isErrorEnabled()) {logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);}
 		}
 	}
 
@@ -320,7 +320,7 @@ public class CsvimProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	private void updateCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFileDefinition csvFileDefinition) throws SQLException {
-		String tableName = convertToActualTableName(csvFileDefinition.getTable());
+		String tableName = csvFileDefinition.getTable();
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
 
 		CsvRecordDefinition csvRecordDefinition = null;
@@ -334,9 +334,9 @@ public class CsvimProcessor {
 				csvProcessor.update(csvRecordDefinitions, csvFileDefinition);
 			}
 		} catch (SQLException e) {
-			String csvRecordValue = csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "<empty>";
+			String csvRecordValue = e.getMessage();
 			logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-			logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);
+			if (logger.isErrorEnabled()) {logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);}
 		}
 	}
 
@@ -389,13 +389,13 @@ public class CsvimProcessor {
 	 * @return the table metadata
 	 */
 	private PersistenceTableModel getTableMetadata(CsvFileDefinition csvFileDefinition) {
-		String tableName = convertToActualTableName(csvFileDefinition.getTable());
+		String tableName = csvFileDefinition.getTable();
 		try {
 			return databaseMetadataUtil.getTableMetadata(tableName, csvFileDefinition.getSchema());
 		} catch (SQLException sqlException) {
 			String errorMessage = String.format("Error occurred while trying to read metadata for table [%s].", tableName);
 			logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-			logger.error(errorMessage, sqlException);
+			if (logger.isErrorEnabled()) {logger.error(errorMessage, sqlException);}
 		}
 		return null;
 	}
@@ -415,7 +415,7 @@ public class CsvimProcessor {
 		} catch (IOException e) {
 			String errorMessage = String.format("Error occurred while trying to parse data from CSV file [%s].", csvFileDefinition.getFile());
 			logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-			logger.error(errorMessage, e);
+			if (logger.isErrorEnabled()) {logger.error(errorMessage, e);}
 		}
 
 		return null;
@@ -461,10 +461,10 @@ public class CsvimProcessor {
 	 */
 	private static void logProcessorErrors(String errorMessage, String errorType, String location, String artifactType) {
 		try {
-			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, "CsvimProcessor", IProblemsConstants.PROGRAM_DEFAULT);
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, CsvimProcessor.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
 		} catch (ProblemsException e) {
-			logger.error("There is an issue with logging of the Errors.");
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error("There is an issue with logging of the Errors.");}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 	}
 	
@@ -476,15 +476,18 @@ public class CsvimProcessor {
 	 * @return the pk name for CSV record
 	 */
 	private String getPkNameForCSVRecord(String tableName, List<String> headerNames) {
-		List<PersistenceTableColumnModel> columnModels = getTableMetadata(tableName).getColumns();
-		if (headerNames.size() > 0) {
-			String pkColumnName = columnModels.stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().get().getName();
-			return pkColumnName;
-		}
-
-		for (int i = 0; i < columnModels.size(); i++) {
-			if (columnModels.get(i).isPrimaryKey()) {
-				return columnModels.get(i).getName();
+		PersistenceTableModel tableModel = getTableMetadata(tableName);
+		if (tableModel != null) {
+			List<PersistenceTableColumnModel> columnModels = tableModel.getColumns();
+			if (headerNames.size() > 0) {
+				String pkColumnName = columnModels.stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().get().getName();
+				return pkColumnName;
+			}
+	
+			for (int i = 0; i < columnModels.size(); i++) {
+				if (columnModels.get(i).isPrimaryKey()) {
+					return columnModels.get(i).getName();
+				}
 			}
 		}
 
@@ -500,35 +503,24 @@ public class CsvimProcessor {
 	 * @return the pk value for CSV record
 	 */
 	private String getPkValueForCSVRecord(CSVRecord csvRecord, String tableName, List<String> headerNames) {
-		List<PersistenceTableColumnModel> columnModels = getTableMetadata(tableName).getColumns();
-		if (headerNames.size() > 0) {
-			String pkColumnName = columnModels.stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().get().getName();
-			int csvRecordPkValueIndex = headerNames.indexOf(pkColumnName);
-			return csvRecordPkValueIndex >= 0 ? csvRecord.get(csvRecordPkValueIndex) : null;
-		}
-
-		for (int i = 0; i < csvRecord.size(); i++) {
-			boolean isColumnPk = columnModels.get(i).isPrimaryKey();
-			if (isColumnPk && !StringUtils.isEmpty(csvRecord.get(i))) {
-				return csvRecord.get(i);
+		PersistenceTableModel tableModel = getTableMetadata(tableName);
+		if (tableModel != null) {
+			List<PersistenceTableColumnModel> columnModels = tableModel.getColumns();
+			if (headerNames.size() > 0) {
+				String pkColumnName = columnModels.stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().get().getName();
+				int csvRecordPkValueIndex = headerNames.indexOf(pkColumnName);
+				return csvRecordPkValueIndex >= 0 ? csvRecord.get(csvRecordPkValueIndex) : null;
+			}
+	
+			for (int i = 0; i < csvRecord.size(); i++) {
+				boolean isColumnPk = columnModels.get(i).isPrimaryKey();
+				if (isColumnPk && !StringUtils.isEmpty(csvRecord.get(i))) {
+					return csvRecord.get(i);
+				}
 			}
 		}
 
 		return null;
-	}
-
-	/**
-	 * Convert to actual table name.
-	 *
-	 * @param tableName the table name
-	 * @return the string
-	 */
-	private String convertToActualTableName(String tableName) {
-		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
-		if (caseSensitive) {
-			tableName = "\"" + tableName + "\"";
-		}
-		return tableName;
 	}
 
 	/**
@@ -551,7 +543,7 @@ public class CsvimProcessor {
 		try {
 			return databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
 		} catch (SQLException sqlException) {
-			logger.error(String.format("Error occurred while trying to read table metadata for table with name: %s", tableName), sqlException);
+			if (logger.isErrorEnabled()) {logger.error(String.format("Error occurred while trying to read table metadata for table with name: %s", tableName), sqlException);}
 		}
 		return null;
 	}

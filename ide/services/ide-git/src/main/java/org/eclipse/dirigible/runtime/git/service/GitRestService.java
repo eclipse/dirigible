@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -37,6 +38,7 @@ import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.git.GitCommitInfo;
 import org.eclipse.dirigible.core.git.GitConnectorException;
+import org.eclipse.dirigible.core.git.model.BaseGitModel;
 import org.eclipse.dirigible.core.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.core.git.model.GitCloneModel;
 import org.eclipse.dirigible.core.git.model.GitDiffModel;
@@ -53,6 +55,9 @@ import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.runtime.git.processor.GitProcessor;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -428,6 +433,66 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	}
 	
 	/**
+	 * Create a local branch.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param branch the branch
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 * @throws GitAPIException 
+	 * @throws InvalidRefNameException 
+	 * @throws RefNotFoundException 
+	 * @throws RefAlreadyExistsException 
+	 */
+	@POST
+	@Path("/{project}/branches/local/{branch}")
+	@Consumes("application/json")
+	@ApiOperation("Create a Local Branch")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Create a Local Branch") })
+	public Response createLocalBranch(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project,
+			@ApiParam(value = "Name of the Branch", required = true) @PathParam("branch") String branch)
+			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		processor.createLocalBranch(workspace, project, branch);
+		return Response.ok().build();
+	}
+	
+	/**
+	 * Delete a local branch.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param branch the branch
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 * @throws GitAPIException 
+	 * @throws InvalidRefNameException 
+	 * @throws RefNotFoundException 
+	 * @throws RefAlreadyExistsException 
+	 */
+	@DELETE
+	@Path("/{project}/branches/local/{branch}")
+	@Consumes("application/json")
+	@ApiOperation("Delete a Local Branch")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Delete a Local Branch") })
+	public Response deleteLocalBranch(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project,
+			@ApiParam(value = "Name of the Branch", required = true) @PathParam("branch") String branch)
+			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		processor.deleteLocalBranch(workspace, project, branch);
+		return Response.ok().build();
+	}
+	
+	/**
 	 * Get remote branches.
 	 *
 	 * @param workspace the workspace
@@ -449,6 +514,68 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		}
 		GitProjectRemoteBranches gitProjectBranches = processor.getRemoteBranches(workspace, project);
 		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectBranches)).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+	
+	/**
+	 * Create a remote branch.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param branch the branch
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 * @throws GitAPIException 
+	 * @throws InvalidRefNameException 
+	 * @throws RefNotFoundException 
+	 * @throws RefAlreadyExistsException 
+	 */
+	@POST
+	@Path("/{project}/branches/remote/{branch}")
+	@Consumes("application/json")
+	@ApiOperation("Create a Remote Branch")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Create a Remote Branch") })
+	public Response createRemoteBranch(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project,
+			@ApiParam(value = "Name of the Branch", required = true) @PathParam("branch") String branch,
+			BaseGitModel model)
+			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		processor.createRemoteBranch(workspace, project, branch, model);
+		return Response.ok().build();
+	}
+	
+	/**
+	 * Delete a remote branch.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param branch the branch
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 * @throws GitAPIException 
+	 * @throws InvalidRefNameException 
+	 * @throws RefNotFoundException 
+	 * @throws RefAlreadyExistsException 
+	 */
+	@DELETE
+	@Path("/{project}/branches/remote/{branch}")
+	@Consumes("application/json")
+	@ApiOperation("Delete a Remote Branch")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Delete a Remote Branch") })
+	public Response deleteRemoteBranch(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project,
+			@ApiParam(value = "Name of the Branch", required = true) @PathParam("branch") String branch,
+			BaseGitModel model)
+			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		processor.deleteRemoteBranch(workspace, project, branch, model);
+		return Response.ok().build();
 	}
 	
 	/**

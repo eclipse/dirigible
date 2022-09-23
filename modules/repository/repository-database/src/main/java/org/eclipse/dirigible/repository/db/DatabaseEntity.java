@@ -149,7 +149,7 @@ public abstract class DatabaseEntity implements IEntity {
 		try {
 			return this.repository.getRepositoryDao().getObjectByPath(getPath());
 		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
+			if (logger.isErrorEnabled()) {logger.error(ex.getMessage(), ex);}
 			return null;
 		}
 	}

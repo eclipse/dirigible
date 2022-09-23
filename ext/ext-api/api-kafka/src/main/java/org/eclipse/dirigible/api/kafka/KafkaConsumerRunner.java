@@ -80,30 +80,30 @@ public class KafkaConsumerRunner implements Runnable {
 	@Override
 	public void run() {
 		try {
-			logger.info("Starting a Kafka listener for {} ...", this.name);
+			if (logger.isInfoEnabled()) {logger.info("Starting a Kafka listener for {} ...", this.name);}
 			consumer.subscribe(Arrays.asList(this.name));
 			while (!stopped.get()) {
 				ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(this.timeout));
 				for (ConsumerRecord<String, String> record : records) {
-					logger.trace(format("Start processing a received record in [{0}] by [{1}] ...", this.name, this.handler));
+					if (logger.isTraceEnabled()) {logger.trace(format("Start processing a received record in [{0}] by [{1}] ...", this.name, this.handler));}
 					if (this.handler != null) {
 						Map<Object, Object> context = createMessagingContext();
 						context.put("message", escapeCodeString(GsonHelper.GSON.toJson(record)));
 						try {
 							ScriptEngineExecutorsManager.executeServiceModule(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE, context);
 						} catch (ScriptingException e) {
-							logger.error(e.getMessage(), e);
+							if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 							try {
 								context.put("error", escapeCodeString(e.getMessage()));
 								ScriptEngineExecutorsManager.executeServiceModule(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR, context);
 							} catch (ScriptingException es) {
-								logger.error(es.getMessage(), es);
+								if (logger.isErrorEnabled()) {logger.error(es.getMessage(), es);}
 							}
 						}
 					} else {
-						logger.info(String.format("[Kafka Consumer] %s -  offset = %d, key = %s, value = %s%n", this.name, record.offset(), record.key(), record.value()));
+						if (logger.isInfoEnabled()) {logger.info(String.format("[Kafka Consumer] %s -  offset = %d, key = %s, value = %s%n", this.name, record.offset(), record.key(), record.value()));}
 					}
-					logger.trace(format("Done processing the received record in [{0}] by [{1}]", this.name, this.handler));
+					if (logger.isTraceEnabled()) {logger.trace(format("Done processing the received record in [{0}] by [{1}]", this.name, this.handler));}
 				}
 				
 			}

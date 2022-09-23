@@ -32,9 +32,9 @@ public class EnvFacade implements IScriptingFacade {
 	 * @return the string
 	 */
 	public static final String get(String name) {
-		logger.trace("API - EnvFacade.get() -> begin");
+		if (logger.isTraceEnabled()) {logger.trace("API - EnvFacade.get() -> begin");}
 		String value = System.getenv(name);
-		logger.trace("API - EnvFacade.get() -> end");
+		if (logger.isTraceEnabled()) {logger.trace("API - EnvFacade.get() -> end");}
 		return value;
 	}
 
@@ -44,9 +44,9 @@ public class EnvFacade implements IScriptingFacade {
 	 * @return the string
 	 */
 	public static final String list() {
-		logger.trace("API - EnvFacade.get() -> begin");
+		if (logger.isTraceEnabled()) {logger.trace("API - EnvFacade.get() -> begin");}
 		String value = GsonHelper.GSON.toJson(System.getenv());
-		logger.trace("API - EnvFacade.get() -> end");
+		if (logger.isTraceEnabled()) {logger.trace("API - EnvFacade.get() -> end");}
 		return value;
 	}
 

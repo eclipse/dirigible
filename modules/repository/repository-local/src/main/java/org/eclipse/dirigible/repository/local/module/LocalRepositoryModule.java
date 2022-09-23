@@ -51,7 +51,7 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 			LocalRepository localRepository = createInstance();
 			StaticObjects.set(StaticObjects.LOCAL_REPOSITORY, localRepository);
 			StaticObjects.set(StaticObjects.REPOSITORY, localRepository);
-			logger.info("Bound Local Repository as the Repository for this instance.");
+			if (logger.isInfoEnabled()) {logger.info("Bound Local Repository as the Repository for this instance.");}
 
 			String masterType = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_PROVIDER);
 			if (masterType == null) {
@@ -66,11 +66,11 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 	 * @return the i repository
 	 */
 	private LocalRepository createInstance() {
-		logger.debug("creating Local Repository...");
+		if (logger.isDebugEnabled()) {logger.debug("creating Local Repository...");}
 		String rootFolder = Configuration.get(LocalRepository.DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER);
 		boolean absolute = Boolean.parseBoolean(Configuration.get(LocalRepository.DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE));
 		LocalRepository localRepository = new LocalRepository(rootFolder, absolute);
-		logger.debug("Local Repository created.");
+		if (logger.isDebugEnabled()) {logger.debug("Local Repository created.");}
 		return localRepository;
 	}
 

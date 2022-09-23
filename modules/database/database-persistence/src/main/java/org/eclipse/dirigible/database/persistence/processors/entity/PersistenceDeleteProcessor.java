@@ -77,7 +77,7 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 				.where(getPrimaryKey(tableModel) + new StringBuilder().append(ISqlKeywords.SPACE).append(ISqlKeywords.EQUALS)
 						.append(ISqlKeywords.SPACE).append(ISqlKeywords.QUESTION).toString());
 		String sql = deleteBuilder.toString();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -93,7 +93,7 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 	protected String generateScriptDeleteAll(Connection connection, PersistenceTableModel tableModel) {
 		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).delete().from(tableModel.getTableName());
 		String sql = deleteBuilder.toString();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -113,8 +113,8 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 	 *             the persistence exception
 	 */
 	public int delete(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id) throws PersistenceException {
-		logger.trace("delete -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName() + ", id: " + id);
+		if (logger.isTraceEnabled()) {logger.trace("delete -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName() + ", id: " + id);}
 		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -123,8 +123,8 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 			setValue(preparedStatement, 1, id);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);
@@ -145,8 +145,8 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 	 *             the persistence exception
 	 */
 	public int deleteAll(Connection connection, PersistenceTableModel tableModel, Class<T> clazz) throws PersistenceException {
-		logger.trace("deleteAll -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName());
+		if (logger.isTraceEnabled()) {logger.trace("deleteAll -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName());}
 		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -154,8 +154,8 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 			preparedStatement = openPreparedStatement(connection, sql);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

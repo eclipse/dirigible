@@ -123,7 +123,7 @@ public class WebSynchronizerTest extends AbstractDirigibleTest {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void createWebTest() throws WebCoreException, IOException {
-		webSynchronizer.registerPredeliveredWeb("/control/project.json");
+		webSynchronizer.registerPredeliveredProject("/control/project.json");
 
 		WebModel webModelCustom = new WebModel();
 		webModelCustom.setLocation("/custom/project.json");

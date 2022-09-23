@@ -1,18 +1,18 @@
+/*
+ * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.graalium.core.javascript;
 
-import org.eclipse.dirigible.graalium.core.graal.GraalJSEngineCreator;
-import org.eclipse.dirigible.graalium.core.graal.GraalJSSourceCreator;
-import org.eclipse.dirigible.graalium.core.graal.GraalJSTypeMap;
-import org.eclipse.dirigible.graalium.core.graal.modules.downloadable.DownloadableModuleResolver;
-import org.eclipse.dirigible.graalium.core.graal.modules.ModuleResolver;
-import org.eclipse.dirigible.graalium.core.graal.globals.JSGlobalObject;
-import org.eclipse.dirigible.graalium.core.graal.polyfills.JavascriptPolyfill;
-import org.eclipse.dirigible.graalium.core.graal.GraalJSContextCreator;
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Engine;
-import org.graalvm.polyglot.Source;
-import org.graalvm.polyglot.Value;
-
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,22 +21,50 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.eclipse.dirigible.graalium.core.graal.GraalJSContextCreator;
+import org.eclipse.dirigible.graalium.core.graal.GraalJSEngineCreator;
+import org.eclipse.dirigible.graalium.core.graal.GraalJSInterceptor;
+import org.eclipse.dirigible.graalium.core.graal.GraalJSSourceCreator;
+import org.eclipse.dirigible.graalium.core.graal.GraalJSTypeMap;
+import org.eclipse.dirigible.graalium.core.graal.globals.JSGlobalObject;
+import org.eclipse.dirigible.graalium.core.graal.modules.ModuleResolver;
+import org.eclipse.dirigible.graalium.core.graal.modules.downloadable.DownloadableModuleResolver;
+import org.eclipse.dirigible.graalium.core.graal.polyfills.JavascriptPolyfill;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Engine;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
+import java.lang.IllegalStateException;
+
 /**
  * The Class GraalJSCodeRunner.
  */
 public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
 
-    /** The current working directory path. */
+    /**
+     * The current working directory path.
+     */
     private final Path currentWorkingDirectoryPath;
-    
-    /** The graal context. */
+
+    /**
+     * The graal context.
+     */
     private final Context graalContext;
-    
-    /** The graal JS source creator. */
+
+    /**
+     * The graal JS source creator.
+     */
     private final GraalJSSourceCreator graalJSSourceCreator;
-    
-    /** The graal JS context creator. */
+
+    /**
+     * The graal JS context creator.
+     */
     private final GraalJSContextCreator graalJSContextCreator;
+
+    /**
+     * The graal JS interceptor.
+     */
+    private final GraalJSInterceptor graalJSInterceptor;
 
     /**
      * Instantiates a new graal JS code runner.
@@ -55,17 +83,30 @@ public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
         graalJSSourceCreator = new GraalJSSourceCreator(builder.jsModuleType);
         graalJSContextCreator = new GraalJSContextCreator(builder.typeMaps);
 
+        graalJSInterceptor = builder.interceptor;
+
         graalContext = graalJSContextCreator.createContext(
                 graalEngine,
                 currentWorkingDirectoryPath,
                 downloadableModuleResolver,
                 builder.moduleResolvers,
                 onBeforeContextCreatedHook,
-                onAfterContextCreatedHook
+                onAfterContextCreatedHook,
+                builder.onRealPathNotFound,
+                builder.delegateFileSystem
         );
 
         registerGlobalObjects(graalContext, builder.globalObjects);
         registerPolyfills(graalContext, builder.jsPolyfills);
+    }
+
+    /**
+     * Gets the graal context.
+     *
+     * @return the graal context
+     */
+    public Context getGraalContext() {
+        return graalContext;
     }
 
     /**
@@ -91,7 +132,7 @@ public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
     /**
      * Register global objects.
      *
-     * @param context the context
+     * @param context       the context
      * @param globalObjects the global objects
      */
     private static void registerGlobalObjects(Context context, List<JSGlobalObject> globalObjects) {
@@ -102,7 +143,7 @@ public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
     /**
      * Register polyfills.
      *
-     * @param context the context
+     * @param context     the context
      * @param jsPolyfills the js polyfills
      */
     private void registerPolyfills(Context context, List<JavascriptPolyfill> jsPolyfills) {
@@ -116,13 +157,12 @@ public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
      * Run.
      *
      * @param codeFilePath the code file path
-     * @return the value
+     * @return the source
      */
     @Override
-    public Value run(Path codeFilePath) {
+    public Source prepareSource(Path codeFilePath) {
         Path relativeCodeFilePath = currentWorkingDirectoryPath.resolve(codeFilePath);
-        Source codeSource = graalJSSourceCreator.createSource(relativeCodeFilePath);
-        return run(codeSource);
+        return graalJSSourceCreator.createSource(relativeCodeFilePath);
     }
 
     /**
@@ -136,6 +176,15 @@ public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
         Value result = graalContext.eval(codeSource);
         rethrowIfError(result);
         return result;
+    }
+
+    /**
+     * Gets the graal JS interceptor.
+     *
+     * @return the graal JS interceptor
+     */
+    public GraalJSInterceptor getGraalJSInterceptor() {
+        return graalJSInterceptor;
     }
 
     /**
@@ -200,7 +249,7 @@ public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
      * New builder.
      *
      * @param currentWorkingDirectoryPath the current working directory path
-     * @param cachesPath the caches path
+     * @param cachesPath                  the caches path
      * @return the builder
      */
     public static Builder newBuilder(Path currentWorkingDirectoryPath, Path cachesPath) {
@@ -221,43 +270,78 @@ public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
      * The Class Builder.
      */
     public static class Builder {
-        
-        /** The working directory path. */
+
+        /**
+         * The working directory path.
+         */
         private final Path workingDirectoryPath;
-        
-        /** The dependencies cache path. */
+
+        /**
+         * The dependencies cache path.
+         */
         private final Path dependenciesCachePath;
-        
-        /** The wait for debugger. */
+
+        /**
+         * The wait for debugger.
+         */
         private boolean waitForDebugger = false;
-        
-        /** The js module type. */
+
+        /**
+         * The js module type.
+         */
         private JavascriptModuleType jsModuleType = JavascriptModuleType.BASED_ON_FILE_EXTENSION;
-        
-        /** The js polyfills. */
+
+        /**
+         * The js polyfills.
+         */
         private final List<JavascriptPolyfill> jsPolyfills = new ArrayList<>();
-        
-        /** The global objects. */
+
+        /**
+         * The global objects.
+         */
         private final List<JSGlobalObject> globalObjects = new ArrayList<>();
-        
-        /** The on before context created listeners. */
+
+        /**
+         * The on before context created listeners.
+         */
         private final List<Consumer<Context.Builder>> onBeforeContextCreatedListeners = new ArrayList<>();
-        
-        /** The on after context created listener. */
+
+        /**
+         * The on after context created listener.
+         */
         private final List<Consumer<Context>> onAfterContextCreatedListener = new ArrayList<>();
-        
-        /** The module resolvers. */
+
+        /**
+         * The module resolvers.
+         */
         private final List<ModuleResolver> moduleResolvers = new ArrayList<>();
-        
-        /** The type maps. */
+
+        /**
+         * The type maps.
+         */
         @SuppressWarnings("rawtypes")
         private final List<GraalJSTypeMap> typeMaps = new ArrayList<>();
+
+        /**
+         * The interceptor *.
+         */
+        private GraalJSInterceptor interceptor;
+
+        /**
+         * The callback to invoke in GraalJS' FileSystem when a Path's toRealPath fails.
+         */
+        private Function<Path, Path> onRealPathNotFound;
+
+        /**
+         * The file system to delegate to in GraalJS' file system
+         */
+        private FileSystem delegateFileSystem = FileSystems.getDefault();
 
         /**
          * Instantiates a new builder.
          *
          * @param workingDirectoryPath the working directory path
-         * @param cachesPath the caches path
+         * @param cachesPath           the caches path
          */
         public Builder(Path workingDirectoryPath, Path cachesPath) {
             this.workingDirectoryPath = workingDirectoryPath;
@@ -337,7 +421,9 @@ public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
          * @return the builder
          */
         public Builder addOnBeforeContextCreatedListener(Consumer<Context.Builder> onBeforeContextCreatedListener) {
-            onBeforeContextCreatedListeners.add(onBeforeContextCreatedListener);
+            if (onBeforeContextCreatedListener != null) {
+                onBeforeContextCreatedListeners.add(onBeforeContextCreatedListener);
+            }
             return this;
         }
 
@@ -348,17 +434,55 @@ public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
          * @return the builder
          */
         public Builder addOnAfterContextCreatedListener(Consumer<Context> onAfterContextCreatedListener) {
-            this.onAfterContextCreatedListener.add(onAfterContextCreatedListener);
+            if (onAfterContextCreatedListener != null) {
+                this.onAfterContextCreatedListener.add(onAfterContextCreatedListener);
+            }
+            return this;
+        }
+
+        /**
+         * Sets a callback to invoke when a Path's toRealPath fails in GraalJS' FileSystem.
+         * This callback should return another Path if it could be constructed or throw an exception
+         *
+         * @param onRealPathNotFound the callback to invoke
+         * @return the builder
+         */
+        public Builder setOnRealPathNotFound(Function<Path, Path> onRealPathNotFound) {
+            this.onRealPathNotFound = onRealPathNotFound;
+            return this;
+        }
+
+        /**
+         * Sets a file system to use in GraalJS' FileSystem. Defaults to the system one.
+         *
+         * @param fileSystem the file system to use
+         * @return
+         */
+        public Builder setDelegateFileSystem(FileSystem fileSystem) {
+            this.delegateFileSystem = fileSystem;
+            return this;
+        }
+
+        /**
+         * Adds the on after context created listener.
+         *
+         * @param interceptor the interceptor
+         * @return the builder
+         */
+        public Builder setInterceptor(GraalJSInterceptor interceptor) {
+            if (interceptor != null) {
+                this.interceptor = interceptor;
+            }
             return this;
         }
 
         /**
          * Adds the type mapping.
          *
-         * @param <S> the generic type
-         * @param <T> the generic type
-         * @param source the source
-         * @param target the target
+         * @param <S>       the generic type
+         * @param <T>       the generic type
+         * @param source    the source
+         * @param target    the target
          * @param converter the converter
          * @return the builder
          */

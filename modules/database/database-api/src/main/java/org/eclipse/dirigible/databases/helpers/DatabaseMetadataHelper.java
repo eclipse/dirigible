@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -188,49 +189,49 @@ public class DatabaseMetadataHelper {
 		
 		ISqlDialect sqlDialect = getDialect(connection);
 
-		
 		List<SchemaMetadata> result = new ArrayList<SchemaMetadata>();
-		ResultSet rs = null;
-
-		try {
-
-			if (sqlDialect.isSchemaFilterSupported()) {
-				try {
-					// low level filtering for schema
-					rs = connection.createStatement().executeQuery(sqlDialect.getSchemaFilterScript());
-				} catch (Exception e) {
-					if (rs != null) {
-						rs.close();
+		if (sqlDialect.isSchemaFilterSupported()) {
+			try {
+				// low level filtering for schema
+				try (Statement stmt = connection.createStatement()) {
+					try (ResultSet rs = stmt.executeQuery(sqlDialect.getSchemaFilterScript())) {
+						filterSchemas(connection, catalogName, schemaNameFilter, nameFilter, result, rs);
 					}
-					DatabaseMetaData dmd = connection.getMetaData();
-					// backup in case of wrong product recognition
-					rs = dmd.getSchemas(catalogName, null);
 				}
-			} else if (sqlDialect.isCatalogForSchema()) {
+			} catch (Exception e) {
 				DatabaseMetaData dmd = connection.getMetaData();
-				rs = dmd.getCatalogs();
-			} else {
-				DatabaseMetaData dmd = connection.getMetaData();
-				rs = dmd.getSchemas(catalogName, null);
-			}
-			if (rs != null) {
-				while (rs.next()) {
-					String schemeName = rs.getString(1); // TABLE_SCHEM or TABLE_CAT
-					// higher level filtering for schema if low level is not supported
-					if ((schemaNameFilter != null) && !schemaNameFilter.accepts(schemeName)) {
-						continue;
-					}
-					result.add(new SchemaMetadata(schemeName, connection, catalogName, nameFilter));
+				// backup in case of wrong product recognition
+				try (ResultSet rs = dmd.getSchemas(catalogName, null)) {
+					filterSchemas(connection, catalogName, schemaNameFilter, nameFilter, result, rs);
 				}
 			}
-
-		} finally {
-			if (rs != null) {
-				rs.close();
+		} else if (sqlDialect.isCatalogForSchema()) {
+			DatabaseMetaData dmd = connection.getMetaData();
+			try (ResultSet rs = dmd.getCatalogs()) {
+				filterSchemas(connection, catalogName, schemaNameFilter, nameFilter, result, rs);
+			}
+		} else {
+			DatabaseMetaData dmd = connection.getMetaData();
+			try (ResultSet rs = dmd.getSchemas(catalogName, null)) {
+				filterSchemas(connection, catalogName, schemaNameFilter, nameFilter, result, rs);
 			}
 		}
 
 		return result;
+	}
+
+	private static void filterSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter,
+			Filter<String> nameFilter, List<SchemaMetadata> result, ResultSet rs) throws SQLException {
+		if (rs != null) {
+			while (rs.next()) {
+				String schemeName = rs.getString(1); // TABLE_SCHEM or TABLE_CAT
+				// higher level filtering for schema if low level is not supported
+				if ((schemaNameFilter != null) && !schemaNameFilter.accepts(schemeName)) {
+					continue;
+				}
+				result.add(new SchemaMetadata(schemeName, connection, catalogName, nameFilter));
+			}
+		}
 	}
 
 	/**
@@ -777,7 +778,7 @@ public class DatabaseMetadataHelper {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
+					if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				}
 			}
 		}
@@ -808,7 +809,7 @@ public class DatabaseMetadataHelper {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
+					if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				}
 			}
 		}
@@ -839,7 +840,7 @@ public class DatabaseMetadataHelper {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
+					if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				}
 			}
 		}
@@ -870,7 +871,7 @@ public class DatabaseMetadataHelper {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
+					if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				}
 			}
 		}
@@ -894,7 +895,7 @@ public class DatabaseMetadataHelper {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
+					if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				}
 			}
 		}

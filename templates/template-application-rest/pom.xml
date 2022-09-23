@@ -18,7 +18,7 @@
 		<content.repository.name>template-application-rest</content.repository.name>
 		<content.project.name>template-application-rest</content.project.name>
 
-		<license.header.location>../../licensing-header.txt</license.header.location>
+		<license.header.location>../generation-header.txt</license.header.location>
 	</properties>
 
 </project>

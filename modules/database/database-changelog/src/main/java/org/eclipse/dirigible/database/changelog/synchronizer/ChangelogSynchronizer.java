@@ -32,7 +32,10 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
@@ -108,7 +111,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	public void synchronize() {
 		synchronized (ChangelogSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Changelogs...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing Changelogs...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -127,17 +130,17 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 								+ "Mutable: [Changelog: {9}]", 
 								immutableChangelogCount, mutableChangelogCount));
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Changelogs failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Changelogs failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Changelogs files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Changelogs files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Changelogs.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Changelogs.");}
 				afterSynchronizing();
 			}
 		}
@@ -203,18 +206,18 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	 *             the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered Changelogs...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered Changelogs...");}
 		
 		// Changelog
 		for (DataStructureChangelogModel changelog : CHANGELOG_PREDELIVERED.values()) {
 			try {
 				synchronizeChangelog(changelog);
 			} catch (Exception e) {
-				logger.error(format("Update Changelog [{0}] skipped due to an error: {1}", changelog, e.getMessage()), e);
+				if (logger.isErrorEnabled()) {logger.error(format("Update Changelog [{0}] skipped due to an error: {1}", changelog, e.getMessage()), e);}
 			}
 		}
 		
-		logger.trace("Done synchronizing predelivered Changelogs.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered Changelogs.");}
 	}
 	
 	/**
@@ -230,20 +233,21 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 			if (!dataStructuresCoreService.existsChangelog(changelogModel.getLocation())) {
 				dataStructuresCoreService.createChangelog(changelogModel.getLocation(), changelogModel.getName(), changelogModel.getHash());
 				DATA_STRUCTURE_CHANGELOG_MODELS.put(changelogModel.getName(), changelogModel);
-				logger.info("Synchronized a new Changelog file [{}] from location: {}", changelogModel.getName(), changelogModel.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Changelog file [{}] from location: {}", changelogModel.getName(), changelogModel.getLocation());}
 				applyArtefactState(changelogModel, CHANGELOG_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				DataStructureChangelogModel existing = dataStructuresCoreService.getChangelog(changelogModel.getLocation());
 				if (!changelogModel.equals(existing)) {
 					dataStructuresCoreService.updateChangelog(changelogModel.getLocation(), changelogModel.getName(), changelogModel.getHash());
 					DATA_STRUCTURE_CHANGELOG_MODELS.put(changelogModel.getName(), changelogModel);
-					logger.info("Synchronized a modified Changelog file [{}] from location: {}", changelogModel.getName(), changelogModel.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Changelog file [{}] from location: {}", changelogModel.getName(), changelogModel.getLocation());}
 					applyArtefactState(changelogModel, CHANGELOG_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			CHANGELOG_SYNCHRONIZED.add(changelogModel.getLocation());
 		} catch (DataStructuresException e) {
 			applyArtefactState(changelogModel, CHANGELOG_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, changelogModel.getLocation(), CHANGELOG_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -259,11 +263,11 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing Changelogs from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing Changelogs from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing Changelogs from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Changelogs from Registry.");}
 	}
 
 	/**
@@ -308,7 +312,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up Changelogs...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up Changelogs...");}
 		super.cleanup();
 
 		try {
@@ -320,7 +324,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 				for (DataStructureChangelogModel changelogModel : changelogModels) {
 					if (!CHANGELOG_SYNCHRONIZED.contains(changelogModel.getLocation())) {
 						dataStructuresCoreService.removeChangelog(changelogModel.getLocation());
-						logger.warn("Cleaned up Changelog Data file [{}] from location: {}", changelogModel.getName(), changelogModel.getLocation());
+						if (logger.isWarnEnabled()) {logger.warn("Cleaned up Changelog Data file [{}] from location: {}", changelogModel.getName(), changelogModel.getLocation());}
 					}
 				}
 			} finally {
@@ -332,7 +336,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up Changelogs.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up Changelogs.");}
 	}
 
 	/**
@@ -341,7 +345,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	private void updateChangelogs() {
 
 		if (DATA_STRUCTURE_CHANGELOG_MODELS.isEmpty()) {
-			logger.trace("No Changelogs to update.");
+			if (logger.isTraceEnabled()) {logger.trace("No Changelogs to update.");}
 			return;
 		}
 
@@ -359,7 +363,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 						executeChangelogUpdate(connection, changelog, model);
 						applyArtefactState(model, CHANGELOG_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 					} catch (URISyntaxException | LiquibaseException | IOException e) {
-						logger.error(e.getMessage(), e);
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 						errors.add(e.getMessage());
 						applyArtefactState(model, CHANGELOG_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 					}
@@ -371,10 +375,10 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 				}
 			}
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			errors.add(e.getMessage());
 		} finally {
-			logger.error(concatenateListOfStrings(errors, "\n---\n"));
+			if (logger.isErrorEnabled()) {logger.error(concatenateListOfStrings(errors, "\n---\n"));}
 		}
 	}
 
@@ -434,6 +438,28 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	@Override
 	public int getPriority() {
 		return 100;
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "CHANGELOG";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-database-changelog";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, ChangelogSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
+		}
 	}
 
 }

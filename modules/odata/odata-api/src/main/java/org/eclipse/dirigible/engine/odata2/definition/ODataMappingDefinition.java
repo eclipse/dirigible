@@ -17,11 +17,13 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
+
 /**
  * The OData Mapping for Entity.
  */
 @Table(name = "DIRIGIBLE_ODATA_MAPPING")
-public class ODataMappingDefinition {
+public class ODataMappingDefinition implements IArtefactDefinition {
 
 	/** The location. */
 	@Id
@@ -178,6 +180,16 @@ public class ODataMappingDefinition {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getLocation();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 
 }

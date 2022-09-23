@@ -99,7 +99,7 @@ public class UserFacade implements IScriptingFacade {
 		try {
 			return HttpRequestFacade.isUserInRole(role);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 
 		return false;
@@ -116,13 +116,13 @@ public class UserFacade implements IScriptingFacade {
 	public static final void setName(String userName) throws ContextException {
 		if (Configuration.isAnonymousModeEnabled()) {
 			setContextProperty(DIRIGIBLE_ANONYMOUS_IDENTIFIER, userName);
-			logger.debug(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+			if (logger.isDebugEnabled()) {logger.debug(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));}
 		} else if (Configuration.isAnonymousUserEnabled()) {
 			setContextProperty(DIRIGIBLE_ANONYMOUS_USER, userName);
-			logger.debug(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+			if (logger.isDebugEnabled()) {logger.debug(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));}
 		} else if (Configuration.isJwtModeEnabled()) {
 			setContextProperty(DIRIGIBLE_JWT_USER, userName);
-			logger.debug(format("User name has been set programmatically {0} to the session as the JWT mode is enabled", userName));
+			if (logger.isDebugEnabled()) {logger.debug(format("User name has been set programmatically {0} to the session as the JWT mode is enabled", userName));}
 		} else {
 			throw new SecurityException("Setting the user name programmatically is supported only when the anonymous mode is enabled");
 		}
@@ -143,7 +143,7 @@ public class UserFacade implements IScriptingFacade {
 		try {
 			userName = request.getRemoteUser();
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 		if (userName != null) {
 			return userName;
@@ -166,7 +166,7 @@ public class UserFacade implements IScriptingFacade {
 		try {
 			userName = session.getUserPrincipal().getName();
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 		if (userName != null) {
 			return userName;
@@ -183,7 +183,7 @@ public class UserFacade implements IScriptingFacade {
 		if (HttpSessionFacade.isValid()) {
 			return HttpSessionFacade.getMaxInactiveInterval();
 		} else {
-			logger.error(NO_VALID_REQUEST);
+			if (logger.isErrorEnabled()) {logger.error(NO_VALID_REQUEST);}
 		}
 		return 0;
 	}
@@ -197,7 +197,7 @@ public class UserFacade implements IScriptingFacade {
 		if (HttpRequestFacade.isValid()) {
 			return HttpRequestFacade.getAuthType();
 		} else {
-			logger.error(NO_VALID_REQUEST);
+			if (logger.isErrorEnabled()) {logger.error(NO_VALID_REQUEST);}
 		}
 		return null;
 	}
@@ -213,7 +213,7 @@ public class UserFacade implements IScriptingFacade {
 			String token = HttpRequestFacade.getHeader(AUTH);
 			return token != null && !"".equals(token)? token.substring(token.indexOf(" ")) : "";
 		} else {
-			logger.error(NO_VALID_REQUEST);
+			if (logger.isErrorEnabled()) {logger.error(NO_VALID_REQUEST);}
 		}
 		return "";
 	}
@@ -227,7 +227,7 @@ public class UserFacade implements IScriptingFacade {
 		if (HttpSessionFacade.isValid()) {
 			return HttpSessionFacade.getAttribute(INVOCATION_COUNT);
 		} else {
-			logger.error(NO_VALID_REQUEST);
+			if (logger.isErrorEnabled()) {logger.error(NO_VALID_REQUEST);}
 		}
 		return null;
 	}
@@ -248,7 +248,7 @@ public class UserFacade implements IScriptingFacade {
 			List<Locale.LanguageRange> ranges = Locale.LanguageRange.parse(language);
 			return  ranges == null || ranges.isEmpty() ? "" : ranges.get(0).getRange();
 		} else {
-			logger.error(NO_VALID_REQUEST);
+			if (logger.isErrorEnabled()) {logger.error(NO_VALID_REQUEST);}
 		}
 		return null;
 	}
@@ -300,7 +300,7 @@ public class UserFacade implements IScriptingFacade {
 				return HttpRequestFacade.getRemoteUser();
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 		return null;
 	}
@@ -316,7 +316,7 @@ public class UserFacade implements IScriptingFacade {
 			try {
 				userName = getContextProperty(DIRIGIBLE_ANONYMOUS_IDENTIFIER);
 			} catch (ContextException e) {
-				logger.error(e.getMessage());
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 			}
 		} else if (Configuration.isAnonymousUserEnabled()) {
 			try {
@@ -325,13 +325,13 @@ public class UserFacade implements IScriptingFacade {
 					userName = setAnonymousUser();
 				}
 			} catch (ContextException e) {
-				logger.error(e.getMessage());
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 			}
 		} else if (Configuration.isJwtModeEnabled()) {
 			try {
 				userName = getContextProperty(DIRIGIBLE_JWT_USER);
 			} catch (ContextException e) {
-				logger.error(e.getMessage());
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 			}
 		}
 		return userName;
@@ -350,7 +350,7 @@ public class UserFacade implements IScriptingFacade {
 			try {
 				setName(userName);
 			} catch (ContextException e) {
-				logger.info("Error while setting userName from DIRIGIBLE_ANONYMOUS_USER_PROPERTY_NAME.", e);
+				if (logger.isInfoEnabled()) {logger.info("Error while setting userName from DIRIGIBLE_ANONYMOUS_USER_PROPERTY_NAME.", e);}
 			}
 		}
 		return userName;

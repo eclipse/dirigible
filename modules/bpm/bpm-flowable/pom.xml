@@ -71,6 +71,11 @@
 			<artifactId>dirigible-engine-javascript</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-log</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
 
     	<dependency>
 		    <groupId>org.flowable</groupId>
@@ -105,7 +110,7 @@
         </dependency>
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-javascript-graalvm</artifactId>
+			<artifactId>dirigible-engine-javascript-graalium</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
@@ -121,7 +126,6 @@
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
-    	
 		<dependency>
 		    <groupId>com.h2database</groupId>
 		    <artifactId>h2</artifactId>

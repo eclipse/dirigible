@@ -90,11 +90,11 @@ public class OData2ODataXTransformer {
             List<PersistenceTableColumnModel> idColumns = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).collect(Collectors.toList());
 
             if (tableMetadata.getTableType() == null || (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType()))) {
-                logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());
+            	if (logger.isErrorEnabled()) {logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());}
                 continue;
             }
             if (!VIEW_TYPES.contains(tableMetadata.getTableType()) && !TABLE_TYPES.contains(tableMetadata.getTableType())) {
-                logger.error("Unsupported database type {} for entity object {}", tableMetadata.getTableType(), entity.getTable());
+            	if (logger.isErrorEnabled()) {logger.error("Unsupported database type {} for entity object {}", tableMetadata.getTableType(), entity.getTable());}
                 continue;
             }
 

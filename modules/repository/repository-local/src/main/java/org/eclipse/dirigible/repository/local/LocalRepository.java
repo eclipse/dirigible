@@ -87,7 +87,7 @@ public class LocalRepository extends FileSystemRepository {
 	@Override
 	public void initialize() {
 		Configuration.loadModuleConfig("/dirigible-repository-local.properties");
-		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
+		if (logger.isDebugEnabled()) {logger.debug(this.getClass().getCanonicalName() + " module initialized.");}
 	}
 	
 	/**

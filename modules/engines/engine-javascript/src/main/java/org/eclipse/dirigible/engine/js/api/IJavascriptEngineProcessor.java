@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.engine.js.api;
 
+import java.util.Map;
+
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 
 /**
@@ -21,11 +23,10 @@ public interface IJavascriptEngineProcessor {
 	/**
 	 * Execute service.
 	 *
-	 * @param module
-	 *            the module
-	 * @throws ScriptingException
-	 *             the scripting exception
+	 * @param module            the module
+	 * @return the object
+	 * @throws ScriptingException             the scripting exception
 	 */
-	public void executeService(String module) throws ScriptingException;
+	public Object executeService(String module, Map<Object, Object> parameters) throws ScriptingException;
 
 }

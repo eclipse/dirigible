@@ -70,7 +70,7 @@ public class PersistenceNextValueIdentityProcessor extends AbstractPersistencePr
 	 *             the persistence exception
 	 */
 	public long nextval(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-		logger.trace("nextval -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+		if (logger.isTraceEnabled()) {logger.trace("nextval -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));}
 		return nextval(connection, tableModel.getTableName());
 	}
 	
@@ -86,7 +86,7 @@ public class PersistenceNextValueIdentityProcessor extends AbstractPersistencePr
 	 *             the persistence exception
 	 */
 	public long nextval(Connection connection, String tableName) throws PersistenceException {
-		logger.trace("nextval -> connection: " + connection.hashCode() + ", tableName: " + tableName);
+		if (logger.isTraceEnabled()) {logger.trace("nextval -> connection: " + connection.hashCode() + ", tableName: " + tableName);}
 		PersistenceManager<Identity> persistenceManager = new PersistenceManager<Identity>();
 		if (!persistenceManager.tableExists(connection, Identity.class)) {
 			persistenceManager.tableCreate(connection, Identity.class);

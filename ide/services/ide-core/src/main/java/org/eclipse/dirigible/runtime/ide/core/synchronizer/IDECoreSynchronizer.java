@@ -65,14 +65,14 @@ public class IDECoreSynchronizer extends AbstractSynchronizer {
 					try {
 						getEngine().executeServiceCode(code, new HashMap<Object, Object>());
 					} catch (ScriptingException e) {
-						logger.error(e.getMessage(), e);
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					}
 				});
 			} else {
-				logger.debug("Synchronization has been disabled");
+				if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 			}
 		} catch (Throwable e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 
 	}

@@ -47,7 +47,7 @@ public class ChangelogClasspathContentHandler extends AbstractClasspathContentHa
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Changelog at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered Changelog at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

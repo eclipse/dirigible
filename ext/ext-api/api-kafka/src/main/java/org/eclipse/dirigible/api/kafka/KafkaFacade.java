@@ -124,7 +124,7 @@ public class KafkaFacade implements IScriptingFacade {
 			}
 			producer = new KafkaProducer<>(props);
 			PRODUCERS.put(server, producer);
-			logger.info("Kafka Producer [{}] created.", server);
+			if (logger.isInfoEnabled()) {logger.info("Kafka Producer [{}] created.", server);}
 		}
 		
 		producer.send(new ProducerRecord<String, String>(destination, key, value));
@@ -155,7 +155,7 @@ public class KafkaFacade implements IScriptingFacade {
 			producer.close();
 			PRODUCERS.remove(server);
 		} else {
-			logger.warn("Kafka Producer [{}] has not been started yet.", server);
+			if (logger.isWarnEnabled()) {logger.warn("Kafka Producer [{}] has not been started yet.", server);}
 		}
 	}
 	
@@ -224,9 +224,9 @@ public class KafkaFacade implements IScriptingFacade {
 			consumerThread.setDaemon(false);
 			consumerThread.start();
 			CONSUMERS.put(location, consumerRunner);
-			logger.info("Kafka Consumer [{}] created.", location);
+			if (logger.isInfoEnabled()) {logger.info("Kafka Consumer [{}] created.", location);}
 		} else {
-			logger.warn("Kafka Consumer [{}] has already been started.", location);
+			if (logger.isWarnEnabled()) {logger.warn("Kafka Consumer [{}] has already been started.", location);}
 		}
 	}
 	
@@ -255,7 +255,7 @@ public class KafkaFacade implements IScriptingFacade {
 			consumerRunner.stop();
 			CONSUMERS.remove(location);
 		} else {
-			logger.warn("Kafka Consumer [" + location + "] has not been started yet.");
+			if (logger.isWarnEnabled()) {logger.warn("Kafka Consumer [" + location + "] has not been started yet.");}
 		}
 	}
 

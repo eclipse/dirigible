@@ -28,13 +28,13 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v4.git.GitFacade;
 import org.eclipse.dirigible.core.git.GitCommitInfo;
 import org.eclipse.dirigible.core.git.GitConnectorException;
-import org.eclipse.dirigible.core.git.project.ProjectMetadata;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.json.ProjectDescriptor;
+import org.eclipse.dirigible.core.workspace.project.ProjectMetadata;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.Test;
 

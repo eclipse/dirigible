@@ -175,7 +175,7 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 		}
 
 		if (definition.getId() != id) {
-			logger.warn("The id provided in the body of the database definition update operation differs from the one requested via the URI");
+			if (logger.isWarnEnabled()) {logger.warn("The id provided in the body of the database definition update operation differs from the one requested via the URI");}
 			definition.setId(id);
 		}
 		processor.updateDefinedDatabase(definition);

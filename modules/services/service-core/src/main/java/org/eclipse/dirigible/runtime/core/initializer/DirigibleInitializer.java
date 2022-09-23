@@ -57,7 +57,7 @@ public class DirigibleInitializer {
 	 */
 	public synchronized void initialize() {
 
-		logger.info("---------- Initializing Eclipse Dirigible Platform... ----------");
+		if (logger.isInfoEnabled()) {logger.info("---------- Initializing Eclipse Dirigible Platform... ----------");}
 
 		initializeModules();
 		
@@ -76,18 +76,18 @@ public class DirigibleInitializer {
 
 		printAllConfigurations();
 
-		logger.info("---------- Eclipse Dirigible Platform initialized. ----------");
+		if (logger.isInfoEnabled()) {logger.info("---------- Eclipse Dirigible Platform initialized. ----------");}
 	}
 	
 	/**
 	 * Initialize modules.
 	 */
 	private void initializeModules() {
-		logger.trace("Initializing modules ...");
+		if (logger.isTraceEnabled()) {logger.trace("Initializing modules ...");}
 
 		DirigibleModulesInstallerModule.configure();
 
-		logger.trace("Modules have been initialized.");
+		if (logger.isTraceEnabled()) {logger.trace("Modules have been initialized.");}
 	}
 
 	/**
@@ -95,8 +95,8 @@ public class DirigibleInitializer {
 	 */
 	private void printAllConfigurations() {
 		
-		logger.info("---------- Environment ----------");
-		logger.info("========== Configurations =======");
+		if (logger.isInfoEnabled()) {logger.info("---------- Environment ----------");}
+		if (logger.isInfoEnabled()) {logger.info("========== Configurations =======");}
 		String[] keys = Configuration.getKeys();
 		for (String key : keys) {
 			String value = Configuration.get(key);
@@ -104,22 +104,22 @@ public class DirigibleInitializer {
 			{
 				value = "******";
 			}
-			logger.info("Configuration: {}={}", key, value);
+			if (logger.isInfoEnabled()) {logger.info("Configuration: {}={}", key, value);}
 		}
 		
-		logger.info("========== Properties =======");
+		if (logger.isInfoEnabled()) {logger.info("========== Properties =======");}
 		Properties props = System.getProperties();
 		for (Map.Entry<Object, Object> entry : props.entrySet()) {
 			if (entry.getKey() != null && entry.getKey().toString().startsWith("DIRIGIBLE")) {
-				logger.info("Configuration: {}={}", entry.getKey().toString(), entry.getValue());
+				if (logger.isInfoEnabled()) {logger.info("Configuration: {}={}", entry.getKey().toString(), entry.getValue());}
 			}
 		}
 		
-		logger.info("========== Variables =======");
+		if (logger.isInfoEnabled()) {logger.info("========== Variables =======");}
 		Map<String, String> env = System.getenv();
 		for (Map.Entry<String, String> entry : env.entrySet()) {
 			if (entry.getKey() != null && entry.getKey().startsWith("DIRIGIBLE")) {
-				logger.info("Configuration: {}={}", entry.getKey(), entry.getValue());
+				if (logger.isInfoEnabled()) {logger.info("Configuration: {}={}", entry.getKey(), entry.getValue());}
 			}
 		}
 	}
@@ -128,20 +128,20 @@ public class DirigibleInitializer {
 	 * Load predelivered content.
 	 */
 	private void loadPredeliveredContent() {
-		logger.trace("Loading the predelivered content...");
+		if (logger.isTraceEnabled()) {logger.trace("Loading the predelivered content...");}
 		try {
 			ClasspathContentLoader.load();
 		} catch (IOException e) {
-			logger.error("Failed loading the predelivered content", e);
+			if (logger.isErrorEnabled()) {logger.error("Failed loading the predelivered content", e);}
 		}
-		logger.trace("Done loading predelivered content.");
+		if (logger.isTraceEnabled()) {logger.trace("Done loading predelivered content.");}
 	}
 
 	/**
 	 * Register rest services for cxf.
 	 */
 	private void registerRestServicesForCxf() {
-		logger.trace("Registering REST services...");
+		if (logger.isTraceEnabled()) {logger.trace("Registering REST services...");}
 
 		getServices().add(new SecureAnnotationsInterceptor());
 		getServices().add(new GsonMessageBodyHandler<Object>());
@@ -150,7 +150,7 @@ public class DirigibleInitializer {
 		addExceptionHandlers();
 		addSwagger();
 
-		logger.trace("Done registering REST services.");
+		if (logger.isTraceEnabled()) {logger.trace("Done registering REST services.");}
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class DirigibleInitializer {
 		for (IRestService next : ServiceLoader.load(IRestService.class)) {
 			StaticObjects.set(next.getType().getCanonicalName(), next);
 			getServices().add(next);
-			logger.info("REST service registered {}.", next.getType());
+			if (logger.isInfoEnabled()) {logger.info("REST service registered {}.", next.getType());}
 		}
 	}
 
@@ -171,7 +171,7 @@ public class DirigibleInitializer {
 		for (AbstractExceptionHandler<?> next : ServiceLoader.load(AbstractExceptionHandler.class)) {
 			StaticObjects.set(next.getType().getCanonicalName(), next);
 			getServices().add(next);
-			logger.info("Exception Handler registered {}.", next.getType());
+			if (logger.isInfoEnabled()) {logger.info("Exception Handler registered {}.", next.getType());}
 		}
 	}
 
@@ -189,7 +189,7 @@ public class DirigibleInitializer {
 			Version version = new VersionProcessor().getVersion();
 			feature.setVersion(version.getProductVersion());
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			feature.setVersion("6.0.0");
 		}
 		feature.setTitle("Eclipse Dirigible - Core REST Services API");
@@ -210,67 +210,67 @@ public class DirigibleInitializer {
 	 * Startup scheduler.
 	 */
 	private void startupScheduler() {
-		logger.info("Starting Scheduler...");
+		if (logger.isInfoEnabled()) {logger.info("Starting Scheduler...");}
 		try {
 			new SchedulerInitializer().initialize();
 		} catch (SchedulerException | SQLException | IOException e) {
 			logger.error("Failed starting Scheduler", e);
 		}
-		logger.info("Done starting Scheduler.");
+		if (logger.isInfoEnabled()) {logger.info("Done starting Scheduler.");}
 	}
 
 	/**
 	 * Shutdown scheduler.
 	 */
 	private void shutdownScheduler() {
-		logger.trace("Shutting down Scheduler...");
+		if (logger.isTraceEnabled()) {logger.trace("Shutting down Scheduler...");}
 		try {
 			SchedulerInitializer.shutdown();
 		} catch (SchedulerException e) {
-			logger.error("Failed shutting down Scheduler", e);
+			if (logger.isErrorEnabled()) {logger.error("Failed shutting down Scheduler", e);}
 		}
-		logger.trace("Done shutting down Scheduler.");
+		if (logger.isTraceEnabled()) {logger.trace("Done shutting down Scheduler.");}
 	}
 
 	/**
 	 * Startup messaging.
 	 */
 	private void startupMessaging() {
-		logger.info("Starting Message Broker...");
+		if (logger.isInfoEnabled()) {logger.info("Starting Message Broker...");}
 		try {
 			new SchedulerManager().initialize();
 		} catch (Exception e) {
 			logger.error("Failed starting Messaging", e);
 		}
-		logger.info("Done starting Message Broker.");
+		if (logger.isInfoEnabled()) {logger.info("Done starting Message Broker.");}
 	}
 	
 	/**
 	 * Startup Terminal Server.
 	 */
 	private void startupTerminalServer() {
-		logger.info("Starting Terminal Server...");
+		if (logger.isInfoEnabled()) {logger.info("Starting Terminal Server...");}
 		try {
 			Class.forName("org.eclipse.dirigible.runtime.ide.terminal.service.XTerminalWebsocketService");
 		} catch (ClassNotFoundException e) {
-			logger.warn("Terminal Server is not available");
+			if (logger.isWarnEnabled()) {logger.warn("Terminal Server is not available");}
 		} catch (Throwable e) {
-			logger.error("Failed starting Terminal Server", e);
+			if (logger.isErrorEnabled()) {logger.error("Failed starting Terminal Server", e);}
 		}
-		logger.info("Done starting Terminal Server.");
+		if (logger.isInfoEnabled()) {logger.info("Done starting Terminal Server.");}
 	}
 
 	/**
 	 * Shutdown messaging.
 	 */
 	private void shutdownMessaging() {
-		logger.trace("Shutting down Message Broker...");
+		if (logger.isTraceEnabled()) {logger.trace("Shutting down Message Broker...");}
 		try {
 			SchedulerManager.shutdown();
 		} catch (Exception e) {
-			logger.error("Failed shutting down Message Broker", e);
+			if (logger.isErrorEnabled()) {logger.error("Failed shutting down Message Broker", e);}
 		}
-		logger.trace("Done shutting down Message Broker.");
+		if (logger.isTraceEnabled()) {logger.trace("Done shutting down Message Broker.");}
 	}
 
 	/**
@@ -286,13 +286,13 @@ public class DirigibleInitializer {
 	 * Destory.
 	 */
 	public void destory() {
-		logger.info("Shutting down Eclipse Dirigible Platform...");
+		if (logger.isInfoEnabled()) {logger.info("Shutting down Eclipse Dirigible Platform...");}
 
 		shutdownScheduler();
 
 		shutdownMessaging();
 
-		logger.info("Eclipse Dirigible Platform shut down.");
+		if (logger.isInfoEnabled()) {logger.info("Eclipse Dirigible Platform shut down.");}
 	}
 
 }

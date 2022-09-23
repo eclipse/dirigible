@@ -73,10 +73,10 @@ public class MasterToRepositoryInitializer {
 			if (getRepository() != null) {
 				copyRepository(getMasterRepository(), getRepository());
 			} else {
-				logger.error("No Repository has been initialized.");
+				if (logger.isErrorEnabled()) {logger.error("No Repository has been initialized.");}
 			}
 		} else {
-			logger.info("No Master Repository has been initialized.");
+			if (logger.isInfoEnabled()) {logger.info("No Master Repository has been initialized.");}
 		}
 	}
 	
@@ -110,10 +110,10 @@ public class MasterToRepositoryInitializer {
 				IResource resource = (IResource) entity;
 				try {
 					targetRepository.createResource(resource.getPath(), resource.getContent(), resource.isBinary(), resource.getContentType(), true);
-					logger.info(String.format("Initial copy from the Mater Repository of the Resource: %s", resource.getPath()));
+					if (logger.isInfoEnabled()) {logger.info(String.format("Initial copy from the Mater Repository of the Resource: %s", resource.getPath()));}
 				} catch (Exception e) {
-					logger.info(String.format("Failed initial copy from the Mater Repository of the Resource: %s", resource.getPath()));
-					logger.error(e.getMessage());
+					if (logger.isInfoEnabled()) {logger.info(String.format("Failed initial copy from the Mater Repository of the Resource: %s", resource.getPath()));}
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 				}
 			}
 		}

@@ -79,7 +79,7 @@ public class RabbitMQReceiverRunner implements Runnable {
 	@Override
 	public void run() {
 		try {
-			logger.info("Starting a RabbitMQ receiver for: " + this.queue);
+			if (logger.isInfoEnabled()) {logger.info("Starting a RabbitMQ receiver for: " + this.queue);}
 			channel.queueDeclare(queue, false, false, false, null);
 			while (!stopped.get()) {
 				Map<Object, Object> context = createMessagingContext();
@@ -94,14 +94,14 @@ public class RabbitMQReceiverRunner implements Runnable {
 									IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT,
 									DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE, context);
 						} catch (ScriptingException e) {
-							logger.error(e.getMessage(), e);
+							if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 							try {
 								context.put("error", escapeCodeString(e.getMessage()));
 								ScriptEngineExecutorsManager.executeServiceModule(
 										IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT,
 										DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR, context);
 							} catch (ScriptingException es) {
-								logger.error(es.getMessage(), es);
+								if (logger.isErrorEnabled()) {logger.error(es.getMessage(), es);}
 							}
 						}
 					}

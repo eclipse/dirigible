@@ -15,16 +15,9 @@
 
 	<modules>
 		<module>core-extensions</module>
-        <module>core-git</module>
-		<module>core-indexing</module>
 		<module>core-messaging</module>
-		<module>core-problems</module>
-		<module>core-publisher</module>
-		<module>core-registry</module>
 		<module>core-scheduler</module>
 		<module>core-security</module>
-		<module>core-workspace</module>
-		<module>core-migrations</module>
 		<module>core-websockets</module>
 	</modules>
 

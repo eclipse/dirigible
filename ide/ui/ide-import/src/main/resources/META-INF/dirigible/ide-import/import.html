@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ Copyright (c) 2010-2022 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -14,29 +14,16 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <!-- Fake favicon to silent console errors and not waste a get request -->
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-
-        <!-- Title directive -->
         <title dg-view-title></title>
-
-        <!-- View data -->
         <script type="text/javascript" src="services/import-view.js"></script>
-
         <theme></theme>
-
-        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
-
-        <!-- Services -->
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
         <script type="text/javascript" src="/services/v4/web/ide-workspace-service/workspace.js"></script>
         <script type="text/javascript" src="/services/v4/web/ide-transport-service/transport.js"></script>
-
-        <!-- Project-specific stuff -->
-        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=file-upload-js"></script>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=file-upload-js"></script>
         <script type="text/javascript" src="js/import.js"></script>
-
     </head>
 
     <body class="dg-vbox">
@@ -71,7 +58,7 @@
                     </fd-button>
                 </fd-popover-control>
                 <fd-popover-body dg-align="right" no-arrow="true">
-                    <fd-menu>
+                    <fd-menu no-backdrop="true" no-shadow="true">
                         <fd-menu-item title="{{ name }}" ng-repeat="name in workspaceNames"
                             is-selected="{{ isSelectedWorkspace(name) }}" ng-click="switchWorkspace(name)">
                         </fd-menu-item>

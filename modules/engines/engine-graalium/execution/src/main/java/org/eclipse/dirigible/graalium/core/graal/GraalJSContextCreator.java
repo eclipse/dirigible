@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.graalium.core.graal;
 
 import org.eclipse.dirigible.graalium.core.graal.configuration.Configuration;
@@ -8,26 +19,34 @@ import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.EnvironmentAccess;
 import org.graalvm.polyglot.HostAccess;
 
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * The Class GraalJSContextCreator.
  */
 public class GraalJSContextCreator {
     
-    /** The Constant JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS. */
-    private static final String JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS = "JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS";
-    
-    /** The Constant JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD. */
-    private static final String JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD = "JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD";
-    
-    /** The Constant JAVASCRIPT_GRAALVM_ALLOW_IO. */
-    private static final String JAVASCRIPT_GRAALVM_ALLOW_IO = "JAVASCRIPT_GRAALVM_ALLOW_IO";
-    
-    /** The Constant JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS. */
-    private static final String JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS = "JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS";
+	/** The Constant DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS. */
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS";
+	
+	/** The Constant DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD. */
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD";
+	
+	/** The Constant DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS. */
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS";
+	
+	/** The Constant DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO. */
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO";
+	
+	/** The Constant DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN. */
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN = "DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN";
+	
+	/** The Constant DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA. */
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA = "DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA";
 
     /** The graal host access. */
     private static HostAccess graalHostAccess;
@@ -53,6 +72,7 @@ public class GraalJSContextCreator {
      * @param moduleResolvers the module resolvers
      * @param onBeforeContextCreatedHook the on before context created hook
      * @param onAfterContextCreatedHook the on after context created hook
+     * @param delegateFileSystem the file system to delegate to
      * @return the context
      */
     public Context createContext(
@@ -61,12 +81,16 @@ public class GraalJSContextCreator {
             DownloadableModuleResolver downloadableModuleResolver,
             List<ModuleResolver> moduleResolvers,
             Consumer<Context.Builder> onBeforeContextCreatedHook,
-            Consumer<Context> onAfterContextCreatedHook
+            Consumer<Context> onAfterContextCreatedHook,
+            Function<Path, Path> onRealPathNotFound,
+            FileSystem delegateFileSystem
     ) {
         GraalJSFileSystem graalJSFileSystem = new GraalJSFileSystem(
                 workingDirectoryPath,
                 moduleResolvers,
-                downloadableModuleResolver
+                downloadableModuleResolver,
+                onRealPathNotFound,
+                delegateFileSystem
         );
 
         Context.Builder contextBuilder = Context.newBuilder()
@@ -78,22 +102,30 @@ public class GraalJSContextCreator {
 
         onBeforeContextCreatedHook.accept(contextBuilder);
 
-        if (Boolean.parseBoolean(Configuration.get(JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS, "true"))) {
+        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS, "true"))) {
             contextBuilder.allowHostClassLookup(s -> true);
             contextBuilder.allowHostAccess(graalHostAccess);
             contextBuilder.allowAllAccess(true);
         }
-        if (Boolean.parseBoolean(Configuration.get(JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD, "true"))) {
+        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD, "true"))) {
             contextBuilder.allowCreateThread(true);
         }
-        if (Boolean.parseBoolean(Configuration.get(JAVASCRIPT_GRAALVM_ALLOW_IO, "true"))) {
+        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO, "true"))) {
             contextBuilder.allowIO(true);
         }
-        if (Boolean.parseBoolean(Configuration.get(JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS, "true"))) {
+        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS, "true"))) {
             contextBuilder.allowCreateProcess(true);
         }
+        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN, "true"))) {
+			contextBuilder.option("js.nashorn-compat", "true");
+		}
 
         Context context = contextBuilder.build();
+        
+        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA, "false"))) {
+        	context.eval("js", "load(\"nashorn:mozilla_compat.js\")");
+        }
+        
         onAfterContextCreatedHook.accept(context);
         return context;
     }

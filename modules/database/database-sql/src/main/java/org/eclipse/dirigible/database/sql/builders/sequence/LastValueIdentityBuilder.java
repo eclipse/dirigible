@@ -55,7 +55,7 @@ public class LastValueIdentityBuilder extends AbstractQuerySqlBuilder {
 
 		String generated = sql.toString();
 
-		logger.trace("generated: " + generated);
+		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
 
 		return generated;
 	}

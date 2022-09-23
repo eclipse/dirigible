@@ -62,7 +62,7 @@ public class PersistenceNextValueSequenceProcessor extends AbstractPersistencePr
 				.nextval(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
 
 		String sql = nextValueBuilder.toString();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -78,7 +78,7 @@ public class PersistenceNextValueSequenceProcessor extends AbstractPersistencePr
 	 *             the persistence exception
 	 */
 	public long nextval(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-		logger.trace("nextval -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+		if (logger.isTraceEnabled()) {logger.trace("nextval -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));}
 		long result = -1;
 		String sql = null;
 		PreparedStatement preparedStatement = null;

@@ -61,7 +61,7 @@ public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcess
 				.sequence(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
 
 		String sql = dropSequenceBuilder.toString();
-		logger.trace(sql);
+		if (logger.isTraceEnabled()) {logger.trace(sql);}
 		return sql;
 	}
 
@@ -77,7 +77,7 @@ public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcess
 	 *             the persistence exception
 	 */
 	public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-		logger.trace("drop -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+		if (logger.isTraceEnabled()) {logger.trace("drop -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));}
 		int result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -86,8 +86,8 @@ public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcess
 			preparedStatement = openPreparedStatement(connection, sql);
 			result = preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(sql);}
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

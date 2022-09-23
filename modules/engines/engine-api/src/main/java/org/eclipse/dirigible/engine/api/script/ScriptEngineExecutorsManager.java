@@ -52,8 +52,7 @@ public class ScriptEngineExecutorsManager {
                 	return scriptEngineExecutor.executeServiceModule(module, executionContext);
                 } else {
                 	String notFound = format("Script Module [{0}] does not exist, hence cannot be processed", module);
-                	logger.error(notFound);
-//					throw new ScriptingException(notFound);
+                	if (logger.isErrorEnabled()) {logger.error(notFound);}
                 	return null;
                 }
             } finally {
@@ -61,8 +60,7 @@ public class ScriptEngineExecutorsManager {
             }
         }
 
-        throw new ScriptingException(
-                format("Script Executor of Type [{0}] does not exist, hence the Module [{1}] cannot be processed", engineType, module));
+        throw new ScriptingException(format("Script Executor of Type [{0}] does not exist, hence the Module [{1}] cannot be processed", engineType, module));
     }
 
     /**

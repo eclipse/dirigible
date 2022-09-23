@@ -71,6 +71,11 @@
 			<artifactId>dirigible-engine-javascript</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-log</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
 
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
@@ -80,13 +85,13 @@
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-javascript-graalvm</artifactId>
+			<artifactId>dirigible-engine-javascript-graalium</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-derby</artifactId>
+			<artifactId>dirigible-database-h2</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>

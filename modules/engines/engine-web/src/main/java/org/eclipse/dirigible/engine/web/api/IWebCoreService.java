@@ -107,7 +107,7 @@ public interface IWebCoreService extends ICoreService {
 	 * @param json the content
 	 * @return the project.json model
 	 */
-	public WebModel parseWeb(String path, String json);
+	public WebModel parseProject(String path, String json);
 
 	/**
 	 * Parses the project.json.

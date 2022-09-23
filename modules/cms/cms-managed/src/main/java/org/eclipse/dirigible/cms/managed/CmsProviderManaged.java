@@ -86,7 +86,7 @@ public class CmsProviderManaged implements ICmsProvider {
 			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | NamingException e) {
 				String message = "Error in initializing the managed CMIS session";
-				logger.error(message, e);
+				if (logger.isErrorEnabled()) {logger.error(message, e);}
 				throw new IllegalStateException(message, e);
 			}
 		}
@@ -113,7 +113,7 @@ public class CmsProviderManaged implements ICmsProvider {
 			Object ecmService = ctx.lookup(key);
 			if (ecmService != null) {
 				String authMethod = Configuration.get(DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD);
-				logger.debug(String.format("CMIS Authentication Method: %s", authMethod));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("CMIS Authentication Method: %s", authMethod));}
 				String uniqueName = null;
 				String secretKey = null;
 				if (DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD_KEY.equals(authMethod)) {
@@ -130,34 +130,34 @@ public class CmsProviderManaged implements ICmsProvider {
 					}
 				} else {
 					String message = String.format("Connection to CMIS Repository was failed. Invalid Authentication Method: %s", authMethod);
-					logger.error(message);
+					if (logger.isErrorEnabled()) {logger.error(message);}
 					throw new SecurityException(message);
 				}
-				logger.info(String.format("Connecting to CMIS Repository with name: %s for type: %s", uniqueName, authMethod));
+				if (logger.isInfoEnabled()) {logger.info(String.format("Connecting to CMIS Repository with name: %s for type: %s", uniqueName, authMethod));}
 				try {
 					Method connectMethod = ecmService.getClass().getMethod("connect", String.class, String.class);
 					Object openCmisSession = connectMethod.invoke(ecmService, uniqueName, secretKey);
 					if (openCmisSession != null) {
-						logger.info(String.format("Connection to CMIS Repository with name: %s was successful.", uniqueName));
+						if (logger.isInfoEnabled()) {logger.info(String.format("Connection to CMIS Repository with name: %s was successful.", uniqueName));}
 						return openCmisSession;
 					}
 				} catch (Throwable t) {
 					String message = "Connection to CMIS Repository was failed.";
-					logger.error(message, t);
+					if (logger.isErrorEnabled()) {logger.error(message, t);}
 					throw new IllegalStateException(message, t);
 				}
 			} else {
 				String message = "ECM is requested as CMIS service, but it is not available.";
-				logger.error(message);
+				if (logger.isErrorEnabled()) {logger.error(message);}
 				throw new IllegalStateException(message);
 			}
 		} else {
 			String message = "CMIS service JNDI name has not been provided.";
-			logger.error(message);
+			if (logger.isErrorEnabled()) {logger.error(message);}
 			throw new IllegalArgumentException(message);
 		}
 		String message = "Initializing the managed CMIS session failed.";
-		logger.error(message);
+		if (logger.isErrorEnabled()) {logger.error(message);}
 		throw new IllegalStateException(message);
 	}
 

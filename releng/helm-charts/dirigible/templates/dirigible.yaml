@@ -33,6 +33,8 @@ metadata:
     {{- include "dirigible.labels" . | nindent 4 }}
 spec:
   replicas: {{ required "Missing replica count" .Values.replicaCount }}
+  strategy:
+    type: {{ required "Missing deployment strategy type" .Values.dirigible.strategyType }}
   selector:
     matchLabels:
       {{- include "dirigible.selectorLabels" . | nindent 6 }}
@@ -72,6 +74,19 @@ spec:
         {{- end }}
       containers:
         - name: {{ required "Missing chart name" .Chart.Name }}
+          {{- if eq .Values.kyma.enabled false }}
+          {{- if eq .Values.keycloak.enabled false }}
+          lifecycle:
+            postStart:
+              exec:
+                command: 
+                - "/bin/sh"
+                - "-c"
+                - >
+                  sed -i 's/username="dirigible"/username="{{required "Missing chart name" .Values.dirigible.username }}"/g' /usr/local/tomcat/conf/tomcat-users.xml &&
+                  sed -i 's/password="dirigible"/password="{{required "Missing chart name" .Values.dirigible.password }}"/g' /usr/local/tomcat/conf/tomcat-users.xml
+          {{- end }}
+          {{- end }}
           volumeMounts:
           - name: dirigible-temp-data
             mountPath: /usr/local/tomcat/target

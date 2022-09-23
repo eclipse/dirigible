@@ -64,8 +64,7 @@ public class CsvimDefinitionsTopologicalSorter {
 				}
 			}
 		} catch (SQLException exception) {
-			logger.error(String.format("An error occurred while trying to get metadata. %s", exception.getMessage()),
-					exception);
+			if (logger.isErrorEnabled()) {logger.error(String.format("An error occurred while trying to get metadata. %s", exception.getMessage()), exception);}
 		}
 	}
 
@@ -112,12 +111,10 @@ public class CsvimDefinitionsTopologicalSorter {
 							}
 						}
 					} catch (SQLException exception) {
-						logger.error(String.format("An error occurred while trying to get metadata. %s",
-								exception.getMessage()), exception);
+						if (logger.isErrorEnabled()) {logger.error(String.format("An error occurred while trying to get metadata. %s", exception.getMessage()), exception);}
 					}
 				} else {
-					throw new SQLException(
-							String.format("Cyclic dependency in %s ", csvFileDefinition.getTable()));
+					throw new SQLException(String.format("Cyclic dependency in %s ", csvFileDefinition.getTable()));
 				}
 			}
 		}

@@ -11,14 +11,25 @@
  */
 package org.eclipse.dirigible.engine.js.service;
 
-import javax.ws.rs.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.PATCH;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
-import org.eclipse.dirigible.engine.js.processor.JavascriptEngineProcessor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
@@ -30,10 +41,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * Front facing REST service serving the Javascript backend services.
  */
@@ -43,11 +50,15 @@ import java.lang.reflect.InvocationTargetException;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class JavascriptRestService extends AbstractRestService implements IRestService {
 
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(JavascriptRestService.class.getCanonicalName());
 	
 	/** The Constant DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME. */
 	private static final String DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME = "DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME";
+
+	/** The Constant DEFAULT_DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME. */
+	private static final String DEFAULT_DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME = "org.eclipse.dirigible.graalium.handler.GraaliumJavascriptHandler";
 	
 	/** The Constant HTTP_PATH_MATCHER. */
 	private static final String HTTP_PATH_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}";
@@ -310,7 +321,7 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
 
-			getJavascriptHandler().handleRequest(projectName, projectFilePath, projectFilePathParam, debug);
+			getJavascriptHandler().handleRequest(projectName, projectFilePath, projectFilePathParam, null, debug);
 			return Response.ok().build();
 		} catch (RepositoryNotFoundException e) {
 			String message = e.getMessage() + ". Try to publish the service before execution.";
@@ -324,7 +335,7 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 	 * @return the javascript handler
 	 */
 	private JavascriptHandler getJavascriptHandler() {
-		String javascriptHandlerClassName = Configuration.get(DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME, null);
+		String javascriptHandlerClassName = Configuration.get(DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME, DEFAULT_DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME);
 		if (javascriptHandlerClassName == null) {
 			return new DefaultJavascriptHandler();
 		}

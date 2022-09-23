@@ -51,11 +51,12 @@ public class AccessVerifier {
 			throws ServletException, AccessException {
 		List<AccessDefinition> accessDefinitions = new ArrayList<AccessDefinition>();
 		AccessDefinition current = null;
-		for (AccessDefinition accessDefinition : securityCoreService.getAccessDefinitions()) {
+		List<AccessDefinition> existing = securityCoreService.getAccessDefinitions();
+		for (AccessDefinition accessDefinition : existing) {
 			if (scope.equalsIgnoreCase(accessDefinition.getScope()) && path.startsWith(accessDefinition.getPath())
 					&& (accessDefinition.getMethod().equals("*") || method.equals(accessDefinition.getMethod()))) {
-				logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", path, method,
-						accessDefinition.getLocation()));
+				if (logger.isDebugEnabled()) {logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", path, method,
+						accessDefinition.getLocation()));}
 				if ((current == null) || (accessDefinition.getPath().length() > current.getPath().length())) {
 					current = accessDefinition;
 					accessDefinitions.clear();
@@ -66,7 +67,7 @@ public class AccessVerifier {
 			}
 		}
 		if (accessDefinitions.isEmpty()) {
-			logger.trace(String.format("URI [%s] with HTTP method [%s] is NOT secured", path, method));
+			if (logger.isTraceEnabled()) {logger.trace(String.format("URI [%s] with HTTP method [%s] is NOT secured", path, method));}
 		}
 		return accessDefinitions;
 	}

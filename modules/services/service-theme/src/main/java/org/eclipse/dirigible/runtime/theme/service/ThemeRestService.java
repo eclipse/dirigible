@@ -207,7 +207,7 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 		}
 
 		final String message = String.format("There is no resource at the specified path: %s", repositoryPath);
-		logger.error(message);
+		if (logger.isErrorEnabled()) {logger.error(message);}
 		return createErrorResponseNotFound(message);
 	}
 

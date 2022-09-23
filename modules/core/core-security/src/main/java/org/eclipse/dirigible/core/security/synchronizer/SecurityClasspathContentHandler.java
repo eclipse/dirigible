@@ -51,7 +51,7 @@ public class SecurityClasspathContentHandler extends AbstractClasspathContentHan
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Security Access or Roles artifact at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered Security Access or Roles artifact at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

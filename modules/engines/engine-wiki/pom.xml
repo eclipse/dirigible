@@ -56,7 +56,11 @@
             <artifactId>dirigible-service-core</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-log</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
 		
 		<dependency>
 		    <groupId>org.eclipse.mylyn.docs</groupId>
@@ -67,12 +71,23 @@
 		    <groupId>com.vladsch.flexmark</groupId>
 		    <artifactId>flexmark-all</artifactId>
 		    <version>${flexmark.version}</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>com.ibm.icu</groupId>
+		    		<artifactId>icu4j</artifactId>
+		    	</exclusion>
+		    </exclusions>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.ibm.icu</groupId>
+			<artifactId>icu4j</artifactId>
+			<version>${icu4j.version}</version>
+		</dependency>
+		
     </dependencies>
 
     <properties>
-    	<wikitext.version>3.0.42</wikitext.version>
-    	<flexmark.version>0.64.0</flexmark.version>
         <license.header.location>../../../licensing-header.txt</license.header.location>
     </properties>
 

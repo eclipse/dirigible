@@ -19,13 +19,14 @@ Entity.prototype.dataName = null;
 Entity.prototype.dataQuery = null; // database query in case of a report type of the entity
 Entity.prototype.dataCount = null; // database query for the count of the entities
 Entity.prototype.title = '';
+Entity.prototype.caption = '';
 Entity.prototype.tooltip = '';
-Entity.prototype.icon = 'file-o';
+Entity.prototype.icon = '/services/v4/web/resources/unicons/file.svg';
 Entity.prototype.menuLabel = ''; // the visible name of the menu
 Entity.prototype.menuIndex = 100;
 Entity.prototype.layoutType = 'MANAGE';
 Entity.prototype.perspectiveName = 'Entities';
-Entity.prototype.perspectiveIcon = 'files-o';
+Entity.prototype.perspectiveIcon = '/services/v4/web/resources/unicons/copy.svg';
 Entity.prototype.perspectiveOrder = 100;
 Entity.prototype.feedUrl = null;
 Entity.prototype.feedUsername = null;
@@ -37,7 +38,7 @@ Entity.prototype.roleWrite = null;
 Entity.prototype.projectionReferencedModel = null;
 Entity.prototype.projectionReferencedEntity = null;
 
-Entity.prototype.clone = function() {
+Entity.prototype.clone = function () {
 	return mxUtils.clone(this);
 };
 
@@ -78,7 +79,7 @@ Property.prototype.feedPropertyName = null; // the matching property name from t
 Property.prototype.roleRead = null; // the matching property name from the read role
 Property.prototype.roleWrite = null; // the matching property name from the write role
 
-Property.prototype.clone = function() {
+Property.prototype.clone = function () {
 	return mxUtils.clone(this);
 };
 

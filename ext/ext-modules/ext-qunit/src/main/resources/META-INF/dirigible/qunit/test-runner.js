@@ -9,35 +9,35 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-(function(){
-"use strict";
-	exports.run = function(QUnit, config){
-		if(arguments.length == 1){
+(function () {
+	"use strict";
+	exports.run = function (QUnit, config) {
+		if (arguments.length == 1) {
 			//try to guess using well-known properties in QUnit
-			if(!arguments[0].version && !arguments[0].assert){
+			if (!arguments[0].version && !arguments[0].assert) {
 				config = arguments[0];
 				QUnit = undefined;
 			}
 		}
 		config = config || {};
-		var console_reporter,svc_reporter;
-		if(!config["disable-console-reporter"])
+		var console_reporter, svc_reporter;
+		if (!config["disable-console-reporter"])
 			console_reporter = require("qunit/reporters/console-reporter");
-		if(!config["disable-service-reporter"])
+		if (!config["disable-service-reporter"])
 			svc_reporter = require("qunit/reporters/svc-reporter");
-		if(!QUnit){
-			QUnit = require('qunit/qunit');	
+		if (!QUnit) {
+			QUnit = require('qunit/qunit');
 		} else {
-			if(console_reporter)
+			if (console_reporter)
 				console_reporter.QUnit = QUnit;
-			if(svc_reporter)
+			if (svc_reporter)
 				svc_reporter.QUnit = QUnit;
 		}
 		require("test/runner").run({
-			"execute": function(){
-					QUnit.load();
-				}.bind(this),
+			"execute": function () {
+				QUnit.load();
+			}.bind(this),
 			"serviceReporter": svc_reporter
-		});	
+		});
 	};
 })();

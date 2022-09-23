@@ -183,7 +183,7 @@ public class WorkspaceProcessor {
             isGitProject = projectFile.exists() && FileUtils.isSymlink(projectFile);
         }
 
-        if (isGitProject) {
+        if (isGitProject && projectFile != null) {
             Files.delete(projectFile.toPath());
         } else {
             workspaceObject.deleteProject(project);
@@ -691,15 +691,15 @@ public class WorkspaceProcessor {
             String[] modules = ExtensionsServiceFacade.getExtensions(EXTENSION_POINT_IDE_WORKSPACE_ON_SAVE);
             for (String module : modules) {
                 try {
-                    logger.trace("Workspace On Save Extension: {} triggered...", module);
+                	if (logger.isTraceEnabled()) {logger.trace("Workspace On Save Extension: {} triggered...", module);}
                     ScriptEngineExecutorsManager.executeServiceModule("javascript", module, context);
-                    logger.trace("Workspace On Save Extension: {} finshed.", module);
+                    if (logger.isTraceEnabled()) {logger.trace("Workspace On Save Extension: {} finshed.", module);}
                 } catch (Exception | Error e) {
-                    logger.error(e.getMessage(), e);
+                	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
                 }
             }
         } catch (ExtensionsException e) {
-            logger.error(e.getMessage(), e);
+        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
         }
     }
 

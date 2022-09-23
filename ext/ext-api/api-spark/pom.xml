@@ -154,7 +154,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
-			<version>1.7.36</version>
+			<version>2.0.2</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
@@ -176,16 +176,9 @@
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-<!-- Conflicts with other dependencies -->
-<!--		<dependency>-->
-<!--			<groupId>org.eclipse.dirigible</groupId>-->
-<!--			<artifactId>dirigible-engine-javascript-graalvm</artifactId>-->
-<!--			<version>7.0.0-SNAPSHOT</version>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-derby</artifactId>
+			<artifactId>dirigible-database-h2</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>

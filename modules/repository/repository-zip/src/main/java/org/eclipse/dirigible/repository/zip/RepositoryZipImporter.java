@@ -115,7 +115,7 @@ public class RepositoryZipImporter {
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override,
 			boolean excludeRootFolderName, Map<String, String> filter) throws RepositoryImportException {
 
-		logger.debug("importZip started...");
+		if (logger.isDebugEnabled()) {logger.debug("importZip started...");}
 
 		try {
 			try {
@@ -130,23 +130,23 @@ public class RepositoryZipImporter {
                     name = Paths.get(FilenameUtils.normalize(name)).normalize().toString();
                     if (excludeRootFolderName && (parentFolder == null)) {
                         parentFolder = name;
-                        logger.debug("importZip parentFolder: " + parentFolder);
+                        if (logger.isDebugEnabled()) {logger.debug("importZip parentFolder: " + parentFolder);}
                         continue;
                     }
 
 					String entryName = getEntryName(entry, parentFolder, excludeRootFolderName);
 					entryName = Paths.get(FilenameUtils.normalize(entryName)).normalize().toString();
 					entryName = entryName.replace('\\', '/');
-					logger.debug("importZip entryName: " + entryName);
+					if (logger.isDebugEnabled()) {logger.debug("importZip entryName: " + entryName);}
 					String outpath = relativeRoot + ((relativeRoot.endsWith(IRepository.SEPARATOR)) ? "" : IRepository.SEPARATOR) + entryName;
-					logger.debug("importZip outpath: " + outpath);
+					if (logger.isDebugEnabled()) {logger.debug("importZip outpath: " + outpath);}
 
 					if (filter != null) {
 						for (Map.Entry<String, String> forReplacement : filter.entrySet()) {
 							outpath = outpath.replace(forReplacement.getKey(), forReplacement.getValue());
 						}
 					}
-					logger.debug("importZip outpath replaced: " + outpath);
+					if (logger.isDebugEnabled()) {logger.debug("importZip outpath replaced: " + outpath);}
 
 					try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
 						IOUtils.copy(zipInputStream, output);
@@ -158,9 +158,9 @@ public class RepositoryZipImporter {
 								String extension = ContentTypeHelper.getExtension(name);
 								String mimeType = ContentTypeHelper.getContentType(extension);
 								boolean isBinary = ContentTypeHelper.isBinary(mimeType);
-								logger.debug("importZip creating resource: " + outpath);
+								if (logger.isDebugEnabled()) {logger.debug("importZip creating resource: " + outpath);}
 								if (mimeType != null) {
-									logger.debug("importZip creating resource is binary?: " + isBinary);
+									if (logger.isDebugEnabled()) {logger.debug("importZip creating resource is binary?: " + isBinary);}
 									repository.createResource(outpath, content, isBinary, mimeType, override);
 
 								} else {
@@ -169,12 +169,12 @@ public class RepositoryZipImporter {
 								}
 							} else {
 								if (outpath.endsWith(IRepository.SEPARATOR)) {
-									logger.debug("importZip creating collection: " + outpath);
+									if (logger.isDebugEnabled()) {logger.debug("importZip creating collection: " + outpath);}
 									repository.createCollection(outpath);
 								}
 							}
 						} catch (Exception e) {
-							logger.error(String.format("Error importing %s", outpath), e);
+							if (logger.isErrorEnabled()) {logger.error(String.format("Error importing %s", outpath), e);}
 						}
 					}
 				}
@@ -185,7 +185,7 @@ public class RepositoryZipImporter {
 			throw new RepositoryImportException(e);
 		}
 
-		logger.debug("importZip ended.");
+		if (logger.isDebugEnabled()) {logger.debug("importZip ended.");}
 	}
 
 	/**

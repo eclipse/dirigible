@@ -53,7 +53,7 @@ public class CsvimClasspathContentHandler extends AbstractClasspathContentHandle
 			}
 
 		} catch (IOException e) {
-			logger.error("Predelivered CSVIM at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered CSVIM at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

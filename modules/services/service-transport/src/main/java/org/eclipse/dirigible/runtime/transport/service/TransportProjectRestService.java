@@ -95,7 +95,7 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		try {
 			return importProject(path, false, files);
 		} catch(IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			return createErrorResponseInternalServerError(FILE_UPLOAD_FAILED);
 		}
 
@@ -121,7 +121,7 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		try {
 			return importProject(workspace, true, files);
 		} catch(IOException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			return createErrorResponseInternalServerError(FILE_UPLOAD_FAILED);
 		}
 	}

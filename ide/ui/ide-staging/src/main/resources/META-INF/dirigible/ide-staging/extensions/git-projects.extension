@@ -1,0 +1,5 @@
+{
+    "module": "ide-staging/services/staging-view.js",
+    "extensionPoint": "ide-view",
+    "description": "Git Staging View"
+}

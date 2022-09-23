@@ -9,7 +9,12 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import com.datastax.driver.core.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.dirigible.api.cassandra.CassandraFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.junit.Before;
@@ -17,11 +22,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.testcontainers.containers.CassandraContainer;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.KeyspaceMetadata;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.datastax.driver.core.Session;
 
 public class CassandraFacadeTest {
 

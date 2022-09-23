@@ -71,9 +71,9 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 			this.writer.write(message);
 			this.writer.write("\n");
 			this.writer.flush();
-			logger.info(message);
+			if (logger.isInfoEnabled()) {logger.info(message);}
 		} catch (IOException e) {
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 	}
 
@@ -118,7 +118,7 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 		try {
 			this.writer.close();
 		} catch (IOException e) {
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 	}
 
@@ -255,7 +255,7 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 	 */
 	@Override
 	public void tableSelectSQL(String selectSQL) {
-		logger.debug("Table select SQL script is: " + selectSQL, SEVERITY_INFO);
+		if (logger.isDebugEnabled()) {logger.debug("Table select SQL script is: " + selectSQL, SEVERITY_INFO);}
 		
 	}
 
@@ -266,7 +266,7 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 	 */
 	@Override
 	public void tableInsertSQL(String insertSQL) {
-		logger.debug("Table select SQL script is: " + insertSQL, SEVERITY_INFO);
+		if (logger.isDebugEnabled()) {logger.debug("Table select SQL script is: " + insertSQL, SEVERITY_INFO);}
 	}
 
 	/**
@@ -277,7 +277,7 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 	 */
 	@Override
 	public void tableSkipped(String table, String reason) {
-		logger.debug("Table " + table + " has been skipped due to: " + reason, SEVERITY_WARNING);
+		if (logger.isDebugEnabled()) {logger.debug("Table " + table + " has been skipped due to: " + reason, SEVERITY_WARNING);}
 		
 	}
 
@@ -287,7 +287,7 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 	@Override
 	public void stopTransfer() {
 		stopped = true;
-		logger.debug("Transfer has been stopped.", SEVERITY_WARNING);
+		if (logger.isDebugEnabled()) {logger.debug("Transfer has been stopped.", SEVERITY_WARNING);}
 	}
 	
 	/**

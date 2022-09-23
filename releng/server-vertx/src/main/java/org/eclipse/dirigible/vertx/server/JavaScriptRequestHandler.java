@@ -43,7 +43,7 @@ public class JavaScriptRequestHandler<E> implements Handler<E> {
 			String module = request.path().substring(ROUTE.length() - 2);
     		MainVerticle.DIRIGIBLE.execute("javascript", module, context);
 		} catch (ScriptingException | ContextException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 		
 		response.end();

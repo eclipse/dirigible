@@ -11,18 +11,19 @@
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
-import org.eclipse.dirigible.database.sql.DataType;
-import org.eclipse.dirigible.database.sql.ISqlDialect;
-import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.eclipse.dirigible.database.sql.DataType;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.lang.IllegalStateException;
 
 /**
  * The Create Table Builder.
@@ -170,8 +171,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      */
     public TABLE_BUILDER column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity, Boolean isFuzzyIndexEnabled,
                                 String... args) {
-        logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey + ", isNullable: "
-                + isNullable + ", isUnique: " + isUnique + ", isIdentity: " + isIdentity + ", args: " + Arrays.toString(args));
+    	if (logger.isTraceEnabled()) {logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey + ", isNullable: "
+                + isNullable + ", isUnique: " + isUnique + ", isIdentity: " + isIdentity + ", args: " + Arrays.toString(args));}
         String[] definition = new String[]{name, getDialect().getDataTypeName(type)};
         String[] column;
         if (isIdentity) {

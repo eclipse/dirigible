@@ -82,13 +82,13 @@ public class MessagingProducer implements Runnable {
 				TextMessage textMessage = session.createTextMessage(this.message);
 
 				producer.send(textMessage);
-				logger.trace(format("Message sent in [{0}]", this.name));
+				if (logger.isTraceEnabled()) {logger.trace(format("Message sent in [{0}]", this.name));}
 			} finally {
 				session.close();
 				connection.close();
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 }

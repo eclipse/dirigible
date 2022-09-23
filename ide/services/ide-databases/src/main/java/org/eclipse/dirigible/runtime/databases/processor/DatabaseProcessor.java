@@ -174,7 +174,7 @@ public class DatabaseProcessor {
 			try {
 				type = DatabaseArtifactTypes.valueOf(kind);
 			} catch (Exception e) {
-				logger.warn("Kind is unknown", e);
+				if (logger.isWarnEnabled()) {logger.warn("Kind is unknown", e);}
 			}
 			switch (type) {
 				case PROCEDURE: metadata = DatabaseMetadataHelper.getProcedureMetadataAsJson(dataSource, schema, artifact); break;
@@ -329,26 +329,26 @@ public class DatabaseProcessor {
 								results.add(DatabaseResultSetHelper.print(rs, LIMITED));
 							}
 						} catch (SQLException e) {
-							logger.warn(e.getMessage(), e);
+							if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 							errors.add(e.getMessage());
 						}
 					}
 
 					@Override
 					public void error(Throwable t) {
-						logger.warn(t.getMessage(), t);
+						if (logger.isWarnEnabled()) {logger.warn(t.getMessage(), t);}
 						errors.add(t.getMessage());
 					}
 				});
 			} catch (SQLException e) {
-				logger.warn(e.getMessage(), e);
+				if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				errors.add(e.getMessage());
 			} finally {
 				if (connection != null) {
 					try {
 						connection.close();
 					} catch (SQLException e) {
-						logger.warn(e.getMessage(), e);
+						if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 					}
 				}
 			}
@@ -414,26 +414,26 @@ public class DatabaseProcessor {
 								results.add(DatabaseResultSetHelper.print(rs, LIMITED));
 							}
 						} catch (SQLException e) {
-							logger.warn(e.getMessage(), e);
+							if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 							errors.add(e.getMessage());
 						}
 					}
 
 					@Override
 					public void error(Throwable t) {
-						logger.warn(t.getMessage(), t);
+						if (logger.isWarnEnabled()) {logger.warn(t.getMessage(), t);}
 						errors.add(t.getMessage());
 					}
 				});
 			} catch (SQLException e) {
-				logger.warn(e.getMessage(), e);
+				if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 				errors.add(e.getMessage());
 			} finally {
 				if (connection != null) {
 					try {
 						connection.close();
 					} catch (SQLException e) {
-						logger.warn(e.getMessage(), e);
+						if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 					}
 				}
 			}
@@ -528,7 +528,7 @@ public class DatabaseProcessor {
 			byte[] result = baos.toByteArray();
 			return result;
 		} catch(IOException | SQLException e) {
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 			return e.getMessage().getBytes();
 		}
 	}
@@ -595,7 +595,7 @@ public class DatabaseProcessor {
 	 * @throws DatabasesException the databases exception
 	 */
 	public void updateDefinedDatabase(DatabaseDefinition definition) throws DatabasesException {
-		databasesCoreService.createDatabase(definition);
+		databasesCoreService.updateDatabase(definition);
 	}
 	
 	/**

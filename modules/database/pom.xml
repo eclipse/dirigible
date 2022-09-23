@@ -18,7 +18,6 @@
         <module>database-custom</module>
 		<module>database-data-models</module>
 		<module>database-data-structures</module>
-		<module>database-derby</module>
 		<module>database-managed</module>
 		<module>database-persistence</module>
 		<module>database-sql</module>
@@ -28,6 +27,11 @@
 		<module>database-databases</module>
 		<module>database-defined</module>
 		<module>database-data-transfer</module>
+		<module>database-sql-h2</module>
+		<module>database-sql-hana</module>
+		<module>database-sql-mysql</module>
+		<module>database-sql-postgres</module>
+		<module>database-sql-sybase</module>
 	</modules>
 
 	<properties>

@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
@@ -73,7 +76,7 @@ public class WebSynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized (WebSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Web...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing Web...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -87,17 +90,17 @@ public class WebSynchronizer extends AbstractSynchronizer {
 						clearCache();
 						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Web failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Web failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Web files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Web files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Webs.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Webs.");}
 				afterSynchronizing();
 			}
 		}
@@ -124,11 +127,11 @@ public class WebSynchronizer extends AbstractSynchronizer {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void registerPredeliveredWeb(String webPath) throws IOException {
+	public void registerPredeliveredProject(String webPath) throws IOException {
 		InputStream in = WebSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + webPath);
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-			WebModel webModel = webCoreService.parseWeb(webPath, json);
+			WebModel webModel = webCoreService.parseProject(webPath, json);
 			WEB_PREDELIVERED.put(webPath, webModel);
 		} finally {
 			if (in != null) {
@@ -148,11 +151,11 @@ public class WebSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing Webs from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing Webs from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing Webs from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Webs from Registry.");}
 	}
 
 	/**
@@ -188,7 +191,7 @@ public class WebSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up Webs...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up Webs...");}
 		super.cleanup();
 
 		try {
@@ -196,14 +199,14 @@ public class WebSynchronizer extends AbstractSynchronizer {
 			for (WebModel webModel : webModels) {
 				if (!WEB_SYNCHRONIZED.contains(webModel.getGuid())) {
 					webCoreService.removeWeb(webModel.getGuid());
-					logger.warn("Cleaned up Web [{}]", webModel.getGuid());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up Web [{}]", webModel.getGuid());}
 				}
 			}
 		} catch (WebCoreException e) {
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up Webs.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up Webs.");}
 	}
 
 	/**
@@ -212,7 +215,7 @@ public class WebSynchronizer extends AbstractSynchronizer {
 	 * @throws SchedulerException the scheduler exception
 	 */
 	private void updateWebExposures() throws SchedulerException {
-		logger.trace("Start Web Registering...");
+		if (logger.isTraceEnabled()) {logger.trace("Start Web Registering...");}
 
 		for (String webName : WEB_SYNCHRONIZED) {
 			if (!WebExposureManager.existExposableProject(webName)) {
@@ -223,10 +226,10 @@ public class WebSynchronizer extends AbstractSynchronizer {
 						WebExposureManager.registerExposableProject(webName, webModel.getExposes());
 						applyArtefactState(webModel, WEB_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 					} else {
-						logger.trace(webName + " skipped due to lack of exposures");
+						if (logger.isTraceEnabled()) {logger.trace(webName + " skipped due to lack of exposures");}
 					}
 				} catch (WebCoreException e) {
-					logger.error(e.getMessage(), e);
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					applyArtefactState(webModel, WEB_ARTEFACT, ArtefactState.FAILED_CREATE, e.getMessage());
 				}
 			}
@@ -245,13 +248,13 @@ public class WebSynchronizer extends AbstractSynchronizer {
 					applyArtefactState(webModel, WEB_ARTEFACT, ArtefactState.SUCCESSFUL_DELETE);
 				}
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				applyArtefactState(webModel, WEB_ARTEFACT, ArtefactState.FAILED_DELETE, e.getMessage());
 			}
 		}
 
-		logger.trace("Registered Projects: " + registerdProjects.size());
-		logger.trace("Done registering Projects.");
+		if (logger.isTraceEnabled()) {logger.trace("Registered Projects: " + registerdProjects.size());}
+		if (logger.isTraceEnabled()) {logger.trace("Done registering Projects.");}
 	}
 
 	/**
@@ -267,12 +270,12 @@ public class WebSynchronizer extends AbstractSynchronizer {
 	 * @throws SynchronizationException the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered Webs...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered Webs...");}
 		// Webs
 		for (WebModel webModel : WEB_PREDELIVERED.values()) {
 			synchronizeWeb(webModel);
 		}
-		logger.trace("Done synchronizing predelivered Jobs.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered Jobs.");}
 	}
 
 	/**
@@ -285,17 +288,42 @@ public class WebSynchronizer extends AbstractSynchronizer {
 		try {
 			if (!webCoreService.existsWeb(webModel.getLocation())) {
 				webCoreService.createWeb(webModel.getLocation(), webModel.getGuid(), webModel.getExposed(), webModel.getHash());
-				logger.info("Synchronized a new Web [{}]", webModel.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Web [{}]", webModel.getLocation());}
+				applyArtefactState(webModel, WEB_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				WebModel existing = webCoreService.getWeb(webModel.getLocation());
 				if (!webModel.equals(existing)) {
 					webCoreService.updateWeb(webModel.getLocation(), webModel.getGuid(), webModel.getExposed(), webModel.getHash());
-					logger.info("Synchronized a modified Web [{}]", webModel.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Web [{}]", webModel.getLocation());}
+					applyArtefactState(webModel, WEB_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			WEB_SYNCHRONIZED.add(webModel.getGuid());
 		} catch (WebCoreException e) {
+			logProblem(e.getMessage(), ERROR_TYPE, webModel.getLocation(), WEB_ARTEFACT.getId());
 			throw new SynchronizationException(e);
+		}
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "WEB";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-core-security";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, WebSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
 		}
 	}
 

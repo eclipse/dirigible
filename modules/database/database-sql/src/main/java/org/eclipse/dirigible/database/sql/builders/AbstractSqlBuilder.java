@@ -11,13 +11,12 @@
  */
 package org.eclipse.dirigible.database.sql.builders;
 
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.ISqlBuilder;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
-import org.eclipse.dirigible.database.sql.dialects.mysql.MySQLSqlDialect;
-
-import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * The Abstract SQL Builder.
@@ -106,9 +105,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return the escape symbol
 	 */
 	public String getEscapeSymbol() {
-		return (getDialect().getClass().equals(MySQLSqlDialect.class))
-				? "`"
-				: "\"";
+		return getDialect().getEscapeSymbol();
 	}
 
 	/**

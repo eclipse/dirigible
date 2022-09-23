@@ -25,6 +25,9 @@ import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
@@ -87,7 +90,7 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized (WikiSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Wiki files...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing Wiki files...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -101,17 +104,17 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 						clearCache();
 						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Wiki files failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Wiki files failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Wiki files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Wiki files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Wiki files.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Wiki files.");}
 			}
 		}
 	}
@@ -164,12 +167,12 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 	 * @throws SynchronizationException the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered Wiki files...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered Wiki files...");}
 		// Wiki
 		for (WikiDefinition wikiDefinition : WIKI_PREDELIVERED.values()) {
 			synchronizeWiki(wikiDefinition);
 		}
-		logger.trace("Done synchronizing predelivered Wiki files.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered Wiki files.");}
 	}
 
 	/**
@@ -182,14 +185,14 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 		try {
 			if (!wikiCoreService.existsWiki(wikiDefinition.getLocation())) {
 				wikiCoreService.createWiki(wikiDefinition.getLocation(), wikiDefinition.getHash());
-				logger.info("Synchronized a new Wiki from location: {}", wikiDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new Wiki from location: {}", wikiDefinition.getLocation());}
 				WIKI_DEFINITIONS.put(wikiDefinition.getLocation(), wikiDefinition);
 				applyArtefactState(wikiDefinition, WIKI_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				WikiDefinition existing = wikiCoreService.getWiki(wikiDefinition.getLocation());
 				if (!wikiDefinition.equals(existing)) {
 					wikiCoreService.updateWiki(wikiDefinition.getLocation(), wikiDefinition.getHash());
-					logger.info("Synchronized a modified Wiki from location: {}", wikiDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified Wiki from location: {}", wikiDefinition.getLocation());}
 					applyArtefactState(wikiDefinition, WIKI_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 					WIKI_DEFINITIONS.put(wikiDefinition.getLocation(), wikiDefinition);
 				}
@@ -197,6 +200,7 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 			WIKI_SYNCHRONIZED.add(wikiDefinition.getLocation());
 		} catch (WikiException e) {
 			applyArtefactState(wikiDefinition, WIKI_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, wikiDefinition.getLocation(), WIKI_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -212,11 +216,11 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing Wiki from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing Wiki from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing Wiki from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Wiki from Registry.");}
 	}
 
 	/**
@@ -261,7 +265,7 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up Wiki files ...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up Wiki files ...");}
 		super.cleanup();
 
 		try {
@@ -269,14 +273,14 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 			for (WikiDefinition wikiDefinition : wikiDefinitions) {
 				if (!WIKI_SYNCHRONIZED.contains(wikiDefinition.getLocation())) {
 					wikiCoreService.removeWiki(wikiDefinition.getLocation());
-					logger.warn("Cleaned up Wiki from location: {}", wikiDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up Wiki from location: {}", wikiDefinition.getLocation());}
 				}
 			}
 		} catch (WikiException e) {
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up Wiki files.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up Wiki files.");}
 	}
 	
 	/**
@@ -301,10 +305,31 @@ public class WikiSynchronizer extends AbstractSynchronizer {
 				path = IRepositoryStructure.PATH_REGISTRY_PUBLIC + path + FILE_EXTENSION_HTML;
 				repository.createResource(path, rendered.getBytes());
 			} else {
-				logger.error("Wiki file has been deleted" + path);
+				if (logger.isErrorEnabled()) {logger.error("Wiki file has been deleted" + path);}
 			}
 		}
-		
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "WIKI";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-engine-wiki";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, WikiSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
+		}
 	}
 
 }

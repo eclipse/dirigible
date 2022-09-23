@@ -11,12 +11,12 @@
  */
 package org.eclipse.dirigible.engine.command.processor;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.http.HttpResponseFacade;
@@ -182,8 +182,8 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 	 */
 	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
 		
-		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
-		logger.trace("module or code=" + moduleOrCode); //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("entering: executeServiceModule()");} //$NON-NLS-1$
+		if (logger.isTraceEnabled()) {logger.trace("module or code=" + moduleOrCode);} //$NON-NLS-1$
 
 		if (moduleOrCode == null) {
 			throw new ScriptingException("Command module name cannot be null");
@@ -205,7 +205,7 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		try {
 			commandDefinition = GsonHelper.GSON.fromJson(commandSource, CommandDefinition.class);
 		} catch (Exception e2) {
-			logger.error(e2.getMessage(), e2);
+			if (logger.isErrorEnabled()) {logger.error(e2.getMessage(), e2);}
 			throw new ScriptingException(e2);
 		}
 
@@ -218,10 +218,10 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		try {
 			HttpResponseFacade.setContentType(commandDefinition.getContentType());
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 		
-		logger.trace("exiting: executeServiceModule()");
+		if (logger.isTraceEnabled()) {logger.trace("exiting: executeServiceModule()");}
 		return result;
 	}
 
@@ -242,12 +242,12 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		try {
 			args = ProcessUtils.translateCommandline(commandLine);
 		} catch (Exception e1) {
-			logger.error(e1.getMessage(), e1);
+			if (logger.isErrorEnabled()) {logger.error(e1.getMessage(), e1);}
 			throw new ScriptingException(e1);
 		}
 
 		if (shouldLogCommand()) {
-			logger.debug("executing command=" + commandLine); //$NON-NLS-1$
+			if (logger.isDebugEnabled()) {logger.debug("executing command=" + commandLine);} //$NON-NLS-1$
 		}
 
 		ByteArrayOutputStream out;
@@ -286,11 +286,11 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 				} while (!deadYet);
 
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				throw new IOException(e);
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new ScriptingException(e);
 		}
 		result = out.toString(StandardCharsets.UTF_8);

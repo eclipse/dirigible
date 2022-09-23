@@ -68,7 +68,7 @@ public class DataTransferSortableTableWrapper implements ITopologicallySortable 
 		for (PersistenceTableRelationModel dependency: this.tableModel.getRelations()) {
 			String dependencyName = dependency.getToTableName();
 			if (!wrappers.containsKey(dependencyName)) {
-				logger.warn("Dependency is not present in this cycle: " + dependencyName);
+				if (logger.isWarnEnabled()) {logger.warn("Dependency is not present in this cycle: " + dependencyName);}
 			} else {
 				dependencies.add(wrappers.get(dependencyName));
 			}

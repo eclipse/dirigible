@@ -1,0 +1,5 @@
+{
+    "module": "ide-jobs/services/job-logs-window.js",
+    "extensionPoint": "ide-dialog-window",
+    "description": "Job logs window"
+}

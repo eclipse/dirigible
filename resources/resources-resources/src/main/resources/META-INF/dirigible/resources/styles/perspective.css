@@ -15,38 +15,10 @@ body {
   flex-direction: column;
   overflow: hidden;
 }
-/* header menus */
-.dg-menu__backdrop {
-  background-color: transparent;
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  /* Just below the dialogs */
-  z-index: 200;
-}
-.dg-headermenu--overflow {
-  overflow-y: auto !important;
-  max-height: 90vh;
-  flex-wrap: nowrap;
-  background-color: var(--sapList_Background, #fff);
-}
-.dg-fixed-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-}
-.dg-hamburger-menu .fd-menu,
-.fd-menu__sublist {
-  width: auto;
-}
-.dg-backdrop-element {
-  /* Just below the dialogs, just above the backdrop */
-  z-index: 210;
+/* header */
+.dg-main-header {
+  width: 100%;
+  height: auto;
 }
 @media only screen and (max-width: 1280px) {
   .dg-menubar {
@@ -124,7 +96,7 @@ body {
   fill: var(--sapContent_NonInteractiveIconColor, #6a6d70);
   width: 100%;
   height: 100%;
-  padding: 0.7rem;
+  padding: 0.6rem;
 }
 /* Statusbar */
 .dg-statusbar {

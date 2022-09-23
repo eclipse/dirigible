@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Templating - Javascript</name>
-	<artifactId>dirigible-core-templating-javascript</artifactId>
+	<name>Templating - Javascript</name>
+	<artifactId>dirigible-templating-javascript</artifactId>
     <packaging>jar</packaging>
 
     <build>
@@ -33,7 +33,7 @@
     <dependencies>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-core-templating</artifactId>
+			<artifactId>dirigible-templating-core</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
@@ -50,7 +50,7 @@
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-javascript-graalvm</artifactId>
+			<artifactId>dirigible-engine-javascript-graalium</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>

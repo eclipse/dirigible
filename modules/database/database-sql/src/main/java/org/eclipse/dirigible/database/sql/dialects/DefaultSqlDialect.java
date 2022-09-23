@@ -656,5 +656,14 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	public String getFuzzySearchIndex() {
 		return " ";
 	}
+	
+	/**
+	 * Gets the escape symbol.
+	 *
+	 * @return the escape symbol
+	 */
+	public String getEscapeSymbol() {
+		return "\"";
+	}
 
 }

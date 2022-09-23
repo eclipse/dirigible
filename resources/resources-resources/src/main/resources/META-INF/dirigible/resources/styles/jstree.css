@@ -2,6 +2,11 @@
   --jstree-fiori-animation: 0.2s;
   --jstree-spinner-animation: 0.8s;
 }
+/* jsTree list mode */
+.jstree-list-mode .jstree-leaf > .jstree-ocl.jstree-icon:empty {
+  width: 0.25rem;
+  visibility: hidden;
+}
 /* jsTree fiori theme */
 .jstree-fiori {
   font-family: var(--sapFontFamily, "72", "72full", Arial, Helvetica);

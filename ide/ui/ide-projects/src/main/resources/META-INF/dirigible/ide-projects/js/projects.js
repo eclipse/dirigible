@@ -1204,7 +1204,7 @@ projectsView.controller('ProjectsViewController', [
                         msg.data.formData[0].value,
                     ).then(function (response) {
                         if (response.status === 201) {
-                            if (msg.data.formData[0].value !== $scope.selectedWorkspace.name)
+                            if (msg.data.formData[0].value === $scope.selectedWorkspace.name)
                                 $scope.reloadWorkspace(); // Temp
                             messageHub.setStatusMessage(`Duplicated '${originalPath}'`);
                         } else {
@@ -1339,40 +1339,22 @@ projectsView.controller('ProjectsViewController', [
                                 break;
                             }
                         }
-                        messageHub.updateFormDialog(
-                            "projectGenerateForm2",
-                            formData,
-                            "Generating...",
-                        );
+                        if (formData.length > 0) {
+                            messageHub.updateFormDialog(
+                                "projectGenerateForm2",
+                                formData,
+                                "Generating...",
+                            );
+                        } else {
+                            generateModel();
+                        }
                     } else {
                         $scope.gmodel.parameters = {};
                         for (let i = 0; i < msg.data.formData.length; i++) {
                             if (msg.data.formData[i].value)
                                 $scope.gmodel.parameters[msg.data.formData[i].id] = msg.data.formData[i].value;
                         }
-                        generateApi.generateFromModel(
-                            $scope.selectedWorkspace.name,
-                            $scope.gmodel.project,
-                            $scope.gmodel.model,
-                            $scope.gmodel.templateId,
-                            $scope.gmodel.parameters
-                        ).then(function (response) {
-                            messageHub.hideFormDialog("projectGenerateForm2");
-                            if (response.status !== 201) {
-                                messageHub.showAlertError(
-                                    'Failed to generate from model',
-                                    `An unexpected error has occurred while trying generate from model '${$scope.gmodel.model}'`
-                                );
-                                messageHub.setStatusError(`Unable to generate from model '${$scope.gmodel.model}'`);
-                            } else {
-                                messageHub.setStatusMessage(`Generated from model '${$scope.gmodel.model}'`);
-                            }
-                            $scope.reloadWorkspace();
-                            for (let key in $scope.gmodel.parameters) {
-                                delete $scope.gmodel.parameters[key];
-                            }
-                            $scope.gmodel.model = '';
-                        });
+                        generateModel();
                     }
                 } else {
                     messageHub.hideFormDialog('projectGenerateForm2');
@@ -1381,6 +1363,32 @@ projectsView.controller('ProjectsViewController', [
             },
             true
         );
+
+        function generateModel() {
+            generateApi.generateFromModel(
+                $scope.selectedWorkspace.name,
+                $scope.gmodel.project,
+                $scope.gmodel.model,
+                $scope.gmodel.templateId,
+                $scope.gmodel.parameters
+            ).then(function (response) {
+                messageHub.hideFormDialog("projectGenerateForm2");
+                if (response.status !== 201) {
+                    messageHub.showAlertError(
+                        'Failed to generate from model',
+                        `An unexpected error has occurred while trying generate from model '${$scope.gmodel.model}'`
+                    );
+                    messageHub.setStatusError(`Unable to generate from model '${$scope.gmodel.model}'`);
+                } else {
+                    messageHub.setStatusMessage(`Generated from model '${$scope.gmodel.model}'`);
+                }
+                $scope.reloadWorkspace();
+                for (let key in $scope.gmodel.parameters) {
+                    delete $scope.gmodel.parameters[key];
+                }
+                $scope.gmodel.model = '';
+            });
+        }
 
         messageHub.onDidReceiveMessage(
             "projects.formDialog.create.file",

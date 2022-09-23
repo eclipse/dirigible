@@ -162,7 +162,7 @@ public class RepositorySearcher {
 				if (countUpdated > 30) {
 					countUpdated = 0;
 					lastUpdated = new Date(0);
-					logger.trace("Full reindexing of the Repository Content...");
+					if (logger.isTraceEnabled()) {logger.trace("Full reindexing of the Repository Content...");}
 				}
 				reindex();
 				lastUpdated = new Date();
@@ -277,7 +277,7 @@ public class RepositorySearcher {
 				}
 			}
 			long end = System.currentTimeMillis();
-			logger.trace("Reindexing of the Repository Content finished in: " + (end - start) + "ms");
+			if (logger.isTraceEnabled()) {logger.trace("Reindexing of the Repository Content finished in: " + (end - start) + "ms");}
 		}
 	}
 

@@ -136,16 +136,16 @@ public class SchedulerManager {
 		if (!LISTENERS.keySet().contains(listener.getLocation())) {
 			IResource resource = getRepository().getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandler());
 			if (!resource.exists()) {
-				logger.error("Listener {} cannot be started, because the handler {} does not exist!", listener.getLocation(), listener.getHandler());
+				if (logger.isErrorEnabled()) {logger.error("Listener {} cannot be started, because the handler {} does not exist!", listener.getLocation(), listener.getHandler());}
 			}
 			MessagingConsumer consumer = new MessagingConsumer(listener.getName(), listener.getType(), listener.getHandler(), 1000);
 			Thread consumerThread = new Thread(consumer);
 			consumerThread.setDaemon(false);
 			consumerThread.start();
 			LISTENERS.put(listener.getLocation(), consumer);
-			logger.info("Listener started: " + listener.getLocation());
+			if (logger.isInfoEnabled()) {logger.info("Listener started: " + listener.getLocation());}
 		} else {
-			logger.warn(format("Message consumer for listener at [{0}] already running!", listener.getLocation()));
+			if (logger.isWarnEnabled()) {logger.warn(format("Message consumer for listener at [{0}] already running!", listener.getLocation()));}
 		}
 	}
 
@@ -160,9 +160,9 @@ public class SchedulerManager {
 		if (consumer != null) {
 			consumer.stop();
 			LISTENERS.remove(listener.getLocation());
-			logger.info("Listener stopped: " + listener.getLocation());
+			if (logger.isInfoEnabled()) {logger.info("Listener stopped: " + listener.getLocation());}
 		} else {
-			logger.warn(format("There is no a message consumer for listener at [{0}] running!", listener.getLocation()));
+			if (logger.isWarnEnabled()) {logger.warn(format("There is no a message consumer for listener at [{0}] running!", listener.getLocation()));}
 		}
 	}
 

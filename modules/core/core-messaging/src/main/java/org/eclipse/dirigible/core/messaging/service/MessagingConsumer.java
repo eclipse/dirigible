@@ -112,7 +112,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	 */
 	public String receiveMessage() {
 		try {
-			logger.info("Starting a message listener for {} ...", this.name);
+			if (logger.isInfoEnabled()) {logger.info("Starting a message listener for {} ...", this.name);}
 
 			ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(SchedulerManager.CONNECTOR_URL_ATTACH);
 
@@ -141,7 +141,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 						if (message == null) {
 							continue;
 						}
-						logger.trace(format("Start processing a received message in [{0}] by [{1}] ...", this.name, this.handler));
+						if (logger.isTraceEnabled()) {logger.trace(format("Start processing a received message in [{0}] by [{1}] ...", this.name, this.handler));}
 						if (message instanceof TextMessage) {
 							Map<Object, Object> context = createMessagingContext();
 							context.put("message", escapeCodeString(((TextMessage) message).getText()));
@@ -149,11 +149,11 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 						} else {
 							throw new MessagingException(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
 						}
-						logger.trace(format("Done processing the received message in [{0}] by [{1}]", this.name, this.handler));
+						if (logger.isTraceEnabled()) {logger.trace(format("Done processing the received message in [{0}] by [{1}]", this.name, this.handler));}
 					}
 				} else {
 					message = consumer.receive(this.timeout);
-					logger.debug(format("Received message in [{0}] by synchronous consumer.", this.name));
+					if (logger.isDebugEnabled()) {logger.debug(format("Received message in [{0}] by synchronous consumer.", this.name));}
 					if (message instanceof TextMessage) {
 						TextMessage textMessage = (TextMessage) message;
 						String text = textMessage.getText();
@@ -185,9 +185,9 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 			context.put("error", escapeCodeString(exception.getMessage()));
 			ScriptEngineExecutorsManager.executeServiceModule(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR, context);
 		} catch (ScriptingException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
-		logger.error(exception.getMessage(), exception);
+		if (logger.isErrorEnabled()) {logger.error(exception.getMessage(), exception);}
 	}
 
 	private Map<Object, Object> createMessagingContext() {

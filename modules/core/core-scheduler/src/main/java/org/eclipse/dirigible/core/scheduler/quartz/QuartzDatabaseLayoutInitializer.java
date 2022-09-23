@@ -66,7 +66,7 @@ public class QuartzDatabaseLayoutInitializer extends AbstractDatabaseLayoutIniti
 				dataSource = DatabaseModule.getDataSource(dataSourceType, dataSourceName);
 			}
 			connection = getDataSource().getConnection();
-			logger.debug("Starting to create the database layout for Quartz...");
+			if (logger.isDebugEnabled()) {logger.debug("Starting to create the database layout for Quartz...");}
 			@SuppressWarnings("rawtypes")
 			SqlFactory sqlFactory = SqlFactory.getNative(connection);
 			if (!sqlFactory.exists(connection, "QUARTZ_JOB_DETAILS")) {
@@ -103,9 +103,9 @@ public class QuartzDatabaseLayoutInitializer extends AbstractDatabaseLayoutIniti
 				createTable(connection, "/quartz/QUARTZ_LOCKS.json");
 			}
 
-			logger.debug("Done creating the database layout for Quartz.");
+			if (logger.isDebugEnabled()) {logger.debug("Done creating the database layout for Quartz.");}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		} finally {
 			if (connection != null) {
 				connection.close();

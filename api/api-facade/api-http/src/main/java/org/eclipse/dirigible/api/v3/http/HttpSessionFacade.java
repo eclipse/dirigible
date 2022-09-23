@@ -56,7 +56,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 				return httpSession;
 			}
 		} catch (ContextException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 		return null;
 	}
@@ -79,7 +79,10 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final String getAttribute(String arg0) {
 		HttpSession session = getSession();
-		return session.getAttribute(arg0) != null ? session.getAttribute(arg0).toString() : null;
+		if (session != null) {
+			return session.getAttribute(arg0) != null ? session.getAttribute(arg0).toString() : null;
+		}
+		return null;
 	}
 
 	/**
@@ -89,7 +92,10 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final String[] getAttributeNames() {
 		HttpSession session = getSession();
-		return Collections.list(session.getAttributeNames()).toArray(new String[] {});
+		if (session != null) {
+			return Collections.list(session.getAttributeNames()).toArray(new String[] {});
+		}
+		return null;
 	}
 	
 	/**
@@ -99,8 +105,11 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final String getAttributeNamesJson() {
 		HttpSession session = getSession();
-		String[] array = Collections.list(session.getAttributeNames()).toArray(new String[] {});
-		return GsonHelper.GSON.toJson(array);
+		if (session != null) { 
+			String[] array = Collections.list(session.getAttributeNames()).toArray(new String[] {});
+			return GsonHelper.GSON.toJson(array);
+		}
+		return null;
 	}
 
 	/**
@@ -110,7 +119,10 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final long getCreationTime() {
 		HttpSession session = getSession();
-		return session.getCreationTime();
+		if (session != null) {
+			return session.getCreationTime();
+		}
+		return 0;
 	}
 
 	/**
@@ -120,7 +132,10 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final String getId() {
 		HttpSession session = getSession();
-		return session.getId();
+		if (session != null) {
+			return session.getId();
+		}
+		return null;
 	}
 
 	/**
@@ -130,7 +145,10 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final long getLastAccessedTime() {
 		HttpSession session = getSession();
-		return session.getLastAccessedTime();
+		if (session != null) {
+			return session.getLastAccessedTime();
+		}
+		return 0;
 	}
 
 	/**
@@ -140,7 +158,10 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final int getMaxInactiveInterval() {
 		HttpSession session = getSession();
-		return session.getMaxInactiveInterval();
+		if (session != null) {
+			return session.getMaxInactiveInterval();
+		}
+		return 0;
 	}
 
 	/**
@@ -148,7 +169,9 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final void invalidate() {
 		HttpSession session = getSession();
-		session.invalidate();
+		if (session != null) {
+			session.invalidate();
+		}
 	}
 
 	/**
@@ -158,7 +181,10 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final boolean isNew() {
 		HttpSession session = getSession();
-		return session.isNew();
+		if (session != null) {
+			return session.isNew();
+		}
+		return false;
 	}
 
 	/**
@@ -171,7 +197,9 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final void setAttribute(String arg0, String arg1) {
 		HttpSession session = getSession();
-		session.setAttribute(arg0, arg1);
+		if (session != null) {
+			session.setAttribute(arg0, arg1);
+		}
 	}
 
 	/**
@@ -182,7 +210,9 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final void removeAttribute(String arg0) {
 		HttpSession session = getSession();
-		session.removeAttribute(arg0);
+		if (session != null) {
+			session.removeAttribute(arg0);
+		}
 	}
 
 	/**
@@ -193,7 +223,9 @@ public class HttpSessionFacade implements IScriptingFacade {
 	 */
 	public static final void setMaxInactiveInterval(int arg0) {
 		HttpSession session = getSession();
-		session.setMaxInactiveInterval(arg0);
+		if (session != null) {
+			session.setMaxInactiveInterval(arg0);
+		}
 	}
 
 	/**

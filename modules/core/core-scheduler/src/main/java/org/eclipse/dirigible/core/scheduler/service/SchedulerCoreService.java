@@ -202,7 +202,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		try {
 			logsRetantionInHours = Integer.parseInt(Configuration.get(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD, logsRetantionInHours + ""));
 		} catch (Throwable e) {
-			logger.warn(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD + " is not correctly set, so it will be backed up to a week timeframe (24x7)");
+			if (logger.isWarnEnabled()) {logger.warn(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD + " is not correctly set, so it will be backed up to a week timeframe (24x7)");}
 			logsRetantionInHours = 24*7;
 		}
 		
@@ -214,7 +214,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 			for (String maybe : emailRecipients) {
 				if (!EmailValidator.getInstance().isValid(maybe)) {
 					emailRecipients = null;
-					logger.warn(DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS + " contains invalid e-mail address: " + maybe);
+					if (logger.isWarnEnabled()) {logger.warn(DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS + " contains invalid e-mail address: " + maybe);}
 					break;
 				}
 			}
@@ -895,7 +895,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		if (template == null) {
 			template = registryResourceExecutor.getRegistryContent(defaultLocation);
 			if (template == null) {
-				logger.error("Template for the e-mail has not been set nor the default one is available");
+				if (logger.isErrorEnabled()) {logger.error("Template for the e-mail has not been set nor the default one is available");}
 				return null;
 			}
 		}
@@ -910,7 +910,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 			byte[] generated = generationEngine.generate(parameters, "~/temp", template);
 			return new String(generated, StandardCharsets.UTF_8);
 		} catch (IOException e) {
-			logger.error("Error on generating the e-mail body: " + e.getMessage(),e);
+			if (logger.isErrorEnabled()) {logger.error("Error on generating the e-mail body: " + e.getMessage(),e);}
 			return null;
 		}
 	}
@@ -948,11 +948,11 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	//		String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts
 			} else {
 				if (emailRecipientsLine != null) {
-					logger.error("DIRIGIBLE_SCHEDULER_EMAIL_* environment variables are not set correctly");
+					if (logger.isErrorEnabled()) {logger.error("DIRIGIBLE_SCHEDULER_EMAIL_* environment variables are not set correctly");}
 				}
 			}
 		} catch (MessagingException | IOException | SchedulerException e) {
-			logger.error("Sending an e-mail failed with: " + e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error("Sending an e-mail failed with: " + e.getMessage(), e);}
 		}
 		
 	}

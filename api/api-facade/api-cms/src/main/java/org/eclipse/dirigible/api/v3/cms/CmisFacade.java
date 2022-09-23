@@ -138,7 +138,7 @@ public class CmisFacade {
 			if (!readDefinitions.isEmpty()) {
 				isReadable = false;
 				if (user == null) {
-					logger.error("No logged in user accessing path: " + path);
+					if (logger.isErrorEnabled()) {logger.error("No logged in user accessing path: " + path);}
 					return false;
 				}
 			}
@@ -156,7 +156,7 @@ public class CmisFacade {
 				if (!writeDefinitions.isEmpty()) {
 					isReadOnly = true;
 					if (user == null) {
-						logger.error("No logged in user accessing path: " + path);
+						if (logger.isErrorEnabled()) {logger.error("No logged in user accessing path: " + path);}
 						return false;
 					}
 				}
@@ -172,7 +172,7 @@ public class CmisFacade {
 			}
 
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 		return true;
 	}

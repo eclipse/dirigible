@@ -66,7 +66,7 @@ public class SynchronizerDatabaseLayoutInitializer extends AbstractDatabaseLayou
 				dataSource = DatabaseModule.getDataSource(dataSourceType, dataSourceName);
 			}
 			connection = getDataSource().getConnection();
-			logger.debug("Starting to create the database layout for Synchronizer...");
+			if (logger.isDebugEnabled()) {logger.debug("Starting to create the database layout for Synchronizer...");}
 			@SuppressWarnings("rawtypes")
 			SqlFactory sqlFactory = SqlFactory.getNative(connection);
 			if (!sqlFactory.exists(connection, "DIRIGIBLE_SYNCHRONIZER_STATE")) {
@@ -79,9 +79,9 @@ public class SynchronizerDatabaseLayoutInitializer extends AbstractDatabaseLayou
 				createTable(connection, "/synchronizer/DIRIGIBLE_SYNCHRONIZER_STATE_ARTEFACTS.json");
 			}
 
-			logger.debug("Done creating the database layout for Synchronizer.");
+			if (logger.isDebugEnabled()) {logger.debug("Done creating the database layout for Synchronizer.");}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		} finally {
 			if (connection != null) {
 				connection.close();

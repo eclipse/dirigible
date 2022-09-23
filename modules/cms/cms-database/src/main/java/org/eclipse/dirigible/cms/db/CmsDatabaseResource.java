@@ -59,7 +59,7 @@ public class CmsDatabaseResource extends CmsDatabaseEntity implements IResource 
 
 			}
 		} catch (RepositoryReadException e) {
-			logger.error(e.getMessage(), e);
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		}
 	}
 

@@ -153,7 +153,7 @@ public class PersistenceAnnotationsParser {
 			if (annotationColumn == null) {
 				Annotation annotationTransient = field.getAnnotation(Transient.class);
 				if (annotationTransient == null) {
-					logger.warn(format("No Column nor Transient annotation found in Class {0} and Field {1}", clazz, field.getName()));
+					if (logger.isWarnEnabled()) {logger.warn(format("No Column nor Transient annotation found in Class {0} and Field {1}", clazz, field.getName()));}
 				}
 				continue;
 			}

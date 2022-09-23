@@ -53,7 +53,7 @@ public class BytesFacade {
 	 */
 	public static byte[] intToByteArray(int value, String byteOrder) {
 		ByteBuffer buffer = ByteBuffer.allocate(4);
-		ByteOrder order = byteOrder == ByteOrder.BIG_ENDIAN.toString() ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
+		ByteOrder order = byteOrder.equals(ByteOrder.BIG_ENDIAN.toString()) ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
 		buffer.order(order);
 		buffer.putInt(value);
 		return buffer.array();
@@ -68,7 +68,7 @@ public class BytesFacade {
 	 */
 	public static int byteArrayToInt(byte[] data, String byteOrder) {
 		ByteBuffer buffer = ByteBuffer.allocate(4);
-		ByteOrder order = byteOrder == ByteOrder.BIG_ENDIAN.toString() ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
+		ByteOrder order = byteOrder.equals(ByteOrder.BIG_ENDIAN.toString()) ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
 		buffer.order(order);
 		buffer.put(data);
 		return buffer.getInt(0);

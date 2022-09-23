@@ -53,7 +53,7 @@ public class CleanupSynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized (CleanupSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Cleanup Synchronizers...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing Cleanup Synchronizers...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -62,23 +62,23 @@ public class CleanupSynchronizer extends AbstractSynchronizer {
 							try {
 								next.cleanup();
 							} catch (Exception e) {
-								logger.error(format("Error during cleaning up the: [{0}]. Skipped due to an error: {1}", next.getClass().getCanonicalName(), e.getMessage()), e);
+								if (logger.isErrorEnabled()) {logger.error(format("Error during cleaning up the: [{0}]. Skipped due to an error: {1}", next.getClass().getCanonicalName(), e.getMessage()), e);}
 							}
 						}
 												
 						successfulSynchronization(SYNCHRONIZER_NAME, "Details in the previous log messages");
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Cleanup Synchronizers failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Cleanup Synchronizers failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Cleanup Synchronizers failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Cleanup Synchronizers failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Cleanup Synchronizers.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Cleanup Synchronizers.");}
 				afterSynchronizing();
 			}
 		}

@@ -34,12 +34,15 @@ import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
 import org.eclipse.dirigible.bpm.api.BpmException;
 import org.eclipse.dirigible.bpm.flowable.BpmProviderFlowable;
 import org.eclipse.dirigible.bpm.flowable.api.IBpmCoreService;
 import org.eclipse.dirigible.bpm.flowable.artefacts.BpmSynchronizationArtefactType;
 import org.eclipse.dirigible.bpm.flowable.definition.BpmDefinition;
 import org.eclipse.dirigible.bpm.flowable.service.BpmCoreService;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
@@ -89,7 +92,7 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized (BpmSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing BPMN files...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing BPMN files...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
@@ -107,17 +110,17 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 							failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
 						}
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for BPMN files failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for BPMN files failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for BPMN files failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for BPMN files failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing BPMN files.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing BPMN files.");}
 				afterSynchronizing();
 			}
 		}
@@ -173,12 +176,12 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	 * @throws SynchronizationException the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
-		logger.trace("Synchronizing predelivered BPMN files...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing predelivered BPMN files...");}
 		// BPMN files
 		for (BpmDefinition bpmDefinition : BPMN_PREDELIVERED.values()) {
 			synchronizeBpm(bpmDefinition);
 		}
-		logger.trace("Done synchronizing predelivered Extension Points and Extensions.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing predelivered Extension Points and Extensions.");}
 	}
 
 	/**
@@ -192,20 +195,21 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 			if (!bpmCoreService.existsBpm(bpmDefinition.getLocation())) {
 				bpmCoreService.createBpm(bpmDefinition.getLocation(), bpmDefinition.getHash());
 				deployOnProcessEngine(bpmDefinition);
-				logger.info("Synchronized a new BPMN file from location: {}", bpmDefinition.getLocation());
+				if (logger.isInfoEnabled()) {logger.info("Synchronized a new BPMN file from location: {}", bpmDefinition.getLocation());}
 				applyArtefactState(bpmDefinition, BPM_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				BpmDefinition existing = bpmCoreService.getBpm(bpmDefinition.getLocation());
 				if (!bpmDefinition.equals(existing)) {
 					bpmCoreService.updateBpm(bpmDefinition.getLocation(), bpmDefinition.getHash());
 					deployOnProcessEngine(bpmDefinition);
-					logger.info("Synchronized a modified BPMN file from location: {}", bpmDefinition.getLocation());
+					if (logger.isInfoEnabled()) {logger.info("Synchronized a modified BPMN file from location: {}", bpmDefinition.getLocation());}
 					applyArtefactState(bpmDefinition, BPM_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			BPMN_SYNCHRONIZED.put(bpmDefinition.getLocation(), bpmDefinition);
 		} catch (BpmException e) {
 			applyArtefactState(bpmDefinition, BPM_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			logProblem(e.getMessage(), ERROR_TYPE, bpmDefinition.getLocation(), BPM_ARTEFACT.getId());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -221,11 +225,11 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
-		logger.trace("Synchronizing BPMN files from Registry...");
+		if (logger.isTraceEnabled()) {logger.trace("Synchronizing BPMN files from Registry...");}
 
 		super.synchronizeRegistry();
 
-		logger.trace("Done synchronizing BPMN files from Registry.");
+		if (logger.isTraceEnabled()) {logger.trace("Done synchronizing BPMN files from Registry.");}
 	}
 
 	/**
@@ -265,7 +269,7 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up BPMN files...");
+		if (logger.isTraceEnabled()) {logger.trace("Cleaning up BPMN files...");}
 		super.cleanup();
 
 		try {
@@ -273,14 +277,14 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 			for (BpmDefinition bpmDefinition : bpmDefinitions) {
 				if (!BPMN_SYNCHRONIZED.keySet().contains(bpmDefinition.getLocation())) {
 					bpmCoreService.removeBpm(bpmDefinition.getLocation());
-					logger.warn("Cleaned up BPMN file from location: {}", bpmDefinition.getLocation());
+					if (logger.isWarnEnabled()) {logger.warn("Cleaned up BPMN file from location: {}", bpmDefinition.getLocation());}
 				}
 			}
 		} catch (BpmException e) {
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up BPMN files.");
+		if (logger.isTraceEnabled()) {logger.trace("Done cleaning up BPMN files.");}
 	}
 	
 	/**
@@ -297,9 +301,9 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 				.key(bpmDefinition.getLocation())
 				.addBytes(bpmDefinition.getLocation(), bpmDefinition.getContent().getBytes(StandardCharsets.UTF_8))
 				.deploy();
-			logger.info(format("Deployed: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));
+			if (logger.isInfoEnabled()) {logger.info(format("Deployed: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));}
 		} catch (Exception e) {
-			logger.error("Error on deploying a BPMN file from location: {}", bpmDefinition.getLocation(), e);
+			if (logger.isErrorEnabled()) {logger.error("Error on deploying a BPMN file from location: {}", bpmDefinition.getLocation(), e);}
 		}
 	}
 	
@@ -308,7 +312,7 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	 */
 	private void updateProcessEngine() {
 		if (BPMN_SYNCHRONIZED.isEmpty()) {
-			logger.trace("No BPMN files to update.");
+			if (logger.isTraceEnabled()) {logger.trace("No BPMN files to update.");}
 			return;
 		}
 		
@@ -317,12 +321,34 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		
 		List<Deployment> deployments = repositoryService.createDeploymentQuery().list();
 		for (Deployment deployment : deployments) {
-			logger.trace(format("Deployment: [{0}] with key: [{1}]", deployment.getId(), deployment.getKey()));
+			if (logger.isTraceEnabled()) {logger.trace(format("Deployment: [{0}] with key: [{1}]", deployment.getId(), deployment.getKey()));}
 			if (!BPMN_SYNCHRONIZED.containsKey(deployment.getKey())) {
 				repositoryService.deleteDeployment(deployment.getId(), true);
-				logger.info(format("Deleted deployment: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));
+				if (logger.isInfoEnabled()) {logger.info(format("Deleted deployment: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));}
 			}
 		}
 
+	}
+	
+	/** The Constant ERROR_TYPE. */
+	private static final String ERROR_TYPE = "BPM";
+	
+	/** The Constant MODULE. */
+	private static final String MODULE = "dirigible-bpm-flowable";
+	
+	/**
+	 * Use to log problem from artifact processing.
+	 *
+	 * @param errorMessage the error message
+	 * @param errorType the error type
+	 * @param location the location
+	 * @param artifactType the artifact type
+	 */
+	private static void logProblem(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE, BpmSynchronizer.class.getName(), IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
+		}
 	}
 }

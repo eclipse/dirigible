@@ -60,7 +60,7 @@ public class OrderedSynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized (OrderedSynchronizer.class) {
 			if (beforeSynchronizing()) {
-				logger.trace("Synchronizing Ordered Synchronizers...");
+				if (logger.isTraceEnabled()) {logger.trace("Synchronizing Ordered Synchronizers...");}
 				try {
 					if (isSynchronizationEnabled()) {
 						startSynchronization(SYNCHRONIZER_NAME);
@@ -83,24 +83,24 @@ public class OrderedSynchronizer extends AbstractSynchronizer {
 								try {
 									failedSynchronization(next.getClass().getCanonicalName(), e.getMessage());
 								} catch (SchedulerException e1) {
-									logger.error("Synchronizing process for Ordered Synchronizers failed in registering the state log.", e);
+									if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Ordered Synchronizers failed in registering the state log.", e);}
 								}
 							}
 						}
 						
 						successfulSynchronization(SYNCHRONIZER_NAME, "Details in the previous log messages");
 					} else {
-						logger.debug("Synchronization has been disabled");
+						if (logger.isDebugEnabled()) {logger.debug("Synchronization has been disabled");}
 					}
 				} catch (Exception e) {
-					logger.error("Synchronizing process for Ordered Synchronizers failed.", e);
+					if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Ordered Synchronizers failed.", e);}
 					try {
 						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
 					} catch (SchedulerException e1) {
-						logger.error("Synchronizing process for Ordered Synchronizers failed in registering the state log.", e);
+						if (logger.isErrorEnabled()) {logger.error("Synchronizing process for Ordered Synchronizers failed in registering the state log.", e);}
 					}
 				}
-				logger.trace("Done synchronizing Ordered Synchronizers.");
+				if (logger.isTraceEnabled()) {logger.trace("Done synchronizing Ordered Synchronizers.");}
 				afterSynchronizing();
 			}
 		}

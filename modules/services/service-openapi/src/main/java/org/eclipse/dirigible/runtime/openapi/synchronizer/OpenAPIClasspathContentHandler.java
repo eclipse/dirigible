@@ -48,7 +48,7 @@ public class OpenAPIClasspathContentHandler extends AbstractClasspathContentHand
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered OpenAPI at path [" + path + "] is not valid", e);
+			if (logger.isErrorEnabled()) {logger.error("Predelivered OpenAPI at path [" + path + "] is not valid", e);}
 		}
 
 		return false;

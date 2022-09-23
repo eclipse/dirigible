@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class CustomDatabase extends AbstractDatabase {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(CustomDatabase.class);
+	private static final Logger logger = LoggerFactory.getLogger(CustomDatabase.class);
 
 	/** The Constant NAME. */
 	public static final String NAME = "basic";
@@ -50,11 +50,11 @@ public class CustomDatabase extends AbstractDatabase {
 	 * The default constructor.
 	 */
 	public CustomDatabase() {
-		LOGGER.debug("Initializing the custom datasources...");
+		if (logger.isDebugEnabled()) {logger.debug("Initializing the custom datasources...");}
 
 		initialize();
 
-		LOGGER.debug("Custom datasources initialized.");
+		if (logger.isDebugEnabled()) {logger.debug("Custom datasources initialized.");}
 	}
 
 	/**
@@ -69,17 +69,17 @@ public class CustomDatabase extends AbstractDatabase {
 		Configuration.loadModuleConfig("/dirigible-database-custom.properties");
 		String customDataSourcesList = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES);
 		if ((customDataSourcesList != null) && !"".equals(customDataSourcesList)) {
-			LOGGER.trace("Custom datasources list: " + customDataSourcesList);
+			if (logger.isTraceEnabled()) {logger.trace("Custom datasources list: " + customDataSourcesList);}
 			StringTokenizer tokens = new StringTokenizer(customDataSourcesList, ",");
 			while (tokens.hasMoreTokens()) {
 				String name = tokens.nextToken();
-				LOGGER.info("Initializing a custom datasource with name: " + name);
+				if (logger.isInfoEnabled()) {logger.info("Initializing a custom datasource with name: " + name);}
 				initializeDataSource(name);
 			}
 		} else {
-			LOGGER.trace("No custom datasources configured");
+			if (logger.isTraceEnabled()) {logger.trace("No custom datasources configured");}
 		}
-		LOGGER.debug(this.getClass().getCanonicalName() + " module initialized.");
+		if (logger.isDebugEnabled()) {logger.debug(this.getClass().getCanonicalName() + " module initialized.");}
 	}
 
 	
