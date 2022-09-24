@@ -493,7 +493,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     header: "",
                     subheader: "",
                     title: "",
-                    body: "",
+                    body: [],
                     footer: "",
                     buttons: [],
                     callbackTopic: null,
@@ -811,6 +811,11 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     true
                 );
 
+                function getDialogBody(body) {
+                    if (Array.isArray(body)) return body;
+                    return [body];
+                }
+
                 messageHub.onDidReceiveMessage(
                     "ide.dialog",
                     function (data) {
@@ -819,7 +824,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                                 header: data.header,
                                 subheader: data.subheader,
                                 title: data.title,
-                                body: data.body,
+                                body: getDialogBody(data.body),
                                 footer: data.footer,
                                 loader: data.loader,
                                 buttons: data.buttons,

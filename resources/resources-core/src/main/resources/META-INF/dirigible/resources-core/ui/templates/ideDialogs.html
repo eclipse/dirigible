@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div class="fd-dialog__body fd-scrollbar">
-                {{ dialog.body }}
+                <span ng-repeat-start="text in dialog.body">{{ text }}</span><br ng-if="!$last" ng-repeat-end>
                 <div ng-show="dialog.loader && dialog.status">
                     <strong>Status: </strong>{{ dialog.status }}
                 </div>
