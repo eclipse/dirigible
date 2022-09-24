@@ -29,6 +29,10 @@ exports.getTemplate = function (parameters) {
             action: "copy",
             rename: "gen/dao/utils/EntityUtils.js"
         }],
-        parameters: []
+        parameters: [{
+            name: "tablePrefix",
+            label: "Table Prefix",
+            placeholder: "Table prefix"
+        }]
     };
 };

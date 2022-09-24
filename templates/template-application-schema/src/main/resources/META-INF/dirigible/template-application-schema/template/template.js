@@ -24,6 +24,10 @@ exports.getTemplate = function (parameters) {
             rename: "gen/schema/{{projectName}}.schema",
             engine: "velocity"
         }],
-        parameters: []
+        parameters: [{
+            name: "tablePrefix",
+            label: "Table Prefix",
+            placeholder: "Table prefix"
+        }]
     };
 };

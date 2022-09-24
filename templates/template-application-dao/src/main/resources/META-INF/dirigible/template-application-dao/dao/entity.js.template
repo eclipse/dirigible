@@ -33,7 +33,7 @@ function ForbiddenError(message) {
 #end
 
 let dao = daoApi.create({
-	table: "${dataName}",
+	table: "${tablePrefix}_${dataName}",
 	properties: [
 #foreach ($property in $properties)
 #if($foreach.isFirst())
@@ -178,7 +178,7 @@ exports.create = function(entity) {
 #end
 	let id = dao.insert(entity);
 	triggerEvent("Create", {
-		table: "${dataName}",
+		table: "${tablePrefix}_${dataName}",
 		key: {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
@@ -226,7 +226,7 @@ exports.update = function(entity) {
 #end
 	dao.update(entity);
 	triggerEvent("Update", {
-		table: "${dataName}",
+		table: "${tablePrefix}_${dataName}",
 		key: {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
@@ -247,7 +247,7 @@ exports.delete = function(id) {
 #end
 	dao.remove(id);
 	triggerEvent("Delete", {
-		table: "${dataName}",
+		table: "${tablePrefix}_${dataName}",
 		key: {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
@@ -263,7 +263,7 @@ exports.delete = function(id) {
 
 #if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
 exports.count = function (#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end) {
-	let resultSet = query.execute("SELECT COUNT(*) AS COUNT FROM ${dataName} WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.dataName}#end#end = ?", [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
+	let resultSet = query.execute("SELECT COUNT(*) AS COUNT FROM ${tablePrefix}_${dataName} WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.dataName}#end#end = ?", [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
 	if (resultSet !== null && resultSet[0] !== null) {
 		if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
 			return resultSet[0].COUNT;

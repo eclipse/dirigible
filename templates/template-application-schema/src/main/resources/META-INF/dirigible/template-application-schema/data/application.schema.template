@@ -14,7 +14,7 @@
 #foreach ($model in $models)
 #if($model.type != "REPORT")
             {
-                "name": "${model.dataName}",
+                "name": "${tablePrefix}_${model.dataName}",
                 "type": "TABLE",
                 "columns": [
 #foreach ($property in $model.properties)
@@ -61,7 +61,7 @@
 #end
 #else
             {
-                "name": "${model.dataName}",
+                "name": "${tablePrefix}_${model.dataName}",
                 "type": "VIEW",
                 "columns": [
                     {
@@ -87,14 +87,14 @@
             {
                 "name": "${property.relationshipName}",
                 "type": "foreignKey",
-                "table": "${model.dataName}",
+                "table": "${tablePrefix}_${model.dataName}",
                 "constraintName": "${property.relationshipName}",
                 "columns": "${property.dataName}",
 #foreach ($relationModel in $models)
 #if($relationModel.type != "REPORT" && $relationModel.name != $model.name)
 #foreach ($relationProperty in $relationModel.properties)
 #if($property.relationshipEntityName == $relationModel.name)
-                "referencedTable": "${relationModel.dataName}",
+                "referencedTable": "${tablePrefix}_${relationModel.dataName}",
                 "referencedColumns": "#foreach ($relationIdProperty in $relationModel.properties)#if ($relationIdProperty.dataPrimaryKey || $relationIdProperty.dataPrimaryKey == "true")${relationIdProperty.dataName}#end#end"
 #break
 #end
