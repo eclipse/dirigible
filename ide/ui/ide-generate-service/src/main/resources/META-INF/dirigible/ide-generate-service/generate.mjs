@@ -70,6 +70,12 @@ function onGenerateModel(context, request, response) {
     for (let i = 0; i < generatedFiles.length; i++) {
         createFile(workspace, project, generatedFiles[i].path, generatedFiles[i].content);
     }
+    let gen = path;
+    if (gen.indexOf(".") > 0) {
+        gen = gen.substring(0, path.indexOf("."))
+    }
+
+    createFile(workspace, project, gen + ".gen", JSON.stringify(parameters, null, 2));
 
     lifecycle.publish(user.getName(), workspace, project);
 
