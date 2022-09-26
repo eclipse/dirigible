@@ -29,6 +29,7 @@ import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
 import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -46,7 +47,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Security Synchronizer.
  */
-public class SecuritySynchronizer extends AbstractSynchronizer {
+public class SecuritySynchronizer extends AbstractSynchronizer implements IOrderedSynchronizerContribution {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SecuritySynchronizer.class);
@@ -409,5 +410,10 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		} catch (ProblemsException e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e.getMessage());}
 		}
+	}
+
+	@Override
+	public int getPriority() {
+		return 0;
 	}
 }

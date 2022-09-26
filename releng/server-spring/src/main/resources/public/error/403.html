@@ -10,39 +10,39 @@
   -->
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="errorPage" ng-controller="ErrorPageController">
 
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="icon" href="/services/v4/web/resources/images/favicon.ico" />
-		<title>Access Denied</title>
-		<theme></theme>
-		<script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=application-view-js">
-		</script>
-		<link type="text/css" rel="stylesheet"
-			href="/services/v4/js/resources-core/services/loader.js?id=application-view-css" />
-	</head>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="/services/v4/web/resources/images/favicon.ico" />
+        <title>Access Denied</title>
+        <theme></theme>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=application-view-js">
+        </script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=application-view-css" />
+    </head>
 
-	<body class="fd-scrollbar" dg-contextmenu="contextMenuContent">
+    <body class="fd-scrollbar" dg-contextmenu="contextMenuContent">
 
-		<div style="height: 600px; width: 100%;">
-			<fd-message-page glyph="sap-icon--alert">
-				<fd-message-page-title>Access Denied</fd-message-page-title>
-				<fd-message-page-subtitle>
-					<b>The page you're trying to access has resctricted access</b>.
-					<br>
-					Pleace contact your system administrator for more details.
-				</fd-message-page-subtitle>
-			</fd-message-page>
-		</div>
+        <div style="height: 600px; width: 100%;">
+            <fd-message-page glyph="sap-icon--alert">
+                <fd-message-page-title>Access Denied</fd-message-page-title>
+                <fd-message-page-subtitle>
+                    <b>The page you're trying to access has resctricted access</b>.
+                    <br>
+                    Pleace contact your system administrator for more details.
+                </fd-message-page-subtitle>
+            </fd-message-page>
+        </div>
 
-		<script>
-			let errorPage = angular.module('errorPage', ['ideUI', 'ideView']);
+        <script>
+            let errorPage = angular.module('errorPage', ['ideUI', 'ideView']);
 
-			errorPage.controller('ErrorPageController', ['$scope', function ($scope) {
+			errorPage.controller('ErrorPageController', ['$scope', 'theming', function ($scope, theming) {
 
 			}]);
-		</script>
-	</body>
+        </script>
+    </body>
 
 </html>

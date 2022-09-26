@@ -60,7 +60,8 @@ public class HealthCheckFilter implements Filter {
 		boolean isHealthCheck = httpRequest.getPathInfo().startsWith("/healthcheck");
 		boolean isOps = httpRequest.getPathInfo().startsWith("/ops");
 		boolean isWebJars = httpRequest.getPathInfo().startsWith("/webjars");
-		if (!isResources && !isHealthCheck && !isOps && !isWebJars) {
+		boolean isTheme = httpRequest.getPathInfo().startsWith("/web/theme/") || httpRequest.getPathInfo().startsWith("/js/theme/");
+		if (!isResources && !isHealthCheck && !isOps && !isWebJars && !isTheme) {
 			HealthStatus healthStatus = HealthStatus.getInstance();
 			if (healthStatus.getStatus().equals(HealthStatus.Status.Ready)) {
 				chain.doFilter(request, response);

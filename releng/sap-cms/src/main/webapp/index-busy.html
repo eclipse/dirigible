@@ -10,40 +10,40 @@
   -->
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="busyPage" ng-controller="BusyController">
 
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="icon" href="/services/v4/web/resources/images/favicon.ico" />
-		<title>Loading ...</title>
-		<theme></theme>
-		<script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=application-view-js">
-		</script>
-		<link type="text/css" rel="stylesheet"
-			href="/services/v4/js/resources-core/services/loader.js?id=application-view-css" />
-	</head>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="/services/v4/web/resources/images/favicon.ico" />
+        <title>Loading ...</title>
+        <theme></theme>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=application-view-js">
+        </script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=application-view-css" />
+    </head>
 
-	<body class="fd-scrollbar" dg-contextmenu="contextMenuContent">
+    <body class="fd-scrollbar" dg-contextmenu="contextMenuContent">
 
-		<div style="padding-left: 10rem; padding-right: 10rem; margin-top: 3rem;">
-			<div class="fd-panel fd-panel--fixed">
-				<div class="fd-panel__header">
-					<h4 class="fd-panel__title">Preparing Eclipse Dirigible Instance</h4>
-				</div>
-			</div>
-			<fd-list>
-				<fd-list-item ng-repeat="job in jobs">
-					<span fd-object-status status="{{job.status}}" glyph="{{job.statusIcon}}"
-						text="{{job.name}}"></span>
-				</fd-list-item>
-			</fd-list>
-			<fd-busy-indicator style="margin-top: 3rem;" dg-size="l"></fd-busy-indicator>
-		</div>
+        <div style="padding-left: 10rem; padding-right: 10rem; margin-top: 3rem;">
+            <div class="fd-panel fd-panel--fixed">
+                <div class="fd-panel__header">
+                    <h4 class="fd-panel__title">Preparing Eclipse Dirigible Instance</h4>
+                </div>
+            </div>
+            <fd-list>
+                <fd-list-item ng-repeat="job in jobs">
+                    <span fd-object-status status="{{job.status}}" glyph="{{job.statusIcon}}"
+                        text="{{job.name}}"></span>
+                </fd-list-item>
+            </fd-list>
+            <fd-busy-indicator style="margin-top: 3rem;" dg-size="l"></fd-busy-indicator>
+        </div>
 
-		<script>
-			let busyPage = angular.module('busyPage', ['ideUI', 'ideView']);
+        <script>
+            let busyPage = angular.module('busyPage', ['ideUI', 'ideView']);
 
-			busyPage.controller('BusyController', ['$scope', '$http', function ($scope, $http) {
+			busyPage.controller('BusyController', ['$scope', '$http', 'theming', function ($scope, $http, theming) {
 
                 setInterval(function() {
 
@@ -80,7 +80,7 @@
 
                 }, 1000);
 			}]);
-		</script>
-	</body>
+        </script>
+    </body>
 
 </html>
