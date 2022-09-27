@@ -1,53 +1,65 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="page">
+<html lang="en" ng-app="page" ng-controller="PageController">
 
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-        <link type="text/css" rel="stylesheet" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css">
-
-        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" async></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-        <script type="text/javascript" src="/services/v4/web/resources-core/ui/message-hub.js"></script>
-
-        <!-- Custom IDE Styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
+        <theme></theme>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js">
+        </script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
+        <script type="text/javascript" src="editor.js"></script>
     </head>
 
-    <body ng-controller="PageController">
-        <div class="container">
-            <div class="page-header">
-                <h1>Extension Description: {{file}}</h1>
-            </div>
-            <form>
-                <div class="form-group">
-                    <label>Module</label>
-                    <input type="text" class="form-control" placeholder="Enter handler" ng-model="extension.module">
-                </div>
-                <div class="form-group">
-                    <label>Extension Point</label>
-                    <input type="text" class="form-control" placeholder="Enter Extension Point Name"
-                        ng-model="extension.extensionPoint">
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea class="form-control" placeholder="Enter description" ng-model="extension.description"
-                        cols=20 rows=5></textarea>
-                </div>
-                <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
-            </form>
-        </div>
+    <body class="dg-vbox" dg-contextmenu="contextMenuContent">
+        <fd-scrollbar class="dg-full-height">
+            <fd-fieldset class="fd-margin--md" ng-form="formFieldset">
+                <fd-form-group dg-header="Extension Description: {{file}}" name="entityForm">
 
-        <script type="text/javascript" src="editor.js"></script>
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="idExtensionPoint" dg-required="true" dg-colon="true">Extension Point
+                        </fd-form-label>
+                        <fd-combobox-input id="idExtensionPoint" name="extensionPoint"
+                            state="{{ formErrors.extensionPoint ? 'error' : '' }}" ng-required="true"
+                            ng-change="isValid(formFieldset['extensionPoint'].$valid, 'extensionPoint')"
+                            ng-model="extension.extensionPoint" dropdown-items="optionsExtensionPoints"
+                            dg-placeholder="Search Extension Point ...">
+                        </fd-combobox-input>
+                    </fd-form-item>
 
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="idModule" dg-required="true" dg-colon="true">Module</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.module ? false : true }}">
+                            <fd-input id="idModule" name="module" state="{{ formErrors.module ? 'error' : '' }}"
+                                ng-required="true" ng-change="isValid(formFieldset['module'].$valid, 'module')"
+                                ng-model="extension.module" ng-maxlength="255" dg-input-rules="{ patterns: [''] }"
+                                type="text" placeholder="Enter Module">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="idDescription" dg-required="false" dg-colon="true">Description
+                        </fd-form-label>
+                        <fd-textarea id="idDescription" name="description"
+                            state="{{ formErrors.description ? 'error' : '' }}" ng-required="false"
+                            ng-change="isValid(formFieldset['description'].$valid, 'description')"
+                            ng-model="extension.description" dg-input-rules="{ patterns: [''] }"
+                            placeholder="Enter Description">
+                        </fd-textarea>
+                        <fd-form-message dg-type="error" ng-show="formErrors.description">Incorrect Input
+                        </fd-form-message>
+                </fd-form-group>
+            </fd-fieldset>
+
+            <fd-button class="fd-margin--md fd-dialog__decisive-button" compact="true" dg-type="emphasized"
+                dg-label="Save" ng-click="save()" state="{{ !isFormValid ? 'disabled' : '' }}">
+            </fd-button>
+        </fd-scrollbar>
     </body>
 
 </html>
