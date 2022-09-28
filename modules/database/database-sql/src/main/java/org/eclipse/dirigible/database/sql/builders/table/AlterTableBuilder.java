@@ -269,7 +269,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
     protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
         if (uniqueIndex != null) {
             if (uniqueIndex.getName() != null) {
-                String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName()) : uniqueIndex.getName();
+                String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName(), false) : uniqueIndex.getName();
                 sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(uniqueIndexName).append(SPACE);
             }
             sql.append(KEYWORD_UNIQUE).append(SPACE).append(OPEN).append(traverseNames(uniqueIndex.getColumns())).append(CLOSE);

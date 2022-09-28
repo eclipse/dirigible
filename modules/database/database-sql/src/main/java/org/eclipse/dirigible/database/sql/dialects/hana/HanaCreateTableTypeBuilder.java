@@ -122,7 +122,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
             boolean isColumnName = true;
             for (String arg : column) {
                 if (isColumnName) {
-                    String columnName = (isCaseSensitive()) ? encapsulate(arg) : arg;
+                    String columnName = (isCaseSensitive()) ? encapsulate(arg, false) : arg;
                     snippet.append(columnName).append(SPACE);
                     isColumnName = false;
                     continue;
@@ -144,7 +144,11 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
      *            the sql
      */
     private void generateTableType(StringBuilder sql) {
+<<<<<<< HEAD:modules/database/database-sql/src/main/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaCreateTableTypeBuilder.java
         String tableTypeName = (isCaseSensitive()) ? encapsulate(this.getTableType()) : this.getTableType();
+=======
+        String tableTypeName = (isCaseSensitive()) ? encapsulate(this.getTableType(), true) : this.getTableType();
+>>>>>>> c0118d8f8c (Refactoring of encapsulation changes):modules/database/database-sql-hana/src/main/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaCreateTableTypeBuilder.java
         sql.append(SPACE).append(KEYWORD_TABLE_TYPE).append(SPACE).append(tableTypeName).append(SPACE).append(KEYWORD_AS).append(SPACE).append(KEYWORD_TABLE);
     }
 
@@ -232,7 +236,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
         if ((this.primaryKey != null) && allPrimaryKeys.size() == 0 && !this.primaryKey.getColumns().isEmpty()) {
             sql.append(COMMA).append(SPACE);
             if (this.primaryKey.getName() != null) {
-                String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName()) : this.primaryKey.getName();
+                String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName(), false) : this.primaryKey.getName();
                 sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(primaryKeyName).append(SPACE);
             }
             sql.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
@@ -275,7 +279,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
         StringBuilder snippet = new StringBuilder();
         snippet.append(SPACE);
         for (String column : names) {
-            String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+            String columnName = (isCaseSensitive()) ? encapsulate(column, false) : column;
             snippet.append(columnName).append(SPACE).append(COMMA).append(SPACE);
         }
         return snippet.substring(0, snippet.length() - 2);

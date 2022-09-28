@@ -69,7 +69,7 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
     protected String traverseColumnNamesForDrop() {
         StringBuilder snippet = new StringBuilder();
         for (String[] column : this.getColumns()) {
-            String columnName = (isCaseSensitive()) ? encapsulate(column[0]) : column[0];
+            String columnName = (isCaseSensitive()) ? encapsulate(column[0], false) : column[0];
             snippet.append(KEYWORD_DROP).append(SPACE).append(OPEN);
             snippet.append(columnName).append(CLOSE).append(SPACE);
             snippet.append(COMMA).append(SPACE);
@@ -153,7 +153,7 @@ public class HanaAlterTableBuilder extends AlterTableBuilder {
     protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
         if (uniqueIndex != null) {
             if (uniqueIndex.getName() != null) {
-                String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName()) : uniqueIndex.getName();
+                String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName(), false) : uniqueIndex.getName();
                 sql.append(KEYWORD_ADD)
                     .append(SPACE)
                     .append(KEYWORD_CONSTRAINT)

@@ -68,7 +68,11 @@ public class HanaDropTableTypeBuilder extends DropTableTypeBuilder {
      *            the sql
      */
     private void generateTableType(StringBuilder sql) {
+<<<<<<< HEAD:modules/database/database-sql/src/main/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaDropTableTypeBuilder.java
         String tableTypeName = (isCaseSensitive()) ? encapsulate(this.getTableType()) : this.getTableType();
+=======
+        String tableTypeName = (isCaseSensitive()) ? encapsulate(this.getTableType(), true) : this.getTableType();
+>>>>>>> c0118d8f8c (Refactoring of encapsulation changes):modules/database/database-sql-hana/src/main/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaDropTableTypeBuilder.java
         sql.append(SPACE).append(KEYWORD_TABLE_TYPE).append(SPACE).append(tableTypeName);
     }
 

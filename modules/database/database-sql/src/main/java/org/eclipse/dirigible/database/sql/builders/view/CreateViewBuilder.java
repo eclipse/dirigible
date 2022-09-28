@@ -153,7 +153,11 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateView(StringBuilder sql) {
+<<<<<<< HEAD
 		String viewName = (isCaseSensitive()) ? encapsulate(this.getView()) : this.getView();
+=======
+		String viewName = (isCaseSensitive()) ? encapsulate(this.getView(), true) : this.getView();
+>>>>>>> c0118d8f8c (Refactoring of encapsulation changes)
 		sql.append(SPACE).append(KEYWORD_VIEW).append(SPACE).append(viewName);
 	}
 
@@ -178,7 +182,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(SPACE);
 		for (String column : this.columns) {
-			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+			String columnName = (isCaseSensitive()) ? encapsulate(column, false) : column;
 			snippet.append(columnName).append(SPACE);
 			snippet.append(COMMA).append(SPACE);
 		}

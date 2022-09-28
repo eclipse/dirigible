@@ -47,7 +47,11 @@ public class HanaNextValueSequenceBuilder extends NextValueSequenceBuilder {
 	 */
 	@Override
 	public String generate() {
+<<<<<<< HEAD:modules/database/database-sql/src/main/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaNextValueSequenceBuilder.java
 		String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence()) : this.getSequence();
+=======
+		String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
+>>>>>>> c0118d8f8c (Refactoring of encapsulation changes):modules/database/database-sql-hana/src/main/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaNextValueSequenceBuilder.java
 		String sql = format(PATTERN_SELECT_NEXT_VAL_SEQUENCE, sequenceName);
 		return sql;
 	}

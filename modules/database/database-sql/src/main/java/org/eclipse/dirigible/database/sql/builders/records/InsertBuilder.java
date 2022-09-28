@@ -144,7 +144,11 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
+<<<<<<< HEAD
 		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable()) : this.getTable();
+=======
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
+>>>>>>> c0118d8f8c (Refactoring of encapsulation changes)
 		sql.append(SPACE).append(KEYWORD_INTO).append(SPACE).append(tableName);
 	}
 
@@ -194,7 +198,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	protected String traverseColumns() {
 		StringBuilder snippet = new StringBuilder();
 		for (String column : this.columns) {
-			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+			String columnName = (isCaseSensitive()) ? encapsulate(column, false) : column;
 			snippet.append(columnName).append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);

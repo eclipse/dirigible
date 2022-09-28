@@ -66,7 +66,11 @@ public class HanaDropSequenceBuilder extends DropSequenceBuilder {
      * @param sql the sql
      */
     protected void generateRestrict(StringBuilder sql) {
+<<<<<<< HEAD:modules/database/database-sql/src/main/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaDropSequenceBuilder.java
         String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence()) : this.getSequence();
+=======
+        String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
+>>>>>>> c0118d8f8c (Refactoring of encapsulation changes):modules/database/database-sql-hana/src/main/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaDropSequenceBuilder.java
         sql.append(SPACE).append(KEYWORD_DATABASE_DROP_RESTRICT);
     }
 }

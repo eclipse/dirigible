@@ -61,7 +61,11 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 	 */
 	@Override
 	protected void generateTable(StringBuilder sql) {
+<<<<<<< HEAD:modules/database/database-sql/src/main/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaCreateTableBuilder.java
 		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable()) : this.getTable();
+=======
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
+>>>>>>> c0118d8f8c (Refactoring of encapsulation changes):modules/database/database-sql-hana/src/main/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaCreateTableBuilder.java
 		String tableType = "";
 
 		if (this.tableType.equalsIgnoreCase(KEYWORD_COLUMN)) {

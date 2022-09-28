@@ -50,6 +50,31 @@ public class HanaCreateTableBuilderTest {
     assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
   }
 
+<<<<<<< HEAD:modules/database/database-sql/src/test/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaCreateTableBuilderTest.java
+=======
+  /**
+   * Creates the table generic with case sensitive flag.
+   */
+  @Test
+  public void createTableCaseSensitiveGeneric() {
+    Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+    try {
+      String sql = SqlFactory.getDefault().create()
+              .table("myapp::test.customers")
+              .column("Id", DataType.INTEGER, Modifiers.PRIMARY_KEY, Modifiers.NOT_NULL, Modifiers.NON_UNIQUE)
+              .column("First_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
+              .column("Last_Name", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
+              .build();
+
+      assertNotNull(sql);
+      assertEquals("CREATE TABLE \"myapp::test.customers\" ( \"Id\" INTEGER NOT NULL PRIMARY KEY , \"First_Name\" VARCHAR (20) NOT NULL UNIQUE , \"Last_Name\" VARCHAR (30) )",
+              sql);
+    } finally {
+      Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+    }
+  }
+
+>>>>>>> c0118d8f8c (Refactoring of encapsulation changes):modules/database/database-sql-hana/src/test/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaCreateTableBuilderTest.java
   /**
    * Creates the table column.
    */
