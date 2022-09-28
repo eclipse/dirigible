@@ -5,6 +5,10 @@ kind: ServiceAccount
 metadata:
   name: {{ required "Missing Keycloak service account name" .Values.keycloak.serviceAccountName }}
   namespace: {{ .Release.Namespace }}
+  {{- if .Values.gke.cloudSQL }}
+  annotations:
+    iam.gke.io/gcp-service-account: {{ .Values.gke.keycloakServiceAccountName }}@{{ .Values.gke.projectId }}.iam.gserviceaccount.com
+  {{- end }}
 {{- end }}
 ---  
 {{- if .Values.keycloak.database.enabled }}
@@ -278,7 +282,7 @@ spec:
       name: {{ required "Missing Istio server port name" .Values.istio.serversPortName }}
       protocol: {{ required "Missing Istio server port protocol" .Values.istio.serversPortProtocol }}
     hosts:
-    - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+    - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}
     {{- if .Values.istio.httpsRedirect }}
     tls:
       httpsRedirect: true
@@ -289,10 +293,10 @@ spec:
       name: https-443
       protocol: HTTPS
     hosts:
-    -  {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+    -  {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}
     tls:
       mode: SIMPLE 
-      credentialName:  {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+      credentialName:  {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}
   {{- end }}
   {{- end }}
 
@@ -303,7 +307,7 @@ metadata:
   name: {{ required "Missing Keycloak name" .Values.keycloak.name }}
 spec:
   hosts:
-  - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+  - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}
   - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release namespace" .Release.Namespace }}.svc.cluster.local
   gateways:
   - {{ required "Missing Keycloak name" .Values.keycloak.name }}-gateway
@@ -321,15 +325,15 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: keycloak
+  name: {{ required "Missing Keycloak name" .Values.keycloak.name }}
   namespace: istio-ingress
 spec:
-  secretName: {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+  secretName: {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}
   issuerRef: 
     name: letsencrypt
     kind: ClusterIssuer
-  commonName: {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+  commonName: {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}
   dnsNames: 
-  - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing release name" .Values.ingress.host }}
+  - {{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}
 {{- end }}
 {{- end }}

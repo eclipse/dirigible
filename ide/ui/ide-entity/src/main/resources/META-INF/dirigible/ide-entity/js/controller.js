@@ -43,6 +43,12 @@ function main(container, outline, toolbar, sidebar, status) {
 		console.error('file parameter is not present in the URL');
 	}
 
+	function replaceSpecialSymbols(value) {
+		let v = value.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+		v = v.replace(/\s/g, "_");
+		return v;
+	}
+
 	function getViewParameters() {
 		if (window.frameElement.hasAttribute("data-parameters")) {
 			var params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
@@ -231,12 +237,16 @@ function main(container, outline, toolbar, sidebar, status) {
 		// Text label changes will go into the name field of the user object
 		graph.model.valueForCellChanged = function (cell, value) {
 			if (value.name != null) {
+				value.name = replaceSpecialSymbols(value.name);
 				return mxGraphModel.prototype.valueForCellChanged.apply(this, arguments);
 			}
 			var old = cell.value.name;
+			value = replaceSpecialSymbols(value);
 			cell.value.name = value;
 			return old;
 		};
+
+
 
 		// Properties are dynamically created HTML labels
 		graph.isHtmlLabel = function (cell) {

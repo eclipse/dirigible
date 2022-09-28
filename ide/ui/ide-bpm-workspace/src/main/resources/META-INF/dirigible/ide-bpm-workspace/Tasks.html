@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="tasks" ng-controller="TasksController as tasks">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+
+        <!-- Title directive -->
+        <title dg-view-title></title>
+
+        <!-- View data -->
+        <script type="text/javascript" src="services/tasks-view.js"></script>
+
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
+
+        <script type="text/javascript" src="js/tasks.js"></script>
+
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
+        <theme></theme>
+
+        <style>
+            .main-container {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                overflow: hidden;
+                height: 100%;
+                width: 100%;
+            }
+
+            .tasks-table {
+                flex-grow: 1;
+                min-height: 0;
+            }
+
+            .main-container .fd-pagination,
+            .main-container .fd-toolbar {
+                flex-shrink: 0;
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+        <div class="main-container">
+            <div class="tasks-table">
+                <fd-scrollbar style="height: 100%">
+                    <table fd-table display-mode="compact">
+                        <thead fd-table-header sticky="true">
+                            <tr fd-table-row>
+                                <th fd-table-header-cell>Operation type</th>
+                                <th fd-table-header-cell>Email</th>
+                                <th fd-table-header-cell>Created At</th>
+                                <th fd-table-header-cell>Finished</th>
+                            </tr>
+                        </thead>
+                        <tbody fd-table-body>
+                            <tr fd-table-row ng-repeat="next in tasks.tasksList track by next.taskId" hoverable="true"
+                                activable="false" dg-selected="next.selected">
+                                <td fd-table-cell>{{next.operationType}}</td>
+                                <td fd-table-cell>{{next.email}}</td>
+                                <td fd-table-cell>{{next.createdAt}}</td>
+                                <td fd-table-cell>{{next.isFinished}}</td>
+                            </tr>
+                            <tr ng-if="tasks.tasksList.length === 0" fd-table-row>
+                                <td fd-table-cell no-data="true">{{tasks.getNoDataMessage()}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fd-scrollbar>
+            </div>
+            <fd-pagination ng-if="tasks.totalRows > 0" current-page="tasks.currentPage" total-items="tasks.totalRows"
+                items-per-page="tasks.pageSize" items-per-page-options="[10, 20, 50, 100]"
+                items-per-page-placement="top-start" display-total-items="true" compact="true"
+                page-change="tasks.onPageChange(pageNumber)"
+                items-per-page-change="tasks.onItemsPerPageChange(itemsPerPage)">
+            </fd-pagination>
+        </div>
+    </body>
+
+</html>

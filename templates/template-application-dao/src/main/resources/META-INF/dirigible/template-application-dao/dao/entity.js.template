@@ -1,8 +1,8 @@
 #if($dataCount)
-var query = require("db/v4/query");
+const query = require("db/v4/query");
 #end
-var producer = require("messaging/v4/producer");
-var daoApi = require("db/v4/dao");
+const producer = require("messaging/v4/producer");
+const daoApi = require("db/v4/dao");
 #set($isEntityUtilsEnabled = "false")
 #foreach ($property in $properties)
 #if($property.dataType == "DATE" || $property.dataType == "BOOLEAN")
@@ -11,7 +11,7 @@ var daoApi = require("db/v4/dao");
 #end
 #end
 #if($isEntityUtilsEnabled == "true")
-var EntityUtils = require("${projectName}/gen/dao/utils/EntityUtils");
+const EntityUtils = require("${projectName}/gen/dao/utils/EntityUtils");
 #end
 #if($roleRead && $roleRead != "" || $roleWrite && $roleWrite != "") 
 #set($isEntitySecurityEnabled = "true")
@@ -23,7 +23,7 @@ var EntityUtils = require("${projectName}/gen/dao/utils/EntityUtils");
 #end
 #end
 #if($isEntitySecurityEnabled || $isEntityPropertySecurityEnabled)
-var user = require("security/v4/user");
+const user = require("security/v4/user");
 
 function ForbiddenError(message) {
     this.name = "ForbiddenError";
@@ -32,8 +32,8 @@ function ForbiddenError(message) {
 }
 #end
 
-var dao = daoApi.create({
-	table: "${dataName}",
+let dao = daoApi.create({
+	table: "${tablePrefix}_${dataName}",
 	properties: [
 #foreach ($property in $properties)
 #if($foreach.isFirst())
@@ -77,7 +77,7 @@ exports.list = function(settings) {
 		}
 #end
 #if($property.dataType == "DATE")
-		EntityUtils.setLocalDate(e, "${property.name}");
+		EntityUtils.setDate(e, "${property.name}");
 #end
 #if($property.dataType == "BOOLEAN")
 		EntityUtils.setBoolean(e, "${property.name}");
@@ -109,7 +109,7 @@ exports.get = function(id) {
 	}
 #end
 #if($isEntityUtilsEnabled == "true")
-	var entity = dao.find(id);
+	let entity = dao.find(id);
 #foreach ($property in $properties)
 #if($property.roleRead && $property.roleRead != "")
 	if (!user.isInRole("${property.roleRead}")) {
@@ -117,7 +117,7 @@ exports.get = function(id) {
 	}
 #end
 #if($property.dataType == "DATE")
-	EntityUtils.setLocalDate(entity, "${property.name}");
+	EntityUtils.setDate(entity, "${property.name}");
 #end
 #if($property.dataType == "BOOLEAN")
 	EntityUtils.setBoolean(entity, "${property.name}");
@@ -125,7 +125,7 @@ exports.get = function(id) {
 #end
 	return entity;
 #elseif($isEntityPropertySecurityEnabled == "true")
-	var entity = dao.find(id);
+	let entity = dao.find(id);
 #foreach ($property in $properties)
 #if($property.roleRead && $property.roleRead != "")
 	if (!user.isInRole("${property.roleRead}")) {
@@ -176,9 +176,9 @@ exports.create = function(entity) {
 	}
 #end
 #end
-	var id = dao.insert(entity);
+	let id = dao.insert(entity);
 	triggerEvent("Create", {
-		table: "${dataName}",
+		table: "${tablePrefix}_${dataName}",
 		key: {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
@@ -199,7 +199,7 @@ exports.update = function(entity) {
 	}
 #end
 #if($isEntityPropertySecurityEnabled == "true")
-	var oldEntity = dao.find(entity.#foreach ($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
+	let oldEntity = dao.find(entity.#foreach ($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
 #foreach ($property in $properties)
 #if($property.roleWrite && $property.roleWrite != "")
 	if (!user.isInRole("${property.roleWrite}")) {
@@ -212,7 +212,7 @@ exports.update = function(entity) {
 #if($isEntityUtilsEnabled == "true")
 #foreach ($property in $properties)
 #if($property.dataType == "DATE")
-	EntityUtils.setLocalDate(entity, "${property.name}");
+	// EntityUtils.setLocalDate(entity, "${property.name}");
 #end
 #if($property.dataType == "BOOLEAN")
 	EntityUtils.setBoolean(entity, "${property.name}");
@@ -226,7 +226,7 @@ exports.update = function(entity) {
 #end
 	dao.update(entity);
 	triggerEvent("Update", {
-		table: "${dataName}",
+		table: "${tablePrefix}_${dataName}",
 		key: {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
@@ -247,7 +247,7 @@ exports.delete = function(id) {
 #end
 	dao.remove(id);
 	triggerEvent("Delete", {
-		table: "${dataName}",
+		table: "${tablePrefix}_${dataName}",
 		key: {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
@@ -261,13 +261,27 @@ exports.delete = function(id) {
 };
 #end
 
+#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
+exports.count = function (#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end) {
+	let resultSet = query.execute("SELECT COUNT(*) AS COUNT FROM ${tablePrefix}_${dataName} WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.dataName}#end#end = ?", [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
+	if (resultSet !== null && resultSet[0] !== null) {
+		if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
+			return resultSet[0].COUNT;
+		} else if (resultSet[0].count !== undefined && resultSet[0].count !== null) {
+			return resultSet[0].count;
+		}
+	}
+	return 0;
+};
+#else
 exports.count = function() {
 	return dao.count();
 };
+#end
 
 exports.customDataCount = function() {
 #if($dataCount)
-	var resultSet = query.execute("${dataCount}");
+	let resultSet = query.execute("${dataCount}");
 	if (resultSet !== null && resultSet[0] !== null) {
 		if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
 			return resultSet[0].COUNT;

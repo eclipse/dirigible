@@ -129,6 +129,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 						valueObject = ((Enum) valueObject).name();
 					}
 				}
+				valueObject = truncateValue(columnModel, valueObject);
 				setValue(preparedStatement, i++, dataType, valueObject);
 			} catch (PersistenceException e) {
 				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
@@ -136,6 +137,30 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 						format("Database type [{0}] not supported (Class: [{1}])", dataType, pojo.getClass()));
 			}
 		}
+	}
+
+	/**
+	 * Truncate value.
+	 *
+	 * @param columnModel the column model
+	 * @param valueObject the value object
+	 * @return the object
+	 */
+	protected Object truncateValue(PersistenceTableColumnModel columnModel, Object valueObject) {
+		String dataType = columnModel.getType();
+		int dataLength = columnModel.getLength();
+		if (DataTypeUtils.isVarchar(dataType) 
+				|| DataTypeUtils.isNvarchar(dataType) 
+				|| DataTypeUtils.isChar(dataType)) {
+			if (valueObject != null && valueObject.toString().length() > dataLength) {
+				if (logger.isWarnEnabled()) {
+					logger.warn("String has been truncated to fit to the database column [{}] length [{}].",
+							columnModel.getName(), columnModel.getLength());
+				}
+				return valueObject.toString().substring(0, dataLength - 1);
+			}
+		}
+		return valueObject;
 	}
 
 	/**

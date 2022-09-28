@@ -131,6 +131,19 @@
         <auth-method>BASIC</auth-method>
     </login-config>
 
+	<!-- Error Pages -->     
+	<error-page>
+		<error-code>403</error-code>
+		<location>/403.html</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.html</location>
+	</error-page>
+	<error-page>
+		<location>/error.html</location>
+	</error-page>
+
 	<!-- Landing Page -->
 	<security-constraint>
 		<web-resource-collection>
@@ -198,6 +211,15 @@
 			<url-pattern>/public/v4/graalvm/*</url-pattern>
 	        <url-pattern>/public/v4/wiki/*</url-pattern>
 	        <url-pattern>/public/v4/command/*</url-pattern>
+	    </web-resource-collection>
+	</security-constraint>
+	
+	<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>Unprotected Services</web-resource-name>
+	        <url-pattern>/services/v4/web/resources/*</url-pattern>
+	        <url-pattern>/services/v4/web/resources-core/*</url-pattern>
+	        <url-pattern>/services/v4/js/resources-core/*</url-pattern>
 	    </web-resource-collection>
 	</security-constraint>
 

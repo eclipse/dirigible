@@ -41,64 +41,25 @@ jobsView.controller('JobsController', ['$scope', '$http', 'messageHub', function
 			});
 	}
 
-	$scope.getLogs = function (job) {
-		$scope.job = job;
-		$http.get('/services/v4/ops/jobs/logs/' + job.name)
-			.then(function (response) {
-				$scope.name = job.name;
-				$scope.logs = response.data;
-			}, function (response) {
-				console.error(response.data);
-			});
+	$scope.showLogsWindow = function (job) {
+		messageHub.showDialogWindow(
+			"job-logs",
+			{ job }
+		);
 	}
 
-	$scope.getParameters = function (job) {
-		$scope.job = job;
-		$scope.result = "Job: " + $scope.job.name + " has not been triggered yet";
-		$scope.map = new Array();
-		$http.get('/services/v4/ops/jobs/parameters/' + job.name)
-			.then(function (response) {
-				$scope.name = job.name;
-				$scope.parameters = response.data;
-			}, function (response) {
-				console.error(response.data);
-			});
+	$scope.showTriggerWindow = function (job) {
+		messageHub.showDialogWindow(
+			"job-trigger",
+			{ job }
+		);
 	}
 
-	$scope.triggerJob = function () {
-		$scope.map = new Array();
-		for (let i in $scope.parameters) {
-			let parameter = $scope.parameters[i];
-			let entry = {};
-			entry.name = parameter.name;
-			entry.value = parameter.value;
-			$scope.map.push(entry);
-		}
-		$http.post('/services/v4/ops/jobs/trigger/' + $scope.job.name, $scope.map)
-			.then(function (response) {
-				$scope.result = "Job: " + $scope.job.name + " has been triggered successfully";
-			}, function (response) {
-				console.error(response.data);
-			});
-	}
-
-	$scope.clearLogs = function (name) {
-		$http.post('/services/v4/ops/jobs/clear/' + $scope.job.name)
-			.then(function (response) {
-				messageHub.showAlertInfo(
-					"Job Logs",
-					'Execution logs of the job ' + name + ' has been deleted.'
-				);
-				$http.get('/services/v4/ops/jobs/logs/' + name)
-					.then(function (response) {
-						$scope.name = name;
-						$scope.logs = response.data;
-					}, function (response) {
-						console.error(response.data);
-					});
-			}, function (response) {
-				console.error(response.data);
-			});
+	$scope.showAssignWindow = function (job) {
+		messageHub.showDialogWindow(
+			"job-assign",
+			{ job }
+		);
 	}
 
 	$scope.getEmails = function (job) {

@@ -16,6 +16,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>resources-core</module>
 		<module>resources-goldenlayout</module>
 		<module>resources-fonts</module>
 		<module>resources-dev-tools</module>
@@ -27,6 +28,7 @@
 		<module>resources-theme-quartz-light</module>
 		<module>resources-flowable-libs</module>
 		<module>resources-mxgraph</module>
+		<module>resources-unicons</module>
 	</modules>
 
 	<properties>

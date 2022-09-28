@@ -96,7 +96,7 @@ body {
   fill: var(--sapContent_NonInteractiveIconColor, #6a6d70);
   width: 100%;
   height: 100%;
-  padding: 0.7rem;
+  padding: 0.6rem;
 }
 /* Statusbar */
 .dg-statusbar {

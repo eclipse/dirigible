@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="page" ng-controller="PageController">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
+		<title dg-brand-title></title>
+		<theme></theme>
+		<script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=application-view-js">
+		</script>
+		<link type="text/css" rel="stylesheet"
+			href="/services/v4/js/resources-core/services/loader.js?id=application-view-css" />
+
+		<script type="text/javascript" src="controller.js"></script>
+	</head>
+
+	<body class="dg-vbox" dg-contextmenu="contextMenuContent">
+		<fd-scrollbar class="dg-full-height">
+
+			<section class="fd-section">
+				<div class="fd-section__header">
+					<h3 class="fd-section__title">${title}</h3>
+				</div>
+				<p class="fd-text">${description}</p>
+				<br>
+				<div class="fd-panel fd-panel--fixed" ng-repeat="group in groups">
+					<div class="fd-panel__header">
+						<h4 class="fd-panel__title">{{group}}</h4>
+					</div>
+					<div role="region" class="fd-panel__content" style="border-bottom: none">
+						<div class="fd-container">
+							<div class="fd-row">
+								<div class="fd-col fd-col--12 fd-col-md--6 fd-col-lg--4 fd-col-xl--3"
+									ng-repeat="next in data[group]">
+
+									<fd-card card-type="object">
+										<fd-card-header ng-click="openView(next.location)">
+											<fd-card-title>{{next.name}}</fd-card-title>
+											<fd-card-status><i class="sap-icon--navigation-right-arrow"></i>
+											</fd-card-status>
+										</fd-card-header>
+										<fd-card-content aria-label="Card Content">
+											<div class="fd-card__content-container">
+												<div class="fd-card__content-section">
+													<div class="fd-card__content-title-container">Description
+													</div>
+													<div class="fd-card__content-group">
+														<div class="fd-card__content-group-text">
+															<span>{{next.caption}}</span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</fd-card-content>
+									</fd-card>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</fd-scrollbar>
+		<br>
+
+		<div class="fd-message-strip" style="border: none">
+			<p class="fd-message-strip__text" style="margin: auto">
+				The technology platform used for project <b>${projectName}</b> is
+				<a href="http://www.dirigible.io/" target="_blank" class="fd-link">Eclipse Dirigible</a>.
+				All the source code is licensed under the <a href="https://www.eclipse.org/legal/epl-v20.html"
+					target="_blank" class="fd-link"> Eclipse Public License - v 2.0</a> and
+				maintained at <a href="https://github.com/eclipse/dirigible" target="_blank" class="fd-link">GitHub</a>.
+			</p>
+		</div>
+
+	</body>
+
+</html>

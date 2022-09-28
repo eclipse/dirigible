@@ -85,6 +85,9 @@ import org.slf4j.LoggerFactory;
 	}, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
 public class SecurityFilter implements Filter {
 
+	private static final String SKIP_PATH_ANGULAR_ARIA = "/js/resources-core/services/angular-aria.min.js.map";
+
+
 	/** The Constant PATH_WEB_RESOURCES. */
 	private static final String PATH_WEB_RESOURCES = "/web/resources";
 
@@ -195,6 +198,9 @@ public class SecurityFilter implements Filter {
 			throw new ServletException(e);
 		}
 
+		if (((HttpServletRequest) request).getPathInfo().equals(SKIP_PATH_ANGULAR_ARIA)) {
+			return;
+		}
 		chain.doFilter(request, response);
 	}
 

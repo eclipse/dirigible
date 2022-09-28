@@ -1,4 +1,0 @@
-{
-	"description": "Extension Point for the {{extensionName}} Tiles Providers",
-	"name": "launchpad-{{extensionName}}-tiles"
-}

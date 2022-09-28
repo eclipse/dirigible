@@ -51,7 +51,8 @@ public class AccessVerifier {
 			throws ServletException, AccessException {
 		List<AccessDefinition> accessDefinitions = new ArrayList<AccessDefinition>();
 		AccessDefinition current = null;
-		for (AccessDefinition accessDefinition : securityCoreService.getAccessDefinitions()) {
+		List<AccessDefinition> existing = securityCoreService.getAccessDefinitions();
+		for (AccessDefinition accessDefinition : existing) {
 			if (scope.equalsIgnoreCase(accessDefinition.getScope()) && path.startsWith(accessDefinition.getPath())
 					&& (accessDefinition.getMethod().equals("*") || method.equals(accessDefinition.getMethod()))) {
 				if (logger.isDebugEnabled()) {logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", path, method,

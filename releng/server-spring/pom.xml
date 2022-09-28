@@ -20,19 +20,19 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
+			<version>${spring.boot.slf4j.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>${logback.version}</version>
+			<version>${spring.boot.logback.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
+			<version>${spring.boot.logback.version}</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -112,6 +112,7 @@
 					<artifactId>dirigible-service-security</artifactId>
 				</exclusion>
 			</exclusions>
+
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>

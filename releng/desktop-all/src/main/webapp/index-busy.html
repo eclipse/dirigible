@@ -1,192 +1,86 @@
 <!DOCTYPE HTML>
-<html lang="en" ng-app="busy" ng-controller="BusyController as busy">
-	<head>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta charset="utf-8">
+<!--
+  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="busyPage" ng-controller="BusyController">
 
-		<!-- Twitter Bootstrap with Theme Support -->
-		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="/services/v4/web/resources/images/favicon.ico" />
+        <title>Loading ...</title>
+        <theme></theme>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=application-view-js">
+        </script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=application-view-css" />
+    </head>
 
-		<!-- FontAwesome icon set -->
-    	<link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <body class="fd-scrollbar" dg-contextmenu="contextMenuContent">
 
-		<style>
-			.busy-indicator {
-			  display: inline-block;
-			  position: relative;
-			  width: 64px;
-			  height: 64px;
-			}
-			.busy-indicator div {
-			  animation: busy-indicator 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-			  transform-origin: 32px 32px;
-			}
-			.busy-indicator div:after {
-			  content: " ";
-			  display: block;
-			  position: absolute;
-			  width: 6px;
-			  height: 6px;
-			  border-radius: 50%;
-			  background: #cef;
-			  margin: -3px 0 0 -3px;
-			}
-			.busy-indicator div:nth-child(1) {
-			  animation-delay: -0.036s;
-			}
-			.busy-indicator div:nth-child(1):after {
-			  top: 50px;
-			  left: 50px;
-			}
-			.busy-indicator div:nth-child(2) {
-			  animation-delay: -0.072s;
-			}
-			.busy-indicator div:nth-child(2):after {
-			  top: 54px;
-			  left: 45px;
-			}
-			.busy-indicator div:nth-child(3) {
-			  animation-delay: -0.108s;
-			}
-			.busy-indicator div:nth-child(3):after {
-			  top: 57px;
-			  left: 39px;
-			}
-			.busy-indicator div:nth-child(4) {
-			  animation-delay: -0.144s;
-			}
-			.busy-indicator div:nth-child(4):after {
-			  top: 58px;
-			  left: 32px;
-			}
-			.busy-indicator div:nth-child(5) {
-			  animation-delay: -0.18s;
-			}
-			.busy-indicator div:nth-child(5):after {
-			  top: 57px;
-			  left: 25px;
-			}
-			.busy-indicator div:nth-child(6) {
-			  animation-delay: -0.216s;
-			}
-			.busy-indicator div:nth-child(6):after {
-			  top: 54px;
-			  left: 19px;
-			}
-			.busy-indicator div:nth-child(7) {
-			  animation-delay: -0.252s;
-			}
-			.busy-indicator div:nth-child(7):after {
-			  top: 50px;
-			  left: 14px;
-			}
-			.busy-indicator div:nth-child(8) {
-			  animation-delay: -0.288s;
-			}
-			.busy-indicator div:nth-child(8):after {
-			  top: 45px;
-			  left: 10px;
-			}
-			@keyframes busy-indicator {
-			  0% {
-			    transform: rotate(0deg);
-			  }
-			  100% {
-			    transform: rotate(360deg);
-			  }
-			}
+        <div style="padding-left: 10rem; padding-right: 10rem; margin-top: 3rem;">
+            <div class="fd-panel fd-panel--fixed">
+                <div class="fd-panel__header">
+                    <h4 class="fd-panel__title">Preparing Eclipse Dirigible Instance</h4>
+                </div>
+            </div>
+            <fd-list>
+                <fd-list-item ng-repeat="job in jobs">
+                    <span fd-object-status status="{{job.status}}" glyph="{{job.statusIcon}}"
+                        text="{{job.name}}"></span>
+                </fd-list-item>
+            </fd-list>
+            <fd-busy-indicator style="margin-top: 3rem;" dg-size="l"></fd-busy-indicator>
+        </div>
 
-			.Running:before {
-			    font-family: 'FontAwesome';
-			    font-size:1.3em;
-			    color: yellow;
-			    content: '\f054';  /* the chevron right icon */
-			    padding-right: 4px; /* plus 4px spacing */
-			}
+        <script>
+            let busyPage = angular.module('busyPage', ['ideUI', 'ideView']);
 
-			.Succeeded:before {
-			    font-family: 'FontAwesome';
-			    font-size:1.3em;
-			    color: green;
-			    content: '\f00c';  /* the check icon */
-			    padding-right: 4px; /* plus 4px spacing */
-			}
+			busyPage.controller('BusyController', ['$scope', '$http', 'theming', function ($scope, $http, theming) {
 
-			.Failed:before {
-			    font-family: 'FontAwesome';
-			    font-size:1.3em;
-			    color: red;
-			    content: '\f00d';  /* the times icon */
-			    padding-right: 4px; /* plus 4px spacing */
-			}
+                setInterval(function() {
 
-		</style>
+                    $http({
+                        method: 'GET',
+                        url: '/services/v4/healthcheck'
+                    }).then(function(healthStatus){
+                        if (healthStatus.data.status === "Ready") {
+                            window.location='/home';
+                        }
+                        let jobs = [];
+                        for (const [key, value] of Object.entries(healthStatus.data.jobs.statuses)) {
+                            let job = new Object();
+                            job.name = key;
+                            switch(value) {
+                                case "Succeeded":
+                                    job.status = "positive";
+                                    job.statusIcon = "sap-icon--message-success"
+                                    break;
+                                case "Failed":
+                                    job.status = "negative";
+                                    job.statusIcon = "sap-icon--message-error";
+                                default:
+                                    job.status = "informative";
+                                    job.statusIcon = "sap-icon--message-information"
+                                    break;
+                            }
+                            jobs.push(job);
+                        }
+                        $scope.jobs = jobs.sort((x, y) => x.name > y.name ? 1 : -1);
+                    }), (function(e){
+                        console.error("Error retreiving the health status", e);
+                    });
 
+                }, 1000);
+			}]);
+        </script>
+    </body>
 
-		<!-- jQuery -->
-		<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-
-		<!-- Twitter Bootstrap with Theme Support -->
-		<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" async></script>
-
-		<!-- AngularJS -->
-		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-
-	</head>
-
-	<body>
-		<div class="container text-center">
-			<br><br><br><br><br>
-			<h1>Preparing Eclipse Dirigible Instance <span class="badge badge-secondary"><div class="busy-indicator">
-			<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></span></h1>
-
-			<table class="table table-striped">
-			    <thead>
-			        <tr>
-			            <th>Synchronizer</th>
-						<th>Status</th>
-			        </tr>
-			    </thead>
-			    <tbody>
-			        <tr ng-repeat="job in jobs">
-					   <td>{{job.name}}</td>
-					   <td class="{{job.status}}">{{job.status}}</td>
-					</tr>
-			    </tbody>
-			</table>
-
-		</div>
-	</body>
-
-	<script>
-
-		angular.module('busy', ['ngResource'])
-			.controller('BusyController', ['$scope', '$http', function ($scope, $http) {
-
-			setInterval(function() {
-
-				$http({
-		            method: 'GET',
-		            url: 'services/v4/healthcheck'
-		        }).then(function(healthStatus){
-		        	if (healthStatus.data.status === "Ready") {
-						window.location='home';
-					}
-					let jobs = [];
-					for (const [key, value] of Object.entries(healthStatus.data.jobs.statuses)) {
-						let job = new Object();
-						job.name = key;
-						job.status = value;
-						jobs.push(job);
-					}
-		        	$scope.jobs = jobs.sort((x, y) => x.name > y.name ? 1 : -1);
-		        }), (function(e){
-		            console.error("Error retreiving the health status", e);
-		        });
-
-			}, 1000);
-
-		}]);
-	</script>
 </html>

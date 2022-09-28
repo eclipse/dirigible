@@ -18,7 +18,7 @@
 		<content.repository.name>template-application-feed</content.repository.name>
 		<content.project.name>template-application-feed</content.project.name>
 
-		<license.header.location>../../licensing-header.txt</license.header.location>
+		<license.header.location>../generation-header.txt</license.header.location>
 	</properties>
 
 </project>

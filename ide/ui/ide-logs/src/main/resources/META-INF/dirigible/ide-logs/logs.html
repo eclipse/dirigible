@@ -14,75 +14,33 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Fake favicon to silent console errors and not waste a get request -->
 
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
         <!-- Title directive -->
         <title dg-view-title></title>
 
-        <!-- Font Awesome -->
-        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-
-        <!-- jQuery -->
-        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-
-        <!-- Twitter Bootstrap with Theme Support -->
-        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
         <!-- View data -->
-        <script type="text/javascript" src="logs-view.js"></script>
+        <script type="text/javascript" src="services/logs-view.js"></script>
 
-        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
 
-        <script type="text/javascript" src="logs.js"></script>
+        <script type="text/javascript" src="js/logs.js"></script>
 
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
-
-        <style>
-            .main-container {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                overflow: hidden;
-                height: 100%;
-                width: 100%;
-            }
-
-            .logs-area {
-                flex-grow: 1;
-                overflow: auto;
-                min-height: 0;
-            }
-
-        </style>
-
     </head>
 
-    <body>
-
-        <div>
-            <div class="fd-toolbar fd-toolbar--cozy">
-                <div class="fd-col fd-col--1 fd-col-md--1 fd-col-lg--1 fd-col-xl--1">
-                    <fd-form-label for="log" dg-required="false" dg-colon="true">Log File</fd-form-label>
-                </div>
-                <div>
-                    <fd-select id="log" class="dg-full-width" ng-model="selectedLog" ng-change="logChanged()"
-                        dropdown-fixed="true">
-                        <fd-option text="{{ log }}" value="log" ng-repeat="log in logsList">
-                        </fd-option>
-                    </fd-select>
-                </div>
-            </div>
-
-            <div class="main-container">
-                <textarea class="fd-textarea fd-textarea--compact logs-area">{{ logContent }}</textarea>
-            </div>
-
-
-        </div>
-
+    <body class="dg-vbox">
+        <fd-toolbar has-title="true" dg-type="solid">
+            <span>Log File</span>
+            <fd-combobox-input dropdown-items="log.logsList" compact="true" ng-model="log.selectedLog"
+                ng-change="logChanged()" dg-placeholder="Select log file..." dg-aria-label="Log files">
+            </fd-combobox-input>
+        </fd-toolbar>
+        <fd-textarea class="dg-stretch">{{ logContent }}
+        </fd-textarea>
     </body>
 
 </html>

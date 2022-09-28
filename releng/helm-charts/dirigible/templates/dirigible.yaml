@@ -4,6 +4,10 @@ kind: ServiceAccount
 metadata:
   name: {{ required "Missing service account name" .Values.serviceAccount.name }}
   namespace: {{ .Release.Namespace }}
+  {{- if .Values.gke.cloudSQL }}
+  annotations:
+    iam.gke.io/gcp-service-account: {{ .Values.gke.dirigibleServiceAccountName }}@{{ .Values.gke.projectId }}.iam.gserviceaccount.com
+  {{- end }}
 {{- end }}
 ---  
 {{- if .Values.volume.enabled }}
@@ -414,7 +418,7 @@ spec:
       name: {{ required "Missing Istio server port name" .Values.istio.serversPortName }}
       protocol: {{ required "Missing Istio server port protocol" .Values.istio.serversPortProtocol }}
     hosts:
-    - {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+    - {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
     {{- if .Values.istio.httpsRedirect }}
     tls:
       httpsRedirect: true
@@ -425,10 +429,10 @@ spec:
       name: https-443
       protocol: HTTPS
     hosts:
-    - {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+    - {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
     tls:
       mode: SIMPLE 
-      credentialName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+      credentialName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
   {{- end }}
 
 ---
@@ -438,7 +442,8 @@ metadata:
   name: {{ required "Missing release name" .Release.Name }}
 spec:
   hosts:
-  - {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+  - {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+  - {{ include "dirigible.fullname" . }}.{{ required "Missing release namespace" .Release.Namespace }}.svc.cluster.local
   gateways:
   - {{ required "Missing release name" .Release.Name }}-gateway
   http:
@@ -447,7 +452,7 @@ spec:
         regex: /.*
     route:
     - destination:
-        host: {{ required "Missing release name" .Release.Name }}.{{ required "Missing release namespace" .Release.Namespace }}.svc.cluster.local
+        host: {{ include "dirigible.fullname" . }}.{{ required "Missing release namespace" .Release.Namespace }}.svc.cluster.local
         port:
           number: 8080
 {{- if .Values.istio.enableHttps }}
@@ -455,15 +460,15 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: dirigible
+  name: {{ required "Missing release name" .Release.Name }}
   namespace: istio-ingress
 spec:
-  secretName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+  secretName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
   issuerRef: 
     name: letsencrypt
     kind: ClusterIssuer
-  commonName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+  commonName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
   dnsNames: 
-  - {{ required "Missing release name" .Release.Name }}.{{ required "Missing release name" .Values.ingress.host }}
+  - {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
 {{- end }}
 {{- end }}

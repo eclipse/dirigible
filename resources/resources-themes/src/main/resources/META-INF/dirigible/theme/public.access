@@ -1,0 +1,1 @@
+{"constraints":[{"path":"/theme/resources.js","method":"GET","roles":["Public"],"scope":"HTTP"}]}

@@ -131,6 +131,7 @@ body {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
+  flex-basis: 0;
   min-height: 0;
 }
 
@@ -270,6 +271,14 @@ body {
   padding-bottom: 1rem;
 }
 .fd-container.fd-form-layout-grid-container .fd-row .fd-col .fd-select__control {
+  margin: 0;
+}
+/* Combobox and Select (when in toolbar) margin fixes */
+.fd-toolbar .fd-popover .fd-input-group {
+  margin: 0;
+}
+/* Table margin fixes*/
+.fd-table .fd-table__cell .fd-select__control {
   margin: 0;
 }
 .dg-backdrop {

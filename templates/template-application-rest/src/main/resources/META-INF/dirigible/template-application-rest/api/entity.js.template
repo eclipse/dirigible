@@ -1,7 +1,7 @@
 #set($dollar = '$' )
-var rs = require("http/v4/rs");
-var dao = require("${projectName}/gen/dao/${perspectiveName}/${name}");
-var http = require("${projectName}/gen/api/utils/http");
+const rs = require("http/v4/rs");
+const dao = require("${projectName}/gen/dao/${perspectiveName}/${name}");
+const http = require("${projectName}/gen/api/utils/http");
 
 #if($type != "REPORT")
 #foreach ($property in $properties)
@@ -13,12 +13,12 @@ var http = require("${projectName}/gen/api/utils/http");
 rs.service()
 	.resource("")
 		.get(function(ctx, request) {
-			var queryOptions = {};
-			var parameters = request.getParameterNames();
-			for (var i = 0; i < parameters.length; i ++) {
+			let queryOptions = {};
+			let parameters = request.getParameterNames();
+			for (let i = 0; i < parameters.length; i ++) {
 				queryOptions[parameters[i]] = request.getParameter(parameters[i]);
 			}
-			var entities = dao.list(queryOptions);
+			let entities = dao.list(queryOptions);
 			http.sendResponseOk(entities);
 		})
 		.produces(["application/json"])
@@ -31,10 +31,18 @@ rs.service()
 				http.sendInternalServerError(error.message);
 			}
         })
+#if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
+	.resource("count/{${masterEntityId}}")
+		.get(function(ctx, request) {
+			let ${masterEntityId} = ctx.pathParameters.${masterEntityId};
+			http.sendResponseOk("" + dao.count(${masterEntityId}));
+		})
+#else
 	.resource("count")
 		.get(function(ctx, request) {
-			http.sendResponseOk(dao.count());
+			http.sendResponseOk("" + dao.count());
 		})
+#end
 		.catch(function(ctx, error) {
             if (error.name === "ForbiddenError") {
                 http.sendForbiddenRequest(error.message);
@@ -46,8 +54,8 @@ rs.service()
         })
 	.resource("{id}")
 		.get(function(ctx) {
-			var id = ctx.pathParameters.id;
-			var entity = dao.get(id);
+			let id = ctx.pathParameters.id;
+			let entity = dao.get(id);
 			if (entity) {
 			    http.sendResponseOk(entity);
 			} else {
@@ -66,7 +74,7 @@ rs.service()
         })
 	.resource("")
 		.post(function(ctx, request, response) {
-			var entity = request.getJSON();
+			let entity = request.getJSON();
 #if($isEntityPropertyPropertyEnabled)
 			validateEntity(entity);
 #end
@@ -86,7 +94,7 @@ rs.service()
         })
 	.resource("{id}")
 		.put(function(ctx, request) {
-			var entity = request.getJSON();
+			let entity = request.getJSON();
 			entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end = ctx.pathParameters.id;
 #if($isEntityPropertyPropertyEnabled)
 			validateEntity(entity);
@@ -106,8 +114,8 @@ rs.service()
         })
 	.resource("{id}")
 		.delete(function(ctx) {
-			var id = ctx.pathParameters.id;
-			var entity = dao.get(id);
+			let id = ctx.pathParameters.id;
+			let entity = dao.get(id);
 			if (entity) {
 				dao.delete(id);
 				http.sendResponseNoContent();
@@ -134,7 +142,7 @@ function ValidationError(message) {
 }
 
 function validateEntity(entity) {
-	var isValid = true;
+	let isValid = true;
 #foreach ($property in $properties)
 #if($property.widgetPattern && $property.widgetPattern != "")
 	isValid = isValid && entity.${property.name} && entity.${property.name}.match(/^${property.widgetPattern}${dollar}/) !== null;
@@ -150,12 +158,12 @@ function validateEntity(entity) {
 rs.service()
 	.resource("")
 		.get(function(ctx, request) {
-			var queryOptions = {};
-			var parameters = request.getParameterNames();
-			for (var i = 0; i < parameters.length; i ++) {
+			let queryOptions = {};
+			let parameters = request.getParameterNames();
+			for (let i = 0; i < parameters.length; i ++) {
 				queryOptions[parameters[i]] = request.getParameter(parameters[i]);
 			}
-			var entities = dao.list(queryOptions);
+			let entities = dao.list(queryOptions);
 			http.sendResponseOk(entities);
 		})
 		.catch(function(ctx, error) {

@@ -23,10 +23,10 @@
         <!-- View data -->
         <script type="text/javascript" src="services/projects-view.js"></script>
 
-        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
         <theme></theme>
 
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/editors.js"></script>
+        <script type="text/javascript" src="/services/v4/web/resources-core/ui/editors.js"></script>
 
         <!-- Services -->
         <script type="text/javascript" src="/services/v4/web/ide-workspace-service/workspace.js"></script>
@@ -37,10 +37,10 @@
 
         <!-- JSTree -->
         <script type="text/javascript" src="/webjars/jstree/3.3.12/jstree.min.js"></script>
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/widgets/indicator.plugin.js"></script>
+        <script type="text/javascript" src="/services/v4/web/resources-core/ui/widgets/indicator.plugin.js"></script>
         <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/jstree.css" />
 
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
 
         <!-- Project-specific stuff -->
         <script type="text/javascript" src="js/projects.js"></script>
@@ -68,7 +68,7 @@
                     </fd-button>
                 </fd-popover-control>
                 <fd-popover-body dg-align="right" no-arrow="true">
-                    <fd-menu no-backdrop="true">
+                    <fd-menu no-backdrop="true" no-shadow="true">
                         <fd-menu-item title="{{ name }}" ng-repeat="name in workspaceNames"
                             is-selected="{{ isSelectedWorkspace(name) }}" ng-click="switchWorkspace(name)">
                         </fd-menu-item>

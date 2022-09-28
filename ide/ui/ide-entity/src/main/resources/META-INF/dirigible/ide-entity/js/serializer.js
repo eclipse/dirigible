@@ -23,6 +23,7 @@ function createModel(graph) {
 			child.value.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
 			child.value.dataCount = child.value.dataCount ? child.value.dataCount : 'SELECT COUNT(*) AS COUNT FROM ' + JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
 			child.value.title = child.value.title ? child.value.title : child.value.name;
+			child.value.caption = child.value.caption ? child.value.caption : "Manage entity " + child.value.name;
 			child.value.tooltip = child.value.tooltip ? child.value.tooltip : child.value.name;
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
@@ -32,6 +33,7 @@ function createModel(graph) {
 				'" dataQuery="' + _.escape(child.value.dataQuery) +
 				'" type="' + _.escape(child.value.entityType ? child.value.entityType : 'PRIMARY') +
 				'" title="' + _.escape(child.value.title) +
+				'" caption="' + _.escape(child.value.caption) +
 				'" tooltip="' + _.escape(child.value.tooltip) +
 				'" icon="' + _.escape(child.value.icon) +
 				'" menuKey="' + _.escape(child.value.menuKey) +
@@ -39,8 +41,8 @@ function createModel(graph) {
 				'" menuIndex="' + _.escape(child.value.menuIndex) +
 				'" layoutType="' + _.escape(child.value.layoutType) +
 				'" perspectiveName="' + _.escape(child.value.perspectiveName) +
-				'" perspectiveIcon="' + _.escape(child.value.perspectiveIcon) +
-				'" perspectiveOrder="' + _.escape(child.value.perspectiveOrder) + '"';
+				'" perspectiveIcon="' + getPerspectiveIcon(graph, child) +
+				'" perspectiveOrder="' + getPerspectiveOrder(graph, child) + '"';
 
 			if (child.value.feedUrl && child.value.feedUrl !== "") {
 				child.value.feedUrl = btoa(child.value.feedUrl);
@@ -236,6 +238,32 @@ function createModel(graph) {
 	}
 
 	return model.join('');
+}
+
+function getPerspectiveIcon(graph, child) {
+	let perspectiveName = _.escape(child.value.perspectiveName);
+	let perspectiveIcon = _.escape(child.value.perspectiveIcon);
+	let perspectives = graph.getModel().perspectives || [];
+	for (let i = 0; i < perspectives.length; i++) {
+		if (perspectiveName === _.escape(perspectives[i].id)) {
+			perspectiveIcon = perspectives[i].icon;
+
+		}
+	}
+	return perspectiveIcon;
+}
+
+function getPerspectiveOrder(graph, child) {
+	let perspectiveName = _.escape(child.value.perspectiveName);
+	let perspectiveOrder = _.escape(child.value.perspectiveOrder);
+	let perspectives = graph.getModel().perspectives || [];
+	for (let i = 0; i < perspectives.length; i++) {
+		if (perspectiveName === _.escape(perspectives[i].id)) {
+			perspectiveOrder = perspectives[i].order;
+
+		}
+	}
+	return perspectiveOrder;
 }
 
 // function createModelJson(graph) {
