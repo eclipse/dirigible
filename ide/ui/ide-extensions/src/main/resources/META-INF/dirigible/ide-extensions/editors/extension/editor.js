@@ -103,7 +103,7 @@ angular.module('page', ["ideUI", "ideView"])
 		messageHub.subscribe(
 			function (msg) {
 				let file = msg.data && typeof msg.data === 'object' && msg.data.file;
-				let extension = JSON.stringify($scope.extension);
+				let extension = JSON.stringify($scope.extension, null, 4);
 				if (file && file === $scope.file && contents !== extension)
 					$scope.save();
 			},
