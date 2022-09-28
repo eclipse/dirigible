@@ -1859,7 +1859,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param sql the sql
      */
     protected void generateTable(StringBuilder sql) {
-        String tableName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getTable()) : this.getTable();
+        String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
         sql.append(SPACE).append(KEYWORD_TABLE).append(SPACE).append(tableName);
     }
 
@@ -1936,7 +1936,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     protected String traverseColumnNamesForDrop() {
         StringBuilder snippet = new StringBuilder();
         for (String[] column : this.columns) {
-            String columnName = (isCaseSensitive()) ? encapsulate(column[0]) : column[0];
+            String columnName = (isCaseSensitive()) ? encapsulate(column[0], false) : column[0];
             snippet.append(KEYWORD_DROP).append(SPACE).append(KEYWORD_COLUMN).append(SPACE);
             snippet.append(columnName).append(SPACE);
             snippet.append(COMMA).append(SPACE);
@@ -1958,7 +1958,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
             boolean first = true;
             for (String arg : column) {
                 if (first) {
-                    String columnName = (isCaseSensitive()) ? encapsulate(arg) : arg;
+                    String columnName = (isCaseSensitive()) ? encapsulate(arg, false) : arg;
                     snippet.append(columnName).append(SPACE);
                     first = false;
                     continue;
@@ -1982,7 +1982,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         StringBuilder snippet = new StringBuilder();
         snippet.append(SPACE);
         for (String column : names) {
-            String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+            String columnName = (isCaseSensitive()) ? encapsulate(column, false) : column;
             snippet.append(columnName).append(SPACE).append(COMMA).append(SPACE);
         }
         return snippet.substring(0, snippet.length() - 2);

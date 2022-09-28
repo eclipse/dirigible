@@ -323,7 +323,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
         if ((this.primaryKey != null) && allPrimaryKeys.size() == 0 && !this.primaryKey.getColumns().isEmpty()) {
             sql.append(COMMA).append(SPACE);
             if (this.primaryKey.getName() != null) {
-                String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName()) : this.primaryKey.getName();
+                String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName(), false) : this.primaryKey.getName();
                 sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(primaryKeyName).append(SPACE);
             }
             sql.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
@@ -359,10 +359,10 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
         if (foreignKey != null) {
             sql.append(COMMA).append(SPACE);
             if (foreignKey.getName() != null) {
-                String foreignKeyName = (isCaseSensitive()) ? encapsulate(foreignKey.getName()) : foreignKey.getName();
+                String foreignKeyName = (isCaseSensitive()) ? encapsulate(foreignKey.getName(), false) : foreignKey.getName();
                 sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKeyName).append(SPACE);
             }
-            String referencedTableName = (isCaseSensitive()) ? encapsulateDataStructureName(foreignKey.getReferencedTable()) : foreignKey.getReferencedTable();
+            String referencedTableName = (isCaseSensitive()) ? encapsulate(foreignKey.getReferencedTable(), true) : foreignKey.getReferencedTable();
             sql.append(KEYWORD_FOREIGN).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
                     .append(traverseNames(foreignKey.getColumns())).append(CLOSE).append(SPACE).append(KEYWORD_REFERENCES).append(SPACE);
             if (foreignKey.getReferencedTableSchema() != null) {
@@ -438,7 +438,7 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
         if (check != null) {
             sql.append(COMMA).append(SPACE);
             if (check.getName() != null) {
-                String checkName = (isCaseSensitive()) ? encapsulate(check.getName()) : check.getName();
+                String checkName = (isCaseSensitive()) ? encapsulate(check.getName(), false) : check.getName();
                 sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(checkName).append(SPACE);
             }
             sql.append(KEYWORD_CHECK).append(SPACE).append(OPEN).append(check.getExpression()).append(CLOSE);

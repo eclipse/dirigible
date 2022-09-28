@@ -129,7 +129,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
-		String tableName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getTable()) : this.getTable();
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
 		sql.append(SPACE).append(tableName);
 	}
 
@@ -142,7 +142,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	protected void generateSetValues(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_SET);
 		for (Entry<String, String> next : values.entrySet()) {
-			String columnName = (isCaseSensitive()) ? encapsulate(next.getKey()) : next.getKey();
+			String columnName = (isCaseSensitive()) ? encapsulate(next.getKey(), false) : next.getKey();
 			sql.append(SPACE).append(columnName).append(SPACE).append(EQUALS).append(SPACE).append(next.getValue()).append(COMMA);
 		}
 		if (values.entrySet().size() > 0) {

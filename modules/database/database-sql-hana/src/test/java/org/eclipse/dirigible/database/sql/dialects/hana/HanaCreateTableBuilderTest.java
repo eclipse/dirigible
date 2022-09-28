@@ -48,6 +48,9 @@ public class HanaCreateTableBuilderTest {
     assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
   }
 
+  /**
+   * Creates the table generic with case sensitive flag.
+   */
   @Test
   public void createTableCaseSensitiveGeneric() {
     Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");

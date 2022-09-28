@@ -61,7 +61,7 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 	 */
 	@Override
 	protected void generateTable(StringBuilder sql) {
-		String tableName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getTable()) : this.getTable();
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
 		String tableType = "";
 
 		if (this.tableType.equalsIgnoreCase(KEYWORD_COLUMN)) {

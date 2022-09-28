@@ -71,7 +71,7 @@ public class DropSchemaBuilder extends AbstractDropSqlBuilder {
      * @param sql the sql
      */
     protected void generateSchema(StringBuilder sql) {
-        String schemaName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getName()) : this.getName();
+        String schemaName = (isCaseSensitive()) ? encapsulate(this.getName(), true) : this.getName();
         sql.append(SPACE).append(KEYWORD_SCHEMA).append(SPACE).append(schemaName);
     }
 

@@ -74,7 +74,7 @@ public class DropTableBuilder extends AbstractDropSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
-		String tableName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getTable()) : this.getTable();
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
 		sql.append(SPACE).append(KEYWORD_TABLE).append(SPACE).append(tableName);
 	}
 	

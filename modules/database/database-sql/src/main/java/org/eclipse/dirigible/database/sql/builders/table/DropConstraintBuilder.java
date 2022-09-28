@@ -100,7 +100,7 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateAlter(StringBuilder sql) {
-		String tableName = (isCaseSensitive()) ? encapsulateDataStructureName(this.getTable()) : this.getTable();
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
 		sql.append(ALTER).append(SPACE).append(TABLE).append(SPACE).append(tableName).append(SPACE);
 	}
 	
@@ -111,7 +111,7 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateConstraint(StringBuilder sql) {
-		String constraintName = (isCaseSensitive()) ? encapsulate(this.getConstraint()) : this.getConstraint();
+		String constraintName = (isCaseSensitive()) ? encapsulate(this.getConstraint(), false) : this.getConstraint();
 		sql.append(SPACE).append(KEYWORD_CONSTRAINT).append(SPACE).append(constraintName);
 	}
 	
