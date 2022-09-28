@@ -194,7 +194,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	protected String traverseColumns() {
 		StringBuilder snippet = new StringBuilder();
 		for (String column : this.columns) {
-			String columnName = (isCaseSensitive()) ? encapsulate(column, false) : column;
+			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
 			snippet.append(columnName).append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);

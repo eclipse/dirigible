@@ -122,7 +122,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
             boolean isColumnName = true;
             for (String arg : column) {
                 if (isColumnName) {
-                    String columnName = (isCaseSensitive()) ? encapsulate(arg, false) : arg;
+                    String columnName = (isCaseSensitive()) ? encapsulate(arg) : arg;
                     snippet.append(columnName).append(SPACE);
                     isColumnName = false;
                     continue;
@@ -232,7 +232,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
         if ((this.primaryKey != null) && allPrimaryKeys.size() == 0 && !this.primaryKey.getColumns().isEmpty()) {
             sql.append(COMMA).append(SPACE);
             if (this.primaryKey.getName() != null) {
-                String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName(), false) : this.primaryKey.getName();
+                String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName()) : this.primaryKey.getName();
                 sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(primaryKeyName).append(SPACE);
             }
             sql.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
@@ -275,7 +275,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
         StringBuilder snippet = new StringBuilder();
         snippet.append(SPACE);
         for (String column : names) {
-            String columnName = (isCaseSensitive()) ? encapsulate(column, false) : column;
+            String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
             snippet.append(columnName).append(SPACE).append(COMMA).append(SPACE);
         }
         return snippet.substring(0, snippet.length() - 2);

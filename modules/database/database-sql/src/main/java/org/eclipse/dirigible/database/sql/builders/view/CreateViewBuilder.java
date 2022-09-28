@@ -178,7 +178,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(SPACE);
 		for (String column : this.columns) {
-			String columnName = (isCaseSensitive()) ? encapsulate(column, false) : column;
+			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
 			snippet.append(columnName).append(SPACE);
 			snippet.append(COMMA).append(SPACE);
 		}

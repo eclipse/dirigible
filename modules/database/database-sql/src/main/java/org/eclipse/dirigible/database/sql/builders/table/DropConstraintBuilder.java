@@ -111,7 +111,7 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateConstraint(StringBuilder sql) {
-		String constraintName = (isCaseSensitive()) ? encapsulate(this.getConstraint(), false) : this.getConstraint();
+		String constraintName = (isCaseSensitive()) ? encapsulate(this.getConstraint()) : this.getConstraint();
 		sql.append(SPACE).append(KEYWORD_CONSTRAINT).append(SPACE).append(constraintName);
 	}
 	
