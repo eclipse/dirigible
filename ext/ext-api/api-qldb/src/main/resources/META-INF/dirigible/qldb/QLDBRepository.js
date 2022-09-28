@@ -9,5 +9,4 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const QLDBRepository = Java.type("org.eclipse.dirigible.api.qldb.QLDBRepository");
-module.exports = QLDBRepository;
+module.exports = Java.type("org.eclipse.dirigible.api.qldb.QLDBRepository");

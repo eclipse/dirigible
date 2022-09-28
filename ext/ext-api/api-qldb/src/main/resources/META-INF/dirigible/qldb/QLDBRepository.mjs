@@ -1,1 +1,1 @@
-export const QLDBRepository = Java.type("org.eclipse.dirigible.api.qldb.QLDBRepository");
+export default QLDBRepository = Java.type("org.eclipse.dirigible.api.qldb.QLDBRepository");

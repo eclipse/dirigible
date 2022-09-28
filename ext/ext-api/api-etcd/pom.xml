@@ -25,17 +25,6 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>${maven.compiler.plugin.version}</version>
-                        <configuration>
-                            <source>${maven.compiler.source}</source>
-                            <target>${maven.compiler.target}</target>
-                            <debug>true</debug>
-                            <debuglevel>lines,vars,source</debuglevel>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>2.22.2</version>
                         <configuration>
@@ -56,17 +45,17 @@
             </activation>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>${maven.compiler.plugin.version}</version>
-                        <configuration>
-                            <source>${maven.compiler.source}</source>
-                            <target>${maven.compiler.target}</target>
-                            <debug>true</debug>
-                            <debuglevel>lines,vars,source</debuglevel>
-                        </configuration>
-                    </plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>${maven.compiler.plugin.version}</version>
+						<configuration>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
+							<debug>true</debug>
+							<debuglevel>lines,vars,source</debuglevel>
+						</configuration>
+					</plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
@@ -118,18 +107,18 @@
 		<dependency>
 			<groupId>io.etcd</groupId>
 			<artifactId>jetcd-core</artifactId>
-			<version>0.7.3</version>
+			<version>${jetcd.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.etcd</groupId>
 			<artifactId>jetcd-launcher</artifactId>
-			<version>0.7.3</version>
+			<version>${jetcd.core.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.etcd</groupId>
 			<artifactId>jetcd-test</artifactId>
-			<version>0.5.4</version>
+			<version>${jetcd.test.version}</version>
 		</dependency>
 		<!-- / Etcd dependencies -->
 

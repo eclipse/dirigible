@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class QLDBRepository {
@@ -44,7 +43,7 @@ public class QLDBRepository {
                 .build();
     }
 
-    public void createTable() { // Todo: if exists
+    public void createTable() {
          qldbDriver.execute(
                 txn -> {
                     txn.execute("CREATE TABLE " + tableName);
@@ -54,7 +53,7 @@ public class QLDBRepository {
     }
 
     public void dropTable() {
-        qldbDriver.execute(txn -> { // Todo: if exists
+        qldbDriver.execute(txn -> {
             txn.execute("DROP TABLE " + tableName);
         });
     }
@@ -93,14 +92,10 @@ public class QLDBRepository {
         return "SELECT * FROM " + tableName + " BY " + DOCUMENT_ID_FIELD;
     }
 
-    List<Map<String, Object>> ionValuesToList(Result ionValues) {
-        return iterableToStream(ionValues)
+    private List<Map<String, Object>> ionValuesToList(Result ionValues) {
+        return StreamSupport.stream(ionValues.spliterator(), false)
                 .map(this::deserialize)
                 .collect(Collectors.toList());
-    }
-
-    private static <T> Stream<T> iterableToStream(Iterable<T> iterable) {
-        return StreamSupport.stream(iterable.spliterator(), false);
     }
 
     public Map<String, Object> getById(String id) {

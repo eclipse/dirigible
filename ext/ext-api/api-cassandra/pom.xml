@@ -25,17 +25,6 @@
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>${maven.compiler.plugin.version}</version>
-						<configuration>
-							<source>${maven.compiler.source}</source>
-							<target>${maven.compiler.target}</target>
-							<debug>true</debug>
-							<debuglevel>lines,vars,source</debuglevel>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<version>2.22.2</version>
 						<configuration>
@@ -86,7 +75,7 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>cassandra</artifactId>
-			<version>1.17.3</version>
+			<version>${cassandra.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -128,7 +117,7 @@
 		<dependency>
 			<groupId>com.datastax.cassandra</groupId>
 			<artifactId>cassandra-driver-core</artifactId>
-			<version>3.11.3</version>
+			<version>${cassandra.driver.version}</version>
 		</dependency>
 		
 
