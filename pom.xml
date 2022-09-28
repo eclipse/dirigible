@@ -714,6 +714,7 @@
 		<commons.codec>1.15</commons.codec>
 		<commons.lang3>3.12.0</commons.lang3>
 		<commons.exec>1.3</commons.exec>
+		<commons.text>1.9</commons.text>
 		<cxf.version>3.5.3</cxf.version>
 		<gson.version>2.9.1</gson.version>
 		<mockito.version>4.8.0</mockito.version>
@@ -770,6 +771,12 @@
 		<classgraph.version>4.8.149</classgraph.version>
 		<commons-compress.version>1.21</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.3</testcontainers.elasticsearch.version>
+		<testcontainers.version>1.17.3</testcontainers.version>
+		<testcontainers.rabbitmq.version>1.17.3</testcontainers.rabbitmq.version>
+		<amqp.client.version>5.16.0</amqp.client.version>
+		<elasticsearch.client.version>7.7.1</elasticsearch.client.version>
+		<jetcd.core.version>0.7.3</jetcd.core.version>
+		<jetcd.test.version>0.5.4</jetcd.test.version>
 		<logcaptor.version>2.7.10</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.13.4</jackson.databind.version>
@@ -789,6 +796,13 @@
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.42</wikitext.version>
 		<flexmark.version>0.64.0</flexmark.version>
+		<qldb.driver.version>2.3.1</qldb.driver.version>
+		<qldb.sdk.version>1.11.785</qldb.sdk.version>
+		<cassandra.version>1.17.3</cassandra.version>
+		<cassandra.driver.version>3.11.3</cassandra.driver.version>
+		<jedis.version>4.2.3</jedis.version>
+		<spark.version>3.3.0</spark.version>
+
 		<sonar.organization>eclipse</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
