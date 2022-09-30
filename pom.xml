@@ -771,7 +771,7 @@
 		<classgraph.version>4.8.149</classgraph.version>
 		<commons-compress.version>1.21</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.4</testcontainers.elasticsearch.version>
-		<testcontainers.version>1.17.3</testcontainers.version>
+		<testcontainers.version>1.17.4</testcontainers.version>
 		<testcontainers.rabbitmq.version>1.17.4</testcontainers.rabbitmq.version>
 		<amqp.client.version>5.16.0</amqp.client.version>
 		<elasticsearch.client.version>7.7.1</elasticsearch.client.version>
