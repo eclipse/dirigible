@@ -772,7 +772,7 @@
 		<commons-compress.version>1.21</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.3</testcontainers.elasticsearch.version>
 		<testcontainers.version>1.17.3</testcontainers.version>
-		<testcontainers.rabbitmq.version>1.17.3</testcontainers.rabbitmq.version>
+		<testcontainers.rabbitmq.version>1.17.4</testcontainers.rabbitmq.version>
 		<amqp.client.version>5.16.0</amqp.client.version>
 		<elasticsearch.client.version>7.7.1</elasticsearch.client.version>
 		<jetcd.core.version>0.7.3</jetcd.core.version>
