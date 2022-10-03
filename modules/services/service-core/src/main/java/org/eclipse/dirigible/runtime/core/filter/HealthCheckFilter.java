@@ -56,11 +56,12 @@ public class HealthCheckFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		boolean isResources = httpRequest.getPathInfo().startsWith("/web/resources") || httpRequest.getPathInfo().startsWith("/js/resources");
-		boolean isHealthCheck = httpRequest.getPathInfo().startsWith("/healthcheck");
-		boolean isOps = httpRequest.getPathInfo().startsWith("/ops");
-		boolean isWebJars = httpRequest.getPathInfo().startsWith("/webjars");
-		boolean isTheme = httpRequest.getPathInfo().startsWith("/web/theme/") || httpRequest.getPathInfo().startsWith("/js/theme/");
+		String path = getRequestPath(httpRequest);
+		boolean isResources = isResourcesRequest(path);
+		boolean isHealthCheck = isHealtCheckRequest(path);
+		boolean isOps = isOpsRequest(path);
+		boolean isWebJars = isWebJarsRequest(path);
+		boolean isTheme = isThemeRequest(path);
 		if (!isResources && !isHealthCheck && !isOps && !isWebJars && !isTheme) {
 			HealthStatus healthStatus = HealthStatus.getInstance();
 			if (healthStatus.getStatus().equals(HealthStatus.Status.Ready)) {
@@ -71,6 +72,39 @@ public class HealthCheckFilter implements Filter {
 			return;
 		}
 		chain.doFilter(request, response);
+	}
+
+	private boolean isResourcesRequest(String path) {
+		return path.startsWith("/web/resources") || path.startsWith("/js/resources");
+	}
+
+	private boolean isHealtCheckRequest(String path) {
+		return path.startsWith("/healthcheck");
+	}
+
+	private boolean isOpsRequest(String path) {
+		return path.startsWith("/ops");
+	}
+
+	private boolean isWebJarsRequest(String path) {
+		return path.startsWith("/webjars");
+	}
+
+	private boolean isThemeRequest(String path) {
+		return path.startsWith("/web/theme/") || path.startsWith("/js/theme/");
+	}
+
+	private String getRequestPath(HttpServletRequest httpRequest) {
+		String path = httpRequest.getPathInfo();
+		if (path == null) {
+			path = httpRequest.getServletPath();
+			path = path
+					.replace("/services/v3", "")
+					.replace("/services/v4", "")
+					.replace("/public/v3", "")
+					.replace("/public/v4", "");
+		}
+		return path;
 	}
 
 	/**
