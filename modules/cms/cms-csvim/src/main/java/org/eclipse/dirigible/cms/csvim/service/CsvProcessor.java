@@ -336,15 +336,10 @@ public class CsvProcessor {
 	 */
 	private void setPreparedStatementValue(Boolean distinguishEmptyFromNull, PreparedStatement statement, int i,
 			String value, int columnType) throws SQLException {
-		if (!StringUtils.isEmpty(value)) {
-			setValue(statement, i, columnType, value);
-		} else {
-			if (distinguishEmptyFromNull) {
-				setValue(statement, i, columnType, "");
-			} else {
-				setValue(statement, i, columnType, value);
-			}
+		if (StringUtils.isEmpty(value)) {
+			value = distinguishEmptyFromNull ? "" : null;
 		}
+		setValue(statement, i, columnType, value);
 	}
 
 	/**
