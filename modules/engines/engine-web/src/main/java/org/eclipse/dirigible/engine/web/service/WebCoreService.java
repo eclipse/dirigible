@@ -297,7 +297,6 @@ public class WebCoreService implements IWebCoreService {
 			if (!result.getGuid().equals(name)) {
 				String error = format("The name of the project folder must the same as the 'guid' property in the 'project.json' - [{0}] and [{1}]", name, result.getGuid());
 				logProblem(error, ERROR_TYPE, path, ProjectMetadata.PROJECT_METADATA_ARTEFACT_TYPE);
-				throw new RuntimeException(error);
 			}
 		}
 	}
