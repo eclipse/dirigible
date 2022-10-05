@@ -21,7 +21,7 @@ function createModel(graph) {
 
 		if (!graph.model.isEdge(child)) {
 			child.value.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
-			child.value.dataCount = child.value.dataCount ? child.value.dataCount : 'SELECT COUNT(*) AS COUNT FROM ' + JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
+			child.value.dataCount = child.value.dataCount ? child.value.dataCount : "SELECT COUNT(*) AS COUNT FROM \"${tablePrefix}_" + JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase() + "\"";
 			child.value.title = child.value.title ? child.value.title : child.value.name;
 			child.value.caption = child.value.caption ? child.value.caption : "Manage entity " + child.value.name;
 			child.value.tooltip = child.value.tooltip ? child.value.tooltip : child.value.name;

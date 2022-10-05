@@ -263,7 +263,7 @@ exports.delete = function(id) {
 
 #if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
 exports.count = function (#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end) {
-	let resultSet = query.execute("SELECT COUNT(*) AS COUNT FROM ${tablePrefix}_${dataName} WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.dataName}#end#end = ?", [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
+	let resultSet = query.execute('SELECT COUNT(*) AS COUNT FROM "${tablePrefix}_${dataName}" WHERE #foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")"${property.dataName}"#end#end = ?', [#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION")${property.name}#end#end]);
 	if (resultSet !== null && resultSet[0] !== null) {
 		if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
 			return resultSet[0].COUNT;
@@ -281,7 +281,7 @@ exports.count = function() {
 
 exports.customDataCount = function() {
 #if($dataCount)
-	let resultSet = query.execute("${dataCount}");
+	let resultSet = query.execute('${dataCount}');
 	if (resultSet !== null && resultSet[0] !== null) {
 		if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
 			return resultSet[0].COUNT;
