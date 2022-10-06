@@ -53,17 +53,17 @@ public class DirigibleModulesInstallerModule {
 			}
 		}
 
-		ServiceLoader<AbstractDirigibleModule> dirigibleModules = ServiceLoader.load(AbstractDirigibleModule.class);
+		ServiceLoader<IDirigibleModule> dirigibleModules = ServiceLoader.load(IDirigibleModule.class);
 
-		List<AbstractDirigibleModule> sortedDirigibleModules = new ArrayList<AbstractDirigibleModule>();
-		Iterator<AbstractDirigibleModule> iterator = dirigibleModules.iterator();
+		List<IDirigibleModule> sortedDirigibleModules = new ArrayList<IDirigibleModule>();
+		Iterator<IDirigibleModule> iterator = dirigibleModules.iterator();
 		while(iterator.hasNext()) {
 			sortedDirigibleModules.add(iterator.next());
 		}
-		Collections.sort(sortedDirigibleModules, new Comparator<AbstractDirigibleModule>() {
+		Collections.sort(sortedDirigibleModules, new Comparator<IDirigibleModule>() {
 
 			@Override
-			public int compare(AbstractDirigibleModule module1, AbstractDirigibleModule module2) {
+			public int compare(IDirigibleModule module1, IDirigibleModule module2) {
 				int priorityDiff = module1.getPriority() - module2.getPriority();
 				if (priorityDiff == 0) {
 					priorityDiff = module1.getName().compareTo(module2.getName());
@@ -72,7 +72,7 @@ public class DirigibleModulesInstallerModule {
 			}
 		});
 
-		for (AbstractDirigibleModule next: sortedDirigibleModules) {
+		for (IDirigibleModule next: sortedDirigibleModules) {
 			if (logger.isDebugEnabled()) {logger.debug(format("Installing Dirigible Module [{0}] ...", next.getName()));}
 			try {
 				next.configure();

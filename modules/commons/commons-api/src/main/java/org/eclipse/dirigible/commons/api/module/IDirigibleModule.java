@@ -14,7 +14,7 @@ package org.eclipse.dirigible.commons.api.module;
 /**
  * The Interface DirigibleModule.
  */
-public interface DirigibleModule {
+public interface IDirigibleModule {
 	
 	/** The priority configuration. */
 	int PRIORITY_CONFIGURATION = 10;

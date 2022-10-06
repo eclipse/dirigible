@@ -14,7 +14,7 @@ package org.eclipse.dirigible.commons.api.module;
 /**
  * The AbstractDirigibleModule is the parent of the Dirigible's Modules.
  */
-public abstract class AbstractDirigibleModule implements DirigibleModule {
+public abstract class AbstractDirigibleModule implements IDirigibleModule {
 
 	/**
 	 * Gets the name.
