@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.commons.api.service;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -29,7 +27,7 @@ import com.google.gson.Gson;
  * @param <T>
  *            the generic type
  */
-public abstract class AbstractExceptionHandler<T extends Throwable> implements ExceptionMapper<T> {
+public abstract class AbstractExceptionHandler<T extends Throwable> implements ExceptionMapper<T>, IRestExceptionHandler<T> {
 
 	/** The Constant GSON. */
 	private static final Gson GSON = new Gson();
@@ -70,6 +68,7 @@ public abstract class AbstractExceptionHandler<T extends Throwable> implements E
 	 *
 	 * @return the type
 	 */
+	@Override
 	public abstract Class<? extends AbstractExceptionHandler<T>> getType();
 
 	/**

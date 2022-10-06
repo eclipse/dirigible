@@ -24,7 +24,7 @@ import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
 import org.apache.cxf.jaxrs.swagger.Swagger2Feature;
 import org.eclipse.dirigible.commons.api.content.ClasspathContentLoader;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
-import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
+import org.eclipse.dirigible.commons.api.service.IRestExceptionHandler;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
@@ -168,7 +168,7 @@ public class DirigibleInitializer {
 	 * Adds the exception handlers.
 	 */
 	private void addExceptionHandlers() {
-		for (AbstractExceptionHandler<?> next : ServiceLoader.load(AbstractExceptionHandler.class)) {
+		for (IRestExceptionHandler<?> next : ServiceLoader.load(IRestExceptionHandler.class)) {
 			StaticObjects.set(next.getType().getCanonicalName(), next);
 			getServices().add(next);
 			if (logger.isInfoEnabled()) {logger.info("Exception Handler registered {}.", next.getType());}
