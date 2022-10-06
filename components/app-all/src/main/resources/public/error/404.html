@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="errorPage" ng-controller="ErrorPageController">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="/services/v4/web/resources/images/favicon.ico" />
+        <title>Page Not Found</title>
+        <theme></theme>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=application-view-js">
+        </script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=application-view-css" />
+    </head>
+
+    <body class="fd-scrollbar" dg-contextmenu="contextMenuContent">
+
+        <div style="height: 600px; width: 100%;">
+            <fd-message-page glyph="sap-icon--documents">
+                <fd-message-page-title>Page Not Found</fd-message-page-title>
+                <fd-message-page-subtitle>
+                    <b>It looks like you've reached a URL that doesn't exist</b>.
+                    <br>
+                    The page you are looking for is no longer here, or never existed in the first place.
+                    <br>
+                    <br>
+                    <i>You can go to the <b>previous page</b>, or start over from the <b>home page</b>.</i>
+                </fd-message-page-subtitle>
+                <fd-message-page-actions>
+                    <fd-button compact="true" dg-label="Go Back" dg-type="emphasized" style="margin: 0 0.25rem;"
+                        ng-click="goBack()">
+                    </fd-button>
+                    <fd-button compact="true" dg-label="Take Me Home" ng-click="goHome()" ng-click="goHome()">
+                    </fd-button>
+                </fd-message-page-actions>
+            </fd-message-page>
+        </div>
+
+        <script>
+            let errorPage = angular.module('errorPage', ['ideUI', 'ideView']);
+
+			errorPage.controller('ErrorPageController', ['$scope', 'theming', function ($scope, theming) {
+
+				$scope.goBack = function() {
+					history.back();
+				};
+
+				$scope.goHome = function() {
+					window.location = "/home";
+				};
+
+			}]);
+        </script>
+    </body>
+
+</html>
