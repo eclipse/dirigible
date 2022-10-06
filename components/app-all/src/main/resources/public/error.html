@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="errorPage" ng-controller="ErrorPageController">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="/services/v4/web/resources/images/favicon.ico" />
+        <title>Unexpected Error Occurred</title>
+        <theme></theme>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=application-view-js">
+        </script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=application-view-css" />
+    </head>
+
+    <body class="fd-scrollbar" dg-contextmenu="contextMenuContent">
+
+        <div style="height: 600px; width: 100%;">
+            <fd-message-page glyph="sap-icon--error">
+                <fd-message-page-title>Unexpected Error Occurred</fd-message-page-title>
+                <fd-message-page-subtitle>
+                    <b>There was a problem serving the requested page</b>.
+                    <br>
+                    Usually this means that an enexpected error
+                    happened while processing your request. Here's what you can try next:
+                    <br>
+                    <br>
+                    <i><b>Reload the page</b>, the problem may be temporary. If the problem persists, <b>contact us</b>
+                        and we'll
+                        help get you on your way.</i>
+                </fd-message-page-subtitle>
+                <fd-message-page-actions>
+                    <fd-button compact="true" dg-label="Reload Page" dg-type="emphasized" style="margin: 0 0.25rem;"
+                        ng-click="reloadPage()">
+                    </fd-button>
+                    <fd-button compact="true" dg-label="Contact Support" ng-click="contactSupport()"></fd-button>
+                </fd-message-page-actions>
+            </fd-message-page>
+        </div>
+
+        <script>
+            let errorPage = angular.module('errorPage', ['ideUI', 'ideView']);
+
+			errorPage.controller('ErrorPageController', ['$scope', 'theming', function ($scope, theming) {
+
+				$scope.reloadPage = function() {
+					location.reload();
+				};
+
+				$scope.contactSupport = function() {
+					window.open("https://bugs.dirigible.io", "_blank");
+				};
+			}]);
+        </script>
+    </body>
+
+</html>
