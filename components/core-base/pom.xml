@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - Configurations</name>
-	<artifactId>dirigible-components-configurations</artifactId>
+	<name>Components - Base</name>
+	<artifactId>dirigible-components-base</artifactId>
     <packaging>jar</packaging>
 
 	<properties>

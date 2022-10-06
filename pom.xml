@@ -804,6 +804,9 @@
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>4.2.3</jedis.version>
 		<spark.version>3.3.0</spark.version>
+		
+		<jakarta.validation.version>3.0.2</jakarta.validation.version>
+		<org.springdoc.openapi.ui.version>1.6.11</org.springdoc.openapi.ui.version>
 
 		<sonar.organization>eclipse</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>

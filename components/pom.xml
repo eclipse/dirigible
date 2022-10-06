@@ -15,6 +15,8 @@
 
 	<modules>
 		<module>core-configurations</module>
+		<module>core-base</module>
+		<module>core-extensions</module>
 		
 		<module>app-all</module>
 	</modules>
@@ -39,6 +41,65 @@
 			<artifactId>logback-classic</artifactId>
 			<version>${spring.boot.logback.version}</version>
 			<scope>compile</scope>
+		</dependency>
+		
+		<!-- Commons -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-config</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+
+    	<!-- Spring Boot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>${spring.boot.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- Date Type Utils -->
+		<dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>${jackson.databind.version}</version>
+        </dependency>
+        
+    	<!-- Bean Validation API support -->
+		<dependency>
+		    <groupId>jakarta.validation</groupId>
+		    <artifactId>jakarta.validation-api</artifactId>
+		    <version>${jakarta.validation.version}</version>
+		</dependency>
+		
+		<!-- Swagger -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>${org.springdoc.openapi.ui.version}</version>
+		</dependency>
+
+		<!-- Data Access -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2database.version}</version>
 		</dependency>
 
 		<!-- WebJars -->
