@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "configurations")
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "configurations")
 public class ConfigurationsEndpoint extends BaseEndpoint {
 	
 	

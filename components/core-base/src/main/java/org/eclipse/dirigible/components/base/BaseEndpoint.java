@@ -36,6 +36,8 @@ public abstract class BaseEndpoint {
 	
 	public static final String PREFIX_ENDPOINT_SECURED = "services/v8/";
 	
+	public static final String PREFIX_ENDPOINT_CORE = "services/v8/core/";
+	
 	public static final String PREFIX_ENDPOINT_PUBLIC = "public/v8/";
 	
 	@Autowired
