@@ -9,10 +9,11 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.configurations;
+package org.eclipse.dirigible.components.configurations.endpoint;
 
 import java.util.List;
 
+import org.eclipse.dirigible.components.configurations.service.ConfigurationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,17 +26,17 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("services/v8/configurations")
-public class ConfigurationsController {
+public class ConfigurationsEndpoint {
 	
 	
 	private final ConfigurationsService configurationsService;
 	
 	@Autowired
-	public ConfigurationsController(ConfigurationsService configurationsProcessor) {
+	public ConfigurationsEndpoint(ConfigurationsService configurationsProcessor) {
 		this.configurationsService = configurationsProcessor;
 	}
 	
-	@ApiOperation(value = "", nickname = "getAll", notes = "", response = List.class, responseContainer = "List", tags={ "Version", })
+	@ApiOperation(value = "", nickname = "findAll", notes = "", response = List.class, responseContainer = "List", tags={ "Version", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "successful operation", response = String.class, responseContainer = "List"),
         @ApiResponse(code = 401, message = "Unauthorized"),
@@ -43,8 +44,8 @@ public class ConfigurationsController {
         @ApiResponse(code = 404, message = "Not Found"),
         @ApiResponse(code = 500, message = "Internal Server Error") })
     @GetMapping
-    public ResponseEntity<List<List<String>>> getAll() {
-        return ResponseEntity.ok(configurationsService.getConfigurations());
+    public ResponseEntity<List<List<String>>> findAll() {
+        return ResponseEntity.ok(configurationsService.findAll());
     }
 
 }

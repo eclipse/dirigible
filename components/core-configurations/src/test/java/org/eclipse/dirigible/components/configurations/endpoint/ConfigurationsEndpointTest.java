@@ -9,26 +9,29 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.configurations;
+package org.eclipse.dirigible.components.configurations.endpoint;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.eclipse.dirigible.components.configurations.service.ConfigurationsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ConfigurationsControllerTest {
+@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
+public class ConfigurationsEndpointTest {
 	
 	@Autowired
 	private ConfigurationsService configurationsService;
 
 	@Test
-	public void contextLoads() {
-		assertNotNull(configurationsService.getConfigurations());
+	public void findAll() {
+		assertNotNull(configurationsService.findAll());
 	}
 
 	@SpringBootApplication

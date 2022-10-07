@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.configurations;
+package org.eclipse.dirigible.components.configurations.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConfigurationsService {
 	
-	public List<List<String>> getConfigurations() {
+	public List<List<String>> findAll() {
 		
 		Map<String, String> runtimeVariables = Configuration.getRuntimeVariables();
 		Map<String, String> environmentVariables = Configuration.getEnvironmentVariables();

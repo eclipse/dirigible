@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 public abstract class BaseEndpoint {
 	
-	public static final int DEFAULT_PAGE_SIZE = 10;
+	public static final int DEFAULT_PAGE_SIZE = 20;
 	
 	@Autowired
 	protected MessageSource messageSource;
