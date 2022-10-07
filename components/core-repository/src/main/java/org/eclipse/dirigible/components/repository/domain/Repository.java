@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.registry.domain;
+package org.eclipse.dirigible.components.repository.domain;
 
 import java.util.ArrayList;
 import java.util.List;

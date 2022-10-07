@@ -9,18 +9,15 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.registry.domain;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.eclipse.dirigible.components.repository.domain;
 
 /**
- * The Collection transport object.
+ * The Resource transport object.
  */
-public class Collection {
+public class Resource {
 
-	/** The Constant TYPE_COLLECTION. */
-	private static final String TYPE_COLLECTION = "collection";
+	/** The Constant TYPE_RESOURCE. */
+	private static final String TYPE_RESOURCE = "resource";
 
 	/** The name. */
 	private String name;
@@ -28,14 +25,11 @@ public class Collection {
 	/** The path. */
 	private String path;
 
+	/** The content type. */
+	private String contentType;
+
 	/** The type. */
-	private String type = TYPE_COLLECTION;
-
-	/** The collections. */
-	private List<Collection> collections = new ArrayList<Collection>();
-
-	/** The resources. */
-	private List<Resource> resources = new ArrayList<Resource>();
+	private String type = TYPE_RESOURCE;
 
 	/**
 	 * Gets the name.
@@ -76,41 +70,22 @@ public class Collection {
 	}
 
 	/**
-	 * Gets the collections.
+	 * Gets the content type.
 	 *
-	 * @return the collections
+	 * @return the content type
 	 */
-	public List<Collection> getCollections() {
-		return collections;
+	public String getContentType() {
+		return contentType;
 	}
 
 	/**
-	 * Sets the collections.
+	 * Sets the content type.
 	 *
-	 * @param collections
-	 *            the new collections
+	 * @param contentType
+	 *            the new content type
 	 */
-	public void setCollections(List<Collection> collections) {
-		this.collections = collections;
-	}
-
-	/**
-	 * Gets the resources.
-	 *
-	 * @return the resources
-	 */
-	public List<Resource> getResources() {
-		return resources;
-	}
-
-	/**
-	 * Sets the resources.
-	 *
-	 * @param resources
-	 *            the new resources
-	 */
-	public void setResources(List<Resource> resources) {
-		this.resources = resources;
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 
 	/**

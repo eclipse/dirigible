@@ -9,18 +9,18 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.registry.domain;
+package org.eclipse.dirigible.components.repository.domain;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Registry transport object.
+ * The Collection transport object.
  */
-public class Registry {
+public class Collection {
 
-	/** The Constant TYPE_REGISTRY. */
-	private static final String TYPE_REGISTRY = "registry";
+	/** The Constant TYPE_COLLECTION. */
+	private static final String TYPE_COLLECTION = "collection";
 
 	/** The name. */
 	private String name;
@@ -29,7 +29,7 @@ public class Registry {
 	private String path;
 
 	/** The type. */
-	private String type = TYPE_REGISTRY;
+	private String type = TYPE_COLLECTION;
 
 	/** The collections. */
 	private List<Collection> collections = new ArrayList<Collection>();

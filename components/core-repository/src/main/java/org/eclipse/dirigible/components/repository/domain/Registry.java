@@ -9,15 +9,18 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.registry.domain;
+package org.eclipse.dirigible.components.repository.domain;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * The Resource transport object.
+ * The Registry transport object.
  */
-public class Resource {
+public class Registry {
 
-	/** The Constant TYPE_RESOURCE. */
-	private static final String TYPE_RESOURCE = "resource";
+	/** The Constant TYPE_REGISTRY. */
+	private static final String TYPE_REGISTRY = "registry";
 
 	/** The name. */
 	private String name;
@@ -25,11 +28,14 @@ public class Resource {
 	/** The path. */
 	private String path;
 
-	/** The content type. */
-	private String contentType;
-
 	/** The type. */
-	private String type = TYPE_RESOURCE;
+	private String type = TYPE_REGISTRY;
+
+	/** The collections. */
+	private List<Collection> collections = new ArrayList<Collection>();
+
+	/** The resources. */
+	private List<Resource> resources = new ArrayList<Resource>();
 
 	/**
 	 * Gets the name.
@@ -70,22 +76,41 @@ public class Resource {
 	}
 
 	/**
-	 * Gets the content type.
+	 * Gets the collections.
 	 *
-	 * @return the content type
+	 * @return the collections
 	 */
-	public String getContentType() {
-		return contentType;
+	public List<Collection> getCollections() {
+		return collections;
 	}
 
 	/**
-	 * Sets the content type.
+	 * Sets the collections.
 	 *
-	 * @param contentType
-	 *            the new content type
+	 * @param collections
+	 *            the new collections
 	 */
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
+	public void setCollections(List<Collection> collections) {
+		this.collections = collections;
+	}
+
+	/**
+	 * Gets the resources.
+	 *
+	 * @return the resources
+	 */
+	public List<Resource> getResources() {
+		return resources;
+	}
+
+	/**
+	 * Sets the resources.
+	 *
+	 * @param resources
+	 *            the new resources
+	 */
+	public void setResources(List<Resource> resources) {
+		this.resources = resources;
 	}
 
 	/**
