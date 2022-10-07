@@ -20,13 +20,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import javax.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.base.BaseEndpoint;
-import org.eclipse.dirigible.components.database.DataSourceDefaultConfig;
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
 import org.eclipse.dirigible.components.extensions.service.ExtensionPointService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,16 +33,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@EntityScan("org.eclipse.dirigible.components")
 @Transactional
-@EnableJpaRepositories("org.eclipse.dirigible.components.*")
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
-@EntityScan("org.eclipse.dirigible.components.*")
 public class ExtensionPointEndpointTest {
 	
 	@Autowired

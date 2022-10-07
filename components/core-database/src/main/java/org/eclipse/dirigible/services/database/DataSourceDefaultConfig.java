@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.database;
+package org.eclipse.dirigible.services.database;
 
 import java.util.Properties;
 
@@ -35,23 +35,23 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory",
     transactionManagerRef = "transactionManager", basePackages = {"org.eclipse.dirigible.components"})
-public class DataSourceSystemConfig {
+public class DataSourceDefaultConfig {
 	
 	@Bean
-	@ConfigurationProperties("app.datasource.system")
+	@ConfigurationProperties("app.datasource.default")
 	public DataSourceProperties getDataSourceProperties() {
 		return new DataSourceProperties();
 	}
 
-	@Bean(name = "SystemDB")
-	@ConfigurationProperties("app.datasource.system.configuration")
+	@Bean(name = "DefaultDB")
+	@ConfigurationProperties("app.datasource.default.configuration")
 	public HikariDataSource getDataSource() {
 		return getDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
 	}
 
 	@Bean(name = "entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-			@Qualifier("SystemDB") DataSource dataSource) {
+			@Qualifier("DefaultDB") DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(dataSource);
 		em.setPackagesToScan(new String[] { "org.eclipse.dirigible.components" });

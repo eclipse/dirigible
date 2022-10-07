@@ -26,14 +26,12 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest(classes=ExtensionPointRepository.class)
+@SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@EnableJpaRepositories("org.eclipse.dirigible.components.*")
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
-@EntityScan("org.eclipse.dirigible.components.*")
+@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class ExtensionPointRepositoryTest {
 	
