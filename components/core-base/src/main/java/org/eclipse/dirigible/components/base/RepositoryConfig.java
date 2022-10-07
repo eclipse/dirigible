@@ -21,7 +21,7 @@ class RepositoryConfig {
 	
     @Bean
     public IRepository repository() {
-        return new LocalRepository();
+        return new LocalRepository("target");
     }
 
 }
