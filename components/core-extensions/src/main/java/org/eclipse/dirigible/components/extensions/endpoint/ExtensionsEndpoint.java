@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
-@RequestMapping({"services/v8/extensionpoints", "public/v8/extensionpoints"})
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "extensionpoints")
 public class ExtensionsEndpoint extends BaseEndpoint {
 
 	private final ExtensionPointService extensionPointService;

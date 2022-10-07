@@ -34,6 +34,10 @@ public abstract class BaseEndpoint {
 	
 	public static final int DEFAULT_PAGE_SIZE = 20;
 	
+	public static final String PREFIX_ENDPOINT_SECURED = "services/v8/";
+	
+	public static final String PREFIX_ENDPOINT_PUBLIC = "public/v8/";
+	
 	@Autowired
 	protected MessageSource messageSource;
 

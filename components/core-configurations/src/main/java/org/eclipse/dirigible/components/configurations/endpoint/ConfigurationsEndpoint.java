@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.configurations.endpoint;
 
 import java.util.List;
 
+import org.eclipse.dirigible.components.base.BaseEndpoint;
 import org.eclipse.dirigible.components.configurations.service.ConfigurationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("services/v8/configurations")
-public class ConfigurationsEndpoint {
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "configurations")
+public class ConfigurationsEndpoint extends BaseEndpoint {
 	
 	
 	private final ConfigurationsService configurationsService;
