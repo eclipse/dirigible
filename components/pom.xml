@@ -17,6 +17,7 @@
 		<module>core-configurations</module>
 		<module>core-base</module>
 		<module>core-extensions</module>
+		<module>core-registry</module>
 		
 		<module>app-all</module>
 	</modules>

@@ -33,8 +33,8 @@ public class ConfigurationsEndpoint extends BaseEndpoint {
 	private final ConfigurationsService configurationsService;
 	
 	@Autowired
-	public ConfigurationsEndpoint(ConfigurationsService configurationsProcessor) {
-		this.configurationsService = configurationsProcessor;
+	public ConfigurationsEndpoint(ConfigurationsService configurationsService) {
+		this.configurationsService = configurationsService;
 	}
 	
 	@ApiOperation(value = "", nickname = "findAll", notes = "", response = List.class, responseContainer = "List", tags={ "Version", })

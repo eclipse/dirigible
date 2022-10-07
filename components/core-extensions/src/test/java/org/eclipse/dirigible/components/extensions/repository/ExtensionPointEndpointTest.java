@@ -87,7 +87,7 @@ public class ExtensionPointEndpointTest {
 	public void getExtensionPointById() throws Exception {
 		Long id = testExtensionPoint.getId();
 
-		mockMvc.perform(get("/services/v8/extensionpoints/{id}", id))
+		mockMvc.perform(get("/services/v8/core/extensionpoints/{id}", id))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful())
 		;
@@ -97,7 +97,7 @@ public class ExtensionPointEndpointTest {
 	public void getExtensionPointByName() throws Exception {
 		String name = testExtensionPoint.getName();
 
-		mockMvc.perform(get("/services/v8/extensionpoints/search?name={name}", name))
+		mockMvc.perform(get("/services/v8/core/extensionpoints/search?name={name}", name))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful())
 		;

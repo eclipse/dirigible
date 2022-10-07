@@ -28,6 +28,11 @@
 			<artifactId>dirigible-components-extensions</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
    		</dependency>
+   		<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-registry</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+   		</dependency>
    		
 	</dependencies>
 	
