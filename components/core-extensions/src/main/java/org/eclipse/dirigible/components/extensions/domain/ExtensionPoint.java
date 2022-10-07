@@ -18,6 +18,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -36,7 +37,7 @@ public class ExtensionPoint extends Artefact {
 	
 	/** The id. */
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EXTENSIONPOINT_ID", nullable = false)
 	private Long id;
 	

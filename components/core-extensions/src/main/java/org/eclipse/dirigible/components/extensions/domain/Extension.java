@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.extensions.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -28,7 +29,7 @@ public class Extension extends Artefact {
 	
 	/** The id. */
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EXTENSION_ID", nullable = false)
 	private Long id;
 	

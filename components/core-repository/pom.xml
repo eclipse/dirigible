@@ -9,30 +9,24 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - Extensions</name>
-	<artifactId>dirigible-components-extensions</artifactId>
+	<name>Components - Repository</name>
+	<artifactId>dirigible-components-repository</artifactId>
     <packaging>jar</packaging>
-
-
+    
     <dependencies>
-    	
-    	<!-- Base -->
+    
+    	<!-- Repository -->
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-base</artifactId>
+			<artifactId>dirigible-repository-api</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-database</artifactId>
+			<artifactId>dirigible-repository-local</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-repository</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-    	</dependency>
-		
+    
     </dependencies>
 
 	<properties>
