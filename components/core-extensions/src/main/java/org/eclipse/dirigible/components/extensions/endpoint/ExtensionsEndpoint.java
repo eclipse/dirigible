@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
-@RequestMapping("services/v4/core/extensions")
+@RequestMapping({"services/v8/extensionpoints", "public/v8/extensionpoints"})
 public class ExtensionsEndpoint extends BaseEndpoint {
 
 	private final ExtensionPointService extensionPointService;
@@ -42,11 +42,11 @@ public class ExtensionsEndpoint extends BaseEndpoint {
 		this.extensionPointService = extensionPointService;
 	}
 
-	@ApiOperation(value = "Returns the Extension Point with their Extensions requested by its name", nickname = "getExtensionPoint", notes = "", response = ExtensionPoint.class, tags = {
-			"Core - Extensions", })
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "The Extension Point", response = ExtensionPoint.class),
+	@ApiOperation(value = "Returns all the Extension Points", nickname = "findAll", notes = "", response = ExtensionPoint.class, tags = {
+			"Extensions Points", })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "The Extension Points", response = ExtensionPoint.class),
 			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
-			@ApiResponse(code = 404, message = "Extension Point with the requested name does not exist") })
+			@ApiResponse(code = 404, message = "Extension Points do not exist") })
 	@GetMapping("")
 	public Page<ExtensionPoint> findAll(
 			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
@@ -64,14 +64,27 @@ public class ExtensionsEndpoint extends BaseEndpoint {
 
 	}
 
-	@ApiOperation(value = "Returns the Extension Point with their Extensions requested by its name", nickname = "getExtensionPoint", notes = "", response = ExtensionPoint.class, tags = {
-			"Core - Extensions", })
+	@ApiOperation(value = "Returns the Extension Point with their Extensions requested by its id", nickname = "get", notes = "", response = ExtensionPoint.class, tags = {
+			"Extensions Points", })
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "The Extension Point", response = ExtensionPoint.class),
 			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
-			@ApiResponse(code = 404, message = "Extension Point with the requested name does not exist") })
-	@GetMapping("/{name}")
-	public ResponseEntity<ExtensionPoint> getExtensionPoint(
-			@ApiParam(value = "Name of the ExtensionPoint", required = true) @PathVariable("name") String name) {
+			@ApiResponse(code = 404, message = "Extension Point with the requested id does not exist") })
+	@GetMapping("/{id}")
+	public ResponseEntity<ExtensionPoint> get(
+			@ApiParam(value = "Id of the ExtensionPoint", required = true) @PathVariable("id") Long id) {
+
+		return ResponseEntity.ok(extensionPointService.findById(id));
+
+	}
+	
+	@ApiOperation(value = "Returns the Extension Point with their Extensions requested by its name", nickname = "findByName", notes = "", response = ExtensionPoint.class, tags = {
+			"Extensions Points", })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "The Extension Point", response = ExtensionPoint.class),
+			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
+			@ApiResponse(code = 404, message = "Extension Point with the requested id does not exist") })
+	@GetMapping("/search")
+	public ResponseEntity<ExtensionPoint> findByName(
+			@ApiParam(value = "Name of the ExtensionPoint", required = true) @RequestParam("name") String name) {
 
 		return ResponseEntity.ok(extensionPointService.findByName(name));
 

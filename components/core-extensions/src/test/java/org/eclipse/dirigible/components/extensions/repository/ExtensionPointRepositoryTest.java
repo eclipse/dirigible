@@ -47,16 +47,17 @@ public class ExtensionPointRepositoryTest {
     public void setup() throws Exception {
 
     	// create test ExtensionPoints
-		extensionPointRepository.save(createExtensionPoint("e1", "/a/b/c/e1.extensionpoint", "description"));
-		extensionPointRepository.save(createExtensionPoint("e2", "/a/b/c/e2.extensionpoint", "description"));
-		extensionPointRepository.save(createExtensionPoint("e3", "/a/b/c/e3.extensionpoint", "description"));
-		extensionPointRepository.save(createExtensionPoint("e4", "/a/b/c/e4.extensionpoint", "description"));
-		extensionPointRepository.save(createExtensionPoint("e5", "/a/b/c/e5.extensionpoint", "description"));
+		extensionPointRepository.save(createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description"));
+		extensionPointRepository.save(createExtensionPoint("/a/b/c/e2.extensionpoint", "e2", "description"));
+		extensionPointRepository.save(createExtensionPoint("/a/b/c/e3.extensionpoint", "e3", "description"));
+		extensionPointRepository.save(createExtensionPoint("/a/b/c/e4.extensionpoint", "e4", "description"));
+		extensionPointRepository.save(createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
     }
 
 	@Test
     public void getOne() {
-		Optional<ExtensionPoint> optional = extensionPointRepository.findById("e1");
+		Long id = extensionPointRepository.findAll().get(0).getId();
+		Optional<ExtensionPoint> optional = extensionPointRepository.findById(id);
 		ExtensionPoint extensionPoint = optional.isPresent() ? optional.get() : null;
         assertNotNull(extensionPoint);
         assertNotNull(extensionPoint.getLocation());
@@ -67,7 +68,8 @@ public class ExtensionPointRepositoryTest {
 	
 	@Test
     public void getReferenceUsingEntityManager() {
-		ExtensionPoint extensionPoint = entityManager.getReference(ExtensionPoint.class, "e1");
+		Long id = extensionPointRepository.findAll().get(0).getId();
+		ExtensionPoint extensionPoint = entityManager.getReference(ExtensionPoint.class, id);
         assertNotNull(extensionPoint);
         assertNotNull(extensionPoint.getLocation());
     }

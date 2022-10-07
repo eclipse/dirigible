@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("extensionPointRepository")
-public interface ExtensionPointRepository extends JpaRepository<ExtensionPoint, String> {
+public interface ExtensionPointRepository extends JpaRepository<ExtensionPoint, Long> {
 
 }
 

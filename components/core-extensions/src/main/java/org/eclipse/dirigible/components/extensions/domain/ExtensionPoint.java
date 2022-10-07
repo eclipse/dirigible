@@ -17,12 +17,14 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.Valid;
 
+import org.eclipse.dirigible.components.base.Artefact;
 import org.eclipse.dirigible.components.base.Auditable;
 
 /**
@@ -30,16 +32,21 @@ import org.eclipse.dirigible.components.base.Auditable;
  */
 @Entity
 @Table(name = "DIRIGIBLE_EXTENSION_POINTS")
-public class ExtensionPoint extends Auditable<String> implements Serializable {
+public class ExtensionPoint extends Artefact {
 	
-	/** The name. */
+	/** The id. */
 	@Id
-	@Column(name = "EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
-	private String name;
+	@GeneratedValue
+	@Column(name = "EXTENSIONPOINT_ID", nullable = false)
+	private Long id;
 	
 	/** The location. */
 	@Column(name = "EXTENSIONPOINT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
+	
+	/** The name. */
+	@Column(name = "EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
+	private String name;
 
 	/** The description. */
 	@Column(name = "EXTENSIONPOINT_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
@@ -65,29 +72,26 @@ public class ExtensionPoint extends Auditable<String> implements Serializable {
 	 * @param name the name
 	 * @param description the description
 	 */
-	public ExtensionPoint(String name, String location, String description) {
+	public ExtensionPoint(String location, String name, String description) {
 		super();
-		this.name = name;
 		this.location = location;
+		this.name = name;
 		this.description = description;
 	}
 	
+	
 	/**
-	 * Gets the name.
-	 *
-	 * @return the name
+	 * @return the id
 	 */
-	public String getName() {
-		return name;
+	public Long getId() {
+		return id;
 	}
 
 	/**
-	 * Sets the name.
-	 *
-	 * @param name the name to set
+	 * @param id the id to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**
@@ -107,6 +111,25 @@ public class ExtensionPoint extends Auditable<String> implements Serializable {
 	public void setLocation(String location) {
 		this.location = location;
 	}
+	
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
 
 	/**
 	 * Gets the description.

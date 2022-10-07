@@ -38,12 +38,25 @@ public class ExtensionPointService {
 	}
 	
 	@Transactional(readOnly = true)
-	public ExtensionPoint findByName(String name) {
-		Optional<ExtensionPoint> extensionPoint = extensionPointRepository.findById(name);
+	public ExtensionPoint findById(Long id) {
+		Optional<ExtensionPoint> extensionPoint = extensionPointRepository.findById(id);
 		if (extensionPoint.isPresent()) {
 			return extensionPoint.get();
 		} else {
-			throw new IllegalArgumentException("ExtensionPoint does not exist: " + name);
+			throw new IllegalArgumentException("ExtensionPoint with id does not exist: " + id);
+		}
+	}
+	
+	@Transactional(readOnly = true)
+	public ExtensionPoint findByName(String name) {
+		ExtensionPoint filter = new ExtensionPoint();
+		filter.setName(name);
+		Example<ExtensionPoint> example = Example.of(filter);
+		Optional<ExtensionPoint> extensionPoint = extensionPointRepository.findOne(example);
+		if (extensionPoint.isPresent()) {
+			return extensionPoint.get();
+		} else {
+			throw new IllegalArgumentException("ExtensionPoint with name does not exist: " + name);
 		}
 	}
 	

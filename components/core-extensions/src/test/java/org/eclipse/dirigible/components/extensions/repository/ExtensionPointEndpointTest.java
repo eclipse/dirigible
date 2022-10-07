@@ -60,11 +60,11 @@ public class ExtensionPointEndpointTest {
     public void setup() throws Exception {
 
     	// create test ExtensionPoints
-		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("e1", "/a/b/c/e1.extensionpoint", "description"));
-		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("e2", "/a/b/c/e2.extensionpoint", "description"));
-		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("e3", "/a/b/c/e3.extensionpoint", "description"));
-		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("e4", "/a/b/c/e4.extensionpoint", "description"));
-		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("e5", "/a/b/c/e5.extensionpoint", "description"));
+		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description"));
+		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e2.extensionpoint", "e2", "description"));
+		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e3.extensionpoint", "e3", "description"));
+		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e4.extensionpoint", "e4", "description"));
+		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
 		
 		Page<ExtensionPoint> extensionPoints = extensionPointService.findAll(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
 		assertNotNull(extensionPoints);
@@ -84,10 +84,20 @@ public class ExtensionPointEndpointTest {
 	}
 	
 	@Test
+	public void getExtensionPointById() throws Exception {
+		Long id = testExtensionPoint.getId();
+
+		mockMvc.perform(get("/services/v8/extensionpoints/{id}", id))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful())
+		;
+	}
+	
+	@Test
 	public void getExtensionPointByName() throws Exception {
 		String name = testExtensionPoint.getName();
 
-		mockMvc.perform(get("/services/v4/core/extensions/{name}", name))
+		mockMvc.perform(get("/services/v8/extensionpoints/search?name={name}", name))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful())
 		;

@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("services/v4/core/configurations")
+@RequestMapping("services/v8/configurations")
 public class ConfigurationsController {
 	
 	
@@ -35,7 +35,7 @@ public class ConfigurationsController {
 		this.configurationsService = configurationsProcessor;
 	}
 	
-	@ApiOperation(value = "", nickname = "getConfigurations", notes = "", response = List.class, responseContainer = "List", tags={ "Version", })
+	@ApiOperation(value = "", nickname = "getAll", notes = "", response = List.class, responseContainer = "List", tags={ "Version", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "successful operation", response = String.class, responseContainer = "List"),
         @ApiResponse(code = 401, message = "Unauthorized"),
@@ -43,7 +43,7 @@ public class ConfigurationsController {
         @ApiResponse(code = 404, message = "Not Found"),
         @ApiResponse(code = 500, message = "Internal Server Error") })
     @GetMapping
-    public ResponseEntity<List<List<String>>> getConfigurations() {
+    public ResponseEntity<List<List<String>>> getAll() {
         return ResponseEntity.ok(configurationsService.getConfigurations());
     }
 

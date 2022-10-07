@@ -11,32 +11,33 @@
  */
 package org.eclipse.dirigible.components.extensions.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.eclipse.dirigible.components.base.Auditable;
+import org.eclipse.dirigible.components.base.Artefact;
 
 /**
  * The Class Extension.
  */
 @Entity
 @Table(name = "DIRIGIBLE_EXTENSIONS")
-public class Extension extends Auditable<String> implements Serializable {
+public class Extension extends Artefact {
+	
+	/** The id. */
+	@Id
+	@GeneratedValue
+	@Column(name = "EXTENSION_ID", nullable = false)
+	private Long id;
 	
 	/** The location. */
-	@Id
 	@Column(name = "EXTENSION_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
 	/** The extension point. */
-	@ManyToOne
-    @JoinColumn(name = "EXTENSION_EXTENSIONPOINT_NAME")
+	@Column(name = "EXTENSION_EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = false)
 	private ExtensionPoint extensionPoint;
 
 	/** The module. */
@@ -68,6 +69,20 @@ public class Extension extends Auditable<String> implements Serializable {
 		this.extensionPoint = extensionPoint;
 		this.module = module;
 		this.description = description;
+	}
+	
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**
