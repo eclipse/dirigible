@@ -786,7 +786,7 @@
 		<spring.boot.slf4j.version>2.0.2</spring.boot.slf4j.version>
 		<spring.boot.logback.version>1.2.11</spring.boot.logback.version>
 		<webjars-locator>0.45</webjars-locator>
-		<keycloak-adapter-bom.version>19.0.2</keycloak-adapter-bom.version>
+		<keycloak-adapter-bom.version>19.0.3</keycloak-adapter-bom.version>
 		<hikaricp.version>5.0.1</hikaricp.version>
 		<validator.version>1.7</validator.version>
 		<quartz.version>2.3.2</quartz.version>
