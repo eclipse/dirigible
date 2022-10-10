@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Components - Initializers</name>
-	<artifactId>dirigible-components-init</artifactId>
+	<artifactId>dirigible-components-initializers</artifactId>
     <packaging>jar</packaging>
     
     <dependencies>

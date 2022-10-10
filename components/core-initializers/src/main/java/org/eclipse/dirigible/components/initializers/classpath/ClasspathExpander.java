@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.init.classpath;
+package org.eclipse.dirigible.components.initializers.classpath;
 
 import java.io.IOException;
 import java.net.JarURLConnection;

@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.init;
+package org.eclipse.dirigible.components.initializers;
 
-import org.eclipse.dirigible.components.init.classpath.ClasspathContentInitializer;
+import org.eclipse.dirigible.components.initializers.classpath.ClasspathContentInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
