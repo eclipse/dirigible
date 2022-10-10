@@ -9,9 +9,10 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.init.classpath;
+package org.eclipse.dirigible.components.initializers.classpath;
 
-import org.eclipse.dirigible.components.init.SynchronousSpringEventsConfig;
+import org.eclipse.dirigible.components.initializers.SynchronousSpringEventsConfig;
+import org.eclipse.dirigible.components.initializers.classpath.ClasspathContentInitializer;
 import org.eclipse.dirigible.components.repository.RepositoryConfig;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.junit.jupiter.api.Test;
