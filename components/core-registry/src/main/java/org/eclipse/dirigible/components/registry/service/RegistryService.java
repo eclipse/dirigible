@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.components.registry.service;
 
-import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.components.repository.domain.Registry;
 import org.eclipse.dirigible.components.repository.domain.RepositoryJsonHelper;
 import org.eclipse.dirigible.repository.api.ICollection;

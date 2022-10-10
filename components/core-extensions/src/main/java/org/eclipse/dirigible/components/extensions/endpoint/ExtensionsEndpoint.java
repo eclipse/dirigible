@@ -42,11 +42,6 @@ public class ExtensionsEndpoint extends BaseEndpoint {
 		this.extensionPointService = extensionPointService;
 	}
 
-	@ApiOperation(value = "Returns all the Extension Points", nickname = "findAll", notes = "", response = ExtensionPoint.class, tags = {
-			"Extensions Points", })
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "The Extension Points", response = ExtensionPoint.class),
-			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
-			@ApiResponse(code = 404, message = "Extension Points do not exist") })
 	@GetMapping
 	public Page<ExtensionPoint> findAll(
 			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
@@ -64,14 +59,6 @@ public class ExtensionsEndpoint extends BaseEndpoint {
 
 	}
 
-	@ApiOperation(value = "Returns the Extension Point with their Extensions requested by its id", nickname = "get", notes = "", response = ExtensionPoint.class, tags = {
-			"Extensions Points", })
-	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "The Extension Point", response = ExtensionPoint.class),
-			@ApiResponse(code = 401, message = "Unauthorized"),
-			@ApiResponse(code = 403, message = "Forbidden"),
-			@ApiResponse(code = 404, message = "Extension Point with the requested id does not exist"),
-			@ApiResponse(code = 500, message = "Internal Server Error") })
 	@GetMapping("/{id}")
 	public ResponseEntity<ExtensionPoint> get(
 			@ApiParam(value = "Id of the ExtensionPoint", required = true) @PathVariable("id") Long id) {
@@ -80,14 +67,6 @@ public class ExtensionsEndpoint extends BaseEndpoint {
 
 	}
 	
-	@ApiOperation(value = "Returns the Extension Point with their Extensions requested by its name", nickname = "findByName", notes = "", response = ExtensionPoint.class, tags = {
-			"Extensions Points", })
-	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "The Extension Point", response = ExtensionPoint.class),
-			@ApiResponse(code = 401, message = "Unauthorized"),
-			@ApiResponse(code = 403, message = "Forbidden"),
-			@ApiResponse(code = 404, message = "Extension Point with the requested id does not exist"),
-			@ApiResponse(code = 500, message = "Internal Server Error") })
 	@GetMapping("/search")
 	public ResponseEntity<ExtensionPoint> findByName(
 			@ApiParam(value = "Name of the ExtensionPoint", required = true) @RequestParam("name") String name) {

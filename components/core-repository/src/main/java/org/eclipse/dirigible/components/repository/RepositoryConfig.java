@@ -11,17 +11,21 @@
  */
 package org.eclipse.dirigible.components.repository;
 
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-class RepositoryConfig {
+public class RepositoryConfig {
 	
     @Bean
     public IRepository repository() {
-        return new LocalRepository("target");
+        LocalRepository localRepository = new LocalRepository("target");
+        // To be removed once moved to Spring entirely
+        StaticObjects.set(StaticObjects.REPOSITORY, localRepository);
+		return localRepository;
     }
 
 }

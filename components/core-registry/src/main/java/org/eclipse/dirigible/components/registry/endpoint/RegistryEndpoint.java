@@ -14,9 +14,6 @@ package org.eclipse.dirigible.components.registry.endpoint;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
-
 import org.eclipse.dirigible.api.v3.platform.RegistryFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.components.base.BaseEndpoint;
@@ -31,7 +28,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -50,14 +49,6 @@ public class RegistryEndpoint extends BaseEndpoint {
 		this.registryService = registryService;
 	}
 	
-	@ApiOperation(value = "Returns the Registry Resource requested by its path", nickname = "get", notes = "", response = Object.class, tags = {
-			"Extensions Points", })
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "The Registry Resource", response = Object.class),
-			@ApiResponse(code = 401, message = "Unauthorized"),
-			@ApiResponse(code = 403, message = "Forbidden"),
-			@ApiResponse(code = 404, message = "Resource with the requested path does not exist"),
-			@ApiResponse(code = 500, message = "Internal Server Error")})
 	@GetMapping("/{*path}")
 	public ResponseEntity<?> get(
 			@ApiParam(value = "Location of the Resource", required = true) @PathVariable("path") String path) {
@@ -72,15 +63,15 @@ public class RegistryEndpoint extends BaseEndpoint {
 				try {
 					content = RegistryFacade.getContent(path);
 				} catch (ScriptingException e) {
-					throw new InternalServerErrorException(path, e);
+					throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, path, e);
 				} catch (IOException e) {
-					throw new NotFoundException(path, e);
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND, path, e);
 				}
 				if (content != null) {
 					httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 					return new ResponseEntity(content, httpHeaders, HttpStatus.OK);
 				}
-				throw new NotFoundException(path);
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, path);
 			}
 			httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 			return new ResponseEntity(registryService.renderRegistry(collection), httpHeaders, HttpStatus.OK);

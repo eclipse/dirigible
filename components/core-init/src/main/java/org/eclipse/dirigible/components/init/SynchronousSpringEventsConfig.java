@@ -9,20 +9,21 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.base;
+package org.eclipse.dirigible.components.init;
 
+import org.eclipse.dirigible.components.init.classpath.ClasspathContentInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @Configuration
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
-class PersistenceConfig {
-	
-    @Bean
-    public AuditorAware<String> auditorAware() {
-        return new AuditorAwareImpl();
-    }
+@ComponentScan
+public class SynchronousSpringEventsConfig {
+
+	@Bean
+	public ClasspathContentInitializer classpathContentInitializer() {
+		ClasspathContentInitializer classpathContentInitializer = new ClasspathContentInitializer();
+		return classpathContentInitializer;
+	}
 
 }

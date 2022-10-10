@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>core-configurations</module>
+		<module>core-init</module>
 		<module>core-base</module>
 		<module>core-extensions</module>
 		<module>core-database</module>

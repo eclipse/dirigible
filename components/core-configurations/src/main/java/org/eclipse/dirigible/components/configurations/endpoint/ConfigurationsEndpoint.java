@@ -37,13 +37,6 @@ public class ConfigurationsEndpoint extends BaseEndpoint {
 		this.configurationsService = configurationsService;
 	}
 	
-	@ApiOperation(value = "", nickname = "findAll", notes = "", response = List.class, responseContainer = "List", tags={ "Version", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "successful operation", response = String.class, responseContainer = "List"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Not Found"),
-        @ApiResponse(code = 500, message = "Internal Server Error") })
     @GetMapping
     public ResponseEntity<List<List<String>>> findAll() {
         return ResponseEntity.ok(configurationsService.findAll());

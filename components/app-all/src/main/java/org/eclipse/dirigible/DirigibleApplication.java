@@ -21,7 +21,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 public class DirigibleApplication {
 	
-
     public static void main(String[] args) {
         SpringApplication.run(DirigibleApplication.class, args);
     }
