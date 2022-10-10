@@ -81,7 +81,7 @@ public class CloudFoundryUtils {
 
 	public static DestinationEnv getDestinationEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
-		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		VcapServicesEnv vcapServicesEnv = org.eclipse.dirigible.commons.api.helpers.GsonHelper.GSON.fromJson(envJson, org.eclipse.dirigible.cf.utils.CloudFoundryUtils.VcapServicesEnv.class);
 		return vcapServicesEnv.getDestinationEnv() != null ? vcapServicesEnv.getDestinationEnv().get(0) : null;
 	}
 
@@ -645,9 +645,14 @@ public class CloudFoundryUtils {
 
 		public static class DestinationCredentialsEnv {
 
+			@SerializedName("clientid")
 			private String clientId;
+
+			@SerializedName("clientsecret")
 			private String clientSecret;
+
 			private String url;
+
 			private String uri;
 
 			public String getClientId() {
@@ -698,9 +703,14 @@ public class CloudFoundryUtils {
 
 		public static class ConnectivityCredentialsEnv {
 
+			@SerializedName("clientid")
 			private String clientId;
+
+			@SerializedName("clientsecret")
 			private String clientSecret;
+
 			private String url;
+
 			private String uri;
 
 			@SerializedName("onpremise_proxy_host")
