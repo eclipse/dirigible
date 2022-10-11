@@ -144,7 +144,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
      *            the sql
      */
     private void generateTableType(StringBuilder sql) {
-        String tableTypeName = (isCaseSensitive()) ? encapsulate(this.getTableType()) : this.getTableType();
+        String tableTypeName = (isCaseSensitive()) ? encapsulate(this.getTableType(), true) : this.getTableType();
         sql.append(SPACE).append(KEYWORD_TABLE_TYPE).append(SPACE).append(tableTypeName).append(SPACE).append(KEYWORD_AS).append(SPACE).append(KEYWORD_TABLE);
     }
 

@@ -129,7 +129,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
-		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable()) : this.getTable();
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
 		sql.append(SPACE).append(tableName);
 	}
 

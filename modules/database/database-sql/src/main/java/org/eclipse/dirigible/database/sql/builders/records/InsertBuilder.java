@@ -144,7 +144,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
-		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable()) : this.getTable();
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
 		sql.append(SPACE).append(KEYWORD_INTO).append(SPACE).append(tableName);
 	}
 
