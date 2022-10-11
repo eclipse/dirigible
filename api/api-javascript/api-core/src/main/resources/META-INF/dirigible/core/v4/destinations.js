@@ -58,8 +58,7 @@ function isCloudEnvironment() {
 function getCloudDestination(name) {
 	let token = getOAuthToken();
 
-	let instanceDestinationUrl = `${getInstanceDestinationsBasePath()}/${name}`;
-	let subaccountDestinationUrl = `${getSubaccountDestinationsBasePath()}/${name}`;
+	let destinationUrl = `${getDestinationsBasePath()}/${name}`;
 
 	let requestOptions = {
 		headers: [{
@@ -68,18 +67,17 @@ function getCloudDestination(name) {
 		}]
 	};
 
-	let response = httpClient.get(instanceDestinationUrl, requestOptions);
-
-	// Fallback to subaccount level destination
-	if (response.statusCode === 404) {
-		response = httpClient.get(subaccountDestinationUrl, requestOptions);
-	}
+	let response = httpClient.get(destinationUrl, requestOptions);
 
 	if (response.statusCode === 404) {
 		throw new Error(`Destination with name '${name}' not found`);
 	};
 
 	return response.text;
+}
+
+function getDestinationsBasePath() {
+	return `${config.get("DIRIGIBLE_DESTINATION_URI")}/destination-configuration/v1/destinations`;
 }
 
 function getInstanceDestinationsBasePath() {
