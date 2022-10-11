@@ -641,68 +641,77 @@ var HttpController = exports.HttpController = function(oMappings){
 
 	const self = this;
 
-	const matchRequestUrl = function (requestPath, method, cfg) {
-		var pathDefs = Object.keys(cfg);
-		var matches = [];
-		for (var i = 0; i < pathDefs.length; i++) {
-			var pathDef = pathDefs[i];
-			var resolvedPath;
-			if (pathDef === requestPath) {
-				resolvedPath = pathDef;
-				matches.push({w: 1, p: resolvedPath, d: pathDef});
-			} else {
-				var pathDefSegments = pathDef.split('/');
-				var reqPathSegments;
-				if (requestPath.trim().length > 0)
-					reqPathSegments = requestPath.split('/');
-				else
-					reqPathSegments = [];
-				if (pathDefSegments.length === reqPathSegments.length) {
-					var verbHandlers = Object.keys(cfg[pathDef]);
-					if (verbHandlers && verbHandlers.length > 0 && verbHandlers.indexOf(method) > -1) {
-						var pathParams = {};
-						var resolvedPathDefSegments = pathDefSegments.map(function (pSeg, i) {
-							pSeg = pSeg.trim();
-							var matcher = pSeg.match(/{(.*?)}/);
-							if (matcher !== null) {
-								var param = matcher[1];
-								pathParams[param] = reqPathSegments[i];
-								return reqPathSegments[i];
-							} else {
-								return pSeg;
-							}
-						});
-						var p = resolvedPathDefSegments.join('/');
-						if (p === requestPath) {
-							resolvedPath = p;
-							var match = {w: 0, p: resolvedPath, d: pathDef};
-							if (Object.keys(pathParams).length > 0) {
-								match.pathParams = pathParams;
-							}
-							matches.push(match);
-						}
-					}
-				}
-			}
-		}
-		//sort matches by weight
-		matches = matches.sort(function (p, n) {
-			if (n.w === p.w) {
-				//the one with less placeholders wins
-				var m1 = p.d.match(/{(.*?)}/g);
-				var placeholdersCount1 = m1 !== null ? m1.length : 0;
-				var m2 = n.d.match(/{(.*?)}/g);
-				var placeholdersCount2 = m2 !== null ? m2.length : 0;
-				if (placeholdersCount1 > placeholdersCount2) {
-					n.w = n.w + 1;
-				} else if (placeholdersCount1 < placeholdersCount2) {
-					p.w = p.w + 1;
-				}
-			}
-			return n.w - p.w;
-		});
-		return matches;
-	};
+const matchRequestUrl = function (requestPath, method, cfg) {
+    var pathDefs = Object.keys(cfg);
+    var matches = [];
+    for (var i = 0; i < pathDefs.length; i++) {
+        var pathDef = pathDefs[i];
+        var resolvedPath;
+        if (pathDef === requestPath) {
+            resolvedPath = pathDef;
+            matches.push({ w: 1, p: resolvedPath, d: pathDef });
+        } else {
+            var pathDefSegments = pathDef.split('/');
+            var reqPathSegments;
+            if (requestPath.trim().length > 0)
+                reqPathSegments = requestPath.split('/');
+            else
+                reqPathSegments = [];
+            if (reqPathSegments.length >= pathDefSegments.length) {
+                var verbHandlers = Object.keys(cfg[pathDef]);
+                if (verbHandlers && verbHandlers.length > 0 && verbHandlers.indexOf(method) > -1) {
+                    var pathParams = {};
+                    var resolvedPathDefSegments = pathDefSegments.map(function (pSeg, i) {
+                        pSeg = pSeg.trim();
+                        const multipleParamMatcher = pSeg.match(/{(.*?)\*}/);
+                        if (multipleParamMatcher != null) {
+                            const paramName = multipleParamMatcher[1];
+                            const paramValue = reqPathSegments.slice(i).join("/")
+                            pathParams[paramName] = paramValue;
+                            return paramValue;
+                        } else {
+                            const regularParamMatcher = pSeg.match(/{(.*?)}/);
+                            if (regularParamMatcher !== null) {
+                                const paramName = regularParamMatcher[1];
+                                const paramValue = reqPathSegments[i];
+                                pathParams[paramName] = paramValue;
+                                return paramValue;
+                            } else {
+                                return pSeg;
+                            }
+                        }
+                    });
+                    var p = resolvedPathDefSegments.join('/');
+                    if (p === requestPath) {
+                        resolvedPath = p;
+                        var match = { w: 0, p: resolvedPath, d: pathDef };
+                        if (Object.keys(pathParams).length > 0) {
+                            match.pathParams = pathParams;
+                        }
+                        matches.push(match);
+                    }
+                }
+            }
+        }
+    }
+    //sort matches by weight
+    matches = matches.sort(function (p, n) {
+        if (n.w === p.w) {
+            //the one with less placeholders wins
+            var m1 = p.d.match(/{(.*?)}/g);
+            var placeholdersCount1 = m1 !== null ? m1.length : 0;
+            var m2 = n.d.match(/{(.*?)}/g);
+            var placeholdersCount2 = m2 !== null ? m2.length : 0;
+            if (placeholdersCount1 > placeholdersCount2) {
+                n.w = n.w + 1;
+            } else if (placeholdersCount1 < placeholdersCount2) {
+                p.w = p.w + 1;
+            }
+        }
+        return n.w - p.w;
+    });
+    return matches;
+};
 
 	//  content-type, consumes
 	//  accepts, produces
