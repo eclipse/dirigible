@@ -657,19 +657,28 @@ const matchRequestUrl = function (requestPath, method, cfg) {
                 reqPathSegments = requestPath.split('/');
             else
                 reqPathSegments = [];
-            if (pathDefSegments.length === reqPathSegments.length) {
+            if (reqPathSegments.length >= pathDefSegments.length) {
                 var verbHandlers = Object.keys(cfg[pathDef]);
                 if (verbHandlers && verbHandlers.length > 0 && verbHandlers.indexOf(method) > -1) {
                     var pathParams = {};
                     var resolvedPathDefSegments = pathDefSegments.map(function (pSeg, i) {
                         pSeg = pSeg.trim();
-                        var matcher = pSeg.match(/{(.*?)}/);
-                        if (matcher !== null) {
-                            var param = matcher[1];
-                            pathParams[param] = reqPathSegments[i];
-                            return reqPathSegments[i];
+                        const multipleParamMatcher = pSeg.match(/{(.*?)\*}/);
+                        if (multipleParamMatcher != null) {
+                            const paramName = multipleParamMatcher[1];
+                            const paramValue = reqPathSegments.slice(i).join("/")
+                            pathParams[paramName] = paramValue;
+                            return paramValue;
                         } else {
-                            return pSeg;
+                            const regularParamMatcher = pSeg.match(/{(.*?)}/);
+                            if (regularParamMatcher !== null) {
+                                const paramName = regularParamMatcher[1];
+                                const paramValue = reqPathSegments[i];
+                                pathParams[paramName] = paramValue;
+                                return paramValue;
+                            } else {
+                                return pSeg;
+                            }
                         }
                     });
                     var p = resolvedPathDefSegments.join('/');
