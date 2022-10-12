@@ -26,7 +26,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 					// Set Errors for required fields only
 					$scope.formErrors = {
 #foreach ($property in $properties)
-#if(!$property.dataAutoIncrement && $property.dataNotNull)
+#if(!$property.dataAutoIncrement && $property.relationshipType != "COMPOSITION" && $property.relationshipCardinality != "1_n" && $property.dataNotNull)
 						${property.name}: true,
 #end
 #end
