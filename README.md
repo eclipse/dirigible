@@ -196,6 +196,21 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/docker/)
 
+### Experimental - Spring Boot
+
+#### Build
+
+	cd components
+	mvn clean install
+	
+#### Run
+
+	java -jar app-all/target/dirigible-application-all-7.0.0-SNAPSHOT.jar
+
+#### Debug
+
+	java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar app-all/target/dirigible-application-all-7.0.0-SNAPSHOT.jar
+
 ## Additional Information
 
 ### License
