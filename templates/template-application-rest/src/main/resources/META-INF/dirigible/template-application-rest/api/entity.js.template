@@ -34,7 +34,8 @@ rs.service()
 #if($layoutType == "MANAGE_DETAILS" || $layoutType == "LIST_DETAILS")
 	.resource("count/{${masterEntityId}}")
 		.get(function(ctx, request) {
-			let ${masterEntityId} = ctx.pathParameters.${masterEntityId};
+			let ${masterEntityId} = parseInt(ctx.pathParameters.${masterEntityId});
+			${masterEntityId} = isNaN(${masterEntityId}) ? ctx.pathParameters.${masterEntityId} : ${masterEntityId};
 			http.sendResponseOk("" + dao.count(${masterEntityId}));
 		})
 #else
