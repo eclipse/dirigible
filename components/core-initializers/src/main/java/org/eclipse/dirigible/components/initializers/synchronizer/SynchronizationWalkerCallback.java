@@ -9,13 +9,13 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.initializers;
+package org.eclipse.dirigible.components.initializers.synchronizer;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 
-@Configuration
-@ComponentScan
-public class SynchronousSpringEventsConfig {
+public interface SynchronizationWalkerCallback {
+	
+	public void visitFile(Path file, BasicFileAttributes attrs, String location);
 
 }

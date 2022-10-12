@@ -13,7 +13,7 @@ package org.eclipse.dirigible.components.configurations.endpoint;
 
 import java.util.List;
 
-import org.eclipse.dirigible.components.base.BaseEndpoint;
+import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.configurations.service.ConfigurationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

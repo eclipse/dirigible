@@ -18,7 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.eclipse.dirigible.components.base.Artefact;
+import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 /**
  * The Class Extension.
@@ -27,27 +27,40 @@ import org.eclipse.dirigible.components.base.Artefact;
 @Table(name = "DIRIGIBLE_EXTENSIONS")
 public class Extension extends Artefact {
 	
+	/** The Constant ARTEFACT_TYPE. */
+	public static final String ARTEFACT_TYPE = "extension";
+	
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EXTENSION_ID", nullable = false)
 	private Long id;
 	
-	/** The location. */
-	@Column(name = "EXTENSION_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
-	private String location;
-
 	/** The extension point. */
 	@Column(name = "EXTENSION_EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = false)
-	private ExtensionPoint extensionPoint;
+	private String extensionPoint;
 
 	/** The module. */
 	@Column(name = "EXTENSION_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String module;
 
-	/** The description. */
-	@Column(name = "EXTENSION_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
-	private String description;
+	
+	/**
+	 * Instantiates a new extension.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param description the description
+	 * @param dependencies the dependencies
+	 * @param extensionPoint the extension point
+	 * @param module the module
+	 */
+	public Extension(String location, String name, String description, String dependencies,
+			String extensionPoint, String module) {
+		super(location, name, ARTEFACT_TYPE, description, dependencies);
+		this.extensionPoint = extensionPoint;
+		this.module = module;
+	}
 	
 	/**
 	 * Instantiates a new extension.
@@ -57,22 +70,8 @@ public class Extension extends Artefact {
 	}
 
 	/**
-	 * Instantiates a new extension.
+	 * Gets the id.
 	 *
-	 * @param location the location
-	 * @param extensionPoint the extension point
-	 * @param module the module
-	 * @param description the description
-	 */
-	public Extension(String location, ExtensionPoint extensionPoint, String module, String description) {
-		super();
-		this.location = location;
-		this.extensionPoint = extensionPoint;
-		this.module = module;
-		this.description = description;
-	}
-	
-	/**
 	 * @return the id
 	 */
 	public Long getId() {
@@ -80,36 +79,22 @@ public class Extension extends Artefact {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	/**
-	 * Gets the location.
-	 *
-	 * @return the location
-	 */
-	public String getLocation() {
-		return location;
-	}
-
-	/**
-	 * Sets the location.
-	 *
-	 * @param location the location to set
-	 */
-	public void setLocation(String location) {
-		this.location = location;
-	}
+	
 
 	/**
 	 * Gets the extension point.
 	 *
 	 * @return the extensionPoint
 	 */
-	public ExtensionPoint getExtensionPoint() {
+	public String getExtensionPoint() {
 		return extensionPoint;
 	}
 
@@ -118,7 +103,7 @@ public class Extension extends Artefact {
 	 *
 	 * @param extensionPoint the extensionPoint to set
 	 */
-	public void setExtensionPoint(ExtensionPoint extensionPoint) {
+	public void setExtensionPoint(String extensionPoint) {
 		this.extensionPoint = extensionPoint;
 	}
 
@@ -141,21 +126,17 @@ public class Extension extends Artefact {
 	}
 
 	/**
-	 * Gets the description.
+	 * To string.
 	 *
-	 * @return the description
+	 * @return the string
 	 */
-	public String getDescription() {
-		return description;
+	@Override
+	public String toString() {
+		return "Extension [id=" + id + ", extensionPoint=" + extensionPoint + ", module=" + module + ", location="
+				+ location + ", name=" + name + ", description=" + description + ", type=" + type + ", key=" + key
+				+ ", dependencies=" + dependencies + ", createdBy="
+				+ createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt
+				+ "]";
 	}
-
-	/**
-	 * Sets the description.
-	 *
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
+	
 }

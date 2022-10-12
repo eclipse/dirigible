@@ -25,8 +25,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.Valid;
 
-import org.eclipse.dirigible.components.base.Artefact;
-import org.eclipse.dirigible.components.base.Auditable;
+import org.eclipse.dirigible.components.base.artefact.Artefact;
+import org.eclipse.dirigible.components.base.artefact.Auditable;
 
 /**
  * The Class ExtensionPoint.
@@ -35,29 +35,35 @@ import org.eclipse.dirigible.components.base.Auditable;
 @Table(name = "DIRIGIBLE_EXTENSION_POINTS")
 public class ExtensionPoint extends Artefact {
 	
+	/** The Constant ARTEFACT_TYPE. */
+	public static final String ARTEFACT_TYPE = "extensionpoint";
+	
+	
+	
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EXTENSIONPOINT_ID", nullable = false)
 	private Long id;
 	
-	/** The location. */
-	@Column(name = "EXTENSIONPOINT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
-	private String location;
+//	/** The extensions. */
+//	@Valid
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "EXTENSIONPOINT_NAME")
+//	private Set<Extension> extensions;
 	
-	/** The name. */
-	@Column(name = "EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
-	private String name;
-
-	/** The description. */
-	@Column(name = "EXTENSIONPOINT_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
-	private String description;
-
-	/** The extensions. */
-	@Valid
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "EXTENSIONPOINT_NAME")
-	private Set<Extension> extensions;
+	
+	/**
+	 * Instantiates a new extension point.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param description the description
+	 * @param dependencies the dependencies
+	 */
+	public ExtensionPoint(String location, String name, String description, String dependencies) {
+		super(location, name, ARTEFACT_TYPE, description, dependencies);
+	}	
 	
 	/**
 	 * Instantiates a new extension point.
@@ -65,23 +71,10 @@ public class ExtensionPoint extends Artefact {
 	public ExtensionPoint() {
 		super();
 	}
-
+	
 	/**
-	 * Instantiates a new extension point.
+	 * Gets the id.
 	 *
-	 * @param location the location
-	 * @param name the name
-	 * @param description the description
-	 */
-	public ExtensionPoint(String location, String name, String description) {
-		super();
-		this.location = location;
-		this.name = name;
-		this.description = description;
-	}
-	
-	
-	/**
 	 * @return the id
 	 */
 	public Long getId() {
@@ -89,83 +82,43 @@ public class ExtensionPoint extends Artefact {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	/**
-	 * Gets the location.
-	 *
-	 * @return the location
-	 */
-	public String getLocation() {
-		return location;
-	}
+//	/**
+//	 * Gets the extensions.
+//	 *
+//	 * @return the extensions
+//	 */
+//	public Set<Extension> getExtensions() {
+//		return extensions;
+//	}
+//
+//	/**
+//	 * Sets the extensions.
+//	 *
+//	 * @param extensions the extensions to set
+//	 */
+//	public void setExtensions(Set<Extension> extensions) {
+//		this.extensions = extensions;
+//	}
 
 	/**
-	 * Sets the location.
+	 * To string.
 	 *
-	 * @param location the location to set
+	 * @return the string
 	 */
-	public void setLocation(String location) {
-		this.location = location;
-	}
-	
-	/**
-	 * Sets the name.
-	 *
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-
-	/**
-	 * Gets the description.
-	 *
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * Sets the description.
-	 *
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
-	 * Gets the extensions.
-	 *
-	 * @return the extensions
-	 */
-	public Set<Extension> getExtensions() {
-		return extensions;
-	}
-
-	/**
-	 * Sets the extensions.
-	 *
-	 * @param extensions the extensions to set
-	 */
-	public void setExtensions(Set<Extension> extensions) {
-		this.extensions = extensions;
+	@Override
+	public String toString() {
+		return "ExtensionPoint [id=" + id + ", location=" + location + ", name=" + name
+				+ ", description=" + description + ", type=" + type + ", key=" + key 
+				+ ", dependencies=" + dependencies + ", state=" + createdBy + ", createdAt="
+				+ createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
 	
 }

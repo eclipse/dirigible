@@ -9,16 +9,22 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.base;
+package org.eclipse.dirigible.components.base.artefact;
 
-import java.util.Optional;
+/**
+ * The Enum ArtefactLifecycle.
+ */
+public enum ArtefactLifecycle {
+	
+	/** The created. */
+	CREATED, 
+	/** The updated. */
+	UPDATED,
+	/** The deleted. */
+	DELETED,
+	/** The modified. */
+	MODIFIED,
+	/** The failed. */
+	FAILED
 
-import org.springframework.data.domain.AuditorAware;
-
-public class AuditorAwareImpl implements AuditorAware<String> {
-
-    @Override
-    public Optional<String> getCurrentAuditor() {
-    	return Optional.of("SYSTEM"); //TODO
-    }
 }

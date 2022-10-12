@@ -9,13 +9,13 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.initializers;
+package org.eclipse.dirigible.components.initializers.definition;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@Configuration
-@ComponentScan
-public class SynchronousSpringEventsConfig {
+@Repository("definitionRepository")
+public interface DefinitionRepository extends JpaRepository<Definition, Long> {
 
 }
+

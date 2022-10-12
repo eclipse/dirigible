@@ -51,11 +51,12 @@
 		</encoder> -->
 	</appender>
 
-	<logger name="org.eclipse.dirigible" level="ERROR" additivity="false">
+	<logger name="org.eclipse.dirigible" level="DEBUG" additivity="false">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE_CORE" />
 		<appender-ref ref="ConsoleLoggingAppender" />
 	</logger>
+	
 
 	<logger name="org.eclipse.dirigible.api.v3.core.Console" level="ALL" additivity="false">
 		<appender-ref ref="STDOUT" />

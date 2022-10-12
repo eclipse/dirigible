@@ -9,16 +9,19 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.extensions.repository;
+package org.eclipse.dirigible.components.extensions.synchronizer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Optional;
+import java.nio.file.Path;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
+import org.eclipse.dirigible.components.extensions.repository.ExtensionPointRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,19 +33,33 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class ExtensionPointsSynchronizerTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-public class ExtensionPointRepositoryTest {
+public class ExtensionPointsSynchronizerTest {
 	
+	/** The extension point repository. */
 	@Autowired
 	private ExtensionPointRepository extensionPointRepository;
 	
+	/** The extension points synchronizer. */
+	@Autowired
+	private ExtensionPointsSynchronizer extensionPointsSynchronizer;
+	
+	/** The entity manager. */
 	@Autowired
 	EntityManager entityManager;
 	
+	/**
+	 * Setup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeEach
     public void setup() throws Exception {
 
@@ -54,6 +71,11 @@ public class ExtensionPointRepositoryTest {
 		extensionPointRepository.save(createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
     }
 	
+	/**
+	 * Cleanup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@AfterEach
     public void cleanup() throws Exception {
 		
@@ -62,32 +84,52 @@ public class ExtensionPointRepositoryTest {
     }
 	
 
+	
+	/**
+	 * Checks if is accepted.
+	 */
 	@Test
-    public void getOne() {
-		Long id = extensionPointRepository.findAll().get(0).getId();
-		Optional<ExtensionPoint> optional = extensionPointRepository.findById(id);
-		ExtensionPoint extensionPoint = optional.isPresent() ? optional.get() : null;
-        assertNotNull(extensionPoint);
-        assertNotNull(extensionPoint.getLocation());
-        assertNotNull(extensionPoint.getCreatedBy());
-        assertEquals("SYSTEM", extensionPoint.getCreatedBy());
-        assertNotNull(extensionPoint.getCreatedAt());
-        assertEquals("extensionpoint:/a/b/c/e1.extensionpoint:e1",extensionPoint.getKey());
+    public void isAcceptedPath() {
+		assertTrue(extensionPointsSynchronizer.isAccepted(Path.of("/a/b/c/e1.extensionpoint"), null));
     }
 	
+	/**
+	 * Checks if is accepted.
+	 */
 	@Test
-    public void getReferenceUsingEntityManager() {
-		Long id = extensionPointRepository.findAll().get(0).getId();
-		ExtensionPoint extensionPoint = entityManager.getReference(ExtensionPoint.class, id);
-        assertNotNull(extensionPoint);
-        assertNotNull(extensionPoint.getLocation());
+    public void isAcceptedArtefact() {
+		assertTrue(extensionPointsSynchronizer.isAccepted(createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description").getType()));
     }
 	
+	/**
+	 * Load the artefact.
+	 */
+	@Test
+    public void load() {
+		String content = "{\"location\":\"/control/control.extensionpoint\",\"name\":\"/control/control\",\"description\":\"Control Extension Point\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
+		List<ExtensionPoint> list = extensionPointsSynchronizer.load("/control/control.extensionpoint", content.getBytes());
+		assertNotNull(list);
+		assertEquals("/control/control.extensionpoint", list.get(0).getLocation());
+    }
+	
+
+	
+	/**
+	 * Creates the extension point.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param description the description
+	 * @return the extension point
+	 */
 	public static ExtensionPoint createExtensionPoint(String location, String name, String description) {
 		ExtensionPoint extensionPoint = new ExtensionPoint(location, name, description, null);
 		return extensionPoint;
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

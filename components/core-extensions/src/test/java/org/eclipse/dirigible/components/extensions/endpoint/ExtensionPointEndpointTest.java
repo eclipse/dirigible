@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.extensions.repository;
+package org.eclipse.dirigible.components.extensions.endpoint;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,9 +19,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import javax.persistence.EntityManager;
 
-import org.eclipse.dirigible.components.base.BaseEndpoint;
+import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
+import org.eclipse.dirigible.components.extensions.repository.ExtensionPointRepository;
+import org.eclipse.dirigible.components.extensions.repository.ExtensionPointRepositoryTest;
 import org.eclipse.dirigible.components.extensions.service.ExtensionPointService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +52,9 @@ public class ExtensionPointEndpointTest {
 	@Autowired
 	private ExtensionPointService extensionPointService;
 	
+	@Autowired
+	private ExtensionPointRepository extensionPointRepository;
+	
 	private ExtensionPoint testExtensionPoint;
 	
 	@Autowired
@@ -71,6 +77,13 @@ public class ExtensionPointEndpointTest {
 		testExtensionPoint = extensionPoints.getContent().get(0);
 		
 		entityManager.refresh(testExtensionPoint);
+    }
+	
+	@AfterEach
+    public void cleanup() throws Exception {
+		
+		// delete test ExtensionPoints
+		extensionPointRepository.findAll().stream().forEach(e -> extensionPointRepository.delete(e));
     }
 
 	@Test

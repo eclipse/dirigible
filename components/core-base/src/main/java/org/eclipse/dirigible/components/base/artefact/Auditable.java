@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.base;
+package org.eclipse.dirigible.components.base.artefact;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -25,29 +25,40 @@ import java.util.Date;
 
 import static javax.persistence.TemporalType.TIMESTAMP;
 
+/**
+ * The Class Auditable.
+ *
+ * @param <U> the generic type
+ */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable<U> {
 
+    /** The created by. */
     @CreatedBy
     @Column(name = "CREATED_BY", columnDefinition = "VARCHAR", nullable = true, length = 128)
     protected U createdBy;
 
+    /** The created at. */
     @CreatedDate
     @Temporal(TIMESTAMP)
     @Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP", nullable = true)
     protected Date createdAt;
 
+    /** The updated by. */
     @LastModifiedBy
     @Column(name = "UPDATED_BY", columnDefinition = "VARCHAR", nullable = true, length = 128)
     protected U updatedBy;
 
+    /** The updated at. */
     @LastModifiedDate
     @Temporal(TIMESTAMP)
     @Column(name = "UPDATED_AT", columnDefinition = "TIMESTAMP", nullable = true)
     protected Date updatedAt;
 
 	/**
+	 * Gets the created by.
+	 *
 	 * @return the createdBy
 	 */
 	public U getCreatedBy() {
@@ -55,6 +66,8 @@ public abstract class Auditable<U> {
 	}
 
 	/**
+	 * Sets the created by.
+	 *
 	 * @param createdBy the createdBy to set
 	 */
 	public void setCreatedBy(U createdBy) {
@@ -62,6 +75,8 @@ public abstract class Auditable<U> {
 	}
 
 	/**
+	 * Gets the created at.
+	 *
 	 * @return the createdAt
 	 */
 	public Date getCreatedAt() {
@@ -69,6 +84,8 @@ public abstract class Auditable<U> {
 	}
 
 	/**
+	 * Sets the created at.
+	 *
 	 * @param createdAt the createdAt to set
 	 */
 	public void setCreatedAt(Date createdAt) {
@@ -76,6 +93,8 @@ public abstract class Auditable<U> {
 	}
 
 	/**
+	 * Gets the updated by.
+	 *
 	 * @return the updatedBy
 	 */
 	public U getUpdatedBy() {
@@ -83,6 +102,8 @@ public abstract class Auditable<U> {
 	}
 
 	/**
+	 * Sets the updated by.
+	 *
 	 * @param updatedBy the updatedBy to set
 	 */
 	public void setUpdatedBy(U updatedBy) {
@@ -90,6 +111,8 @@ public abstract class Auditable<U> {
 	}
 
 	/**
+	 * Gets the updated at.
+	 *
 	 * @return the updatedAt
 	 */
 	public Date getUpdatedAt() {
@@ -97,6 +120,8 @@ public abstract class Auditable<U> {
 	}
 
 	/**
+	 * Sets the updated at.
+	 *
 	 * @param updatedAt the updatedAt to set
 	 */
 	public void setUpdatedAt(Date updatedAt) {

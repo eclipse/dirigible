@@ -9,20 +9,24 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.base;
+package org.eclipse.dirigible.components.base.artefact;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import java.util.Optional;
+
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@Configuration
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
-class PersistenceConfig {
-	
-    @Bean
-    public AuditorAware<String> auditorAware() {
-        return new AuditorAwareImpl();
+/**
+ * The Class AuditorAwareHandler.
+ */
+public class AuditorAwareHandler implements AuditorAware<String> {
+
+    /**
+     * Gets the current auditor.
+     *
+     * @return the current auditor
+     */
+    @Override
+    public Optional<String> getCurrentAuditor() {
+    	return Optional.of("SYSTEM"); //TODO
     }
-
 }

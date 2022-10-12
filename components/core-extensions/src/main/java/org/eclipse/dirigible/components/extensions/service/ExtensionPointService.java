@@ -11,8 +11,10 @@
  */
 package org.eclipse.dirigible.components.extensions.service;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
 import org.eclipse.dirigible.components.extensions.repository.ExtensionPointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +25,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Processing the Extensions Service incoming requests.
+ * Processing the Extension Points Service incoming requests.
  */
 @Service
 @Transactional
-public class ExtensionPointService {
+public class ExtensionPointService implements ArtefactService<ExtensionPoint> {
 	
 	@Autowired 
 	private ExtensionPointRepository extensionPointRepository;
 
+	@Override
+	@Transactional(readOnly = true)
+	public List<ExtensionPoint> findAll() {
+		return extensionPointRepository.findAll();
+	}
+	
+	@Override
 	@Transactional(readOnly = true)
 	public Page<ExtensionPoint> findAll(Pageable pageable) {
 		return extensionPointRepository.findAll(pageable);
 	}
 	
+	@Override
 	@Transactional(readOnly = true)
 	public ExtensionPoint findById(Long id) {
 		Optional<ExtensionPoint> extensionPoint = extensionPointRepository.findById(id);
@@ -47,6 +57,7 @@ public class ExtensionPointService {
 		}
 	}
 	
+	@Override
 	@Transactional(readOnly = true)
 	public ExtensionPoint findByName(String name) {
 		ExtensionPoint filter = new ExtensionPoint();
@@ -60,10 +71,12 @@ public class ExtensionPointService {
 		}
 	}
 	
+	@Override
 	public ExtensionPoint save(ExtensionPoint extensionPoint) {
 		return extensionPointRepository.saveAndFlush(extensionPoint);
 	}
 	
+	@Override
 	public void delete(ExtensionPoint extensionPoint) {
 		extensionPointRepository.delete(extensionPoint);
 	}

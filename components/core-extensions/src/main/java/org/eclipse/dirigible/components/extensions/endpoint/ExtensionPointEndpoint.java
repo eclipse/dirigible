@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.extensions.endpoint;
 
-import org.eclipse.dirigible.components.base.BaseEndpoint;
+import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
 import org.eclipse.dirigible.components.extensions.service.ExtensionPointService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +33,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "extensionpoints")
-public class ExtensionsEndpoint extends BaseEndpoint {
+public class ExtensionPointEndpoint extends BaseEndpoint {
 
 	private final ExtensionPointService extensionPointService;
 
 	@Autowired
-	public ExtensionsEndpoint(ExtensionPointService extensionPointService) {
+	public ExtensionPointEndpoint(ExtensionPointService extensionPointService) {
 		this.extensionPointService = extensionPointService;
 	}
 
