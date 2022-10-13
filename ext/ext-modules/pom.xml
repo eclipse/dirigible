@@ -27,6 +27,7 @@
 		<module>ext-rabbitmq</module>
 		<module>ext-redis</module>
 		<module>ext-spark</module>
+		<module>ext-destinations-proxy</module>
 	</modules>
 
 	<properties>
