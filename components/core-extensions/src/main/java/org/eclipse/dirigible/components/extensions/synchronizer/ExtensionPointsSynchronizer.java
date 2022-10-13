@@ -89,7 +89,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	/**
 	 * Checks if is accepted.
 	 *
-	 * @param artefact the artefact
+	 * @param type the type
 	 * @return true, if is accepted
 	 */
 	@Override
