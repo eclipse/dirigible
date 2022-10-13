@@ -14,8 +14,18 @@ package org.eclipse.dirigible.components.initializers.synchronizer;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
+/**
+ * The Interface SynchronizationWalkerCallback.
+ */
 public interface SynchronizationWalkerCallback {
 	
+	/**
+	 * Visit file.
+	 *
+	 * @param file the file
+	 * @param attrs the attrs
+	 * @param location the location
+	 */
 	public void visitFile(Path file, BasicFileAttributes attrs, String location);
 
 }

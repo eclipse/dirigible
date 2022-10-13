@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 /**
  * The Class ExtensionPointsSynchronizer.
  *
- * @param <A> the generic type
+ * @param A the generic type
  */
 @Component
 @Order(10)

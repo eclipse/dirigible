@@ -28,7 +28,7 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 /**
  * The Class Auditable.
  *
- * @param <U> the generic type
+ * @param U the generic type
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)

@@ -29,7 +29,7 @@ public class TopologyFactory {
 	 *
 	 * @param artefacts the artefacts
 	 * @param synchronizers the synchronizers
-	 * @return the list< topology wrapper<? extends artefact>>
+	 * @return the list of topology wrappers
 	 */
 	public static final List<TopologyWrapper<? extends Artefact>> wrap(List<? extends Artefact> artefacts, List<Synchronizer<Artefact>> synchronizers) {
 		List<TopologyWrapper<? extends Artefact>> list = new ArrayList<TopologyWrapper<? extends Artefact>>();

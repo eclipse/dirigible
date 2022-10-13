@@ -23,7 +23,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 /**
  * The Interface Synchronizer.
  *
- * @param <A> the generic type
+ * @param A the generic type
  */
 public interface Synchronizer<A extends Artefact> {
 

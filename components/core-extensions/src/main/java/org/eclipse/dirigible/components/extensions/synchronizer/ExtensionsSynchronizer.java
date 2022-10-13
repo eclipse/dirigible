@@ -36,6 +36,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * The Class ExtensionsSynchronizer.
+ * 
+ * @param A the generic type
  */
 @Component
 @Order(20)

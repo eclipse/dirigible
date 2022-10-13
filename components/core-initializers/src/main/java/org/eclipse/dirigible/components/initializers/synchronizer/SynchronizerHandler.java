@@ -24,30 +24,58 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * The Class SynchronizerHandler.
+ */
 public class SynchronizerHandler implements SynchronizerCallback {
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizerHandler.class);
 	
+	/** The errors. */
 	private List<String> errors = new ArrayList<>();
 	
+	/** The synchronization processor. */
 	private SynchronizationProcessor synchronizationProcessor;
 	
+	/**
+	 * Instantiates a new synchronizer handler.
+	 *
+	 * @param synchronizationProcessor the synchronization processor
+	 */
 	@Autowired
 	public SynchronizerHandler(SynchronizationProcessor synchronizationProcessor) {
 		this.synchronizationProcessor = synchronizationProcessor;
 	}
 	
+	/**
+	 * Adds the error.
+	 *
+	 * @param error the error
+	 */
 	@Override
 	public void addError(String error) {
 		this.errors.add(error);
 	}
 	
+	/**
+	 * Gets the errors.
+	 *
+	 * @return the errors
+	 */
 	@Override
 	public List<String> getErrors() {
 		return errors;
 	}
 
+	/**
+	 * Register errors.
+	 *
+	 * @param synchronizer the synchronizer
+	 * @param remained the remained
+	 * @param lifecycle the lifecycle
+	 * @param state the state
+	 */
 	@Override
 	public void registerErrors(Synchronizer<? extends Artefact> synchronizer, List<TopologyWrapper<? extends Artefact>> remained, 
 			ArtefactLifecycle lifecycle, ArtefactState state) {

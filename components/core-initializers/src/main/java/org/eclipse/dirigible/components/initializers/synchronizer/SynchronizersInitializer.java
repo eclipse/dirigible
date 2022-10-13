@@ -16,16 +16,30 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class SynchronizersInitializer.
+ */
 @Component
 public class SynchronizersInitializer {
 
+	/** The synchronization processor. */
 	private final SynchronizationProcessor synchronizationProcessor;
 
+	/**
+	 * Instantiates a new synchronizers initializer.
+	 *
+	 * @param synchronizationProcessor the synchronization processor
+	 */
 	@Autowired
 	public SynchronizersInitializer(SynchronizationProcessor synchronizationProcessor) {
 		this.synchronizationProcessor = synchronizationProcessor;
 	}
 
+	/**
+	 * Handle context start.
+	 *
+	 * @param are the are
+	 */
 	@EventListener(ApplicationReadyEvent.class)
 	public void handleContextStart(final ApplicationReadyEvent are) {
 		synchronizationProcessor.processSynchronizers();

@@ -194,7 +194,6 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	/**
 	 * Update key.
 	 *
-	 * @return the string
 	 */
 	public void updateKey() {
 		if (this.type != null

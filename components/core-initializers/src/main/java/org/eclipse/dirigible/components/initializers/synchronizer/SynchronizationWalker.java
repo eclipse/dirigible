@@ -25,6 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class SynchronizationWalker.
+ */
 @Component
 public class SynchronizationWalker {
 	
@@ -32,12 +35,24 @@ public class SynchronizationWalker {
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationWalker.class);
 	
 	
+	/** The synchronization walker callback. */
 	private SynchronizationWalkerCallback synchronizationWalkerCallback;
 	
+	/**
+	 * Instantiates a new synchronization walker.
+	 *
+	 * @param synchronizationWalkerCallback the synchronization walker callback
+	 */
 	public SynchronizationWalker(SynchronizationWalkerCallback synchronizationWalkerCallback) {
 		this.synchronizationWalkerCallback = synchronizationWalkerCallback;
 	}
 	
+	/**
+	 * Walk.
+	 *
+	 * @param root the root
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void walk(String root) throws IOException {
 		EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
 		Files.walkFileTree(Paths.get(root), opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
