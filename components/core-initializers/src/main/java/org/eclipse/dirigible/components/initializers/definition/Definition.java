@@ -108,7 +108,7 @@ public class Definition extends Artefact {
 	/**
 	 * Sets the state.
 	 *
-	 * @param status the state to set
+	 * @param state the state to set
 	 */
 	public void setState(String state) {
 		this.state = state;

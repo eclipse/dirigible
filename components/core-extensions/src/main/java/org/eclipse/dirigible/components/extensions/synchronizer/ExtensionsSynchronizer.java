@@ -90,7 +90,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	/**
 	 * Checks if is accepted.
 	 *
-	 * @param artefact the artefact
+	 * @param type the artefact
 	 * @return true, if is accepted
 	 */
 	@Override
@@ -127,7 +127,6 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 *
 	 * @param wrappers the wrappers
 	 * @param depleter the depleter
-	 * @param callback the callback
 	 */
 	@Override
 	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
@@ -138,7 +137,6 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 *
 	 * @param wrappers the wrappers
 	 * @param depleter the depleter
-	 * @param callback the callback
 	 */
 	@Override
 	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
@@ -166,8 +164,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	/**
 	 * Cleanup.
 	 *
-	 * @param extensionPoint the extension point
-	 * @param callback the callback
+	 * @param extension the extension
 	 */
 	@Override
 	public void cleanup(Extension extension) {
