@@ -17,7 +17,7 @@ package org.eclipse.dirigible.components.base.endpoint;
 public abstract class BaseEndpoint {
 	
 	/** The Constant DEFAULT_PAGE_SIZE. */
-	public static final int DEFAULT_PAGE_SIZE = 20;
+	public static final int DEFAULT_PAGE_SIZE = 100;
 	
 	/** The Constant PREFIX_ENDPOINT_SECURED. */
 	public static final String PREFIX_ENDPOINT_SECURED = "services/v8/";
