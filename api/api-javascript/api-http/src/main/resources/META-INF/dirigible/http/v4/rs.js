@@ -30,6 +30,8 @@
  * @return {Boolean} true if the arrays are equal, false otherwise
  * @private
  */
+const { match } = require("/webjars/path-to-regexp/6.2.1/dist/index.js");
+
 var arrayEquals = function(source, target){
 	if(source===target)
 		return true;
@@ -641,77 +643,55 @@ var HttpController = exports.HttpController = function(oMappings){
 
 	const self = this;
 
-const matchRequestUrl = function (requestPath, method, cfg) {
-    var pathDefs = Object.keys(cfg);
-    var matches = [];
-    for (var i = 0; i < pathDefs.length; i++) {
-        var pathDef = pathDefs[i];
-        var resolvedPath;
-        if (pathDef === requestPath) {
-            resolvedPath = pathDef;
-            matches.push({ w: 1, p: resolvedPath, d: pathDef });
-        } else {
-            var pathDefSegments = pathDef.split('/');
-            var reqPathSegments;
-            if (requestPath.trim().length > 0)
-                reqPathSegments = requestPath.split('/');
-            else
-                reqPathSegments = [];
-            if (reqPathSegments.length >= pathDefSegments.length) {
-                var verbHandlers = Object.keys(cfg[pathDef]);
-                if (verbHandlers && verbHandlers.length > 0 && verbHandlers.indexOf(method) > -1) {
-                    var pathParams = {};
-                    var resolvedPathDefSegments = pathDefSegments.map(function (pSeg, i) {
-                        pSeg = pSeg.trim();
-                        const multipleParamMatcher = pSeg.match(/{(.*?)\*}/);
-                        if (multipleParamMatcher != null) {
-                            const paramName = multipleParamMatcher[1];
-                            const paramValue = reqPathSegments.slice(i).join("/")
-                            pathParams[paramName] = paramValue;
-                            return paramValue;
-                        } else {
-                            const regularParamMatcher = pSeg.match(/{(.*?)}/);
-                            if (regularParamMatcher !== null) {
-                                const paramName = regularParamMatcher[1];
-                                const paramValue = reqPathSegments[i];
-                                pathParams[paramName] = paramValue;
-                                return paramValue;
-                            } else {
-                                return pSeg;
-                            }
-                        }
-                    });
-                    var p = resolvedPathDefSegments.join('/');
-                    if (p === requestPath) {
-                        resolvedPath = p;
-                        var match = { w: 0, p: resolvedPath, d: pathDef };
-                        if (Object.keys(pathParams).length > 0) {
-                            match.pathParams = pathParams;
-                        }
-                        matches.push(match);
-                    }
-                }
-            }
-        }
-    }
-    //sort matches by weight
-    matches = matches.sort(function (p, n) {
-        if (n.w === p.w) {
-            //the one with less placeholders wins
-            var m1 = p.d.match(/{(.*?)}/g);
-            var placeholdersCount1 = m1 !== null ? m1.length : 0;
-            var m2 = n.d.match(/{(.*?)}/g);
-            var placeholdersCount2 = m2 !== null ? m2.length : 0;
-            if (placeholdersCount1 > placeholdersCount2) {
-                n.w = n.w + 1;
-            } else if (placeholdersCount1 < placeholdersCount2) {
-                p.w = p.w + 1;
-            }
-        }
-        return n.w - p.w;
-    });
-    return matches;
-};
+function matchRequestUrl(requestPath, method, cfg) {
+	return Object.entries(cfg)
+		.filter(([_, handlers]) => handlers && handlers[method])
+		.map(([path, _]) => path)
+		.reduce((matches, path) => matchingRouteDefinitionsReducer(matches, path, requestPath), [])
+		.sort(matchedRouteDefinitionsSorter);
+}
+
+function matchingRouteDefinitionsReducer(matchedDefinitions, definedPath, requestPath) {
+	const matches = match(transformPathParamsDeclaredInBraces(definedPath));
+	const matched = matches(requestPath);
+	if (matched) {
+		const matchedDefinition = {
+			p: requestPath,
+			d: definedPath,
+			pathParams: Array.isArray(matched.params) ? matched.params.join("/") : matched.params
+		};
+		matchedDefinitions.push(matchedDefinition);
+	}
+	return matchedDefinitions;
+}
+
+function matchedRouteDefinitionsSorter(p, n) {
+	p.w = calculateMatchedRouteWeight(p);
+	n.w = calculateMatchedRouteWeight(n);
+
+	if (n.w === p.w) {
+		//the one with less placeholders wins
+		var m1 = p.d.match(/{(.*?)}/g);
+		var placeholdersCount1 = m1 !== null ? m1.length : 0;
+		var m2 = n.d.match(/{(.*?)}/g);
+		var placeholdersCount2 = m2 !== null ? m2.length : 0;
+		if (placeholdersCount1 > placeholdersCount2) {
+			n.w = n.w + 1;
+		} else if (placeholdersCount1 < placeholdersCount2) {
+			p.w = p.w + 1;
+		}
+	}
+	return n.w - p.w;
+}
+
+function calculateMatchedRouteWeight(matchedRoute) {
+	return (matchedRoute.params && matchedRoute.params.length > 0) ? 0 : 1; // always prefer exact route definitions - set weight to 1
+}
+
+function transformPathParamsDeclaredInBraces(pathDefinition) {
+	const pathParamsInBracesMatcher = /({(\w*\*?)})/g; // matches cases like '/api/{pathParam}' or '/api/{pathParam*}'
+	return pathDefinition.replace(pathParamsInBracesMatcher, ":$2"); // transforms matched cases to '/api/:pathParam' or '/api/:pathParam*'
+}
 
 	//  content-type, consumes
 	//  accepts, produces
@@ -815,9 +795,9 @@ const matchRequestUrl = function (requestPath, method, cfg) {
 				"queryParameters": {}
 			};
 			if(matches[0].pathParams){
-				ctx.pathParameters =  matches[0].pathParams;
+				ctx.pathParameters = request.params =  matches[0].pathParams;
 			}
-			ctx.queryParameters = queryParams;
+			ctx.queryParameters = request.query = queryParams;
 
 			const noop = function () {
 			};
@@ -861,6 +841,8 @@ const matchRequestUrl = function (requestPath, method, cfg) {
 			self.sendError(response.BAD_REQUEST, undefined, 'Bad Request', 'No suitable processor for this request.');
 		}
   	};
+
+	this.listen = this.execute;
 
 
 	if(oMappings instanceof ResourceMappings){

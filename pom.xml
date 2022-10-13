@@ -804,6 +804,7 @@
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>4.3.0</jedis.version>
 		<spark.version>3.3.0</spark.version>
+		<path-to-regexp.version>6.2.1</path-to-regexp.version>
 		
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<org.springdoc.openapi.ui.version>1.6.11</org.springdoc.openapi.ui.version>

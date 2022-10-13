@@ -14,6 +14,14 @@
     <description>HTTP Modules</description>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>path-to-regexp</artifactId>
+            <version>${path-to-regexp.version}</version>
+        </dependency>
+    </dependencies>
+
     <properties>
         <profile.content.phase>generate-sources</profile.content.phase>
         <content.repository.name>api-http</content.repository.name>
