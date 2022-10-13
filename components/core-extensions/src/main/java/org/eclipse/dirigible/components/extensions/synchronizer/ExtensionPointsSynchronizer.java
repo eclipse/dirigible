@@ -51,6 +51,9 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	/** The extension point service. */
 	private ExtensionPointService extensionPointService;
 	
+	/** The synchronization callback. */
+	private SynchronizerCallback callback;
+	
 	/**
 	 * Instantiates a new extension points synchronizer.
 	 *
@@ -122,11 +125,9 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 *
 	 * @param wrappers the wrappers
 	 * @param depleter the depleter
-	 * @param callback the callback
 	 */
 	@Override
-	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter,
-			SynchronizerCallback callback) {
+	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
 	}
 	
 	/**
@@ -134,11 +135,9 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 *
 	 * @param wrappers the wrappers
 	 * @param depleter the depleter
-	 * @param callback the callback
 	 */
 	@Override
-	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter,
-			SynchronizerCallback callback) {
+	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
 		try {
 			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
 			callback.registerErrors(this, results, ArtefactLifecycle.CREATED, ArtefactState.FAILED_CREATE_UPDATE);
@@ -155,8 +154,8 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(String flow) {
-		// TODO successful state
+	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 		return true;
 	}
 
@@ -164,16 +163,20 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 * Cleanup.
 	 *
 	 * @param extensionPoint the extension point
-	 * @param callback the callback
 	 */
 	@Override
-	public void cleanup(ExtensionPoint extensionPoint, SynchronizerCallback callback) {
+	public void cleanup(ExtensionPoint extensionPoint) {
 		try {
 			getService().delete(extensionPoint);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
 		}
+	}
+	
+	@Override
+	public void setCallback(SynchronizerCallback callback) {
+		this.callback = callback;
 	}
 
 }

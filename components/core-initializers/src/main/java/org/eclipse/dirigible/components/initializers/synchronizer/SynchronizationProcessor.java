@@ -45,7 +45,7 @@ import org.springframework.stereotype.Component;
  * The Class SynchronizationProcessor.
  */
 @Component
-public class SynchronizationProcessor implements SynchronizationWalkerCallback {
+public class SynchronizationProcessor implements SynchronizationWalkerCallback, SynchronizerCallback {
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationProcessor.class);
@@ -62,9 +62,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback {
 	/** The synchronizers. */
 	private final List<Synchronizer<Artefact>> synchronizers;
 	
+	/** The errors. */
+	private List<String> errors = new ArrayList<>();
+	
 	/** The definition service. */
 	private DefinitionService definitionService;
-	
 	
 	/**
 	 * Instantiates a new synchronization processor.
@@ -78,6 +80,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback {
 		this.repository = repository;
 		this.synchronizers = synchronizers;
 		this.definitionService = definitionService;
+		this.synchronizers.forEach(s -> s.setCallback(this));
 	}
 	
 	/**
@@ -90,17 +93,14 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback {
 		// prepare map
 		synchronizers.forEach(s -> definitions.put(s, new ArrayList<>()));
 		
-		// prepare the callback handler
-		SynchronizerCallback callback = new SynchronizerHandler(this);
-		
 		if (logger.isDebugEnabled()) {logger.debug("Collecting files...");}
 		// collect definitions for processing
-		collectFiles(callback);
+		collectFiles();
 		if (logger.isDebugEnabled()) {logger.debug("Collecting files done.");}
 		
 		if (logger.isDebugEnabled()) {logger.debug("Loading definitions...");}
 		// parse definitions to artefacts
-		loadDefinitions(callback);
+		loadDefinitions();
 		if (logger.isDebugEnabled()) {logger.debug("Loading definitions done.");}
 		
 		TopologicalSorter<TopologyWrapper<? extends Artefact>> sorter = new TopologicalSorter<>();
@@ -118,7 +118,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback {
 		if (logger.isDebugEnabled()) {logger.debug("Preparing for processing...");}
 		// preparing and depleting
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
-			synchronizer.prepare(wrappers, depleter, callback);
+			synchronizer.prepare(wrappers, depleter);
 		}
 		if (logger.isDebugEnabled()) {logger.debug("Preparing for processing done.");}
 		
@@ -128,7 +128,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback {
 		if (logger.isDebugEnabled()) {logger.debug("Processing of artefacts...");}
 		// processing and depleting
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
-			synchronizer.process(wrappers, depleter, callback);
+			synchronizer.process(wrappers, depleter);
 		}
 		if (logger.isDebugEnabled()) {logger.debug("Processing of artefacts done.");}
 		
@@ -138,14 +138,14 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback {
 			List<? extends Artefact> registered = synchronizer.getService().findAll();
 			for (Artefact artefact : registered) {
 				if (!repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + artefact.getLocation()).exists()) {
-					synchronizer.cleanup(artefact, callback);
+					synchronizer.cleanup(artefact);
 				}
 			}
 		}
 		if (logger.isDebugEnabled()) {logger.debug("Cleaning up removed artefacts done.");}
 		
 		// report results
-		callback.getErrors().forEach(e -> {if (logger.isErrorEnabled()) {logger.error(e);}});
+		getErrors().forEach(e -> {if (logger.isErrorEnabled()) {logger.error(e);}});
 		
 		if (logger.isDebugEnabled()) {logger.debug("Processing synchronizers done. {} artefacts processed.", artefacts.size());}
 		// clear maps
@@ -158,14 +158,14 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback {
 	 *
 	 * @param errorCallback the error callback
 	 */
-	private void collectFiles(SynchronizerCallback errorCallback) {
+	private void collectFiles() {
 		String registryFolder = getRegistryFolder();
 		SynchronizationWalker synchronizationWalker = new SynchronizationWalker(this);
 		try {
 			synchronizationWalker.walk(registryFolder);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
-			errorCallback.addError(e.getMessage());
+			addError(e.getMessage());
 		}
 	}
 	
@@ -174,7 +174,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback {
 	 *
 	 * @param errorCallback the error callback
 	 */
-	private void loadDefinitions(SynchronizerCallback errorCallback) {
+	private void loadDefinitions() {
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
 			for (Definition definition : definitions.get(synchronizer)) {
 				try {
@@ -182,7 +182,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback {
 					artefacts.addAll(loaded);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
-					errorCallback.addError(e.getMessage());
+					addError(e.getMessage());
 				}
 			}
 		}
@@ -290,6 +290,62 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback {
 		definition.setState(state.toString());
 		definition.setMessage(message);
 		definitionService.save(definition);
+	}
+	
+	/**
+	 * Adds the error.
+	 *
+	 * @param error the error
+	 */
+	@Override
+	public void addError(String error) {
+		this.errors.add(error);
+	}
+	
+	/**
+	 * Gets the errors.
+	 *
+	 * @return the errors
+	 */
+	@Override
+	public List<String> getErrors() {
+		return errors;
+	}
+
+	/**
+	 * Register errors.
+	 *
+	 * @param synchronizer the synchronizer
+	 * @param remained the remained
+	 * @param lifecycle the lifecycle
+	 * @param state the state
+	 */
+	@Override
+	public void registerErrors(Synchronizer<? extends Artefact> synchronizer, List<TopologyWrapper<? extends Artefact>> remained, 
+			ArtefactLifecycle lifecycle, ArtefactState state) {
+		if (remained.size() > 0) {
+			for (TopologyWrapper<? extends Artefact> wrapper : remained) {
+				String errorMessage = String.format("Undepleted Artefact of type: [%s] with key: [%s] in phase: [%s]", 
+						wrapper.getArtefact().getType(), wrapper.getId(), lifecycle.toString());
+				if (logger.isErrorEnabled()) {logger.error(errorMessage);}
+				errors.add(errorMessage);
+				setDefinitionState(wrapper.getArtefact(), state, errorMessage);
+			}
+		}		
+	}
+	
+	/**
+	 * Register state.
+	 *
+	 * @param synchronizer the synchronizer
+	 * @param wrapper the wrapper
+	 * @param lifecycle the lifecycle
+	 * @param state the state
+	 */
+	@Override
+	public void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper, ArtefactLifecycle lifecycle, ArtefactState state) {
+		if (logger.isDebugEnabled()) {logger.debug("Processed artefact with key: {} for state: {}", wrapper.getArtefact().getKey(), state.toString());}
+		setDefinitionState(wrapper.getArtefact(), state, "");
 	}
 
 }

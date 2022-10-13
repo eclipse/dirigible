@@ -49,4 +49,15 @@ public interface SynchronizerCallback {
 	void registerErrors(Synchronizer<? extends Artefact> synchronizer, List<TopologyWrapper<? extends Artefact>> remained, 
 			ArtefactLifecycle lifecycle, ArtefactState state);
 
+	/**
+	 * Register errors.
+	 *
+	 * @param synchronizer the synchronizer
+	 * @param wrapper the wrapper
+	 * @param lifecycle the lifecycle
+	 * @param state the state
+	 */
+	void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
+			ArtefactLifecycle lifecycle, ArtefactState state);
+
 }

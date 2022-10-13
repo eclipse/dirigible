@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  * The Class SynchronizersInitializer.
  */
 @Component
-public class SynchronizersInitializer {
+public class SynchronizationInitializer {
 
 	/** The synchronization processor. */
 	private final SynchronizationProcessor synchronizationProcessor;
@@ -31,7 +31,7 @@ public class SynchronizersInitializer {
 	 * @param synchronizationProcessor the synchronization processor
 	 */
 	@Autowired
-	public SynchronizersInitializer(SynchronizationProcessor synchronizationProcessor) {
+	public SynchronizationInitializer(SynchronizationProcessor synchronizationProcessor) {
 		this.synchronizationProcessor = synchronizationProcessor;
 	}
 

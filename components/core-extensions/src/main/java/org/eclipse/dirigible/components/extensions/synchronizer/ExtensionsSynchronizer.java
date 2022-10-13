@@ -52,6 +52,9 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	/** The extension service. */
 	private ExtensionService extensionService;
 	
+	/** The synchronization callback. */
+	private SynchronizerCallback callback;
+	
 	/**
 	 * Instantiates a new extensions synchronizer.
 	 *
@@ -128,8 +131,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 * @param callback the callback
 	 */
 	@Override
-	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter,
-			SynchronizerCallback callback) {
+	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
 	}
 	
 	/**
@@ -140,8 +142,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 * @param callback the callback
 	 */
 	@Override
-	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter,
-			SynchronizerCallback callback) {
+	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
 		try {
 			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
 			callback.registerErrors(this, results, ArtefactLifecycle.CREATED, ArtefactState.FAILED_CREATE_UPDATE);
@@ -158,7 +159,8 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(String flow) {
+	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 		return true;
 	}
 
@@ -169,13 +171,18 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 * @param callback the callback
 	 */
 	@Override
-	public void cleanup(Extension extension, SynchronizerCallback callback) {
+	public void cleanup(Extension extension) {
 		try {
 			getService().delete(extension);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
 		}
+	}
+	
+	@Override
+	public void setCallback(SynchronizerCallback callback) {
+		this.callback = callback;
 	}
 
 }

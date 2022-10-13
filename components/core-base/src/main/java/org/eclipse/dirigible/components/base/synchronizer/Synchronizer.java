@@ -58,18 +58,16 @@ public interface Synchronizer<A extends Artefact> {
 	 *
 	 * @param wrappers the wrappers
 	 * @param depleter the depleter
-	 * @param callback the callback
 	 */
-	void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter, SynchronizerCallback callback);
+	void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter);
 	
 	/**
 	 * Process.
 	 *
 	 * @param wrappers the wrappers
 	 * @param depleter the depleter
-	 * @param callback the callback
 	 */
-	void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter, SynchronizerCallback callback);
+	void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter);
 	
 	/**
 	 * Gets the service.
@@ -79,19 +77,26 @@ public interface Synchronizer<A extends Artefact> {
 	ArtefactService<A> getService();
 	
 	/**
-	 * Complete.
-	 *
-	 * @param flow the flow
-	 * @return true, if successful
-	 */
-	boolean complete(String flow);
-
-	/**
 	 * Cleanup.
 	 *
 	 * @param artefact the artefact
-	 * @param callback the callback
 	 */
-	void cleanup(A artefact, SynchronizerCallback callback);
+	void cleanup(A artefact);
+
+	/**
+	 * Complete.
+	 *
+	 * @param wrapper the topology wrapper
+	 * @param flow the flow
+	 * @return true, if successful
+	 */
+	boolean complete(TopologyWrapper<Artefact> wrapper, String flow);
+	
+	/**
+	 * Set the callback
+	 * 
+	 * @param callback
+	 */
+	void setCallback(SynchronizerCallback callback);
 	
 }
