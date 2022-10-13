@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
@@ -21,6 +22,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
 
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -60,7 +62,8 @@ public class SynchronizationWalker {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
                     throws IOException {
-            	synchronizationWalkerCallback.visitFile(file, attrs, file.toString().substring(root.length()));
+            	synchronizationWalkerCallback.visitFile(file, attrs, file.toString()
+            			.substring(root.length()).replace(File.separator, IRepository.SEPARATOR));
                 return FileVisitResult.CONTINUE;
             }
 

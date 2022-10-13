@@ -112,7 +112,10 @@ public class TopologyWrapper<A extends Artefact> implements ITopologicallySortab
 	 */
 	@Override
 	public boolean complete(String flow) {
-		return synchronizer.complete((TopologyWrapper<Artefact>) this, flow);
+		if (synchronizer.isAccepted(getArtefact().getType())) {
+			return synchronizer.complete((TopologyWrapper<Artefact>) this, flow);
+		}
+		return true;
 	}
 	
 	

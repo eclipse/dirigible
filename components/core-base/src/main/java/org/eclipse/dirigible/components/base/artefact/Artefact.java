@@ -27,7 +27,7 @@ import javax.xml.bind.DatatypeConverter;
 public abstract class Artefact extends Auditable<String> implements Serializable {
 	
 	/** The Constant KEY_SEPARATOR. */
-	private static final String KEY_SEPARATOR = ":";
+	public static final String KEY_SEPARATOR = ":";
 
 	/** The location. */
 	@Column(name = "ARTEFACT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)

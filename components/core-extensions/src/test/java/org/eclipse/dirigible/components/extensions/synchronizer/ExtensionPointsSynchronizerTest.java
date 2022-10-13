@@ -106,10 +106,10 @@ public class ExtensionPointsSynchronizerTest {
 	 */
 	@Test
     public void load() {
-		String content = "{\"location\":\"/control/control.extensionpoint\",\"name\":\"/control/control\",\"description\":\"Control Extension Point\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
-		List<ExtensionPoint> list = extensionPointsSynchronizer.load("/control/control.extensionpoint", content.getBytes());
+		String content = "{\"location\":\"/test/test.extensionpoint\",\"name\":\"/test/test\",\"description\":\"Test Extension Point\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
+		List<ExtensionPoint> list = extensionPointsSynchronizer.load("/test/test.extensionpoint", content.getBytes());
 		assertNotNull(list);
-		assertEquals("/control/control.extensionpoint", list.get(0).getLocation());
+		assertEquals("/test/test.extensionpoint", list.get(0).getLocation());
     }
 	
 

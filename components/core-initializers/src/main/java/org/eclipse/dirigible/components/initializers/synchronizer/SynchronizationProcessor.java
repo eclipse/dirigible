@@ -21,7 +21,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.commons.api.topology.TopologicalSorter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -96,12 +98,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		if (logger.isDebugEnabled()) {logger.debug("Collecting files...");}
 		// collect definitions for processing
 		collectFiles();
-		if (logger.isDebugEnabled()) {logger.debug("Collecting files done.");}
+		if (logger.isDebugEnabled()) {logger.debug("Collecting files done. {} known definitions collected.", definitions.size());}
 		
 		if (logger.isDebugEnabled()) {logger.debug("Loading definitions...");}
 		// parse definitions to artefacts
 		loadDefinitions();
-		if (logger.isDebugEnabled()) {logger.debug("Loading definitions done.");}
+		if (logger.isDebugEnabled()) {logger.debug("Loading definitions done. {} artefacts parsed. ", artefacts.size());}
 		
 		TopologicalSorter<TopologyWrapper<? extends Artefact>> sorter = new TopologicalSorter<>();
 		TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter = new TopologicalDepleter<>();
@@ -118,7 +120,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		if (logger.isDebugEnabled()) {logger.debug("Preparing for processing...");}
 		// preparing and depleting
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
-			synchronizer.prepare(wrappers, depleter);
+			List<TopologyWrapper<? extends Artefact>> locals = 
+					wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toList());
+			synchronizer.prepare(locals, depleter);
 		}
 		if (logger.isDebugEnabled()) {logger.debug("Preparing for processing done.");}
 		
@@ -128,7 +132,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		if (logger.isDebugEnabled()) {logger.debug("Processing of artefacts...");}
 		// processing and depleting
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
-			synchronizer.process(wrappers, depleter);
+			List<TopologyWrapper<? extends Artefact>> locals = 
+					wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toList());
+			synchronizer.process(locals, depleter);
 		}
 		if (logger.isDebugEnabled()) {logger.debug("Processing of artefacts done.");}
 		
@@ -137,8 +143,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		for (Synchronizer<Artefact> synchronizer : synchronizers) {
 			List<? extends Artefact> registered = synchronizer.getService().findAll();
 			for (Artefact artefact : registered) {
-				if (!repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + artefact.getLocation()).exists()) {
-					synchronizer.cleanup(artefact);
+				if (synchronizer.isAccepted(artefact.getType())) {
+					if (!repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + artefact.getLocation()).exists()) {
+						synchronizer.cleanup(artefact);
+						break;
+					}
 				}
 			}
 		}
@@ -250,7 +259,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		}
 		// load the content to calculate the checksum
 		byte[] content = Files.readAllBytes(file);
-		Definition definition = new Definition(location, file.getFileName().toString(), type, content);
+		Definition definition = new Definition(location, FilenameUtils.getBaseName(file.getFileName().toString()), type, content);
 		// check whether this artefact has been processed in the past already
 		Definition maybe = definitionService.findByKey(definition.getKey());
 		if (maybe != null) {
@@ -273,6 +282,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			}
 		} else {
 			// artefact is new, hence stored for processing
+			definition.setState(ArtefactLifecycle.CREATED.toString());
 			definitionService.save(definition);
 			definitions.get(synchronizer).add(definition);
 		}
@@ -286,7 +296,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 * @param message the message
 	 */
 	public void setDefinitionState(Artefact artefact, ArtefactState state, String message) {
-		Definition definition = definitionService.findByKey(artefact.getKey());
+		Definition definition = definitionService.findByLocation(artefact.getLocation());
+		if (definition == null) {
+			logger.warn("Definition with location: {} does not exist, but should be.", artefact.getLocation());
+			definition = new Definition(artefact.getLocation(), artefact.getName(), artefact.getType(), new byte[] {});
+		}
 		definition.setState(state.toString());
 		definition.setMessage(message);
 		definitionService.save(definition);

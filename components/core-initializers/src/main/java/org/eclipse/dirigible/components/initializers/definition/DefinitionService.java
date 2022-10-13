@@ -57,6 +57,18 @@ public class DefinitionService {
 		return null;
 	}
 	
+	@Transactional(readOnly = true)
+	public Definition findByLocation(String location) {
+		Definition filter = new Definition();
+		filter.setLocation(location);
+		Example<Definition> example = Example.of(filter);
+		Optional<Definition> definition = definitionRepository.findOne(example);
+		if (definition.isPresent()) {
+			return definition.get();
+		}
+		return null;
+	}
+	
 	public Definition save(Definition definition) {
 		return definitionRepository.saveAndFlush(definition);
 	}

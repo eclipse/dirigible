@@ -9,11 +9,15 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.initializers.classpath;
+package org.eclipse.dirigible.components.initializers.synchronizer;
 
+import java.io.IOException;
+
+import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.initializers.SynchronousSpringEventsConfig;
 import org.eclipse.dirigible.components.repository.RepositoryConfig;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,13 +34,14 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { SynchronousSpringEventsConfig.class }, loader = AnnotationConfigContextLoader.class)
-@EntityScan("org.eclipse.dirigible.components") 
-public class ClasspathContentInitializerTest {
+@EntityScan("org.eclipse.dirigible.components")
+public class SynchronizationInitializerTest {
 	
 	@Configuration
+	@ComponentScan("org.eclipse.dirigible.components")
     static class ContextConfiguration {
 
-        @Bean("ClasspathContentInitializerTestRepository")
+        @Bean("SynchronizationInitializerTestReposiotry")
         public IRepository repository() {
             return new RepositoryConfig().repository();
         }
@@ -43,11 +49,17 @@ public class ClasspathContentInitializerTest {
     }
 	
 	@Autowired
-    private ClasspathContentInitializer listener;
+    private SynchronizationInitializer listener;
+	
+	@Autowired
+    private IRepository repository;
 	
 	@Test
-    public void testContextStartedHandler() {
+    public void testContextStartedHandler() throws RepositoryWriteException, IOException {
 		System.out.println("Test context started listener.");
+		repository.createResource("/registry/public/test/test.extensionpoint", 
+				IOUtils.toByteArray(SynchronizationInitializerTest.class.getResourceAsStream(
+						"/META-INF/dirigible/test/test.extensionpoint")));
 		listener.handleContextStart(null);
     }
 	

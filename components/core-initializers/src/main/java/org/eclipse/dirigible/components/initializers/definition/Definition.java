@@ -45,7 +45,7 @@ public class Definition extends Artefact {
 	
 	/** The status. */
 	@Column(name = "DEFINITION_STATE", columnDefinition = "VARCHAR", nullable = true, length = 32)
-    protected String state = ArtefactLifecycle.CREATED.toString();
+    protected String state;
 	
 	/** The status. */
 	@Column(name = "DEFINITION_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
