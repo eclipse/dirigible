@@ -15,6 +15,12 @@ const httpClient = require("http/v4/client");
 const xml = require("utils/v4/xml");
 const destinations = require("core/v4/destinations");
 
+const config = require("core/v4/configurations");
+
+if (config.get("DIRIGIBLE_DESTINATIONS_PROXY_ENABLED", "false") !== "true") {
+    throw new Error("Destinations Proxy is disabled");
+}
+
 const IGNORED_HEADERS = [
     "host",
     "accept-encoding",
