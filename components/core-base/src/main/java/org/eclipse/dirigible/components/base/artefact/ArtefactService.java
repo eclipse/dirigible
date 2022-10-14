@@ -28,7 +28,7 @@ public interface ArtefactService<A extends Artefact> {
 	 *
 	 * @return the page
 	 */
-	public List<A> findAll();
+	public List<A> getAll();
 	
 	/**
 	 * Find all.

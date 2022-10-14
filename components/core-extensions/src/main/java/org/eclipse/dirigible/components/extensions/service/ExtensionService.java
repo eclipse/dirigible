@@ -36,7 +36,7 @@ public class ExtensionService implements ArtefactService<Extension> {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Extension> findAll() {
+	public List<Extension> getAll() {
 		return extensionRepository.findAll();
 	}
 	

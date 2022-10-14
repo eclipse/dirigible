@@ -59,10 +59,9 @@ public class ExtensionPoint extends Artefact {
 	 * @param location the location
 	 * @param name the name
 	 * @param description the description
-	 * @param dependencies the dependencies
 	 */
-	public ExtensionPoint(String location, String name, String description, String dependencies) {
-		super(location, name, ARTEFACT_TYPE, description, dependencies);
+	public ExtensionPoint(String location, String name, String description) {
+		super(location, name, ARTEFACT_TYPE, description, null);
 	}	
 	
 	/**

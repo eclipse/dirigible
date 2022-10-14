@@ -51,13 +51,12 @@ public class Extension extends Artefact {
 	 * @param location the location
 	 * @param name the name
 	 * @param description the description
-	 * @param dependencies the dependencies
 	 * @param extensionPoint the extension point
 	 * @param module the module
 	 */
-	public Extension(String location, String name, String description, String dependencies,
+	public Extension(String location, String name, String description,
 			String extensionPoint, String module) {
-		super(location, name, ARTEFACT_TYPE, description, dependencies);
+		super(location, name, ARTEFACT_TYPE, description, null);
 		this.extensionPoint = extensionPoint;
 		this.module = module;
 	}

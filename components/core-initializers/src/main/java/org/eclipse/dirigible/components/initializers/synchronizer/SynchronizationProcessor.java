@@ -141,7 +141,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		if (logger.isDebugEnabled()) {logger.debug("Cleaning up removed artefacts...");}
 		// cleanup
 		for (Synchronizer<Artefact> synchronizer : synchronizers) {
-			List<? extends Artefact> registered = synchronizer.getService().findAll();
+			List<? extends Artefact> registered = synchronizer.getService().getAll();
 			for (Artefact artefact : registered) {
 				if (synchronizer.isAccepted(artefact.getType())) {
 					if (!repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + artefact.getLocation()).exists()) {

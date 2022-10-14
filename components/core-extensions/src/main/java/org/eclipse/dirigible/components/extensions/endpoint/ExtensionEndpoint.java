@@ -14,8 +14,8 @@ package org.eclipse.dirigible.components.extensions.endpoint;
 import java.util.List;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
-import org.eclipse.dirigible.components.extensions.service.ExtensionPointService;
+import org.eclipse.dirigible.components.extensions.domain.Extension;
+import org.eclipse.dirigible.components.extensions.service.ExtensionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,25 +27,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "extensionpoints")
-public class ExtensionPointEndpoint extends BaseEndpoint {
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "extensions")
+public class ExtensionEndpoint extends BaseEndpoint {
 
-	private final ExtensionPointService extensionPointService;
+	private final ExtensionService extensionService;
 
 	@Autowired
-	public ExtensionPointEndpoint(ExtensionPointService extensionPointService) {
-		this.extensionPointService = extensionPointService;
+	public ExtensionEndpoint(ExtensionService extensionService) {
+		this.extensionService = extensionService;
 	}
 
 	@GetMapping
-	public Page<ExtensionPoint> findAll(
+	public Page<Extension> findAll(
 			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
 			@Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
 		
@@ -56,31 +53,31 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 			page = 0;
 		}
 		Pageable pageable = PageRequest.of(page, size);
-		Page<ExtensionPoint> extensionPoints = extensionPointService.findAll(pageable);
-		return extensionPoints;
+		Page<Extension> extensions = extensionService.findAll(pageable);
+		return extensions;
 
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ExtensionPoint> get(
-			@ApiParam(value = "Id of the ExtensionPoint", required = true) @PathVariable("id") Long id) {
+	public ResponseEntity<Extension> get(
+			@ApiParam(value = "Id of the Extension", required = true) @PathVariable("id") Long id) {
 
-		return ResponseEntity.ok(extensionPointService.findById(id));
+		return ResponseEntity.ok(extensionService.findById(id));
 
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<ExtensionPoint> findByName(
-			@ApiParam(value = "Name of the ExtensionPoint", required = true) @RequestParam("name") String name) {
+	public ResponseEntity<Extension> findByName(
+			@ApiParam(value = "Name of the Extension", required = true) @RequestParam("name") String name) {
 
-		return ResponseEntity.ok(extensionPointService.findByName(name));
+		return ResponseEntity.ok(extensionService.findByName(name));
 
 	}
 	
 	@GetMapping("/all")
-	public ResponseEntity<List<ExtensionPoint>> getAll() {
+	public ResponseEntity<List<Extension>> getAll() {
 
-		return ResponseEntity.ok(extensionPointService.getAll());
+		return ResponseEntity.ok(extensionService.getAll());
 
 	}
 

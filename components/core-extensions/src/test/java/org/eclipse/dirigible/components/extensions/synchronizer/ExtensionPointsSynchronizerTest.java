@@ -123,7 +123,7 @@ public class ExtensionPointsSynchronizerTest {
 	 * @return the extension point
 	 */
 	public static ExtensionPoint createExtensionPoint(String location, String name, String description) {
-		ExtensionPoint extensionPoint = new ExtensionPoint(location, name, description, null);
+		ExtensionPoint extensionPoint = new ExtensionPoint(location, name, description);
 		return extensionPoint;
 	}
 	

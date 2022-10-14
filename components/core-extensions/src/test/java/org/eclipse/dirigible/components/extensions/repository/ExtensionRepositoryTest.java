@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
-import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
+import org.eclipse.dirigible.components.extensions.domain.Extension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,10 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-public class ExtensionPointRepositoryTest {
+public class ExtensionRepositoryTest {
 	
 	@Autowired
-	private ExtensionPointRepository extensionPointRepository;
+	private ExtensionRepository extensionRepository;
 	
 	@Autowired
 	EntityManager entityManager;
@@ -46,46 +46,46 @@ public class ExtensionPointRepositoryTest {
 	@BeforeEach
     public void setup() throws Exception {
 
-    	// create test ExtensionPoints
-		extensionPointRepository.save(createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description"));
-		extensionPointRepository.save(createExtensionPoint("/a/b/c/e2.extensionpoint", "e2", "description"));
-		extensionPointRepository.save(createExtensionPoint("/a/b/c/e3.extensionpoint", "e3", "description"));
-		extensionPointRepository.save(createExtensionPoint("/a/b/c/e4.extensionpoint", "e4", "description"));
-		extensionPointRepository.save(createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
+    	// create test Extensions
+		extensionRepository.save(createExtension("/a/b/c/e1.extension", "e1", "description", "epoint1", "e1"));
+		extensionRepository.save(createExtension("/a/b/c/e2.extension", "e2", "description", "epoint1", "e2"));
+		extensionRepository.save(createExtension("/a/b/c/e3.extension", "e3", "description", "epoint2", "e3"));
+		extensionRepository.save(createExtension("/a/b/c/e4.extension", "e4", "description", "epoint2", "e4"));
+		extensionRepository.save(createExtension("/a/b/c/e5.extension", "e5", "description", "epoint2", "e5"));
     }
 	
 	@AfterEach
     public void cleanup() throws Exception {
 		
-		// delete test ExtensionPoints
-		extensionPointRepository.findAll().stream().forEach(e -> extensionPointRepository.delete(e));
+		// delete test Extensions
+		extensionRepository.findAll().stream().forEach(e -> extensionRepository.delete(e));
     }
 	
 
 	@Test
     public void getOne() {
-		Long id = extensionPointRepository.findAll().get(0).getId();
-		Optional<ExtensionPoint> optional = extensionPointRepository.findById(id);
-		ExtensionPoint extensionPoint = optional.isPresent() ? optional.get() : null;
-        assertNotNull(extensionPoint);
-        assertNotNull(extensionPoint.getLocation());
-        assertNotNull(extensionPoint.getCreatedBy());
-        assertEquals("SYSTEM", extensionPoint.getCreatedBy());
-        assertNotNull(extensionPoint.getCreatedAt());
-//        assertEquals("extensionpoint:/a/b/c/e1.extensionpoint:e1",extensionPoint.getKey());
+		Long id = extensionRepository.findAll().get(0).getId();
+		Optional<Extension> optional = extensionRepository.findById(id);
+		Extension extension = optional.isPresent() ? optional.get() : null;
+        assertNotNull(extension);
+        assertNotNull(extension.getLocation());
+        assertNotNull(extension.getCreatedBy());
+        assertEquals("SYSTEM", extension.getCreatedBy());
+        assertNotNull(extension.getCreatedAt());
+//        assertEquals("extension:/a/b/c/e1.extension:e1",extension.getKey());
     }
 	
 	@Test
     public void getReferenceUsingEntityManager() {
-		Long id = extensionPointRepository.findAll().get(0).getId();
-		ExtensionPoint extensionPoint = entityManager.getReference(ExtensionPoint.class, id);
-        assertNotNull(extensionPoint);
-        assertNotNull(extensionPoint.getLocation());
+		Long id = extensionRepository.findAll().get(0).getId();
+		Extension extension = entityManager.getReference(Extension.class, id);
+        assertNotNull(extension);
+        assertNotNull(extension.getLocation());
     }
 	
-	public static ExtensionPoint createExtensionPoint(String location, String name, String description) {
-		ExtensionPoint extensionPoint = new ExtensionPoint(location, name, description);
-		return extensionPoint;
+	public static Extension createExtension(String location, String name, String description, String extensionPoint, String module) {
+		Extension extension = new Extension(location, name, description, extensionPoint, module);
+		return extension;
 	}
 	
 	@SpringBootApplication

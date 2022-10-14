@@ -36,7 +36,7 @@ public class ExtensionPointService implements ArtefactService<ExtensionPoint> {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ExtensionPoint> findAll() {
+	public List<ExtensionPoint> getAll() {
 		return extensionPointRepository.findAll();
 	}
 	
