@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-components-parent</artifactId>
-		<version>6.3.26</version>
+		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -19,18 +19,18 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-base</artifactId>
-			<version>6.3.26</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-repository</artifactId>
-			<version>6.3.26</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-extensions</artifactId>
-			<version>6.3.26</version>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	
