@@ -124,7 +124,8 @@ public class DirigibleSourceProvider {
      */
     private static byte[] tryGetFromClassLoader(String repositoryAwareFilePathString, String filePathString) {
         try {
-            try (InputStream bundled = DirigibleSourceProvider.class.getResourceAsStream("/META-INF/dirigible/" + filePathString)) {
+            var lookupPath = createLookupPath(filePathString);
+            try (InputStream bundled = DirigibleSourceProvider.class.getResourceAsStream(lookupPath)) {
                 byte[] content = null;
                 if (bundled != null) {
                     content = bundled.readAllBytes();
@@ -135,6 +136,15 @@ public class DirigibleSourceProvider {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    private static String createLookupPath(String filePathString) {
+        var lookupPath = "/META-INF/dirigible/" + filePathString;
+        if (filePathString.startsWith("/webjars") || filePathString.startsWith("webjars")) {
+            lookupPath = "/META-INF/resources/" + filePathString;
+        }
+
+        return lookupPath;
     }
 
     public Path unpackedToFileSystem(Path pathToUnpack, Path pathToLookup) {

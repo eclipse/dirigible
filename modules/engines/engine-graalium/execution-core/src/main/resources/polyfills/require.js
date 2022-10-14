@@ -17,7 +17,7 @@ var Require = (function (modulePath) {
     var _require = function (path) {
         var moduleInfo, buffered, head = '(function(exports,module,require){ ',
             code = '',
-            tail = '})',
+            tail = '\n})',
             line = null;
         moduleInfo = _loadedModules[path];
         if (moduleInfo) {
