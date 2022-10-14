@@ -629,37 +629,22 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: `<textarea class="fd-textarea" ng-class="getClasses()" ng-disabled="dgDisabled" ng-transclude></textarea>`,
         }
-    }]).directive('fdButton', ['uuid', function (uuid) {
-        /**
-         * dgLabel: String - Button text.
-         * compact: Boolean - Button size.
-         * badge: String/Number - Used for showing a badge inside the button.
-         * glyph: String - Icon class/classes.
-         * state: String - Possible options are 'selected', 'expanded', 'disabled' and 'disabled-focusable' (must be used with dgAriaDesc). If not specified, normal state is assumed.
-         * dgType: String - 'emphasized', 'transparent', 'ghost', 'positive', 'negative' and 'attention'. If not specified, normal state is assumed.
-         * dgAriaDesc: String - Short description of the button. If the button is disabled, it should contain the reason and what needs to be done to enable it.
-         * isMenu: Boolean - Adds an arrow to the button.
-         * isOverflow: Boolean - Used when the button is in a toolbar overflow popover.
-         * isSplit: Boolean - (Internal use) If the button is part of a split button.
-         * inGroup: Boolean - If the button is inside an fd-input-group-addon element.
-         */
+    }]).factory('fdButtonTemplates', function () {
         return {
-            restrict: 'AE',
-            transclude: false,
-            replace: true,
-            scope: {
-                dgLabel: '@',
-                compact: '@',
-                badge: '@',
-                glyph: '@',
-                state: '@',
-                dgType: '@',
-                dgAriaDesc: '@',
-                isMenu: '@',
-                isOverflow: '@',
-                isSplit: '@',
-                inGroup: '@',
-            },
+            getTemplate: function (tagName) {
+                return `<${tagName} fd-button-internal class="fd-button" ng-class="getClasses()" ng-disabled="{'disabled':true}[state]"
+                    aria-selected="{{ state === 'selected' ? true : false }}" ng-attr-aria-expanded="{{ state === 'expanded' ? true : undefined }}">
+                    <i ng-if="glyph" ng-class="glyph" role="presentation" aria-hidden="true"></i>
+                    <span ng-if="dgLabel" ng-class="getTextClasses()">{{ dgLabel }}</span>
+                    <span ng-if="badge" class="fd-button__badge">{{ badge }}</span>
+                    <i ng-if="isMenu" class="sap-icon--slim-arrow-down" aria-hidden="true"></i>
+                    <p ng-if="dgAriaDesc" class="fd-button__instructions" id="{{ uuid }}">{{ dgAriaDesc }}</p>
+                </${tagName}>`
+            }
+        }
+    }).directive('fdButtonInternal', ['uuid', function (uuid) {
+        return {
+            restrict: 'A',
             link: {
                 pre: function (scope) {
                     if (scope.dgAriaDesc)
@@ -722,15 +707,60 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         return classList.join(' ');
                     };
                 }
+            }
+        }
+    }]).directive('fdLinkButton', ['fdButtonTemplates', function (fdButtonTemplates) {
+        return {
+            restrict: 'AE',
+            transclude: false,
+            replace: true,
+            scope: {
+                dgLabel: '@',
+                compact: '@',
+                badge: '@',
+                glyph: '@',
+                state: '@',
+                dgType: '@',
+                dgAriaDesc: '@',
+                isMenu: '@',
+                isOverflow: '@',
+                isSplit: '@',
+                inGroup: '@',
             },
-            template: `<button class="fd-button" ng-class="getClasses()" ng-disabled="{'disabled':true}[state]"
-                aria-selected="{{ state === 'selected' ? true : false }}" ng-attr-aria-expanded="{{ state === 'expanded' ? true : undefined }}">
-                <i ng-if="glyph" ng-class="glyph" role="presentation" aria-hidden="true"></i>
-                <span ng-if="dgLabel" ng-class="getTextClasses()">{{ dgLabel }}</span>
-                <span ng-if="badge" class="fd-button__badge">{{ badge }}</span>
-                <i ng-if="isMenu" class="sap-icon--slim-arrow-down" aria-hidden="true"></i>
-                <p ng-if="dgAriaDesc" class="fd-button__instructions" id="{{ uuid }}">{{ dgAriaDesc }}</p>
-            </button>`,
+            template: fdButtonTemplates.getTemplate('a'),
+        }
+    }]).directive('fdButton', ['fdButtonTemplates', function (fdButtonTemplates) {
+        /**
+         * dgLabel: String - Button text.
+         * compact: Boolean - Button size.
+         * badge: String/Number - Used for showing a badge inside the button.
+         * glyph: String - Icon class/classes.
+         * state: String - Possible options are 'selected', 'expanded', 'disabled' and 'disabled-focusable' (must be used with dgAriaDesc). If not specified, normal state is assumed.
+         * dgType: String - 'emphasized', 'transparent', 'ghost', 'positive', 'negative' and 'attention'. If not specified, normal state is assumed.
+         * dgAriaDesc: String - Short description of the button. If the button is disabled, it should contain the reason and what needs to be done to enable it.
+         * isMenu: Boolean - Adds an arrow to the button.
+         * isOverflow: Boolean - Used when the button is in a toolbar overflow popover.
+         * isSplit: Boolean - (Internal use) If the button is part of a split button.
+         * inGroup: Boolean - If the button is inside an fd-input-group-addon element.
+         */
+        return {
+            restrict: 'AE',
+            transclude: false,
+            replace: true,
+            scope: {
+                dgLabel: '@',
+                compact: '@',
+                badge: '@',
+                glyph: '@',
+                state: '@',
+                dgType: '@',
+                dgAriaDesc: '@',
+                isMenu: '@',
+                isOverflow: '@',
+                isSplit: '@',
+                inGroup: '@',
+            },
+            template: fdButtonTemplates.getTemplate('button'),
         };
     }]).directive('fdSegmentedButton', [function () {
         return {
@@ -746,6 +776,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdSplitButton', ['uuid', function (uuid) {
         /**
          * mainAction: String - Main button text
+         * mainGlyph: String - Icon class for the button.
          * dgAlign: String - Relative position of the popover. Possible values are "left" and "right". If not provided, right is assumed.
          * compact: Boolean - Button size.
          * glyph: String - Icon class for the dropdown button.
@@ -759,6 +790,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 mainAction: '@',
+                mainGlyph: '@',
                 dgAlign: '@',
                 compact: '@',
                 glyph: '@',
@@ -821,7 +853,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 },
             },
             template: `<div class="fd-button-split" ng-class="getSplitClasses()" role="group">
-                <fd-button dg-label="{{ mainAction }}" state="{{ state }}" dg-type="{{ dgType }}" is-split="true" compact="{{ compact || 'false' }}" ng-click="mainActionClicked()">
+                <fd-button glyph="{{ mainGlyph }}" dg-label="{{ mainAction }}" state="{{ state }}" dg-type="{{ dgType }}" is-split="true" compact="{{ compact || 'false' }}" ng-click="mainActionClicked()">
                 </fd-button>
                 <fd-button glyph="{{ glyph || 'sap-icon--slim-arrow-down' }}" state="{{ state }}" dg-type="{{ dgType }}" compact="{{ compact || 'false' }}" aria-label="arrow down" aria-controls="{{ popoverId }}"
                     aria-haspopup="true" aria-expanded="{{ popupExpanded }}" ng-click="togglePopover()">
@@ -4151,4 +4183,189 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
             },
         }
-    }]);
+    }]).constant('SplitPaneState', {
+        EXPANDED: 0,
+        COLLAPSED: 1
+    }).directive('split', ['SplitPaneState', function (SplitPaneState) {
+        return {
+            restrict: 'E',
+            replace: true,
+            transclude: true,
+            scope: {
+                direction: '@',
+                width: '@',
+                height: '@',
+                state: '=?'
+            },
+            controller: ['$scope', '$element', function ($scope, $element) {
+                $scope.panes = [];
+                $scope.state = $scope.state || [];
+
+                this.addPane = function (pane) {
+                    $scope.panes.push(pane);
+                    $scope.state.push(SplitPaneState.EXPANDED);
+
+                    $scope.panes.sort((a, b) => {
+                        let elementA = a.element[0];
+                        let elementB = b.element[0];
+                        if (elementA.previousElementSibling === null || elementB.nextElementSibling === null) return -1;
+                        if (elementA.nextElementSibling === null || elementB.previousElementSibling === null) return 1;
+                        if (elementA.nextElementSibling === elementB || elementB.previousElementSibling === elementA) return -1;
+                        if (elementB.nextElementSibling === elementA || elementA.previousElementSibling === elementB) return 1;
+                        return 0;
+                    });
+                };
+
+                this.removePane = function (pane) {
+                    let index = $scope.panes.indexOf(pane);
+                    if (index !== -1) {
+                        $scope.panes.splice(index, 1);
+                    }
+                };
+
+                function normalizeSizes(sizes, index = -1) {
+                    let isOpen = (size, i) => {
+                        return Math.floor(size) > 0 && (index === -1 || index !== i);
+                    };
+
+                    let totalSize = sizes.reduce((x, y) => x + y, 0);
+                    if (totalSize !== 100) {
+                        let openCount = sizes.reduce((count, size, i) => isOpen(size, i) ? count + 1 : count, 0);
+                        if (openCount > 0) {
+                            let d = (100 - totalSize) / openCount;
+                            for (let i = 0; i < sizes.length; i++) {
+                                if (isOpen(sizes[i], i))
+                                    sizes[i] += d;
+                            }
+                        }
+                    }
+                }
+
+                function calcAutoSize() {
+                    let sizes = $scope.panes.map(pane => pane.size);
+                    let fixedSizeTotal = sizes.reduce((sum, size) => size !== 'auto' ? sum + Number(size) : sum, 0);
+                    let autoSizeCount = sizes.reduce((count, size) => size === 'auto' ? count + 1 : count, 0);
+                    let autoSize = 0;
+                    if (fixedSizeTotal < 100 && autoSizeCount > 0) {
+                        autoSize = (100 - fixedSizeTotal) / autoSizeCount;
+                    }
+                    return autoSize;
+                }
+
+                function getPaneSizes() {
+                    let autoSize = calcAutoSize();
+                    return $scope.panes.map(pane => pane.size === 'auto' ? autoSize : Number(pane.size));
+                }
+
+                $scope.$watch('direction', function (newDirection, oldDirection) {
+                    if (oldDirection)
+                        $element.removeClass(oldDirection);
+
+                    $element.addClass(newDirection || 'horizontal');
+                });
+
+                $scope.$watchCollection('panes', function () {
+                    if ($scope.split) {
+                        $scope.split.destroy();
+                        $scope.split = null;
+                    }
+
+                    if ($scope.panes.length === 0 || $scope.panes.some(a => a.element === undefined)) {
+                        return;
+                    }
+
+                    if ($scope.panes.length === 1) {
+                        $scope.panes[0].element.css('width', '100%');
+                        $scope.panes[0].element.css('height', '100%');
+                        return;
+                    }
+
+                    let sizes = getPaneSizes();// $scope.panes.map(pane => pane.size || 0);
+
+                    normalizeSizes(sizes);
+
+                    let minSizes = $scope.panes.map(pane => pane.minSize);
+                    let elements = $scope.panes.map(pane => pane.element[0]);
+                    let snapOffsets = $scope.panes.map(pane => pane.snapOffset);
+
+                    $scope.split = Split(elements, {
+                        direction: $scope.direction,
+                        sizes: sizes,
+                        minSize: minSizes,
+                        expandToMin: true,
+                        gutterSize: 1,
+                        gutterAlign: 'start',
+                        snapOffset: snapOffsets,
+                        onDragEnd: function (newSizes) {
+                            for (let i = 0; i < newSizes.length; i++) {
+                                $scope.state[i] = Math.floor(newSizes[i]) === 0 ? SplitPaneState.COLLAPSED : SplitPaneState.EXPANDED;
+                            }
+                            $scope.$apply();
+                        },
+                    });
+                });
+
+                $scope.$watchCollection('state', function (newState, oldState) {
+                    if (newState.length === oldState.length) {
+                        //Process the collapsing first
+                        for (let i = 0; i < newState.length; i++) {
+                            if (newState[i] !== oldState[i]) {
+                                if (newState[i] === SplitPaneState.COLLAPSED) {
+                                    let sizes = $scope.split.getSizes();
+                                    let size = Math.floor(sizes[i]);
+                                    if (size > 0) {
+                                        $scope.panes[i].lastSize = size;
+                                        $scope.split.collapse(i);
+                                    }
+                                }
+                            }
+                        }
+                        // ... and then the expanding/restore if necessary
+                        for (let i = 0; i < newState.length; i++) {
+                            if (newState[i] !== oldState[i]) {
+                                if (newState[i] === SplitPaneState.EXPANDED) {
+                                    let sizes = $scope.split.getSizes();
+                                    let size = Math.floor(sizes[i]);
+                                    if (size === 0) {
+                                        let pane = $scope.panes[i];
+                                        sizes[i] = pane.lastSize || (pane.size == 'auto' ? calcAutoSize() : Number(pane.size));
+                                        normalizeSizes(sizes, i);
+                                        $scope.split.setSizes(sizes);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }],
+            template: '<div class="dg-split" ng-transclude></div>'
+        };
+    }])
+    .directive('splitPane', function () {
+        return {
+            restrict: 'E',
+            require: '^split',
+            replace: true,
+            transclude: true,
+            scope: {
+                size: '@',
+                minSize: '@',
+                snapOffset: '@'
+            },
+            link: function (scope, element, attrs, bgSplitCtrl) {
+                let paneData = scope.paneData = {
+                    element: element,
+                    size: scope.size,
+                    minSize: Number(scope.minSize),
+                    snapOffset: Number(scope.snapOffset)
+                };
+
+                bgSplitCtrl.addPane(paneData);
+
+                scope.$on('$destroy', function () {
+                    bgSplitCtrl.removePane(paneData);
+                });
+            },
+            template: '<div class="dg-split-pane" ng-transclude></div>'
+        }
+    });

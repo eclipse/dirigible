@@ -480,6 +480,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 let loadingDialogs = [];
                 let formDialogs = [];
                 let selectDialogs = [];
+                element.on('contextmenu', event => event.stopPropagation());
                 scope.searchInput = { value: "" }; // AngularJS - "If you use ng-model, you have to use an object property, not just a variable"
                 scope.activeDialog = null;
                 scope.excludeFromRequired = {};

@@ -19,7 +19,8 @@
         <title dg-brand-title></title>
         <script type="text/javascript" src="/services/v4/web/ide-documents/services/documents-perspective.js"></script>
         <theme></theme>
-        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-perspective-js"></script>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-perspective-js">
+        </script>
         <link type="text/css" rel="stylesheet"
             href="/services/v4/js/resources-core/services/loader.js?id=ide-perspective-css" />
     </head>
@@ -40,17 +41,9 @@
             .controller('DocumentsController', ["$scope", "$http", "messageHub", function ($scope, $http, messageHub)  {
                 $scope.layoutModel = {
                     views: ['documents'],
-                };
-                getConstraints()
-                    .then(function (data) {
-                        $scope.layoutModel.views.push('documents-constraints');
-                    })
-                    .catch(function (err) {
-                        //User is not Operator, so Constraints view cannot be presented."
-                    });
-
-                function getConstraints() {
-                    return $http.get('/services/v4/js/ide-documents/api/constraints');
+                    layoutSettings: {
+                        hideCenterTabs: true
+                    }
                 };
             }]);
         </script>

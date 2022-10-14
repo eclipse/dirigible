@@ -83,6 +83,7 @@ function getLocations(scriptId) {
                 "/angularjs/1.8.2/angular.min.js",
                 "/angularjs/1.8.2/angular-resource.min.js",
                 "/angular-aria/1.8.2/angular-aria.min.js",
+                "/split.js/1.6.5/dist/split.min.js",
                 "/resources-core/core/message-hub.js",
                 "/resources-core/core/ide-message-hub.js",
                 "/resources-core/ui/theming.js",
