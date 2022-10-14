@@ -70,6 +70,10 @@
     </dependencies>
 
     <properties>
+        <profile.content.phase>generate-sources</profile.content.phase>
+        <content.repository.name>ext-qldb</content.repository.name>
+        <content.project.name>qldb</content.project.name>
+
         <license.header.location>../../../licensing-header.txt</license.header.location>
     </properties>
 </project>
