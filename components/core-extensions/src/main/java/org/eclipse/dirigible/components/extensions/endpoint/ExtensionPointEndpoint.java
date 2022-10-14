@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.components.extensions.endpoint;
 
+import java.util.List;
+
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
 import org.eclipse.dirigible.components.extensions.service.ExtensionPointService;
@@ -72,6 +74,13 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 			@ApiParam(value = "Name of the ExtensionPoint", required = true) @RequestParam("name") String name) {
 
 		return ResponseEntity.ok(extensionPointService.findByName(name));
+
+	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<List<ExtensionPoint>> getAll() {
+
+		return ResponseEntity.ok(extensionPointService.findAll());
 
 	}
 

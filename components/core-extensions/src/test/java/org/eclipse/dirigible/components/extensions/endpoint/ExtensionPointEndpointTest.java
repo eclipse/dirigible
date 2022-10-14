@@ -113,6 +113,16 @@ public class ExtensionPointEndpointTest {
 				.andExpect(status().is2xxSuccessful())
 		;
 	}
+	
+	@Test
+	public void getAllExtensionPoints() throws Exception {
+		String name = testExtensionPoint.getName();
+
+		mockMvc.perform(get("/services/v8/core/extensionpoints/all", name))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful())
+		;
+	}
 
 	@SpringBootApplication
 	static class TestConfiguration {
