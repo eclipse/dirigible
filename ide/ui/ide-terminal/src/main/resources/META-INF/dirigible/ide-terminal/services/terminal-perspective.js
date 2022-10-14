@@ -15,7 +15,7 @@ const perspectiveData = {
 	link: "../ide-terminal/index.html",
 	order: "120",
 	image: "terminal", // deprecated
-	icon: "/services/v4/web/resources/unicons/monitor.svg",
+	icon: "../ide-terminal/images/terminal.svg",
 };
 
 if (typeof exports !== 'undefined') {

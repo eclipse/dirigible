@@ -14,7 +14,7 @@ const perspectiveData = {
 	name: "BPM Workspace", // User-facing name
 	link: "../ide-bpm-workspace/perspective.html", // Link to the main perspective view
 	order: "1000", // Used to sort the tabs in the sidebar
-	icon: "/services/v4/web/resources/unicons/process.svg",
+	icon: "../ide-bpm-workspace/images/process.svg",
 };
 if (typeof exports !== 'undefined') {
 	exports.getPerspective = function () {

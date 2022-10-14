@@ -15,7 +15,7 @@ const perspectiveData = {
 	link: "../ide-database/index.html",
 	order: "110",
 	image: "database", // deprecated
-	icon: "/services/v4/web/resources/unicons/database.svg",
+	icon: "../ide-database/images/database.svg",
 };
 if (typeof exports !== 'undefined') {
 	exports.getPerspective = function () {

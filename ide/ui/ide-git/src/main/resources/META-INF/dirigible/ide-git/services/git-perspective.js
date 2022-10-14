@@ -15,7 +15,7 @@ const perspectiveData = {
 	link: "../ide-git/index.html",
 	order: "105",
 	image: "code-fork", // deprecated
-	icon: "/services/v4/web/resources/unicons/code-branch.svg",
+	icon: "../ide-git/images/git.svg",
 };
 
 if (typeof exports !== 'undefined') {

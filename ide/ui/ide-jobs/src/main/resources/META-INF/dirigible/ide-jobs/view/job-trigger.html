@@ -52,12 +52,10 @@
                                 placeholder="Enter {{parameter.name}}" ng-model="parameter.value" required="required">
                             </fd-input>
                             <fd-form-item ng-if="parameter.type === 'boolean'">
-                                <fd-select ng-model="parameter.value" dg-placeholder="Enter {{parameter.name}}"
-                                    dg-size="compact" required="required" dropdown-fixed="true"
-                                    class="fd-popover--full-width">
-                                    <fd-option text="true" value="true"></fd-option>
-                                    <fd-option text="false" value="false"></fd-option>
-                                </fd-select>
+                                <fd-checkbox compact="true" id="cb-{{ parameter.name }}" ng-model="parameter.value">
+                                </fd-checkbox>
+                                <fd-checkbox-label empty="true" compact="true" for="cb-{{ parameter.name }}">
+                                </fd-checkbox-label>
                             </fd-form-item>
                             <fd-form-item ng-if="parameter.type === 'choice'">
                                 <fd-select ng-model="parameter.value" dg-placeholder="Enter {{parameter.name}}"
@@ -117,7 +115,22 @@
                         $http.get('/services/v4/ops/jobs/parameters/' + jobName)
                             .then(function (response) {
                                 $scope.loading = false;
-                                $scope.parameters = response.data;
+                                $scope.parameters = response.data.map(p => {
+                                    let value;
+                                    switch(p.type){
+                                        case 'number':
+                                            value = p.value !== undefined ? Number(p.value) : 0; 
+                                            return {
+                                                ...p,
+                                                value: Number.isFinite(value) ? value : null
+                                            };
+                                        case 'boolean':
+                                            value = typeof p.value === 'boolean' ? p.value : p.value === 'true';
+                                            return {...p, value };
+                                        default:
+                                            return p;
+                                    }
+                                });
                             }, function (response) {
                                 $scope.loading = false;
                                 $scope.loadingError = true;
@@ -140,7 +153,7 @@
                         if($scope.loading) return true;
                         if($scope.parameters.length === 0) return false;
 
-                        let isValid = $scope.parameters.every(p => Number.isFinite(p.value) || p.value);
+                        let isValid = $scope.parameters.every(p => Number.isFinite(p.value) || (p.value !== undefined && p.value !== null));
 
                         return !isValid;
                     }
