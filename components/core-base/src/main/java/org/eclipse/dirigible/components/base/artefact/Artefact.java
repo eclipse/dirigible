@@ -12,13 +12,10 @@
 package org.eclipse.dirigible.components.base.artefact;
 
 import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * The Class Artefact.
@@ -42,7 +39,8 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	protected String type;
 	
 	/** The description. */
-	@Column(name = "ARTEFACT_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+	@Column(name = "ARTEFACT_DESCRIPTION")
+	@Lob()
 	protected String description;
 	
 	/** The key
@@ -52,7 +50,8 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	protected String key;
 	
 	/** The dependencies as comma separated keys. */
-	@Column(name = "ARTEFACT_DEPENDENCIES", columnDefinition = "VARCHAR", nullable = true, length = 20000)
+	@Column(name = "ARTEFACT_DEPENDENCIES")
+	@Lob()
 	protected String dependencies;
 	
 	

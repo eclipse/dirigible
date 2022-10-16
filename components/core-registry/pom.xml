@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Components - Registry</name>
-	<artifactId>dirigible-components-registry</artifactId>
+	<artifactId>dirigible-components-core-registry</artifactId>
     <packaging>jar</packaging>
     
     <dependencies>

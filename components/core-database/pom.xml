@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Components - Database</name>
-	<artifactId>dirigible-components-database</artifactId>
+	<artifactId>dirigible-components-core-database</artifactId>
     <packaging>jar</packaging>
     
     <dependencies>

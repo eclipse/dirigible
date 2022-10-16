@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Components - Base</name>
-	<artifactId>dirigible-components-base</artifactId>
+	<artifactId>dirigible-components-core-base</artifactId>
     <packaging>jar</packaging>
     
 	<properties>
