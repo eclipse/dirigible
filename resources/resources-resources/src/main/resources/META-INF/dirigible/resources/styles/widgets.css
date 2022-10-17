@@ -50,7 +50,8 @@ body {
 }
 /* Vertical navigation icon file */
 .dg-nav-item--svg {
-  display: block;
+  display: inline-block;
+  box-sizing: border-box;
 }
 .dg-nav-item--svg ng-include {
   display: -webkit-box;

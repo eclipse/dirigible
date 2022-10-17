@@ -11,15 +11,15 @@
  */
 exports.getTheme = function () {
 	return {
-		'id': 'quartz-dark',
-		'module': 'theme-quartz-dark',
-		'name': 'Quartz Dark',
-		'type': 'dark',
-		'version': 5,
-		'oldThemeId': 'default',
-		'links': [
-			'/webjars/sap-theming__theming-base-content/11.1.40/content/Base/baseLib/sap_fiori_3_dark/css_variables.css',
-			'/webjars/fundamental-styles/0.24.0/dist/theming/sap_fiori_3_dark.css',
+		id: 'quartz-dark',
+		module: 'theme-quartz-dark',
+		name: 'Quartz Dark',
+		type: 'dark',
+		version: 6,
+		oldThemeId: 'default',
+		links: [
+			'/webjars/sap-theming__theming-base-content/11.1.42/content/Base/baseLib/sap_fiori_3_dark/css_variables.css',
+			'/webjars/fundamental-styles/0.24.4/dist/theming/sap_fiori_3_dark.css',
 		]
 	};
 };
