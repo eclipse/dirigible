@@ -9,17 +9,20 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.data.structures.repository;
+package org.eclipse.dirigible.components.data.structures.synchronizer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Optional;
+import java.nio.file.Path;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.data.structures.domain.Table;
-import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
+import org.eclipse.dirigible.components.data.structures.repository.TableColumnRepository;
+import org.eclipse.dirigible.components.data.structures.repository.TableRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,14 +35,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * The Class TableRepositoryTest.
+ * The Class TablesSynchronizerTest.
  */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-public class TableRepositoryTest {
+public class TablesSynchronizerTest {
 	
 	/** The table repository. */
 	@Autowired
@@ -48,6 +51,10 @@ public class TableRepositoryTest {
 	/** The table column repository. */
 	@Autowired
 	private TableColumnRepository tableColumnRepository;
+	
+	/** The tables synchronizer. */
+	@Autowired
+	private TablesSynchronizer tablesSynchronizer;
 	
 	/** The entity manager. */
 	@Autowired
@@ -61,7 +68,7 @@ public class TableRepositoryTest {
 	@BeforeEach
     public void setup() throws Exception {
 
-    	// create test Tables
+		// create test Tables
 		createTable(tableRepository, tableColumnRepository, "/a/b/c/t1.table", "t1", "description", "");
 		createTable(tableRepository, tableColumnRepository, "/a/b/c/t2.table", "t2", "description", "");
 		createTable(tableRepository, tableColumnRepository, "/a/b/c/t3.table", "t3", "description", "");
@@ -82,42 +89,35 @@ public class TableRepositoryTest {
     }
 	
 
+	
 	/**
-	 * Gets the one.
-	 *
-	 * @return the one
+	 * Checks if is accepted.
 	 */
 	@Test
-    public void getOne() {
-		Long id = tableRepository.findAll().get(0).getId();
-		Optional<Table> optional = tableRepository.findById(id);
-		Table table = optional.isPresent() ? optional.get() : null;
-        assertNotNull(table);
-        assertNotNull(table.getLocation());
-        assertNotNull(table.getCreatedBy());
-        assertEquals("SYSTEM", table.getCreatedBy());
-        assertNotNull(table.getCreatedAt());
-        assertNotNull(table.getColumns());
-        assertNotNull(table.getColumns().get(0));
-        assertEquals(table.getName()  + "_1", table.getColumns().get(0).getName());
-        assertNotNull(table.getIndexes());
-        assertNotNull(table.getIndexes().get(0));
-        assertEquals(table.getName()  + "_1", table.getIndexes().get(0).getName());
-//        assertEquals("table:/a/b/c/t1.table:t1", table.getKey());
+    public void isAcceptedPath() {
+		assertTrue(tablesSynchronizer.isAccepted(Path.of("/a/b/c/t1.table"), null));
     }
 	
 	/**
-	 * Gets the reference using entity manager.
-	 *
-	 * @return the reference using entity manager
+	 * Checks if is accepted.
 	 */
 	@Test
-    public void getReferenceUsingEntityManager() {
-		Long id = tableRepository.findAll().get(0).getId();
-		Table extension = entityManager.getReference(Table.class, id);
-        assertNotNull(extension);
-        assertNotNull(extension.getLocation());
+    public void isAcceptedArtefact() {
+		assertTrue(tablesSynchronizer.isAccepted(createTable(tableRepository, tableColumnRepository, "/a/b/c/table1.table", "table1", "description", "").getType()));
     }
+	
+	/**
+	 * Load the artefact.
+	 */
+	@Test
+    public void load() {
+		String content = "{\"location\":\"/test/test.table\",\"name\":\"/test/test\",\"description\":\"Test Table\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
+		List<Table> list = tablesSynchronizer.load("/test/test.table", content.getBytes());
+		assertNotNull(list);
+		assertEquals("/test/test.table", list.get(0).getLocation());
+    }
+	
+
 	
 	/**
 	 * Creates the table.

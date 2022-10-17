@@ -31,21 +31,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExtensionService implements ArtefactService<Extension> {
 	
+	/** The extension repository. */
 	@Autowired 
 	private ExtensionRepository extensionRepository;
 
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public List<Extension> getAll() {
 		return extensionRepository.findAll();
 	}
 	
+	/**
+	 * Find all.
+	 *
+	 * @param pageable the pageable
+	 * @return the page
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public Page<Extension> findAll(Pageable pageable) {
 		return extensionRepository.findAll(pageable);
 	}
 	
+	/**
+	 * Find by id.
+	 *
+	 * @param id the id
+	 * @return the extension
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public Extension findById(Long id) {
@@ -57,6 +75,12 @@ public class ExtensionService implements ArtefactService<Extension> {
 		}
 	}
 	
+	/**
+	 * Find by name.
+	 *
+	 * @param name the name
+	 * @return the extension
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public Extension findByName(String name) {
@@ -71,11 +95,22 @@ public class ExtensionService implements ArtefactService<Extension> {
 		}
 	}
 	
+	/**
+	 * Save.
+	 *
+	 * @param extension the extension
+	 * @return the extension
+	 */
 	@Override
 	public Extension save(Extension extension) {
 		return extensionRepository.saveAndFlush(extension);
 	}
 	
+	/**
+	 * Delete.
+	 *
+	 * @param extension the extension
+	 */
 	@Override
 	public void delete(Extension extension) {
 		extensionRepository.delete(extension);

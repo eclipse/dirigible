@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 /**
  * The Class ExtensionPointsSynchronizer.
  *
- * @param A the generic type
+ * @param <A> the generic type
  */
 @Component
 @Order(10)
@@ -150,6 +150,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	/**
 	 * Complete.
 	 *
+	 * @param wrapper the wrapper
 	 * @param flow the flow
 	 * @return true, if successful
 	 */
@@ -174,6 +175,11 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 		}
 	}
 	
+	/**
+	 * Sets the callback.
+	 *
+	 * @param callback the new callback
+	 */
 	@Override
 	public void setCallback(SynchronizerCallback callback) {
 		this.callback = callback;

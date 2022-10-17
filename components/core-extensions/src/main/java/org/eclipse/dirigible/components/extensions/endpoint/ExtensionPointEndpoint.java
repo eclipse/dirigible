@@ -33,17 +33,33 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 
+/**
+ * The Class ExtensionPointEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "extensionpoints")
 public class ExtensionPointEndpoint extends BaseEndpoint {
 
+	/** The extension point service. */
 	private final ExtensionPointService extensionPointService;
 
+	/**
+	 * Instantiates a new extension point endpoint.
+	 *
+	 * @param extensionPointService the extension point service
+	 */
 	@Autowired
 	public ExtensionPointEndpoint(ExtensionPointService extensionPointService) {
 		this.extensionPointService = extensionPointService;
 	}
 
+	/**
+	 * Find all.
+	 *
+	 * @param size the size
+	 * @param page the page
+	 * @return the page
+	 */
 	@GetMapping
 	public Page<ExtensionPoint> findAll(
 			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
@@ -61,6 +77,12 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 
 	}
 
+	/**
+	 * Gets the.
+	 *
+	 * @param id the id
+	 * @return the response entity
+	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<ExtensionPoint> get(
 			@ApiParam(value = "Id of the ExtensionPoint", required = true) @PathVariable("id") Long id) {
@@ -69,6 +91,12 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 
 	}
 	
+	/**
+	 * Find by name.
+	 *
+	 * @param name the name
+	 * @return the response entity
+	 */
 	@GetMapping("/search")
 	public ResponseEntity<ExtensionPoint> findByName(
 			@ApiParam(value = "Name of the ExtensionPoint", required = true) @RequestParam("name") String name) {
@@ -77,6 +105,11 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 
 	}
 	
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
 	@GetMapping("/all")
 	public ResponseEntity<List<ExtensionPoint>> getAll() {
 

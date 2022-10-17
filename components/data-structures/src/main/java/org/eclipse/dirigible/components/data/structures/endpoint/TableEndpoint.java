@@ -9,13 +9,13 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.extensions.endpoint;
+package org.eclipse.dirigible.components.data.structures.endpoint;
 
 import java.util.List;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.extensions.domain.Extension;
-import org.eclipse.dirigible.components.extensions.service.ExtensionService;
+import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,23 +31,23 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 
 /**
- * The Class ExtensionEndpoint.
+ * The Class TableEndpoint.
  */
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "extensions")
-public class ExtensionEndpoint extends BaseEndpoint {
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "tables")
+public class TableEndpoint extends BaseEndpoint {
 
-	/** The extension service. */
-	private final ExtensionService extensionService;
+	/** The table service. */
+	private final TableService tableService;
 
 	/**
-	 * Instantiates a new extension endpoint.
+	 * Instantiates a new table endpoint.
 	 *
-	 * @param extensionService the extension service
+	 * @param tableService the table service
 	 */
 	@Autowired
-	public ExtensionEndpoint(ExtensionService extensionService) {
-		this.extensionService = extensionService;
+	public TableEndpoint(TableService tableService) {
+		this.tableService = tableService;
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class ExtensionEndpoint extends BaseEndpoint {
 	 * @return the page
 	 */
 	@GetMapping
-	public Page<Extension> findAll(
+	public Page<Table> findAll(
 			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
 			@Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
 		
@@ -69,8 +69,8 @@ public class ExtensionEndpoint extends BaseEndpoint {
 			page = 0;
 		}
 		Pageable pageable = PageRequest.of(page, size);
-		Page<Extension> extensions = extensionService.findAll(pageable);
-		return extensions;
+		Page<Table> tables = tableService.findAll(pageable);
+		return tables;
 
 	}
 
@@ -81,10 +81,10 @@ public class ExtensionEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Extension> get(
-			@ApiParam(value = "Id of the Extension", required = true) @PathVariable("id") Long id) {
+	public ResponseEntity<Table> get(
+			@ApiParam(value = "Id of the Table", required = true) @PathVariable("id") Long id) {
 
-		return ResponseEntity.ok(extensionService.findById(id));
+		return ResponseEntity.ok(tableService.findById(id));
 
 	}
 	
@@ -95,10 +95,10 @@ public class ExtensionEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/search")
-	public ResponseEntity<Extension> findByName(
-			@ApiParam(value = "Name of the Extension", required = true) @RequestParam("name") String name) {
+	public ResponseEntity<Table> findByName(
+			@ApiParam(value = "Name of the Table", required = true) @RequestParam("name") String name) {
 
-		return ResponseEntity.ok(extensionService.findByName(name));
+		return ResponseEntity.ok(tableService.findByName(name));
 
 	}
 	
@@ -108,9 +108,9 @@ public class ExtensionEndpoint extends BaseEndpoint {
 	 * @return the all
 	 */
 	@GetMapping("/all")
-	public ResponseEntity<List<Extension>> getAll() {
+	public ResponseEntity<List<Table>> getAll() {
 
-		return ResponseEntity.ok(extensionService.getAll());
+		return ResponseEntity.ok(tableService.getAll());
 
 	}
 

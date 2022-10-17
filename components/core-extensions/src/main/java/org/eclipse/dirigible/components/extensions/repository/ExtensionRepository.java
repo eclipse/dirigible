@@ -15,6 +15,9 @@ import org.eclipse.dirigible.components.extensions.domain.Extension;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Interface ExtensionRepository.
+ */
 @Repository("extensionRepository")
 public interface ExtensionRepository extends JpaRepository<Extension, Long> {
 

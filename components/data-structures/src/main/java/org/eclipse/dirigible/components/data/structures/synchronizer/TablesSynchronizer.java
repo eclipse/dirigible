@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.extensions.synchronizer;
+package org.eclipse.dirigible.components.data.structures.synchronizer;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -25,8 +25,8 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
-import org.eclipse.dirigible.components.extensions.domain.Extension;
-import org.eclipse.dirigible.components.extensions.service.ExtensionService;
+import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.service.TableService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,34 +34,34 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * The Class ExtensionsSynchronizer.
+ * The Class TableSynchronizer.
  *
- * @param <A> the generic type
+ * @param A the generic type
  */
 @Component
 @Order(20)
-public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<Extension> {
+public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Table> {
 	
 	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
+	private static final Logger logger = LoggerFactory.getLogger(TablesSynchronizer.class);
 	
-	/** The Constant FILE_EXTENSION_EXTENSION. */
-	public static final String FILE_EXTENSION_EXTENSION = ".extension";
+	/** The Constant FILE_EXTENSION_TABLE. */
+	public static final String FILE_EXTENSION_TABLE = ".table";
 	
-	/** The extension service. */
-	private ExtensionService extensionService;
+	/** The table service. */
+	private TableService tableService;
 	
 	/** The synchronization callback. */
 	private SynchronizerCallback callback;
 	
 	/**
-	 * Instantiates a new extensions synchronizer.
+	 * Instantiates a new table synchronizer.
 	 *
-	 * @param extensionService the extension service
+	 * @param tableService the table service
 	 */
 	@Autowired
-	public ExtensionsSynchronizer(ExtensionService extensionService) {
-		this.extensionService = extensionService;
+	public TablesSynchronizer(TableService tableService) {
+		this.tableService = tableService;
 	}
 	
 	/**
@@ -70,10 +70,9 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 * @return the service
 	 */
 	@Override
-	public ArtefactService<Extension> getService() {
-		return extensionService;
+	public ArtefactService<Table> getService() {
+		return tableService;
 	}
-
 
 	/**
 	 * Checks if is accepted.
@@ -84,18 +83,18 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_EXTENSION_EXTENSION);
+		return file.toString().endsWith(FILE_EXTENSION_TABLE);
 	}
-	
+
 	/**
 	 * Checks if is accepted.
 	 *
-	 * @param type the artefact
+	 * @param type the type
 	 * @return true, if is accepted
 	 */
 	@Override
 	public boolean isAccepted(String type) {
-		return Extension.ARTEFACT_TYPE.equals(type);
+		return Table.ARTEFACT_TYPE.equals(type);
 	}
 
 	/**
@@ -107,21 +106,20 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 */
 	@Override
 	public List load(String location, byte[] content) {
-		Extension extension = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Extension.class);
-		extension.setLocation(location);
-		extension.setName("");
-		extension.setType(Extension.ARTEFACT_TYPE);
-		extension.updateKey();
+		Table table = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Table.class);
+		table.setLocation(location);
+		table.setType(Table.ARTEFACT_TYPE);
+		table.updateKey();
 		try {
-			getService().save(extension);
+			getService().save(table);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			if (logger.isErrorEnabled()) {logger.error("extension: {}", extension);}
+			if (logger.isErrorEnabled()) {logger.error("table: {}", table);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
 		}
-		return List.of(extension);
+		return List.of(table);
 	}
-	
+
 	/**
 	 * Prepare.
 	 *
@@ -148,11 +146,10 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 			callback.addError(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Complete.
 	 *
-	 * @param wrapper the wrapper
 	 * @param flow the flow
 	 * @return true, if successful
 	 */
@@ -165,23 +162,18 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	/**
 	 * Cleanup.
 	 *
-	 * @param extension the extension
+	 * @param table the extension point
 	 */
 	@Override
-	public void cleanup(Extension extension) {
+	public void cleanup(Table table) {
 		try {
-			getService().delete(extension);
+			getService().delete(table);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
 		}
 	}
 	
-	/**
-	 * Sets the callback.
-	 *
-	 * @param callback the new callback
-	 */
 	@Override
 	public void setCallback(SynchronizerCallback callback) {
 		this.callback = callback;

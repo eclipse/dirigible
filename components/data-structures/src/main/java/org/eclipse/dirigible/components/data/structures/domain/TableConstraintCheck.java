@@ -25,6 +25,9 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * The Class TableConstraintCheck.
+ */
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_TABLE_CHECKS")
 public class TableConstraintCheck {
@@ -35,6 +38,7 @@ public class TableConstraintCheck {
 	@Column(name = "CHECK_ID", nullable = false)
 	private Long id;
 	
+	/** The constraints. */
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "CONSTRAINTS_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
