@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ Copyright (c) 2010-2022 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -15,52 +15,16 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=" />
-
-    <!-- Title directive -->
     <title dg-view-title></title>
-
-    <!-- View data -->
     <script type="text/javascript" src="services/welcome-view.js"></script>
-
     <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
-
     <script type="text/javascript" src="js/welcome.js"></script>
-
     <link type="text/css" rel="stylesheet" href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
     <theme></theme>
-
-    <style>
-      html,
-      body {
-        height: initial;
-      }
-
-      body.page {
-        margin: 0 1rem;
-      }
-
-      h1,
-      .h1 {
-        line-height: initial;
-        font-size: 1.6em;
-      }
-
-      h4,
-      .h4 {
-        line-height: initial;
-        font-size: 1.2em;
-      }
-
-      .search-toolbar {
-        min-width: 30%;
-      }
-
-    </style>
   </head>
 
-  <body class="page">
+  <body class="fd-padding" fd-scrollbar>
     <section class="fd-section">
       <div class="fd-section__header">
         <h3 class="fd-section__title">Welcome to Eclipse Dirigible™</h3>
@@ -76,7 +40,7 @@
       <div class="fd-panel fd-panel--fixed">
         <div class="fd-panel__header">
           <h4 class="fd-panel__title">Create a new project</h4>
-          <fd-toolbar dg-type="transparent" no-bottom-border="true" class="search-toolbar">
+          <fd-toolbar dg-type="transparent" no-bottom-border="true" style="min-width: 30%;">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-input type="text" id="searchInput" ng-model="search.text" ng-change="search.applyFilter()"
               placeholder="Search tempate by name">
@@ -97,7 +61,7 @@
                   <fd-card-content aria-label="Card Content">
                     <div class="fd-card__content-container">
                       <div class="fd-card__content-section">
-                        <div class="fd-card__content-title-container">Description
+                        <div class="fd-card__content-title-container">Description:
                         </div>
                         <div class="fd-card__content-group">
                           <div class="fd-card__content-group-text">

@@ -289,10 +289,19 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         }
     }).directive('fdScrollbar', [function () {
         return {
-            restrict: 'AE',
+            restrict: 'E',
             transclude: true,
             replace: true,
             template: `<div class="fd-scrollbar" ng-transclude><div>`,
+        }
+    }]).directive('fdScrollbar', [function () {
+        return {
+            restrict: 'A',
+            link: {
+                pre: function (scope, element) {
+                    element.addClass('fd-scrollbar');
+                }
+            },
         }
     }]).directive('fdAvatar', [function () {
         /**
@@ -326,7 +335,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 image: '@',
             },
             link: function (scope, element, attrs) {
-                if (!attrs.ariaLabel)
+                if (!attrs.hasOwnProperty('ariaLabel'))
                     console.error('fd-avatar error: You should provide a description using the "aria-label" attribute');
                 if (scope.zoomIcon && !scope.zoomLabel)
                     console.error('fd-avatar error: You should provide a description of the zoom button using the "zoom-label" attribute');
@@ -836,7 +845,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 },
                 post: function (scope, element, attrs) {
                     scope.lastState = '';
-                    if (!scope.dgLabel && scope.glyph && !attrs.ariaLabel)
+                    if (!scope.dgLabel && scope.glyph && !attrs.hasOwnProperty('ariaLabel'))
                         console.error('fd-button error: Icon-only buttons must have the "aria-label" attribute');
                     scope.getClasses = function () {
                         let classList = [];
@@ -952,7 +961,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             link: function (scope, element, attrs) {
-                if (!attrs.ariaLabel)
+                if (!attrs.hasOwnProperty('ariaLabel'))
                     console.error('fd-segmented-button error: You should provide a description of the group using the "aria-label" attribute');
             },
             template: '<div class="fd-segmented-button" role="group" ng-transclude></div>'
@@ -986,7 +995,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 pre: function (scope, element, attrs) {
                     if (scope.callback) scope.callback = scope.callback();
                     scope.popoverId = `sb${uuid.generate()}`;
-                    if (!attrs.ariaLabel)
+                    if (!attrs.hasOwnProperty('ariaLabel'))
                         console.error('fd-split-button error: You should provide a description of the split button using the "aria-label" attribute');
                     scope.getSplitClasses = function () {
                         if (scope.dgType) return `fd-button-split--${scope.dgType}`;
@@ -4369,35 +4378,27 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         }
     }]).directive('fdVerticalNav', ['classNames', function (classNames) {
         /**
-         * dgAriaLabel: String - ARIA label of the navigation.
+         * condensed: Boolean - Condensed navigation mode.
+         * canScroll: Boolean - Enable/disable scroll navigation support. Default is false.
          */
         return {
             restrict: 'E',
             replace: true,
             transclude: true,
             scope: {
-                dgAriaLabel: '@',
                 condensed: '<?',
                 canScroll: '<?',
-                maxHeight: '@?',
             },
-            link: {
-                pre: function (scope) {
-                    if (!angular.isDefined(scope.dgAriaLabel))
-                        console.error('fd-vertical-nav error: You must provide a value for the "dg-aria-label" attribute');
-                },
-                post: function (scope, element) {
-                    scope.getClasses = function () {
-                        if (scope.maxHeight) element[0].style.maxHeight = `${scope.maxHeight}px`;
-                        else element[0].style.removeProperty('max-height');
-                        return classNames('fd-vertical-nav', {
-                            'fd-vertical-nav--condensed': scope.condensed === true,
-                            'fd-vertical-nav--overflow': scope.canScroll === true,
-                        });
-                    };
-                },
+            link: function (scope) {
+                scope.getClasses = function () {
+                    return classNames('fd-vertical-nav', {
+                        'fd-vertical-nav--condensed': scope.condensed === true,
+                        'fd-vertical-nav--overflow': scope.canScroll === true,
+                        'fd-scrollbar': scope.canScroll === true,
+                    });
+                };
             },
-            template: `<div ng-class="getClasses()" ng-transclude></div>`
+            template: '<div ng-class="getClasses()" ng-transclude></div>'
         }
     }]).directive('fdVerticalNavMainSection', [function () {
         return {
@@ -4406,7 +4407,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             link: {
                 pre: function (scope, element, attrs) {
-                    if (attrs.ariaLabel)
+                    if (!attrs.hasOwnProperty('ariaLabel'))
                         console.error('fdVerticalNavMainSection error: You must set the "aria-label" attribute');
                 },
             },
@@ -4419,7 +4420,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             link: {
                 pre: function (scope, element, attrs) {
-                    if (attrs.ariaLabel)
+                    if (!attrs.hasOwnProperty('ariaLabel'))
                         console.error('fdVerticalNavUtilitySection error: You must set the "aria-label" attribute');
                 },
             },
@@ -4433,7 +4434,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * isExpanded: Boolean - If the item is expanded or not.
          */
         return {
-            restrict: 'EA',
+            restrict: 'E',
             transclude: true,
             replace: true,
             scope: {
@@ -4485,6 +4486,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
             },
         }
+    }]).directive('fdListNavigationItemText', [function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            transclude: true,
+            template: '<span class="fd-list__navigation-item-text" ng-transclude></span>'
+        }
     }]).directive('fdListNavigationItemIndicator', [function () {
         return {
             restrict: 'E',
@@ -4496,14 +4504,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * isExpanded: Boolean - If the item is expanded or not.
          */
         return {
-            restrict: 'EA',
+            restrict: 'E',
             replace: true,
             scope: {
                 isExpanded: '<?',
             },
             link: {
                 pre: function (scope, element, attrs) {
-                    if (attrs.ariaLabel)
+                    if (!attrs.hasOwnProperty('ariaLabel'))
                         console.error('fdListNavigationItemArrow error: You must set the "aria-label" attribute');
                 },
                 post: function (scope) {
@@ -4523,7 +4531,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * iconSize: String - The size of the item icon. Possible options are include 'lg' and none.
          */
         return {
-            restrict: 'EA',
+            restrict: 'E',
             replace: true,
             scope: {
                 glyph: '@?',
