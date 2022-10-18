@@ -799,7 +799,7 @@
 		<wikitext.version>3.0.42</wikitext.version>
 		<flexmark.version>0.64.0</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.320</qldb.sdk.version>
+		<qldb.sdk.version>1.12.322</qldb.sdk.version>
 		<cassandra.version>1.17.5</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>4.3.0</jedis.version>
