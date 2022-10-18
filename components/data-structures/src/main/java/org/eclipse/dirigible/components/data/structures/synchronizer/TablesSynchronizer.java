@@ -11,10 +11,16 @@
  */
 package org.eclipse.dirigible.components.data.structures.synchronizer;
 
+import static java.text.MessageFormat.format;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
@@ -26,10 +32,15 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.domain.TableLifecycle;
 import org.eclipse.dirigible.components.data.structures.service.TableService;
+import org.eclipse.dirigible.components.database.DataSourcesManager;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -51,6 +62,8 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	/** The table service. */
 	private TableService tableService;
 	
+	private DataSourcesManager dataSourcesManager;
+	
 	/** The synchronization callback. */
 	private SynchronizerCallback callback;
 	
@@ -60,8 +73,9 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 * @param tableService the table service
 	 */
 	@Autowired
-	public TablesSynchronizer(TableService tableService) {
+	public TablesSynchronizer(TableService tableService, DataSourcesManager dataSourcesManager) {
 		this.tableService = tableService;
+		this.dataSourcesManager = dataSourcesManager;
 	}
 	
 	/**
@@ -110,6 +124,26 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 		table.setLocation(location);
 		table.setType(Table.ARTEFACT_TYPE);
 		table.updateKey();
+		table.getColumns().forEach(c -> c.setTable(table));
+		if (table.getIndexes() != null) {
+			table.getIndexes().forEach(i -> i.setTable(table));
+		}
+		if (table.getConstraints() != null) {
+			table.getConstraints().setTable(table);
+			if (table.getConstraints().getPrimaryKey() != null) {
+				table.getConstraints().getPrimaryKey().setConstraints(table.getConstraints());
+			}
+			if (table.getConstraints().getForeignKeys() != null) {
+				table.getConstraints().getForeignKeys().forEach(fk -> fk.setConstraints(table.getConstraints()));
+			}
+			if (table.getConstraints().getUniqueIndexes() != null) {
+				table.getConstraints().getUniqueIndexes().forEach(u -> u.setConstraints(table.getConstraints()));
+			}
+			if (table.getConstraints().getChecks() != null) {
+				table.getConstraints().getChecks().forEach(c -> c.setConstraints(table.getConstraints()));
+			}
+		}
+		
 		try {
 			getService().save(table);
 		} catch (Exception e) {
@@ -128,6 +162,23 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 */
 	@Override
 	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
+		// drop tables' foreign keys in a reverse order
+		try {
+			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.FOREIGN_KEYS_DROP.toString());
+			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_DROP.toString(), ArtefactState.FAILED_DELETE);
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			callback.addError(e.getMessage());
+		}
+		
+		// drop tables in a reverse order
+		try {
+			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.DROP.toString());
+			callback.registerErrors(this, results, TableLifecycle.DROP.toString(), ArtefactState.FAILED_DELETE);
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			callback.addError(e.getMessage());
+		}
 	}
 	
 	/**
@@ -138,13 +189,25 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 */
 	@Override
 	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
+		
+		// process tables
 		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-			callback.registerErrors(this, results, ArtefactLifecycle.CREATED, ArtefactState.FAILED_CREATE_UPDATE);
+			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.CREATE.toString());
+			callback.registerErrors(this, results, TableLifecycle.CREATE.toString(), ArtefactState.FAILED_CREATE);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
 		}
+		
+		// process tables foreign keys
+		try {
+			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.FOREIGN_KEYS_CREATE.toString());
+			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_CREATE.toString(), ArtefactState.FAILED_CREATE);
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			callback.addError(e.getMessage());
+		}
+		
 	}
 
 	/**
@@ -155,8 +218,64 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 */
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
-		return true;
+		
+		try (Connection connection = dataSourcesManager.getDefaultDataSource().getConnection()) {
+		
+			Table table = null;
+			if (wrapper.getArtefact() instanceof Table) {
+				table = (Table) wrapper.getArtefact();
+			} else {
+				throw new UnsupportedOperationException(String.format("Trying to process %s as Table", wrapper.getArtefact().getClass()));
+			}
+			
+			TableLifecycle flag = TableLifecycle.valueOf(flow);
+			switch (flag) {
+			case UPDATE:
+				executeTableUpdate(connection, table);
+				break;
+			case CREATE:
+				if (!SqlFactory.getNative(connection).exists(connection, table.getName())) {
+					executeTableCreate(connection, table);
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE);
+				} else {
+					if (logger.isWarnEnabled()) {logger.warn(format("Table [{0}] already exists during the update process", table.getName()));}
+					if (SqlFactory.getNative(connection).count(connection, table.getName()) != 0) {
+						executeTableAlter(connection, table);
+						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE);
+					}
+				}
+				break;
+			case FOREIGN_KEYS_CREATE:
+				executeTableForeignKeysCreate(connection, table);
+				break;
+			case ALTER:
+				executeTableAlter(connection, table);
+				break;
+			case DROP:
+				if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
+					if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
+						executeTableDrop(connection, table);
+					} else {
+						String message = format("Table [{1}] cannot be deleted during the update process, because it is not empty", table.getName());
+						if (logger.isWarnEnabled()) {logger.warn(message);}
+						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED);
+					}
+				}
+				break;
+			case FOREIGN_KEYS_DROP:
+				if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
+					executeTableForeignKeysDrop(connection, table);
+				}
+				break;
+			default:
+				throw new UnsupportedOperationException(flow);
+			}
+			return true;
+		} catch (SQLException e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			callback.addError(e.getMessage());
+			return false;
+		}
 	}
 
 	/**
@@ -177,6 +296,97 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	@Override
 	public void setCallback(SynchronizerCallback callback) {
 		this.callback = callback;
+	}
+	
+	/**
+	 * Execute table update.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableUpdate(Connection connection, Table tableModel) throws SQLException {
+		if (logger.isInfoEnabled()) {logger.info("Processing Update Table: " + tableModel.getName());}
+		if (SqlFactory.getNative(connection).exists(connection, tableModel.getName())) {
+			if (SqlFactory.getNative(connection).count(connection, tableModel.getName()) == 0) {
+				executeTableDrop(connection, tableModel);
+				executeTableCreate(connection, tableModel);
+			} else {
+				executeTableAlter(connection, tableModel);
+			}
+		} else {
+			executeTableCreate(connection, tableModel);
+		}
+	}
+
+	/**
+	 * Execute table create.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableCreate(Connection connection, Table tableModel) throws SQLException {
+		TableCreateProcessor.execute(connection, tableModel, true);
+	}
+	
+	/**
+	 * Execute table foreign keys create.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableForeignKeysCreate(Connection connection, Table tableModel) throws SQLException {
+		TableForeignKeysCreateProcessor.execute(connection, tableModel);
+	}
+
+	/**
+	 * Execute table alter.
+	 *
+	 * @param connection            the connection
+	 * @param tableModel            the table model
+	 * @throws SQLException the SQL exception
+	 */
+	public void executeTableAlter(Connection connection, Table tableModel) throws SQLException {
+		TableAlterProcessor.execute(connection, tableModel);
+	}
+
+	/**
+	 * Execute table drop.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableDrop(Connection connection, Table tableModel) throws SQLException {
+		TableDropProcessor.execute(connection, tableModel);
+	}
+	
+	/**
+	 * Execute table foreign keys drop.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableForeignKeysDrop(Connection connection, Table tableModel) throws SQLException {
+		TableForeignKeysDropProcessor.execute(connection, tableModel);
 	}
 
 }

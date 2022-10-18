@@ -52,7 +52,7 @@ public class Definition extends Artefact {
     protected String message;
 	
 	@Transient
-	private byte[] content;
+	private transient byte[] content;
 
 	public Definition(String location, String name, String type, byte[] content) {
 		super(location, name, type, null, null);

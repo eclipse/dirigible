@@ -192,8 +192,11 @@ public class TableConstraints {
 	 */
 	@Override
 	public String toString() {
-		return "TableConstraints [id=" + id + ", primaryKey=" + primaryKey + ", foreignKeys=" + Objects.toString(foreignKeys)
-				+ ", uniqueIndexes=" + Objects.toString(uniqueIndexes)  + ", checks=" + Objects.toString(checks) + ", table=" + table.getName() + "]";
+		return "TableConstraints [id=" + id + ", primaryKey=" + primaryKey 
+				+ ", foreignKeys=" + (foreignKeys != null ? Objects.toString(foreignKeys) : "null")
+				+ ", uniqueIndexes=" + (uniqueIndexes != null ? Objects.toString(uniqueIndexes) : "null")
+				+ ", checks=" + (checks != null ? Objects.toString(checks) : "null")
+				+ ", table=" + table.getName() + "]";
 	}
 	
 	

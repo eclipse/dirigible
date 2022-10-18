@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,11 +38,13 @@ public class TableConstraintForeignKey extends TableConstraint {
 	private Long id;
 	
 	/** The referenced table. */
-	@Column(name = "FOREIGNKEY_REF_TABLE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Column(name = "FOREIGNKEY_REF_TABLE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Nullable
 	private String referencedTable;
 	
 	/** The referenced columns. */
-	@Column(name = "FOREIGNKEY_REF_COLUMNS", columnDefinition = "VARCHAR", nullable = false, length = 2000)
+	@Column(name = "FOREIGNKEY_REF_COLUMNS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+	@Nullable
 	private String referencedColumns;
 	
 	/** The column names. */

@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.database.ds.model.processors;
+package org.eclipse.dirigible.components.data.structures.synchronizer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintCheck;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintUnique;
+import org.eclipse.dirigible.components.data.structures.domain.TableIndex;
 import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableColumnModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintCheckModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintForeignKeyModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintUniqueModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableIndexModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -47,7 +47,7 @@ public class TableCreateProcessor {
 	 * @param tableModel the table model
 	 * @throws SQLException the SQL exception
 	 */
-	public static void execute(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+	public static void execute(Connection connection, Table tableModel) throws SQLException {
 		execute(connection, tableModel, false);
 	}
 
@@ -59,7 +59,7 @@ public class TableCreateProcessor {
 	 * @param skipForeignKeys the skip foreign keys
 	 * @throws SQLException the SQL exception
 	 */
-	public static void execute(Connection connection, DataStructureTableModel tableModel, boolean skipForeignKeys) throws SQLException {
+	public static void execute(Connection connection, Table tableModel, boolean skipForeignKeys) throws SQLException {
 		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String tableName = tableModel.getName();
 		if (caseSensitive) {
@@ -67,9 +67,9 @@ public class TableCreateProcessor {
 		}
 		if (logger.isInfoEnabled()) {logger.info("Processing Create Table: " + tableName);}
 		CreateTableBuilder createTableBuilder = SqlFactory.getNative(connection).create().table(tableName);
-		List<DataStructureTableColumnModel> columns = tableModel.getColumns();
-		List<DataStructureTableIndexModel> indexes = tableModel.getIndexes();
-		for (DataStructureTableColumnModel columnModel : columns) {
+		List<TableColumn> columns = tableModel.getColumns();
+		List<TableIndex> indexes = tableModel.getIndexes();
+		for (TableColumn columnModel : columns) {
 			String name = columnModel.getName();
 			if (caseSensitive) {
 				name = "\"" + name + "\"";
@@ -106,9 +106,9 @@ public class TableCreateProcessor {
 		}
 		if (tableModel.getConstraints() != null) {
 			if (tableModel.getConstraints().getPrimaryKey() != null) {
-				String[] primaryKeyColumns = new String[tableModel.getConstraints().getPrimaryKey().getColumns().length];
+				String[] primaryKeyColumns = new String[tableModel.getConstraints().getPrimaryKey().getColumnNames().size()];
 				int i = 0;
-				for (String column : tableModel.getConstraints().getPrimaryKey().getColumns()) {
+				for (String column : tableModel.getConstraints().getPrimaryKey().getColumnNames()) {
 					if (caseSensitive) {
 						primaryKeyColumns[i++] = "\"" + column + "\"";
 					} else {
@@ -120,14 +120,14 @@ public class TableCreateProcessor {
 			}
 			if (!skipForeignKeys) {
 				if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
-					for (DataStructureTableConstraintForeignKeyModel foreignKey : tableModel.getConstraints().getForeignKeys()) {
+					for (TableConstraintForeignKey foreignKey : tableModel.getConstraints().getForeignKeys()) {
 						String foreignKeyName = foreignKey.getName();
 						if (caseSensitive) {
 							foreignKeyName = "\"" + foreignKeyName + "\"";
 						}
-						String[] foreignKeyColumns = new String[foreignKey.getColumns().length];
+						String[] foreignKeyColumns = new String[foreignKey.getColumnNames().size()];
 						int i = 0;
-						for (String column : foreignKey.getColumns()) {
+						for (String column : foreignKey.getColumnNames()) {
 							if (caseSensitive) {
 								foreignKeyColumns[i++] = "\"" + column + "\"";
 							} else {
@@ -138,9 +138,9 @@ public class TableCreateProcessor {
 						if (caseSensitive) {
 							foreignKeyReferencedTable = "\"" + foreignKeyReferencedTable + "\"";
 						}
-						String[] foreignKeyReferencedColumns = new String[foreignKey.getReferencedColumns().length];
+						String[] foreignKeyReferencedColumns = new String[foreignKey.getReferencedColumnNames().size()];
 						i = 0;
-						for (String column : foreignKey.getReferencedColumns()) {
+						for (String column : foreignKey.getReferencedColumnNames()) {
 							if (caseSensitive) {
 								foreignKeyReferencedColumns[i++] = "\"" + column + "\"";
 							} else {
@@ -153,15 +153,15 @@ public class TableCreateProcessor {
 					}
 				}
 			}
-			if (tableModel.getConstraints().getUniqueIndices() != null) {
-				for (DataStructureTableConstraintUniqueModel uniqueIndex : tableModel.getConstraints().getUniqueIndices()) {
+			if (tableModel.getConstraints().getUniqueIndexes() != null) {
+				for (TableConstraintUnique uniqueIndex : tableModel.getConstraints().getUniqueIndexes()) {
 					String uniqueIndexName = uniqueIndex.getName();
 					if (caseSensitive) {
 						uniqueIndexName = "\"" + uniqueIndexName + "\"";
 					}
-					String[] uniqueIndexColumns = new String[uniqueIndex.getColumns().length];
+					String[] uniqueIndexColumns = new String[uniqueIndex.getColumnNames().size()];
 					int i = 0;
-					for (String column : uniqueIndex.getColumns()) {
+					for (String column : uniqueIndex.getColumnNames()) {
 						if (caseSensitive) {
 							uniqueIndexColumns[i++] = "\"" + column + "\"";
 						} else {
@@ -172,7 +172,7 @@ public class TableCreateProcessor {
 				}
 			}
 			if (tableModel.getConstraints().getChecks() != null) {
-				for (DataStructureTableConstraintCheckModel check : tableModel.getConstraints().getChecks()) {
+				for (TableConstraintCheck check : tableModel.getConstraints().getChecks()) {
 					String checkName = check.getName();
 					if (caseSensitive) {
 						checkName = "\"" + checkName + "\"";
@@ -182,11 +182,11 @@ public class TableCreateProcessor {
 			}
 		}
 		if(indexes != null){
-			for(DataStructureTableIndexModel indexModel : indexes) {
+			for(TableIndex indexModel : indexes) {
 				String name = indexModel.getName();
 				String type = indexModel.getType();
 				Boolean isUnique = indexModel.isUnique();
-				Set<String> indexColumns = indexModel.getColumns();
+				Set<String> indexColumns = indexModel.getColumnNames();
 				createTableBuilder.index(name, isUnique, type, indexColumns);
 			}
 		}

@@ -98,7 +98,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		if (logger.isDebugEnabled()) {logger.debug("Collecting files...");}
 		// collect definitions for processing
 		collectFiles();
-		if (logger.isDebugEnabled()) {logger.debug("Collecting files done. {} known definitions collected.", definitions.size());}
+		
+		if (logger.isDebugEnabled()) {logger.debug("Collecting files done. {} known types of definitions collected.", definitions.size());}
 		
 		if (logger.isDebugEnabled()) {logger.debug("Loading definitions...");}
 		// parse definitions to artefacts
@@ -336,11 +337,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 */
 	@Override
 	public void registerErrors(Synchronizer<? extends Artefact> synchronizer, List<TopologyWrapper<? extends Artefact>> remained, 
-			ArtefactLifecycle lifecycle, ArtefactState state) {
+			String lifecycle, ArtefactState state) {
 		if (remained.size() > 0) {
 			for (TopologyWrapper<? extends Artefact> wrapper : remained) {
 				String errorMessage = String.format("Undepleted Artefact of type: [%s] with key: [%s] in phase: [%s]", 
-						wrapper.getArtefact().getType(), wrapper.getId(), lifecycle.toString());
+						wrapper.getArtefact().getType(), wrapper.getId(), lifecycle);
 				if (logger.isErrorEnabled()) {logger.error(errorMessage);}
 				errors.add(errorMessage);
 				setDefinitionState(wrapper.getArtefact(), state, errorMessage);
@@ -357,7 +358,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 * @param state the state
 	 */
 	@Override
-	public void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper, ArtefactLifecycle lifecycle, ArtefactState state) {
+	public void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper, String lifecycle, ArtefactState state) {
 		if (logger.isDebugEnabled()) {logger.debug("Processed artefact with key: {} for state: {}", wrapper.getArtefact().getKey(), state.toString());}
 		setDefinitionState(wrapper.getArtefact(), state, "");
 	}

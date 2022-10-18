@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.database.ds.model.processors;
+package org.eclipse.dirigible.components.data.structures.synchronizer;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
 import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableColumnModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
@@ -52,7 +52,7 @@ public class TableAlterProcessor {
 	 * @param tableModel the table model
 	 * @throws SQLException the SQL exception
 	 */
-	public static void execute(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+	public static void execute(Connection connection, Table tableModel) throws SQLException {
 		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String tableName = tableModel.getName();
 		if (caseSensitive) {
@@ -72,7 +72,7 @@ public class TableAlterProcessor {
 		List<String> modelColumnNames = new ArrayList<String>();
 		
 		// ADD iteration
-		for (DataStructureTableColumnModel columnModel : tableModel.getColumns()) {
+		for (TableColumn columnModel : tableModel.getColumns()) {
 			String name = columnModel.getName();
 			if (caseSensitive) {
 				name = "\"" + name + "\"";

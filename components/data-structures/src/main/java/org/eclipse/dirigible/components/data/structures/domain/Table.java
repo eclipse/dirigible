@@ -142,11 +142,14 @@ public class Table extends Artefact {
 
 	@Override
 	public String toString() {
-		return "Table [id=" + id + ", columns=" + Objects.toString(columns) + ", indexes=" + Objects.toString(indexes) + "]";
+		return "Table [id=" + id + ", columns=" + (columns != null ? Objects.toString(columns) : "null") 
+				+ ", indexes=" + (indexes != null ? Objects.toString(indexes) : "null")
+				+ ", constraints=" + constraints
+				+ "]";
 	}
 
-	public TableColumn addColumn(String name, String type, int length, boolean nullable, boolean primaryKey,
-			String defaultValue, int scale, boolean unique) {
+	public TableColumn addColumn(String name, String type, String length, boolean nullable, boolean primaryKey,
+			String defaultValue, String scale, boolean unique) {
 		TableColumn tableColumn = new TableColumn(name, type, length, nullable, primaryKey, defaultValue, scale, unique, this);
 		columns.add(tableColumn);
 		return tableColumn;

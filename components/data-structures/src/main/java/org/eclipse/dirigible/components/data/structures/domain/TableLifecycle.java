@@ -9,22 +9,24 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.commons.api.helpers;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
+package org.eclipse.dirigible.components.data.structures.domain;
 
 /**
- * The GsonHelper utility class.
+ * The Enum ArtefactLifecycle.
  */
-public class GsonHelper {
-
-	/** The GSON instance. */
-	public static final transient Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+public enum TableLifecycle {
 	
+	/** The execute table create. */
+	CREATE,
+	/** The execute table update. */
+	UPDATE,
+	/** The execute table foreign keys create. */
+	FOREIGN_KEYS_CREATE,
+	/** The execute table foreign keys drop. */
+	FOREIGN_KEYS_DROP,
+	/** The execute table alter. */
+	ALTER,
+	/** The execute table drop. */
+	DROP
 
-	/** The GSON Parser instance. */
-	public static final transient JsonParser PARSER = new JsonParser();
-	
 }

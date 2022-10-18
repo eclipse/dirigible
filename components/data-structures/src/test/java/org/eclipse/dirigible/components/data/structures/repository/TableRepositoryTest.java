@@ -132,8 +132,8 @@ public class TableRepositoryTest {
 	 */
 	public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location, String name, String description, String dependencies) {
 		Table table = new Table(location, name, description, dependencies);
-		table.addColumn(name + "_1", "VARCHAR", 20, true, false, "", 0, false);
-		table.addColumn(name + "_2", "VARCHAR", 20, true, false, "", 0, false);
+		table.addColumn(name + "_1", "VARCHAR", "20", true, false, "", "0", false);
+		table.addColumn(name + "_2", "VARCHAR", "20", true, false, "", "0", false);
 		table.addIndex(name + "_1", "", true, name + "_1");
 		tableRepository.save(table);
 		return table;

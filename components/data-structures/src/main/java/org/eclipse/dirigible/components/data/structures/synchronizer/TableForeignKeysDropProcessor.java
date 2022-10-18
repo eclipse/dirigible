@@ -9,16 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.database.ds.model.processors;
+package org.eclipse.dirigible.components.data.structures.synchronizer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
 import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintForeignKeyModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class TableForeignKeysDropProcessor {
 	 * @param tableModel the table model
 	 * @throws SQLException the SQL exception
 	 */
-	public static void execute(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+	public static void execute(Connection connection, Table tableModel) throws SQLException {
 		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String tableName = tableModel.getName();
 		if (caseSensitive) {
@@ -50,12 +50,13 @@ public class TableForeignKeysDropProcessor {
 			if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
 				if (logger.isInfoEnabled()) {logger.info("Processing Alter Table Create Foreign Keys Table: " + tableName);}
 				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
-				for (DataStructureTableConstraintForeignKeyModel foreignKey : tableModel.getConstraints().getForeignKeys()) {
+				for (TableConstraintForeignKey foreignKey : tableModel.getConstraints().getForeignKeys()) {
 					String foreignKeyName = foreignKey.getName();
 					if (caseSensitive) {
 						foreignKeyName = "\"" + foreignKeyName + "\"";
 					}
-					alterTableBuilder.drop().foreignKey(foreignKeyName, foreignKey.getColumns(), foreignKey.getReferencedTable(), foreignKey.getReferencedColumns());
+					alterTableBuilder.drop().foreignKey(foreignKeyName, foreignKey.getColumnNames().stream().toArray(String[] ::new), 
+							foreignKey.getReferencedTable(), foreignKey.getReferencedColumnNames().stream().toArray(String[] ::new));
 				}
 				
 				final String sql = alterTableBuilder.build();

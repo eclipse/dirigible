@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.database.ds.model.processors;
+package org.eclipse.dirigible.components.data.structures.synchronizer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,10 +20,9 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
 import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintForeignKeyModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
-import org.eclipse.dirigible.database.ds.model.util.DatabaseModelUtils;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
 import org.slf4j.Logger;
@@ -44,7 +43,7 @@ public class TableForeignKeysCreateProcessor {
      * @param tableModel the table model
      * @throws SQLException the SQL exception
      */
-    public static void execute(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+    public static void execute(Connection connection, Table tableModel) throws SQLException {
         boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
         String tableName = tableModel.getName();
         if (caseSensitive) {
@@ -55,16 +54,17 @@ public class TableForeignKeysCreateProcessor {
             if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
             	if (logger.isInfoEnabled()) {logger.info("Processing Alter Table Create Foreign Keys Table: " + tableName);}
                 AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
-                for (DataStructureTableConstraintForeignKeyModel foreignKey : tableModel.getConstraints().getForeignKeys()) {
+                for (TableConstraintForeignKey foreignKey : tableModel.getConstraints().getForeignKeys()) {
                     
                     List<String> valsToHashFKName = new ArrayList<>(Arrays.asList(foreignKey.getColumns()));
                     valsToHashFKName.add(foreignKey.getReferencedTable());
-                    String hashedFKName = "fk" + DatabaseModelUtils.generateHashedName(valsToHashFKName);
+                    String hashedFKName = "fk" + generateHashedName(valsToHashFKName);
                     String foreignKeyName = Objects.isNull(foreignKey.getName()) ? hashedFKName : foreignKey.getName();
                     if (caseSensitive) {
                         foreignKeyName = "\"" + foreignKeyName + "\"";
                     }
-                    alterTableBuilder.add().foreignKey(foreignKeyName, foreignKey.getColumns(), foreignKey.getReferencedTable(), foreignKey.getReferencedColumns());
+                    alterTableBuilder.add().foreignKey(foreignKeyName, foreignKey.getColumnNames().stream().toArray(String[] ::new), 
+                    		foreignKey.getReferencedTable(), foreignKey.getReferencedColumnNames().stream().toArray(String[] ::new));
                 }
                 final String sql = alterTableBuilder.build();
                 if (logger.isInfoEnabled()) {logger.info(sql);}
@@ -82,6 +82,20 @@ public class TableForeignKeysCreateProcessor {
                 }
             }
         }
+    }
+    
+    /**
+     * Generate hashed name.
+     *
+     * @param values the values
+     * @return the string
+     */
+    public static String generateHashedName(List<String> values){
+        StringBuilder hashedName = new StringBuilder("");
+        for(String val : values){
+            hashedName.append(val);
+        }
+        return String.valueOf(hashedName.toString().hashCode());
     }
 
 }

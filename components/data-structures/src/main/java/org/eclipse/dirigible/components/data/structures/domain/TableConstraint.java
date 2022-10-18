@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -34,15 +35,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public abstract class TableConstraint {
 	
 	/** The name. */
-	@Column(name = "CONSTRAINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Column(name = "CONSTRAINT_NAME", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Nullable
 	protected String name;
 	
 	/** The modifiers. */
-	@Column(name = "CONSTRAINT_MODIFIERS", columnDefinition = "VARCHAR", nullable = false, length = 2000)
+	@Column(name = "CONSTRAINT_MODIFIERS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+	@Nullable
 	protected String modifiers;
 	
 	/** The columns. */
-	@Column(name = "CONSTRAINT_COLUMNS", columnDefinition = "VARCHAR", nullable = false, length = 2000)
+	@Column(name = "CONSTRAINT_COLUMNS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+	@Nullable
 	protected String columns;
 	
 	/** The constraints. */

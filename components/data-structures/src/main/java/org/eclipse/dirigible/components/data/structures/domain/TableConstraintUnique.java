@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,11 +32,13 @@ public class TableConstraintUnique extends TableConstraint {
 	private Long id;
 	
 	/** The index type. */
-	@Column(name = "UNIQUE_INDEXTYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Column(name = "UNIQUE_INDEXTYPE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Nullable
     private String indexType;
 
     /** The order. */
-	@Column(name = "UNIQUE_ORDER", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Column(name = "UNIQUE_ORDER", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Nullable
     private String order;
 
 	/**
