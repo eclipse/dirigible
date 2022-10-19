@@ -26,6 +26,9 @@
 		<!-- Data -->
 		<module>data-structures</module>
 		
+		<!-- Engines -->
+		<module>engine-javascript</module>
+		
 		<!-- Applications -->
 		<module>app-all</module>
 	</modules>
