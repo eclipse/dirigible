@@ -18,15 +18,9 @@
     	<!-- Repository -->
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-repository-api</artifactId>
+			<artifactId>dirigible-database-api</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-repository-local</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-    	</dependency>
-    
     </dependencies>
 
 	<properties>
