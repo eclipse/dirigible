@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2021 SAP and others.
+ * Copyright (c) 2010-2022 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         let backdrop = $document[0].createElement('div');
         backdrop.classList.add('dg-backdrop');
         $document[0].body.appendChild(backdrop);
+        backdrop.addEventListener('contextmenu', function (event) {
+            event.stopPropagation();
+        });
 
         let activate = function () {
             $document[0].body.classList.add('dg-backdrop--active');
@@ -36,6 +39,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         return {
             activate: activate,
             deactivate: deactivate,
+            element: backdrop,
         };
     }).factory('classNames', function () {
         function classNames(...args) {
@@ -966,7 +970,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: '<div class="fd-segmented-button" role="group" ng-transclude></div>'
         }
-    }]).directive('fdSplitButton', ['uuid', function (uuid) {
+    }]).directive('fdSplitButton', ['uuid', '$window', 'backdrop', function (uuid, $window, backdrop) {
         /**
          * mainAction: String - Main button text
          * mainGlyph: String - Icon class for the button.
@@ -1003,20 +1007,22 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     };
                 },
                 post: function (scope, element) {
-                    let hidePopoverOnMouseUp = false;
-                    element.on('focusout', function (e) {
-                        if (!e.relatedTarget || !element[0].contains(e.relatedTarget)) {
+                    let isHidden = true;
+                    scope.pointerHandler = function (e) {
+                        if (!element[0].contains(e.target)) {
                             scope.$apply(scope.hidePopover());
-                        } else {
-                            hidePopoverOnMouseUp = true;
+                        }
+                    };
+                    element.on('focusout', function (e) {
+                        if (e.relatedTarget && !element[0].contains(e.relatedTarget)) {
+                            scope.$apply(scope.hidePopover);
                         }
                     });
 
-                    element.on('mouseup', function () {
-                        if (hidePopoverOnMouseUp) {
-                            scope.$apply(scope.hidePopover);
-                            hidePopoverOnMouseUp = false;
-                        }
+                    element.on('pointerup', function (e) {
+                        if (e.originalEvent && e.originalEvent.isSubmenuItem) return;
+                        else if (scope.popoverControl && e.target === scope.popoverControl) return;
+                        else if (element[0].contains(e.target) && !isHidden) scope.hidePopover();
                     });
 
                     scope.mainActionClicked = function () {
@@ -1028,6 +1034,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             scope.popoverControl.setAttribute('aria-expanded', 'false');
                             scope.popoverBody.setAttribute('aria-hidden', 'true');
                         }
+                        isHidden = true;
+                        $window.removeEventListener('pointerup', scope.pointerHandler);
+                        backdrop.deactivate();
                     };
 
                     scope.togglePopover = function () {
@@ -1035,12 +1044,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             scope.popoverControl = element[0].querySelector(`[aria-controls="${scope.popoverId}"]`);
                             scope.popoverBody = element[0].querySelector(`#${scope.popoverId}`);
                         }
-                        if (scope.popoverBody.getAttribute('aria-hidden') === 'true') {
+                        if (isHidden) {
                             scope.popoverControl.setAttribute('aria-expanded', 'true');
                             scope.popoverBody.setAttribute('aria-hidden', 'false');
+                            isHidden = false;
+                            $window.addEventListener('pointerup', scope.pointerHandler);
+                            backdrop.activate();
                         } else {
-                            scope.popoverControl.setAttribute('aria-expanded', 'false');
-                            scope.popoverBody.setAttribute('aria-hidden', 'true');
+                            scope.hidePopover();
                         };
                     };
                 },
@@ -1163,12 +1174,16 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'E',
             transclude: true,
             replace: true,
+            widgetId: "",
             scope: {
                 maxHeight: '@?',
                 dgAlign: '@?',
                 noArrow: '@?',
                 dropdownFill: '@?',
                 canScroll: '<?',
+            },
+            controller: function PopoverBodyController() {
+                this.widgetId = "popoverBody";
             },
             link: {
                 pre: function (scope, element) {
@@ -1205,26 +1220,36 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * maxHeight: Number - Maximum height in pixels before it starts scrolling. Default is the height of the window.
          * canScroll: Boolean - Enable/disable scroll menu support. Default is false.
          * show: Boolean - Use this instead of the CSS 'display' property. Otherwise, the menu will not work properly. Default is true.
-         * noBackdrop: Boolean - Disables the backdrop. Use only when necessary (for example in popovers). This may break the menu if not used properly. Default is false.
-         * noShadow: Boolean - Removes the shadow effect. When in popover, it's recommended that you set this to true. Otherwise you will get double shadow. Default is false.
+         * noBackdrop: Boolean - Disables the backdrop. This may break the menu if not used properly. Default is false.
+         * noShadow: Boolean - Removes the shadow effect. Default is false.
+         * closeOnOuterClick: Boolean - Hide the menu when a user clicks outside it Default is true.
          */
         return {
             restrict: 'E',
             transclude: true,
             replace: true,
+            require: '?^^fdPopoverBody',
             scope: {
                 maxHeight: '@?',
                 canScroll: '<?',
-                show: '<?',
+                show: '=?',
                 noBackdrop: '<?',
                 noShadow: '<?',
+                closeOnOuterClick: '<?',
             },
             link: {
-                pre: function (scope, element) {
+                pre: function (scope, element, attrs, parentCtrl) {
+                    if (!attrs.hasOwnProperty('ariaLabel'))
+                        console.error('fdMenu error: You must set the "aria-label" attribute');
                     if (!angular.isDefined(scope.show))
                         scope.show = true;
                     if (!angular.isDefined(scope.noBackdrop))
                         scope.noBackdrop = false;
+                    if (parentCtrl !== null && parentCtrl.widgetId === "popoverBody") {
+                        scope.noBackdrop = true;
+                        scope.noShadow = true;
+                        scope.closeOnOuterClick = false;
+                    } else scope.closeOnOuterClick = true;
                     let rect = element[0].getBoundingClientRect();
                     scope.defaultHeight = $window.innerHeight - rect.top;
                 },
@@ -1233,10 +1258,28 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         let rect = element[0].getBoundingClientRect();
                         scope.defaultHeight = $window.innerHeight - rect.top;
                     });
+                    scope.backdropClickEvent = function () {
+                        scope.$apply(function () { scope.show = false; });
+                    };
+                    scope.backdropRightClickEvent = function (event) {
+                        event.stopPropagation();
+                        scope.$apply(function () { scope.show = false; });
+                    };
                     scope.$watch('show', function () {
                         if (!scope.noBackdrop) {
-                            if (scope.show) backdrop.activate();
-                            else backdrop.deactivate();
+                            if (scope.show) {
+                                backdrop.activate();
+                                if (scope.closeOnOuterClick) {
+                                    backdrop.element.addEventListener('click', scope.backdropClickEvent);
+                                    backdrop.element.addEventListener('contextmenu', scope.backdropRightClickEvent);
+                                }
+                            } else {
+                                backdrop.deactivate();
+                                if (scope.closeOnOuterClick) {
+                                    backdrop.element.removeEventListener('click', scope.backdropClickEvent);
+                                    backdrop.element.removeEventListener('contextmenu', scope.backdropRightClickEvent);
+                                }
+                            }
                         }
                     });
                     scope.getMenuClasses = function () {
@@ -1244,12 +1287,12 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         else element[0].style.removeProperty('max-height');
                         return classNames({ 'fd-menu--overflow': scope.canScroll });
                     };
-                    scope.getListClasses = () => classNames({
-                        'fd-menu__list--no-shadow': scope.noShadow
+                    scope.getListClasses = () => classNames('fd-menu__list', {
+                        'fd-menu__list--no-shadow': scope.noShadow === true
                     });
                 },
             },
-            template: `<nav aria-label="menu" class="fd-menu" ng-show="show" ng-class="getMenuClasses()"><ul class="fd-menu__list" ng-class="getListClasses()" role="menu" ng-transclude></ul></nav>`
+            template: `<nav class="fd-menu" ng-show="show" ng-class="getMenuClasses()"><ul ng-class="getListClasses()" role="menu" ng-transclude></ul></nav>`
         }
     }]).directive('fdMenuItem', [function () {
         /**

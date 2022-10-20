@@ -330,7 +330,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
         </fd-button>
     </fd-popover-control>
     <fd-popover-body no-arrow="true" can-scroll="false">
-        <fd-menu no-backdrop="true" no-shadow="true">
+        <fd-menu aria-label="header menu">
             <fd-menu-sublist ng-repeat="menuItem in menuList track by $index" title="{{ menuItem.label }}"
                 can-scroll="isScrollable(item.items)">
                 <header-submenu sublist="menuItem.items" menu-handler="menuHandler"></header-submenu>
@@ -369,7 +369,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                         </fd-button>
                     </fd-popover-control>
                     <fd-popover-body no-arrow="true" can-scroll="isScrollable()">
-                        <fd-menu no-backdrop="true" no-shadow="true">
+                        <fd-menu aria-label="header menu">
                             <fd-menu-item ng-repeat-start="item in menuItem.items track by $index" ng-if="!item.items"
                                 title="{{ item.label }}" ng-click="menuHandler(item)">
                             </fd-menu-item>
