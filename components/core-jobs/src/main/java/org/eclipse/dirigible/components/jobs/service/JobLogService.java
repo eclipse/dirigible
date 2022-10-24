@@ -12,7 +12,7 @@
 package org.eclipse.dirigible.components.jobs.service;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.jobs.domain.JobLogs;
+import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.eclipse.dirigible.components.jobs.repository.JobLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -25,60 +25,60 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class JobLogsService implements ArtefactService<JobLogs> {
+public class JobLogService implements ArtefactService<JobLog> {
 
     @Autowired
     private JobLogRepository jobLogRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<JobLogs> getAll() {
+    public List<JobLog> getAll() {
         return jobLogRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<JobLogs> findAll(Pageable pageable) {
+    public Page<JobLog> findAll(Pageable pageable) {
         return jobLogRepository.findAll(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public JobLogs findById(Long id) {
-        Optional<JobLogs> jobLogs = jobLogRepository.findById(id);
-        if (jobLogs.isPresent()) {
-            return jobLogs.get();
+    public JobLog findById(Long id) {
+        Optional<JobLog> jobLog = jobLogRepository.findById(id);
+        if (jobLog.isPresent()) {
+            return jobLog.get();
         } else {
-            throw new IllegalArgumentException("JobLogs with id does not exist: " + id);
+            throw new IllegalArgumentException("JobLog with id does not exist: " + id);
         }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public JobLogs findByName(String name) {
-        JobLogs filter = new JobLogs();
+    public JobLog findByName(String name) {
+        JobLog filter = new JobLog();
         filter.setName(name);
-        Example<JobLogs> example = Example.of(filter);
-        Optional<JobLogs> jobLogs = jobLogRepository.findOne(example);
-        if (jobLogs.isPresent()) {
-            return jobLogs.get();
+        Example<JobLog> example = Example.of(filter);
+        Optional<JobLog> jobLog = jobLogRepository.findOne(example);
+        if (jobLog.isPresent()) {
+            return jobLog.get();
         } else {
             throw new IllegalArgumentException("JobLog with name does not exist: " + name);
         }
     }
 
     @Override
-    public JobLogs save(JobLogs jobLogs) {
-        return jobLogRepository.saveAndFlush(jobLogs);
+    public JobLog save(JobLog jobLog) {
+        return jobLogRepository.saveAndFlush(jobLog);
     }
 
     @Override
-    public void delete(JobLogs jobLogs) {
-        jobLogRepository.delete(jobLogs);
+    public void delete(JobLog jobLog) {
+        jobLogRepository.delete(jobLog);
     }
 
     public void deleteJobByName(String jobLogName){
-        JobLogs jobLogs = findByName(jobLogName);
-        delete(jobLogs);
+        JobLog jobLog = findByName(jobLogName);
+        delete(jobLog);
     }
 }

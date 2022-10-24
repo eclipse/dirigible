@@ -12,8 +12,8 @@
 package org.eclipse.dirigible.components.jobs.endpoint;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.jobs.domain.JobLogs;
-import org.eclipse.dirigible.components.jobs.service.JobLogsService;
+import org.eclipse.dirigible.components.jobs.domain.JobLog;
+import org.eclipse.dirigible.components.jobs.service.JobLogService;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,23 +29,23 @@ import java.util.List;
 public class JobLogEndpoint extends BaseEndpoint {
 
     @Autowired
-    private JobLogsService jobLogsService;
+    private JobLogService jobLogService;
 
     @GetMapping()
-    public ResponseEntity<List<JobLogs>> listJobLog(){
-        return ResponseEntity.ok(jobLogsService.getAll());
+    public ResponseEntity<List<JobLog>> listJobLog(){
+        return ResponseEntity.ok(jobLogService.getAll());
     }
 
     @GetMapping("logs/{name}")
-    public ResponseEntity getJobLogs(@PathParam("name") String name)
+    public ResponseEntity getJobLog(@PathParam("name") String name)
     {
-        return ResponseEntity.ok(jobLogsService.findByName(IRepository.SEPARATOR + name));
+        return ResponseEntity.ok(jobLogService.findByName(IRepository.SEPARATOR + name));
     }
 
     @PostMapping("clear/{name}")
-    public void clearJobLogs(@PathParam("name") String name)
+    public void clearJobLog(@PathParam("name") String name)
     {
         //TODO
-        jobLogsService.deleteJobByName(IRepository.SEPARATOR + name);
+        jobLogService.deleteJobByName(IRepository.SEPARATOR + name);
     }
 }

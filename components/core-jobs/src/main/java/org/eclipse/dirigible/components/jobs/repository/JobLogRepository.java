@@ -11,9 +11,9 @@
  */
 package org.eclipse.dirigible.components.jobs.repository;
 
-import org.eclipse.dirigible.components.jobs.domain.JobLogs;
+import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("jobsLogsRepository")
-public interface JobLogRepository extends JpaRepository<JobLogs, Long> {}
+public interface JobLogRepository extends JpaRepository<JobLog, Long> {}

@@ -11,9 +11,9 @@
  */
 package org.eclipse.dirigible.components.jobs.repository;
 
-import org.eclipse.dirigible.components.jobs.domain.JobEmailDefinition;
+import org.eclipse.dirigible.components.jobs.domain.JobEmail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("jobEmailDefinitionRepository")
-public interface JobEmailDefinitionRepository extends JpaRepository<JobEmailDefinition, Long> {}
+public interface JobEmailRepository extends JpaRepository<JobEmail, Long> {}

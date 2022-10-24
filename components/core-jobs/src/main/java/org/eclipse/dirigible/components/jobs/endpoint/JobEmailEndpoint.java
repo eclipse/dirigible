@@ -12,8 +12,8 @@
 package org.eclipse.dirigible.components.jobs.endpoint;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.jobs.domain.JobEmailDefinition;
-import org.eclipse.dirigible.components.jobs.service.JobEmailDefinitionService;
+import org.eclipse.dirigible.components.jobs.domain.JobEmail;
+import org.eclipse.dirigible.components.jobs.service.JobEmailService;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,20 +24,20 @@ import javax.ws.rs.PathParam;
 import java.util.List;
 
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "jobEmailDefinition")
-public class JobEmailDefinitionEndpoint extends BaseEndpoint {
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "jobEmail")
+public class JobEmailEndpoint extends BaseEndpoint {
 
     @Autowired
-    private JobEmailDefinitionService jobEmailDefinitionService;
+    private JobEmailService jobEmailService;
 
     @GetMapping()
-    public ResponseEntity<List<JobEmailDefinition>> listJobEmailDefinitions(){
-        return ResponseEntity.ok(jobEmailDefinitionService.getAll());
+    public ResponseEntity<List<JobEmail>> listJobEmails(){
+        return ResponseEntity.ok(jobEmailService.getAll());
     }
 
     @GetMapping("emails/{name}")
-    public ResponseEntity<JobEmailDefinition> getJobEmails(@PathParam("name") String name)
+    public ResponseEntity<JobEmail> getJobEmails(@PathParam("name") String name)
     {
-        return ResponseEntity.ok(jobEmailDefinitionService.findByName(IRepository.SEPARATOR + name));
+        return ResponseEntity.ok(jobEmailService.findByName(IRepository.SEPARATOR + name));
     }
 }

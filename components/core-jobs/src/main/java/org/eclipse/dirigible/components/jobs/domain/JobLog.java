@@ -20,7 +20,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "DIRIGIBLE_JOB_LOGS")
-public class JobLogs extends Artefact {
+public class JobLog extends Artefact {
 
     /** The Constant JOB_LOG_STATUS_TRIGGRED. */
     public static final short JOB_LOG_STATUS_TRIGGRED = 0;
@@ -76,11 +76,11 @@ public class JobLogs extends Artefact {
     @Column(name = "JOBLOG_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
     private String message;
 
-    public JobLogs() {
+    public JobLog() {
         super();
     }
 
-    public JobLogs(String location, String name, String type, String description, String dependencies, long id, String handler, Timestamp triggeredAt, long triggeredId, Timestamp finishedAt, short status, String message) {
+    public JobLog(String location, String name, String type, String description, String dependencies, long id, String handler, Timestamp triggeredAt, long triggeredId, Timestamp finishedAt, short status, String message) {
         super(location, name, type, description, dependencies);
         this.id = id;
         this.handler = handler;
@@ -149,7 +149,7 @@ public class JobLogs extends Artefact {
 
     @Override
     public String toString() {
-        return "JobLogs{" +
+        return "JobLog{" +
                 "id=" + id +
                 ", handler='" + handler + '\'' +
                 ", triggeredAt=" + triggeredAt +

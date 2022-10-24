@@ -16,7 +16,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "DIRIGIBLE_JOB_EMAILS")
-public class JobEmailDefinition extends Artefact {
+public class JobEmail extends Artefact {
 
     /** The id. */
     @Id
@@ -32,11 +32,11 @@ public class JobEmailDefinition extends Artefact {
     @Column(name = "JOBEMAIL_EMAIL", columnDefinition = "VARCHAR", nullable = false, length = 255)
     private String email;
 
-    public JobEmailDefinition() {
+    public JobEmail() {
         super();
     }
 
-    public JobEmailDefinition(String location, String name, String type, String description, String dependencies, Long id, String jobName, String email) {
+    public JobEmail(String location, String name, String type, String description, String dependencies, Long id, String jobName, String email) {
         super(location, name, type, description, dependencies);
         this.id = id;
         this.jobName = jobName;
@@ -69,7 +69,7 @@ public class JobEmailDefinition extends Artefact {
 
     @Override
     public String toString() {
-        return "JobEmailDefinition{" +
+        return "JobEmail{" +
                 "id=" + id +
                 ", jobName='" + jobName + '\'' +
                 ", email='" + email + '\'' +
