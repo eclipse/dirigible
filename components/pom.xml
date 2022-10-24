@@ -18,6 +18,7 @@
 		<module>core-configurations</module>
 		<module>core-base</module>
 		<module>core-initializers</module>
+		<module>core-jobs</module>
 		<module>core-extensions</module>
 		<module>core-database</module>
 		<module>core-repository</module>
