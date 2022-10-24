@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class OpenAPIRepositoryTest {
@@ -30,18 +30,18 @@ public class OpenAPIRepositoryTest {
     EntityManager entityManager;
 
     @BeforeEach
-    public void setup() throws Exception {
-        // create test OpenAPI
-        openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description", "test1"));
-        openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description", "test2"));
-        openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description", "test3"));
-        openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description", "test4"));
-        openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description", "test5"));
+    public void setup() {
+        // Create test OpenAPIs
+        openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
+        openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
     }
 
     @AfterEach
-    public void cleanup() throws Exception {
-        // delete test OpenAPI
+    public void cleanup() {
+        // Delete test OpenAPIs
         openAPIRepository.findAll().stream().forEach(openAPI -> openAPIRepository.delete(openAPI));
     }
 
@@ -71,10 +71,10 @@ public class OpenAPIRepositoryTest {
      * @param location    the location
      * @param name        the name
      * @param description the description
-     * @return the extension point
+     * @return the openapi
      */
-    public static OpenAPI createOpenAPI(String location, String name, String description, String hash) {
-        OpenAPI openAPI = new OpenAPI(location, name, description, hash);
+    public static OpenAPI createOpenAPI(String location, String name, String description) {
+        OpenAPI openAPI = new OpenAPI(location, name, description);
         return openAPI;
     }
 

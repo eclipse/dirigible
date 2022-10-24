@@ -39,11 +39,10 @@ public class VersionEndpointTest {
 
     @Test
     public void testGetVersion() throws Exception {
-        //TODO: update expected value when engines added
+        //TODO: Update expected value when engines added.
         mockMvc.perform(get("/services/v8/core/version"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("{\"productName\":\"dirigible\",\"productVersion\":\"0.0.1\",\"productCommitId\":\"test\",\"productRepository\":\"https://github.com/eclipse/dirigible\",\"productType\":\"all\",\"instanceName\":\"server-spring-boot\",\"databaseProvider\":\"local\",\"modules\":[],\"engines\":[]}")));
-        ;
+                .andExpect(content().string(containsString("{\"productName\":\"dirigible\",\"productVersion\":\"0.0.1\",\"productCommitId\":\"test\",\"productRepository\":\"https://github.com/eclipse/dirigible\",\"productType\":\"all\",\"instanceName\":\"server-spring-boot\",\"repositoryProvider\":null,\"databaseProvider\":\"local\",\"modules\":[],\"engines\":[]}")));
     }
 
     @SpringBootApplication

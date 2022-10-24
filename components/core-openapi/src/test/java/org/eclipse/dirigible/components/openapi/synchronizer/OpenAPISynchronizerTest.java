@@ -28,13 +28,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class OpenAPISynchronizerTest {
 
     /**
-     * The openapi point repository.
+     * The openapi repository.
      */
     @Autowired
     private OpenAPIRepository openAPIRepository;
 
     /**
-     * The openapi points synchronizer.
+     * The openapi synchronizer.
      */
     @Autowired
     private OpenAPISynchronizer openAPISynchronizer;
@@ -51,13 +51,13 @@ class OpenAPISynchronizerTest {
      * @throws Exception the exception
      */
     @BeforeEach
-    public void setup() throws Exception {
-        // create test OpenAPIs
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test1.openapi", "test1", "description", "test1"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test2.openapi", "test2", "description", "test2"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test3.openapi", "test3", "description", "test3"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test4.openapi", "test4", "description", "test4"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test5.openapi", "test5", "description", "test5"));
+    public void setup() {
+        // Create test OpenAPIs
+        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
+        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
+        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
+        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
+        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
     }
 
     /**
@@ -66,8 +66,8 @@ class OpenAPISynchronizerTest {
      * @throws Exception the exception
      */
     @AfterEach
-    public void cleanup() throws Exception {
-        // delete test OpenAPIs
+    public void cleanup() {
+        // Delete test OpenAPIs
         openAPIRepository.findAll().stream().forEach(openAPI -> openAPIRepository.delete(openAPI));
     }
 
@@ -84,7 +84,7 @@ class OpenAPISynchronizerTest {
      */
     @Test
     public void isAcceptedArtefact() {
-        assertTrue(openAPISynchronizer.isAccepted(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test.openapi", "test", "description", "test").getType()));
+        assertTrue(openAPISynchronizer.isAccepted(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test.openapi", "test", "description").getType()));
     }
 
     /**
@@ -92,7 +92,7 @@ class OpenAPISynchronizerTest {
      */
     @Test
     public void load() {
-        String content = "{\"location\":\"/test/test.openapi\",\"name\":\"/test/test\",\"description\":\"Test OpenAPI\", \"hash\":\"test\", \"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
+        String content = "{\"location\":\"/test/test.openapi\",\"name\":\"/test/test\",\"description\":\"Test OpenAPI\", \"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
         List<OpenAPI> list = openAPISynchronizer.load("/test/test.openapi", content.getBytes());
         assertNotNull(list);
         assertEquals("/test/test.openapi", list.get(0).getLocation());

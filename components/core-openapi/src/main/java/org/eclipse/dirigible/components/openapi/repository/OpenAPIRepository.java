@@ -15,9 +15,6 @@ import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * The Interface IWebsocketsCoreService.
- */
 @Repository("openAPIRepository")
 public interface OpenAPIRepository extends JpaRepository<OpenAPI, Long> {
 

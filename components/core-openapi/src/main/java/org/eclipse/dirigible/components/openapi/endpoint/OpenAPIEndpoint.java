@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.components.openapi.endpoint;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.models.*;
 import io.swagger.parser.SwaggerParser;
 import io.swagger.util.Json;
@@ -36,10 +37,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * OpenAPI descriptor generation service.
- */
-
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "openapi")
 public class OpenAPIEndpoint extends BaseEndpoint {
@@ -49,30 +46,48 @@ public class OpenAPIEndpoint extends BaseEndpoint {
      */
     private static final Logger logger = LoggerFactory.getLogger(OpenAPIEndpoint.class);
 
+    private static final String BASE_PATH = "/services/v4";
+
+    private static final String CONTACT_EMAIL = "dirigible-dev@eclipse.org";
+
+    private static final String DESCRIPTION = "Eclipse Dirigible API of the REST services provided by the applications";
+
+    private static final String LICENSE_NAME = "Eclipse Public License - v 2.0";
+
+    private static final String LICENSE_URL = "https://www.eclipse.org/legal/epl-v20.html";
+
+    private static final String TITLE = "Eclipse Dirigible - Applications REST Services API";
+
+    private static final String VERSION = "6.0.0";
+
+
     /**
-     * The open API core service.
+     * The openapi service.
      */
     @Autowired
     private OpenAPIService openAPIService;
 
+    /**
+     * The version service.
+     */
     @Autowired
     private VersionService versionService;
 
     @GetMapping
-    public ResponseEntity<String> version() throws Exception {
-        Swagger swagger = new Swagger();
-        swagger.basePath("/services/v4");
-        Info info = new Info();
+    public ResponseEntity<String> version() throws JsonProcessingException {
         Contact contact = new Contact();
-        contact.email("dirigible-dev@eclipse.org");
-        info.setContact(contact);
-        info.setDescription("Eclipse Dirigible API of the REST services provided by the applications");
+        contact.email(CONTACT_EMAIL);
+
         License license = new License();
-        license.setName("Eclipse Public License - v 2.0");
-        license.setUrl("https://www.eclipse.org/legal/epl-v20.html");
+        license.setName(LICENSE_NAME);
+        license.setUrl(LICENSE_URL);
+
+        Info info = new Info();
+        info.setContact(contact);
+        info.setDescription(DESCRIPTION);
         info.setLicense(license);
-//		info.setTermsOfService();
-        info.setTitle("Eclipse Dirigible - Applications REST Services API");
+        //  info.setTermsOfService();
+        info.setTitle(TITLE);
 
         try {
             Version version = versionService.getVersion();
@@ -81,11 +96,27 @@ public class OpenAPIEndpoint extends BaseEndpoint {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage(), e);
             }
-            info.setVersion("6.0.0");
+            info.setVersion(VERSION);
         }
 
-        swagger.info(info);
+        Swagger swagger = initializeSwagger(info);
 
+        for (OpenAPI openAPI : openAPIService.getAll()) {
+            IResource resource = openAPIService.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + openAPI.getLocation());
+
+            if (resource.exists()) {
+                populateSwaggerFromContribution(swagger, resource);
+            }
+        }
+
+        String swaggerJson = Json.mapper().writeValueAsString(swagger);
+        return new ResponseEntity<>(swaggerJson, HttpStatus.OK);
+    }
+
+    private Swagger initializeSwagger(Info info) {
+        Swagger swagger = new Swagger();
+        swagger.basePath(BASE_PATH);
+        swagger.info(info);
         swagger.setConsumes(new ArrayList<>());
         swagger.setDefinitions(new HashMap<>());
         swagger.setParameters(new HashMap<>());
@@ -96,48 +127,43 @@ public class OpenAPIEndpoint extends BaseEndpoint {
         swagger.setSecurity(new ArrayList<>());
         swagger.setSecurityDefinitions(new HashMap<>());
         swagger.setTags(new ArrayList<>());
+        return swagger;
+    }
 
-        for (OpenAPI openAPI : openAPIService.getAll()) {
-            IResource resource = openAPIService.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + openAPI.getLocation());
-            if (resource.exists()) {
-                String service = new String(resource.getContent());
-                Swagger contribution = new SwaggerParser().parse(service);
-                if (contribution != null) {
-                    if (contribution.getConsumes() != null) {
-                        swagger.getConsumes().addAll(contribution.getConsumes());
-                    }
-                    if (contribution.getDefinitions() != null) {
-                        swagger.getDefinitions().putAll(contribution.getDefinitions());
-                    }
-                    if (contribution.getParameters() != null) {
-                        swagger.getParameters().putAll(contribution.getParameters());
-                    }
-                    if (contribution.getPaths() != null) {
-                        swagger.getPaths().putAll(contribution.getPaths());
-                    }
-                    if (contribution.getProduces() != null) {
-                        swagger.getProduces().addAll(contribution.getProduces());
-                    }
-                    if (contribution.getResponses() != null) {
-                        swagger.getResponses().putAll(contribution.getResponses());
-                    }
-                    if (contribution.getSchemes() != null) {
-                        swagger.getSchemes().addAll(contribution.getSchemes());
-                    }
-                    if (contribution.getSecurity() != null) {
-                        swagger.getSecurity().addAll(contribution.getSecurity());
-                    }
-                    if (contribution.getSecurityDefinitions() != null) {
-                        swagger.getSecurityDefinitions().putAll(contribution.getSecurityDefinitions());
-                    }
-                    if (contribution.getTags() != null) {
-                        swagger.getTags().addAll(contribution.getTags());
-                    }
-                }
-
+    private void populateSwaggerFromContribution(Swagger swagger, IResource resource) {
+        String service = new String(resource.getContent());
+        Swagger contribution = new SwaggerParser().parse(service);
+        if (contribution != null) {
+            if (contribution.getConsumes() != null) {
+                swagger.getConsumes().addAll(contribution.getConsumes());
+            }
+            if (contribution.getDefinitions() != null) {
+                swagger.getDefinitions().putAll(contribution.getDefinitions());
+            }
+            if (contribution.getParameters() != null) {
+                swagger.getParameters().putAll(contribution.getParameters());
+            }
+            if (contribution.getPaths() != null) {
+                swagger.getPaths().putAll(contribution.getPaths());
+            }
+            if (contribution.getProduces() != null) {
+                swagger.getProduces().addAll(contribution.getProduces());
+            }
+            if (contribution.getResponses() != null) {
+                swagger.getResponses().putAll(contribution.getResponses());
+            }
+            if (contribution.getSchemes() != null) {
+                swagger.getSchemes().addAll(contribution.getSchemes());
+            }
+            if (contribution.getSecurity() != null) {
+                swagger.getSecurity().addAll(contribution.getSecurity());
+            }
+            if (contribution.getSecurityDefinitions() != null) {
+                swagger.getSecurityDefinitions().putAll(contribution.getSecurityDefinitions());
+            }
+            if (contribution.getTags() != null) {
+                swagger.getTags().addAll(contribution.getTags());
             }
         }
-        String swaggerJson = Json.mapper().writeValueAsString(swagger);
-        return new ResponseEntity<>(swaggerJson, HttpStatus.OK);
     }
 }

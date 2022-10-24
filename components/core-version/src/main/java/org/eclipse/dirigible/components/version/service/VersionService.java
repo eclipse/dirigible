@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.components.version.service;
 
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.version.domain.Version;
@@ -22,11 +21,22 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Properties;
 
-/**
- * The Class VersionProcessor.
- */
 @Service
 public class VersionService {
+
+    private static final String DIRIGIBLE_PROPERTIES_PATH = "/dirigible.properties";
+
+    private static final String DIRIGIBLE_PRODUCT_NAME = "DIRIGIBLE_PRODUCT_NAME";
+
+    private static final String DIRIGIBLE_PRODUCT_VERSION = "DIRIGIBLE_PRODUCT_VERSION";
+
+    private static final String DIRIGIBLE_PRODUCT_REPOSITORY = "DIRIGIBLE_PRODUCT_REPOSITORY";
+
+    private static final String DIRIGIBLE_PRODUCT_COMMIT_ID = "DIRIGIBLE_PRODUCT_COMMIT_ID";
+
+    private static final String DIRIGIBLE_PRODUCT_TYPE = "DIRIGIBLE_PRODUCT_TYPE";
+
+    private static final String DIRIGIBLE_INSTANCE_NAME = "DIRIGIBLE_INSTANCE_NAME";
 
     /**
      * Gets the version.
@@ -37,28 +47,18 @@ public class VersionService {
     public Version getVersion() throws IOException {
         Version version = new Version();
         final Properties properties = new Properties();
-        properties.load(VersionService.class.getResourceAsStream("/dirigible.properties"));
-        version.setProductName(properties.getProperty("DIRIGIBLE_PRODUCT_NAME"));
-        version.setProductVersion(properties.getProperty("DIRIGIBLE_PRODUCT_VERSION"));
-        version.setProductRepository(properties.getProperty("DIRIGIBLE_PRODUCT_REPOSITORY"));
-        version.setProductCommitId(properties.getProperty("DIRIGIBLE_PRODUCT_COMMIT_ID"));
-        version.setProductType(properties.getProperty("DIRIGIBLE_PRODUCT_TYPE"));
-        version.setInstanceName(properties.getProperty("DIRIGIBLE_INSTANCE_NAME"));
+        properties.load(VersionService.class.getResourceAsStream(DIRIGIBLE_PROPERTIES_PATH));
+        version.setProductName(properties.getProperty(DIRIGIBLE_PRODUCT_NAME));
+        version.setProductVersion(properties.getProperty(DIRIGIBLE_PRODUCT_VERSION));
+        version.setProductRepository(properties.getProperty(DIRIGIBLE_PRODUCT_REPOSITORY));
+        version.setProductCommitId(properties.getProperty(DIRIGIBLE_PRODUCT_COMMIT_ID));
+        version.setProductType(properties.getProperty(DIRIGIBLE_PRODUCT_TYPE));
+        version.setInstanceName(properties.getProperty(DIRIGIBLE_INSTANCE_NAME));
         version.setRepositoryProvider(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER));
         version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
         version.getModules().addAll(DirigibleModulesInstallerModule.getModules());
-        // TODO: Fix this commented line
-//		version.getEngines().addAll(EngineExecutorFactory.getEnginesNames());
+        // TODO: Fix commented line below. Missing a dependency.
+        // version.getEngines().addAll(EngineExecutorFactory.getEnginesNames());
         return version;
-    }
-
-    /**
-     * Version.
-     *
-     * @return the string
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public String version() throws IOException {
-        return GsonHelper.GSON.toJson(getVersion());
     }
 }

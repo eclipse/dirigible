@@ -68,7 +68,7 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
     public IResource getResource(String path) {
         return getRepository().getResource(path);
     }
-    
+
     @Override
     @Transactional(readOnly = true)
     public List<OpenAPI> getAll() {

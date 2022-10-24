@@ -31,13 +31,6 @@ class VersionServiceTest {
         assertEquals("server-spring-boot", version.getInstanceName());
         assertEquals("local", version.getDatabaseProvider());
         assertEquals(0, version.getModules().size());
-        //TODO: add assertion for engines
-    }
-
-    @Test
-    void version() throws IOException {
-        String version = versionService.version();
-        //TODO: update expected value when engines added
-        assertEquals("{\"productName\":\"dirigible\",\"productVersion\":\"0.0.1\",\"productCommitId\":\"test\",\"productRepository\":\"https://github.com/eclipse/dirigible\",\"productType\":\"all\",\"instanceName\":\"server-spring-boot\",\"databaseProvider\":\"local\",\"modules\":[],\"engines\":[]}", version);
+        //TODO: Аdd assertion for engines.
     }
 }

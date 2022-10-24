@@ -14,11 +14,7 @@ package org.eclipse.dirigible.components.openapi.domain;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
-/**
- * The WebsocketDefinition Entity.
- */
 @Entity
 @Table(name = "DIRIGIBLE_OPENAPI")
 public class OpenAPI extends Artefact {
@@ -36,15 +32,8 @@ public class OpenAPI extends Artefact {
     @Column(name = "OPENAPI_ID", nullable = false)
     private Long id;
 
-    /**
-     * The hash.
-     */
-    @Column(name = "OPENAPI_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
-    private String hash;
-
-    public OpenAPI(String location, String name, String description, String hash) {
+    public OpenAPI(String location, String name, String description) {
         super(location, name, ARTEFACT_TYPE, description, null);
-        this.hash = hash;
     }
 
     public OpenAPI() {
@@ -55,23 +44,10 @@ public class OpenAPI extends Artefact {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
     @Override
     public String toString() {
         return "OpenAPI{" +
                 "id=" + id +
-                ", hash='" + hash + '\'' +
                 ", location='" + location + '\'' +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
