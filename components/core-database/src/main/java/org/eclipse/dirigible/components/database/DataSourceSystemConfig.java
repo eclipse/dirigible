@@ -11,16 +11,25 @@
  */
 package org.eclipse.dirigible.components.database;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -29,15 +38,16 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-@Configuration
+@org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory",
     transactionManagerRef = "transactionManager", basePackages = {"org.eclipse.dirigible.components"})
 public class DataSourceSystemConfig {
 	
-	@Bean
+	@Bean(name = "SystemDBProperties")
 	@ConfigurationProperties("app.datasource.system")
 	public DataSourceProperties getDataSourceProperties() {
 		return new DataSourceProperties();
@@ -71,6 +81,14 @@ public class DataSourceSystemConfig {
 	public PlatformTransactionManager transactionManager(
 			@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
 		return new JpaTransactionManager(entityManagerFactory);
+	}
+	
+	
+	@Bean(name = "dataSourcesManager")
+	public DataSourcesManager dataSourcesManager() {
+		DataSourcesManager dataSourcesManager = new DataSourcesManager();
+		dataSourcesManager.initialize();
+		return dataSourcesManager;
 	}
 
 }

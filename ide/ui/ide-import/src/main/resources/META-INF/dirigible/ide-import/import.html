@@ -19,10 +19,12 @@
         <script type="text/javascript" src="services/import-view.js"></script>
         <theme></theme>
         <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
         <script type="text/javascript" src="/services/v4/web/ide-workspace-service/workspace.js"></script>
         <script type="text/javascript" src="/services/v4/web/ide-transport-service/transport.js"></script>
-        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=file-upload-js"></script>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=file-upload-js">
+        </script>
         <script type="text/javascript" src="js/import.js"></script>
     </head>
 
@@ -58,7 +60,7 @@
                     </fd-button>
                 </fd-popover-control>
                 <fd-popover-body dg-align="right" no-arrow="true">
-                    <fd-menu no-backdrop="true" no-shadow="true">
+                    <fd-menu aria-label="workspaces menu">
                         <fd-menu-item title="{{ name }}" ng-repeat="name in workspaceNames"
                             is-selected="{{ isSelectedWorkspace(name) }}" ng-click="switchWorkspace(name)">
                         </fd-menu-item>

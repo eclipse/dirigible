@@ -11,20 +11,26 @@
  */
 package org.eclipse.dirigible.database.ds.model.processors;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.database.ds.model.*;
+import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableColumnModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintCheckModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintForeignKeyModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintUniqueModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableIndexModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Set;
 
 /**
  * The Table Create Processor.
@@ -54,7 +60,7 @@ public class TableCreateProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, DataStructureTableModel tableModel, boolean skipForeignKeys) throws SQLException {
-		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String tableName = tableModel.getName();
 		if (caseSensitive) {
 			tableName = "\"" + tableName + "\"";

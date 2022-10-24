@@ -15,6 +15,9 @@ import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Interface TableRepository.
+ */
 @Repository("tableRepository")
 public interface TableRepository extends JpaRepository<Table, Long> {
 

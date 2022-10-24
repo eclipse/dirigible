@@ -30,6 +30,9 @@ import org.springframework.data.annotation.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * The Class TableIndex.
+ */
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_TABLE_INDEXES")
 public class TableIndex {
@@ -53,18 +56,29 @@ public class TableIndex {
 	private boolean unique;
     
     /** The index columns. */
-	@Column(name = "INDEX_COLUMNS", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Column(name = "INDEX_COLUMNS", columnDefinition = "VARCHAR", nullable = false, length = 2000)
     private String columns;
 	
+	/** The table. */
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "TABLE_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Table table;
 	
+	/** The column names. */
 	@Transient
 	private transient Set<String> columnNames;
 
+	/**
+	 * Instantiates a new table index.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param unique the unique
+	 * @param columns the columns
+	 * @param table the table
+	 */
 	TableIndex(String name, String type, boolean unique, String columns, Table table) {
 		super();
 		this.name = name;
@@ -74,11 +88,16 @@ public class TableIndex {
 		this.table = table;
 	}
 
+	/**
+	 * Instantiates a new table index.
+	 */
 	public TableIndex() {
 		super();
 	}
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public Long getId() {
@@ -86,6 +105,8 @@ public class TableIndex {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(Long id) {
@@ -93,6 +114,8 @@ public class TableIndex {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -100,6 +123,8 @@ public class TableIndex {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -107,6 +132,8 @@ public class TableIndex {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -114,6 +141,8 @@ public class TableIndex {
 	}
 
 	/**
+	 * Sets the type.
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(String type) {
@@ -121,6 +150,8 @@ public class TableIndex {
 	}
 
 	/**
+	 * Checks if is unique.
+	 *
 	 * @return the unique
 	 */
 	public boolean isUnique() {
@@ -128,6 +159,8 @@ public class TableIndex {
 	}
 
 	/**
+	 * Sets the unique.
+	 *
 	 * @param unique the unique to set
 	 */
 	public void setUnique(boolean unique) {
@@ -135,6 +168,8 @@ public class TableIndex {
 	}
 
 	/**
+	 * Gets the columns.
+	 *
 	 * @return the columns
 	 */
 	public String getColumns() {
@@ -142,6 +177,8 @@ public class TableIndex {
 	}
 
 	/**
+	 * Sets the columns.
+	 *
 	 * @param columns the columns to set
 	 */
 	public void setColumns(String columns) {
@@ -149,6 +186,8 @@ public class TableIndex {
 	}
 
 	/**
+	 * Gets the table.
+	 *
 	 * @return the table
 	 */
 	public Table getTable() {
@@ -156,12 +195,19 @@ public class TableIndex {
 	}
 
 	/**
+	 * Sets the table.
+	 *
 	 * @param table the table to set
 	 */
 	public void setTable(Table table) {
 		this.table = table;
 	}
 	
+	/**
+	 * Adds the column.
+	 *
+	 * @param column the column
+	 */
 	public void addColumn(String column) {
 		if (columns == null && columns.trim().length() == 0) {
 			columns = column;
@@ -173,6 +219,11 @@ public class TableIndex {
 		}
 	}
 	
+	/**
+	 * Removes the column.
+	 *
+	 * @param column the column
+	 */
 	public void removeColumn(String column) {
 		if (columnNames == null) {
 			columnNames = getColumnNames();
@@ -181,6 +232,11 @@ public class TableIndex {
 		columns = String.join(",", columnNames);
 	}
 	
+	/**
+	 * Gets the column names.
+	 *
+	 * @return the column names
+	 */
 	public Set<String> getColumnNames() {
 		if (columnNames != null) {
 			return columnNames;
@@ -192,6 +248,11 @@ public class TableIndex {
 		return columnNames;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "TableIndex [id=" + id + ", name=" + name + ", type=" + type + ", unique=" + unique + ", columns="

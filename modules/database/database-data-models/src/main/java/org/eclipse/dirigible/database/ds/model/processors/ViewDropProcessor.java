@@ -16,8 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
-import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class ViewDropProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, DataStructureViewModel viewModel) throws SQLException {
-		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String viewName = viewModel.getName();
 		if (caseSensitive) {
 			viewName = "\"" + viewName + "\"";

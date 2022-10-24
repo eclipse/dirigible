@@ -967,7 +967,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					errors.add(e.getMessage());
 				}
 				
-				// process tables foreign keys
+				// process views
 				try {
 					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_VIEW_CREATE.toString());
 					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_VIEW_CREATE.toString(), VIEW_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE);

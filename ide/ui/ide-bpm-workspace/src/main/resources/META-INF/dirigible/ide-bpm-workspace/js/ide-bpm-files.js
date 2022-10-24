@@ -12,20 +12,32 @@
 let ideBpmFilesView = angular.module('ide-bpm-files', ['ideUI', 'ideView']);
 
 ideBpmFilesView.controller('IDEBpmFilesViewController', ['$scope', 'messageHub', function ($scope, messageHub) {
-    $scope.jstreeWidget = angular.element('#jstree_demo');
+    $scope.searchVisible = false;
+    $scope.searchField = { text: '' };
+    $scope.jstreeWidget = angular.element('#bpmFiles');
 
-    let to = false;
+    let to = 0;
     $scope.search = function () {
         if (to) { clearTimeout(to); }
         to = setTimeout(function () {
-            $scope.jstreeWidget.jstree(true).search($('#treeSearch').val());
+            $scope.jstreeWidget.jstree(true).search($scope.searchField.text);
         }, 250);
+    };
+
+    $scope.reload = function () { // Doesn't do anything useful
+        $scope.jstreeWidget.jstree(true).refresh();
+    };
+
+    $scope.toggleSearch = function () {
+        $scope.searchField.text = '';
+        $scope.jstreeWidget.jstree(true).clear_search();
+        $scope.searchVisible = !$scope.searchVisible;
     };
 
     fetch("/services/v4/ide/bpm/bpm-processes/keys")
         .then((response) => response.json())
         .then((data) => {
-            $scope.jstreeWidget.jstree({
+            $scope.jstreeWidget.jstree({ // JSTree should NOT be initialized here
                 core: {
                     check_callback: true,
                     themes: {

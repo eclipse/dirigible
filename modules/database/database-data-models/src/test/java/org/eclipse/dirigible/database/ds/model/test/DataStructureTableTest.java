@@ -24,6 +24,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
@@ -241,7 +242,7 @@ public class DataStructureTableTest {
 						rs.close();
 						fail("Table already exists!");
 					}
-					Configuration.set(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "true");
+					Configuration.set(IDatabase.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "true");
 					try {
 						TableCreateProcessor.execute(connection, table);
 						rs = connection.getMetaData().getTables(null, null, table.getName(), null);
@@ -253,7 +254,7 @@ public class DataStructureTableTest {
 						
 					} finally {
 						connection.createStatement().executeUpdate("DROP TABLE \"" + table.getName() + "\"");
-						Configuration.set(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false");
+						Configuration.set(IDatabase.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false");
 					}
 				} finally {
 					connection.close();

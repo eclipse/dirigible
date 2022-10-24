@@ -68,6 +68,9 @@ public interface IDatabase {
 
 	/** DIRIGIBLE_DATABASE_MANAGED_DATASOURCES. */
 	public static final String DIRIGIBLE_DATABASE_MANAGED_DATASOURCES = "DIRIGIBLE_DATABASE_MANAGED_DATASOURCES"; //$NON-NLS-1$
+	
+	/**  Whether or not to use case sensitive syntax for table or view names and column names. */
+	public static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";
 
 	/**
 	 * Initialize.

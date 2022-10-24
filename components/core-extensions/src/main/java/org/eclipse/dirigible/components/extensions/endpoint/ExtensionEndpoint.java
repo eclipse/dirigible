@@ -30,17 +30,33 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 
+/**
+ * The Class ExtensionEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "extensions")
 public class ExtensionEndpoint extends BaseEndpoint {
 
+	/** The extension service. */
 	private final ExtensionService extensionService;
 
+	/**
+	 * Instantiates a new extension endpoint.
+	 *
+	 * @param extensionService the extension service
+	 */
 	@Autowired
 	public ExtensionEndpoint(ExtensionService extensionService) {
 		this.extensionService = extensionService;
 	}
 
+	/**
+	 * Find all.
+	 *
+	 * @param size the size
+	 * @param page the page
+	 * @return the page
+	 */
 	@GetMapping
 	public Page<Extension> findAll(
 			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
@@ -58,6 +74,12 @@ public class ExtensionEndpoint extends BaseEndpoint {
 
 	}
 
+	/**
+	 * Gets the.
+	 *
+	 * @param id the id
+	 * @return the response entity
+	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<Extension> get(
 			@ApiParam(value = "Id of the Extension", required = true) @PathVariable("id") Long id) {
@@ -66,6 +88,12 @@ public class ExtensionEndpoint extends BaseEndpoint {
 
 	}
 	
+	/**
+	 * Find by name.
+	 *
+	 * @param name the name
+	 * @return the response entity
+	 */
 	@GetMapping("/search")
 	public ResponseEntity<Extension> findByName(
 			@ApiParam(value = "Name of the Extension", required = true) @RequestParam("name") String name) {
@@ -74,6 +102,11 @@ public class ExtensionEndpoint extends BaseEndpoint {
 
 	}
 	
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
 	@GetMapping("/all")
 	public ResponseEntity<List<Extension>> getAll() {
 

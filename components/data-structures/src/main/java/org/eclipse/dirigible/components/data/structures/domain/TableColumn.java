@@ -44,8 +44,8 @@ public class TableColumn {
 	private String type;
 	
 	/** The length. */
-	@Column(name = "COLUMN_LENGTH", columnDefinition = "INTEGER", nullable = true)
-	private int length;
+	@Column(name = "COLUMN_LENGTH", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	private String length;
 	
 	/** The nullable. */
 	@Column(name = "COLUMN_NULLABLE", columnDefinition = "BOOLEAN", nullable = true)
@@ -60,8 +60,8 @@ public class TableColumn {
 	private String defaultValue;
 	
 	/** The scale. */
-	@Column(name = "COLUMN_SCALE", columnDefinition = "INTEGER", nullable = true)
-	private int scale;
+	@Column(name = "COLUMN_SCALE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	private String scale;
 	
 	/** The unique. */
 	@Column(name = "COLUMN_UNIQUE", columnDefinition = "BOOLEAN", nullable = true)
@@ -73,8 +73,8 @@ public class TableColumn {
     @JsonIgnore
     private Table table;
 
-	TableColumn(String name, String type, int length, boolean nullable, boolean primaryKey,
-			String defaultValue, int scale, boolean unique, Table table) {
+	TableColumn(String name, String type, String length, boolean nullable, boolean primaryKey,
+			String defaultValue, String scale, boolean unique, Table table) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -136,14 +136,14 @@ public class TableColumn {
 	/**
 	 * @return the length
 	 */
-	public int getLength() {
+	public String getLength() {
 		return length;
 	}
 
 	/**
 	 * @param length the length to set
 	 */
-	public void setLength(int length) {
+	public void setLength(String length) {
 		this.length = length;
 	}
 
@@ -192,14 +192,14 @@ public class TableColumn {
 	/**
 	 * @return the scale
 	 */
-	public int getScale() {
+	public String getScale() {
 		return scale;
 	}
 
 	/**
 	 * @param scale the scale to set
 	 */
-	public void setScale(int scale) {
+	public void setScale(String scale) {
 		this.scale = scale;
 	}
 
