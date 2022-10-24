@@ -23,18 +23,33 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.ws.rs.PathParam;
 import java.util.List;
 
+/**
+ * The Class JobEmailEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "jobEmail")
 public class JobEmailEndpoint extends BaseEndpoint {
 
+    /** The job email service. */
     @Autowired
     private JobEmailService jobEmailService;
 
+    /**
+     * List job emails.
+     *
+     * @return the response entity
+     */
     @GetMapping()
     public ResponseEntity<List<JobEmail>> listJobEmails(){
         return ResponseEntity.ok(jobEmailService.getAll());
     }
 
+    /**
+     * Gets the job emails.
+     *
+     * @param name the name
+     * @return the job emails
+     */
     @GetMapping("emails/{name}")
     public ResponseEntity<JobEmail> getJobEmails(@PathParam("name") String name)
     {

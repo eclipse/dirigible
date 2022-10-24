@@ -23,25 +23,46 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class JobService.
+ */
 @Service
 @Transactional
 public class JobService implements ArtefactService<Job>  {
 
+    /** The job repository. */
     @Autowired
     private JobRepository jobRepository;
 
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
     @Override
     @Transactional(readOnly = true)
     public List<Job> getAll() {
         return jobRepository.findAll();
     }
 
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<Job> findAll(Pageable pageable) {
         return jobRepository.findAll(pageable);
     }
 
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the job
+     */
     @Override
     @Transactional(readOnly = true)
     public Job findById(Long id) {
@@ -53,6 +74,12 @@ public class JobService implements ArtefactService<Job>  {
         }
     }
 
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the job
+     */
     @Override
     @Transactional(readOnly = true)
     public Job findByName(String name) {
@@ -67,22 +94,45 @@ public class JobService implements ArtefactService<Job>  {
         }
     }
 
+    /**
+     * Save.
+     *
+     * @param job the job
+     * @return the job
+     */
     @Override
     public Job save(Job job) {
         return jobRepository.saveAndFlush(job);
     }
 
+    /**
+     * Delete.
+     *
+     * @param job the job
+     */
     @Override
     public void delete(Job job) {
         jobRepository.delete(job);
     }
 
+    /**
+     * Enable.
+     *
+     * @param name the name
+     * @return the job
+     */
     public Job enable(String name) {
         Job job = findByName(name);
         job.setEnabled(true);
         return jobRepository.saveAndFlush(job);
     }
 
+    /**
+     * Disable.
+     *
+     * @param name the name
+     * @return the job
+     */
     public Job disable(String name) {
         Job job = findByName(name);
         job.setEnabled(false);

@@ -23,25 +23,47 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+/**
+ * The Class WebsocketService.
+ */
 @Service
 @Transactional
 public class WebsocketService implements ArtefactService<Websocket> {
 
+    /** The websocket repository. */
     @Autowired
     private WebsocketRepository websocketRepository;
 
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
     @Override
     @Transactional(readOnly = true)
     public List<Websocket> getAll() {
         return websocketRepository.findAll();
     }
 
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<Websocket> findAll(Pageable pageable) {
         return websocketRepository.findAll(pageable);
     }
 
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the websocket
+     */
     @Override
     @Transactional(readOnly = true)
     public Websocket findById(Long id) {
@@ -53,6 +75,12 @@ public class WebsocketService implements ArtefactService<Websocket> {
         }
     }
 
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the websocket
+     */
     @Override
     @Transactional(readOnly = true)
     public Websocket findByName(String name) {
@@ -67,11 +95,22 @@ public class WebsocketService implements ArtefactService<Websocket> {
         }
     }
 
+    /**
+     * Save.
+     *
+     * @param extension the extension
+     * @return the websocket
+     */
     @Override
     public Websocket save(Websocket extension) {
         return websocketRepository.saveAndFlush(extension);
     }
 
+    /**
+     * Delete.
+     *
+     * @param extension the extension
+     */
     @Override
     public void delete(Websocket extension) {
         websocketRepository.delete(extension);

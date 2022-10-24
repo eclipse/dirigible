@@ -15,6 +15,9 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 import javax.persistence.*;
 
+/**
+ * The Class OpenAPI.
+ */
 @Entity
 @Table(name = "DIRIGIBLE_OPENAPI")
 public class OpenAPI extends Artefact {
@@ -32,18 +35,38 @@ public class OpenAPI extends Artefact {
     @Column(name = "OPENAPI_ID", nullable = false)
     private Long id;
 
+    /**
+     * Instantiates a new open API.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     */
     public OpenAPI(String location, String name, String description) {
         super(location, name, ARTEFACT_TYPE, description, null);
     }
 
+    /**
+     * Instantiates a new open API.
+     */
     public OpenAPI() {
         super();
     }
 
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "OpenAPI{" +

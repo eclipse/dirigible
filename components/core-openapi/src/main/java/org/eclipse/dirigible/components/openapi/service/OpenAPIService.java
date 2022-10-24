@@ -37,6 +37,7 @@ import java.util.Optional;
 @Transactional
 public class OpenAPIService implements ArtefactService<OpenAPI> {
 
+    /** The open API repository. */
     @Autowired
     private OpenAPIRepository openAPIRepository;
 
@@ -45,6 +46,11 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
      */
     private IRepository repository;
 
+    /**
+     * Instantiates a new open API service.
+     *
+     * @param repository the repository
+     */
     @Autowired
     public OpenAPIService(IRepository repository) {
         this.repository = repository;
@@ -69,18 +75,35 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
         return getRepository().getResource(path);
     }
 
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
     @Override
     @Transactional(readOnly = true)
     public List<OpenAPI> getAll() {
         return openAPIRepository.findAll();
     }
 
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<OpenAPI> findAll(Pageable pageable) {
         return openAPIRepository.findAll(pageable);
     }
 
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the open API
+     */
     @Override
     @Transactional(readOnly = true)
     public OpenAPI findById(Long id) {
@@ -92,6 +115,12 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
         }
     }
 
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the open API
+     */
     @Override
     @Transactional(readOnly = true)
     public OpenAPI findByName(String name) {
@@ -106,11 +135,22 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
         }
     }
 
+    /**
+     * Save.
+     *
+     * @param openAPI the open API
+     * @return the open API
+     */
     @Override
     public OpenAPI save(OpenAPI openAPI) {
         return openAPIRepository.saveAndFlush(openAPI);
     }
 
+    /**
+     * Delete.
+     *
+     * @param openAPI the open API
+     */
     @Override
     public void delete(OpenAPI openAPI) {
         openAPIRepository.delete(openAPI);

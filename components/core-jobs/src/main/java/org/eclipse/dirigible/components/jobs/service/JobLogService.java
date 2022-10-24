@@ -23,25 +23,46 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class JobLogService.
+ */
 @Service
 @Transactional
 public class JobLogService implements ArtefactService<JobLog> {
 
+    /** The job log repository. */
     @Autowired
     private JobLogRepository jobLogRepository;
 
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
     @Override
     @Transactional(readOnly = true)
     public List<JobLog> getAll() {
         return jobLogRepository.findAll();
     }
 
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<JobLog> findAll(Pageable pageable) {
         return jobLogRepository.findAll(pageable);
     }
 
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the job log
+     */
     @Override
     @Transactional(readOnly = true)
     public JobLog findById(Long id) {
@@ -53,6 +74,12 @@ public class JobLogService implements ArtefactService<JobLog> {
         }
     }
 
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the job log
+     */
     @Override
     @Transactional(readOnly = true)
     public JobLog findByName(String name) {
@@ -67,16 +94,32 @@ public class JobLogService implements ArtefactService<JobLog> {
         }
     }
 
+    /**
+     * Save.
+     *
+     * @param jobLog the job log
+     * @return the job log
+     */
     @Override
     public JobLog save(JobLog jobLog) {
         return jobLogRepository.saveAndFlush(jobLog);
     }
 
+    /**
+     * Delete.
+     *
+     * @param jobLog the job log
+     */
     @Override
     public void delete(JobLog jobLog) {
         jobLogRepository.delete(jobLog);
     }
 
+    /**
+     * Delete job by name.
+     *
+     * @param jobLogName the job log name
+     */
     public void deleteJobByName(String jobLogName){
         JobLog jobLog = findByName(jobLogName);
         delete(jobLog);

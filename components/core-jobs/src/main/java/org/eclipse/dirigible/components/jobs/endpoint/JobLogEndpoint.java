@@ -24,24 +24,44 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.ws.rs.PathParam;
 import java.util.List;
 
+/**
+ * The Class JobLogEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "jobLog")
 public class JobLogEndpoint extends BaseEndpoint {
 
+    /** The job log service. */
     @Autowired
     private JobLogService jobLogService;
 
+    /**
+     * List job log.
+     *
+     * @return the response entity
+     */
     @GetMapping()
     public ResponseEntity<List<JobLog>> listJobLog(){
         return ResponseEntity.ok(jobLogService.getAll());
     }
 
+    /**
+     * Gets the job log.
+     *
+     * @param name the name
+     * @return the job log
+     */
     @GetMapping("logs/{name}")
     public ResponseEntity getJobLog(@PathParam("name") String name)
     {
         return ResponseEntity.ok(jobLogService.findByName(IRepository.SEPARATOR + name));
     }
 
+    /**
+     * Clear job log.
+     *
+     * @param name the name
+     */
     @PostMapping("clear/{name}")
     public void clearJobLog(@PathParam("name") String name)
     {

@@ -23,18 +23,33 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.ws.rs.PathParam;
 import java.util.List;
 
+/**
+ * The Class JobParameterEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "jobParameter")
 public class JobParameterEndpoint extends BaseEndpoint {
 
+    /** The job parameter service. */
     @Autowired
     private JobParameterService jobParameterService;
 
+    /**
+     * List job parameters.
+     *
+     * @return the response entity
+     */
     @GetMapping()
     public ResponseEntity<List<JobParameter>> listJobParameters(){
         return ResponseEntity.ok(jobParameterService.getAll());
     }
 
+    /**
+     * Gets the job parameters.
+     *
+     * @param name the name
+     * @return the job parameters
+     */
     @GetMapping("parameters/{name}")
     public ResponseEntity<JobParameter> getJobParameters(@PathParam("name") String name)
     {

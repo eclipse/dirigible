@@ -27,20 +27,38 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "job")
 public class JobEndpoint extends BaseEndpoint {
 
+    /** The job service. */
     @Autowired
     private JobService jobService ;
 
+    /**
+     * List jobs.
+     *
+     * @return the response entity
+     */
     @GetMapping()
     public ResponseEntity<List<Job>> listJobs(){
         return ResponseEntity.ok(jobService.getAll());
     }
 
+    /**
+     * Enable job.
+     *
+     * @param name the name
+     * @return the response entity
+     */
     @PostMapping("enable/{name}")
     public ResponseEntity<Job> enableJob(@PathVariable("name") String name)
     {
         return ResponseEntity.ok(jobService.enable(IRepository.SEPARATOR + name));
     }
 
+    /**
+     * Disable job.
+     *
+     * @param name the name
+     * @return the response entity
+     */
     @PostMapping("disable/{name}")
     public ResponseEntity<Job> disableJob(@PathVariable("name") String name)
     {

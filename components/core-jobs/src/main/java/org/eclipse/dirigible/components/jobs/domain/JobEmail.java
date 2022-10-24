@@ -14,6 +14,9 @@ package org.eclipse.dirigible.components.jobs.domain;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import javax.persistence.*;
 
+/**
+ * The Class JobEmail.
+ */
 @Entity
 @Table(name = "DIRIGIBLE_JOB_EMAILS")
 public class JobEmail extends Artefact {
@@ -32,10 +35,25 @@ public class JobEmail extends Artefact {
     @Column(name = "JOBEMAIL_EMAIL", columnDefinition = "VARCHAR", nullable = false, length = 255)
     private String email;
 
+    /**
+     * Instantiates a new job email.
+     */
     public JobEmail() {
         super();
     }
 
+    /**
+     * Instantiates a new job email.
+     *
+     * @param location the location
+     * @param name the name
+     * @param type the type
+     * @param description the description
+     * @param dependencies the dependencies
+     * @param id the id
+     * @param jobName the job name
+     * @param email the email
+     */
     public JobEmail(String location, String name, String type, String description, String dependencies, Long id, String jobName, String email) {
         super(location, name, type, description, dependencies);
         this.id = id;
@@ -43,30 +61,65 @@ public class JobEmail extends Artefact {
         this.email = email;
     }
 
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Sets the id.
+     *
+     * @param id the new id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * Gets the job name.
+     *
+     * @return the job name
+     */
     public String getJobName() {
         return jobName;
     }
 
+    /**
+     * Sets the job name.
+     *
+     * @param jobName the new job name
+     */
     public void setJobName(String jobName) {
         this.jobName = jobName;
     }
 
+    /**
+     * Gets the email.
+     *
+     * @return the email
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets the email.
+     *
+     * @param email the new email
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "JobEmail{" +

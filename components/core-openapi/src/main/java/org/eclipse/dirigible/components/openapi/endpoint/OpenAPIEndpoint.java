@@ -37,6 +37,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * The Class OpenAPIEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "openapi")
 public class OpenAPIEndpoint extends BaseEndpoint {
@@ -46,18 +49,25 @@ public class OpenAPIEndpoint extends BaseEndpoint {
      */
     private static final Logger logger = LoggerFactory.getLogger(OpenAPIEndpoint.class);
 
+    /** The Constant BASE_PATH. */
     private static final String BASE_PATH = "/services/v4";
 
+    /** The Constant CONTACT_EMAIL. */
     private static final String CONTACT_EMAIL = "dirigible-dev@eclipse.org";
 
+    /** The Constant DESCRIPTION. */
     private static final String DESCRIPTION = "Eclipse Dirigible API of the REST services provided by the applications";
 
+    /** The Constant LICENSE_NAME. */
     private static final String LICENSE_NAME = "Eclipse Public License - v 2.0";
 
+    /** The Constant LICENSE_URL. */
     private static final String LICENSE_URL = "https://www.eclipse.org/legal/epl-v20.html";
 
+    /** The Constant TITLE. */
     private static final String TITLE = "Eclipse Dirigible - Applications REST Services API";
 
+    /** The Constant VERSION. */
     private static final String VERSION = "6.0.0";
 
 
@@ -73,6 +83,12 @@ public class OpenAPIEndpoint extends BaseEndpoint {
     @Autowired
     private VersionService versionService;
 
+    /**
+     * Version.
+     *
+     * @return the response entity
+     * @throws JsonProcessingException the json processing exception
+     */
     @GetMapping
     public ResponseEntity<String> version() throws JsonProcessingException {
         Contact contact = new Contact();
@@ -113,6 +129,12 @@ public class OpenAPIEndpoint extends BaseEndpoint {
         return new ResponseEntity<>(swaggerJson, HttpStatus.OK);
     }
 
+    /**
+     * Initialize swagger.
+     *
+     * @param info the info
+     * @return the swagger
+     */
     private Swagger initializeSwagger(Info info) {
         Swagger swagger = new Swagger();
         swagger.basePath(BASE_PATH);
@@ -130,6 +152,12 @@ public class OpenAPIEndpoint extends BaseEndpoint {
         return swagger;
     }
 
+    /**
+     * Populate swagger from contribution.
+     *
+     * @param swagger the swagger
+     * @param resource the resource
+     */
     private void populateSwaggerFromContribution(Swagger swagger, IResource resource) {
         String service = new String(resource.getContent());
         Swagger contribution = new SwaggerParser().parse(service);

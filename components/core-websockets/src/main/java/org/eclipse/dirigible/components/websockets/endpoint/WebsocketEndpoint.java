@@ -25,13 +25,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
+/**
+ * The Class WebsocketEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "websockets")
 public class WebsocketEndpoint extends BaseEndpoint{
 
+    /** The websocket service. */
     @Autowired
     private WebsocketService websocketService;
 
+    /**
+     * Find all.
+     *
+     * @param size the size
+     * @param page the page
+     * @return the page
+     */
     @GetMapping
     public Page<Websocket> findAll(
             @Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,

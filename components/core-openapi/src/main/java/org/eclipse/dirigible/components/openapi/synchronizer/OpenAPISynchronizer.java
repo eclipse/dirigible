@@ -36,6 +36,8 @@ import java.util.*;
 
 /**
  * The Class OpenAPISynchronizer.
+ *
+ * @param A the generic type
  */
 @Component
 public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<OpenAPI> {
@@ -71,16 +73,36 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
         this.openAPIService = openAPIService;
     }
 
+    /**
+     * Checks if is accepted.
+     *
+     * @param file the file
+     * @param attrs the attrs
+     * @return true, if is accepted
+     */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
         return file.toString().endsWith(FILE_OPENAPI_EXTENSION);
     }
 
+    /**
+     * Checks if is accepted.
+     *
+     * @param type the type
+     * @return true, if is accepted
+     */
     @Override
     public boolean isAccepted(String type) {
         return OpenAPI.ARTEFACT_TYPE.equals(type);
     }
 
+    /**
+     * Load.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the list
+     */
     @Override
     public List<OpenAPI> load(String location, byte[] content) {
         OpenAPI openAPI = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), OpenAPI.class);
@@ -98,11 +120,23 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
         return List.of(openAPI);
     }
 
+    /**
+     * Prepare.
+     *
+     * @param wrappers the wrappers
+     * @param depleter the depleter
+     */
     @Override
     public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
 
     }
 
+    /**
+     * Process.
+     *
+     * @param wrappers the wrappers
+     * @param depleter the depleter
+     */
     @Override
     public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
         try {
@@ -114,11 +148,21 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
         }
     }
 
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
     @Override
     public ArtefactService<OpenAPI> getService() {
         return openAPIService;
     }
 
+    /**
+     * Cleanup.
+     *
+     * @param artefact the artefact
+     */
     @Override
     public void cleanup(OpenAPI artefact) {
         try {
@@ -131,12 +175,24 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
         }
     }
 
+    /**
+     * Complete.
+     *
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
+     */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
         return true;
     }
 
+    /**
+     * Sets the callback.
+     *
+     * @param callback the new callback
+     */
     @Override
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;

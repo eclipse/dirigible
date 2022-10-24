@@ -23,24 +23,46 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class JobParameterService.
+ */
 @Service
 @Transactional
 public class JobParameterService implements ArtefactService<JobParameter> {
+    
+    /** The job parameter repository. */
     @Autowired
     private JobParameterRepository jobParameterRepository;
 
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
     @Override
     @Transactional(readOnly = true)
     public List<JobParameter> getAll() {
         return jobParameterRepository.findAll();
     }
 
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<JobParameter> findAll(Pageable pageable) {
         return jobParameterRepository.findAll(pageable);
     }
 
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the job parameter
+     */
     @Override
     @Transactional(readOnly = true)
     public JobParameter findById(Long id) {
@@ -52,6 +74,12 @@ public class JobParameterService implements ArtefactService<JobParameter> {
         }
     }
 
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the job parameter
+     */
     @Override
     @Transactional(readOnly = true)
     public JobParameter findByName(String name) {
@@ -66,11 +94,22 @@ public class JobParameterService implements ArtefactService<JobParameter> {
         }
     }
 
+    /**
+     * Save.
+     *
+     * @param jobParameter the job parameter
+     * @return the job parameter
+     */
     @Override
     public JobParameter save(JobParameter jobParameter) {
         return jobParameterRepository.saveAndFlush(jobParameter);
     }
 
+    /**
+     * Delete.
+     *
+     * @param jobParameter the job parameter
+     */
     @Override
     public void delete(JobParameter jobParameter) {
         jobParameterRepository.delete(jobParameter);

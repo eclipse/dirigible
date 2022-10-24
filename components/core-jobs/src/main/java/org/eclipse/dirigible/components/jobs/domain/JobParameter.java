@@ -55,10 +55,28 @@ public class JobParameter extends Artefact {
     @Column(name = "JOBPARAM_VALUE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
     private String value;
 
+    /**
+     * Instantiates a new job parameter.
+     */
     public JobParameter() {
         super();
     }
 
+    /**
+     * Instantiates a new job parameter.
+     *
+     * @param location the location
+     * @param name the name
+     * @param type the type
+     * @param description the description
+     * @param dependencies the dependencies
+     * @param id the id
+     * @param jobName the job name
+     * @param type1 the type 1
+     * @param defaultValue the default value
+     * @param choices the choices
+     * @param value the value
+     */
     public JobParameter(String location, String name, String type, String description, String dependencies, Long id, String jobName, String type1, String defaultValue, String choices, String value) {
         super(location, name, type, description, dependencies);
         this.id = id;
@@ -69,56 +87,121 @@ public class JobParameter extends Artefact {
         this.value = value;
     }
 
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Sets the id.
+     *
+     * @param id the new id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * Gets the job name.
+     *
+     * @return the job name
+     */
     public String getJobName() {
         return jobName;
     }
 
+    /**
+     * Sets the job name.
+     *
+     * @param jobName the new job name
+     */
     public void setJobName(String jobName) {
         this.jobName = jobName;
     }
 
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
     @Override
     public String getType() {
         return type;
     }
 
+    /**
+     * Sets the type.
+     *
+     * @param type the new type
+     */
     @Override
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Gets the default value.
+     *
+     * @return the default value
+     */
     public String getDefaultValue() {
         return defaultValue;
     }
 
+    /**
+     * Sets the default value.
+     *
+     * @param defaultValue the new default value
+     */
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
+    /**
+     * Gets the choices.
+     *
+     * @return the choices
+     */
     public String getChoices() {
         return choices;
     }
 
+    /**
+     * Sets the choices.
+     *
+     * @param choices the new choices
+     */
     public void setChoices(String choices) {
         this.choices = choices;
     }
 
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
     public String getValue() {
         return value;
     }
 
+    /**
+     * Sets the value.
+     *
+     * @param value the new value
+     */
     public void setValue(String value) {
         this.value = value;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "JobParameter{" +

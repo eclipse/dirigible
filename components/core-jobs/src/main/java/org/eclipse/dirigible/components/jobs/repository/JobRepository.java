@@ -15,5 +15,8 @@ import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Interface JobRepository.
+ */
 @Repository("jobsRepository")
 public interface JobRepository extends JpaRepository<Job, Long> {}

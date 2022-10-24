@@ -16,6 +16,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Interface WebsocketRepository.
+ */
 @Repository("websocketRepository")
 public interface WebsocketRepository extends JpaRepository<Websocket, Long> {
 }

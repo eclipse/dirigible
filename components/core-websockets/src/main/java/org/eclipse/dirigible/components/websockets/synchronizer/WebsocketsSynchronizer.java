@@ -32,26 +32,57 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
+/**
+ * The Class WebsocketsSynchronizer.
+ *
+ * @param A the generic type
+ */
 @Component
 public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<Websocket> {
+    
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(WebsocketsSynchronizer.class);
+    
+    /** The Constant FILE_EXTENSION_WEBSOCKET. */
     private static final String FILE_EXTENSION_WEBSOCKET = ".websocket";
 
+    /** The websocket service. */
     @Autowired
     private WebsocketService websocketService;
 
+    /** The callback. */
     private SynchronizerCallback callback;
 
+    /**
+     * Checks if is accepted.
+     *
+     * @param file the file
+     * @param attrs the attrs
+     * @return true, if is accepted
+     */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
         return file.toString().endsWith(FILE_EXTENSION_WEBSOCKET);
     }
 
+    /**
+     * Checks if is accepted.
+     *
+     * @param type the type
+     * @return true, if is accepted
+     */
     @Override
     public boolean isAccepted(String type) {
         return Websocket.ARTEFACT_TYPE.equals(type);
     }
 
+    /**
+     * Load.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the list
+     */
     @Override
     public List<Websocket> load(String location, byte[] content) {
         Websocket websocket = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Websocket.class);
@@ -70,11 +101,23 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
         return List.of(websocket);
     }
 
+    /**
+     * Prepare.
+     *
+     * @param wrappers the wrappers
+     * @param depleter the depleter
+     */
     @Override
     public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
 
     }
 
+    /**
+     * Process.
+     *
+     * @param wrappers the wrappers
+     * @param depleter the depleter
+     */
     @Override
     public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
         try {
@@ -88,11 +131,21 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
         }
     }
 
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
     @Override
     public ArtefactService<Websocket> getService() {
         return websocketService;
     }
 
+    /**
+     * Cleanup.
+     *
+     * @param websocket the websocket
+     */
     @Override
     public void cleanup(Websocket websocket) {
         try {
@@ -105,12 +158,24 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
         }
     }
 
+    /**
+     * Complete.
+     *
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
+     */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
         return true;
     }
 
+    /**
+     * Sets the callback.
+     *
+     * @param callback the new callback
+     */
     @Override
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;

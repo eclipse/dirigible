@@ -23,25 +23,46 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class JobEmailService.
+ */
 @Service
 @Transactional
 public class JobEmailService implements ArtefactService<JobEmail> {
 
+    /** The job email repository. */
     @Autowired
     private JobEmailRepository jobEmailRepository;
 
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
     @Override
     @Transactional(readOnly = true)
     public List<JobEmail> getAll() {
         return jobEmailRepository.findAll();
     }
 
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<JobEmail> findAll(Pageable pageable) {
         return jobEmailRepository.findAll(pageable);
     }
 
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the job email
+     */
     @Override
     @Transactional(readOnly = true)
     public JobEmail findById(Long id) {
@@ -53,6 +74,12 @@ public class JobEmailService implements ArtefactService<JobEmail> {
         }
     }
 
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the job email
+     */
     @Override
     @Transactional(readOnly = true)
     public JobEmail findByName(String name) {
@@ -67,11 +94,22 @@ public class JobEmailService implements ArtefactService<JobEmail> {
         }
     }
 
+    /**
+     * Save.
+     *
+     * @param jobEmail the job email
+     * @return the job email
+     */
     @Override
     public JobEmail save(JobEmail jobEmail) {
         return jobEmailRepository.saveAndFlush(jobEmail);
     }
 
+    /**
+     * Delete.
+     *
+     * @param jobEmail the job email
+     */
     @Override
     public void delete(JobEmail jobEmail) {
         jobEmailRepository.delete(jobEmail);
