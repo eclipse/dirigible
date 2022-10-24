@@ -50,7 +50,8 @@ body {
 }
 /* Vertical navigation icon file */
 .dg-nav-item--svg {
-  display: block;
+  display: inline-block;
+  box-sizing: border-box;
 }
 .dg-nav-item--svg ng-include {
   display: -webkit-box;
@@ -331,7 +332,8 @@ body {
 .dg-backdrop--active .dg-backdrop {
   display: block;
 }
-.dg-backdrop--active .fd-popover__control {
+.dg-backdrop--active .fd-popover__control,
+.fd-button-split {
   /* Just below the dialogs, just above the backdrop */
   position: relative;
   z-index: 210;

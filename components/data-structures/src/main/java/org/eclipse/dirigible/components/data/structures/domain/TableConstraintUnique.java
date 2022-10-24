@@ -11,23 +11,19 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+/**
+ * The Class TableConstraintUnique.
+ */
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_TABLE_UNIQUES")
-public class TableConstraintUnique {
+public class TableConstraintUnique extends TableConstraint {
 	
 	/** The id. */
 	@Id
@@ -35,10 +31,105 @@ public class TableConstraintUnique {
 	@Column(name = "UNIQUE_ID", nullable = false)
 	private Long id;
 	
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "CONSTRAINTS_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private TableConstraints constraints;
+	/** The index type. */
+	@Column(name = "UNIQUE_INDEXTYPE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Nullable
+    private String indexType;
+
+    /** The order. */
+	@Column(name = "UNIQUE_ORDER", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Nullable
+    private String order;
+
+	/**
+	 * Instantiates a new table constraint unique.
+	 *
+	 * @param name the name
+	 * @param modifiers the modifiers
+	 * @param columns the columns
+	 * @param constraints the constraints
+	 * @param indexType the index type
+	 * @param order the order
+	 */
+	public TableConstraintUnique(String name, String modifiers, String columns, TableConstraints constraints,
+			String indexType, String order) {
+		super(name, modifiers, columns, constraints);
+		this.indexType = indexType;
+		this.order = order;
+	}
+
+	/**
+	 * Instantiates a new table constraint unique.
+	 */
+	public TableConstraintUnique() {
+		super();
+	}
+
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * Gets the index type.
+	 *
+	 * @return the indexType
+	 */
+	public String getIndexType() {
+		return indexType;
+	}
+
+	/**
+	 * Sets the index type.
+	 *
+	 * @param indexType the indexType to set
+	 */
+	public void setIndexType(String indexType) {
+		this.indexType = indexType;
+	}
+
+	/**
+	 * Gets the order.
+	 *
+	 * @return the order
+	 */
+	public String getOrder() {
+		return order;
+	}
+
+	/**
+	 * Sets the order.
+	 *
+	 * @param order the order to set
+	 */
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
+	@Override
+	public String toString() {
+		return "TableConstraintUnique [id=" + id + ", indexType=" + indexType + ", order=" + order + ", name=" + name
+				+ ", modifiers=" + modifiers + ", columns=" + columns + ", constraints.table=" + constraints.getTable().getName() + "]";
+	}
+	
+	
 
 }

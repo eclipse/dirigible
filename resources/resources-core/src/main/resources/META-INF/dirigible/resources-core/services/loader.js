@@ -31,7 +31,8 @@ response.flush();
 response.close();
 
 function setETag(scriptId) {
-    let maxAge = 30 * 24 * 60 * 60;
+    // let maxAge = 30 * 24 * 60 * 60;
+    let maxAge = 3600; // Temp
     let etag = uuid.random();
     response.addCookie({
         'name': getCacheKey(scriptId),
@@ -40,7 +41,7 @@ function setETag(scriptId) {
         'maxAge': maxAge
     });
     response.setHeader("ETag", etag);
-    response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
+    response.setHeader('Cache-Control', `private, must-revalidate, max-age=${maxAge}`);
 }
 
 function getCacheKey(scriptId) {
@@ -120,14 +121,14 @@ function getLocations(scriptId) {
         case "application-view-css":
         case "ide-view-css":
             return [
-                "/fundamental-styles/0.24.0/dist/fundamental-styles.css",
+                "/fundamental-styles/0.24.4/dist/fundamental-styles.css",
                 "/resources/styles/core.css",
                 "/resources/styles/widgets.css",
             ];
         case "application-perspective-css":
         case "ide-perspective-css":
             return [
-                "/fundamental-styles/0.24.0/dist/fundamental-styles.css",
+                "/fundamental-styles/0.24.4/dist/fundamental-styles.css",
                 "/resources/styles/core.css",
                 "/resources/styles/layout.css",
                 "/resources/styles/widgets.css",

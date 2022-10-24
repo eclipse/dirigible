@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,9 +26,12 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * The Class TableConstraintCheck.
+ */
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_TABLE_CHECKS")
-public class TableConstraintCheck {
+public class TableConstraintCheck extends TableConstraint {
 	
 	/** The id. */
 	@Id
@@ -35,10 +39,55 @@ public class TableConstraintCheck {
 	@Column(name = "CHECK_ID", nullable = false)
 	private Long id;
 	
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "CONSTRAINTS_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private TableConstraints constraints;
+	/** The expression. */
+	@Column(name = "CHECK_EXPRESSION", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Nullable
+	private String expression;
+	
+	public TableConstraintCheck(String name, String modifiers, String columns, TableConstraints constraints,
+			String expression) {
+		super(name, modifiers, columns, constraints);
+		this.expression = expression;
+	}
+
+	public TableConstraintCheck() {
+		super();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the expression
+	 */
+	public String getExpression() {
+		return expression;
+	}
+
+	/**
+	 * @param expression the expression to set
+	 */
+	public void setExpression(String expression) {
+		this.expression = expression;
+	}
+
+	@Override
+	public String toString() {
+		return "TableConstraintCheck [id=" + id + ", expression=" + expression + ", name=" + name + ", modifiers="
+				+ modifiers + ", columns=" + columns + ", constraints.table=" + constraints.getTable().getName() + "]";
+	}
+	
+	
 
 }

@@ -31,6 +31,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class TableRepositoryTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
@@ -38,15 +41,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TableRepositoryTest {
 	
+	/** The table repository. */
 	@Autowired
 	private TableRepository tableRepository;
 	
+	/** The table column repository. */
 	@Autowired
 	private TableColumnRepository tableColumnRepository;
 	
+	/** The entity manager. */
 	@Autowired
 	EntityManager entityManager;
 	
+	/**
+	 * Setup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeEach
     public void setup() throws Exception {
 
@@ -58,6 +69,11 @@ public class TableRepositoryTest {
 		createTable(tableRepository, tableColumnRepository, "/a/b/c/t5.table", "t5", "description", "");
     }
 	
+	/**
+	 * Cleanup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@AfterEach
     public void cleanup() throws Exception {
 		
@@ -66,6 +82,11 @@ public class TableRepositoryTest {
     }
 	
 
+	/**
+	 * Gets the one.
+	 *
+	 * @return the one
+	 */
 	@Test
     public void getOne() {
 		Long id = tableRepository.findAll().get(0).getId();
@@ -85,6 +106,11 @@ public class TableRepositoryTest {
 //        assertEquals("table:/a/b/c/t1.table:t1", table.getKey());
     }
 	
+	/**
+	 * Gets the reference using entity manager.
+	 *
+	 * @return the reference using entity manager
+	 */
 	@Test
     public void getReferenceUsingEntityManager() {
 		Long id = tableRepository.findAll().get(0).getId();
@@ -93,15 +119,29 @@ public class TableRepositoryTest {
         assertNotNull(extension.getLocation());
     }
 	
+	/**
+	 * Creates the table.
+	 *
+	 * @param tableRepository the table repository
+	 * @param tableColumnRepository the table column repository
+	 * @param location the location
+	 * @param name the name
+	 * @param description the description
+	 * @param dependencies the dependencies
+	 * @return the table
+	 */
 	public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location, String name, String description, String dependencies) {
 		Table table = new Table(location, name, description, dependencies);
-		table.addColumn(name + "_1", "VARCHAR", 20, true, false, "", 0, false);
-		table.addColumn(name + "_2", "VARCHAR", 20, true, false, "", 0, false);
+		table.addColumn(name + "_1", "VARCHAR", "20", true, false, "", "0", false);
+		table.addColumn(name + "_2", "VARCHAR", "20", true, false, "", "0", false);
 		table.addIndex(name + "_1", "", true, name + "_1");
 		tableRepository.save(table);
 		return table;
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

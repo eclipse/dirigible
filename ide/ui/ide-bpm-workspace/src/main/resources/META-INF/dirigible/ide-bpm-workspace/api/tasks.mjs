@@ -22,5 +22,6 @@ function getUserTasks(ctx, request, response) {
     })
 
     const tasksRes = JSON.stringify(tasks);
+    response.setContentType("application/json");
     response.print(tasksRes);
 }
