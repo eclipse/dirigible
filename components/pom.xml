@@ -22,6 +22,8 @@
 		<module>core-database</module>
 		<module>core-repository</module>
 		<module>core-registry</module>
+		<module>core-openapi</module>
+		<module>core-version</module>
 		<module>core-websockets</module>
 		
 		<!-- Data -->
