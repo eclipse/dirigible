@@ -776,7 +776,7 @@
 		<testcontainers.version>1.17.5</testcontainers.version>
 		<testcontainers.rabbitmq.version>1.17.5</testcontainers.rabbitmq.version>
 		<amqp.client.version>5.16.0</amqp.client.version>
-		<elasticsearch.client.version>7.7.1</elasticsearch.client.version>
+		<elasticsearch.client.version>7.17.7</elasticsearch.client.version>
 		<jetcd.core.version>0.7.3</jetcd.core.version>
 		<jetcd.test.version>0.5.4</jetcd.test.version>
 		<logcaptor.version>2.7.10</logcaptor.version>
