@@ -20,8 +20,8 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
-import org.eclipse.dirigible.components.jobs.domain.Job;
-import org.eclipse.dirigible.components.jobs.service.JobService;
+import org.eclipse.dirigible.components.jobs.domain.JobParameter;
+import org.eclipse.dirigible.components.jobs.service.JobParameterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,27 +32,27 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 /**
- * The Class JobSynchronizer.
+ * The Class JobParameterSynchronizer.
  *
  * @param A the generic type
  */
 @Component
-public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
+public class JobParameterSynchronizer<A extends Artefact> implements Synchronizer<JobParameter> {
 
     /**
      * The Constant logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(JobSynchronizer.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobParameterSynchronizer.class);
 
     /**
-     * The Constant FILE_JOB_EXTENSION.
+     * The Constant FILE_JOB_PARAMETER_EXTENSION.
      */
-    public static final String FILE_JOB_EXTENSION = ".job";
+    public static final String FILE_JOB_PARAMETER_EXTENSION = ".jobparameter";
 
     /**
-     * The job service.
+     * The job parameter service.
      */
-    private JobService jobService;
+    private JobParameterService jobParameterService;
 
     /**
      * The synchronization callback.
@@ -60,12 +60,12 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
     private SynchronizerCallback callback;
 
     /**
-     * Instantiates a new job synchronizer.
+     * Instantiates a new job parameter synchronizer.
      *
-     * @param jobService the job service
+     * @param jobParameterService the job parameter service
      */
     @Autowired
-    public JobSynchronizer(JobService jobService){this.jobService = jobService;}
+    public JobParameterSynchronizer(JobParameterService jobParameterService){this.jobParameterService = jobParameterService;}
 
     /**
      * Checks if is accepted.
@@ -76,7 +76,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(FILE_JOB_EXTENSION);
+        return file.toString().endsWith(FILE_JOB_PARAMETER_EXTENSION);
     }
 
     /**
@@ -86,7 +86,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      * @return true, if is accepted
      */
     @Override
-    public boolean isAccepted(String type) {return Job.ARTEFACT_TYPE.equals(type);}
+    public boolean isAccepted(String type) {return JobParameter.ARTEFACT_TYPE.equals(type);}
 
     /**
      * Load.
@@ -96,20 +96,20 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      * @return the list
      */
     @Override
-    public List<Job> load(String location, byte[] content) {
-        Job job = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Job.class);
-        job.setLocation(location);
-        job.setName("");
-        job.setType(Job.ARTEFACT_TYPE);
-        job.updateKey();
+    public List<JobParameter> load(String location, byte[] content) {
+        JobParameter jobParameter = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), JobParameter.class);
+        jobParameter.setLocation(location);
+        jobParameter.setName("");
+        jobParameter.setType(JobParameter.ARTEFACT_TYPE);
+        jobParameter.updateKey();
         try {
-            getService().save(job);
+            getService().save(jobParameter);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            if (logger.isErrorEnabled()) {logger.error("job: {}", job);}
+            if (logger.isErrorEnabled()) {logger.error("jobParameter: {}", jobParameter);}
             if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
         }
-        return List.of(job);
+        return List.of(jobParameter);
     }
 
     /**
@@ -145,7 +145,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      * @return the service
      */
     @Override
-    public ArtefactService<Job> getService() {return jobService;}
+    public ArtefactService<JobParameter> getService() {return jobParameterService;}
 
     /**
      * Cleanup.
@@ -153,7 +153,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      * @param artefact the artefact
      */
     @Override
-    public void cleanup(Job artefact) {
+    public void cleanup(JobParameter artefact) {
         try {
             getService().delete(artefact);
         } catch (Exception e) {

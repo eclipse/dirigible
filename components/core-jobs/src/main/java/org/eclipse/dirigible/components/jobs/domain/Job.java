@@ -27,6 +27,9 @@ import java.sql.Timestamp;
 @Table(name = "DIRIGIBLE_JOBS")
 public class Job extends Artefact {
 
+    /** The Constant ARTEFACT_TYPE. */
+    public static final String ARTEFACT_TYPE = "job";
+
     /** The id. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

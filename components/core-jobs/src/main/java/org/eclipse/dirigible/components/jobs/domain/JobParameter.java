@@ -27,6 +27,9 @@ import javax.persistence.Table;
 @Table(name = "DIRIGIBLE_JOB_PARAMETERS")
 public class JobParameter extends Artefact {
 
+    /** The Constant ARTEFACT_TYPE. */
+    public static final String ARTEFACT_TYPE = "jobParameter";
+
     /** The id. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
