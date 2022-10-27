@@ -719,7 +719,7 @@
 		<commons.text>1.10.0</commons.text>
 		<cxf.version>3.5.4</cxf.version>
 		<gson.version>2.10</gson.version>
-		<mockito.version>4.8.0</mockito.version>
+		<mockito.version>4.8.1</mockito.version>
 		<!--
 		<powermock-api-mockito2.version>2.0.9</powermock-api-mockito2.version>
 		<powermock-module-junit4.version>2.0.9</powermock-module-junit4.version>
