@@ -790,7 +790,7 @@
 		<hikaricp.version>5.0.1</hikaricp.version>
 		<validator.version>1.7</validator.version>
 		<quartz.version>2.3.2</quartz.version>
-		<graalvm.version>22.2.0.1</graalvm.version>
+		<graalvm.version>22.3.0</graalvm.version>
 		<guava.version>31.1-jre</guava.version>
 		<icu4j.version>72.1</icu4j.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
