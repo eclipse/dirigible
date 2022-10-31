@@ -70,7 +70,6 @@ public class OpenAPIEndpoint extends BaseEndpoint {
     /** The Constant VERSION. */
     private static final String VERSION = "6.0.0";
 
-
     /**
      * The openapi service.
      */
@@ -90,7 +89,7 @@ public class OpenAPIEndpoint extends BaseEndpoint {
      * @throws JsonProcessingException the json processing exception
      */
     @GetMapping
-    public ResponseEntity<String> version() throws JsonProcessingException {
+    public ResponseEntity<String> getVersion() throws JsonProcessingException {
         Contact contact = new Contact();
         contact.email(CONTACT_EMAIL);
 

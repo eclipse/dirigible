@@ -26,6 +26,7 @@
 		<module>core-openapi</module>
 		<module>core-version</module>
 		<module>core-websockets</module>
+		<module>core-security</module>
 		
 		<!-- Data -->
 		<module>data-structures</module>
@@ -35,7 +36,7 @@
 		
 		<!-- Applications -->
 		<module>app-all</module>
-	</modules>
+    </modules>
 	
 	<dependencies>
 	

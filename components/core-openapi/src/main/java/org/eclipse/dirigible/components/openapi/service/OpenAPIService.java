@@ -29,15 +29,14 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The Class OpenAPIsCoreService.
+ * The Class OpenAPIsService.
  */
-
 
 @Service
 @Transactional
 public class OpenAPIService implements ArtefactService<OpenAPI> {
 
-    /** The open API repository. */
+    /** The openAPI repository. */
     @Autowired
     private OpenAPIRepository openAPIRepository;
 
@@ -47,7 +46,7 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
     private IRepository repository;
 
     /**
-     * Instantiates a new open API service.
+     * Instantiates a new openAPI service.
      *
      * @param repository the repository
      */
@@ -102,7 +101,7 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
      * Find by id.
      *
      * @param id the id
-     * @return the open API
+     * @return the openAPI
      */
     @Override
     @Transactional(readOnly = true)
@@ -119,7 +118,7 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
      * Find by name.
      *
      * @param name the name
-     * @return the open API
+     * @return the openAPI
      */
     @Override
     @Transactional(readOnly = true)
@@ -138,8 +137,8 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
     /**
      * Save.
      *
-     * @param openAPI the open API
-     * @return the open API
+     * @param openAPI the openAPI
+     * @return the openAPI
      */
     @Override
     public OpenAPI save(OpenAPI openAPI) {
@@ -149,7 +148,7 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
     /**
      * Delete.
      *
-     * @param openAPI the open API
+     * @param openAPI the openAPI
      */
     @Override
     public void delete(OpenAPI openAPI) {

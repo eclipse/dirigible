@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.openapi.synchronizer;
+package org.eclipse.dirigible.components.security.synchronizer;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
@@ -20,8 +20,9 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
-import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
-import org.eclipse.dirigible.components.openapi.service.OpenAPIService;
+import org.eclipse.dirigible.components.security.domain.SecurityAccessArtifact;
+import org.eclipse.dirigible.components.security.domain.SecurityAccess;
+import org.eclipse.dirigible.components.security.service.SecurityAccessService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,28 +36,28 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 /**
- * The Class OpenAPISynchronizer.
+ * The Class SecurityAccessSynchronizer.
  *
- * @param A the generic type
+ * @param <A> the generic type
  */
+
 @Component
-public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<OpenAPI> {
+public class SecurityAccessSynchronizer<A extends Artefact> implements Synchronizer<SecurityAccess> {
 
     /**
      * The Constant logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(OpenAPISynchronizer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SecurityAccessSynchronizer.class);
 
     /**
-     * The Constant FILE_EXTENSION_OPENAPI.
+     * The Constant FILE_EXTENSION_SECURITY_ACCESS.
      */
-    public static final String FILE_EXTENSION_OPENAPI = ".openapi";
+    public static final String FILE_EXTENSION_SECURITY_ACCESS = ".access";
 
     /**
-     * The openAPI service.
+     * The security access service.
      */
-
-    private OpenAPIService openAPIService;
+    private SecurityAccessService securityAccessService;
 
     /**
      * The synchronization callback.
@@ -64,60 +65,79 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     private SynchronizerCallback callback;
 
     /**
-     * Instantiates a new openAPI synchronizer.
+     * Instantiates a new security access synchronizer.
      *
-     * @param openAPIService the openAPI service
+     * @param securityAccessService the security access service
      */
     @Autowired
-    public OpenAPISynchronizer(OpenAPIService openAPIService) {
-        this.openAPIService = openAPIService;
+    public SecurityAccessSynchronizer(SecurityAccessService securityAccessService) {
+        this.securityAccessService = securityAccessService;
     }
+
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
+    @Override
+    public ArtefactService<SecurityAccess> getService() {
+        return securityAccessService;
+    }
+
 
     /**
      * Checks if is accepted.
      *
-     * @param file the file
+     * @param file  the file
      * @param attrs the attrs
      * @return true, if is accepted
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(FILE_EXTENSION_OPENAPI);
+        return file.toString().endsWith(FILE_EXTENSION_SECURITY_ACCESS);
     }
 
     /**
      * Checks if is accepted.
      *
-     * @param type the type
+     * @param type the artefact
      * @return true, if is accepted
      */
     @Override
     public boolean isAccepted(String type) {
-        return OpenAPI.ARTEFACT_TYPE.equals(type);
+        return SecurityAccess.ARTEFACT_TYPE.equals(type);
     }
 
     /**
      * Load.
      *
      * @param location the location
-     * @param content the content
+     * @param content  the content
      * @return the list
      */
     @Override
-    public List<OpenAPI> load(String location, byte[] content) {
-        OpenAPI openAPI = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), OpenAPI.class);
-        openAPI.setLocation(location);
-        openAPI.setName("");
-        openAPI.setType(OpenAPI.ARTEFACT_TYPE);
-        openAPI.updateKey();
-        try {
-            getService().save(openAPI);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            if (logger.isErrorEnabled()) {logger.error("openAPI: {}", openAPI);}
-            if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+    public List load(String location, byte[] content) {
+        SecurityAccessArtifact securityAccessArtifact = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), SecurityAccessArtifact.class);
+
+        List<SecurityAccess> securityAccesses = securityAccessArtifact.buildSecurityAccesses(location);
+
+        for (SecurityAccess securityAccess : securityAccesses) {
+            try {
+                getService().save(securityAccess);
+            } catch (Exception e) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage(), e);
+                }
+                if (logger.isErrorEnabled()) {
+                    logger.error("security access: {}", securityAccess);
+                }
+                if (logger.isErrorEnabled()) {
+                    logger.error("content: {}", new String(content));
+                }
+            }
         }
-        return List.of(openAPI);
+
+        return securityAccesses;
     }
 
     /**
@@ -128,7 +148,6 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      */
     @Override
     public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-
     }
 
     /**
@@ -143,31 +162,6 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
             List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
             callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            callback.addError(e.getMessage());
-        }
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<OpenAPI> getService() {
-        return openAPIService;
-    }
-
-    /**
-     * Cleanup.
-     *
-     * @param openAPI the openAPI
-     */
-    @Override
-    public void cleanup(OpenAPI openAPI) {
-        try {
-            getService().delete(openAPI);
-        } catch (Exception e) {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage(), e);
             }
@@ -179,13 +173,30 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      * Complete.
      *
      * @param wrapper the wrapper
-     * @param flow the flow
+     * @param flow    the flow
      * @return true, if successful
      */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
         return true;
+    }
+
+    /**
+     * Cleanup.
+     *
+     * @param securityAccess the security access
+     */
+    @Override
+    public void cleanup(SecurityAccess securityAccess) {
+        try {
+            getService().delete(securityAccess);
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            callback.addError(e.getMessage());
+        }
     }
 
     /**

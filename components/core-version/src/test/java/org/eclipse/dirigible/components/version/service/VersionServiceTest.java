@@ -32,7 +32,7 @@ class VersionServiceTest {
     VersionService versionService;
 
     @Test
-    void getVersion() throws IOException {
+    void testGetVersion() throws IOException {
         Version version = versionService.getVersion();
         assertEquals("dirigible", version.getProductName());
         assertEquals("0.0.1", version.getProductVersion());
