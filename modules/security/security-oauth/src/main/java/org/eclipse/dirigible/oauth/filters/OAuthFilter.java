@@ -69,6 +69,9 @@ public class OAuthFilter extends AbstractOAuthFilter {
 	/** The Constant SERVICES_V4_HEALTHCHECK. */
 	private static final String SERVICES_V4_HEALTHCHECK = "/services/v4/healthcheck";
 
+	/** The Constant SERVICES_V4_JS_RESOURCES_CORE. */
+	private static final String SERVICES_V4_JS_RESOURCES_CORE = "/services/v4/js/resources-core/services/loader.js";
+
 	/** The Constant UNAUTHORIZED_MESSAGE. */
 	private static final String UNAUTHORIZED_MESSAGE = "No logged in user";
 
@@ -175,7 +178,7 @@ public class OAuthFilter extends AbstractOAuthFilter {
 	private boolean isPublicResource(ServletRequest servletRequest) {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		String requestURI = request.getRequestURI();
-		return requestURI.startsWith(SERVICES_V4_WEB_RESOURCES) || requestURI.startsWith(SERVICES_V4_HEALTHCHECK);
+		return requestURI.startsWith(SERVICES_V4_WEB_RESOURCES) || requestURI.startsWith(SERVICES_V4_HEALTHCHECK) || requestURI.startsWith(SERVICES_V4_JS_RESOURCES_CORE);
 	}
 
 	/**
