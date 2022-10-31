@@ -9,15 +9,12 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.websockets.repository;
+package org.eclipse.dirigible.components.listeners.repository;
 
-import org.eclipse.dirigible.components.websockets.domain.Websocket;
+import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * The Interface WebsocketRepository.
- */
-@Repository("websocketRepository")
-public interface WebsocketRepository extends JpaRepository<Websocket, Long> {
+@Repository("listenerRepository")
+public interface ListenerRepository extends JpaRepository<Listener, Long> {
 }

@@ -1,0 +1,72 @@
+/*
+ * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
+package org.eclipse.dirigible.components.listeners.domain;
+
+import org.eclipse.dirigible.components.base.artefact.Artefact;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "DIRIGIBLE_LISTENERS")
+public class Listener extends Artefact {
+    public static final String ARTEFACT_TYPE = "listener";
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "EXTENSION_ID", nullable = false)
+    private Long id;
+
+    @Column(name = "LISTENER_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    private String handler;
+
+
+    public Listener(String location, String name, String description, String handler) {
+        super(location, name, ARTEFACT_TYPE, description, null);
+        this.handler = handler;
+    }
+
+    public Listener() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getHandler() {
+        return handler;
+    }
+
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
+
+    @Override
+    public String toString() {
+        return "Listener{" +
+                "id=" + id +
+                ", handler='" + handler + '\'' +
+                ", location='" + location + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                ", key='" + key + '\'' +
+                ", dependencies='" + dependencies + '\'' +
+                ", createdBy=" + createdBy +
+                ", createdAt=" + createdAt +
+                ", updatedBy=" + updatedBy +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
+}
