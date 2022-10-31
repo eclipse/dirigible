@@ -88,7 +88,7 @@ class SecurityAccessSynchronizerTest {
      * Checks if is accepted.
      */
     @Test
-    public void isAcceptedPath() {
+    public void testIsAcceptedPath() {
         assertTrue(securityAccessSynchronizer.isAccepted(Path.of("/a/b/c/test.access"), null));
     }
 
@@ -96,7 +96,7 @@ class SecurityAccessSynchronizerTest {
      * Checks if is accepted.
      */
     @Test
-    public void isAcceptedArtefact() {
+    public void testIsAcceptedArtefact() {
         assertTrue(securityAccessSynchronizer.isAccepted(createSecurityAccess("/a/b/c/test.access", "test",
                 "description", "HTTP", "/a/b/c/test.txt", "GET", "test_role").getType()));
     }
@@ -105,7 +105,7 @@ class SecurityAccessSynchronizerTest {
      * Load the artefact.
      */
     @Test
-    public void load() throws IOException {
+    public void testLoad() throws IOException {
         byte[] content = SecurityAccessSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test" +
                 ".access").readAllBytes();
         List<SecurityAccess> list = securityAccessSynchronizer.load("/META-INF/dirigible/test/test.access", content);

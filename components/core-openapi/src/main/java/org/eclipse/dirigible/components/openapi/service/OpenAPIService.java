@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The Class OpenAPIsService.
+ * The Class OpenAPIService.
  */
 
 @Service

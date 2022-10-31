@@ -84,7 +84,7 @@ class SecurityRoleSynchronizerTest {
      * Checks if is accepted.
      */
     @Test
-    public void isAcceptedPath() {
+    public void testIsAcceptedPath() {
         assertTrue(securityRoleSynchronizer.isAccepted(Path.of("/a/b/c/test.role"), null));
     }
 
@@ -92,7 +92,7 @@ class SecurityRoleSynchronizerTest {
      * Checks if is accepted.
      */
     @Test
-    public void isAcceptedArtefact() {
+    public void testIsAcceptedArtefact() {
         assertTrue(securityRoleSynchronizer.isAccepted(createSecurityRole("/a/b/c/test.role", "test", "description").getType()));
     }
 
@@ -100,7 +100,7 @@ class SecurityRoleSynchronizerTest {
      * Load the artefact.
      */
     @Test
-    public void load() throws IOException {
+    public void testLoad() throws IOException {
         byte[] content =
                 SecurityRoleSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.role").readAllBytes();
         List<SecurityRole> list = securityRoleSynchronizer.load("/META-INF/dirigible/test/test.role", content);
