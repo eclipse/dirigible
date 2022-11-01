@@ -12,11 +12,15 @@
 package org.eclipse.dirigible.oauth.utils;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletRequest;
@@ -37,6 +41,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Verification;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -332,7 +338,11 @@ public class JwtUtils {
 		private String familyName;
 
 		/** The scope. */
-		private List<String> scope;
+		private String scope;
+
+		/** The cognito:groups. */
+		@SerializedName("cognito:groups")
+		private List<String> cognitoGroups;
 
 		/** The client id. */
 		@SerializedName("client_id")
@@ -349,6 +359,10 @@ public class JwtUtils {
 		/** The user name. */
 		@SerializedName("user_name")
 		private String userName;
+
+		/** The user name. */
+		@SerializedName("username")
+		private String username;
 
 		/** The email. */
 		@SerializedName("email")
@@ -434,16 +448,26 @@ public class JwtUtils {
 		 * @return the scope
 		 */
 		public List<String> getScope() {
-			return scope;
-		}
-
-		/**
-		 * Sets the scope.
-		 *
-		 * @param scope the scope to set
-		 */
-		public void setScope(List<String> scope) {
-			this.scope = scope;
+			List<String> scopes = new ArrayList<String>();
+			if (scope != null) {
+				JsonElement json = GsonHelper.PARSER.parse(scope);
+				if (json.isJsonArray()) {
+					JsonArray scopeArray = (JsonArray) json;
+					Iterator<JsonElement> iterator = scopeArray.iterator();
+					while (iterator.hasNext()) {
+						JsonElement scopeElement = iterator.next();
+						if (scopeElement.isJsonPrimitive() && scopeElement.getAsJsonPrimitive().isString()) {
+							scopes.add(scopeElement.getAsString());
+						}
+					}
+				} else {
+					scopes.add(json.getAsString());
+				}
+			}
+			if (cognitoGroups != null) {
+				scopes.addAll(cognitoGroups);
+			}
+			return scopes;
 		}
 
 		/**
@@ -506,7 +530,7 @@ public class JwtUtils {
 		 * @return the userName
 		 */
 		public String getUserName() {
-			return userName;
+			return userName != null ? userName : username;
 		}
 
 		/**
@@ -697,9 +721,11 @@ public class JwtUtils {
 		Algorithm algorithm = Algorithm.RSA256(publicKey, null);
 		Verification verification = JWT.require(algorithm)
 				.acceptLeeway(1) // 1 sec for nbf and iat
-				.acceptExpiresAt(5) // 5 secs for exp
-				.withAudience(OAuthUtils.getOAuthClientId());
+				.acceptExpiresAt(5); // 5 secs for exp
 
+		if (Boolean.parseBoolean(Configuration.get(OAuthService.DIRIGIBLE_OAUTH_CHECK_AUDIENCE_ENABLED, Boolean.TRUE.toString()))) {
+			verification.withAudience(OAuthUtils.getOAuthClientId());
+		}
 		if (Boolean.parseBoolean(Configuration.get(OAuthService.DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED, Boolean.TRUE.toString()))) {
 			verification.withIssuer(OAuthUtils.getOAuthTokenUrl(), OAuthUtils.getOAuthIssuer());
 		}
@@ -778,15 +804,22 @@ public class JwtUtils {
 	 * @throws GeneralSecurityException the general security exception
 	 */
 	private static RSAPublicKey getPublicKeyFromString(String key) throws IOException, GeneralSecurityException {
-		String publicKeyPEM = key;
-		publicKeyPEM = publicKeyPEM.replace("\n", "");
-		publicKeyPEM = publicKeyPEM.replace("-----BEGIN PUBLIC KEY-----", "");
-		publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
-
-		byte[] encoded = BASE64.decode(publicKeyPEM);
+		RSAPublicKey publicKey = null;
 		KeyFactory kf = KeyFactory.getInstance("RSA");
-		RSAPublicKey pubKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(encoded));
 
-		return pubKey;
+		String publicKeyPEM = key.replace("\n", "") //
+				.replace("-----BEGIN PUBLIC KEY-----", "") //
+				.replace("-----END PUBLIC KEY-----", "");
+
+		String keyExponent = Configuration.get(OAuthService.DIRIGIBLE_OAUTH_VERIFICATION_KEY_EXPONENT);
+		if (keyExponent != null) {
+			BigInteger modulus = new BigInteger(1, BASE64.decode(publicKeyPEM));
+			BigInteger exponent = new BigInteger(1, BASE64.decode(keyExponent));
+			publicKey = (RSAPublicKey) kf.generatePublic(new RSAPublicKeySpec(modulus, exponent));
+		} else {
+			publicKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(BASE64.decode(publicKeyPEM)));
+		}
+
+		return publicKey;
 	}
 }

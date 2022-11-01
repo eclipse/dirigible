@@ -30,28 +30,28 @@ import org.eclipse.dirigible.commons.config.Configuration;
 public class OAuthUtils {
 
 	/** The Constant PARAM_CLIENT_ID. */
-	private static final String PARAM_CLIENT_ID = "client_id";
+	public static final String PARAM_CLIENT_ID = "client_id";
 	
 	/** The Constant PARAM_REDIRECT_URI. */
-	private static final String PARAM_REDIRECT_URI = "redirect_uri";
+	public static final String PARAM_REDIRECT_URI = "redirect_uri";
 	
 	/** The Constant PARAM_GRANT_TYPE. */
-	private static final String PARAM_GRANT_TYPE = "grant_type";
+	public static final String PARAM_GRANT_TYPE = "grant_type";
 	
 	/** The Constant PARAM_RESPONSE_TYPE. */
-	private static final String PARAM_RESPONSE_TYPE = "response_type";
+	public static final String PARAM_RESPONSE_TYPE = "response_type";
 	
 	/** The Constant PARAM_CODE. */
-	private static final String PARAM_CODE = "code";
+	public static final String PARAM_CODE = "code";
 
 	/** The Constant VALUE_RESPONSE_TYPE_CODE. */
-	private static final String VALUE_RESPONSE_TYPE_CODE = "code";
+	public static final String VALUE_RESPONSE_TYPE_CODE = "code";
 	
 	/** The Constant VALUE_GRANT_TYPE_AUTHORIZATION_CODE. */
-	private static final String VALUE_GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
+	public static final String VALUE_GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
 	
 	/** The Constant OAUTH_CALLBACK_PATH. */
-	private static final String OAUTH_CALLBACK_PATH = "/services/v4/oauth/callback";
+	public static final String OAUTH_CALLBACK_PATH = "/services/v4/oauth/callback";
 
 	/**
 	 * Gets the authentication url.
@@ -170,7 +170,7 @@ public class OAuthUtils {
 	 *
 	 * @return the redirect uri
 	 */
-	private static String getRedirectUri() {
+	public static String getRedirectUri() {
 		return getOAuthApplicationHost() + OAUTH_CALLBACK_PATH;
 	};
 
