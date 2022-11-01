@@ -12,13 +12,14 @@
 package org.eclipse.dirigible.components.jobs.domain;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.data.annotation.Transient;
+
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class Job.
@@ -81,8 +82,10 @@ public class Job extends Artefact {
     /**
      * The parameters.
      */
-//    @Transient
-//    private List<JobParameter> parameters = new ArrayList<>();
+    @OneToMany(mappedBy = "job", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @Transient
+    private List<JobParameter> parameters = new ArrayList<>();
 
     /** The status. */
     @Column(name = "JOB_STATUS", columnDefinition = "SMALLINT", nullable = true)
@@ -305,6 +308,24 @@ public class Job extends Artefact {
     }
 
     /**
+     * Gets the parameters list.
+     *
+     * @return the parameters list
+     */
+    public List<JobParameter> getParameters() {
+        return parameters;
+    }
+
+    /**
+     * Sets the parameters list.
+     *
+     * @param parameters the new parameters list
+     */
+    public void setParameters(List<JobParameter> parameters) {
+        this.parameters = parameters;
+    }
+
+    /**
      * Gets the message.
      *
      * @return the message
@@ -347,11 +368,29 @@ public class Job extends Artefact {
      */
     @Override
     public String toString() {
-        return "Job{" + "id=" + id + ", group='" + group + '\'' + ", clazz='" + clazz + '\'' + ", expression='"
-                + expression + '\'' + ", handler='" + handler + '\'' + ", engine='" + engine + '\'' + ", singleton="
-                + singleton + ", enabled=" + enabled + ", status=" + status + ", message='" + message + '\'' + ", executedAt="
-                + executedAt + ", location='" + location + '\'' + ", name='" + name + '\'' + ", type='" + type + '\'' + ", description='"
-                + description + '\'' + ", key='" + key + '\'' + ", dependencies='" + dependencies + '\'' + ", createdBy="
-                + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + '}';
+        return "Job{" +
+                "id=" + id +
+                ", group='" + group + '\'' +
+                ", clazz='" + clazz + '\'' +
+                ", expression='" + expression + '\'' +
+                ", handler='" + handler + '\'' +
+                ", engine='" + engine + '\'' +
+                ", singleton=" + singleton +
+                ", enabled=" + enabled +
+                ", parameters=" + parameters +
+                ", status=" + status +
+                ", message='" + message + '\'' +
+                ", executedAt=" + executedAt +
+                ", location='" + location + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                ", key='" + key + '\'' +
+                ", dependencies='" + dependencies + '\'' +
+                ", createdBy=" + createdBy +
+                ", createdAt=" + createdAt +
+                ", updatedBy=" + updatedBy +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

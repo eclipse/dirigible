@@ -21,6 +21,9 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.jobs.domain.Job;
+import org.eclipse.dirigible.components.jobs.domain.JobEmail;
+import org.eclipse.dirigible.components.jobs.service.JobEmailService;
+import org.eclipse.dirigible.components.jobs.service.JobLogService;
 import org.eclipse.dirigible.components.jobs.service.JobService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +56,16 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      * The job service.
      */
     private JobService jobService;
+
+    /**
+     * The jobEmail service.
+     */
+    private JobEmailService jobEmailService;
+
+    /**
+     * The jobLog service.
+     */
+    private JobLogService jobLogService;
 
     /**
      * The synchronization callback.
@@ -173,6 +186,19 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+        Job job = null;
+        if (wrapper.getArtefact() instanceof Job){
+            job = (Job) wrapper.getArtefact();
+            Job existingJob = jobService.findByName(job.getName());
+            List<JobEmail> emailDefinitions = jobEmailService.findAllByName(existingJob.getName());
+
+            jobLogService.jobLogged(existingJob.getName(), existingJob.getHandler(), existingJob.getMessage());
+            JobEmailProcessor.createAndSendJobEmail(job, existingJob, emailDefinitions);
+        }
+        else {
+            throw new UnsupportedOperationException(String.format("Trying to process %s as Job", wrapper.getArtefact().getClass()));
+        }
+
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
         return true;
     }
