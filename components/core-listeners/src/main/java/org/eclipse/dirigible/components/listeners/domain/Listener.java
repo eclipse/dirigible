@@ -21,7 +21,7 @@ public class Listener extends Artefact {
     public static final String ARTEFACT_TYPE = "listener";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "EXTENSION_ID", nullable = false)
+    @Column(name = "LISTENER_ID", nullable = false)
     private Long id;
 
     @Column(name = "LISTENER_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)

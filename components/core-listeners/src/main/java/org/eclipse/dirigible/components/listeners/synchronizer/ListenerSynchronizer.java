@@ -58,7 +58,6 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
     public List<Listener> load(String location, byte[] content) {
         Listener listener = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Listener.class);
         listener.setLocation(location);
-        listener.setName("");
         listener.setType(Listener.ARTEFACT_TYPE);
         listener.updateKey();
         try {
