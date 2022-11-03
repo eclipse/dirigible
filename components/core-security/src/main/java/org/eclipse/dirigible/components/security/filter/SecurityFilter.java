@@ -86,9 +86,6 @@ public class SecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         SECURED_PREFIXES.add("/js");
-        SECURED_PREFIXES.add("/rhino");
-        SECURED_PREFIXES.add("/nashorn");
-        SECURED_PREFIXES.add("/v8");
         SECURED_PREFIXES.add("/public");
         SECURED_PREFIXES.add("/web");
         SECURED_PREFIXES.add("/wiki");

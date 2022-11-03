@@ -25,41 +25,17 @@ public class SecurityFilterConfig {
 
         filterRegistrationBean.setFilter(securityFilter);
         filterRegistrationBean.addUrlPatterns(
-                "/services/v3/js/*",
-                "/services/v3/rhino/*",
-                "/services/v3/nashorn/*",
-                "/services/v3/v8/*",
-                "/services/v3/public/*",
-                "/services/v3/web/*",
-                "/services/v3/wiki/*",
-                "/services/v3/command/*",
+                "/services/v8/js/*",
+                "/services/v8/public/*",
+                "/services/v8/web/*",
+                "/services/v8/wiki/*",
+                "/services/v8/command/*",
 
-                "/public/v3/js/*",
-                "/public/v3/rhino/*",
-                "/public/v3/nashorn/*",
-                "/public/v3/v8/*",
-                "/public/v3/public/*",
-                "/public/v3/web/*",
-                "/public/v3/wiki/*",
-                "/public/v3/command/*",
-
-                "/services/v4/js/*",
-                "/services/v4/rhino/*",
-                "/services/v4/nashorn/*",
-                "/services/v4/v8/*",
-                "/services/v4/public/*",
-                "/services/v4/web/*",
-                "/services/v4/wiki/*",
-                "/services/v4/command/*",
-
-                "/public/v4/js/*",
-                "/public/v4/rhino/*",
-                "/public/v4/nashorn/*",
-                "/public/v4/v8/*",
-                "/public/v4/public/*",
-                "/public/v4/web/*",
-                "/public/v4/wiki/*",
-                "/public/v4/command/*",
+                "/public/v8/js/*",
+                "/public/v8/public/*",
+                "/public/v8/web/*",
+                "/public/v8/wiki/*",
+                "/public/v8/command/*",
 
                 "/odata/v2/*"
         );
