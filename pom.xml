@@ -771,7 +771,7 @@
 		<angularjs.version>1.8.2</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
 		<classgraph.version>4.8.149</classgraph.version>
-		<commons-compress.version>1.21</commons-compress.version>
+		<commons-compress.version>1.22</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.5</testcontainers.elasticsearch.version>
 		<testcontainers.version>1.17.5</testcontainers.version>
 		<testcontainers.rabbitmq.version>1.17.5</testcontainers.rabbitmq.version>
@@ -785,7 +785,7 @@
 		<spring.boot.version>2.7.5</spring.boot.version>
 		<spring.boot.slf4j.version>1.7.25</spring.boot.slf4j.version>
 		<spring.boot.logback.version>1.2.11</spring.boot.logback.version>
-		<webjars-locator>0.45</webjars-locator>
+		<webjars-locator>0.46</webjars-locator>
 		<keycloak-adapter-bom.version>19.0.3</keycloak-adapter-bom.version>
 		<hikaricp.version>5.0.1</hikaricp.version>
 		<validator.version>1.7</validator.version>
@@ -799,7 +799,7 @@
 		<wikitext.version>3.0.42</wikitext.version>
 		<flexmark.version>0.64.0</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.331</qldb.sdk.version>
+		<qldb.sdk.version>1.12.333</qldb.sdk.version>
 		<cassandra.version>1.17.5</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>4.3.0</jedis.version>
