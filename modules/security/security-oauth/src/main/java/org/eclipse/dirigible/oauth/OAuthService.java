@@ -12,8 +12,10 @@
 package org.eclipse.dirigible.oauth;
 
 
+import static org.eclipse.dirigible.oauth.filters.AbstractOAuthFilter.INITIAL_REQUEST_PATH_COOKIE;
 import java.io.IOException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -117,8 +119,8 @@ public class OAuthService extends AbstractRestService implements IRestService {
 	public void callback(@QueryParam("code") String code) throws ClientProtocolException, IOException{
 		AccessToken accessToken = getAccessToken(code);
 		JwtUtils.setJwt(response, accessToken.getAccessToken());
-//		String redirectPath = getRedirectPath();
-		response.sendRedirect("/home");
+		String redirectPath = getRedirectPath();
+		response.sendRedirect(redirectPath);
 	}
 
 	/**
@@ -153,6 +155,24 @@ public class OAuthService extends AbstractRestService implements IRestService {
 		HttpClientResponse clientResponse = HttpClientFacade.processHttpClientResponse(httpClientResponse, false);
 
 		return GsonHelper.GSON.fromJson(clientResponse.getText(), AccessToken.class);
+	}
+
+	private String getRedirectPath() {
+		String redirectPath = "/";
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie: cookies) {
+				if (cookie.getName().equals(INITIAL_REQUEST_PATH_COOKIE) && cookie.getValue() != null && !cookie.getValue().equals("")) {
+					redirectPath = cookie.getValue();
+					cookie.setValue("");
+					cookie.setPath("/");
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+				}
+
+			}
+		}
+		return redirectPath;
 	}
 
 	/**

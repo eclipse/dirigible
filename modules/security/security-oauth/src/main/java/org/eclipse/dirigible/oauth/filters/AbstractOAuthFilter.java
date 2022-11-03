@@ -22,6 +22,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,9 +35,11 @@ import org.slf4j.Logger;
  */
 public abstract class AbstractOAuthFilter implements Filter {
 
+	public static final String INITIAL_REQUEST_PATH_COOKIE = "initialRequestPath";
+
 	/** The Constant SLASH. */
 	private static final String SLASH = "/";
-	
+
 	/** The Constant IS_OAUTH_AUTHENTICATION_ENABLED. */
 	private static final boolean IS_OAUTH_AUTHENTICATION_ENABLED = Configuration.isOAuthAuthenticationEnabled();
 
@@ -102,7 +105,35 @@ public abstract class AbstractOAuthFilter implements Filter {
 	 */
 	protected void authenticate(ServletRequest request, ServletResponse response) throws IOException {
 		String authenticationUrl = OAuthUtils.getAuthenticationUrl();
+		setRequestPathCookie(request, response);
 		((HttpServletResponse) response).sendRedirect(authenticationUrl);
+	}
+
+	/**
+	 * Sets the request path cookie.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 */
+	protected void setRequestPathCookie(ServletRequest request, ServletResponse response) {
+		boolean found = false;
+		Cookie[] cookies = ((HttpServletRequest) request).getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals(INITIAL_REQUEST_PATH_COOKIE) && cookie.getValue() != null && !cookie.getValue().equals("")) {
+					found = true;
+					break;
+				}
+			}
+		}
+		if (!found) {
+			String contextPath = ((HttpServletRequest) request).getContextPath();
+			String pathInfo = ((HttpServletRequest) request).getPathInfo();
+			String requestPath = contextPath + "/services/v4" + pathInfo;
+			Cookie cookie = new Cookie(INITIAL_REQUEST_PATH_COOKIE, requestPath);
+			cookie.setPath("/");
+			((HttpServletResponse) response).addCookie(cookie);
+		}
 	}
 
 	/**
