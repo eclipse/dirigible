@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.components.listeners.synchronizer;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -59,6 +60,7 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
         Listener listener = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Listener.class);
         listener.setLocation(location);
         listener.setType(Listener.ARTEFACT_TYPE);
+        listener.setName(FilenameUtils.getBaseName(location));
         listener.updateKey();
         try {
             getService().save(listener);
