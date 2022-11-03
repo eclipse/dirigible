@@ -18,12 +18,13 @@ import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobEmail;
+import org.eclipse.dirigible.components.registry.accessor.RegistryAccessor;
 import org.eclipse.dirigible.core.generation.api.GenerationEnginesManager;
 import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
-import org.eclipse.dirigible.engine.api.resource.RegistryResourceExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -35,6 +36,9 @@ import java.util.List;
 import java.util.Map;
 
 public class JobEmailProcessor {
+
+    @Autowired
+    private RegistryAccessor registryAccessor;
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(JobEmailProcessor.class);
@@ -185,16 +189,10 @@ public class JobEmailProcessor {
         emailUrlPort = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT);
     }
 
-    private static String prepareEmail(Job jobDefinition, String templateLocation, String defaultLocation) {
-        RegistryResourceExecutor registryResourceExecutor = new RegistryResourceExecutor();
-        byte[] template = registryResourceExecutor.getRegistryContent(templateLocation);
-        if (template == null) {
-            template = registryResourceExecutor.getRegistryContent(defaultLocation);
-            if (template == null) {
-                if (logger.isErrorEnabled()) {logger.error("Template for the e-mail has not been set nor the default one is available");}
-                return null;
-            }
-        }
+    private String prepareEmail(Job jobDefinition, String templateLocation, String defaultLocation) {
+
+        byte[] template = registryAccessor.getRegistryContent(templateLocation, defaultLocation);
+
         IGenerationEngine generationEngine = GenerationEnginesManager.getGenerationEngine("mustache");
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("job.name", jobDefinition.getName());
@@ -211,7 +209,7 @@ public class JobEmailProcessor {
         }
     }
 
-    private static void sendEmail(Job jobDefinition, List<JobEmail> emailDefinitions, String emailSubject, String emailContent) {
+    private void sendEmail(Job jobDefinition, List<JobEmail> emailDefinitions, String emailSubject, String emailContent) {
         try {
             String[] emails = new String[emailDefinitions.size()];
             for (int i = 0; i < emails.length; i++) {
@@ -239,7 +237,7 @@ public class JobEmailProcessor {
         }
     }
 
-    public static void createAndSendJobEmail (Job job, Job existingJob, List<JobEmail> emailDefinitions){
+    public void createAndSendJobEmail (Job job, Job existingJob, List<JobEmail> emailDefinitions){
         if (job.getCreatedAt() == null) {
             job.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
         }

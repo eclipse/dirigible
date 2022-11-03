@@ -160,7 +160,7 @@ public class JobLogService implements ArtefactService<JobLog> {
         jobLog.setHandler(handler);
         jobLog.setMessage(message);
         jobLog.setStatus(severity);
-        jobLog.setTriggeredAt(new Timestamp(new java.util.Date().getTime()));
+        jobLog.setTriggeredAt(new Timestamp(new Date().getTime()));
         save(jobLog);
         return jobLog;
     }
@@ -229,7 +229,7 @@ public class JobLogService implements ArtefactService<JobLog> {
         jobLog.setStatus(JobLog.JOB_LOG_STATUS_FINISHED);
         jobLog.setTriggeredId(triggeredId);
         jobLog.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
-        jobLog.setFinishedAt(new Timestamp(new java.util.Date().getTime()));
+        jobLog.setFinishedAt(new Timestamp(new Date().getTime()));
         save(jobLog);
         return jobLog;
     }
@@ -251,7 +251,7 @@ public class JobLogService implements ArtefactService<JobLog> {
         jobLog.setStatus(JobLog.JOB_LOG_STATUS_FAILED);
         jobLog.setTriggeredId(triggeredId);
         jobLog.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
-        jobLog.setFinishedAt(new Timestamp(new java.util.Date().getTime()));
+        jobLog.setFinishedAt(new Timestamp(new Date().getTime()));
         jobLog.setMessage(message);
         save(jobLog);
         return jobLog;

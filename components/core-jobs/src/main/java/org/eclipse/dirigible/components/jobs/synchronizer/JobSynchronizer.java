@@ -22,6 +22,8 @@ import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobEmail;
+import org.eclipse.dirigible.components.jobs.domain.JobLifecycle;
+import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.eclipse.dirigible.components.jobs.service.JobEmailService;
 import org.eclipse.dirigible.components.jobs.service.JobLogService;
 import org.eclipse.dirigible.components.jobs.service.JobService;
@@ -60,11 +62,13 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
     /**
      * The jobEmail service.
      */
+    @Autowired
     private JobEmailService jobEmailService;
 
     /**
      * The jobLog service.
      */
+    @Autowired
     private JobLogService jobLogService;
 
     /**
@@ -190,10 +194,31 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
         if (wrapper.getArtefact() instanceof Job){
             job = (Job) wrapper.getArtefact();
             Job existingJob = jobService.findByName(job.getName());
-            List<JobEmail> emailDefinitions = jobEmailService.findAllByName(existingJob.getName());
+            JobLog jobLog = jobLogService.findById(existingJob.getId());
+            JobLifecycle jobLifecycleState = JobLifecycle.valueOf(flow);
 
-            jobLogService.jobLogged(existingJob.getName(), existingJob.getHandler(), existingJob.getMessage());
-            JobEmailProcessor.createAndSendJobEmail(job, existingJob, emailDefinitions);
+            switch (jobLifecycleState){
+                case CREATE:
+                    jobLogService.jobLogged(existingJob.getName(), existingJob.getHandler(), existingJob.getMessage());
+                    break;
+                case UPDATE:
+                    List<JobEmail> emailDefinitions = jobEmailService.findAllByName(existingJob.getName());
+                    JobEmailProcessor jobEmailProcessor = new JobEmailProcessor();
+                    jobEmailProcessor.createAndSendJobEmail(job, existingJob, emailDefinitions);
+                    break;
+                case DROP:
+                    jobLogService.delete(jobLog);
+                    break;
+                case TRIGGERED:
+                    jobLogService.jobTriggered(existingJob.getName(), existingJob.getHandler());
+                    break;
+                case FAILED:
+                    jobLogService.jobFailed(existingJob.getName(), existingJob.getHandler(), jobLog.getTriggeredId(), jobLog.getTriggeredAt(), jobLog.getMessage());
+                    break;
+                case FINISHED:
+                    jobLogService.jobFinished(existingJob.getName(), existingJob.getHandler(), jobLog.getTriggeredId(),jobLog.getTriggeredAt());
+                    break;
+            }
         }
         else {
             throw new UnsupportedOperationException(String.format("Trying to process %s as Job", wrapper.getArtefact().getClass()));
