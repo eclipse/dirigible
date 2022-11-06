@@ -9,14 +9,15 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.openapi.synchronizer;
+package org.eclipse.dirigible.components.security.synchronizer;
 
-import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
-import org.eclipse.dirigible.components.openapi.repository.OpenAPIRepository;
-import org.eclipse.dirigible.components.openapi.repository.OpenAPIRepositoryTest;
+import org.eclipse.dirigible.components.security.domain.SecurityRole;
+import org.eclipse.dirigible.components.security.repository.SecurityRoleRepository;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -30,26 +31,26 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+import static org.eclipse.dirigible.components.security.repository.SecurityRoleRepositoryTest.createSecurityRole;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = {OpenAPIRepository.class})
+@SpringBootTest(classes = {SecurityRoleRepository.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-class OpenAPISynchronizerTest {
-
+class SecurityRoleSynchronizerTest {
     /**
-     * The openapi repository.
+     * The security role repository.
      */
     @Autowired
-    private OpenAPIRepository openAPIRepository;
+    private SecurityRoleRepository securityRoleRepository;
 
     /**
-     * The openapi synchronizer.
+     * The sercurity role synchronizer.
      */
     @Autowired
-    private OpenAPISynchronizer openAPISynchronizer;
+    private SecurityRoleSynchronizer securityRoleSynchronizer;
 
     /**
      * The entity manager.
@@ -62,12 +63,12 @@ class OpenAPISynchronizerTest {
      */
     @BeforeEach
     public void setup() {
-        // Create test OpenAPIs
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
+        // Create test security accesses
+        securityRoleRepository.save(createSecurityRole("/a/b/c/test1.access", "test1", "description"));
+        securityRoleRepository.save(createSecurityRole("/a/b/c/test2.access", "test2", "description"));
+        securityRoleRepository.save(createSecurityRole("/a/b/c/test3.access", "test3", "description"));
+        securityRoleRepository.save(createSecurityRole("/a/b/c/test4.access", "test4", "description"));
+        securityRoleRepository.save(createSecurityRole("/a/b/c/test5.access", "test5", "description"));
     }
 
     /**
@@ -75,8 +76,8 @@ class OpenAPISynchronizerTest {
      */
     @AfterEach
     public void cleanup() {
-        // Delete test OpenAPIs
-        openAPIRepository.findAll().stream().forEach(openAPI -> openAPIRepository.delete(openAPI));
+        // Delete test security roles
+        securityRoleRepository.findAll().stream().forEach(securityRole -> securityRoleRepository.delete(securityRole));
     }
 
     /**
@@ -84,7 +85,7 @@ class OpenAPISynchronizerTest {
      */
     @Test
     public void testIsAcceptedPath() {
-        assertTrue(openAPISynchronizer.isAccepted(Path.of("/a/b/c/test.openapi"), null));
+        assertTrue(securityRoleSynchronizer.isAccepted(Path.of("/a/b/c/test.role"), null));
     }
 
     /**
@@ -92,8 +93,7 @@ class OpenAPISynchronizerTest {
      */
     @Test
     public void testIsAcceptedArtefact() {
-        assertTrue(openAPISynchronizer.isAccepted(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test.openapi", "test",
-                "description").getType()));
+        assertTrue(securityRoleSynchronizer.isAccepted(createSecurityRole("/a/b/c/test.role", "test", "description").getType()));
     }
 
     /**
@@ -102,10 +102,10 @@ class OpenAPISynchronizerTest {
     @Test
     public void testLoad() throws IOException {
         byte[] content =
-                OpenAPISynchronizer.class.getResourceAsStream("/META-INF/dirigible/test/test.openapi").readAllBytes();
-        List<OpenAPI> list = openAPISynchronizer.load("/META-INF/dirigible/test/test.openapi", content);
+                SecurityRoleSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.role").readAllBytes();
+        List<SecurityRole> list = securityRoleSynchronizer.load("/META-INF/dirigible/test/test.role", content);
         assertNotNull(list);
-        assertEquals("/META-INF/dirigible/test/test.openapi", list.get(0).getLocation());
+        assertEquals("/META-INF/dirigible/test/test.role", list.get(0).getLocation());
     }
 
     /**
@@ -114,5 +114,4 @@ class OpenAPISynchronizerTest {
     @SpringBootApplication
     static class TestConfiguration {
     }
-
 }

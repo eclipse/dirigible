@@ -1,0 +1,22 @@
+{
+   "constraints":[
+      {
+         "scope":"HTTP",
+         "path":"/myproject/myfolder/myartifact1.txt",
+         "method":"*",
+         "roles":[
+            "myrole1",
+            "myrole2"
+         ]
+      },
+      {
+         "scope":"HTTP",
+         "path":"/myproject/myfolder/myartifact2.txt",
+         "method":"GET",
+         "roles":[
+            "myrole3",
+            "myrole4"
+         ]
+      }
+   ]
+}

@@ -1,0 +1,10 @@
+[  
+   {  
+      "name":"myrole1",
+      "description":"Role1 Description"
+   },
+   {  
+      "name":"myrole2",
+      "description":"Role2 Description"
+   }
+]

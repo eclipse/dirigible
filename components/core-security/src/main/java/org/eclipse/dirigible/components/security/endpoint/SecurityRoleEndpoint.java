@@ -9,43 +9,42 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.version.endpoint;
-
+package org.eclipse.dirigible.components.security.endpoint;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.version.domain.Version;
-import org.eclipse.dirigible.components.version.service.VersionService;
-
+import org.eclipse.dirigible.components.security.domain.SecurityRole;
+import org.eclipse.dirigible.components.security.service.SecurityRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
- * The Class VersionEndpoint.
+ * The Class SecurityRoleEndpoint.
  */
 
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "version")
-public class VersionEndpoint extends BaseEndpoint {
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "security")
+public class SecurityRoleEndpoint extends BaseEndpoint {
 
     /**
      * The Constant logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(VersionEndpoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(SecurityRoleEndpoint.class);
 
     /**
-     * The version service.
+     * The security role service.
      */
     @Autowired
-    private VersionService versionService;
+    private SecurityRoleService securityRoleService;
 
-    @GetMapping
-    public ResponseEntity<Version> getVersion() throws Exception {
-        return ResponseEntity.ok(versionService.getVersion());
+    @GetMapping("/role")
+    public ResponseEntity<List<SecurityRole>> getAll() {
+        return ResponseEntity.ok(securityRoleService.getAll());
     }
 }

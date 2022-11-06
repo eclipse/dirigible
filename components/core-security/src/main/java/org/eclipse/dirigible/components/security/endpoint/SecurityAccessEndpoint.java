@@ -9,12 +9,11 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.version.endpoint;
-
+package org.eclipse.dirigible.components.security.endpoint;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.version.domain.Version;
-import org.eclipse.dirigible.components.version.service.VersionService;
+import org.eclipse.dirigible.components.security.domain.SecurityAccess;
+import org.eclipse.dirigible.components.security.service.SecurityAccessService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,27 +24,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
- * The Class VersionEndpoint.
+ * The Class SecurityAccessEndpoint.
  */
 
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "version")
-public class VersionEndpoint extends BaseEndpoint {
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "security")
+public class SecurityAccessEndpoint extends BaseEndpoint {
 
     /**
      * The Constant logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(VersionEndpoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(SecurityAccessEndpoint.class);
 
     /**
-     * The version service.
+     * The security access service.
      */
     @Autowired
-    private VersionService versionService;
+    private SecurityAccessService securityAccessService;
 
-    @GetMapping
-    public ResponseEntity<Version> getVersion() throws Exception {
-        return ResponseEntity.ok(versionService.getVersion());
+    @GetMapping("/access")
+    public ResponseEntity<List<SecurityAccess>> getSecurityAccesses() {
+        return ResponseEntity.ok(securityAccessService.getAll());
     }
 }

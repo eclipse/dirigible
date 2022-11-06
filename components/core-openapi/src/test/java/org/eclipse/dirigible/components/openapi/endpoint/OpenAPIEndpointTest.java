@@ -12,24 +12,38 @@
 package org.eclipse.dirigible.components.openapi.endpoint;
 
 import org.eclipse.dirigible.components.openapi.repository.OpenAPIRepository;
+import org.eclipse.dirigible.components.openapi.service.OpenAPIService;
+import org.eclipse.dirigible.components.openapi.synchronizer.OpenAPISynchronizer;
+import org.eclipse.dirigible.components.repository.RepositoryConfig;
+import org.eclipse.dirigible.components.repository.domain.Repository;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.eclipse.dirigible.components.openapi.repository.OpenAPIRepositoryTest.createOpenAPI;
+
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = {OpenAPIRepository.class})
+@SpringBootTest(classes = {OpenAPIRepository.class, RepositoryConfig.class})
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
+@EntityScan("org.eclipse.dirigible.components")
+@Transactional
 class OpenAPIEndpointTest {
 
     @Autowired
@@ -37,6 +51,9 @@ class OpenAPIEndpointTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    private IRepository repository;
 
     @BeforeEach
     public void setup() {
@@ -56,9 +73,29 @@ class OpenAPIEndpointTest {
 
     @Test
     public void testGetVersion() throws Exception {
+        String openAPILocation = "/META-INF/dirigible/test/test.openapi";
+        byte[] content = OpenAPISynchronizer.class.getResourceAsStream(openAPILocation).readAllBytes();
+        openAPIRepository.save(createOpenAPI(openAPILocation, "test", "description"));
+        repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + openAPILocation, content);
         mockMvc.perform(get("/services/v8/core/openapi"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("{\"swagger\":\"2.0\",\"info\":{\"description\":\"Eclipse " +
+                        "Dirigible API of the REST services provided by the applications\",\"version\":\"0.0.1\"," +
+                        "\"title\":\"Eclipse Dirigible - Applications REST Services API\"," +
+                        "\"contact\":{\"email\":\"dirigible-dev@eclipse.org\"},\"license\":{\"name\":\"Eclipse Public" +
+                        " License - v 2.0\",\"url\":\"https://www.eclipse.org/legal/epl-v20.html\"}}," +
+                        "\"basePath\":\"/services/v4\",\"tags\":[],\"schemes\":[\"http\"]," +
+                        "\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"security\":[]," +
+                        "\"paths\":{\"/healthcheck\":{\"get\":{\"description\":\"Returns dirigible status\"," +
+                        "\"operationId\":\"getHealthcheck\",\"produces\":[\"application/json\",\"application/xml\"," +
+                        "\"text/xml\",\"text/html\"],\"parameters\":[]," +
+                        "\"responses\":{\"200\":{\"description\":\"healthcheck response\"}," +
+                        "\"default\":{\"description\":\"unexpected error\"," +
+                        "\"schema\":{\"$ref\":\"#/definitions/ErrorModel\"}}}}}},\"securityDefinitions\":{}," +
+                        "\"definitions\":{\"ErrorModel\":{\"type\":\"object\",\"required\":[\"code\",\"message\"]," +
+                        "\"properties\":{\"code\":{\"type\":\"integer\",\"format\":\"int32\"}," +
+                        "\"message\":{\"type\":\"string\"}}}},\"parameters\":{},\"responses\":{}}")));
     }
 
     @SpringBootApplication

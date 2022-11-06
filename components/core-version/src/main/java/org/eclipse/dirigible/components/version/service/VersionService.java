@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * The Class VersionService.
+ */
 @Service
 public class VersionService {
 
