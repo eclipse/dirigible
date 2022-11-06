@@ -46,6 +46,9 @@ public class JobLog extends Artefact {
     /** The Constant JOB_LOG_STATUS_UNKNOWN. */
     public static final short JOB_LOG_STATUS_UNKNOWN = 99;
 
+    /** The Constant ARTEFACT_TYPE. */
+    public static final String ARTEFACT_TYPE = "jobLog";
+
     /** The id. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
