@@ -11,6 +11,11 @@
  */
 package org.eclipse.dirigible.components.websockets.synchronizer;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -25,19 +30,16 @@ import org.eclipse.dirigible.components.websockets.service.WebsocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
 
 /**
  * The Class WebsocketsSynchronizer.
  *
- * @param A the generic type
+ * @param <A> the generic type
  */
 @Component
+@Order(120)
 public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<Websocket> {
     
     /** The Constant logger. */
@@ -62,7 +64,7 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(FILE_EXTENSION_WEBSOCKET);
+        return file.toString().endsWith(getFileExtension());
     }
 
     /**
@@ -180,4 +182,24 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
+    
+    /**
+     * Gets the file extension.
+     *
+     * @return the file extension
+     */
+    @Override
+	public String getFileExtension() {
+		return FILE_EXTENSION_WEBSOCKET;
+	}
+
+	/**
+	 * Gets the artefact type.
+	 *
+	 * @return the artefact type
+	 */
+	@Override
+	public String getArtefactType() {
+		return Websocket.ARTEFACT_TYPE;
+	}
 }

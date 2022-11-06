@@ -36,6 +36,9 @@
 		
 		<!-- Applications -->
 		<module>app-all</module>
+		
+		<!-- Test -->
+		<module>test-project</module>
 	</modules>
 	
 	<dependencies>

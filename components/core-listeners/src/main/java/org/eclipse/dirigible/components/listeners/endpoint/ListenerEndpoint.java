@@ -26,12 +26,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.eclipse.dirigible.components.base.endpoint.BaseEndpoint.DEFAULT_PAGE_SIZE;
 
+/**
+ * The Class ListenerEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "listeners")
 public class ListenerEndpoint {
+    
+    /** The listener service. */
     @Autowired
     private ListenerService listenerService;
 
+    /**
+     * Find all.
+     *
+     * @param size the size
+     * @param page the page
+     * @return the page
+     */
     @GetMapping
     public Page<Listener> findAll(
             @Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,

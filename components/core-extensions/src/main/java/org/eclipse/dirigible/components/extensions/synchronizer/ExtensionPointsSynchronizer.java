@@ -46,7 +46,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionPointsSynchronizer.class);
 	
 	/** The Constant FILE_EXTENSION_EXTENSIONPOINT. */
-	public static final String FILE_EXTENSION_EXTENSIONPOINT = ".extensionpoint";
+	private static final String FILE_EXTENSION_EXTENSIONPOINT = ".extensionpoint";
 	
 	/** The extension point service. */
 	private ExtensionPointService extensionPointService;
@@ -83,7 +83,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_EXTENSION_EXTENSIONPOINT);
+		return file.toString().endsWith(getFileExtension());
 	}
 
 	/**
@@ -183,6 +183,16 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	@Override
 	public void setCallback(SynchronizerCallback callback) {
 		this.callback = callback;
+	}
+
+	@Override
+	public String getFileExtension() {
+		return FILE_EXTENSION_EXTENSIONPOINT;
+	}
+
+	@Override
+	public String getArtefactType() {
+		return ExtensionPoint.ARTEFACT_TYPE;
 	}
 
 }

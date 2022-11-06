@@ -99,4 +99,17 @@ public interface Synchronizer<A extends Artefact> {
 	 */
 	void setCallback(SynchronizerCallback callback);
 	
+	/**
+	 * Gets the file extension
+	 * 
+	 * @return the file extension
+	 */
+	String getFileExtension();
+	
+	/**
+	 * Gets the artefact type
+	 * @return the artefact type
+	 */
+	String getArtefactType();
+	
 }

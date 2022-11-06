@@ -11,6 +11,11 @@
  */
 package org.eclipse.dirigible.components.listeners.synchronizer;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
@@ -26,35 +31,61 @@ import org.eclipse.dirigible.components.listeners.service.ListenerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
-
+/**
+ * The Class ListenerSynchronizer.
+ *
+ * @param <A> the generic type
+ */
 @Component
+@Order(40)
 public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Listener> {
 
+    /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ListenerSynchronizer.class);
 
-    public static final String FILE_EXTENSION_EXTENSION = ".listener";
+    /** The Constant FILE_EXTENSION_LISTENER. */
+    private static final String FILE_EXTENSION_LISTENER = ".listener";
 
+    /** The callback. */
     private SynchronizerCallback callback;
 
+    /** The listener service. */
     @Autowired
     private ListenerService listenerService;
 
+    /**
+     * Checks if is accepted.
+     *
+     * @param file the file
+     * @param attrs the attrs
+     * @return true, if is accepted
+     */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(FILE_EXTENSION_EXTENSION);
+        return file.toString().endsWith(FILE_EXTENSION_LISTENER);
     }
 
+    /**
+     * Checks if is accepted.
+     *
+     * @param type the type
+     * @return true, if is accepted
+     */
     @Override
     public boolean isAccepted(String type) {
         return Listener.ARTEFACT_TYPE.equals(type);
     }
 
+    /**
+     * Load.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the list
+     */
     @Override
     public List<Listener> load(String location, byte[] content) {
         Listener listener = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Listener.class);
@@ -72,11 +103,23 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
         return List.of(listener);
     }
 
+    /**
+     * Prepare.
+     *
+     * @param wrappers the wrappers
+     * @param depleter the depleter
+     */
     @Override
     public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
 
     }
 
+    /**
+     * Process.
+     *
+     * @param wrappers the wrappers
+     * @param depleter the depleter
+     */
     @Override
     public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
         try {
@@ -88,11 +131,21 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
         }
     }
 
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
     @Override
     public ArtefactService<Listener> getService() {
         return listenerService;
     }
 
+    /**
+     * Cleanup.
+     *
+     * @param listener the listener
+     */
     @Override
     public void cleanup(Listener listener) {
         try {
@@ -103,14 +156,46 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
         }
     }
 
+    /**
+     * Complete.
+     *
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
+     */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
         return true;
     }
 
+    /**
+     * Sets the callback.
+     *
+     * @param callback the new callback
+     */
     @Override
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
+    
+    /**
+     * Gets the file extension.
+     *
+     * @return the file extension
+     */
+    @Override
+	public String getFileExtension() {
+		return FILE_EXTENSION_LISTENER;
+	}
+
+	/**
+	 * Gets the artefact type.
+	 *
+	 * @return the artefact type
+	 */
+	@Override
+	public String getArtefactType() {
+		return Listener.ARTEFACT_TYPE;
+	}
 }

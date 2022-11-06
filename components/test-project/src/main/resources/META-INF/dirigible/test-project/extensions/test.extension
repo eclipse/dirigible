@@ -1,0 +1,8 @@
+{
+  "location":"/test-project/extensions/test.extension",
+  "module":"/test-project/extensions/test",
+  "extensionPoint":"/test-project/extensions/test",
+  "description": "Test Extension",
+  "createdBy":"system",
+  "createdAt":"2017-07-06T3:24:12+0000"
+}

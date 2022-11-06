@@ -20,8 +20,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -39,8 +37,6 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -50,14 +46,14 @@ import org.springframework.stereotype.Component;
  * @param A the generic type
  */
 @Component
-@Order(20)
+@Order(210)
 public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Table> {
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TablesSynchronizer.class);
 	
 	/** The Constant FILE_EXTENSION_TABLE. */
-	public static final String FILE_EXTENSION_TABLE = ".table";
+	private static final String FILE_EXTENSION_TABLE = ".table";
 	
 	/** The table service. */
 	private TableService tableService;
@@ -97,7 +93,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_EXTENSION_TABLE);
+		return file.toString().endsWith(getFileExtension());
 	}
 
 	/**
@@ -387,6 +383,16 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 */
 	public void executeTableForeignKeysDrop(Connection connection, Table tableModel) throws SQLException {
 		TableForeignKeysDropProcessor.execute(connection, tableModel);
+	}
+	
+	@Override
+	public String getFileExtension() {
+		return FILE_EXTENSION_TABLE;
+	}
+
+	@Override
+	public String getArtefactType() {
+		return Table.ARTEFACT_TYPE;
 	}
 
 }

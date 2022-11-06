@@ -1,0 +1,7 @@
+{
+  "location":"/test-project/extensions/test.extensionpoint",
+  "name":"/test-project/extensions/test",
+  "description":"Test Extension Point",
+  "createdBy":"system",
+  "createdAt":"2017-07-06T2:53:01+0000"
+}

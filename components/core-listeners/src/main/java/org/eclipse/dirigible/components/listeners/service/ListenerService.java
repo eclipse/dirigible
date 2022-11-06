@@ -24,23 +24,44 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class ListenerService.
+ */
 @Service
 @Transactional
 public class ListenerService implements ArtefactService<Listener> {
 
+    /** The listener repository. */
     @Autowired
     private ListenerRepository listenerRepository;
 
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
     @Override
     public List getAll() {
         return listenerRepository.findAll();
     }
 
+    /**
+     * Find all.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
     @Override
     public Page findAll(Pageable pageable) {
         return listenerRepository.findAll(pageable);
     }
 
+    /**
+     * Find by id.
+     *
+     * @param id the id
+     * @return the listener
+     */
     @Override
     public Listener findById(Long id) {
         Optional<Listener> listener = listenerRepository.findById(id);
@@ -51,6 +72,12 @@ public class ListenerService implements ArtefactService<Listener> {
         }
     }
 
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the listener
+     */
     @Override
     public Listener findByName(String name) {
         Listener filter = new Listener();
@@ -64,11 +91,22 @@ public class ListenerService implements ArtefactService<Listener> {
         }
     }
 
+    /**
+     * Save.
+     *
+     * @param listener the listener
+     * @return the listener
+     */
     @Override
     public Listener save(Listener listener) {
         return listenerRepository.saveAndFlush(listener);
     }
 
+    /**
+     * Delete.
+     *
+     * @param listener the listener
+     */
     @Override
     public void delete(Listener listener) {
         listenerRepository.delete(listener);

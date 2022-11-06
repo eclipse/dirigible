@@ -1,0 +1,8 @@
+{
+  "guid":"test-project",
+  "repository": {
+    "type":"git",
+    "branch":"master",
+    "url":"https://github.com/eclipse/dirigible.git"
+  }
+}

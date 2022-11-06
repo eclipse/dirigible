@@ -11,6 +11,11 @@
  */
 package org.eclipse.dirigible.components.openapi.synchronizer;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -22,17 +27,11 @@ import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
 import org.eclipse.dirigible.components.openapi.service.OpenAPIService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
 
 /**
  * The Class OpenAPISynchronizer.
@@ -40,6 +39,7 @@ import java.util.*;
  * @param A the generic type
  */
 @Component
+@Order(110)
 public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<OpenAPI> {
 
     /**
@@ -50,7 +50,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     /**
      * The Constant FILE_OPENAPI_EXTENSION.
      */
-    public static final String FILE_OPENAPI_EXTENSION = ".openapi";
+    private static final String FILE_EXTENSION_OPENAPI = ".openapi";
 
     /**
      * The openapi service.
@@ -82,7 +82,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(FILE_OPENAPI_EXTENSION);
+        return file.toString().endsWith(getFileExtension());
     }
 
     /**
@@ -197,4 +197,14 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
+    
+    @Override
+	public String getFileExtension() {
+		return FILE_EXTENSION_OPENAPI;
+	}
+
+	@Override
+	public String getArtefactType() {
+		return OpenAPI.ARTEFACT_TYPE;
+	}
 }

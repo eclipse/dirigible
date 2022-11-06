@@ -15,6 +15,9 @@ import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Interface ListenerRepository.
+ */
 @Repository("listenerRepository")
 public interface ListenerRepository extends JpaRepository<Listener, Long> {
 }
