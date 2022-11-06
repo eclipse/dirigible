@@ -50,11 +50,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     /**
      * The Constant FILE_EXTENSION_OPENAPI.
      */
-<<<<<<< HEAD
     private static final String FILE_EXTENSION_OPENAPI = ".openapi";
-=======
-    public static final String FILE_EXTENSION_OPENAPI = ".openapi";
->>>>>>> d24b59b399d359075721e63be48a2fbee3d546ff
 
     /**
      * The openAPI service.
@@ -86,11 +82,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-<<<<<<< HEAD
         return file.toString().endsWith(getFileExtension());
-=======
-        return file.toString().endsWith(FILE_EXTENSION_OPENAPI);
->>>>>>> d24b59b399d359075721e63be48a2fbee3d546ff
     }
 
     /**

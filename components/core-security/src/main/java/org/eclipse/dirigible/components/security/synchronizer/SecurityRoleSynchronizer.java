@@ -11,6 +11,11 @@
  */
 package org.eclipse.dirigible.components.security.synchronizer;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -22,17 +27,11 @@ import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.security.domain.SecurityRole;
 import org.eclipse.dirigible.components.security.service.SecurityRoleService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
 
 /**
  * The Class SecurityRoleSynchronizer.
@@ -41,6 +40,7 @@ import java.util.List;
  */
 
 @Component
+@Order(30)
 public class SecurityRoleSynchronizer<A extends Artefact> implements Synchronizer<SecurityRole> {
 
     /**
@@ -93,7 +93,7 @@ public class SecurityRoleSynchronizer<A extends Artefact> implements Synchronize
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(FILE_EXTENSION_SECURITY_ROLE);
+        return file.toString().endsWith(getFileExtension());
     }
 
     /**
@@ -212,4 +212,14 @@ public class SecurityRoleSynchronizer<A extends Artefact> implements Synchronize
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
+    
+    @Override
+	public String getFileExtension() {
+		return FILE_EXTENSION_SECURITY_ROLE;
+	}
+
+	@Override
+	public String getArtefactType() {
+		return SecurityRole.ARTEFACT_TYPE;
+	}
 }

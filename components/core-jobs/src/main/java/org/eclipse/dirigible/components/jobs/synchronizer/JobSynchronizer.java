@@ -11,6 +11,11 @@
  */
 package org.eclipse.dirigible.components.jobs.synchronizer;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -30,11 +35,8 @@ import org.eclipse.dirigible.components.jobs.service.JobService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
 
 /**
  * The Class JobSynchronizer.
@@ -42,6 +44,7 @@ import java.util.List;
  * @param A the generic type
  */
 @Component
+@Order(50)
 public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
 
     /**
@@ -52,7 +55,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
     /**
      * The Constant FILE_JOB_EXTENSION.
      */
-    public static final String FILE_JOB_EXTENSION = ".job";
+    public static final String FILE_EXTENSION_JOB = ".job";
 
     /**
      * The job service.
@@ -93,7 +96,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(FILE_JOB_EXTENSION);
+        return file.toString().endsWith(getFileExtension());
     }
 
     /**
@@ -235,4 +238,14 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      */
     @Override
     public void setCallback(SynchronizerCallback callback) {this.callback = callback;}
+    
+    @Override
+	public String getFileExtension() {
+		return FILE_EXTENSION_JOB;
+	}
+
+	@Override
+	public String getArtefactType() {
+		return Job.ARTEFACT_TYPE;
+	}
 }

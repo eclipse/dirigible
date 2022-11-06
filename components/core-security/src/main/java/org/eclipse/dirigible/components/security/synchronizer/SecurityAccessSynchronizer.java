@@ -11,6 +11,11 @@
  */
 package org.eclipse.dirigible.components.security.synchronizer;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -20,20 +25,14 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
-import org.eclipse.dirigible.components.security.domain.SecurityAccessArtifact;
 import org.eclipse.dirigible.components.security.domain.SecurityAccess;
+import org.eclipse.dirigible.components.security.domain.SecurityAccessArtifact;
 import org.eclipse.dirigible.components.security.service.SecurityAccessService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
 
 /**
  * The Class SecurityAccessSynchronizer.
@@ -42,6 +41,7 @@ import java.util.*;
  */
 
 @Component
+@Order(40)
 public class SecurityAccessSynchronizer<A extends Artefact> implements Synchronizer<SecurityAccess> {
 
     /**
@@ -52,7 +52,7 @@ public class SecurityAccessSynchronizer<A extends Artefact> implements Synchroni
     /**
      * The Constant FILE_EXTENSION_SECURITY_ACCESS.
      */
-    public static final String FILE_EXTENSION_SECURITY_ACCESS = ".access";
+    private static final String FILE_EXTENSION_SECURITY_ACCESS = ".access";
 
     /**
      * The security access service.
@@ -94,7 +94,7 @@ public class SecurityAccessSynchronizer<A extends Artefact> implements Synchroni
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-        return file.toString().endsWith(FILE_EXTENSION_SECURITY_ACCESS);
+        return file.toString().endsWith(getFileExtension());
     }
 
     /**
@@ -208,4 +208,14 @@ public class SecurityAccessSynchronizer<A extends Artefact> implements Synchroni
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
+    
+    @Override
+	public String getFileExtension() {
+		return FILE_EXTENSION_SECURITY_ACCESS;
+	}
+
+	@Override
+	public String getArtefactType() {
+		return SecurityAccess.ARTEFACT_TYPE;
+	}
 }

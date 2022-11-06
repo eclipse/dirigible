@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(40)
+@Order(60)
 public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Listener> {
 
     /** The Constant logger. */
