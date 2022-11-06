@@ -25,6 +25,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The Class VersionEndpoint.
+ */
+
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "version")
 public class VersionEndpoint extends BaseEndpoint {
@@ -41,7 +45,7 @@ public class VersionEndpoint extends BaseEndpoint {
     private VersionService versionService;
 
     @GetMapping
-    public ResponseEntity<Version> version() throws Exception {
+    public ResponseEntity<Version> getVersion() throws Exception {
         return ResponseEntity.ok(versionService.getVersion());
     }
 }

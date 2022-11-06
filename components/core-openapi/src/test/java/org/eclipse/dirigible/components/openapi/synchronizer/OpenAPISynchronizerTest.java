@@ -26,6 +26,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -58,8 +59,6 @@ class OpenAPISynchronizerTest {
 
     /**
      * Setup.
-     *
-     * @throws Exception the exception
      */
     @BeforeEach
     public void setup() {
@@ -73,8 +72,6 @@ class OpenAPISynchronizerTest {
 
     /**
      * Cleanup.
-     *
-     * @throws Exception the exception
      */
     @AfterEach
     public void cleanup() {
@@ -86,7 +83,7 @@ class OpenAPISynchronizerTest {
      * Checks if is accepted.
      */
     @Test
-    public void isAcceptedPath() {
+    public void testIsAcceptedPath() {
         assertTrue(openAPISynchronizer.isAccepted(Path.of("/a/b/c/test.openapi"), null));
     }
 
@@ -94,19 +91,21 @@ class OpenAPISynchronizerTest {
      * Checks if is accepted.
      */
     @Test
-    public void isAcceptedArtefact() {
-        assertTrue(openAPISynchronizer.isAccepted(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test.openapi", "test", "description").getType()));
+    public void testIsAcceptedArtefact() {
+        assertTrue(openAPISynchronizer.isAccepted(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test.openapi", "test",
+                "description").getType()));
     }
 
     /**
      * Load the artefact.
      */
     @Test
-    public void load() {
-        String content = "{\"location\":\"/test/test.openapi\",\"name\":\"/test/test\",\"description\":\"Test OpenAPI\", \"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
-        List<OpenAPI> list = openAPISynchronizer.load("/test/test.openapi", content.getBytes());
+    public void testLoad() throws IOException {
+        byte[] content =
+                OpenAPISynchronizer.class.getResourceAsStream("/META-INF/dirigible/test/test.openapi").readAllBytes();
+        List<OpenAPI> list = openAPISynchronizer.load("/META-INF/dirigible/test/test.openapi", content);
         assertNotNull(list);
-        assertEquals("/test/test.openapi", list.get(0).getLocation());
+        assertEquals("/META-INF/dirigible/test/test.openapi", list.get(0).getLocation());
     }
 
     /**

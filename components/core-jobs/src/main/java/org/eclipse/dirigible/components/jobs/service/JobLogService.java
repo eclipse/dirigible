@@ -20,6 +20,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -123,5 +126,134 @@ public class JobLogService implements ArtefactService<JobLog> {
     public void deleteJobByName(String jobLogName){
         JobLog jobLog = findByName(jobLogName);
         delete(jobLog);
+    }
+
+    /**
+     * Job triggered.
+     *
+     * @param name the name
+     * @param handler the handler
+     * @return the job log definition
+     */
+    public JobLog jobTriggered(String name, String handler) {
+        JobLog jobLog = new JobLog();
+        jobLog.setName(name);
+        jobLog.setHandler(handler);
+        jobLog.setStatus(JobLog.JOB_LOG_STATUS_TRIGGRED);
+        jobLog.setTriggeredAt(new Timestamp(new Date().getTime()));
+        save(jobLog);
+        return jobLog;
+    }
+
+    /**
+     * Job logged.
+     *
+     * @param name the name
+     * @param handler the handler
+     * @param message the message
+     * @param severity the severity
+     * @return the job log definition
+     */
+    private JobLog jobLogged(String name, String handler, String message, short severity){
+        JobLog jobLog = new JobLog();
+        jobLog.setName(name);
+        jobLog.setHandler(handler);
+        jobLog.setMessage(message);
+        jobLog.setStatus(severity);
+        jobLog.setTriggeredAt(new Timestamp(new Date().getTime()));
+        save(jobLog);
+        return jobLog;
+    }
+
+    /**
+     * Job logged.
+     *
+     * @param name the name
+     * @param handler the handler
+     * @param message the message
+     * @return the job log definition
+     */
+    public JobLog jobLogged(String name, String handler, String message) {
+        return jobLogged(name, handler, message, JobLog.JOB_LOG_STATUS_LOGGED);
+    }
+
+    /**
+     * Job logged error.
+     *
+     * @param name the name
+     * @param handler the handler
+     * @param message the message
+     * @return the job log definition
+     */
+    public JobLog jobLoggedError(String name, String handler, String message) {
+        return jobLogged(name, handler, message, JobLog.JOB_LOG_STATUS_ERROR);
+    }
+
+    /**
+     * Job logged warning.
+     *
+     * @param name the name
+     * @param handler the handler
+     * @param message the message
+     * @return the job log definition
+     */
+    public JobLog jobLoggedWarning(String name, String handler, String message) {
+        return jobLogged(name, handler, message, JobLog.JOB_LOG_STATUS_WARN);
+    }
+
+    /**
+     * Job logged info.
+     *
+     * @param name the name
+     * @param handler the handler
+     * @param message the message
+     * @return the job log definition
+     */
+    public JobLog jobLoggedInfo(String name, String handler, String message) {
+        return jobLogged(name, handler, message, JobLog.JOB_LOG_STATUS_INFO);
+    }
+
+    /**
+     * Job finished.
+     *
+     * @param name the name
+     * @param handler the handler
+     * @param triggeredId the triggered id
+     * @param triggeredAt the triggered at
+     * @return the job log definition
+     */
+    public JobLog jobFinished(String name, String handler, long triggeredId, Date triggeredAt) {
+        JobLog jobLog = new JobLog();
+        jobLog.setName(name);
+        jobLog.setHandler(handler);
+        jobLog.setStatus(JobLog.JOB_LOG_STATUS_FINISHED);
+        jobLog.setTriggeredId(triggeredId);
+        jobLog.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
+        jobLog.setFinishedAt(new Timestamp(new Date().getTime()));
+        save(jobLog);
+        return jobLog;
+    }
+
+    /**
+     * Job failed.
+     *
+     * @param name the name
+     * @param handler the handler
+     * @param triggeredId the triggered id
+     * @param triggeredAt the triggered at
+     * @param message the message
+     * @return the job log definition
+     */
+    public JobLog jobFailed(String name, String handler, long triggeredId, Date triggeredAt, String message){
+        JobLog jobLog = new JobLog();
+        jobLog.setName(name);
+        jobLog.setHandler(handler);
+        jobLog.setStatus(JobLog.JOB_LOG_STATUS_FAILED);
+        jobLog.setTriggeredId(triggeredId);
+        jobLog.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
+        jobLog.setFinishedAt(new Timestamp(new Date().getTime()));
+        jobLog.setMessage(message);
+        save(jobLog);
+        return jobLog;
     }
 }

@@ -48,12 +48,16 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     private static final Logger logger = LoggerFactory.getLogger(OpenAPISynchronizer.class);
 
     /**
-     * The Constant FILE_OPENAPI_EXTENSION.
+     * The Constant FILE_EXTENSION_OPENAPI.
      */
+<<<<<<< HEAD
     private static final String FILE_EXTENSION_OPENAPI = ".openapi";
+=======
+    public static final String FILE_EXTENSION_OPENAPI = ".openapi";
+>>>>>>> d24b59b399d359075721e63be48a2fbee3d546ff
 
     /**
-     * The openapi service.
+     * The openAPI service.
      */
 
     private OpenAPIService openAPIService;
@@ -64,9 +68,9 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     private SynchronizerCallback callback;
 
     /**
-     * Instantiates a new openapi synchronizer.
+     * Instantiates a new openAPI synchronizer.
      *
-     * @param openAPIService the openapi service
+     * @param openAPIService the openAPI service
      */
     @Autowired
     public OpenAPISynchronizer(OpenAPIService openAPIService) {
@@ -82,7 +86,11 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      */
     @Override
     public boolean isAccepted(Path file, BasicFileAttributes attrs) {
+<<<<<<< HEAD
         return file.toString().endsWith(getFileExtension());
+=======
+        return file.toString().endsWith(FILE_EXTENSION_OPENAPI);
+>>>>>>> d24b59b399d359075721e63be48a2fbee3d546ff
     }
 
     /**
@@ -114,7 +122,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
             getService().save(openAPI);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            if (logger.isErrorEnabled()) {logger.error("openapi: {}", openAPI);}
+            if (logger.isErrorEnabled()) {logger.error("openAPI: {}", openAPI);}
             if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
         }
         return List.of(openAPI);
@@ -161,12 +169,12 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     /**
      * Cleanup.
      *
-     * @param artefact the artefact
+     * @param openAPI the openAPI
      */
     @Override
-    public void cleanup(OpenAPI artefact) {
+    public void cleanup(OpenAPI openAPI) {
         try {
-            getService().delete(artefact);
+            getService().delete(openAPI);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage(), e);

@@ -95,6 +95,22 @@ public class JobEmailService implements ArtefactService<JobEmail> {
     }
 
     /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the job email
+     */
+
+    @Transactional(readOnly = true)
+    public List<JobEmail> findAllByName(String name) {
+        JobEmail filter = new JobEmail();
+        filter.setName(name);
+        Example<JobEmail> example = Example.of(filter);
+        List<JobEmail> jobEmail = jobEmailRepository.findAll(example);
+        return jobEmail;
+    }
+
+    /**
      * Save.
      *
      * @param jobEmail the job email

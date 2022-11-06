@@ -61,19 +61,19 @@ class OpenAPIServiceTest {
     }
 
     @Test
-    void getAll() {
+    void testGetAll() {
         List<OpenAPI> openAPIList = openAPIService.getAll();
         assertEquals(5, openAPIList.size());
     }
 
     @Test
-    void findAll() {
+    void testFindAll() {
         Page<OpenAPI> openApiPage = openAPIService.findAll(Pageable.ofSize(1));
         assertEquals(5, openApiPage.getTotalElements());
     }
 
     @Test
-    void findById() {
+    void testFindById() {
         OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
         openAPIService.save(openAPI);
         OpenAPI openAPIServiceById = openAPIService.findById(openAPI.getId());
@@ -81,7 +81,7 @@ class OpenAPIServiceTest {
     }
 
     @Test
-    void findByName() {
+    void testFindByName() {
         OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
         openAPIService.save(openAPI);
         OpenAPI openAPIServiceByName = openAPIService.findByName("test");
@@ -89,18 +89,19 @@ class OpenAPIServiceTest {
     }
 
     @Test
-    void save() {
+    void testSave() {
         OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
         openAPIService.save(openAPI);
         assertNotNull(openAPIService.findByName("test"));
     }
 
     @Test
-    void delete() {
+    void testDelete() {
         try {
             OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
             openAPIService.save(openAPI);
             openAPIService.delete(openAPI);
+            openAPIService.findByName("test");
         } catch (Exception e) {
             assertEquals("OpenAPI with name does not exist: test", e.getMessage());
         }

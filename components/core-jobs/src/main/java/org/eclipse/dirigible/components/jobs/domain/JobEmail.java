@@ -21,6 +21,9 @@ import javax.persistence.*;
 @Table(name = "DIRIGIBLE_JOB_EMAILS")
 public class JobEmail extends Artefact {
 
+    /** The Constant ARTEFACT_TYPE. */
+    public static final String ARTEFACT_TYPE = "jobEmail";
+
     /** The id. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -11,14 +11,13 @@
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.Transient;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 
 /**
  * The JobParameterDefinition serialization object.
@@ -26,6 +25,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "DIRIGIBLE_JOB_PARAMETERS")
 public class JobParameter extends Artefact {
+
+    /** The Constant ARTEFACT_TYPE. */
+    public static final String ARTEFACT_TYPE = "jobParameter";
 
     /** The id. */
     @Id
@@ -55,6 +57,12 @@ public class JobParameter extends Artefact {
     @Column(name = "JOBPARAM_VALUE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
     private String value;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "JOB_ID", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Job job;
+
     /**
      * Instantiates a new job parameter.
      */
@@ -77,7 +85,7 @@ public class JobParameter extends Artefact {
      * @param choices the choices
      * @param value the value
      */
-    public JobParameter(String location, String name, String type, String description, String dependencies, Long id, String jobName, String type1, String defaultValue, String choices, String value) {
+    public JobParameter(String location, String name, String type, String description, String dependencies, Long id, String jobName, String type1, String defaultValue, String choices, String value, Job job) {
         super(location, name, type, description, dependencies);
         this.id = id;
         this.jobName = jobName;
@@ -85,6 +93,7 @@ public class JobParameter extends Artefact {
         this.defaultValue = defaultValue;
         this.choices = choices;
         this.value = value;
+        this.job = job;
     }
 
     /**
@@ -198,6 +207,24 @@ public class JobParameter extends Artefact {
     }
 
     /**
+     * Gets the job.
+     *
+     * @return the job
+     */
+    public Job getJob() {
+        return job;
+    }
+
+    /**
+     * Sets the job.
+     *
+     * @param job the new job
+     */
+    public void setJob(Job job) {
+        this.job = job;
+    }
+
+    /**
      * To string.
      *
      * @return the string
@@ -205,12 +232,13 @@ public class JobParameter extends Artefact {
     @Override
     public String toString() {
         return "JobParameter{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", jobName='" + jobName + '\'' +
                 ", type='" + type + '\'' +
                 ", defaultValue='" + defaultValue + '\'' +
                 ", choices='" + choices + '\'' +
                 ", value='" + value + '\'' +
+                ", job=" + job +
                 ", location='" + location + '\'' +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
