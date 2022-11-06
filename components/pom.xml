@@ -26,6 +26,7 @@
 		<module>core-openapi</module>
 		<module>core-version</module>
 		<module>core-websockets</module>
+		<module>core-listeners</module>
 		
 		<!-- Data -->
 		<module>data-structures</module>
