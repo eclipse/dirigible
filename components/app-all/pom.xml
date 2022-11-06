@@ -13,8 +13,6 @@
     <name>Application - All</name>
     <artifactId>dirigible-application-all</artifactId>
     <packaging>jar</packaging>
-
-
     <dependencies>
 
         <!-- Components -->
@@ -100,9 +98,7 @@
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
 
-
     </dependencies>
-
 
     <build>
         <plugins>

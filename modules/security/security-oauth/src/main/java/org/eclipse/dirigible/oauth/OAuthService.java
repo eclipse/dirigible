@@ -25,16 +25,18 @@ import javax.ws.rs.core.Context;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.eclipse.dirigible.api.v3.http.HttpClientFacade;
 import org.eclipse.dirigible.api.v3.http.client.HttpClientHeader;
+import org.eclipse.dirigible.api.v3.http.client.HttpClientParam;
 import org.eclipse.dirigible.api.v3.http.client.HttpClientProxyUtils;
 import org.eclipse.dirigible.api.v3.http.client.HttpClientRequestOptions;
 import org.eclipse.dirigible.api.v3.http.client.HttpClientResponse;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.oauth.utils.JwtUtils;
 import org.eclipse.dirigible.oauth.utils.OAuthUtils;
 import org.slf4j.Logger;
@@ -83,6 +85,9 @@ public class OAuthService extends AbstractRestService implements IRestService {
 	
 	/** The Constant DIRIGIBLE_OAUTH_VERIFICATION_KEY. */
 	public static final String DIRIGIBLE_OAUTH_VERIFICATION_KEY = "DIRIGIBLE_OAUTH_VERIFICATION_KEY";
+
+	/** The Constant DIRIGIBLE_OAUTH_VERIFICATION_KEY_EXPONENT. */
+	public static final String DIRIGIBLE_OAUTH_VERIFICATION_KEY_EXPONENT = "DIRIGIBLE_OAUTH_VERIFICATION_KEY_EXPONENT";
 	
 	/** The Constant DIRIGIBLE_OAUTH_APPLICATION_NAME. */
 	public static final String DIRIGIBLE_OAUTH_APPLICATION_NAME = "DIRIGIBLE_OAUTH_APPLICATION_NAME";
@@ -95,6 +100,12 @@ public class OAuthService extends AbstractRestService implements IRestService {
 	
 	/** The Constant DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED. */
 	public static final String DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED = "DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED";
+
+	/** The Constant DIRIGIBLE_OAUTH_CHECK_AUDIENCE_ENABLED. */
+	public static final String DIRIGIBLE_OAUTH_CHECK_AUDIENCE_ENABLED = "DIRIGIBLE_OAUTH_CHECK_AUDIENCE_ENABLED";
+
+	/** The Constant DIRIGIBLE_OAUTH_TOKEN_REQUEST_METHOD. */
+	public static final String DIRIGIBLE_OAUTH_TOKEN_REQUEST_METHOD = "DIRIGIBLE_OAUTH_TOKEN_REQUEST_METHOD";
 
 	/**
 	 * Clone repository.
@@ -121,25 +132,31 @@ public class OAuthService extends AbstractRestService implements IRestService {
 	 * @throws ClientProtocolException the client protocol exception
 	 */
 	private AccessToken getAccessToken(String code) throws IOException, ClientProtocolException {
-		String tokenUrl = OAuthUtils.getTokenUrl(code);
-		String authorizationHeader = OAuthUtils.getOAuthAuthorizationHeader();
-
+		HttpUriRequest request = null;
 		HttpClientRequestOptions options = new HttpClientRequestOptions();
-		options.getHeaders().add(new HttpClientHeader(AUTHORIZATION_HEADER, authorizationHeader));
+		options.getHeaders().add(new HttpClientHeader(AUTHORIZATION_HEADER, OAuthUtils.getOAuthAuthorizationHeader()));
 
-		HttpGet httpGet = HttpClientFacade.createGetRequest(tokenUrl, options);
+		switch (Configuration.get(DIRIGIBLE_OAUTH_TOKEN_REQUEST_METHOD, "GET").toUpperCase()) {
+		case "GET":
+			request = HttpClientFacade.createGetRequest(OAuthUtils.getTokenUrl(code), options);
+			break;
+		case "POST":
+			options.getParams().add(new HttpClientParam(OAuthUtils.PARAM_GRANT_TYPE, OAuthUtils.VALUE_GRANT_TYPE_AUTHORIZATION_CODE));
+			options.getParams().add(new HttpClientParam(OAuthUtils.PARAM_CODE, code));
+			options.getParams().add(new HttpClientParam(OAuthUtils.PARAM_REDIRECT_URI, OAuthUtils.getRedirectUri()));
+			request = HttpClientFacade.createPostRequest(OAuthUtils.getOAuthTokenUrl(), options);
+			break;
+		default:
+			throw new IllegalArgumentException("Unsupported OAuth Token Request Method");
+		}
+
 		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(false);
-		CloseableHttpResponse httpClientResponse = httpClient.execute(httpGet);
+		CloseableHttpResponse httpClientResponse = httpClient.execute(request);
 		HttpClientResponse clientResponse = HttpClientFacade.processHttpClientResponse(httpClientResponse, false);
 
 		return GsonHelper.GSON.fromJson(clientResponse.getText(), AccessToken.class);
 	}
 
-	/**
-	 * Gets the redirect path.
-	 *
-	 * @return the redirect path
-	 */
 	private String getRedirectPath() {
 		String redirectPath = "/";
 		Cookie[] cookies = request.getCookies();
@@ -152,7 +169,7 @@ public class OAuthService extends AbstractRestService implements IRestService {
 					cookie.setMaxAge(0);
 					response.addCookie(cookie);
 				}
-				
+
 			}
 		}
 		return redirectPath;

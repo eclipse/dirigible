@@ -12,10 +12,13 @@
 package org.eclipse.dirigible.oauth.utils;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -204,9 +207,18 @@ public class JwtUtils {
 	public static JwtClaim getClaim(String jwt) {
 		String body = getToken(jwt, JWT_BODY);
 		if (body != null) {
-			return GsonHelper.GSON.fromJson(body, JwtClaim.class);
+			try {
+				return GsonHelper.GSON.fromJson(body, XsuaaJwtClaim.class);
+			} catch (Exception e) {
+				// Do nothing
+			}
+			try {
+				return GsonHelper.GSON.fromJson(body, CognitoJwtClaim.class);
+			} catch (Exception e) {
+				// Do nothing
+			}
 		}
-		return null;
+		throw new IllegalStateException("Unable to parse JWT, it is neither XSUAA nor Cognito compliant token.");
 	}
 
 	/**
@@ -314,10 +326,58 @@ public class JwtUtils {
 
 	}
 
+	public static class XsuaaJwtClaim extends JwtClaim {
+
+		/** The scope. */
+		private List<String> scope;
+
+		/** The user name. */
+		@SerializedName("user_name")
+		private String userName;
+
+		@Override
+		public List<String> getScope() {
+			return scope;
+		}
+
+		@Override
+		public String getUserName() {
+			return userName;
+		}
+
+	}
+
+	public static class CognitoJwtClaim extends JwtClaim {
+
+		/** The scope. */
+		private String scope;
+
+		/** The cognito:groups. */
+		@SerializedName("cognito:groups")
+		private List<String> cognitoGroups;
+
+		/** The user name. */
+		private String username;
+
+		@Override
+		public List<String> getScope() {
+			List<String> scopes = new ArrayList<String>(cognitoGroups);
+			if (scope != null) {
+				scopes.add(scope);
+			}
+			return scopes;
+		}
+
+		@Override
+		public String getUserName() {
+			return username;
+		}
+
+	}
 	/**
 	 * The Class JwtClaim.
 	 */
-	public static class JwtClaim {
+	public static abstract class JwtClaim {
 
 		/** The id. */
 		@SerializedName("jti")
@@ -331,9 +391,6 @@ public class JwtUtils {
 		@SerializedName("family_name")
 		private String familyName;
 
-		/** The scope. */
-		private List<String> scope;
-
 		/** The client id. */
 		@SerializedName("client_id")
 		private String clientId;
@@ -345,10 +402,6 @@ public class JwtUtils {
 		/** The user id. */
 		@SerializedName("user_id")
 		private String userId;
-
-		/** The user name. */
-		@SerializedName("user_name")
-		private String userName;
 
 		/** The email. */
 		@SerializedName("email")
@@ -384,30 +437,12 @@ public class JwtUtils {
 		}
 
 		/**
-		 * Sets the id.
-		 *
-		 * @param id the id to set
-		 */
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		/**
 		 * Gets the given name.
 		 *
 		 * @return the givenName
 		 */
 		public String getGivenName() {
 			return givenName;
-		}
-
-		/**
-		 * Sets the given name.
-		 *
-		 * @param givenName the givenName to set
-		 */
-		public void setGivenName(String givenName) {
-			this.givenName = givenName;
 		}
 
 		/**
@@ -420,31 +455,11 @@ public class JwtUtils {
 		}
 
 		/**
-		 * Sets the family name.
-		 *
-		 * @param familyName the familyName to set
-		 */
-		public void setFamilyName(String familyName) {
-			this.familyName = familyName;
-		}
-
-		/**
 		 * Gets the scope.
 		 *
 		 * @return the scope
 		 */
-		public List<String> getScope() {
-			return scope;
-		}
-
-		/**
-		 * Sets the scope.
-		 *
-		 * @param scope the scope to set
-		 */
-		public void setScope(List<String> scope) {
-			this.scope = scope;
-		}
+		public abstract List<String> getScope();
 
 		/**
 		 * Gets the client id.
@@ -453,15 +468,6 @@ public class JwtUtils {
 		 */
 		public String getClientId() {
 			return clientId;
-		}
-
-		/**
-		 * Sets the client id.
-		 *
-		 * @param clientId the clientId to set
-		 */
-		public void setClientId(String clientId) {
-			this.clientId = clientId;
 		}
 
 		/**
@@ -474,15 +480,6 @@ public class JwtUtils {
 		}
 
 		/**
-		 * Sets the grant type.
-		 *
-		 * @param grantType the grantType to set
-		 */
-		public void setGrantType(String grantType) {
-			this.grantType = grantType;
-		}
-
-		/**
 		 * Gets the user id.
 		 *
 		 * @return the userId
@@ -492,31 +489,11 @@ public class JwtUtils {
 		}
 
 		/**
-		 * Sets the user id.
-		 *
-		 * @param userId the userId to set
-		 */
-		public void setUserId(String userId) {
-			this.userId = userId;
-		}
-
-		/**
 		 * Gets the user name.
 		 *
 		 * @return the userName
 		 */
-		public String getUserName() {
-			return userName;
-		}
-
-		/**
-		 * Sets the user name.
-		 *
-		 * @param userName the userName to set
-		 */
-		public void setUserName(String userName) {
-			this.userName = userName;
-		}
+		public abstract String getUserName();
 
 		/**
 		 * Gets the email.
@@ -525,15 +502,6 @@ public class JwtUtils {
 		 */
 		public String getEmail() {
 			return email;
-		}
-
-		/**
-		 * Sets the email.
-		 *
-		 * @param email the email to set
-		 */
-		public void setEmail(String email) {
-			this.email = email;
 		}
 
 		/**
@@ -546,30 +514,12 @@ public class JwtUtils {
 		}
 
 		/**
-		 * Sets the auth time.
-		 *
-		 * @param authTime the authTime to set
-		 */
-		public void setAuthTime(long authTime) {
-			this.authTime = authTime;
-		}
-
-		/**
 		 * Gets the issued at.
 		 *
 		 * @return the issuedAt
 		 */
 		public long getIssuedAt() {
 			return issuedAt;
-		}
-
-		/**
-		 * Sets the issued at.
-		 *
-		 * @param issuedAt the issuedAt to set
-		 */
-		public void setIssuedAt(long issuedAt) {
-			this.issuedAt = issuedAt;
 		}
 
 		/**
@@ -582,15 +532,6 @@ public class JwtUtils {
 		}
 
 		/**
-		 * Sets the expirantion time.
-		 *
-		 * @param expirantionTime the expirantionTime to set
-		 */
-		public void setExpirantionTime(long expirantionTime) {
-			this.expirantionTime = expirantionTime;
-		}
-
-		/**
 		 * Gets the issuer.
 		 *
 		 * @return the issuer
@@ -600,30 +541,12 @@ public class JwtUtils {
 		}
 
 		/**
-		 * Sets the issuer.
-		 *
-		 * @param issuer the issuer to set
-		 */
-		public void setIssuer(String issuer) {
-			this.issuer = issuer;
-		}
-
-		/**
 		 * Gets the audience.
 		 *
 		 * @return the audience
 		 */
 		public List<String> getAudience() {
 			return audience;
-		}
-
-		/**
-		 * Sets the audience.
-		 *
-		 * @param audience the audience to set
-		 */
-		public void setAudience(List<String> audience) {
-			this.audience = audience;
 		}
 
 	}
@@ -697,9 +620,11 @@ public class JwtUtils {
 		Algorithm algorithm = Algorithm.RSA256(publicKey, null);
 		Verification verification = JWT.require(algorithm)
 				.acceptLeeway(1) // 1 sec for nbf and iat
-				.acceptExpiresAt(5) // 5 secs for exp
-				.withAudience(OAuthUtils.getOAuthClientId());
+				.acceptExpiresAt(5); // 5 secs for exp
 
+		if (Boolean.parseBoolean(Configuration.get(OAuthService.DIRIGIBLE_OAUTH_CHECK_AUDIENCE_ENABLED, Boolean.TRUE.toString()))) {
+			verification.withAudience(OAuthUtils.getOAuthClientId());
+		}
 		if (Boolean.parseBoolean(Configuration.get(OAuthService.DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED, Boolean.TRUE.toString()))) {
 			verification.withIssuer(OAuthUtils.getOAuthTokenUrl(), OAuthUtils.getOAuthIssuer());
 		}
@@ -778,15 +703,22 @@ public class JwtUtils {
 	 * @throws GeneralSecurityException the general security exception
 	 */
 	private static RSAPublicKey getPublicKeyFromString(String key) throws IOException, GeneralSecurityException {
-		String publicKeyPEM = key;
-		publicKeyPEM = publicKeyPEM.replace("\n", "");
-		publicKeyPEM = publicKeyPEM.replace("-----BEGIN PUBLIC KEY-----", "");
-		publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
-
-		byte[] encoded = BASE64.decode(publicKeyPEM);
+		RSAPublicKey publicKey = null;
 		KeyFactory kf = KeyFactory.getInstance("RSA");
-		RSAPublicKey pubKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(encoded));
 
-		return pubKey;
+		String publicKeyPEM = key.replace("\n", "") //
+				.replace("-----BEGIN PUBLIC KEY-----", "") //
+				.replace("-----END PUBLIC KEY-----", "");
+
+		String keyExponent = Configuration.get(OAuthService.DIRIGIBLE_OAUTH_VERIFICATION_KEY_EXPONENT);
+		if (keyExponent != null) {
+			BigInteger modulus = new BigInteger(1, BASE64.decode(publicKeyPEM));
+			BigInteger exponent = new BigInteger(1, BASE64.decode(keyExponent));
+			publicKey = (RSAPublicKey) kf.generatePublic(new RSAPublicKeySpec(modulus, exponent));
+		} else {
+			publicKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(BASE64.decode(publicKeyPEM)));
+		}
+
+		return publicKey;
 	}
 }

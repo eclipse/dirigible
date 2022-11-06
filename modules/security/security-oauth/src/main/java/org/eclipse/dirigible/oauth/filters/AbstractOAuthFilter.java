@@ -35,12 +35,11 @@ import org.slf4j.Logger;
  */
 public abstract class AbstractOAuthFilter implements Filter {
 
-	/** The name of the cookie, where is stored the initial request path. */
 	public static final String INITIAL_REQUEST_PATH_COOKIE = "initialRequestPath";
-	
+
 	/** The Constant SLASH. */
 	private static final String SLASH = "/";
-	
+
 	/** The Constant IS_OAUTH_AUTHENTICATION_ENABLED. */
 	private static final boolean IS_OAUTH_AUTHENTICATION_ENABLED = Configuration.isOAuthAuthenticationEnabled();
 
@@ -135,16 +134,6 @@ public abstract class AbstractOAuthFilter implements Filter {
 			cookie.setPath("/");
 			((HttpServletResponse) response).addCookie(cookie);
 		}
-	}
-
-	/**
-	 * Removes the request path cookie.
-	 *
-	 * @param request the request
-	 * @param response the response
-	 */
-	protected void removeRequestPathCookie(ServletRequest request, ServletResponse response) {
-		((HttpServletResponse) response).addCookie(new Cookie(INITIAL_REQUEST_PATH_COOKIE, null));
 	}
 
 	/**

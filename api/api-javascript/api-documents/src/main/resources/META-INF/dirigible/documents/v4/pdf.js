@@ -20,15 +20,17 @@ var templateEngine = require("platform/v4/template-engines");
 
 const TEMPLATE_PATH_TABLE = "documents/templates/table.xml";
 
-exports.generateTable = function(data, config) {
-    let templateParameters = {
+exports.generateTable = function (data, config) {
+    let defaultTemplateParameters = {
         pageWidth: "210",
         pageHeight: "297",
-        columns: data.columns,
         alignColumns: "center",
         alignRows: "center"
     };
-
+    let templateParameters = {
+        ...defaultTemplateParameters,
+        ...data
+    }
     setTemplateParameters(templateParameters, config);
     let template = registry.getText(TEMPLATE_PATH_TABLE);
     let pdfTemplate = templateEngine.generate(template, templateParameters);
@@ -39,13 +41,13 @@ exports.generateTable = function(data, config) {
     return org.eclipse.dirigible.api.v3.documents.PDFFacade.generate(pdfTemplate, xmlData);
 };
 
-exports.generate = function(templatePath, data) {
+exports.generate = function (templatePath, data) {
     let template = registry.getText(templatePath);
 
     let xmlData = xml.fromJson({
         content: data
     });
-	return org.eclipse.dirigible.api.v3.documents.PDFFacade.generate(template, xmlData);
+    return org.eclipse.dirigible.api.v3.documents.PDFFacade.generate(template, xmlData);
 };
 
 function setTemplateParameters(templateParameters, config) {

@@ -27,6 +27,7 @@
 		<module>core-version</module>
 		<module>core-websockets</module>
 		<module>core-security</module>
+		<module>core-listeners</module>
 		
 		<!-- Data -->
 		<module>data-structures</module>
@@ -93,12 +94,12 @@
 		
 		<!-- Date Type Utils -->
 		<dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
-            <version>${jackson.databind.version}</version>
-        </dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-joda</artifactId>
+      <version>${jackson.databind.version}</version>
+    </dependency>
         
-    	<!-- Bean Validation API support -->
+    <!-- Bean Validation API support -->
 		<dependency>
 		    <groupId>jakarta.validation</groupId>
 		    <artifactId>jakarta.validation-api</artifactId>
