@@ -11,11 +11,14 @@
  */
 package org.eclipse.dirigible.components.security.domain;
 
-import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import javax.persistence.*;
-import java.sql.Timestamp;
+import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 /**
  * The Class SecurityAccess.
@@ -23,7 +26,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "DIRIGIBLE_SECURITY_ACCESS")
-public class SecurityAccess extends Artefact {
+public class Access extends Artefact {
 
     /**
      * The Constant ARTEFACT_TYPE.
@@ -62,7 +65,7 @@ public class SecurityAccess extends Artefact {
     @Column(name = "ACCESS_ROLE", columnDefinition = "VARCHAR", nullable = false, length = 64)
     private String role;
 
-    public SecurityAccess(String location, String name, String description, String scope, String path, String method, String role) {
+    public Access(String location, String name, String description, String scope, String path, String method, String role) {
         super(location, name, ARTEFACT_TYPE, description, null);
         this.scope = scope;
         this.path = path;
@@ -70,7 +73,7 @@ public class SecurityAccess extends Artefact {
         this.role = role;
     }
 
-    public SecurityAccess() {
+    public Access() {
         super();
     }
 

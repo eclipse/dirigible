@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -89,6 +90,7 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
     public List<Websocket> load(String location, byte[] content) {
         Websocket websocket = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Websocket.class);
         websocket.setLocation(location);
+        websocket.setName(FilenameUtils.getBaseName(location));
         websocket.setType(Websocket.ARTEFACT_TYPE);
         websocket.updateKey();
         try {

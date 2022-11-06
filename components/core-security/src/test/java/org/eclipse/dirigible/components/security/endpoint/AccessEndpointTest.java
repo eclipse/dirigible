@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.security.endpoint;
 
-import org.eclipse.dirigible.components.security.repository.SecurityAccessRepository;
+import org.eclipse.dirigible.components.security.repository.AccessRepository;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,21 +27,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.eclipse.dirigible.components.security.repository.SecurityAccessRepositoryTest.createSecurityAccess;
+import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(classes = {SecurityAccessRepository.class})
+@SpringBootTest(classes = {AccessRepository.class})
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-class SecurityAccessEndpointTest {
+class AccessEndpointTest {
 
     @Autowired
-    private SecurityAccessRepository securityAccessRepository;
+    private AccessRepository securityAccessRepository;
 
     @Autowired
     MockMvc mockMvc;

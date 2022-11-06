@@ -26,7 +26,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_TABLE_COLUMNS")
+@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_COLUMNS")
 public class TableColumn {
 
 	/** The id. */

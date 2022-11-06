@@ -47,13 +47,17 @@ public class JobLog extends Artefact {
     public static final short JOB_LOG_STATUS_UNKNOWN = 99;
 
     /** The Constant ARTEFACT_TYPE. */
-    public static final String ARTEFACT_TYPE = "jobLog";
+    public static final String ARTEFACT_TYPE = "job-log";
 
     /** The id. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "JOBLOG_ID", nullable = false)
     private long id;
+    
+    /** The job name. */
+    @Column(name = "JOBLOG_JOB_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    private String jobName;
 
     /** The handler. */
     @Column(name = "JOBLOG_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -91,10 +95,9 @@ public class JobLog extends Artefact {
      *
      * @param location the location
      * @param name the name
-     * @param type the type
      * @param description the description
      * @param dependencies the dependencies
-     * @param id the id
+     * @param jobName the job id
      * @param handler the handler
      * @param triggeredAt the triggered at
      * @param triggeredId the triggered id
@@ -102,9 +105,10 @@ public class JobLog extends Artefact {
      * @param status the status
      * @param message the message
      */
-    public JobLog(String location, String name, String type, String description, String dependencies, long id, String handler, Timestamp triggeredAt, long triggeredId, Timestamp finishedAt, short status, String message) {
-        super(location, name, type, description, dependencies);
-        this.id = id;
+    public JobLog(String location, String name, String description, String dependencies, String jobName, String handler, 
+    		Timestamp triggeredAt, long triggeredId, Timestamp finishedAt, short status, String message) {
+        super(location, name, ARTEFACT_TYPE, description, dependencies);
+        this.jobName = jobName;
         this.handler = handler;
         this.triggeredAt = triggeredAt;
         this.triggeredId = triggeredId;
@@ -130,6 +134,24 @@ public class JobLog extends Artefact {
     public void setId(long id) {
         this.id = id;
     }
+    
+    /**
+     * Gets the job name.
+     *
+     * @return the job name
+     */
+    public String getJobName() {
+		return jobName;
+	}
+    
+    /**
+     * Sets the job name.
+     *
+     * @param jobName the new job id
+     */
+    public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
 
     /**
      * Gets the handler.
@@ -248,18 +270,19 @@ public class JobLog extends Artefact {
     public String toString() {
         return "JobLog{" +
                 "id=" + id +
-                ", handler='" + handler + '\'' +
+                ", jobName=" + jobName +
+                ", handler=" + handler +
                 ", triggeredAt=" + triggeredAt +
                 ", triggeredId=" + triggeredId +
                 ", finishedAt=" + finishedAt +
                 ", status=" + status +
-                ", message='" + message + '\'' +
-                ", location='" + location + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", key='" + key + '\'' +
-                ", dependencies='" + dependencies + '\'' +
+                ", message=" + message +
+                ", location=" + location +
+                ", name=" + name +
+                ", type=" + type +
+                ", description=" + description +
+                ", key=" + key +
+                ", dependencies=" + dependencies +
                 ", createdBy=" + createdBy +
                 ", createdAt=" + createdAt +
                 ", updatedBy=" + updatedBy +

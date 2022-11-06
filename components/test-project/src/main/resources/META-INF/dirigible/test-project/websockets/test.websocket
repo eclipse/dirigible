@@ -1,0 +1,8 @@
+{
+  "location":"/test-project/websockets/test.websocket",
+  "handler":"test-project/websockets/test-handler.js",
+  "endpoint":"test-websocket",
+  "description":"Test Websocket",
+  "createdBy":"system",
+  "createdAt":"2017-07-06T2:24:12+0000"
+}

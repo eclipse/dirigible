@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -26,15 +27,13 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.jobs.domain.Job;
-import org.eclipse.dirigible.components.jobs.domain.JobEmail;
-import org.eclipse.dirigible.components.jobs.domain.JobLifecycle;
-import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.eclipse.dirigible.components.jobs.service.JobEmailService;
 import org.eclipse.dirigible.components.jobs.service.JobLogService;
 import org.eclipse.dirigible.components.jobs.service.JobService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -119,9 +118,10 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
     public List<Job> load(String location, byte[] content) {
         Job job = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Job.class);
         job.setLocation(location);
-        job.setName("");
+        job.setName(FilenameUtils.getBaseName(location));
         job.setType(Job.ARTEFACT_TYPE);
         job.updateKey();
+        job.getParameters().forEach(j -> j.setJob(job));
         try {
             getService().save(job);
         } catch (Exception e) {
@@ -175,6 +175,9 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
     @Override
     public void cleanup(Job artefact) {
         try {
+        	// TODO stop the job
+        	jobLogService.deleteAllByJobName(artefact.getName());
+            jobEmailService.deleteAllByJobName(artefact.getName());
             getService().delete(artefact);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
@@ -196,30 +199,13 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
         Job job = null;
         if (wrapper.getArtefact() instanceof Job){
             job = (Job) wrapper.getArtefact();
-            Job existingJob = jobService.findByName(job.getName());
-            JobLog jobLog = jobLogService.findById(existingJob.getId());
-            JobLifecycle jobLifecycleState = JobLifecycle.valueOf(flow);
-
-            switch (jobLifecycleState){
-                case CREATE:
-                    jobLogService.jobLogged(existingJob.getName(), existingJob.getHandler(), existingJob.getMessage());
+            ArtefactLifecycle flag = ArtefactLifecycle.valueOf(flow);
+            switch (flag){
+                case CREATED:
+                	// TODO start the job
                     break;
-                case UPDATE:
-                    List<JobEmail> emailDefinitions = jobEmailService.findAllByName(existingJob.getName());
-                    JobEmailProcessor jobEmailProcessor = new JobEmailProcessor();
-                    jobEmailProcessor.createAndSendJobEmail(job, existingJob, emailDefinitions);
-                    break;
-                case DROP:
-                    jobLogService.delete(jobLog);
-                    break;
-                case TRIGGERED:
-                    jobLogService.jobTriggered(existingJob.getName(), existingJob.getHandler());
-                    break;
-                case FAILED:
-                    jobLogService.jobFailed(existingJob.getName(), existingJob.getHandler(), jobLog.getTriggeredId(), jobLog.getTriggeredAt(), jobLog.getMessage());
-                    break;
-                case FINISHED:
-                    jobLogService.jobFinished(existingJob.getName(), existingJob.getHandler(), jobLog.getTriggeredId(),jobLog.getTriggeredAt());
+                case UPDATED:
+                	// TODO re-start the job
                     break;
             }
         }

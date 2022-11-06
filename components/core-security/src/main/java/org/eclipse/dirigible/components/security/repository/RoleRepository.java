@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.security.repository;
 
-import org.eclipse.dirigible.components.security.domain.SecurityRole;
+import org.eclipse.dirigible.components.security.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +19,6 @@ import org.springframework.stereotype.Repository;
  * The Interface SecurityRoleRepository.
  */
 @Repository("securityRoleRepository")
-public interface SecurityRoleRepository extends JpaRepository<SecurityRole, Long> {
+public interface RoleRepository extends JpaRepository<Role, Long> {
 
 }

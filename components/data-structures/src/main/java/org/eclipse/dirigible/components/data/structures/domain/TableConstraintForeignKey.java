@@ -11,18 +11,14 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.annotation.Nullable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.springframework.data.annotation.Transient;
+import javax.persistence.OrderColumn;
 
 /**
  * The Class TableConstraintForeignKey.
@@ -45,12 +41,10 @@ public class TableConstraintForeignKey extends TableConstraint {
 	/** The referenced columns. */
 	@Column(name = "FOREIGNKEY_REF_COLUMNS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Nullable
-	private String referencedColumns;
+	@ElementCollection
+	@OrderColumn
+	private String[] referencedColumns;
 	
-	/** The column names. */
-	@Transient
-	protected transient Set<String> referencedColumnNames;
-
 	/**
 	 * Instantiates a new table constraint foreign key.
 	 *
@@ -61,8 +55,8 @@ public class TableConstraintForeignKey extends TableConstraint {
 	 * @param referencedColumns the referenced columns
 	 * @param constraints the constraints
 	 */
-	public TableConstraintForeignKey(String name, String modifiers, String columns,
-			String referencedTable, String referencedColumns, TableConstraints constraints) {
+	public TableConstraintForeignKey(String name, String[] modifiers, String[] columns,
+			String referencedTable, String[] referencedColumns, TableConstraints constraints) {
 		super(name, modifiers, columns, constraints);
 		this.referencedTable = referencedTable;
 		this.referencedColumns = referencedColumns;
@@ -116,7 +110,7 @@ public class TableConstraintForeignKey extends TableConstraint {
 	 *
 	 * @return the referencedColumns
 	 */
-	public String getReferencedColumns() {
+	public String[] getReferencedColumns() {
 		return referencedColumns;
 	}
 
@@ -125,53 +119,8 @@ public class TableConstraintForeignKey extends TableConstraint {
 	 *
 	 * @param referencedColumns the referencedColumns to set
 	 */
-	public void setReferencedColumns(String referencedColumns) {
+	public void setReferencedColumns(String[] referencedColumns) {
 		this.referencedColumns = referencedColumns;
-	}
-	
-	/**
-	 * Adds the referencedColumn.
-	 *
-	 * @param referencedColumn the referencedColumn
-	 */
-	public void addReferencedColumn(String referencedColumn) {
-		if (referencedColumns == null && referencedColumns.trim().length() == 0) {
-			referencedColumns = referencedColumn;
-			return;
-		}
-		referencedColumns += "," + referencedColumn;
-		if (referencedColumnNames != null) {
-			referencedColumnNames.add(referencedColumn);
-		}
-	}
-	
-	/**
-	 * Removes the referencedColumn.
-	 *
-	 * @param referencedColumn the referencedColumn
-	 */
-	public void removeReferencedColumn(String referencedColumn) {
-		if (referencedColumnNames == null) {
-			referencedColumnNames = getReferencedColumnNames();
-		}
-		referencedColumnNames.remove(referencedColumn);
-		referencedColumns = String.join(",", referencedColumnNames);
-	}
-	
-	/**
-	 * Gets the referenced column names.
-	 *
-	 * @return the referenced column names
-	 */
-	public Set<String> getReferencedColumnNames() {
-		if (referencedColumnNames != null) {
-			return referencedColumnNames;
-		}
-		referencedColumnNames = new HashSet<>();
-		if (referencedColumns != null) {
-			Arrays.asList(referencedColumns.split(",")).forEach(n -> referencedColumnNames.add(n));;
-		}
-		return referencedColumnNames;
 	}
 
 	/**

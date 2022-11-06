@@ -11,8 +11,8 @@
  */
 package org.eclipse.dirigible.components.security.service;
 
-import org.eclipse.dirigible.components.security.domain.SecurityAccess;
-import org.eclipse.dirigible.components.security.repository.SecurityAccessRepository;
+import org.eclipse.dirigible.components.security.domain.Access;
+import org.eclipse.dirigible.components.security.repository.AccessRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,18 +27,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.eclipse.dirigible.components.security.repository.SecurityAccessRepositoryTest.createSecurityAccess;
+import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = {SecurityAccessRepository.class, SecurityAccessService.class})
+@SpringBootTest(classes = {AccessRepository.class, SecurityAccessService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-class SecurityAccessServiceTest {
+class AccessServiceTest {
 
     @Autowired
-    private SecurityAccessRepository securityAccessRepository;
+    private AccessRepository securityAccessRepository;
 
     @Autowired
     private SecurityAccessService securityAccessService;
@@ -66,37 +66,37 @@ class SecurityAccessServiceTest {
 
     @Test
     void testGetAll() {
-        List<SecurityAccess> securityAccessList = securityAccessService.getAll();
+        List<Access> securityAccessList = securityAccessService.getAll();
         assertEquals(5, securityAccessList.size());
     }
 
     @Test
     void testFindAll() {
-        Page<SecurityAccess> securityAccessPage = securityAccessService.findAll(Pageable.ofSize(1));
+        Page<Access> securityAccessPage = securityAccessService.findAll(Pageable.ofSize(1));
         assertEquals(5, securityAccessPage.getTotalElements());
     }
 
     @Test
     void testFindById() {
-        SecurityAccess securityAccess = new SecurityAccess("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
+        Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
                 "/c/test.txt", "GET", "test_role");
         securityAccessService.save(securityAccess);
-        SecurityAccess securityAccessServiceById = securityAccessService.findById(securityAccess.getId());
+        Access securityAccessServiceById = securityAccessService.findById(securityAccess.getId());
         assertEquals("test", securityAccessServiceById.getName());
     }
 
     @Test
     void testFindByName() {
-        SecurityAccess securityAccess = new SecurityAccess("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
+        Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
                 "/c/test.txt", "GET", "test_role");
         securityAccessService.save(securityAccess);
-        SecurityAccess securityAccessServiceByName = securityAccessService.findByName("test");
+        Access securityAccessServiceByName = securityAccessService.findByName("test");
         assertEquals(securityAccess.getId(), securityAccessServiceByName.getId());
     }
 
     @Test
     void testSave() {
-        SecurityAccess securityAccess = new SecurityAccess("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
+        Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
                 "/c/test.txt", "GET", "test_role");
         securityAccessService.save(securityAccess);
         assertNotNull(securityAccessService.findByName("test"));
@@ -105,7 +105,7 @@ class SecurityAccessServiceTest {
     @Test
     void testDelete() {
         try {
-            SecurityAccess securityAccess = new SecurityAccess("/a/b/c/test.access", "test", "description", "HTTP",
+            Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP",
                     "/a/b/c/test.txt", "GET", "test_role");
             securityAccessService.save(securityAccess);
             securityAccessService.delete(securityAccess);

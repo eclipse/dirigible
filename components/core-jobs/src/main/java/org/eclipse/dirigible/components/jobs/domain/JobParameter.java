@@ -11,34 +11,37 @@
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.eclipse.dirigible.components.base.artefact.Artefact;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.Transient;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The JobParameterDefinition serialization object.
  */
 @Entity
 @Table(name = "DIRIGIBLE_JOB_PARAMETERS")
-public class JobParameter extends Artefact {
+public class JobParameter {
 
     /** The Constant ARTEFACT_TYPE. */
-    public static final String ARTEFACT_TYPE = "jobParameter";
+    public static final String ARTEFACT_TYPE = "job-parameter";
 
     /** The id. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "JOBPARAM_ID", nullable = false)
     private Long id;
-
-    /** The job name. */
-    @Transient
-    @Column(name = "JOBPARAM_JOB_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
-    private String jobName;
 
     /** The type. */
     @Column(name = "JOBPARAM_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -73,23 +76,13 @@ public class JobParameter extends Artefact {
     /**
      * Instantiates a new job parameter.
      *
-     * @param location the location
-     * @param name the name
-     * @param type the type
-     * @param description the description
-     * @param dependencies the dependencies
-     * @param id the id
-     * @param jobName the job name
-     * @param type1 the type 1
+     * @param type the param type
      * @param defaultValue the default value
      * @param choices the choices
      * @param value the value
      */
-    public JobParameter(String location, String name, String type, String description, String dependencies, Long id, String jobName, String type1, String defaultValue, String choices, String value, Job job) {
-        super(location, name, type, description, dependencies);
-        this.id = id;
-        this.jobName = jobName;
-        this.type = type1;
+    public JobParameter(String type, String defaultValue, String choices, String value, Job job) {
+        this.type = type;
         this.defaultValue = defaultValue;
         this.choices = choices;
         this.value = value;
@@ -115,39 +108,19 @@ public class JobParameter extends Artefact {
     }
 
     /**
-     * Gets the job name.
+     * Gets the parameter type.
      *
-     * @return the job name
+     * @return the param type
      */
-    public String getJobName() {
-        return jobName;
-    }
-
-    /**
-     * Sets the job name.
-     *
-     * @param jobName the new job name
-     */
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
-    }
-
-    /**
-     * Gets the type.
-     *
-     * @return the type
-     */
-    @Override
     public String getType() {
         return type;
     }
 
     /**
-     * Sets the type.
+     * Sets the param type.
      *
-     * @param type the new type
+     * @param type the new param type
      */
-    @Override
     public void setType(String type) {
         this.type = type;
     }
@@ -233,22 +206,12 @@ public class JobParameter extends Artefact {
     public String toString() {
         return "JobParameter{" +
                 "id=" + id +
-                ", jobName='" + jobName + '\'' +
-                ", type='" + type + '\'' +
-                ", defaultValue='" + defaultValue + '\'' +
-                ", choices='" + choices + '\'' +
-                ", value='" + value + '\'' +
-                ", job=" + job +
-                ", location='" + location + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", key='" + key + '\'' +
-                ", dependencies='" + dependencies + '\'' +
-                ", createdBy=" + createdBy +
-                ", createdAt=" + createdAt +
-                ", updatedBy=" + updatedBy +
-                ", updatedAt=" + updatedAt +
+                ", type=" + type +
+                ", defaultValue=" + defaultValue +
+                ", choices=" + choices +
+                ", value=" + value +
+                ", job=" + job.getName() +
+                ", type=" + type +
                 '}';
     }
 }

@@ -99,7 +99,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		// collect definitions for processing
 		collectFiles();
 		
-		if (logger.isDebugEnabled()) {logger.debug("Collecting files done. {} known types of definitions collected - {}.", definitions.size(), definitions.keySet().toString());}
+		if (logger.isDebugEnabled()) {logger.debug("Collecting files done. {} known types of definitions collected - {}.", synchronizers.size(),
+				synchronizers.stream().map(Synchronizer::getArtefactType).collect(Collectors.toList()));}
 		
 		if (logger.isDebugEnabled()) {logger.debug("Loading definitions...");}
 		// parse definitions to artefacts

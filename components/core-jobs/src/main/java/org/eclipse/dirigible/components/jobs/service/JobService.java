@@ -11,8 +11,12 @@
  */
 package org.eclipse.dirigible.components.jobs.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.jobs.domain.Job;
+import org.eclipse.dirigible.components.jobs.email.JobEmailProcessor;
 import org.eclipse.dirigible.components.jobs.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -20,8 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * The Class JobService.
@@ -33,6 +35,10 @@ public class JobService implements ArtefactService<Job>  {
     /** The job repository. */
     @Autowired
     private JobRepository jobRepository;
+    
+    /** The job email processor. */
+    @Autowired
+    private JobEmailProcessor jobEmailProcessor;
 
     /**
      * Gets the all.
@@ -102,6 +108,21 @@ public class JobService implements ArtefactService<Job>  {
      */
     @Override
     public Job save(Job job) {
+    	Job existing = null;
+		try {
+			existing = findByName(job.getName());
+		} catch (Exception e) {
+			// ignore if does not exist yet
+		}
+		if (existing != null) {
+			if (existing.isEnabled() && !job.isEnabled()) {
+				String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateDisable, jobEmailProcessor.EMAIL_TEMPLATE_DISABLE);
+				jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectDisable, content);
+			} else if (!existing.isEnabled() && job.isEnabled()) {
+				String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateEnable, jobEmailProcessor.EMAIL_TEMPLATE_ENABLE);
+				jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectEnable, content);
+			}
+		}
         return jobRepository.saveAndFlush(job);
     }
 

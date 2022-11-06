@@ -11,20 +11,17 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.annotation.Nullable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.annotation.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -42,12 +39,16 @@ public abstract class TableConstraint {
 	/** The modifiers. */
 	@Column(name = "CONSTRAINT_MODIFIERS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Nullable
-	protected String modifiers;
+	@ElementCollection
+	@OrderColumn
+	protected String[] modifiers;
 	
 	/** The columns. */
 	@Column(name = "CONSTRAINT_COLUMNS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Nullable
-	protected String columns;
+	@ElementCollection
+	@OrderColumn
+	protected String[] columns;
 	
 	/** The constraints. */
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
@@ -56,14 +57,6 @@ public abstract class TableConstraint {
     @JsonIgnore
     protected TableConstraints constraints;
 	
-	/** The modifier names. */
-	@Transient
-	protected transient Set<String> modifierNames;
-	
-	/** The column names. */
-	@Transient
-	protected transient Set<String> columnNames;
-
 	/**
 	 * Instantiates a new table constraint.
 	 *
@@ -72,7 +65,7 @@ public abstract class TableConstraint {
 	 * @param columns the columns
 	 * @param constraints the constraints
 	 */
-	public TableConstraint(String name, String modifiers, String columns, TableConstraints constraints) {
+	public TableConstraint(String name, String[] modifiers, String[] columns, TableConstraints constraints) {
 		super();
 		this.name = name;
 		this.modifiers = modifiers;
@@ -110,7 +103,7 @@ public abstract class TableConstraint {
 	 *
 	 * @return the modifiers
 	 */
-	public String getModifiers() {
+	public String[] getModifiers() {
 		return modifiers;
 	}
 
@@ -119,7 +112,7 @@ public abstract class TableConstraint {
 	 *
 	 * @param modifiers the modifiers to set
 	 */
-	public void setModifiers(String modifiers) {
+	public void setModifiers(String[] modifiers) {
 		this.modifiers = modifiers;
 	}
 
@@ -128,7 +121,7 @@ public abstract class TableConstraint {
 	 *
 	 * @return the columns
 	 */
-	public String getColumns() {
+	public String[] getColumns() {
 		return columns;
 	}
 
@@ -137,7 +130,7 @@ public abstract class TableConstraint {
 	 *
 	 * @param columns the columns to set
 	 */
-	public void setColumns(String columns) {
+	public void setColumns(String[] columns) {
 		this.columns = columns;
 	}
 
@@ -157,96 +150,6 @@ public abstract class TableConstraint {
 	 */
 	public void setConstraints(TableConstraints constraints) {
 		this.constraints = constraints;
-	}
-
-	/**
-	 * Adds the modifier.
-	 *
-	 * @param modifier the modifier
-	 */
-	public void addModifier(String modifier) {
-		if (modifiers == null && modifiers.trim().length() == 0) {
-			modifiers = modifier;
-			return;
-		}
-		modifiers += "," + modifier;
-		if (modifierNames != null) {
-			modifierNames.add(modifier);
-		}
-	}
-	
-	/**
-	 * Removes the modifier.
-	 *
-	 * @param modifier the modifier
-	 */
-	public void removeModifier(String modifier) {
-		if (modifierNames == null) {
-			modifierNames = getModifierNames();
-		}
-		modifierNames.remove(modifier);
-		modifiers = String.join(",", modifierNames);
-	}
-	
-	/**
-	 * Gets the modifier names.
-	 *
-	 * @return the modifier names
-	 */
-	public Set<String> getModifierNames() {
-		if (modifierNames != null) {
-			return modifierNames;
-		}
-		modifierNames = new HashSet<>();
-		if (modifiers != null) {
-			Arrays.asList(modifiers.split(",")).forEach(n -> modifierNames.add(n));;
-		}
-		return modifierNames;
-	}
-	
-	/**
-	 * Adds the column.
-	 *
-	 * @param column the column
-	 */
-	public void addColumn(String column) {
-		if (columns == null && columns.trim().length() == 0) {
-			columns = column;
-			return;
-		}
-		columns += "," + column;
-		if (columnNames != null) {
-			columnNames.add(column);
-		}
-	}
-	
-	/**
-	 * Removes the column.
-	 *
-	 * @param column the column
-	 */
-	public void removeColumn(String column) {
-		if (columnNames == null) {
-			columnNames = getColumnNames();
-		}
-		columnNames.remove(column);
-		columns = String.join(",", columnNames);
-	}
-	
-	/**
-	 * Gets the column names.
-	 *
-	 * @return the column names
-	 */
-	public Set<String> getColumnNames() {
-		if (columnNames != null) {
-			return columnNames;
-		}
-		columnNames = new HashSet<>();
-		if (columns != null) {
-			Arrays.asList(columns.split(",")).forEach(n -> columnNames.add(n));;
-		}
-		return columnNames;
 	}
 
 }

@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.security.verifier;
 
-import org.eclipse.dirigible.components.security.domain.SecurityAccess;
+import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.service.SecurityAccessService;
 
 import org.slf4j.Logger;
@@ -27,12 +27,12 @@ import java.util.List;
  */
 
 @Component
-public class SecurityAccessVerifier {
+public class AccessVerifier {
 
     /**
      * The Constant logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(SecurityAccessVerifier.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccessVerifier.class);
 
     /**
      * The security access service.
@@ -48,11 +48,11 @@ public class SecurityAccessVerifier {
      * @param method the method
      * @return all the most specific security access entry matching the URI if any
      */
-    public List<SecurityAccess> getMatchingSecurityAccesses(String scope, String path, String method) {
-        List<SecurityAccess> securityAccesses = new ArrayList<>();
-        SecurityAccess currentSecurityAccess = null;
-        List<SecurityAccess> existingSecurityAccesses = securityAccessService.getAll();
-        for (SecurityAccess securityAccess : existingSecurityAccesses) {
+    public List<Access> getMatchingSecurityAccesses(String scope, String path, String method) {
+        List<Access> securityAccesses = new ArrayList<>();
+        Access currentSecurityAccess = null;
+        List<Access> existingSecurityAccesses = securityAccessService.getAll();
+        for (Access securityAccess : existingSecurityAccesses) {
             if (scope.equalsIgnoreCase(securityAccess.getScope()) && path.startsWith(securityAccess.getPath())
                     && (securityAccess.getMethod().equals("*") || method.equals(securityAccess.getMethod()))) {
                 if (logger.isDebugEnabled()) {

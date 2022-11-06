@@ -11,8 +11,15 @@
  */
 package org.eclipse.dirigible.components.jobs.service;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
+import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
+import org.eclipse.dirigible.components.jobs.email.JobEmailProcessor;
 import org.eclipse.dirigible.components.jobs.repository.JobLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -20,11 +27,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * The Class JobLogService.
@@ -36,6 +38,14 @@ public class JobLogService implements ArtefactService<JobLog> {
     /** The job log repository. */
     @Autowired
     private JobLogRepository jobLogRepository;
+    
+    /** The job service. */
+    @Autowired
+    private JobService jobService;
+    
+    /** The job email processor. */
+    @Autowired
+    private JobEmailProcessor jobEmailProcessor;
 
     /**
      * Gets the all.
@@ -116,16 +126,6 @@ public class JobLogService implements ArtefactService<JobLog> {
     @Override
     public void delete(JobLog jobLog) {
         jobLogRepository.delete(jobLog);
-    }
-
-    /**
-     * Delete job by name.
-     *
-     * @param jobLogName the job log name
-     */
-    public void deleteJobByName(String jobLogName){
-        JobLog jobLog = findByName(jobLogName);
-        delete(jobLog);
     }
 
     /**
@@ -231,6 +231,15 @@ public class JobLogService implements ArtefactService<JobLog> {
         jobLog.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
         jobLog.setFinishedAt(new Timestamp(new Date().getTime()));
         save(jobLog);
+        Job job = jobService.findByName(name);
+		boolean statusChanged = job.getStatus() != JobLog.JOB_LOG_STATUS_FINISHED;
+		job.setStatus(JobLog.JOB_LOG_STATUS_FINISHED);
+		job.setMessage("");
+		job.setExecutedAt(jobLog.getFinishedAt());
+		if (statusChanged) {
+			String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateNormal, jobEmailProcessor.EMAIL_TEMPLATE_NORMAL);
+			jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectNormal, content);
+		}
         return jobLog;
     }
 
@@ -244,7 +253,7 @@ public class JobLogService implements ArtefactService<JobLog> {
      * @param message the message
      * @return the job log definition
      */
-    public JobLog jobFailed(String name, String handler, long triggeredId, Date triggeredAt, String message){
+    public JobLog jobFailed(String name, String handler, long triggeredId, Date triggeredAt, String message) {
         JobLog jobLog = new JobLog();
         jobLog.setName(name);
         jobLog.setHandler(handler);
@@ -254,6 +263,24 @@ public class JobLogService implements ArtefactService<JobLog> {
         jobLog.setFinishedAt(new Timestamp(new Date().getTime()));
         jobLog.setMessage(message);
         save(jobLog);
+        Job job = jobService.findByName(name);
+		boolean statusChanged = job.getStatus() != JobLog.JOB_LOG_STATUS_FAILED;
+		job.setStatus(JobLog.JOB_LOG_STATUS_FAILED);
+		job.setMessage(message);
+		job.setExecutedAt(jobLog.getFinishedAt());
+		if (statusChanged) {
+			String content = jobEmailProcessor.prepareEmail(job, jobEmailProcessor.emailTemplateError, jobEmailProcessor.EMAIL_TEMPLATE_ERROR);
+			jobEmailProcessor.sendEmail(job, jobEmailProcessor.emailSubjectError, content);
+		}
         return jobLog;
     }
+
+	public void deleteAllByJobName(String jobName) {
+		JobLog filter = new JobLog();
+        filter.setJobName(jobName);
+        Example<JobLog> example = Example.of(filter);
+        List<JobLog> jobLogs = jobLogRepository.findAll(example);
+        jobLogRepository.deleteAll(jobLogs);
+		
+	}
 }

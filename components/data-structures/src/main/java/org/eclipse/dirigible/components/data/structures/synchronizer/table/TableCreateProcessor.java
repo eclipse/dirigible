@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.data.structures.synchronizer;
+package org.eclipse.dirigible.components.data.structures.synchronizer.table;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -106,9 +106,9 @@ public class TableCreateProcessor {
 		}
 		if (tableModel.getConstraints() != null) {
 			if (tableModel.getConstraints().getPrimaryKey() != null) {
-				String[] primaryKeyColumns = new String[tableModel.getConstraints().getPrimaryKey().getColumnNames().size()];
+				String[] primaryKeyColumns = new String[tableModel.getConstraints().getPrimaryKey().getColumns().length];
 				int i = 0;
-				for (String column : tableModel.getConstraints().getPrimaryKey().getColumnNames()) {
+				for (String column : tableModel.getConstraints().getPrimaryKey().getColumns()) {
 					if (caseSensitive) {
 						primaryKeyColumns[i++] = "\"" + column + "\"";
 					} else {
@@ -125,9 +125,9 @@ public class TableCreateProcessor {
 						if (caseSensitive) {
 							foreignKeyName = "\"" + foreignKeyName + "\"";
 						}
-						String[] foreignKeyColumns = new String[foreignKey.getColumnNames().size()];
+						String[] foreignKeyColumns = new String[foreignKey.getColumns().length];
 						int i = 0;
-						for (String column : foreignKey.getColumnNames()) {
+						for (String column : foreignKey.getColumns()) {
 							if (caseSensitive) {
 								foreignKeyColumns[i++] = "\"" + column + "\"";
 							} else {
@@ -138,9 +138,9 @@ public class TableCreateProcessor {
 						if (caseSensitive) {
 							foreignKeyReferencedTable = "\"" + foreignKeyReferencedTable + "\"";
 						}
-						String[] foreignKeyReferencedColumns = new String[foreignKey.getReferencedColumnNames().size()];
+						String[] foreignKeyReferencedColumns = new String[foreignKey.getReferencedColumns().length];
 						i = 0;
-						for (String column : foreignKey.getReferencedColumnNames()) {
+						for (String column : foreignKey.getReferencedColumns()) {
 							if (caseSensitive) {
 								foreignKeyReferencedColumns[i++] = "\"" + column + "\"";
 							} else {
@@ -159,9 +159,9 @@ public class TableCreateProcessor {
 					if (caseSensitive) {
 						uniqueIndexName = "\"" + uniqueIndexName + "\"";
 					}
-					String[] uniqueIndexColumns = new String[uniqueIndex.getColumnNames().size()];
+					String[] uniqueIndexColumns = new String[uniqueIndex.getColumns().length];
 					int i = 0;
-					for (String column : uniqueIndex.getColumnNames()) {
+					for (String column : uniqueIndex.getColumns()) {
 						if (caseSensitive) {
 							uniqueIndexColumns[i++] = "\"" + column + "\"";
 						} else {

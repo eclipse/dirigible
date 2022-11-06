@@ -12,8 +12,8 @@
 package org.eclipse.dirigible.components.security.service;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.security.domain.SecurityRole;
-import org.eclipse.dirigible.components.security.repository.SecurityRoleRepository;
+import org.eclipse.dirigible.components.security.domain.Role;
+import org.eclipse.dirigible.components.security.repository.RoleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -32,13 +32,13 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class SecurityRoleService implements ArtefactService<SecurityRole> {
+public class SecurityRoleService implements ArtefactService<Role> {
 
     /**
      * The security role repository.
      */
     @Autowired
-    private SecurityRoleRepository securityRoleRepository;
+    private RoleRepository securityRoleRepository;
 
     /**
      * Gets the all.
@@ -47,7 +47,7 @@ public class SecurityRoleService implements ArtefactService<SecurityRole> {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<SecurityRole> getAll() {
+    public List<Role> getAll() {
         return securityRoleRepository.findAll();
     }
 
@@ -59,7 +59,7 @@ public class SecurityRoleService implements ArtefactService<SecurityRole> {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<SecurityRole> findAll(Pageable pageable) {
+    public Page<Role> findAll(Pageable pageable) {
         return securityRoleRepository.findAll(pageable);
     }
 
@@ -71,8 +71,8 @@ public class SecurityRoleService implements ArtefactService<SecurityRole> {
      */
     @Override
     @Transactional(readOnly = true)
-    public SecurityRole findById(Long id) {
-        Optional<SecurityRole> securityRole = securityRoleRepository.findById(id);
+    public Role findById(Long id) {
+        Optional<Role> securityRole = securityRoleRepository.findById(id);
         if (securityRole.isPresent()) {
             return securityRole.get();
         } else {
@@ -88,11 +88,11 @@ public class SecurityRoleService implements ArtefactService<SecurityRole> {
      */
     @Override
     @Transactional(readOnly = true)
-    public SecurityRole findByName(String name) {
-        SecurityRole filter = new SecurityRole();
+    public Role findByName(String name) {
+        Role filter = new Role();
         filter.setName(name);
-        Example<SecurityRole> example = Example.of(filter);
-        Optional<SecurityRole> securityRole = securityRoleRepository.findOne(example);
+        Example<Role> example = Example.of(filter);
+        Optional<Role> securityRole = securityRoleRepository.findOne(example);
         if (securityRole.isPresent()) {
             return securityRole.get();
         } else {
@@ -107,7 +107,7 @@ public class SecurityRoleService implements ArtefactService<SecurityRole> {
      * @return the security role
      */
     @Override
-    public SecurityRole save(SecurityRole securityRole) {
+    public Role save(Role securityRole) {
         return securityRoleRepository.saveAndFlush(securityRole);
     }
 
@@ -117,7 +117,7 @@ public class SecurityRoleService implements ArtefactService<SecurityRole> {
      * @param securityRole the security role
      */
     @Override
-    public void delete(SecurityRole securityRole) {
+    public void delete(Role securityRole) {
         securityRoleRepository.delete(securityRole);
     }
 }

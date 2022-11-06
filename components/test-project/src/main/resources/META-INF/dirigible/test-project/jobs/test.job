@@ -1,0 +1,34 @@
+{
+   "expression":"0/10 * * * * ?",
+   "group":"dirigible-defined",
+   "handler":"sample-job/myhandler.js",
+   "description":"My Job with Parameters",
+   "parameters":[
+      {
+         "type":"string",
+         "name":"stringParam",
+         "defaultValue":"My Value",
+         "choices":"",
+         "description":"My String Param"
+      },
+      {
+         "type":"number",
+         "name":"numberParam",
+         "defaultValue":"1",
+         "description":"My Number Param"
+      },
+      {
+         "type":"boolean",
+         "name":"boolParam",
+         "defaultValue":"true",
+         "description":"My Bool Value"
+      },
+      {
+         "type":"choice",
+         "name":"choiceParam",
+         "defaultValue":"a",
+         "choices":"a,b,c",
+         "description":"My Choice Param"
+      }
+   ]
+}

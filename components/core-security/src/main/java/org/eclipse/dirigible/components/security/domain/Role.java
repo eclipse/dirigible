@@ -21,7 +21,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "DIRIGIBLE_SECURITY_ROLES")
-public class SecurityRole extends Artefact {
+public class Role extends Artefact {
 
     /**
      * The Constant ARTEFACT_TYPE.
@@ -36,11 +36,11 @@ public class SecurityRole extends Artefact {
     @Column(name = "ROLE_ID", nullable = false)
     private Long id;
 
-    public SecurityRole(String location, String name, String description) {
+    public Role(String location, String name, String description) {
         super(location, name, ARTEFACT_TYPE, description, null);
     }
 
-    public SecurityRole() {
+    public Role() {
         super();
     }
 
@@ -54,7 +54,7 @@ public class SecurityRole extends Artefact {
 
     @Override
     public String toString() {
-        return "SecurityRole{" +
+        return "SecurityRole {" +
                 "id=" + id +
                 ", location='" + location + '\'' +
                 ", name='" + name + '\'' +

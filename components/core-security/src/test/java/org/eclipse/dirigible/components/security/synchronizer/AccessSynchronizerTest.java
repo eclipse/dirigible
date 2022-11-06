@@ -11,8 +11,8 @@
  */
 package org.eclipse.dirigible.components.security.synchronizer;
 
-import org.eclipse.dirigible.components.security.domain.SecurityAccess;
-import org.eclipse.dirigible.components.security.repository.SecurityAccessRepository;
+import org.eclipse.dirigible.components.security.domain.Access;
+import org.eclipse.dirigible.components.security.repository.AccessRepository;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,26 +30,26 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.eclipse.dirigible.components.security.repository.SecurityAccessRepositoryTest.createSecurityAccess;
+import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = {SecurityAccessRepository.class})
+@SpringBootTest(classes = {AccessRepository.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-class SecurityAccessSynchronizerTest {
+class AccessSynchronizerTest {
     /**
      * The security access repository.
      */
     @Autowired
-    private SecurityAccessRepository securityAccessRepository;
+    private AccessRepository securityAccessRepository;
 
     /**
      * The security access synchronizer.
      */
     @Autowired
-    private SecurityAccessSynchronizer securityAccessSynchronizer;
+    private AccessSynchronizer securityAccessSynchronizer;
 
     /**
      * The entity manager.
@@ -106,9 +106,9 @@ class SecurityAccessSynchronizerTest {
      */
     @Test
     public void testLoad() throws IOException {
-        byte[] content = SecurityAccessSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test" +
+        byte[] content = AccessSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test" +
                 ".access").readAllBytes();
-        List<SecurityAccess> list = securityAccessSynchronizer.load("/META-INF/dirigible/test/test.access", content);
+        List<Access> list = securityAccessSynchronizer.load("/META-INF/dirigible/test/test.access", content);
         assertNotNull(list);
         assertEquals("/META-INF/dirigible/test/test.access", list.get(0).getLocation());
     }

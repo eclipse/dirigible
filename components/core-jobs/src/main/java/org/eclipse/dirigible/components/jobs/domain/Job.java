@@ -108,10 +108,8 @@ public class Job extends Artefact {
      *
      * @param location the location
      * @param name the name
-     * @param type the type
      * @param description the description
      * @param dependencies the dependencies
-     * @param id the id
      * @param group the group
      * @param clazz the clazz
      * @param expression the expression
@@ -123,9 +121,9 @@ public class Job extends Artefact {
      * @param message the message
      * @param executedAt the executed at
      */
-    public Job(String location, String name, String type, String description, String dependencies, Long id, String group, String clazz, String expression, String handler, String engine, boolean singleton, boolean enabled, short status, String message, Timestamp executedAt) {
-        super(location, name, type, description, dependencies);
-        this.id = id;
+    public Job(String location, String name, String description, String dependencies, String group, String clazz, 
+    		String expression, String handler, String engine, boolean singleton, boolean enabled, short status, String message, Timestamp executedAt) {
+        super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.group = group;
         this.clazz = clazz;
         this.expression = expression;
@@ -368,25 +366,25 @@ public class Job extends Artefact {
      */
     @Override
     public String toString() {
-        return "Job{" +
-                "id=" + id +
-                ", group='" + group + '\'' +
-                ", clazz='" + clazz + '\'' +
-                ", expression='" + expression + '\'' +
-                ", handler='" + handler + '\'' +
-                ", engine='" + engine + '\'' +
+        return "Job {" +
+                " id=" + id +
+                ", group=" + group +
+                ", clazz=" + clazz +
+                ", expression=" + expression +
+                ", handler=" + handler +
+                ", engine=" + engine +
                 ", singleton=" + singleton +
                 ", enabled=" + enabled +
                 ", parameters=" + parameters +
                 ", status=" + status +
-                ", message='" + message + '\'' +
+                ", message=" + message +
                 ", executedAt=" + executedAt +
-                ", location='" + location + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", key='" + key + '\'' +
-                ", dependencies='" + dependencies + '\'' +
+                ", location=" + location +
+                ", name=" + name +
+                ", type=" + type +
+                ", description=" + description +
+                ", key=" + key +
+                ", dependencies=" + dependencies +
                 ", createdBy=" + createdBy +
                 ", createdAt=" + createdAt +
                 ", updatedBy=" + updatedBy +

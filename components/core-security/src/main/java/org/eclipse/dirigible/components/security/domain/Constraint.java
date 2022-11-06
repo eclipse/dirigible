@@ -14,7 +14,7 @@ package org.eclipse.dirigible.components.security.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SecurityAccessConstraint {
+public class Constraint {
 
     /**
      * The scope.

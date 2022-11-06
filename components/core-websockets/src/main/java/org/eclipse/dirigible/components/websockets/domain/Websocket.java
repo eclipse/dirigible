@@ -148,7 +148,7 @@ public class Websocket extends Artefact {
      */
     @Override
     public String toString() {
-        return "Websocket{" +
+        return "Websocket {" +
                 "id=" + id +
                 ", endpoint='" + endpoint + '\'' +
                 ", handler='" + handler + '\'' +

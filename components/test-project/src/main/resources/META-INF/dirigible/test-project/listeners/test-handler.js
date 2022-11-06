@@ -9,16 +9,10 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.security.repository;
+exports.onMessage = function(message) {
+	console.log(message);
+}
 
-import org.eclipse.dirigible.components.security.domain.SecurityAccess;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-/**
- * The Interface SecurityAccessRepository.
- */
-@Repository("securityAccessRepository")
-public interface SecurityAccessRepository extends JpaRepository<SecurityAccess, Long> {
-
+exports.onError = function(error) {
+	console.error(error);
 }

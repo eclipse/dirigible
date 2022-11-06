@@ -13,8 +13,8 @@ package org.eclipse.dirigible.components.security.filter;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.security.domain.SecurityAccess;
-import org.eclipse.dirigible.components.security.verifier.SecurityAccessVerifier;
+import org.eclipse.dirigible.components.security.domain.Access;
+import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
 import org.slf4j.Logger;
@@ -67,10 +67,10 @@ public class SecurityFilter implements Filter {
      */
     private static final Set<String> SECURED_PREFIXES = new HashSet<>();
 
-    private SecurityAccessVerifier securityAccessVerifier;
+    private AccessVerifier securityAccessVerifier;
 
     @Autowired
-    public SecurityFilter(SecurityAccessVerifier securityAccessVerifier) {
+    public SecurityFilter(AccessVerifier securityAccessVerifier) {
         this.securityAccessVerifier = securityAccessVerifier;
     }
 
@@ -127,13 +127,13 @@ public class SecurityFilter implements Filter {
             boolean isInRole = false;
             Principal principal = httpServletRequest.getUserPrincipal();
 
-            List<SecurityAccess> securityAccesses =
+            List<Access> securityAccesses =
                     securityAccessVerifier.getMatchingSecurityAccesses(CONSTRAINT_SCOPE_HTTP, path, method);
             if (!securityAccesses.isEmpty()) {
 
                 if (principal == null && !Configuration.isJwtModeEnabled()) {
                     // white list check
-                    for (SecurityAccess securityAccess : securityAccesses) {
+                    for (Access securityAccess : securityAccesses) {
                         if (ROLE_PUBLIC.equalsIgnoreCase(securityAccess.getRole())) {
                             isInRole = true;
                             break;
@@ -145,7 +145,7 @@ public class SecurityFilter implements Filter {
                         return;
                     }
                 } else {
-                    for (SecurityAccess securityAccess : securityAccesses) {
+                    for (Access securityAccess : securityAccesses) {
                         if (ROLE_PUBLIC.equalsIgnoreCase(securityAccess.getRole()) || HttpRequestFacade.isUserInRole(securityAccess.getRole())) {
                             isInRole = true;
                             break;

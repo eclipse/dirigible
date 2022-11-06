@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.jobs.service;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.jobs.domain.JobEmail;
+import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.eclipse.dirigible.components.jobs.repository.JobEmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -109,6 +110,22 @@ public class JobEmailService implements ArtefactService<JobEmail> {
         List<JobEmail> jobEmail = jobEmailRepository.findAll(example);
         return jobEmail;
     }
+    
+    /**
+     * Find by job name.
+     *
+     * @param name the name
+     * @return the job email
+     */
+
+    @Transactional(readOnly = true)
+    public List<JobEmail> findAllByJobName(String jobName) {
+        JobEmail filter = new JobEmail();
+        filter.setJobName(jobName);
+        Example<JobEmail> example = Example.of(filter);
+        List<JobEmail> jobEmail = jobEmailRepository.findAll(example);
+        return jobEmail;
+    }
 
     /**
      * Save.
@@ -130,4 +147,12 @@ public class JobEmailService implements ArtefactService<JobEmail> {
     public void delete(JobEmail jobEmail) {
         jobEmailRepository.delete(jobEmail);
     }
+
+	public void deleteAllByJobName(String jobName) {
+		JobEmail filter = new JobEmail();
+        filter.setJobName(jobName);
+        Example<JobEmail> example = Example.of(filter);
+        List<JobEmail> jobLogs = jobEmailRepository.findAll(example);
+        jobEmailRepository.deleteAll(jobLogs);
+	}
 }

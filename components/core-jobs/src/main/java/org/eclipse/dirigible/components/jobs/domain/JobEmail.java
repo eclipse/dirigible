@@ -22,7 +22,7 @@ import javax.persistence.*;
 public class JobEmail extends Artefact {
 
     /** The Constant ARTEFACT_TYPE. */
-    public static final String ARTEFACT_TYPE = "jobEmail";
+    public static final String ARTEFACT_TYPE = "job-email";
 
     /** The id. */
     @Id
@@ -50,16 +50,13 @@ public class JobEmail extends Artefact {
      *
      * @param location the location
      * @param name the name
-     * @param type the type
      * @param description the description
      * @param dependencies the dependencies
-     * @param id the id
      * @param jobName the job name
      * @param email the email
      */
-    public JobEmail(String location, String name, String type, String description, String dependencies, Long id, String jobName, String email) {
-        super(location, name, type, description, dependencies);
-        this.id = id;
+    public JobEmail(String location, String name, String description, String dependencies, String jobName, String email) {
+        super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.jobName = jobName;
         this.email = email;
     }
@@ -125,20 +122,20 @@ public class JobEmail extends Artefact {
      */
     @Override
     public String toString() {
-        return "JobEmail{" +
-                "id=" + id +
-                ", jobName='" + jobName + '\'' +
-                ", email='" + email + '\'' +
-                ", location='" + location + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", key='" + key + '\'' +
-                ", dependencies='" + dependencies + '\'' +
+        return "JobEmail {" +
+                " id=" + id +
+                ", jobName=" + jobName +
+                ", email=" + email +
+                ", location=" + location +
+                ", name=" + name +
+                ", type=" + type +
+                ", description=" + description +
+                ", key=" + key +
+                ", dependencies=" + dependencies +
                 ", createdBy=" + createdBy +
                 ", createdAt=" + createdAt +
                 ", updatedBy=" + updatedBy +
                 ", updatedAt=" + updatedAt +
-                '}';
+                "}";
     }
 }

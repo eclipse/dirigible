@@ -11,8 +11,8 @@
  */
 package org.eclipse.dirigible.components.security.synchronizer;
 
-import org.eclipse.dirigible.components.security.domain.SecurityRole;
-import org.eclipse.dirigible.components.security.repository.SecurityRoleRepository;
+import org.eclipse.dirigible.components.security.domain.Role;
+import org.eclipse.dirigible.components.security.repository.RoleRepository;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,10 +31,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.eclipse.dirigible.components.security.repository.SecurityRoleRepositoryTest.createSecurityRole;
+import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = {SecurityRoleRepository.class})
+@SpringBootTest(classes = {RoleRepository.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
@@ -44,13 +44,13 @@ class SecurityRoleSynchronizerTest {
      * The security role repository.
      */
     @Autowired
-    private SecurityRoleRepository securityRoleRepository;
+    private RoleRepository securityRoleRepository;
 
     /**
      * The sercurity role synchronizer.
      */
     @Autowired
-    private SecurityRoleSynchronizer securityRoleSynchronizer;
+    private RoleSynchronizer securityRoleSynchronizer;
 
     /**
      * The entity manager.
@@ -103,7 +103,7 @@ class SecurityRoleSynchronizerTest {
     public void testLoad() throws IOException {
         byte[] content =
                 SecurityRoleSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.role").readAllBytes();
-        List<SecurityRole> list = securityRoleSynchronizer.load("/META-INF/dirigible/test/test.role", content);
+        List<Role> list = securityRoleSynchronizer.load("/META-INF/dirigible/test/test.role", content);
         assertNotNull(list);
         assertEquals("/META-INF/dirigible/test/test.role", list.get(0).getLocation());
     }

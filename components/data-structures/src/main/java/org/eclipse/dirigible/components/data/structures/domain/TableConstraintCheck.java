@@ -44,7 +44,7 @@ public class TableConstraintCheck extends TableConstraint {
 	@Nullable
 	private String expression;
 	
-	public TableConstraintCheck(String name, String modifiers, String columns, TableConstraints constraints,
+	public TableConstraintCheck(String name, String[] modifiers, String[] columns, TableConstraints constraints,
 			String expression) {
 		super(name, modifiers, columns, constraints);
 		this.expression = expression;

@@ -12,7 +12,7 @@
 package org.eclipse.dirigible.components.security.endpoint;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.security.domain.SecurityAccess;
+import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.service.SecurityAccessService;
 
 import org.slf4j.Logger;
@@ -32,12 +32,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "security")
-public class SecurityAccessEndpoint extends BaseEndpoint {
+public class AccessEndpoint extends BaseEndpoint {
 
     /**
      * The Constant logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(SecurityAccessEndpoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccessEndpoint.class);
 
     /**
      * The security access service.
@@ -46,7 +46,7 @@ public class SecurityAccessEndpoint extends BaseEndpoint {
     private SecurityAccessService securityAccessService;
 
     @GetMapping("/access")
-    public ResponseEntity<List<SecurityAccess>> getSecurityAccesses() {
+    public ResponseEntity<List<Access>> getSecurityAccesses() {
         return ResponseEntity.ok(securityAccessService.getAll());
     }
 }

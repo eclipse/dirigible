@@ -9,36 +9,41 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.jobs.synchronizer;
+package org.eclipse.dirigible.components.jobs.email;
 
-import org.apache.commons.collections.map.HashedMap;
-import org.eclipse.dirigible.api.v3.mail.MailFacade;
-import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.jobs.domain.Job;
-import org.eclipse.dirigible.components.jobs.domain.JobEmail;
-import org.eclipse.dirigible.components.registry.accessor.RegistryAccessor;
-import org.eclipse.dirigible.core.generation.api.GenerationEnginesManager;
-import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.mail.MessagingException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+
+import org.apache.commons.validator.routines.EmailValidator;
+import org.eclipse.dirigible.api.v3.mail.MailFacade;
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.jobs.domain.Job;
+import org.eclipse.dirigible.components.jobs.domain.JobEmail;
+import org.eclipse.dirigible.components.jobs.service.JobEmailService;
+import org.eclipse.dirigible.components.registry.accessor.RegistryAccessor;
+import org.eclipse.dirigible.core.generation.api.GenerationEnginesManager;
+import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class JobEmailProcessor {
 
     @Autowired
     private RegistryAccessor registryAccessor;
+    
+    /** The job service. */
+    @Autowired
+    private JobEmailService jobEmailService ;
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(JobEmailProcessor.class);
@@ -98,10 +103,10 @@ public class JobEmailProcessor {
     private static String[] emailRecipients = null;
 
     /** The email subject error. */
-    private static String emailSubjectError = null;
+    public static String emailSubjectError = null;
 
     /** The email subject normal. */
-    private static String emailSubjectNormal = null;
+    public static String emailSubjectNormal = null;
 
     /** The email subject enable. */
     public static String emailSubjectEnable = null;
@@ -110,10 +115,10 @@ public class JobEmailProcessor {
     public static String emailSubjectDisable = null;
 
     /** The email template error. */
-    private static String emailTemplateError = null;
+    public static String emailTemplateError = null;
 
     /** The email template normal. */
-    private static String emailTemplateNormal = null;
+    public static String emailTemplateNormal = null;
 
     /** The email template enable. */
     public static String emailTemplateEnable = null;
@@ -143,10 +148,10 @@ public class JobEmailProcessor {
     private static final String DEFAULT_EMAIL_SUBJECT_DISABLE = "Job execution has been disabled: [%s]";
 
     /** The Constant EMAIL_TEMPLATE_ERROR. */
-    private static final String EMAIL_TEMPLATE_ERROR = "/job/templates/template-error.txt";
+    public static final String EMAIL_TEMPLATE_ERROR = "/job/templates/template-error.txt";
 
     /** The Constant EMAIL_TEMPLATE_NORMAL. */
-    private static final String EMAIL_TEMPLATE_NORMAL = "/job/templates/template-normal.txt";
+    public static final String EMAIL_TEMPLATE_NORMAL = "/job/templates/template-normal.txt";
 
     /** The Constant EMAIL_TEMPLATE_ENABLE. */
     public static final String EMAIL_TEMPLATE_ENABLE = "/job/templates/template-enable.txt";
@@ -189,14 +194,14 @@ public class JobEmailProcessor {
         emailUrlPort = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT);
     }
 
-    private String prepareEmail(Job jobDefinition, String templateLocation, String defaultLocation) {
+    public String prepareEmail(Job job, String templateLocation, String defaultLocation) {
 
         byte[] template = registryAccessor.getRegistryContent(templateLocation, defaultLocation);
 
         IGenerationEngine generationEngine = GenerationEnginesManager.getGenerationEngine("mustache");
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("job.name", jobDefinition.getName());
-        parameters.put("job.message", jobDefinition.getMessage());
+        parameters.put("job.name", job.getName());
+        parameters.put("job.message", job.getMessage());
         parameters.put("job.scheme", emailUrlScheme);
         parameters.put("job.host", emailUrlHost);
         parameters.put("job.port", emailUrlPort);
@@ -209,23 +214,23 @@ public class JobEmailProcessor {
         }
     }
 
-    private void sendEmail(Job jobDefinition, List<JobEmail> emailDefinitions, String emailSubject, String emailContent) {
+    public void sendEmail(Job job, String emailSubject, String emailContent) {
         try {
-            String[] emails = new String[emailDefinitions.size()];
-            for (int i = 0; i < emails.length; i++) {
-                emails[i] = emailDefinitions.get(i).getEmail();
-            }
-            if (emailSender != null && ((emailRecipients != null && emailRecipients.length > 0)
-                            || emails.length > 0)) {
+        	List<JobEmail> emailArtefacts = jobEmailService.findAllByJobName(job.getName());
+			String[] emails = emailArtefacts.stream().map(JobEmail::getEmail).toArray(String[]::new);
+			
+            if (emailSender != null 
+            		&& ((emailRecipients != null && emailRecipients.length > 0)
+                    || emails.length > 0)) {
 
                 List<Map> parts = new ArrayList<Map>();
-                Map<String, String> map  = new HashedMap();
+                Map<String, String> map  = new HashMap<>();
                 map.put("contentType", ContentTypeHelper.TEXT_PLAIN);
                 map.put("type", "text");
                 map.put("text", emailContent);
                 parts.add(map);
                 MailFacade.getInstance().send(emailSender, emails.length > 0 ? emails : emailRecipients, null, null,
-                        String.format(emailSubject, jobDefinition.getName()), parts);
+                        String.format(emailSubject, job.getName()), parts);
                 //		String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts
             } else {
                 if (emailRecipientsLine != null) {
@@ -237,21 +242,4 @@ public class JobEmailProcessor {
         }
     }
 
-    public void createAndSendJobEmail (Job job, Job existingJob, List<JobEmail> emailDefinitions){
-        if (job.getCreatedAt() == null) {
-            job.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
-        }
-        if (job.getCreatedBy() == null) {
-            job.setCreatedBy(UserFacade.getName());
-        }
-        if (existingJob != null) {
-            if (existingJob.isEnabled() && !job.isEnabled()) {
-                String content = prepareEmail(job, emailTemplateDisable, EMAIL_TEMPLATE_DISABLE);
-                sendEmail(job, emailDefinitions, emailSubjectDisable, content);
-            } else if (!existingJob.isEnabled() && job.isEnabled()) {
-                String content = prepareEmail(job, emailTemplateEnable, EMAIL_TEMPLATE_ENABLE);
-                sendEmail(job, emailDefinitions, emailSubjectEnable, content);
-            }
-        }
-    }
 }

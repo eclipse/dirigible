@@ -34,7 +34,7 @@ import org.hibernate.annotations.LazyCollectionOption;
  * The Class Extension.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_TABLES")
+@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLES")
 public class Table extends Artefact {
 	
 	/** The Constant ARTEFACT_TYPE. */

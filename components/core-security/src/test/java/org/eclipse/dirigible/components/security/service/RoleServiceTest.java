@@ -11,8 +11,8 @@
  */
 package org.eclipse.dirigible.components.security.service;
 
-import org.eclipse.dirigible.components.security.domain.SecurityRole;
-import org.eclipse.dirigible.components.security.repository.SecurityRoleRepository;
+import org.eclipse.dirigible.components.security.domain.Role;
+import org.eclipse.dirigible.components.security.repository.RoleRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,18 +27,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.eclipse.dirigible.components.security.repository.SecurityRoleRepositoryTest.createSecurityRole;
+import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = {SecurityRoleRepository.class, SecurityRoleService.class})
+@SpringBootTest(classes = {RoleRepository.class, SecurityRoleService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-class SecurityRoleServiceTest {
+class RoleServiceTest {
 
     @Autowired
-    private SecurityRoleRepository securityRoleRepository;
+    private RoleRepository securityRoleRepository;
 
     @Autowired
     private SecurityRoleService securityRoleService;
@@ -61,35 +61,35 @@ class SecurityRoleServiceTest {
 
     @Test
     void testGetAll() {
-        List<SecurityRole> securityRoleList = securityRoleService.getAll();
+        List<Role> securityRoleList = securityRoleService.getAll();
         assertEquals(5, securityRoleList.size());
     }
 
     @Test
     void testFindAll() {
-        Page<SecurityRole> securityRolePage = securityRoleService.findAll(Pageable.ofSize(1));
+        Page<Role> securityRolePage = securityRoleService.findAll(Pageable.ofSize(1));
         assertEquals(5, securityRolePage.getTotalElements());
     }
 
     @Test
     void testFindById() {
-        SecurityRole securityRole = new SecurityRole("/a/b/c/test.role", "test", "description");
+        Role securityRole = new Role("/a/b/c/test.role", "test", "description");
         securityRoleService.save(securityRole);
-        SecurityRole securityRoleServiceById = securityRoleService.findById(securityRole.getId());
+        Role securityRoleServiceById = securityRoleService.findById(securityRole.getId());
         assertEquals("test", securityRoleServiceById.getName());
     }
 
     @Test
     void testFindByName() {
-        SecurityRole securityRole = new SecurityRole("/a/b/c/test.role", "test", "description");
+        Role securityRole = new Role("/a/b/c/test.role", "test", "description");
         securityRoleService.save(securityRole);
-        SecurityRole securityRoleServiceByName = securityRoleService.findByName("test");
+        Role securityRoleServiceByName = securityRoleService.findByName("test");
         assertEquals(securityRole.getId(), securityRoleServiceByName.getId());
     }
 
     @Test
     void testSave() {
-        SecurityRole securityRole = new SecurityRole("/a/b/c/test.role", "test", "description");
+        Role securityRole = new Role("/a/b/c/test.role", "test", "description");
         securityRoleService.save(securityRole);
         assertNotNull(securityRoleService.findByName("test"));
     }
@@ -97,7 +97,7 @@ class SecurityRoleServiceTest {
     @Test
     void testDelete() {
         try {
-            SecurityRole securityRole = new SecurityRole("/a/b/c/test.role", "test", "description");
+            Role securityRole = new Role("/a/b/c/test.role", "test", "description");
             securityRoleService.save(securityRole);
             securityRoleService.delete(securityRole);
             securityRoleService.findByName("test");

@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.security.endpoint;
+package org.eclipse.dirigible.components.security.repository;
 
-import org.eclipse.dirigible.components.security.repository.SecurityRoleRepository;
+import org.eclipse.dirigible.components.security.domain.Role;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,30 +20,27 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.eclipse.dirigible.components.security.repository.SecurityRoleRepositoryTest.createSecurityRole;
+import javax.persistence.EntityManager;
+import java.util.Optional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = {SecurityRoleRepository.class})
-@AutoConfigureMockMvc
+@SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-class SecurityRoleEndpointTest {
+public class RoleRepositoryTest {
+    @Autowired
+    private RoleRepository securityRoleRepository;
 
     @Autowired
-    private SecurityRoleRepository securityRoleRepository;
-
-    @Autowired
-    MockMvc mockMvc;
+    EntityManager entityManager;
 
     @BeforeEach
     public void setup() {
@@ -62,10 +59,28 @@ class SecurityRoleEndpointTest {
     }
 
     @Test
-    public void testGetSecurityRoles() throws Exception {
-        mockMvc.perform(get("/services/v8/core/security/role"))
-                .andDo(print())
-                .andExpect(status().isOk());
+    public void getOne() {
+        Long id = securityRoleRepository.findAll().get(0).getId();
+        Optional<Role> optional = securityRoleRepository.findById(id);
+        Role securityRole = optional.isPresent() ? optional.get() : null;
+        assertNotNull(securityRole);
+        assertNotNull(securityRole.getLocation());
+        assertNotNull(securityRole.getCreatedBy());
+        assertEquals("SYSTEM", securityRole.getCreatedBy());
+        assertNotNull(securityRole.getCreatedAt());
+    }
+
+    @Test
+    public void getReferenceUsingEntityManager() {
+        Long id = securityRoleRepository.findAll().get(0).getId();
+        Role securityRole = entityManager.getReference(Role.class, id);
+        assertNotNull(securityRole);
+        assertNotNull(securityRole.getLocation());
+    }
+
+    public static Role createSecurityRole(String location, String name, String description) {
+        Role securityRole = new Role(location, name, description);
+        return securityRole;
     }
 
     @SpringBootApplication

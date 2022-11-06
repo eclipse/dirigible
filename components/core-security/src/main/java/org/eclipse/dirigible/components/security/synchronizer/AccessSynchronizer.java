@@ -25,8 +25,8 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
-import org.eclipse.dirigible.components.security.domain.SecurityAccess;
-import org.eclipse.dirigible.components.security.domain.SecurityAccessArtifact;
+import org.eclipse.dirigible.components.security.domain.Access;
+import org.eclipse.dirigible.components.security.domain.Constraints;
 import org.eclipse.dirigible.components.security.service.SecurityAccessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,12 +42,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(40)
-public class SecurityAccessSynchronizer<A extends Artefact> implements Synchronizer<SecurityAccess> {
+public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Access> {
 
     /**
      * The Constant logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(SecurityAccessSynchronizer.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccessSynchronizer.class);
 
     /**
      * The Constant FILE_EXTENSION_SECURITY_ACCESS.
@@ -70,7 +70,7 @@ public class SecurityAccessSynchronizer<A extends Artefact> implements Synchroni
      * @param securityAccessService the security access service
      */
     @Autowired
-    public SecurityAccessSynchronizer(SecurityAccessService securityAccessService) {
+    public AccessSynchronizer(SecurityAccessService securityAccessService) {
         this.securityAccessService = securityAccessService;
     }
 
@@ -80,7 +80,7 @@ public class SecurityAccessSynchronizer<A extends Artefact> implements Synchroni
      * @return the service
      */
     @Override
-    public ArtefactService<SecurityAccess> getService() {
+    public ArtefactService<Access> getService() {
         return securityAccessService;
     }
 
@@ -105,7 +105,7 @@ public class SecurityAccessSynchronizer<A extends Artefact> implements Synchroni
      */
     @Override
     public boolean isAccepted(String type) {
-        return SecurityAccess.ARTEFACT_TYPE.equals(type);
+        return Access.ARTEFACT_TYPE.equals(type);
     }
 
     /**
@@ -117,11 +117,11 @@ public class SecurityAccessSynchronizer<A extends Artefact> implements Synchroni
      */
     @Override
     public List load(String location, byte[] content) {
-        SecurityAccessArtifact securityAccessArtifact = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), SecurityAccessArtifact.class);
+        Constraints securityAccessArtifact = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
 
-        List<SecurityAccess> securityAccesses = securityAccessArtifact.buildSecurityAccesses(location);
+        List<Access> securityAccesses = securityAccessArtifact.buildSecurityAccesses(location);
 
-        for (SecurityAccess securityAccess : securityAccesses) {
+        for (Access securityAccess : securityAccesses) {
             try {
                 getService().save(securityAccess);
             } catch (Exception e) {
@@ -188,7 +188,7 @@ public class SecurityAccessSynchronizer<A extends Artefact> implements Synchroni
      * @param securityAccess the security access
      */
     @Override
-    public void cleanup(SecurityAccess securityAccess) {
+    public void cleanup(Access securityAccess) {
         try {
             getService().delete(securityAccess);
         } catch (Exception e) {
@@ -216,6 +216,6 @@ public class SecurityAccessSynchronizer<A extends Artefact> implements Synchroni
 
 	@Override
 	public String getArtefactType() {
-		return SecurityAccess.ARTEFACT_TYPE;
+		return Access.ARTEFACT_TYPE;
 	}
 }

@@ -11,9 +11,9 @@
  */
 package org.eclipse.dirigible.components.security.verifier;
 
-import org.eclipse.dirigible.components.security.domain.SecurityAccess;
-import org.eclipse.dirigible.components.security.repository.SecurityAccessRepository;
-import org.eclipse.dirigible.components.security.repository.SecurityRoleRepository;
+import org.eclipse.dirigible.components.security.domain.Access;
+import org.eclipse.dirigible.components.security.repository.AccessRepository;
+import org.eclipse.dirigible.components.security.repository.RoleRepository;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,25 +29,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.eclipse.dirigible.components.security.repository.SecurityAccessRepositoryTest.createSecurityAccess;
-import static org.eclipse.dirigible.components.security.repository.SecurityRoleRepositoryTest.createSecurityRole;
+import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
+import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
 import static org.junit.Assert.*;
 
-@SpringBootTest(classes = {SecurityAccessRepository.class, SecurityRoleRepository.class})
+@SpringBootTest(classes = {AccessRepository.class, RoleRepository.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-class SecurityAccessVerifierTest {
+class AccessVerifierTest {
 
     @Autowired
-    private SecurityAccessVerifier securityAccessVerifier;
+    private AccessVerifier securityAccessVerifier;
 
     @Autowired
-    private SecurityAccessRepository securityAccessRepository;
+    private AccessRepository securityAccessRepository;
 
     @Autowired
-    private SecurityRoleRepository securityRoleRepository;
+    private RoleRepository securityRoleRepository;
 
     @BeforeEach
     public void setup() {
@@ -69,7 +69,7 @@ class SecurityAccessVerifierTest {
 
     @Test
     void testGetMatchingSecurityAccesses() {
-        List<SecurityAccess> matchingSecurityAccesses =
+        List<Access> matchingSecurityAccesses =
                 securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c", "GET");
         assertTrue(matchingSecurityAccesses.isEmpty());
 

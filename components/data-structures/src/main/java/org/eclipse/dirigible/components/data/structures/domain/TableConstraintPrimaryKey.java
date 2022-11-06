@@ -38,7 +38,7 @@ public class TableConstraintPrimaryKey extends TableConstraint {
 	 * @param columns the columns
 	 * @param constraints the constraints
 	 */
-	public TableConstraintPrimaryKey(String name, String modifiers, String columns, TableConstraints constraints) {
+	public TableConstraintPrimaryKey(String name, String[] modifiers, String[] columns, TableConstraints constraints) {
 		super(name, modifiers, columns, constraints);
 	}
 

@@ -11,17 +11,14 @@
  */
 package org.eclipse.dirigible.components.registry.endpoint;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import org.eclipse.dirigible.api.v3.platform.RegistryFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
+import org.eclipse.dirigible.components.registry.accessor.RegistryAccessor;
 import org.eclipse.dirigible.components.registry.service.RegistryService;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,9 +38,12 @@ public class RegistryEndpoint extends BaseEndpoint {
 	
 	private final RegistryService registryService;
 	
+	private final RegistryAccessor registryAccessor;
+	
 	@Autowired
-	public RegistryEndpoint(RegistryService registryService) {
+	public RegistryEndpoint(RegistryService registryService, RegistryAccessor registryAccessor) {
 		this.registryService = registryService;
+		this.registryAccessor = registryAccessor;
 	}
 	
 	@GetMapping("/{*path}")
@@ -58,11 +58,9 @@ public class RegistryEndpoint extends BaseEndpoint {
 			if (!collection.exists()) {
 				byte[] content;
 				try {
-					content = RegistryFacade.getContent(path);
+					content = registryAccessor.getRegistryContent(path);
 				} catch (ScriptingException e) {
 					throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, path, e);
-				} catch (IOException e) {
-					throw new ResponseStatusException(HttpStatus.NOT_FOUND, path, e);
 				}
 				if (content != null) {
 					httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);

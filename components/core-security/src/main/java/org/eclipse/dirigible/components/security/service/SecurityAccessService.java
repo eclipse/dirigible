@@ -12,8 +12,8 @@
 package org.eclipse.dirigible.components.security.service;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.security.domain.SecurityAccess;
-import org.eclipse.dirigible.components.security.repository.SecurityAccessRepository;
+import org.eclipse.dirigible.components.security.domain.Access;
+import org.eclipse.dirigible.components.security.repository.AccessRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -31,13 +31,13 @@ import java.util.Optional;
  */
 @Service
 @Transactional
-public class SecurityAccessService implements ArtefactService<SecurityAccess> {
+public class SecurityAccessService implements ArtefactService<Access> {
 
     /**
      * The security access repository.
      */
     @Autowired
-    private SecurityAccessRepository securityAccessRepository;
+    private AccessRepository securityAccessRepository;
 
     /**
      * Gets the all.
@@ -46,7 +46,7 @@ public class SecurityAccessService implements ArtefactService<SecurityAccess> {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<SecurityAccess> getAll() {
+    public List<Access> getAll() {
         return securityAccessRepository.findAll();
     }
 
@@ -58,7 +58,7 @@ public class SecurityAccessService implements ArtefactService<SecurityAccess> {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<SecurityAccess> findAll(Pageable pageable) {
+    public Page<Access> findAll(Pageable pageable) {
         return securityAccessRepository.findAll(pageable);
     }
 
@@ -70,8 +70,8 @@ public class SecurityAccessService implements ArtefactService<SecurityAccess> {
      */
     @Override
     @Transactional(readOnly = true)
-    public SecurityAccess findById(Long id) {
-        Optional<SecurityAccess> securityAccess = securityAccessRepository.findById(id);
+    public Access findById(Long id) {
+        Optional<Access> securityAccess = securityAccessRepository.findById(id);
         if (securityAccess.isPresent()) {
             return securityAccess.get();
         } else {
@@ -87,11 +87,11 @@ public class SecurityAccessService implements ArtefactService<SecurityAccess> {
      */
     @Override
     @Transactional(readOnly = true)
-    public SecurityAccess findByName(String name) {
-        SecurityAccess filter = new SecurityAccess();
+    public Access findByName(String name) {
+        Access filter = new Access();
         filter.setName(name);
-        Example<SecurityAccess> example = Example.of(filter);
-        Optional<SecurityAccess> securityAccess = securityAccessRepository.findOne(example);
+        Example<Access> example = Example.of(filter);
+        Optional<Access> securityAccess = securityAccessRepository.findOne(example);
         if (securityAccess.isPresent()) {
             return securityAccess.get();
         } else {
@@ -106,7 +106,7 @@ public class SecurityAccessService implements ArtefactService<SecurityAccess> {
      * @return the security access
      */
     @Override
-    public SecurityAccess save(SecurityAccess securityAccess) {
+    public Access save(Access securityAccess) {
         return securityAccessRepository.saveAndFlush(securityAccess);
     }
 
@@ -116,7 +116,7 @@ public class SecurityAccessService implements ArtefactService<SecurityAccess> {
      * @param securityAccess the security access
      */
     @Override
-    public void delete(SecurityAccess securityAccess) {
+    public void delete(Access securityAccess) {
         securityAccessRepository.delete(securityAccess);
     }
 

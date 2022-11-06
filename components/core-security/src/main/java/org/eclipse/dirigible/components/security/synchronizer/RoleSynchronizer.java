@@ -25,7 +25,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
-import org.eclipse.dirigible.components.security.domain.SecurityRole;
+import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.security.service.SecurityRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +41,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(30)
-public class SecurityRoleSynchronizer<A extends Artefact> implements Synchronizer<SecurityRole> {
+public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> {
 
     /**
      * The Constant logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(SecurityRoleSynchronizer.class);
+    private static final Logger logger = LoggerFactory.getLogger(RoleSynchronizer.class);
 
     /**
      * The Constant FILE_EXTENSION_SECURITY_ROLE.
@@ -69,7 +69,7 @@ public class SecurityRoleSynchronizer<A extends Artefact> implements Synchronize
      * @param securityRoleService the security role service
      */
     @Autowired
-    public SecurityRoleSynchronizer(SecurityRoleService securityRoleService) {
+    public RoleSynchronizer(SecurityRoleService securityRoleService) {
         this.securityRoleService = securityRoleService;
     }
 
@@ -79,7 +79,7 @@ public class SecurityRoleSynchronizer<A extends Artefact> implements Synchronize
      * @return the service
      */
     @Override
-    public ArtefactService<SecurityRole> getService() {
+    public ArtefactService<Role> getService() {
         return securityRoleService;
     }
 
@@ -104,7 +104,7 @@ public class SecurityRoleSynchronizer<A extends Artefact> implements Synchronize
      */
     @Override
     public boolean isAccepted(String type) {
-        return SecurityRole.ARTEFACT_TYPE.equals(type);
+        return Role.ARTEFACT_TYPE.equals(type);
     }
 
     /**
@@ -116,14 +116,14 @@ public class SecurityRoleSynchronizer<A extends Artefact> implements Synchronize
      */
     @Override
     public List load(String location, byte[] content) {
-        SecurityRole[] securityRoles = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), SecurityRole[].class);
+        Role[] securityRoles = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Role[].class);
 
         Integer roleIndex = 1;
 
-        for (SecurityRole securityRole : securityRoles) {
+        for (Role securityRole : securityRoles) {
             securityRole.setLocation(location);
             securityRole.setName(roleIndex.toString());
-            securityRole.setType(SecurityRole.ARTEFACT_TYPE);
+            securityRole.setType(Role.ARTEFACT_TYPE);
             securityRole.updateKey();
 
             try {
@@ -192,7 +192,7 @@ public class SecurityRoleSynchronizer<A extends Artefact> implements Synchronize
      * @param securityRole the security role
      */
     @Override
-    public void cleanup(SecurityRole securityRole) {
+    public void cleanup(Role securityRole) {
         try {
             getService().delete(securityRole);
         } catch (Exception e) {
@@ -220,6 +220,6 @@ public class SecurityRoleSynchronizer<A extends Artefact> implements Synchronize
 
 	@Override
 	public String getArtefactType() {
-		return SecurityRole.ARTEFACT_TYPE;
+		return Role.ARTEFACT_TYPE;
 	}
 }

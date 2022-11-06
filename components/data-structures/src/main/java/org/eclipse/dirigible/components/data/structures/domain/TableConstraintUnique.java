@@ -51,7 +51,7 @@ public class TableConstraintUnique extends TableConstraint {
 	 * @param indexType the index type
 	 * @param order the order
 	 */
-	public TableConstraintUnique(String name, String modifiers, String columns, TableConstraints constraints,
+	public TableConstraintUnique(String name, String[] modifiers, String[] columns, TableConstraints constraints,
 			String indexType, String order) {
 		super(name, modifiers, columns, constraints);
 		this.indexType = indexType;

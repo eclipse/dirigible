@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.security.repository;
 
-import org.eclipse.dirigible.components.security.domain.SecurityAccess;
+import org.eclipse.dirigible.components.security.domain.Access;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,10 +35,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
-public class SecurityAccessRepositoryTest {
+public class AccessRepositoryTest {
 
     @Autowired
-    private SecurityAccessRepository securityAccessRepository;
+    private AccessRepository securityAccessRepository;
 
     @Autowired
     EntityManager entityManager;
@@ -62,8 +62,8 @@ public class SecurityAccessRepositoryTest {
     @Test
     public void getOne() {
         Long id = securityAccessRepository.findAll().get(0).getId();
-        Optional<SecurityAccess> optional = securityAccessRepository.findById(id);
-        SecurityAccess securityAccess = optional.isPresent() ? optional.get() : null;
+        Optional<Access> optional = securityAccessRepository.findById(id);
+        Access securityAccess = optional.isPresent() ? optional.get() : null;
         assertNotNull(securityAccess);
         assertNotNull(securityAccess.getLocation());
         assertNotNull(securityAccess.getCreatedBy());
@@ -74,13 +74,13 @@ public class SecurityAccessRepositoryTest {
     @Test
     public void getReferenceUsingEntityManager() {
         Long id = securityAccessRepository.findAll().get(0).getId();
-        SecurityAccess securityAccess = entityManager.getReference(SecurityAccess.class, id);
+        Access securityAccess = entityManager.getReference(Access.class, id);
         assertNotNull(securityAccess);
         assertNotNull(securityAccess.getLocation());
     }
 
-    public static SecurityAccess createSecurityAccess(String location, String name, String description, String scope, String path, String method, String role) {
-        SecurityAccess securityAccess = new SecurityAccess(location, name, description, scope, path, method, role);
+    public static Access createSecurityAccess(String location, String name, String description, String scope, String path, String method, String role) {
+        Access securityAccess = new Access(location, name, description, scope, path, method, role);
         return securityAccess;
     }
 

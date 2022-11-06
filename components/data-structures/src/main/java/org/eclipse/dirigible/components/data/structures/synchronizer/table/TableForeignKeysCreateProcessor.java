@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.data.structures.synchronizer;
+package org.eclipse.dirigible.components.data.structures.synchronizer.table;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -63,8 +63,8 @@ public class TableForeignKeysCreateProcessor {
                     if (caseSensitive) {
                         foreignKeyName = "\"" + foreignKeyName + "\"";
                     }
-                    alterTableBuilder.add().foreignKey(foreignKeyName, foreignKey.getColumnNames().stream().toArray(String[] ::new), 
-                    		foreignKey.getReferencedTable(), foreignKey.getReferencedColumnNames().stream().toArray(String[] ::new));
+                    alterTableBuilder.add().foreignKey(foreignKeyName, foreignKey.getColumns(), 
+                    		foreignKey.getReferencedTable(), foreignKey.getReferencedColumns());
                 }
                 final String sql = alterTableBuilder.build();
                 if (logger.isInfoEnabled()) {logger.info(sql);}

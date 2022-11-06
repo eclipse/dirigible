@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * Front facing REST service serving the Jobs.
  */
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "job")
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "jobs")
 public class JobEndpoint extends BaseEndpoint {
 
     /** The job service. */

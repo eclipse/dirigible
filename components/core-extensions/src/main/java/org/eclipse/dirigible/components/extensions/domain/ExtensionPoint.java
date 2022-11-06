@@ -38,20 +38,11 @@ public class ExtensionPoint extends Artefact {
 	/** The Constant ARTEFACT_TYPE. */
 	public static final String ARTEFACT_TYPE = "extensionpoint";
 	
-	
-	
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EXTENSIONPOINT_ID", nullable = false)
 	private Long id;
-	
-//	/** The extensions. */
-//	@Valid
-//	@OneToMany(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "EXTENSIONPOINT_NAME")
-//	private Set<Extension> extensions;
-	
 	
 	/**
 	 * Instantiates a new extension point.

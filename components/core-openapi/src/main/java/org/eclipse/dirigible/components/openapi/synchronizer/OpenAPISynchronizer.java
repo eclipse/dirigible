@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -107,7 +108,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     public List<OpenAPI> load(String location, byte[] content) {
         OpenAPI openAPI = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), OpenAPI.class);
         openAPI.setLocation(location);
-        openAPI.setName("");
+        openAPI.setName(FilenameUtils.getBaseName(location));
         openAPI.setType(OpenAPI.ARTEFACT_TYPE);
         openAPI.updateKey();
         try {

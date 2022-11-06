@@ -9,13 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.jobs.domain;
+package org.eclipse.dirigible.components.security.repository;
 
-public enum JobLifecycle {
-    /** The execute job create. */
-    CREATE,
-    /** The execute job update. */
-    UPDATE,
-    /** The execute job delete. */
-    DELETE
+import org.eclipse.dirigible.components.security.domain.Access;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+/**
+ * The Interface SecurityAccessRepository.
+ */
+@Repository("securityAccessRepository")
+public interface AccessRepository extends JpaRepository<Access, Long> {
+
 }

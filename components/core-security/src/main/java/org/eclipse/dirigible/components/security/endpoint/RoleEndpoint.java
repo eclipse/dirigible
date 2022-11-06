@@ -12,7 +12,7 @@
 package org.eclipse.dirigible.components.security.endpoint;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.security.domain.SecurityRole;
+import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.security.service.SecurityRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +30,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "security")
-public class SecurityRoleEndpoint extends BaseEndpoint {
+public class RoleEndpoint extends BaseEndpoint {
 
     /**
      * The Constant logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(SecurityRoleEndpoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(RoleEndpoint.class);
 
     /**
      * The security role service.
@@ -43,8 +43,8 @@ public class SecurityRoleEndpoint extends BaseEndpoint {
     @Autowired
     private SecurityRoleService securityRoleService;
 
-    @GetMapping("/role")
-    public ResponseEntity<List<SecurityRole>> getAll() {
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getAll() {
         return ResponseEntity.ok(securityRoleService.getAll());
     }
 }

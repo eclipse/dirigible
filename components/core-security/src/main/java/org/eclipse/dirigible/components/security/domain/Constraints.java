@@ -14,20 +14,20 @@ package org.eclipse.dirigible.components.security.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SecurityAccessArtifact {
+public class Constraints {
 
-    private List<SecurityAccessConstraint> constraints = new ArrayList<>();
+    private List<Constraint> constraints = new ArrayList<>();
 
-    public List<SecurityAccess> buildSecurityAccesses(String location) {
-        List<SecurityAccess> securityAccesses = new ArrayList<>();
+    public List<Access> buildSecurityAccesses(String location) {
+        List<Access> securityAccesses = new ArrayList<>();
 
         Integer keyIndex = 1;
 
-        for (SecurityAccessConstraint securityAccessConstraint : constraints) {
+        for (Constraint securityAccessConstraint : constraints) {
             for (String role : securityAccessConstraint.getRoles()) {
-                SecurityAccess securityAccess = new SecurityAccess();
+                Access securityAccess = new Access();
                 securityAccess.setLocation(location);
-                securityAccess.setType(SecurityAccess.ARTEFACT_TYPE);
+                securityAccess.setType(Access.ARTEFACT_TYPE);
                 securityAccess.setName(keyIndex.toString());
                 securityAccess.updateKey();
                 securityAccess.setMethod(securityAccessConstraint.getMethod());
