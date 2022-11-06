@@ -785,11 +785,13 @@
 		<spring.boot.version>2.7.5</spring.boot.version>
 		<spring.boot.slf4j.version>1.7.25</spring.boot.slf4j.version>
 		<spring.boot.logback.version>1.2.11</spring.boot.logback.version>
+		<spring-context-support.version>5.3.23</spring-context-support.version>
 		<webjars-locator>0.46</webjars-locator>
 		<keycloak-adapter-bom.version>20.0.0</keycloak-adapter-bom.version>
 		<hikaricp.version>5.0.1</hikaricp.version>
 		<validator.version>1.7</validator.version>
 		<quartz.version>2.3.2</quartz.version>
+		<c3p0.version>0.9.5.5</c3p0.version>
 		<graalvm.version>22.3.0</graalvm.version>
 		<guava.version>31.1-jre</guava.version>
 		<icu4j.version>72.1</icu4j.version>

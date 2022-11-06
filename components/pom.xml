@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -11,7 +10,7 @@
 
 	<name>Components - Parent</name>
 	<artifactId>dirigible-components-parent</artifactId>
-    <packaging>pom</packaging>   
+	<packaging>pom</packaging>
 
 	<modules>
 		<!-- Core -->
@@ -28,22 +27,22 @@
 		<module>core-websockets</module>
 		<module>core-security</module>
 		<module>core-listeners</module>
-		
+
 		<!-- Data -->
 		<module>data-structures</module>
-		
+
 		<!-- Engines -->
 		<module>engine-javascript</module>
-		
+
 		<!-- Applications -->
 		<module>app-all</module>
-		
+
 		<!-- Test -->
 		<module>test-project</module>
 	</modules>
-	
+
 	<dependencies>
-	
+
 		<!-- Platform -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -63,7 +62,7 @@
 			<version>${spring.boot.logback.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- Commons -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
@@ -71,7 +70,7 @@
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 
-    	<!-- Spring Boot -->
+		<!-- Spring Boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -87,28 +86,28 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 			<version>${spring.boot.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>${spring.boot.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Date Type Utils -->
 		<dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-joda</artifactId>
-      <version>${jackson.databind.version}</version>
-    </dependency>
-        
-    <!-- Bean Validation API support -->
-		<dependency>
-		    <groupId>jakarta.validation</groupId>
-		    <artifactId>jakarta.validation-api</artifactId>
-		    <version>${jakarta.validation.version}</version>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>${jackson.databind.version}</version>
 		</dependency>
-		
+
+		<!-- Bean Validation API support -->
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>${jakarta.validation.version}</version>
+		</dependency>
+
 		<!-- Swagger -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -143,16 +142,16 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<!-- Modules -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ide-service-console</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
-		
+
 	</dependencies>
-	
+
 	<properties>
 		<license.header.location>../licensing-header.txt</license.header.location>
 	</properties>
