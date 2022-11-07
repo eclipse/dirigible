@@ -114,7 +114,7 @@ public class JobEmailService implements ArtefactService<JobEmail> {
     /**
      * Find by job name.
      *
-     * @param name the name
+     * @param jobName the job name
      * @return the job email
      */
 
@@ -148,6 +148,11 @@ public class JobEmailService implements ArtefactService<JobEmail> {
         jobEmailRepository.delete(jobEmail);
     }
 
+	/**
+	 * Delete all by job name.
+	 *
+	 * @param jobName the job name
+	 */
 	public void deleteAllByJobName(String jobName) {
 		JobEmail filter = new JobEmail();
         filter.setJobName(jobName);

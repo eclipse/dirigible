@@ -275,6 +275,11 @@ public class JobLogService implements ArtefactService<JobLog> {
         return jobLog;
     }
 
+	/**
+	 * Delete all by job name.
+	 *
+	 * @param jobName the job name
+	 */
 	public void deleteAllByJobName(String jobName) {
 		JobLog filter = new JobLog();
         filter.setJobName(jobName);

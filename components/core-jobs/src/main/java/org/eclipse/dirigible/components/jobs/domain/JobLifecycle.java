@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
+/**
+ * The Enum JobLifecycle.
+ */
 public enum JobLifecycle {
     /** The execute job create. */
     CREATE,

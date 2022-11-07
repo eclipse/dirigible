@@ -60,6 +60,7 @@ public class JobParameter {
     @Column(name = "JOBPARAM_VALUE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
     private String value;
 
+    /** The job. */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "JOB_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -80,6 +81,7 @@ public class JobParameter {
      * @param defaultValue the default value
      * @param choices the choices
      * @param value the value
+     * @param job the job
      */
     public JobParameter(String type, String defaultValue, String choices, String value, Job job) {
         this.type = type;

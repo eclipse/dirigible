@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 /**
  * The Class JobSynchronizer.
  *
- * @param A the generic type
+ * @param <A> the generic type
  */
 @Component
 @Order(50)
@@ -225,11 +225,21 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
     @Override
     public void setCallback(SynchronizerCallback callback) {this.callback = callback;}
     
+    /**
+     * Gets the file extension.
+     *
+     * @return the file extension
+     */
     @Override
 	public String getFileExtension() {
 		return FILE_EXTENSION_JOB;
 	}
 
+	/**
+	 * Gets the artefact type.
+	 *
+	 * @return the artefact type
+	 */
 	@Override
 	public String getArtefactType() {
 		return Job.ARTEFACT_TYPE;
