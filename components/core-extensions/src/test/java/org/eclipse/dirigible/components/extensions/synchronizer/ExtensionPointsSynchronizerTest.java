@@ -62,6 +62,8 @@ public class ExtensionPointsSynchronizerTest {
 	 */
 	@BeforeEach
     public void setup() throws Exception {
+		
+		cleanup();
 
     	// create test ExtensionPoints
 		extensionPointRepository.save(createExtensionPoint("/a/b/c/e1.extensionpoint", "e1", "description"));
@@ -78,9 +80,7 @@ public class ExtensionPointsSynchronizerTest {
 	 */
 	@AfterEach
     public void cleanup() throws Exception {
-		
-		// delete test ExtensionPoints
-		extensionPointRepository.findAll().stream().forEach(e -> extensionPointRepository.delete(e));
+		extensionPointRepository.deleteAll();
     }
 	
 

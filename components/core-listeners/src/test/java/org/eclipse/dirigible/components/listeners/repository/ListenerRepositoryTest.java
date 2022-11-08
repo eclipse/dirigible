@@ -44,6 +44,9 @@ public class ListenerRepositoryTest {
 
     @BeforeEach
     public void setup() {
+    	
+    	cleanup();
+    	
         listenerRepository.save(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1"));
         listenerRepository.save(new Listener("/a/b/c/l2.listener", "name2", "description", "handler2"));
         listenerRepository.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3"));

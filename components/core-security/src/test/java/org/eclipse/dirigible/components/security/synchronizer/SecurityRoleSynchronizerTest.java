@@ -63,6 +63,9 @@ class SecurityRoleSynchronizerTest {
      */
     @BeforeEach
     public void setup() {
+    	
+    	cleanup();
+    	
         // Create test security accesses
         securityRoleRepository.save(createSecurityRole("/a/b/c/test1.access", "test1", "description"));
         securityRoleRepository.save(createSecurityRole("/a/b/c/test2.access", "test2", "description"));
@@ -77,7 +80,7 @@ class SecurityRoleSynchronizerTest {
     @AfterEach
     public void cleanup() {
         // Delete test security roles
-        securityRoleRepository.findAll().stream().forEach(securityRole -> securityRoleRepository.delete(securityRole));
+        securityRoleRepository.deleteAll();
     }
 
     /**

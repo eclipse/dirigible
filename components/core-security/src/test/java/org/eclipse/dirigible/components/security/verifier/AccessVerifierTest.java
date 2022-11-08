@@ -51,6 +51,9 @@ class AccessVerifierTest {
 
     @BeforeEach
     public void setup() {
+    	
+    	cleanup();
+    	
         // Create test security roles and accesses
         securityRoleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
         securityRoleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
@@ -63,8 +66,8 @@ class AccessVerifierTest {
     @AfterEach
     public void cleanup() {
         // Delete test security roles and accesses
-        securityRoleRepository.findAll().stream().forEach(securityRole -> securityRoleRepository.delete(securityRole));
-        securityAccessRepository.findAll().stream().forEach(securityAccess -> securityAccessRepository.delete(securityAccess));
+        securityRoleRepository.deleteAll();
+        securityAccessRepository.deleteAll();
     }
 
     @Test

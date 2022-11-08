@@ -62,6 +62,9 @@ class AccessSynchronizerTest {
      */
     @BeforeEach
     public void setup() {
+    	
+    	cleanup();
+    	
         // Create test security accesses
         securityAccessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
                 "/b/c/test1.txt", "GET", "test_role_1"));
@@ -81,7 +84,7 @@ class AccessSynchronizerTest {
     @AfterEach
     public void cleanup() {
         // Delete test security accesses
-        securityAccessRepository.findAll().stream().forEach(securityAccess -> securityAccessRepository.delete(securityAccess));
+        securityAccessRepository.deleteAll();
     }
 
     /**
