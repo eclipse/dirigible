@@ -47,6 +47,9 @@ public class ListenerEndpointTest {
 
     @BeforeEach
     public void setup() {
+    	
+    	cleanup();
+    	
         listenerService.save(new Listener("/a/b/c/l1.listener", "name1", "description", "handler1"));
         listenerService.save(new Listener("/a/b/c/l2.listener", "name2", "description", "handler2"));
         listenerService.save(new Listener("/a/b/c/l3.listener", "name3", "description", "handler3"));

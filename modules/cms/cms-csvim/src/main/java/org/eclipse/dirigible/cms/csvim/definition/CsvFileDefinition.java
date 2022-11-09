@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.cms.csvim.definition;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,9 @@ public class CsvFileDefinition {
 	
 	/** The delim enclosing. */
 	private String delimEnclosing;
-	
+
+	private String sequence;
+
 	/** The distinguish empty from null. */
 	private Boolean distinguishEmptyFromNull = Boolean.TRUE;
 	
@@ -173,7 +174,25 @@ public class CsvFileDefinition {
 	public void setDelimEnclosing(String delimEnclosing) {
 		this.delimEnclosing = delimEnclosing;
 	}
-	
+
+	/**
+	 * Gets the sequence.
+	 *
+	 * @return
+	 */
+	public String getSequence() {
+		return sequence;
+	}
+
+	/**
+	 * Sets the sequence.
+	 *
+	 * @param sequence the sequence to set
+	 */
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
+	}
+
 	/**
 	 * Gets the distinguish empty from null.
 	 *

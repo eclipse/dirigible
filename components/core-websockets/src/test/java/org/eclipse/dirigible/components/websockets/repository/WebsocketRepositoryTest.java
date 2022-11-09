@@ -47,6 +47,9 @@ public class WebsocketRepositoryTest {
 
     @BeforeEach
     public void setup() {
+    	
+    	cleanup();
+    	
         websocketRepository.save(new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1"));
         websocketRepository.save(new Websocket("/a/b/c/w2.websocket", "name2", "description", "endpoint2", "handler2", "engine2"));
         websocketRepository.save(new Websocket("/a/b/c/w3.websocket", "name3", "description", "endpoint3", "handler3", "engine3"));

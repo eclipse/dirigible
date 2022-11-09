@@ -41,7 +41,6 @@ import org.eclipse.dirigible.cms.csvim.definition.CsvRecordDefinition;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
-import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.utils.DatabaseMetadataUtil;
@@ -225,6 +224,36 @@ public class CsvimProcessor {
 
 		insertCsvRecords(recordsToInsert, csvParser.getHeaderNames(), csvFileDefinition);
 		updateCsvRecords(recordsToUpdate, csvParser.getHeaderNames(), csvFileDefinition);
+
+		if ((recordsToInsert.size() > 0 || recordsToUpdate.size() > 0) && csvFileDefinition.getSequence() != null) {
+			int sequenceStart = csvRecords.size() + 1;
+
+			PreparedStatement preparedStatement = null;
+			try {
+				String createSequenceSql = SqlFactory.getNative(connection).create().sequence(csvFileDefinition.getSequence()).start(sequenceStart).build();
+				preparedStatement = connection.prepareStatement(createSequenceSql);
+				preparedStatement.executeUpdate();
+			} catch (SQLException e) {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+				try {
+					String alterSequenceSql = SqlFactory.getNative(connection).alter().sequence(csvFileDefinition.getSequence()).restartWith(sequenceStart).build();
+					preparedStatement = connection.prepareStatement(alterSequenceSql);
+					preparedStatement.executeUpdate();
+				} catch (SQLException e1) {
+					logger.error("Failed to restart database sequence [" + csvFileDefinition.getSequence() + "]", e1);
+				} finally {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+					}
+				}
+			} finally {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+			}
+		}
 	}
 
 	/**

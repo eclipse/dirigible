@@ -47,6 +47,9 @@ class RoleEndpointTest {
 
     @BeforeEach
     public void setup() {
+    	
+    	cleanup();
+    	
         // Create test security roles
         securityRoleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
         securityRoleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
@@ -58,7 +61,7 @@ class RoleEndpointTest {
     @AfterEach
     public void cleanup() {
         // Delete test security roles
-        securityRoleRepository.findAll().stream().forEach(securityRole -> securityRoleRepository.delete(securityRole));
+        securityRoleRepository.deleteAll();
     }
 
     @Test

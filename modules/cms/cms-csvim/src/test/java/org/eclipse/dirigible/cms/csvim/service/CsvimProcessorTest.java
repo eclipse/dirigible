@@ -27,56 +27,143 @@ import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.junit.After;
 import org.junit.Test;
 
 public class CsvimProcessorTest extends AbstractDirigibleTest {
+
+	@After
+	public void cleanUp() throws Exception {
+		DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		try (Connection connection = dataSource.getConnection()) {
+			try (Statement stmt = connection.createStatement()) {
+				stmt.executeUpdate("DROP TABLE TEST_CSV");
+				try {
+					stmt.executeUpdate("DROP SEQUENCE TEST_SEQUENCE");
+				} catch (SQLException e) {
+					// Do nothing
+				}
+			}
+		}
+	}
 
 	@Test
 	public void testInsert() throws SQLException, CsvimException, IOException {
 		CsvimProcessor csvimProcessor = new CsvimProcessor();
 		DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 		IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-		
+
 		String path = IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/csvim/test.csv";
 		String content = "1,John,Doe\n2,Jane,Doe\n";
 		repository.createResource(path, content.getBytes());
 		CsvFileDefinition csvFileDefinition = new CsvFileDefinition();
 		csvFileDefinition.setFile("/csvim/test.csv");
 		csvFileDefinition.setTable("TEST_CSV");
-		
+
 		try (Connection connection = dataSource.getConnection()) {
 			try (Statement stmt = connection.createStatement()) {
 				stmt.executeUpdate("CREATE TABLE TEST_CSV (ID INT PRIMARY KEY, FIRST_NAME VARCHAR(20), LAST_NAME VARCHAR(20))");
 			}
-			
+
 			csvimProcessor.process(csvFileDefinition, content, connection);
-			
+
 			try (Statement stmt = connection.createStatement()) {
 				ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM TEST_CSV");
 				if (rs.next()) {
 					assertEquals(2, rs.getInt(1));
 				}
 			}
-			
-			try (Statement stmt = connection.createStatement()) {
-				stmt.executeUpdate("DROP TABLE TEST_CSV");
-			}
 		}
 	}
-	
+
 	@Test
-	public void testUpdate() throws SQLException, CsvimException, IOException {
+	public void testCreateSequence() throws SQLException, CsvimException, IOException {
 		CsvimProcessor csvimProcessor = new CsvimProcessor();
 		DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 		IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-		
+
 		String path = IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/csvim/test.csv";
 		String content = "1,John,Doe\n2,Jane,Doe\n";
 		repository.createResource(path, content.getBytes());
 		CsvFileDefinition csvFileDefinition = new CsvFileDefinition();
 		csvFileDefinition.setFile("/csvim/test.csv");
 		csvFileDefinition.setTable("TEST_CSV");
-		
+		csvFileDefinition.setSequence("TEST_SEQUENCE");
+
+		try (Connection connection = dataSource.getConnection()) {
+			try (Statement stmt = connection.createStatement()) {
+				stmt.executeUpdate("CREATE TABLE TEST_CSV (ID INT PRIMARY KEY, FIRST_NAME VARCHAR(20), LAST_NAME VARCHAR(20))");
+			}
+
+			csvimProcessor.process(csvFileDefinition, content, connection);
+
+			try (Statement stmt = connection.createStatement()) {
+				ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM TEST_CSV");
+				if (rs.next()) {
+					assertEquals(2, rs.getInt(1));
+				}
+			}
+
+			try (Statement stmt = connection.createStatement()) {
+				ResultSet rs = stmt.executeQuery("SELECT NEXTVAL('TEST_SEQUENCE')");
+				if (rs.next()) {
+					assertEquals(3, rs.getInt(1));
+				}
+			}
+		}
+	}
+
+	@Test
+	public void testUpdateSequence() throws SQLException, CsvimException, IOException {
+		CsvimProcessor csvimProcessor = new CsvimProcessor();
+		DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+
+		String path = IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/csvim/test.csv";
+		String content = "1,John,Doe\n2,Jane,Doe\n";
+		repository.createResource(path, content.getBytes());
+		CsvFileDefinition csvFileDefinition = new CsvFileDefinition();
+		csvFileDefinition.setFile("/csvim/test.csv");
+		csvFileDefinition.setTable("TEST_CSV");
+		csvFileDefinition.setSequence("TEST_SEQUENCE");
+
+		try (Connection connection = dataSource.getConnection()) {
+			try (Statement stmt = connection.createStatement()) {
+				stmt.executeUpdate("CREATE TABLE TEST_CSV (ID INT PRIMARY KEY, FIRST_NAME VARCHAR(20), LAST_NAME VARCHAR(20))");
+				stmt.executeUpdate("CREATE SEQUENCE TEST_SEQUENCE");
+			}
+
+			csvimProcessor.process(csvFileDefinition, content, connection);
+
+			try (Statement stmt = connection.createStatement()) {
+				ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM TEST_CSV");
+				if (rs.next()) {
+					assertEquals(2, rs.getInt(1));
+				}
+			}
+
+			try (Statement stmt = connection.createStatement()) {
+				ResultSet rs = stmt.executeQuery("SELECT NEXTVAL('TEST_SEQUENCE')");
+				if (rs.next()) {
+					assertEquals(3, rs.getInt(1));
+				}
+			}
+		}
+	}
+
+	@Test
+	public void testUpdate() throws SQLException, CsvimException, IOException {
+		CsvimProcessor csvimProcessor = new CsvimProcessor();
+		DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+
+		String path = IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/csvim/test.csv";
+		String content = "1,John,Doe\n2,Jane,Doe\n";
+		repository.createResource(path, content.getBytes());
+		CsvFileDefinition csvFileDefinition = new CsvFileDefinition();
+		csvFileDefinition.setFile("/csvim/test.csv");
+		csvFileDefinition.setTable("TEST_CSV");
+
 		try (Connection connection = dataSource.getConnection()) {
 			try (Statement stmt = connection.createStatement()) {
 				stmt.executeUpdate("CREATE TABLE TEST_CSV (ID INT PRIMARY KEY, FIRST_NAME VARCHAR(20), LAST_NAME VARCHAR(20))");
@@ -84,25 +171,21 @@ public class CsvimProcessorTest extends AbstractDirigibleTest {
 			try (Statement stmt = connection.createStatement()) {
 				stmt.executeUpdate("INSERT INTO TEST_CSV VALUES (2,'Jennifer','Doe')");
 			}
-			
+
 			csvimProcessor.process(csvFileDefinition, content, connection);
-			
+
 			try (Statement stmt = connection.createStatement()) {
 				ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM TEST_CSV");
 				if (rs.next()) {
 					assertEquals(2, rs.getInt(1));
 				}
 			}
-			
+
 			try (Statement stmt = connection.createStatement()) {
 				ResultSet rs = stmt.executeQuery("SELECT * FROM TEST_CSV WHERE ID=2");
 				if (rs.next()) {
 					assertEquals("Jane", rs.getString("FIRST_NAME"));
 				}
-			}
-			
-			try (Statement stmt = connection.createStatement()) {
-				stmt.executeUpdate("DROP TABLE TEST_CSV");
 			}
 		}
 	}

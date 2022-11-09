@@ -45,6 +45,8 @@ public class ExtensionRepositoryTest {
 	
 	@BeforeEach
     public void setup() throws Exception {
+		
+		cleanup();
 
     	// create test Extensions
 		extensionRepository.save(createExtension("/a/b/c/e1.extension", "e1", "description", "epoint1", "e1"));
@@ -56,9 +58,7 @@ public class ExtensionRepositoryTest {
 	
 	@AfterEach
     public void cleanup() throws Exception {
-		
-		// delete test Extensions
-		extensionRepository.findAll().stream().forEach(e -> extensionRepository.delete(e));
+		extensionRepository.deleteAll();
     }
 	
 

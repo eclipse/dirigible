@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - Extensions</name>
+	<name>Components - Test Project</name>
 	<artifactId>dirigible-components-test-project</artifactId>
     <packaging>jar</packaging>
 

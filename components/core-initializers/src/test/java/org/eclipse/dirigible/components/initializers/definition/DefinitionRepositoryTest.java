@@ -46,6 +46,8 @@ public class DefinitionRepositoryTest {
 	
 	@BeforeEach
     public void setup() throws Exception {
+		
+		cleanup();
 
     	// create test ExtensionPoints
 		definitionRepository.save(createDefinition("/a/b/c/e1.extensionpoint", "e1", "extensionpoint"));
@@ -57,9 +59,7 @@ public class DefinitionRepositoryTest {
 	
 	@AfterEach
     public void cleanup() throws Exception {
-		
-		// delete test ExtensionPoints
-		definitionRepository.findAll().stream().forEach(e -> definitionRepository.delete(e));
+		definitionRepository.deleteAll();
     }
 	
 

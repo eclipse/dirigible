@@ -23,6 +23,21 @@ public class AlterSequenceBuilder extends CreateSequenceBuilder {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(AlterSequenceBuilder.class);
 
+    /** The restart with. */
+    private Integer restartWith;
+
+    /**
+     * Restart with.
+     *
+     * @param restartWith the restart with
+     * @return the creates the sequence builder
+     */
+    public CreateSequenceBuilder restartWith(Integer restartWith) {
+        if (logger.isTraceEnabled()) {logger.trace("restartWith: " + restartWith);}
+        this.restartWith = restartWith;
+        return this;
+    }
+
     /**
      * Instantiates a new alter sequence builder.
      *
@@ -31,6 +46,18 @@ public class AlterSequenceBuilder extends CreateSequenceBuilder {
      */
     public AlterSequenceBuilder(ISqlDialect dialect, String sequence) {
         super(dialect, sequence);
+    }
+
+    /**
+     * Generate reset by.
+     *
+     * @param sql the sql
+     */
+    protected void generateRestartWith(StringBuilder sql) {
+        if (this.restartWith != null) {
+            generateSequenceParameter(sql, KEYWORD_SEQUENCE_RESTART_WITH, String.valueOf(this.restartWith));
+        }
+
     }
 
     /**
@@ -71,6 +98,9 @@ public class AlterSequenceBuilder extends CreateSequenceBuilder {
 
         //RESET BY
         generateResetBy(sql);
+
+        //RESTART WITH
+        generateRestartWith(sql);
 
         String generated = sql.toString();
 

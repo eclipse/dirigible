@@ -57,6 +57,9 @@ class OpenAPIEndpointTest {
 
     @BeforeEach
     public void setup() {
+    	
+    	cleanup();
+    	
         // Create test OpenAPI
         openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
         openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
@@ -67,8 +70,7 @@ class OpenAPIEndpointTest {
 
     @AfterEach
     public void cleanup() {
-        // Delete test OpenAPIs
-        openAPIRepository.findAll().stream().forEach(openAPI -> openAPIRepository.delete(openAPI));
+        openAPIRepository.deleteAll();
     }
 
     @Test

@@ -114,7 +114,13 @@
 			<artifactId>jedis</artifactId>
 			<version>${jedis.version}</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>compile</scope>         
+			<exclusions>
+				<exclusion>
+					<groupId>org.json</groupId>
+					<artifactId>json</artifactId>
+				</exclusion>
+			</exclusions> 
 		</dependency>
 		<!-- / Redis dependencies -->
 

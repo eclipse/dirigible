@@ -67,6 +67,8 @@ public class TablesSynchronizerTest {
 	 */
 	@BeforeEach
     public void setup() throws Exception {
+		
+		cleanup();
 
 		// create test Tables
 		createTable(tableRepository, tableColumnRepository, "/a/b/c/t1.table", "t1", "description", "");
@@ -85,7 +87,7 @@ public class TablesSynchronizerTest {
     public void cleanup() throws Exception {
 		
 		// delete test Tables
-		tableRepository.findAll().stream().forEach(e -> tableRepository.delete(e));
+		tableRepository.deleteAll();
     }
 	
 
