@@ -29,7 +29,7 @@ public class AlterSequenceBuilder extends CreateSequenceBuilder {
     /**
      * Restart with.
      *
-     * @param resetBy the reset by
+     * @param restartWith the restart with
      * @return the creates the sequence builder
      */
     public CreateSequenceBuilder restartWith(Integer restartWith) {
