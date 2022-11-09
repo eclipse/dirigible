@@ -676,6 +676,28 @@ public class DatabaseFacade implements IScriptingFacade {
 
 	//  =========  Sequence  ===========
 
+	/**
+	 * Nextval.
+	 *
+	 * @param sequence the sequence
+	 * @return the long
+	 * @throws SQLException the SQL exception
+	 */
+	public static long nextval(String sequence) throws SQLException {
+		return nextval(sequence, null, null, null);
+	}
+
+	/**
+	 * Nextval.
+	 *
+	 * @param sequence the sequence
+	 * @param databaseType the database type
+	 * @return the long
+	 * @throws SQLException the SQL exception
+	 */
+	public static long nextval(String sequence, String databaseType) throws SQLException {
+		return nextval(sequence, databaseType, null, null);
+	}
 
 	/**
 	 * Nextval.
@@ -686,7 +708,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @return the nextval
 	 * @throws SQLException the SQL exception
 	 */
-	public static final long nextval(String sequence, String databaseType, String datasourceName) throws SQLException {
+	public static final long nextval(String sequence, String databaseType, String datasourceName, String tableName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
 			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
@@ -700,7 +722,7 @@ public class DatabaseFacade implements IScriptingFacade {
 			} catch (SQLException e) {
 				// assuming the sequence does not exists first time, hence create it implicitly
 				if (logger.isWarnEnabled()) {logger.warn( format("Implicitly creating a Sequence [{0}] due to: [{1}]", sequence, e.getMessage()));}
-				createSequenceInternal(sequence, connection);
+				createSequenceInternal(sequence, null, connection, tableName);
 				return getNextVal(sequence, connection);
 			} catch (IllegalStateException e) {
 				// assuming the sequence objects are not supported by the underlying database
@@ -747,8 +769,27 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @param connection the connection
 	 * @throws SQLException the SQL exception
 	 */
-	private static void createSequenceInternal(String sequence, Connection connection) throws SQLException {
-		String sql = SqlFactory.getNative(connection).create().sequence(sequence).build();
+	private static void createSequenceInternal(String sequence, Integer sequenceStart, Connection connection, String tableName) throws SQLException {
+		if (sequenceStart == null && tableName != null) {
+			String countSql = SqlFactory.getNative(connection).select().column("count(*)").from(tableName).build();
+			PreparedStatement countPreparedStatement = null;
+			try {
+				countPreparedStatement = connection.prepareStatement(countSql);
+				ResultSet rs = countPreparedStatement.executeQuery();
+				if (rs.next()) {
+					sequenceStart = rs.getInt(1);
+					sequenceStart ++;
+				}
+			} catch(SQLException e) {
+				// Do nothing
+			} finally {
+				if (countPreparedStatement != null) {
+					countPreparedStatement.close();
+				}
+			}
+		}
+
+		String sql = SqlFactory.getNative(connection).create().sequence(sequence).start(sequenceStart).build();
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		try {
 			preparedStatement.executeUpdate();
@@ -760,29 +801,6 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Nextval.
-	 *
-	 * @param sequence the sequence
-	 * @param databaseType the database type
-	 * @return the long
-	 * @throws SQLException the SQL exception
-	 */
-	public static long nextval(String sequence, String databaseType) throws SQLException {
-		return nextval(sequence, databaseType, null);
-	}
-
-	/**
-	 * Nextval.
-	 *
-	 * @param sequence the sequence
-	 * @return the long
-	 * @throws SQLException the SQL exception
-	 */
-	public static long nextval(String sequence) throws SQLException {
-		return nextval(sequence, null, null);
-	}
-
-	/**
 	 * Creates the sequence.
 	 *
 	 * @param sequence the sequence
@@ -790,7 +808,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @param datasourceName the datasource name
 	 * @throws SQLException the SQL exception
 	 */
-	public static final void createSequence(String sequence, String databaseType, String datasourceName) throws SQLException {
+	public static final void createSequence(String sequence, Integer start, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
 			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
@@ -799,7 +817,7 @@ public class DatabaseFacade implements IScriptingFacade {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
-			createSequenceInternal(sequence, connection);
+			createSequenceInternal(sequence, start, connection, null);
 		} finally {
 			if (connection != null) {
 				connection.close();
@@ -814,8 +832,18 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @param databaseType the database type
 	 * @throws SQLException the SQL exception
 	 */
-	public static void createSequence(String sequence, String databaseType) throws SQLException {
-		createSequence(sequence, databaseType, null);
+	public static void createSequence(String sequence, Integer start, String databaseType) throws SQLException {
+		createSequence(sequence, start, databaseType, null);
+	}
+
+	/**
+	 * Creates the sequence.
+	 *
+	 * @param sequence the sequence
+	 * @throws SQLException the SQL exception
+	 */
+	public static void createSequence(String sequence, Integer start) throws SQLException {
+		createSequence(sequence, null, null);
 	}
 
 	/**

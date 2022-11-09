@@ -93,6 +93,16 @@
 					</div>
 					<div class="row">
 						<div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
+							<label for="sequence">Sequence</label>
+							<input type="text" class="form-control" id="sequence" ng-trim="false"
+								ng-model="csvimData[activeItemId].sequence" ng-disabled="!editEnabled"
+								ng-keydown="fileChanged()" validate-input="^[A-Za-z0-9_\-$.]+$">
+							<label ng-show="sequenceError.hasError" class="error-label"
+								id="sequenceError">{{schemaError.msg}}</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
 							<label for="filepath">File path</label>
 							<input type="text" class="form-control" ng-class="{'warn-input':fileExists===false}"
 								id="filepath" ng-model="csvimData[activeItemId].file" ng-disabled="!editEnabled"

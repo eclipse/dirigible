@@ -58,19 +58,32 @@ editorView.directive('validateInput', () => {
                     correct = RegExp(scope.regex, 'g').test(value);
                 }
                 if (attrs.hasOwnProperty("id")) {
-                    if (attrs["id"] === "table") scope.$parent.showTableError(!correct);
-                    else if (attrs["id"] === "schema") {
+                    if (attrs["id"] === "table") {
+                        scope.$parent.showTableError(!correct);
+                    } else if (attrs["id"] === "schema") {
                         if (value === '' || value === null || value === undefined) {
                             scope.$parent.showSchemaError(false);
                             correct = true;
-                        } else scope.$parent.showSchemaError(!correct);
+                        } else {
+                            scope.$parent.showSchemaError(!correct);
+                        }
+                    } else if (attrs["id"] === "sequence") {
+                        if (value === '' || value === null || value === undefined) {
+                            scope.$parent.showSequenceError(false);
+                            correct = true;
+                        } else {
+                            scope.$parent.showSequenceError(!correct);
+                        }
                     } else if (attrs["id"] === "filepath") {
                         scope.$parent.fileExists = true;
                         scope.$parent.showFilepathError(!correct);
                     }
                 }
-                if (correct) element.removeClass("error-input");
-                else element.addClass('error-input');
+                if (correct) {
+                    element.removeClass("error-input");
+                } else {
+                    element.addClass('error-input');
+                }
                 scope.$parent.setSaveEnabled(correct);
                 return correct;
             };
@@ -133,6 +146,10 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
         hasError: false,
         msg: 'Schema can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), and dollar signs ("$")'
     };
+    $scope.sequenceError = {
+        hasError: false,
+        msg: 'Sequence can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), and dollar signs ("$")'
+    };
     $scope.tableError = {
         hasError: false,
         msg: 'Table can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), and dollar signs ("$"). Two colons ("::") are permitted only when table name contains schema ("schemaName::tableName").'
@@ -179,6 +196,10 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
         $scope.schemaError.hasError = hasError;
     };
 
+    $scope.showSequenceError = function (hasError) {
+        $scope.sequenceError.hasError = hasError;
+    };
+
     $scope.showFilepathError = function (hasError) {
         $scope.filepathError.hasError = hasError;
     };
@@ -210,6 +231,7 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
             "visible": true,
             "table": "",
             "schema": "",
+            "sequence": "",
             "file": "",
             "header": false,
             "useHeaderNames": false,
@@ -409,6 +431,9 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
             return undefined;
         }
         if (key === "schema" && value === "") {
+            return undefined;
+        }
+        if (key === "sequence" && value === "") {
             return undefined;
         }
         return value;

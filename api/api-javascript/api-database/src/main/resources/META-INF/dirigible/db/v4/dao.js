@@ -26,7 +26,7 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 		return sequences.drop(this.sequenceName, databaseType, dataSourceName);
 	};
 	this.generateId = function(){
-		return sequences.nextval(this.sequenceName, databaseType, dataSourceName);
+		return sequences.nextval(this.sequenceName, databaseType, dataSourceName, this.orm.table);
 	};
 
 	const conn = database.getConnection(databaseType, dataSourceName);
