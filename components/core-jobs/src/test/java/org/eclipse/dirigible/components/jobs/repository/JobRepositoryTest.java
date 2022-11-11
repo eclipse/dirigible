@@ -113,9 +113,9 @@ public class JobRepositoryTest {
     @Test
     public void getReferenceUsingEntityManager() {
         Long id = jobRepository.findAll().get(0).getId();
-        Job extension = entityManager.getReference(Job.class, id);
-        assertNotNull(extension);
-        assertNotNull(extension.getLocation());
+        Job job = entityManager.getReference(Job.class, id);
+        assertNotNull(job);
+        assertNotNull(job.getLocation());
     }
 
     /**

@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.jobs.repository;
 
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
@@ -46,11 +57,11 @@ public class JobLogRepositoryTest {
     public void setup() throws Exception {
         cleanup();
         // create test Tables
-        createTable(jobLogRepository, "/a/b/c/jobLog1.jobLog", "jobLog1", "description", "",
+        createJobLog(jobLogRepository, "/a/b/c/jobLog1.jobLog", "jobLog1", "description", "",
                 "job1", "test-handler.js", new Timestamp(1667667600), 1L, new Timestamp(1667667660), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
-        createTable(jobLogRepository, "/a/b/c/jobLog2.jobLog", "jobLog2", "description", "",
+        createJobLog(jobLogRepository, "/a/b/c/jobLog2.jobLog", "jobLog2", "description", "",
                 "job2", "test-handler.js", new Timestamp(1667667720), 2L, new Timestamp(1667667780), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
-        createTable(jobLogRepository, "/a/b/c/jobLog3.jobLog", "jobLog3", "description", "",
+        createJobLog(jobLogRepository, "/a/b/c/jobLog3.jobLog", "jobLog3", "description", "",
                 "job3", "test-handler.js", new Timestamp(1667667840), 3L, new Timestamp(1667667900), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
     }
 
@@ -83,8 +94,6 @@ public class JobLogRepositoryTest {
         assertEquals("description", jobLog.getDescription());
         assertEquals("job1", jobLog.getJobName());
         assertEquals("test-handler.js", jobLog.getHandler());
-        assertEquals("1970-01-20 09:14:27.6", jobLog.getTriggeredAt().toString());
-        assertEquals("1970-01-20 09:14:27.66", jobLog.getFinishedAt().toString());
         assertEquals(1L, jobLog.getTriggeredId());
         assertEquals(JobLog.JOB_LOG_STATUS_LOGGED, jobLog.getStatus());
         assertEquals("job logged", jobLog.getMessage());
@@ -121,7 +130,7 @@ public class JobLogRepositoryTest {
      * @param status the status
      * @param message the message
      */
-    public static void createTable(JobLogRepository jobLogRepository, String location, String name, String description, String dependencies, String jobName, String handler,
+    public static void createJobLog(JobLogRepository jobLogRepository, String location, String name, String description, String dependencies, String jobName, String handler,
                                      Timestamp triggeredAt, long triggeredId, Timestamp finishedAt, short status, String message) {
         JobLog jobLog = new JobLog(location, name, description, dependencies, jobName, handler, triggeredAt, triggeredId, finishedAt, status, message);
         jobLogRepository.save(jobLog);
