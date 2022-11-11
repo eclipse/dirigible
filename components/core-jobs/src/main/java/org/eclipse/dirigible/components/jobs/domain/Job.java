@@ -138,6 +138,32 @@ public class Job extends Artefact {
 
     /**
      * Instantiates a new job.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @param dependencies the dependencies
+     * @param group the group
+     * @param clazz the clazz
+     * @param expression the expression
+     * @param handler the handler
+     * @param engine the engine
+     * @param singleton the singleton
+     */
+    public Job(String name, String group, String clazz, String handler, String engine, String description, String expression,
+               boolean singleton, List<JobParameter> parameters, String location, String dependencies) {
+        super(location, name, ARTEFACT_TYPE, description, dependencies);
+        this.group = group;
+        this.clazz = clazz;
+        this.expression = expression;
+        this.handler = handler;
+        this.engine = engine;
+        this.singleton = singleton;
+        this.parameters = parameters;
+    }
+
+    /**
+     * Instantiates a new job.
      */
     public Job() {
         super();
