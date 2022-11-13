@@ -12,7 +12,7 @@
 package org.eclipse.dirigible.components.security.verifier;
 
 import org.eclipse.dirigible.components.security.domain.Access;
-import org.eclipse.dirigible.components.security.service.SecurityAccessService;
+import org.eclipse.dirigible.components.security.service.AccessService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class AccessVerifier {
      * The security access service.
      */
     @Autowired
-    private SecurityAccessService securityAccessService;
+    private AccessService securityAccessService;
 
     /**
      * Checks whether the URI is secured via the *.access file or not

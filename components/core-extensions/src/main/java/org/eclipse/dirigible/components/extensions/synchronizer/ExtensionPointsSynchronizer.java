@@ -111,6 +111,10 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 		extensionPoint.setType(ExtensionPoint.ARTEFACT_TYPE);
 		extensionPoint.updateKey();
 		try {
+			ExtensionPoint maybe = getService().findByKey(extensionPoint.getKey());
+			if (maybe != null) {
+				extensionPoint.setId(maybe.getId());
+			}
 			getService().save(extensionPoint);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
@@ -169,9 +173,11 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	public void cleanup(ExtensionPoint extensionPoint) {
 		try {
 			getService().delete(extensionPoint);
+			callback.registerState(this, extensionPoint, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
+			callback.registerState(this, extensionPoint, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
 		}
 	}
 	

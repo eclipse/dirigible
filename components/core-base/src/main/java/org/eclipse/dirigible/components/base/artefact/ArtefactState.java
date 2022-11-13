@@ -22,32 +22,24 @@ public enum ArtefactState {
 		/** The successful. */
 		SUCCESSFUL("Successful"),
 		/** The successful create. */
-		//
-		SUCCESSFUL_CREATE("Successful"),
+		SUCCESSFUL_CREATE("Successfully created"),
 		/** The successful update. */
-		//
-		SUCCESSFUL_UPDATE("Successful"),
+		SUCCESSFUL_UPDATE("Successfully updated"),
 		/** The successful create update. */
-		//
-		SUCCESSFUL_CREATE_UPDATE("Successful"),
+		SUCCESSFUL_CREATE_UPDATE("Successfully created or updated"),
 		/** The successful delete. */
-		//
-		SUCCESSFUL_DELETE("Successful"), //
+		SUCCESSFUL_DELETE("Successfully deleted"), //
 
 		/** The failed. */
 		FAILED("Failed"),
 		/** The failed create. */
-		//
-		FAILED_CREATE("Failed"),
+		FAILED_CREATE("Failed to create"),
 		/** The failed update. */
-		//
-		FAILED_UPDATE("Failed"),
+		FAILED_UPDATE("Failed to update"),
 		/** The failed create update. */
-		//
-		FAILED_CREATE_UPDATE("Failed"),
+		FAILED_CREATE_UPDATE("Failed to create or update"),
 		/** The failed delete. */
-		//
-		FAILED_DELETE("Failed"), //
+		FAILED_DELETE("Failed to delete"), //
 
 		/** The in progress. */
 		IN_PROGRESS("Processing..."), //

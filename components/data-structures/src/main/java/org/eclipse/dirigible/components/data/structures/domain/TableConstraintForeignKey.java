@@ -134,7 +134,5 @@ public class TableConstraintForeignKey extends TableConstraint {
 				+ referencedColumns + ", name=" + name + ", modifiers=" + modifiers + ", columns=" + columns
 				+ ", constraints.table=" + constraints.getTable().getName() + "]";
 	}
-	
-	
 
 }

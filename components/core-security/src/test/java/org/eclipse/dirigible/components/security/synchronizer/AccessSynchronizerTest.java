@@ -43,13 +43,13 @@ class AccessSynchronizerTest {
      * The security access repository.
      */
     @Autowired
-    private AccessRepository securityAccessRepository;
+    private AccessRepository accessRepository;
 
     /**
      * The security access synchronizer.
      */
     @Autowired
-    private AccessSynchronizer securityAccessSynchronizer;
+    private AccessSynchronizer accessSynchronizer;
 
     /**
      * The entity manager.
@@ -66,15 +66,15 @@ class AccessSynchronizerTest {
     	cleanup();
     	
         // Create test security accesses
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
                 "/b/c/test1.txt", "GET", "test_role_1"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" +
                 "/b/c/test2.txt", "GET", "test_role_2"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test3.access", "test3", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test3.access", "test3", "description", "HTTP", "/a" +
                 "/b/c/test3.txt", "GET", "test_role_3"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test4.access", "test4", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test4.access", "test4", "description", "HTTP", "/a" +
                 "/b/c/test4.txt", "GET", "test_role_4"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test5.access", "test5", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test5.access", "test5", "description", "HTTP", "/a" +
                 "/b/c/test5.txt", "GET", "test_role_5"));
     }
 
@@ -84,7 +84,7 @@ class AccessSynchronizerTest {
     @AfterEach
     public void cleanup() {
         // Delete test security accesses
-        securityAccessRepository.deleteAll();
+        accessRepository.deleteAll();
     }
 
     /**
@@ -92,7 +92,7 @@ class AccessSynchronizerTest {
      */
     @Test
     public void testIsAcceptedPath() {
-        assertTrue(securityAccessSynchronizer.isAccepted(Path.of("/a/b/c/test.access"), null));
+        assertTrue(accessSynchronizer.isAccepted(Path.of("/a/b/c/test.access"), null));
     }
 
     /**
@@ -100,7 +100,7 @@ class AccessSynchronizerTest {
      */
     @Test
     public void testIsAcceptedArtefact() {
-        assertTrue(securityAccessSynchronizer.isAccepted(createSecurityAccess("/a/b/c/test.access", "test",
+        assertTrue(accessSynchronizer.isAccepted(createSecurityAccess("/a/b/c/test.access", "test",
                 "description", "HTTP", "/a/b/c/test.txt", "GET", "test_role").getType()));
     }
 
@@ -111,7 +111,7 @@ class AccessSynchronizerTest {
     public void testLoad() throws IOException {
         byte[] content = AccessSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test" +
                 ".access").readAllBytes();
-        List<Access> list = securityAccessSynchronizer.load("/META-INF/dirigible/test/test.access", content);
+        List<Access> list = accessSynchronizer.load("/META-INF/dirigible/test/test.access", content);
         assertNotNull(list);
         assertEquals("/META-INF/dirigible/test/test.access", list.get(0).getLocation());
     }

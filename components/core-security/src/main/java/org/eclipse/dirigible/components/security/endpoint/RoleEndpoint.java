@@ -13,7 +13,7 @@ package org.eclipse.dirigible.components.security.endpoint;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.security.domain.Role;
-import org.eclipse.dirigible.components.security.service.SecurityRoleService;
+import org.eclipse.dirigible.components.security.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +41,10 @@ public class RoleEndpoint extends BaseEndpoint {
      * The security role service.
      */
     @Autowired
-    private SecurityRoleService securityRoleService;
+    private RoleService roleService;
 
     @GetMapping("/roles")
     public ResponseEntity<List<Role>> getAll() {
-        return ResponseEntity.ok(securityRoleService.getAll());
+        return ResponseEntity.ok(roleService.getAll());
     }
 }

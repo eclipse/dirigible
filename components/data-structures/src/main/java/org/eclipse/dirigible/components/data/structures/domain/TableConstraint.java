@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
+import java.util.Arrays;
+
 import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -150,6 +152,12 @@ public abstract class TableConstraint {
 	 */
 	public void setConstraints(TableConstraints constraints) {
 		this.constraints = constraints;
+	}
+
+	@Override
+	public String toString() {
+		return "TableConstraint [name=" + name + ", modifiers=" + Arrays.toString(modifiers) + ", columns="
+				+ Arrays.toString(columns) + ", constraints=" + constraints + "]";
 	}
 
 }

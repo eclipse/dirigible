@@ -26,7 +26,6 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.extensions.domain.Extension;
-import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
 import org.eclipse.dirigible.components.extensions.service.ExtensionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,6 +113,10 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 		extension.setType(Extension.ARTEFACT_TYPE);
 		extension.updateKey();
 		try {
+			Extension maybe = getService().findByKey(extension.getKey());
+			if (maybe != null) {
+				extension.setId(maybe.getId());
+			}
 			getService().save(extension);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
@@ -172,9 +175,11 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	public void cleanup(Extension extension) {
 		try {
 			getService().delete(extension);
+			callback.registerState(this, extension, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
+			callback.registerState(this, extension, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
 		}
 	}
 	

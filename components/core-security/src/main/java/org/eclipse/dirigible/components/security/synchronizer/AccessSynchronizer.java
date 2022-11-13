@@ -27,7 +27,7 @@ import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.domain.Constraints;
-import org.eclipse.dirigible.components.security.service.SecurityAccessService;
+import org.eclipse.dirigible.components.security.service.AccessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * The Class SecurityAccessSynchronizer.
+ * The Class AccessSynchronizer.
  *
  * @param <A> the generic type
  */
@@ -57,7 +57,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     /**
      * The security access service.
      */
-    private SecurityAccessService securityAccessService;
+    private AccessService securityAccessService;
 
     /**
      * The synchronization callback.
@@ -70,7 +70,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * @param securityAccessService the security access service
      */
     @Autowired
-    public AccessSynchronizer(SecurityAccessService securityAccessService) {
+    public AccessSynchronizer(AccessService securityAccessService) {
         this.securityAccessService = securityAccessService;
     }
 
@@ -117,19 +117,24 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      */
     @Override
     public List load(String location, byte[] content) {
-        Constraints securityAccessArtifact = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
+        Constraints accessArtifact = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
 
-        List<Access> securityAccesses = securityAccessArtifact.buildSecurityAccesses(location);
+        List<Access> accesses = accessArtifact.buildSecurityAccesses(location);
 
-        for (Access securityAccess : securityAccesses) {
+        for (Access access : accesses) {
             try {
-                getService().save(securityAccess);
+            	access.updateKey();
+            	Access maybe = getService().findByKey(access.getKey());
+    			if (maybe != null) {
+    				access.setId(maybe.getId());
+    			}
+                getService().save(access);
             } catch (Exception e) {
                 if (logger.isErrorEnabled()) {
                     logger.error(e.getMessage(), e);
                 }
                 if (logger.isErrorEnabled()) {
-                    logger.error("security access: {}", securityAccess);
+                    logger.error("security access: {}", access);
                 }
                 if (logger.isErrorEnabled()) {
                     logger.error("content: {}", new String(content));
@@ -137,7 +142,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
             }
         }
 
-        return securityAccesses;
+        return accesses;
     }
 
     /**
@@ -185,17 +190,17 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     /**
      * Cleanup.
      *
-     * @param securityAccess the security access
+     * @param access the security access
      */
     @Override
-    public void cleanup(Access securityAccess) {
+    public void cleanup(Access access) {
         try {
-            getService().delete(securityAccess);
+            getService().delete(access);
+            callback.registerState(this, access, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
+            callback.registerState(this, access, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
         }
     }
 

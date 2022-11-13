@@ -106,6 +106,25 @@ public class JobLogService implements ArtefactService<JobLog> {
             throw new IllegalArgumentException("JobLog with name does not exist: " + name);
         }
     }
+    
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the job log
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public JobLog findByKey(String key) {
+    	JobLog filter = new JobLog();
+        filter.setKey(key);
+        Example<JobLog> example = Example.of(filter);
+        Optional<JobLog> jobLog = jobLogRepository.findOne(example);
+        if (jobLog.isPresent()) {
+            return jobLog.get();
+        }
+        return null;
+    }
 
     /**
      * Save.

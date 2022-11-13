@@ -115,9 +115,9 @@ public class TableRepositoryTest {
 	@Test
     public void getReferenceUsingEntityManager() {
 		Long id = tableRepository.findAll().get(0).getId();
-		Table extension = entityManager.getReference(Table.class, id);
-        assertNotNull(extension);
-        assertNotNull(extension.getLocation());
+		Table table = entityManager.getReference(Table.class, id);
+        assertNotNull(table);
+        assertNotNull(table.getLocation());
     }
 	
 	/**

@@ -11,9 +11,11 @@
  */
 package org.eclipse.dirigible.components.jobs.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.jobs.domain.JobEmail;
-import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.eclipse.dirigible.components.jobs.repository.JobEmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -21,8 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * The Class JobEmailService.
@@ -125,6 +125,25 @@ public class JobEmailService implements ArtefactService<JobEmail> {
         Example<JobEmail> example = Example.of(filter);
         List<JobEmail> jobEmail = jobEmailRepository.findAll(example);
         return jobEmail;
+    }
+    
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the job email
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public JobEmail findByKey(String key) {
+    	JobEmail filter = new JobEmail();
+        filter.setKey(key);
+        Example<JobEmail> example = Example.of(filter);
+        Optional<JobEmail> jobEmail = jobEmailRepository.findOne(example);
+        if (jobEmail.isPresent()) {
+            return jobEmail.get();
+        }
+        return null;
     }
 
     /**

@@ -94,6 +94,10 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
         listener.setName(FilenameUtils.getBaseName(location));
         listener.updateKey();
         try {
+        	Listener maybe = getService().findByKey(listener.getKey());
+			if (maybe != null) {
+				listener.setId(maybe.getId());
+			}
             getService().save(listener);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
@@ -142,21 +146,6 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
     }
 
     /**
-     * Cleanup.
-     *
-     * @param listener the listener
-     */
-    @Override
-    public void cleanup(Listener listener) {
-        try {
-            getService().delete(listener);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            callback.addError(e.getMessage());
-        }
-    }
-
-    /**
      * Complete.
      *
      * @param wrapper the wrapper
@@ -167,6 +156,23 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
     public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
         return true;
+    }
+    
+    /**
+     * Cleanup.
+     *
+     * @param listener the listener
+     */
+    @Override
+    public void cleanup(Listener listener) {
+        try {
+            getService().delete(listener);
+            callback.registerState(this, listener, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            callback.addError(e.getMessage());
+            callback.registerState(this, listener, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+        }
     }
 
     /**

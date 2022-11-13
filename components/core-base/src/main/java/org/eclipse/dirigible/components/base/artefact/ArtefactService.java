@@ -55,6 +55,14 @@ public interface ArtefactService<A extends Artefact> {
 	public A findByName(String name);
 	
 	/**
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the a
+	 */
+	public A findByKey(String key);
+	
+	/**
 	 * Save.
 	 *
 	 * @param a the a

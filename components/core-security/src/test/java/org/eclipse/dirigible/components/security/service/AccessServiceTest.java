@@ -30,7 +30,7 @@ import java.util.List;
 import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = {AccessRepository.class, SecurityAccessService.class})
+@SpringBootTest(classes = {AccessRepository.class, AccessService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
@@ -38,10 +38,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class AccessServiceTest {
 
     @Autowired
-    private AccessRepository securityAccessRepository;
+    private AccessRepository accessRepository;
 
     @Autowired
-    private SecurityAccessService securityAccessService;
+    private AccessService accessService;
 
     @BeforeEach
     public void setup() {
@@ -49,33 +49,33 @@ class AccessServiceTest {
     	cleanup();
     	
         // Create test security accesses
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
                 "/b/c/test1.txt", "GET", "test_role_1"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" +
                 "/b/c/test2.txt", "GET", "test_role_2"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test3.access", "test3", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test3.access", "test3", "description", "HTTP", "/a" +
                 "/b/c/test3.txt", "GET", "test_role_3"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test4.access", "test4", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test4.access", "test4", "description", "HTTP", "/a" +
                 "/b/c/test4.txt", "GET", "test_role_4"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test5.access", "test5", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test5.access", "test5", "description", "HTTP", "/a" +
                 "/b/c/test5.txt", "GET", "test_role_5"));
     }
 
     @AfterEach
     public void cleanup() {
         // Delete test security accesses
-        securityAccessRepository.deleteAll();
+        accessRepository.deleteAll();
     }
 
     @Test
     void testGetAll() {
-        List<Access> securityAccessList = securityAccessService.getAll();
+        List<Access> securityAccessList = accessService.getAll();
         assertEquals(5, securityAccessList.size());
     }
 
     @Test
     void testFindAll() {
-        Page<Access> securityAccessPage = securityAccessService.findAll(Pageable.ofSize(1));
+        Page<Access> securityAccessPage = accessService.findAll(Pageable.ofSize(1));
         assertEquals(5, securityAccessPage.getTotalElements());
     }
 
@@ -83,8 +83,8 @@ class AccessServiceTest {
     void testFindById() {
         Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
                 "/c/test.txt", "GET", "test_role");
-        securityAccessService.save(securityAccess);
-        Access securityAccessServiceById = securityAccessService.findById(securityAccess.getId());
+        accessService.save(securityAccess);
+        Access securityAccessServiceById = accessService.findById(securityAccess.getId());
         assertEquals("test", securityAccessServiceById.getName());
     }
 
@@ -92,8 +92,8 @@ class AccessServiceTest {
     void testFindByName() {
         Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
                 "/c/test.txt", "GET", "test_role");
-        securityAccessService.save(securityAccess);
-        Access securityAccessServiceByName = securityAccessService.findByName("test");
+        accessService.save(securityAccess);
+        Access securityAccessServiceByName = accessService.findByName("test");
         assertEquals(securityAccess.getId(), securityAccessServiceByName.getId());
     }
 
@@ -101,8 +101,8 @@ class AccessServiceTest {
     void testSave() {
         Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
                 "/c/test.txt", "GET", "test_role");
-        securityAccessService.save(securityAccess);
-        assertNotNull(securityAccessService.findByName("test"));
+        accessService.save(securityAccess);
+        assertNotNull(accessService.findByName("test"));
     }
 
     @Test
@@ -110,11 +110,11 @@ class AccessServiceTest {
         try {
             Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP",
                     "/a/b/c/test.txt", "GET", "test_role");
-            securityAccessService.save(securityAccess);
-            securityAccessService.delete(securityAccess);
-            securityAccessService.findByName("test");
+            accessService.save(securityAccess);
+            accessService.delete(securityAccess);
+            accessService.findByName("test");
         } catch (Exception e) {
-            assertEquals("SecurityAccess with name does not exist: test", e.getMessage());
+            assertEquals("Access with name does not exist: test", e.getMessage());
         }
     }
 }

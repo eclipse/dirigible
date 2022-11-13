@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.components.websockets.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.websockets.domain.Websocket;
 import org.eclipse.dirigible.components.websockets.repository.WebsocketRepository;
@@ -20,9 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * The Class WebsocketService.
@@ -93,6 +93,25 @@ public class WebsocketService implements ArtefactService<Websocket> {
         } else {
             throw new IllegalArgumentException("Websocket with name does not exist: " + name);
         }
+    }
+    
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the websocket
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Websocket findByKey(String key) {
+    	Websocket filter = new Websocket();
+        filter.setKey(key);
+        Example<Websocket> example = Example.of(filter);
+        Optional<Websocket> websocket = websocketRepository.findOne(example);
+        if (websocket.isPresent()) {
+            return websocket.get();
+        }
+        return null;
     }
 
     /**

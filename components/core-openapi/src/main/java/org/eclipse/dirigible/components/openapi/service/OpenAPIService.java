@@ -11,22 +11,20 @@
  */
 package org.eclipse.dirigible.components.openapi.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
 import org.eclipse.dirigible.components.openapi.repository.OpenAPIRepository;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * The Class OpenAPIService.
@@ -132,6 +130,25 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
         } else {
             throw new IllegalArgumentException("OpenAPI with name does not exist: " + name);
         }
+    }
+    
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the openAPI
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public OpenAPI findByKey(String key) {
+    	OpenAPI filter = new OpenAPI();
+        filter.setKey(key);
+        Example<OpenAPI> example = Example.of(filter);
+        Optional<OpenAPI> openAPI = openAPIRepository.findOne(example);
+        if (openAPI.isPresent()) {
+            return openAPI.get();
+        }
+        return null;
     }
 
     /**

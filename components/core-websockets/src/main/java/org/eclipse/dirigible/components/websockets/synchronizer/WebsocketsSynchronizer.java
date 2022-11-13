@@ -94,6 +94,10 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
         websocket.setType(Websocket.ARTEFACT_TYPE);
         websocket.updateKey();
         try {
+        	Websocket maybe = getService().findByKey(websocket.getKey());
+			if (maybe != null) {
+				websocket.setId(maybe.getId());
+			}
             getService().save(websocket);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
@@ -154,11 +158,11 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
     public void cleanup(Websocket websocket) {
         try {
             getService().delete(websocket);
+            callback.registerState(this, websocket, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
+            callback.registerState(this, websocket, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
         }
     }
 

@@ -30,7 +30,7 @@ import java.util.List;
 import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = {RoleRepository.class, SecurityRoleService.class})
+@SpringBootTest(classes = {RoleRepository.class, RoleService.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
@@ -38,10 +38,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class RoleServiceTest {
 
     @Autowired
-    private RoleRepository securityRoleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    private SecurityRoleService securityRoleService;
+    private RoleService roleService;
 
     @BeforeEach
     public void setup() {
@@ -49,61 +49,61 @@ class RoleServiceTest {
     	cleanup();
     	
         // Create test security roles
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test3.role", "test3", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test4.role", "test4", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test5.role", "test5", "description"));
+        roleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
+        roleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
+        roleRepository.save(createSecurityRole("/a/b/c/test3.role", "test3", "description"));
+        roleRepository.save(createSecurityRole("/a/b/c/test4.role", "test4", "description"));
+        roleRepository.save(createSecurityRole("/a/b/c/test5.role", "test5", "description"));
     }
 
     @AfterEach
     public void cleanup() {
         // Delete test security roles
-        securityRoleRepository.deleteAll();
+        roleRepository.deleteAll();
     }
 
     @Test
     void testGetAll() {
-        List<Role> securityRoleList = securityRoleService.getAll();
+        List<Role> securityRoleList = roleService.getAll();
         assertEquals(5, securityRoleList.size());
     }
 
     @Test
     void testFindAll() {
-        Page<Role> securityRolePage = securityRoleService.findAll(Pageable.ofSize(1));
+        Page<Role> securityRolePage = roleService.findAll(Pageable.ofSize(1));
         assertEquals(5, securityRolePage.getTotalElements());
     }
 
     @Test
     void testFindById() {
         Role securityRole = new Role("/a/b/c/test.role", "test", "description");
-        securityRoleService.save(securityRole);
-        Role securityRoleServiceById = securityRoleService.findById(securityRole.getId());
+        roleService.save(securityRole);
+        Role securityRoleServiceById = roleService.findById(securityRole.getId());
         assertEquals("test", securityRoleServiceById.getName());
     }
 
     @Test
     void testFindByName() {
         Role securityRole = new Role("/a/b/c/test.role", "test", "description");
-        securityRoleService.save(securityRole);
-        Role securityRoleServiceByName = securityRoleService.findByName("test");
+        roleService.save(securityRole);
+        Role securityRoleServiceByName = roleService.findByName("test");
         assertEquals(securityRole.getId(), securityRoleServiceByName.getId());
     }
 
     @Test
     void testSave() {
         Role securityRole = new Role("/a/b/c/test.role", "test", "description");
-        securityRoleService.save(securityRole);
-        assertNotNull(securityRoleService.findByName("test"));
+        roleService.save(securityRole);
+        assertNotNull(roleService.findByName("test"));
     }
 
     @Test
     void testDelete() {
         try {
             Role securityRole = new Role("/a/b/c/test.role", "test", "description");
-            securityRoleService.save(securityRole);
-            securityRoleService.delete(securityRole);
-            securityRoleService.findByName("test");
+            roleService.save(securityRole);
+            roleService.delete(securityRole);
+            roleService.findByName("test");
         } catch (Exception e) {
             assertEquals("SecurityRole with name does not exist: test", e.getMessage());
         }

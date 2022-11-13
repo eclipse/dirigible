@@ -26,7 +26,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.security.domain.Role;
-import org.eclipse.dirigible.components.security.service.SecurityRoleService;
+import org.eclipse.dirigible.components.security.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
     /**
      * The security role service.
      */
-    private SecurityRoleService securityRoleService;
+    private RoleService securityRoleService;
 
     /**
      * The synchronization callback.
@@ -69,7 +69,7 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
      * @param securityRoleService the security role service
      */
     @Autowired
-    public RoleSynchronizer(SecurityRoleService securityRoleService) {
+    public RoleSynchronizer(RoleService securityRoleService) {
         this.securityRoleService = securityRoleService;
     }
 
@@ -120,24 +120,22 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
 
         Integer roleIndex = 1;
 
-        for (Role securityRole : securityRoles) {
-            securityRole.setLocation(location);
-            securityRole.setName(roleIndex.toString());
-            securityRole.setType(Role.ARTEFACT_TYPE);
-            securityRole.updateKey();
+        for (Role role : securityRoles) {
+            role.setLocation(location);
+            role.setName(roleIndex.toString());
+            role.setType(Role.ARTEFACT_TYPE);
+            role.updateKey();
 
             try {
-                getService().save(securityRole);
+            	Role maybe = getService().findByKey(role.getKey());
+    			if (maybe != null) {
+    				role.setId(maybe.getId());
+    			}
+                getService().save(role);
             } catch (Exception e) {
-                if (logger.isErrorEnabled()) {
-                    logger.error(e.getMessage(), e);
-                }
-                if (logger.isErrorEnabled()) {
-                    logger.error("security role: {}", securityRole);
-                }
-                if (logger.isErrorEnabled()) {
-                    logger.error("content: {}", new String(content));
-                }
+                if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+                if (logger.isErrorEnabled()) {logger.error("security role: {}", role);}
+                if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
             }
             roleIndex++;
         }
@@ -189,17 +187,17 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
     /**
      * Cleanup.
      *
-     * @param securityRole the security role
+     * @param role the security role
      */
     @Override
-    public void cleanup(Role securityRole) {
+    public void cleanup(Role role) {
         try {
-            getService().delete(securityRole);
+            getService().delete(role);
+            callback.registerState(this, role, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
+            callback.registerState(this, role, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
         }
     }
 

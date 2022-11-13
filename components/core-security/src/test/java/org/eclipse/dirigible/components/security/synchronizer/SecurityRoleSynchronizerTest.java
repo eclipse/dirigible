@@ -44,13 +44,13 @@ class SecurityRoleSynchronizerTest {
      * The security role repository.
      */
     @Autowired
-    private RoleRepository securityRoleRepository;
+    private RoleRepository roleRepository;
 
     /**
      * The sercurity role synchronizer.
      */
     @Autowired
-    private RoleSynchronizer securityRoleSynchronizer;
+    private RoleSynchronizer roleSynchronizer;
 
     /**
      * The entity manager.
@@ -67,11 +67,11 @@ class SecurityRoleSynchronizerTest {
     	cleanup();
     	
         // Create test security accesses
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test1.access", "test1", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test2.access", "test2", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test3.access", "test3", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test4.access", "test4", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test5.access", "test5", "description"));
+        roleRepository.save(createSecurityRole("/a/b/c/test1.access", "test1", "description"));
+        roleRepository.save(createSecurityRole("/a/b/c/test2.access", "test2", "description"));
+        roleRepository.save(createSecurityRole("/a/b/c/test3.access", "test3", "description"));
+        roleRepository.save(createSecurityRole("/a/b/c/test4.access", "test4", "description"));
+        roleRepository.save(createSecurityRole("/a/b/c/test5.access", "test5", "description"));
     }
 
     /**
@@ -80,7 +80,7 @@ class SecurityRoleSynchronizerTest {
     @AfterEach
     public void cleanup() {
         // Delete test security roles
-        securityRoleRepository.deleteAll();
+        roleRepository.deleteAll();
     }
 
     /**
@@ -88,7 +88,7 @@ class SecurityRoleSynchronizerTest {
      */
     @Test
     public void testIsAcceptedPath() {
-        assertTrue(securityRoleSynchronizer.isAccepted(Path.of("/a/b/c/test.role"), null));
+        assertTrue(roleSynchronizer.isAccepted(Path.of("/a/b/c/test.role"), null));
     }
 
     /**
@@ -96,7 +96,7 @@ class SecurityRoleSynchronizerTest {
      */
     @Test
     public void testIsAcceptedArtefact() {
-        assertTrue(securityRoleSynchronizer.isAccepted(createSecurityRole("/a/b/c/test.role", "test", "description").getType()));
+        assertTrue(roleSynchronizer.isAccepted(createSecurityRole("/a/b/c/test.role", "test", "description").getType()));
     }
 
     /**
@@ -106,7 +106,7 @@ class SecurityRoleSynchronizerTest {
     public void testLoad() throws IOException {
         byte[] content =
                 SecurityRoleSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.role").readAllBytes();
-        List<Role> list = securityRoleSynchronizer.load("/META-INF/dirigible/test/test.role", content);
+        List<Role> list = roleSynchronizer.load("/META-INF/dirigible/test/test.role", content);
         assertNotNull(list);
         assertEquals("/META-INF/dirigible/test/test.role", list.get(0).getLocation());
     }

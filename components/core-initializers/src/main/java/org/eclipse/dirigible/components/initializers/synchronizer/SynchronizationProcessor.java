@@ -204,7 +204,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 *
 	 * @return the registry folder
 	 */
-	private String getRegistryFolder() {
+	public String getRegistryFolder() {
 		return ((LocalRepository) repository).getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 	}
 
@@ -361,7 +361,21 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	@Override
 	public void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper, String lifecycle, ArtefactState state) {
 		if (logger.isDebugEnabled()) {logger.debug("Processed artefact with key: {} for state: {}", wrapper.getArtefact().getKey(), state.toString());}
-		setDefinitionState(wrapper.getArtefact(), state, "");
+		registerState(synchronizer, wrapper.getArtefact(), lifecycle, state);
+	}
+	
+	/**
+	 * Register state.
+	 *
+	 * @param synchronizer the synchronizer
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param state the state
+	 */
+	@Override
+	public void registerState(Synchronizer<? extends Artefact> synchronizer, Artefact artefact, String lifecycle, ArtefactState state) {
+		if (logger.isDebugEnabled()) {logger.debug("Processed artefact with key: {} for state: {}", artefact.getKey(), state.toString());}
+		setDefinitionState(artefact, state, "");
 	}
 
 }

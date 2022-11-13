@@ -11,6 +11,16 @@
  */
 package org.eclipse.dirigible.components.openapi.synchronizer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import org.eclipse.dirigible.components.openapi.domain.OpenAPI;
 import org.eclipse.dirigible.components.openapi.repository.OpenAPIRepository;
 import org.eclipse.dirigible.components.openapi.repository.OpenAPIRepositoryTest;
@@ -24,13 +34,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {OpenAPIRepository.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

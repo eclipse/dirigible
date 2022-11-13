@@ -146,6 +146,10 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 		}
 		
 		try {
+			Table maybe = getService().findByKey(table.getKey());
+			if (maybe != null) {
+				table.setId(maybe.getId());
+			}
 			getService().save(table);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
@@ -236,8 +240,13 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 				break;
 			case CREATE:
 				if (!SqlFactory.getNative(connection).exists(connection, table.getName())) {
-					executeTableCreate(connection, table);
-					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE);
+					try {
+						executeTableCreate(connection, table);
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE);
+					} catch (Exception e) {
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE);
+					}
 				} else {
 					if (logger.isWarnEnabled()) {logger.warn(format("Table [{0}] already exists during the update process", table.getName()));}
 					if (SqlFactory.getNative(connection).count(connection, table.getName()) != 0) {
@@ -259,7 +268,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 					} else {
 						String message = format("Table [{1}] cannot be deleted during the update process, because it is not empty", table.getName());
 						if (logger.isWarnEnabled()) {logger.warn(message);}
-						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED);
+						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
 					}
 				}
 				break;
@@ -282,15 +291,17 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	/**
 	 * Cleanup.
 	 *
-	 * @param table the extension point
+	 * @param table the table
 	 */
 	@Override
 	public void cleanup(Table table) {
 		try {
 			getService().delete(table);
+			callback.registerState(this, table, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
+			callback.registerState(this, table, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
 		}
 	}
 	

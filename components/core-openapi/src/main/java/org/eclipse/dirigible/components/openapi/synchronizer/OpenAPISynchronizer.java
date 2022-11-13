@@ -112,6 +112,10 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
         openAPI.setType(OpenAPI.ARTEFACT_TYPE);
         openAPI.updateKey();
         try {
+        	OpenAPI maybe = getService().findByKey(openAPI.getKey());
+			if (maybe != null) {
+				openAPI.setId(maybe.getId());
+			}
             getService().save(openAPI);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
@@ -168,11 +172,11 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     public void cleanup(OpenAPI openAPI) {
         try {
             getService().delete(openAPI);
+            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
+            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
+            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
         }
     }
 

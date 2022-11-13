@@ -198,7 +198,5 @@ public class TableConstraints {
 				+ ", checks=" + (checks != null ? Objects.toString(checks) : "null")
 				+ ", table=" + table.getName() + "]";
 	}
-	
-	
 
 }

@@ -129,7 +129,5 @@ public class TableConstraintUnique extends TableConstraint {
 		return "TableConstraintUnique [id=" + id + ", indexType=" + indexType + ", order=" + order + ", name=" + name
 				+ ", modifiers=" + modifiers + ", columns=" + columns + ", constraints.table=" + constraints.getTable().getName() + "]";
 	}
-	
-	
 
 }

@@ -33,6 +33,7 @@
 
 		<!-- Engines -->
 		<module>engine-javascript</module>
+		<module>engine-web</module>
 
 		<!-- Applications -->
 		<module>app-all</module>

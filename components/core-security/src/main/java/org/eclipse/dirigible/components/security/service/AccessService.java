@@ -11,33 +11,31 @@
  */
 package org.eclipse.dirigible.components.security.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.repository.AccessRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * The Class SecurityAccessService.
  */
 @Service
 @Transactional
-public class SecurityAccessService implements ArtefactService<Access> {
+public class AccessService implements ArtefactService<Access> {
 
     /**
      * The security access repository.
      */
     @Autowired
-    private AccessRepository securityAccessRepository;
+    private AccessRepository accessRepository;
 
     /**
      * Gets the all.
@@ -47,7 +45,7 @@ public class SecurityAccessService implements ArtefactService<Access> {
     @Override
     @Transactional(readOnly = true)
     public List<Access> getAll() {
-        return securityAccessRepository.findAll();
+        return accessRepository.findAll();
     }
 
     /**
@@ -59,7 +57,7 @@ public class SecurityAccessService implements ArtefactService<Access> {
     @Override
     @Transactional(readOnly = true)
     public Page<Access> findAll(Pageable pageable) {
-        return securityAccessRepository.findAll(pageable);
+        return accessRepository.findAll(pageable);
     }
 
     /**
@@ -71,11 +69,11 @@ public class SecurityAccessService implements ArtefactService<Access> {
     @Override
     @Transactional(readOnly = true)
     public Access findById(Long id) {
-        Optional<Access> securityAccess = securityAccessRepository.findById(id);
+        Optional<Access> securityAccess = accessRepository.findById(id);
         if (securityAccess.isPresent()) {
             return securityAccess.get();
         } else {
-            throw new IllegalArgumentException("SecurityAccess with id does not exist: " + id);
+            throw new IllegalArgumentException("Access with id does not exist: " + id);
         }
     }
 
@@ -91,12 +89,31 @@ public class SecurityAccessService implements ArtefactService<Access> {
         Access filter = new Access();
         filter.setName(name);
         Example<Access> example = Example.of(filter);
-        Optional<Access> securityAccess = securityAccessRepository.findOne(example);
-        if (securityAccess.isPresent()) {
-            return securityAccess.get();
+        Optional<Access> access = accessRepository.findOne(example);
+        if (access.isPresent()) {
+            return access.get();
         } else {
-            throw new IllegalArgumentException("SecurityAccess with name does not exist: " + name);
+            throw new IllegalArgumentException("Access with name does not exist: " + name);
         }
+    }
+    
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the security access
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Access findByKey(String key) {
+        Access filter = new Access();
+        filter.setKey(key);
+        Example<Access> example = Example.of(filter);
+        Optional<Access> access = accessRepository.findOne(example);
+        if (access.isPresent()) {
+            return access.get();
+        }
+        return null;
     }
 
     /**
@@ -107,7 +124,7 @@ public class SecurityAccessService implements ArtefactService<Access> {
      */
     @Override
     public Access save(Access securityAccess) {
-        return securityAccessRepository.saveAndFlush(securityAccess);
+        return accessRepository.saveAndFlush(securityAccess);
     }
 
     /**
@@ -117,7 +134,7 @@ public class SecurityAccessService implements ArtefactService<Access> {
      */
     @Override
     public void delete(Access securityAccess) {
-        securityAccessRepository.delete(securityAccess);
+        accessRepository.delete(securityAccess);
     }
 
 }

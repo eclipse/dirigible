@@ -71,6 +71,25 @@ public class TableService implements ArtefactService<Table> {
 		}
 	}
 	
+	/**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the table
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Table findByKey(String key) {
+    	Table filter = new Table();
+        filter.setKey(key);
+        Example<Table> example = Example.of(filter);
+        Optional<Table> table = tableRepository.findOne(example);
+        if (table.isPresent()) {
+            return table.get();
+        }
+        return null;
+    }
+	
 	@Override
 	public Table save(Table table) {
 		return tableRepository.saveAndFlush(table);

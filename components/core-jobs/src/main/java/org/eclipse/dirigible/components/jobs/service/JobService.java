@@ -99,6 +99,25 @@ public class JobService implements ArtefactService<Job>  {
             throw new IllegalArgumentException("Job with name does not exist: " + name);
         }
     }
+    
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the job
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Job findByKey(String key) {
+    	Job filter = new Job();
+        filter.setKey(key);
+        Example<Job> example = Example.of(filter);
+        Optional<Job> job = jobRepository.findOne(example);
+        if (job.isPresent()) {
+            return job.get();
+        }
+        return null;
+    }
 
     /**
      * Save.

@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.repository.ListenerRepository;
@@ -20,9 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * The Class ListenerService.
@@ -89,6 +89,25 @@ public class ListenerService implements ArtefactService<Listener> {
         } else {
             throw new IllegalArgumentException("Listener with name does not exist: " + name);
         }
+    }
+    
+    /**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the listener
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Listener findByKey(String key) {
+    	Listener filter = new Listener();
+        filter.setKey(key);
+        Example<Listener> example = Example.of(filter);
+        Optional<Listener> listener = listenerRepository.findOne(example);
+        if (listener.isPresent()) {
+            return listener.get();
+        }
+        return null;
     }
 
     /**

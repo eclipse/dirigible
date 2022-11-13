@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AccessEndpointTest {
 
     @Autowired
-    private AccessRepository securityAccessRepository;
+    private AccessRepository accessRepository;
 
     @Autowired
     MockMvc mockMvc;
@@ -52,16 +52,16 @@ class AccessEndpointTest {
     	cleanup();
     	
         // Create test security accesses
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
                 "/b/c/test1.txt", "GET", "test_role_1"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" +
+        accessRepository.save(createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" +
                 "/b/c/test2.txt", "GET", "test_role_2"));
     }
 
     @AfterEach
     public void cleanup() {
         // Delete test security accesses
-        securityAccessRepository.deleteAll();
+        accessRepository.deleteAll();
     }
 
     @Test

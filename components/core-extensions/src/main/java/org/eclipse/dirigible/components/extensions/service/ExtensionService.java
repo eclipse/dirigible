@@ -96,6 +96,25 @@ public class ExtensionService implements ArtefactService<Extension> {
 	}
 	
 	/**
+     * Find by key.
+     *
+     * @param key the key
+     * @return the extension point
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Extension findByKey(String key) {
+    	Extension filter = new Extension();
+        filter.setKey(key);
+        Example<Extension> example = Example.of(filter);
+        Optional<Extension> extension = extensionRepository.findOne(example);
+        if (extension.isPresent()) {
+            return extension.get();
+        }
+        return null;
+    }
+	
+	/**
 	 * Save.
 	 *
 	 * @param extension the extension

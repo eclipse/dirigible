@@ -13,7 +13,7 @@ package org.eclipse.dirigible.components.security.endpoint;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.security.domain.Access;
-import org.eclipse.dirigible.components.security.service.SecurityAccessService;
+import org.eclipse.dirigible.components.security.service.AccessService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +43,10 @@ public class AccessEndpoint extends BaseEndpoint {
      * The security access service.
      */
     @Autowired
-    private SecurityAccessService securityAccessService;
+    private AccessService accessService;
 
     @GetMapping("/access")
     public ResponseEntity<List<Access>> getSecurityAccesses() {
-        return ResponseEntity.ok(securityAccessService.getAll());
+        return ResponseEntity.ok(accessService.getAll());
     }
 }

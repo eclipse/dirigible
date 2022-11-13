@@ -33,7 +33,6 @@ import org.eclipse.dirigible.components.jobs.service.JobService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -123,6 +122,10 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
         job.updateKey();
         job.getParameters().forEach(j -> j.setJob(job));
         try {
+        	Job maybe = getService().findByKey(job.getKey());
+			if (maybe != null) {
+				job.setId(maybe.getId());
+			}
             getService().save(job);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
@@ -168,26 +171,6 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
     public ArtefactService<Job> getService() {return jobService;}
 
     /**
-     * Cleanup.
-     *
-     * @param artefact the artefact
-     */
-    @Override
-    public void cleanup(Job artefact) {
-        try {
-        	// TODO stop the job
-        	jobLogService.deleteAllByJobName(artefact.getName());
-            jobEmailService.deleteAllByJobName(artefact.getName());
-            getService().delete(artefact);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-            callback.addError(e.getMessage());
-        }
-    }
-
-    /**
      * Complete.
      *
      * @param wrapper the wrapper
@@ -216,6 +199,26 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
         return true;
     }
+    
+    /**
+     * Cleanup.
+     *
+     * @param job the artefact
+     */
+    @Override
+    public void cleanup(Job job) {
+        try {
+        	// TODO stop the job
+        	jobLogService.deleteAllByJobName(job.getName());
+            jobEmailService.deleteAllByJobName(job.getName());
+            getService().delete(job);
+            callback.registerState(this, job, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            callback.addError(e.getMessage());
+            callback.registerState(this, job, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+        }
+    }
 
     /**
      * Sets the callback.
@@ -223,7 +226,9 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      * @param callback the new callback
      */
     @Override
-    public void setCallback(SynchronizerCallback callback) {this.callback = callback;}
+    public void setCallback(SynchronizerCallback callback) {
+    	this.callback = callback;
+    }
     
     /**
      * Gets the file extension.
