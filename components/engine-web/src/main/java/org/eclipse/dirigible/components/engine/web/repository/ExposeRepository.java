@@ -15,6 +15,9 @@ import org.eclipse.dirigible.components.engine.web.domain.Expose;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Interface ExposeRepository.
+ */
 @Repository("webRepository")
 public interface ExposeRepository extends JpaRepository<Expose, Long> {
 

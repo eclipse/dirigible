@@ -139,16 +139,17 @@ public class Job extends Artefact {
     /**
      * Instantiates a new job.
      *
-     * @param location the location
      * @param name the name
-     * @param description the description
-     * @param dependencies the dependencies
      * @param group the group
      * @param clazz the clazz
-     * @param expression the expression
      * @param handler the handler
      * @param engine the engine
+     * @param description the description
+     * @param expression the expression
      * @param singleton the singleton
+     * @param parameters the parameters
+     * @param location the location
+     * @param dependencies the dependencies
      */
     public Job(String name, String group, String clazz, String handler, String engine, String description, String expression,
                boolean singleton, List<JobParameter> parameters, String location, String dependencies) {

@@ -214,11 +214,21 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 		this.callback = callback;
 	}
 	
+	/**
+	 * Gets the file extension.
+	 *
+	 * @return the file extension
+	 */
 	@Override
 	public String getFileExtension() {
 		return FILE_NAME;
 	}
 
+	/**
+	 * Gets the artefact type.
+	 *
+	 * @return the artefact type
+	 */
 	@Override
 	public String getArtefactType() {
 		return Expose.ARTEFACT_TYPE;

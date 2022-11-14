@@ -36,22 +36,47 @@ public class Role extends Artefact {
     @Column(name = "ROLE_ID", nullable = false)
     private Long id;
 
+    /**
+     * Instantiates a new role.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     */
     public Role(String location, String name, String description) {
         super(location, name, ARTEFACT_TYPE, description, null);
     }
 
+    /**
+     * Instantiates a new role.
+     */
     public Role() {
         super();
     }
 
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Sets the id.
+     *
+     * @param id the new id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "SecurityRole {" +

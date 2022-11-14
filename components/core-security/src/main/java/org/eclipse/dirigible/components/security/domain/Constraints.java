@@ -14,10 +14,20 @@ package org.eclipse.dirigible.components.security.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Class Constraints.
+ */
 public class Constraints {
 
+    /** The constraints. */
     private List<Constraint> constraints = new ArrayList<>();
 
+    /**
+     * Builds the security accesses.
+     *
+     * @param location the location
+     * @return the list
+     */
     public List<Access> buildSecurityAccesses(String location) {
         List<Access> securityAccesses = new ArrayList<>();
 

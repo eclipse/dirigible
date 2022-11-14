@@ -14,6 +14,9 @@ package org.eclipse.dirigible.components.security.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Class Constraint.
+ */
 public class Constraint {
 
     /**

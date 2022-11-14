@@ -35,9 +35,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class JobEmailProcessor.
+ */
 @Component
 public class JobEmailProcessor {
 
+    /** The registry accessor. */
     @Autowired
     private RegistryAccessor registryAccessor;
     
@@ -194,6 +198,14 @@ public class JobEmailProcessor {
         emailUrlPort = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT);
     }
 
+    /**
+     * Prepare email.
+     *
+     * @param job the job
+     * @param templateLocation the template location
+     * @param defaultLocation the default location
+     * @return the string
+     */
     public String prepareEmail(Job job, String templateLocation, String defaultLocation) {
 
         byte[] template = registryAccessor.getRegistryContent(templateLocation, defaultLocation);
@@ -214,6 +226,13 @@ public class JobEmailProcessor {
         }
     }
 
+    /**
+     * Send email.
+     *
+     * @param job the job
+     * @param emailSubject the email subject
+     * @param emailContent the email content
+     */
     public void sendEmail(Job job, String emailSubject, String emailContent) {
         try {
         	List<JobEmail> emailArtefacts = jobEmailService.findAllByJobName(job.getName());

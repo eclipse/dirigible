@@ -16,9 +16,18 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class SecurityFilterConfig.
+ */
 @Configuration
 public class SecurityFilterConfig {
 
+    /**
+     * Security filter registration bean.
+     *
+     * @param securityFilter the security filter
+     * @return the filter registration bean
+     */
     @Bean
     public FilterRegistrationBean<SecurityFilter> securityFilterRegistrationBean(SecurityFilter securityFilter) {
         FilterRegistrationBean<SecurityFilter> filterRegistrationBean = new FilterRegistrationBean<>(securityFilter);

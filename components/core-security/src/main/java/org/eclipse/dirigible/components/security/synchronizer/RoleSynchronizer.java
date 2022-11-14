@@ -211,11 +211,21 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
         this.callback = callback;
     }
     
+    /**
+     * Gets the file extension.
+     *
+     * @return the file extension
+     */
     @Override
 	public String getFileExtension() {
 		return FILE_EXTENSION_SECURITY_ROLE;
 	}
 
+	/**
+	 * Gets the artefact type.
+	 *
+	 * @return the artefact type
+	 */
 	@Override
 	public String getArtefactType() {
 		return Role.ARTEFACT_TYPE;

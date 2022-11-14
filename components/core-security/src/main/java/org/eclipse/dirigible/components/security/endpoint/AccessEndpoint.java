@@ -45,6 +45,11 @@ public class AccessEndpoint extends BaseEndpoint {
     @Autowired
     private AccessService accessService;
 
+    /**
+     * Gets the security accesses.
+     *
+     * @return the security accesses
+     */
     @GetMapping("/access")
     public ResponseEntity<List<Access>> getSecurityAccesses() {
         return ResponseEntity.ok(accessService.getAll());

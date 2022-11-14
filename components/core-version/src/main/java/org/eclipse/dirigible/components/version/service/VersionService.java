@@ -27,18 +27,25 @@ import java.util.Properties;
 @Service
 public class VersionService {
 
+    /** The Constant DIRIGIBLE_PROPERTIES_PATH. */
     private static final String DIRIGIBLE_PROPERTIES_PATH = "/dirigible.properties";
 
+    /** The Constant DIRIGIBLE_PRODUCT_NAME. */
     private static final String DIRIGIBLE_PRODUCT_NAME = "DIRIGIBLE_PRODUCT_NAME";
 
+    /** The Constant DIRIGIBLE_PRODUCT_VERSION. */
     private static final String DIRIGIBLE_PRODUCT_VERSION = "DIRIGIBLE_PRODUCT_VERSION";
 
+    /** The Constant DIRIGIBLE_PRODUCT_REPOSITORY. */
     private static final String DIRIGIBLE_PRODUCT_REPOSITORY = "DIRIGIBLE_PRODUCT_REPOSITORY";
 
+    /** The Constant DIRIGIBLE_PRODUCT_COMMIT_ID. */
     private static final String DIRIGIBLE_PRODUCT_COMMIT_ID = "DIRIGIBLE_PRODUCT_COMMIT_ID";
 
+    /** The Constant DIRIGIBLE_PRODUCT_TYPE. */
     private static final String DIRIGIBLE_PRODUCT_TYPE = "DIRIGIBLE_PRODUCT_TYPE";
 
+    /** The Constant DIRIGIBLE_INSTANCE_NAME. */
     private static final String DIRIGIBLE_INSTANCE_NAME = "DIRIGIBLE_INSTANCE_NAME";
 
     /**

@@ -65,6 +65,17 @@ public class Access extends Artefact {
     @Column(name = "ACCESS_ROLE", columnDefinition = "VARCHAR", nullable = false, length = 64)
     private String role;
 
+    /**
+     * Instantiates a new access.
+     *
+     * @param location the location
+     * @param name the name
+     * @param description the description
+     * @param scope the scope
+     * @param path the path
+     * @param method the method
+     * @param role the role
+     */
     public Access(String location, String name, String description, String scope, String path, String method, String role) {
         super(location, name, ARTEFACT_TYPE, description, null);
         this.scope = scope;
@@ -73,50 +84,108 @@ public class Access extends Artefact {
         this.role = role;
     }
 
+    /**
+     * Instantiates a new access.
+     */
     public Access() {
         super();
     }
 
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Sets the id.
+     *
+     * @param id the new id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * Gets the scope.
+     *
+     * @return the scope
+     */
     public String getScope() {
         return scope;
     }
 
+    /**
+     * Sets the scope.
+     *
+     * @param scope the new scope
+     */
     public void setScope(String scope) {
         this.scope = scope;
     }
 
+    /**
+     * Gets the path.
+     *
+     * @return the path
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * Sets the path.
+     *
+     * @param path the new path
+     */
     public void setPath(String path) {
         this.path = path;
     }
 
+    /**
+     * Gets the method.
+     *
+     * @return the method
+     */
     public String getMethod() {
         return method;
     }
 
+    /**
+     * Sets the method.
+     *
+     * @param method the new method
+     */
     public void setMethod(String method) {
         this.method = method;
     }
 
+    /**
+     * Gets the role.
+     *
+     * @return the role
+     */
     public String getRole() {
         return role;
     }
 
+    /**
+     * Sets the role.
+     *
+     * @param role the new role
+     */
     public void setRole(String role) {
         this.role = role;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "SecurityAccess{" +

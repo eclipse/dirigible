@@ -28,6 +28,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class RegistryAccessor.
+ */
 @Component
 public class RegistryAccessor {
 
@@ -45,8 +48,14 @@ public class RegistryAccessor {
 //	/** The Constant LOCATION_META_INF_WEBJARS. */
 //	private static final String LOCATION_META_INF_WEBJARS = "/META-INF/resources/webjars";
 
-	private IRepository repository;
+	/** The repository. */
+private IRepository repository;
 	
+	/**
+	 * Instantiates a new registry accessor.
+	 *
+	 * @param repository the repository
+	 */
 	@Autowired
 	public RegistryAccessor(IRepository repository) {
 		this.repository = repository;
@@ -215,12 +224,13 @@ public class RegistryAccessor {
 //	}
 
 	/**
-	 * Creates the resource path.
-	 *
-	 * @param module the module
-	 * @param extension the extension
-	 * @return the string
-	 */
+ * Creates the resource path.
+ *
+ * @param root the root
+ * @param module the module
+ * @param extension the extension
+ * @return the string
+ */
 	private String createResourcePath(String root, String module, String extension) {
 		StringBuilder buff = new StringBuilder().append(root);
 		if (!Character.toString(module.charAt(0)).equals(IRepository.SEPARATOR)) {
@@ -283,7 +293,6 @@ public class RegistryAccessor {
 	/**
 	 * Gets the resource.
 	 *
-	 * @param root the root
 	 * @param module the module
 	 * @param extension the extension
 	 * @return the resource

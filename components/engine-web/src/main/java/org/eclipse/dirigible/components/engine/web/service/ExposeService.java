@@ -117,7 +117,7 @@ public class ExposeService implements ArtefactService<Expose> {
 	/**
 	 * Save.
 	 *
-	 * @param extension the expose
+	 * @param expose the expose
 	 * @return the expose
 	 */
 	@Override

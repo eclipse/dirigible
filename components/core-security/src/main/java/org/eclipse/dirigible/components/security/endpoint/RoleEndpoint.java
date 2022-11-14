@@ -43,6 +43,11 @@ public class RoleEndpoint extends BaseEndpoint {
     @Autowired
     private RoleService roleService;
 
+    /**
+     * Gets the all.
+     *
+     * @return the all
+     */
     @GetMapping("/roles")
     public ResponseEntity<List<Role>> getAll() {
         return ResponseEntity.ok(roleService.getAll());

@@ -42,6 +42,7 @@ public class Expose extends Artefact {
 	@Column(name = "EXPOSE_ID", nullable = false)
 	private Long id;
 	
+	/** The guid. */
 	@Column(name = "EXPOSE_GUID", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	private String guid;
 	
@@ -58,7 +59,6 @@ public class Expose extends Artefact {
 	 * @param location the location
 	 * @param name the name
 	 * @param description the description
-	 * @param project the project
 	 * @param exposes the exposes
 	 */
 	public Expose(String location, String name, String description, String[] exposes) {

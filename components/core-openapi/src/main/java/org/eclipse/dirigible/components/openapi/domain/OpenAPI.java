@@ -63,8 +63,8 @@ public class OpenAPI extends Artefact {
     }
     
     /**
-     * Sets the id
-     * 
+     * Sets the id.
+     *
      * @param id to set
      */
     public void setId(Long id) {

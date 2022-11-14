@@ -61,6 +61,12 @@ public class JobEndpoint extends BaseEndpoint {
 
     }
 
+    /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the response entity
+     */
     @GetMapping("/search")
     public ResponseEntity<Job> findByName(
             @ApiParam(value = "Name of the Extension", required = true) @RequestParam("name") String name) {

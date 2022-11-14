@@ -67,8 +67,14 @@ public class SecurityFilter implements Filter {
      */
     private static final Set<String> SECURED_PREFIXES = new HashSet<>();
 
+    /** The security access verifier. */
     private AccessVerifier securityAccessVerifier;
 
+    /**
+     * Instantiates a new security filter.
+     *
+     * @param securityAccessVerifier the security access verifier
+     */
     @Autowired
     public SecurityFilter(AccessVerifier securityAccessVerifier) {
         this.securityAccessVerifier = securityAccessVerifier;
@@ -98,8 +104,8 @@ public class SecurityFilter implements Filter {
      * @param request  the request
      * @param response the response
      * @param chain    the chain
-     * @throws IOException      Signals that an I/O exception has occurred.
      * @throws ServletException the servlet exception
+     * @throws IOException      Signals that an I/O exception has occurred.
      */
     /*
      * (non-Javadoc)

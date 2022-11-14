@@ -214,11 +214,21 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
         this.callback = callback;
     }
     
+    /**
+     * Gets the file extension.
+     *
+     * @return the file extension
+     */
     @Override
 	public String getFileExtension() {
 		return FILE_EXTENSION_SECURITY_ACCESS;
 	}
 
+	/**
+	 * Gets the artefact type.
+	 *
+	 * @return the artefact type
+	 */
 	@Override
 	public String getArtefactType() {
 		return Access.ARTEFACT_TYPE;

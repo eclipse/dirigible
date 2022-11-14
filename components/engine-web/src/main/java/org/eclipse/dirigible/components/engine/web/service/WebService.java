@@ -33,6 +33,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * The Class WebService.
+ */
 @Service
 @RequestScope
 public class WebService {
@@ -43,12 +46,20 @@ public class WebService {
 	/** The Constant INDEX_HTML. */
 	private static final String INDEX_HTML = "index.html";
 	
+	/** The request. */
 	@Autowired
 	private HttpServletRequest request;
 	
+	/** The registry accessor. */
 	@Autowired
 	private RegistryAccessor registryAccessor;
 
+	/**
+	 * Gets the resource.
+	 *
+	 * @param path the path
+	 * @return the resource
+	 */
 	public Response getResource(@PathParam("path") String path) {
 		if (ExposeManager.isPathExposed(path)) {
 			if ("".equals(path.trim())) {

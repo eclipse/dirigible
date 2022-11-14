@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 /**
  * The Class OpenAPISynchronizer.
  *
- * @param A the generic type
+ * @param <A> the generic type
  */
 @Component
 @Order(110)
@@ -203,11 +203,21 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
         this.callback = callback;
     }
     
+    /**
+     * Gets the file extension.
+     *
+     * @return the file extension
+     */
     @Override
 	public String getFileExtension() {
 		return FILE_EXTENSION_OPENAPI;
 	}
 
+	/**
+	 * Gets the artefact type.
+	 *
+	 * @return the artefact type
+	 */
 	@Override
 	public String getArtefactType() {
 		return OpenAPI.ARTEFACT_TYPE;

@@ -44,6 +44,12 @@ public class VersionEndpoint extends BaseEndpoint {
     @Autowired
     private VersionService versionService;
 
+    /**
+     * Gets the version.
+     *
+     * @return the version
+     * @throws Exception the exception
+     */
     @GetMapping
     public ResponseEntity<Version> getVersion() throws Exception {
         return ResponseEntity.ok(versionService.getVersion());
