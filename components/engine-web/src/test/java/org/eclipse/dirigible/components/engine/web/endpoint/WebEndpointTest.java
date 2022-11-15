@@ -106,7 +106,7 @@ public class WebEndpointTest {
 		Files.writeString(Paths.get(registyrFolder, "demo", "ui", "index.html"), "Hidden", StandardOpenOption.CREATE);
 		try {
 			synchronizationProcessor.processSynchronizers();
-			assertEquals(1, ExposeManager.listRegisteredProjects().size());
+			assertTrue(ExposeManager.listRegisteredProjects().size() > 0);
 			assertTrue(ExposeManager.isPathExposed("demo/ui"));
 			assertFalse(ExposeManager.isPathExposed("demo/hidden"));
 			mockMvc.perform(get("/services/v8/web/demo/ui/hello-world.txt")).andDo(print())
