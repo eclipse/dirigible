@@ -260,6 +260,9 @@ body {
 .dg-popover-text--multiline .fd-text {
   white-space: normal;
 }
+.dg-font--italic {
+  font-style: italic;
+}
 /* fd-page helper classes */
 .dg-page__content-card {
   padding: 2rem;

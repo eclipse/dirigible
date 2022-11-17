@@ -9,19 +9,402 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let messageHub = new FramesMessageHub();
 
-messageHub.fireFileOpen = function (fileDescriptor) {
-	messageHub.post({ data: fileDescriptor }, 'fileselected');
-}
-
-angular.module('database', []).controller('DatabaseController', function ($scope, $http) {
-
+// messageHub.fireFileOpen = function (fileDescriptor) {
+// 	messageHub.post({ data: fileDescriptor }, 'fileselected');
+// }
+let database = angular.module('database', ['ideUI', 'ideView']);
+database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	let databasesSvcUrl = "/services/v4/ide/databases";
 	$scope.selectedDatabase;
-	$scope.jstree;
+	$scope.jstreeWidget = angular.element('#dgDatabases');
+	$scope.spinnerColumns = {
+		text: "Loading Columns...",
+		type: "spinner",
+		li_attr: { spinner: true },
+	};
+	$scope.spinnerIndices = {
+		text: "Loading Indices...",
+		type: "spinner",
+		li_attr: { spinner: true },
+	};
+	$scope.jstreeConfig = {
+		core: {
+			check_callback: true,
+			themes: {
+				name: "fiori",
+				variant: "compact",
+			},
+			data: []
+		},
+		search: {
+			case_sensitive: false,
+		},
+		plugins: ['wholerow', 'state', 'types', 'dnd', 'unique', 'contextmenu'],
+		dnd: {
+			large_drop_target: true,
+			large_drag_target: true,
+		},
+		state: { key: 'ide-databases' },
+		types: {
+			'default': {
+				icon: "jstree-file",
+			},
+			folder: {
+				icon: "jstree-folder",
+			},
+			file: {
+				icon: "jstree-file",
+			},
+			project: {
+				icon: "jstree-project",
+			},
+			table: {
+				icon: "sap-icon--table-view",
+			},
+			tableView: {
+				icon: "sap-icon--grid",
+			},
+			tableLock: {
+				icon: "sap-icon--locked",
+			},
+			column: {
+				icon: "sap-icon--table-column",
+			},
+			columns: {
+				icon: "sap-icon--table-column",
+			},
+			indice: {
+				icon: "sap-icon--table-row",
+			},
+			indices: {
+				icon: "sap-icon--table-row",
+			},
+			schema: {
+				icon: "sap-icon--database",
+			},
+			procedure: {
+				icon: "sap-icon--workflow-tasks",
+			},
+			'function': {
+				icon: "sap-icon--settings",
+			},
+			varchar: {
+				icon: "sap-icon--sort-ascending",
+			},
+			nvarchar: {
+				icon: "sap-icon--sort-ascending",
+			},
+			char: {
+				icon: "sap-icon--text",
+			},
+			date: {
+				icon: "sap-icon--calendar",
+			},
+			datetime: {
+				icon: "sap-icon--date-time",
+			},
+			timestamp: {
+				icon: "sap-icon--date-time",
+			},
+			smallint: {
+				icon: "sap-icon--numbered-text",
+			},
+			tinyint: {
+				icon: "sap-icon--numbered-text",
+			},
+			integer: {
+				icon: "sap-icon--numbered-text",
+			},
+			float: {
+				icon: "sap-icon--measuring-point",
+			},
+			double: {
+				icon: "sap-icon--measuring-point",
+			},
+			decimal: {
+				icon: "sap-icon--measuring-point",
+			},
+			bigint: {
+				icon: "sap-icon--trend-up",
+			},
+			boolean: {
+				icon: "sap-icon--checklist-item",
+			},
+			clob: {
+				icon: "sap-icon--rhombus-milestone",
+			},
+			blob: {
+				icon: "sap-icon--rhombus-milestone",
+			},
+			key: {
+				icon: "sap-icon--key",
+			},
+			spinner: {
+				icon: "jstree-spinner",
+				valid_children: [],
+			},
+		},
+		contextmenu: {
+			items: function (node) {
+				let ctxmenu = {};
 
-	function getDatabases() {
+				// Select contents
+				if (node.original.type === 'table'
+					|| node.original.type === 'base table'
+					|| node.original.type === 'view') {
+					ctxmenu.contents = {
+						"separator_before": false,
+						"label": "Show Contents",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let parentNodeName = tree.get_text(node.parent);
+							let sqlCommand = "SELECT * FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+							messageHub.postMessage('database.sql.execute', sqlCommand);
+						}.bind(this)
+					};
+
+					// Generate scripts
+					// debugger
+					let tree = $scope.jstreeWidget.jstree(true);
+					let columnsMaybe = tree.get_node(node.children[0]);
+					let internalMaybe = null;
+					if (columnsMaybe) {
+						internalMaybe = tree.get_node(columnsMaybe.children[0]);
+					}
+					// Select
+					if ((node.original.type === 'table' || node.original.type === 'base table' || node.original.type === 'view')
+						&& (internalMaybe !== null && internalMaybe.text !== "Loading Columns..." && internalMaybe.text !== "Loading Indices...")) {
+						ctxmenu.selectScript = {
+							"separator_before": true,
+							"label": "Select",
+							"action": function (data) {
+								let tree = $.jstree.reference(data.reference);
+								let node = tree.get_node(data.reference);
+								let parentNodeName = tree.get_text(node.parent);
+								let columns = tree.get_node(node.children[0]);
+								let sqlCommand = "SELECT ";
+								for (let i = 0; i < columns.children.length; i++) {
+									sqlCommand += tree.get_node(columns.children[i]).original.column.name;
+									sqlCommand += ", ";
+								}
+								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
+								sqlCommand += " FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+								messageHub.postMessage('database.sql.script', sqlCommand);
+								$scope.jstreeWidget.jstree(true).refresh();
+
+							}.bind(this)
+						};
+					}
+
+					// Insert
+					if ((node.original.type === 'table' || node.original.type === 'base table')
+						&& (internalMaybe !== null && internalMaybe.text !== "Loading Columns..." && internalMaybe.text !== "Loading Indices...")) {
+						ctxmenu.insertScript = {
+							"separator_before": false,
+							"label": "Insert",
+							"action": function (data) {
+								let tree = $.jstree.reference(data.reference);
+								let node = tree.get_node(data.reference);
+								let parentNodeName = tree.get_text(node.parent);
+								let columns = tree.get_node(node.children[0]);
+								let sqlCommand = "INSERT INTO \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" (";
+								for (let i = 0; i < columns.children.length; i++) {
+									sqlCommand += tree.get_node(columns.children[i]).original.column.name;
+									sqlCommand += ", ";
+								}
+								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
+								sqlCommand += ") VALUES (";
+								for (let i = 0; i < columns.children.length; i++) {
+									sqlCommand += "'" + tree.get_node(columns.children[i]).original.column.type;
+									sqlCommand += "', ";
+								}
+								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
+								sqlCommand += ")";
+								messageHub.postMessage('database.sql.script', sqlCommand);
+								$scope.jstreeWidget.jstree(true).refresh();
+
+							}.bind(this)
+						};
+					}
+
+					// Update
+					if ((node.original.type === 'table' || node.original.type === 'base table')
+						&& (internalMaybe !== null && internalMaybe.text !== "Loading Columns..." && internalMaybe.text !== "Loading Indices...")) {
+						ctxmenu.updateScript = {
+							"separator_before": false,
+							"label": "Update",
+							"action": function (data) {
+								let tree = $.jstree.reference(data.reference);
+								let node = tree.get_node(data.reference);
+								let parentNodeName = tree.get_text(node.parent);
+								let columns = tree.get_node(node.children[0]);
+								let sqlCommand = "UPDATE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" SET ";
+								for (let i = 0; i < columns.children.length; i++) {
+									sqlCommand += tree.get_node(columns.children[i]).original.column.name +
+										" = '" + tree.get_node(columns.children[i]).original.column.type
+									sqlCommand += "', ";
+								}
+								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
+								sqlCommand += " WHERE ";
+								for (let i = 0; i < columns.children.length; i++) {
+									sqlCommand += tree.get_node(columns.children[i]).original.column.name +
+										" = '" + tree.get_node(columns.children[i]).original.column.type
+									sqlCommand += "' AND ";
+								}
+								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 5);
+								messageHub.postMessage('database.sql.script', sqlCommand);
+								$scope.jstreeWidget.jstree(true).refresh();
+
+							}.bind(this)
+						};
+					}
+
+					// Delete
+					if ((node.original.type === 'table' || node.original.type === 'base table')
+						&& (internalMaybe !== null && internalMaybe.text !== "Loading Columns..." && internalMaybe.text !== "Loading Indices...")) {
+						ctxmenu.deleteScript = {
+							"separator_before": false,
+							"label": "Delete",
+							"action": function (data) {
+								let tree = $.jstree.reference(data.reference);
+								let node = tree.get_node(data.reference);
+								let parentNodeName = tree.get_text(node.parent);
+								let columns = tree.get_node(node.children[0]);
+								let sqlCommand = "DELETE FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+								sqlCommand += " WHERE ";
+								for (let i = 0; i < columns.children.length; i++) {
+									sqlCommand += tree.get_node(columns.children[i]).original.column.name +
+										" = '" + tree.get_node(columns.children[i]).original.column.type
+									sqlCommand += "' AND ";
+								}
+								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 5);
+								messageHub.postMessage('database.sql.script', sqlCommand);
+								$scope.jstreeWidget.jstree(true).refresh();
+
+							}.bind(this)
+						};
+					}
+
+					// Drop table
+					if (node.original.type === 'table' || node.original.type === 'base table') {
+						ctxmenu.dropScript = {
+							"separator_before": false,
+							"label": "Drop",
+							"action": function (data) {
+								let tree = $.jstree.reference(data.reference);
+								let node = tree.get_node(data.reference);
+								let parentNodeName = tree.get_text(node.parent);
+								let sqlCommand = "DROP TABLE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+								messageHub.postMessage('database.sql.script', sqlCommand);
+							}.bind(this)
+						};
+					}
+					// Drop view
+					if (node.original.type === 'view') {
+						ctxmenu.dropScript = {
+							"separator_before": false,
+							"label": "Drop",
+							"action": function (data) {
+								let tree = $.jstree.reference(data.reference);
+								let node = tree.get_node(data.reference);
+								let parentNodeName = tree.get_text(node.parent);
+								let sqlCommand = "DROP VIEW \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+								messageHub.postMessage('database.sql.script', sqlCommand);
+							}.bind(this)
+						};
+					}
+
+					ctxmenu.exportData = {
+						"separator_before": true,
+						"label": "Export Data",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let parentNodeName = tree.get_text(node.parent);
+							let sqlCommand = parentNodeName + "." + node.original.text;
+							messageHub.postMessage('database.data.export.artifact', sqlCommand);
+						}.bind(this)
+					};
+					ctxmenu.exportMetadata = {
+						"separator_before": false,
+						"label": "Export Metadata",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let parentNodeName = tree.get_text(node.parent);
+							let sqlCommand = parentNodeName + "." + node.original.text;
+							messageHub.postMessage('database.metadata.export.artifact', sqlCommand);
+						}.bind(this)
+					};
+
+				}
+
+				// Procedure related actions
+				if (node.original.kind === 'procedure') {
+					ctxmenu.dropProcedure = {
+						"separator_before": false,
+						"label": "Drop",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = "DROP PROCEDURE \"" + node.original.text + "\"";
+							messageHub.postMessage('database.sql.script', sqlCommand);
+						}.bind(this)
+					};
+				}
+
+				// Schema related actions
+				if (node.original.kind === 'schema') {
+					ctxmenu.exportData = {
+						"separator_before": false,
+						"label": "Export Data",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = node.original.text;
+							messageHub.postMessage('database.data.export.schema', sqlCommand);
+						}.bind(this)
+					};
+					ctxmenu.exportMetadata = {
+						"separator_before": false,
+						"label": "Export Metadata",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = node.original.text;
+							messageHub.postMessage('database.metadata.export.schema', sqlCommand);
+						}.bind(this)
+					};
+				}
+				return ctxmenu;
+			}
+		}
+	};
+
+	/*$scope.jstreeWidget.on('dblclick.jstree', function (event, node) {
+		let data = $scope.jstreeWidget.jstree(true).get_selected(true);
+		let kind = $scope.jstreeWidget.jstree(true).get_node(event.target).original.kind;
+		// if(['table'].indexOf(type)<0)
+		// 								messageHub.fireFileOpen(data[0].original._file);
+	});*/
+
+	$scope.jstreeWidget.on('open_node.jstree', function (event, data) {
+		if (data.node.children.length === 1 && $scope.jstreeWidget.jstree(true).get_text(data.node.children[0]) === "Loading Columns...") {
+			expandColumns(event, data);
+		} else if (data.node.children.length === 1 && $scope.jstreeWidget.jstree(true).get_text(data.node.children[0]) === "Loading Indices...") {
+			expandIndices(event, data);
+		}
+	});
+
+	// $scope.jstreeWidget.on('select_node.jstree', function (event) {
+	// });
+
+	// $scope.jstreeWidget.on('close_node.jstree', function (event) {
+	// });
+
+	function getDatabases(setConfig = false) {
 		$http.get(databasesSvcUrl)
 			.then(function (data) {
 				$scope.databases = data.data;
@@ -33,7 +416,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 						$scope.selectedDatabase = $scope.databases[0];
 					}
 					if ($scope.selectedDatabase) {
-						messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
+						messageHub.postMessage('database.database.selection.changed', $scope.selectedDatabase);
 						$http.get(databasesSvcUrl + "/" + $scope.selectedDatabase).then(function (data) {
 							$scope.datasources = data.data;
 							if ($scope.datasources.length > 0) {
@@ -43,8 +426,8 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 									$scope.selectedDatasource = $scope.datasources[0];
 								}
 								if ($scope.selectedDatasource) {
-									messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
-									$scope.refreshDatabase();
+									messageHub.postMessage('database.datasource.selection.changed', $scope.selectedDatasource);
+									$scope.refreshDatabase(setConfig);
 								}
 							}
 						});
@@ -52,58 +435,56 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 				}
 			});
 	}
-	setTimeout(getDatabases, 500);
+	setTimeout(getDatabases, 500, true);
 
-	var expandColumns = function (evt, data) {
-		let parent = $('.database').jstree().get_node(data.node);
-		let tableParent = $('.database').jstree().get_node(data.node.parent);
-		let schemaParent = $('.database').jstree().get_node(tableParent.parent);
+	let expandColumns = function (evt, data) {
+		let parent = $scope.jstreeWidget.jstree(true).get_node(data.node);
+		let tableParent = $scope.jstreeWidget.jstree(true).get_node(data.node.parent);
+		let schemaParent = $scope.jstreeWidget.jstree(true).get_text(tableParent.parent);
 
-		$('.database').jstree("delete_node", $('.database').jstree().get_node(data.node.children[0]));
+		$scope.jstreeWidget.jstree("delete_node", $scope.jstreeWidget.jstree(true).get_node(data.node.children[0]));
 		let position = 'last';
 
 		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
-			+ '/' + schemaParent.text + '/' + tableParent.text + "?kind=" + tableParent.original.kind.toUpperCase())
+			+ '/' + schemaParent + '/' + tableParent.text + "?kind=" + tableParent.original.kind.toUpperCase())
 			.then(function (data) {
 				data.data.columns.forEach(function (column) {
-					let icon = "fa fa-th-large";
+					let icon = "sap-icon--grid";
 					if (column.key) {
-						icon = "fa fa-key";
+						icon = "sap-icon--key";
 					} else {
 						switch (column.type.toLowerCase()) {
+							case "character varying":
 							case "varchar":
 							case "nvarchar":
-								icon = "fa fa-sort-alpha-asc";
-								break;
 							case "char":
-								icon = "fa fa-font";
+								icon = "sap-icon--text";
 								break;
 							case "date":
-								icon = "fa fa-calendar";
+								icon = "sap-icon--calendar";
 								break;
 							case "datetime":
 							case "timestamp":
-								icon = "fa fa-clock-o";
+								icon = "sap-icon--date-time";
 								break;
+							case "bigint":
 							case "smallint":
 							case "tinyint":
 							case "integer":
-								icon = "fa fa-list-ol";
+								icon = "sap-icon--numbered-text";
 								break;
 							case "float":
 							case "double":
+							case "double precision":
 							case "decimal":
-								icon = "fa fa-percent"
-								break;
-							case "bigint":
-								icon = "fa fa-signal";
+								icon = "sap-icon--measuring-point"
 								break;
 							case "boolean":
-								icon = "fa fa-toggle-on";
+								icon = "sap-icon--sys-enter";
 								break;
 							case "clob":
 							case "blob":
-								icon = "fa fa-ellipsis-h";
+								icon = "sap-icon--rhombus-milestone";
 								break;
 						}
 					}
@@ -115,31 +496,109 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 						column: column,
 						icon: icon
 					};
-					let child = $('.database').jstree("create_node", parent, newNode, position, false, false);
+					$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
 				})
 			});
 	}
 
-	var expandIndices = function (evt, data) {
-		let parent = $('.database').jstree().get_node(data.node);
-		let tableParent = $('.database').jstree().get_node(data.node.parent);
-		let schemaParent = $('.database').jstree().get_node(tableParent.parent);
+	let expandIndices = function (evt, data) {
+		let parent = $scope.jstreeWidget.jstree(true).get_node(data.node);
+		let tableParent = $scope.jstreeWidget.jstree(true).get_node(data.node.parent);
+		let schemaParent = $scope.jstreeWidget.jstree(true).get_text(tableParent.parent);
 
-		$('.database').jstree("delete_node", $('.database').jstree().get_node(data.node.children[0]));
+		$scope.jstreeWidget.jstree("delete_node", $scope.jstreeWidget.jstree(true).get_node(data.node.children[0]));
 		let position = 'last';
 
 		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
-			+ '/' + schemaParent.text + '/' + tableParent.text)
+			+ '/' + schemaParent + '/' + tableParent.text)
 			.then(function (data) {
 				data.data.indices.forEach(function (index) {
 					let nodeText = index.name;
-					let newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + index.name, "icon": "fa fa-list-ul" };
-					let child = $('.database').jstree("create_node", parent, newNode, position, false, false);
+					let newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + index.name, "icon": "sap-icon--bullet-text" };
+					$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
 				})
 			});
 	}
 
-	$scope.refreshDatabase = function () {
+	// $scope.processData = function (data) {
+	// 	let children = [];
+	// 	let name = data.name;
+	// 	let type = (data.type) ? data.type.toLowerCase() : data.kind;
+	// 	if (data.kind == 'schema') {
+	// 		type = 'schema';
+	// 		let tablesChildren = data.tables.map(function (_table) {
+	// 			return $scope.processData(_table)
+	// 		});
+	// 		children = children.concat(tablesChildren);
+
+	// 		let proceduresChildren = data.procedures.map(function (_procedure) {
+	// 			return $scope.processData(_procedure)
+	// 		});
+	// 		children = children.concat(proceduresChildren);
+
+	// 		let functionsChildren = data.functions.map(function (_function) {
+	// 			return $scope.processData(_function)
+	// 		});
+	// 		children = children.concat(functionsChildren);
+	// 	} else if (data.kind == 'table' && (data.type === 'TABLE' || data.type === 'BASE TABLE')) { // table
+	// 		type = 'table';
+	// 		children = [
+	// 			{ text: "Columns", type: 'columns', children: true },
+	// 			{ text: "Indices", type: 'indices', children: true },
+	// 		];
+	// 	} else if (data.kind == 'table' && data.type === 'VIEW') { // tableView
+	// 		type = 'tableView';
+	// 		children = [
+	// 			{ text: "Columns", type: 'columns', children: true },
+	// 			{ text: "Indices", type: 'indices', children: true },
+	// 		];
+	// 	} else if (data.kind == 'table' && data.type !== 'TABLE' && data.type !== 'VIEW') { // tableLock
+	// 		type = 'tableLock';
+	// 		children = [
+	// 			{ text: "Columns", type: 'columns', children: true },
+	// 			{ text: "Indices", type: 'indices', children: true },
+	// 		];
+	// 	} else if (data.kind == 'procedure') {
+	// 		type = 'procedure';
+	// 		children = [
+	// 			{ text: "Columns", type: 'columns', children: true },
+	// 		];
+	// 	} else if (data.kind == 'function') {
+	// 		type = 'function';
+	// 		children = [
+	// 			{ text: "Columns", type: 'columns', children: true },
+	// 		];
+	// 	} else if (data.kind == 'column') {
+	// 		type = 'column';
+	// 		name += `[<i>${data.type}</i>(<i>${data.size}</i>)]`;
+	// 	}
+	// 	data.label = data.name; // ?
+	// 	return {
+	// 		text: name,
+	// 		children: children,
+	// 		type: type,
+	// 		kind: data.kind,
+	// 		'_file': data,
+	// 	}
+	// };
+
+	// $scope.refreshDatabase = function () {
+	// 	if ($scope.selectedDatabase && $scope.selectedDatasource) {
+	// 		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
+	// 			.then(function (data) {
+	// 				$scope.datasource = data.data;
+	// 				let schemas = $scope.datasource.schemas.map(function (schemas) {
+	// 					return $scope.processData(schemas);
+	// 				})
+	// 			}.bind(this));
+	// 	} else {
+	// 		$scope.treeData.length = 0;
+	// 		$scope.jstreeWidget.jstree(true).refresh();
+	// 	}
+	// };
+
+	$scope.refreshDatabase = function (setConfig = false) {
+		if (setConfig) $scope.jstreeWidget.jstree($scope.jstreeConfig);
 		if ($scope.selectedDatabase && $scope.selectedDatasource) {
 			$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
 				.then(function (data) {
@@ -148,317 +607,20 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 					let schemas = $scope.datasource.schemas.map(function (schemas) {
 						return build(schemas);
 					})
-					if ($scope.jstree) {
-						$('.database').jstree(true).settings.core.data = schemas;
-						$('.database').jstree(true).refresh();
-					} else {
-						$scope.jstree = $('.database').jstree({
-							"core": {
-								"data": schemas,
-								"themes": {
-									"name": "default",
-									"responsive": false,
-									"dots": false,
-									"icons": true,
-									"variant": "small",
-									"stripes": true
-								},
-								'check_callback': function (o, n, p, i, m) {
-									if (m && m.dnd && m.pos !== 'i') { return false; }
-									if (o === "move_node" || o === "copy_node") {
-										if (this.get_node(n).parent === this.get_node(p).id) { return false; }
-									}
-									return true;
-								}
-							},
-							'types': {
-								'default': {
-									'icon': "fa fa-file"
-								},
-								'folder': {
-									'icon': "fa fa-folder"
-								},
-								'file': {
-									'icon': "fa fa-file"
-								},
-								'project': {
-									'icon': "fa fa-folder"
-								}
-							},
-							'contextmenu': {
-								'items': function (node) {
-									let ctxmenu = {};
-
-									// Select contents
-									if (node.original.type === 'table'
-										|| node.original.type === 'base table'
-										|| node.original.type === 'view') {
-										ctxmenu.contents = {
-											"separator_before": false,
-											"label": "Show Contents",
-											"action": function (data) {
-												let tree = $.jstree.reference(data.reference);
-												let node = tree.get_node(data.reference);
-												let parentNodeName = tree.get_node(node.parent).text;
-												let sqlCommand = "SELECT * FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
-												messageHub.post({ data: sqlCommand }, 'database.sql.execute');
-											}.bind(this)
-										};
-
-										// Generate scripts
-										debugger
-										let tree = $('.database').jstree();
-										let columnsMaybe = tree.get_node(node.children[0]);
-										let internalMaybe = null;
-										if (columnsMaybe) {
-											internalMaybe = tree.get_node(columnsMaybe.children[0]);
-										}
-										// Select
-										if ((node.original.type === 'table' || node.original.type === 'base table' || node.original.type === 'view')
-											&& (internalMaybe !== null && internalMaybe.original !== "Loading Columns..." && internalMaybe.original !== "Loading Indices...")) {
-											ctxmenu.selectScript = {
-												"separator_before": true,
-												"label": "Select",
-												"action": function (data) {
-													let tree = $.jstree.reference(data.reference);
-													let node = tree.get_node(data.reference);
-													let parentNodeName = tree.get_node(node.parent).text;
-													let columns = tree.get_node(node.children[0]);
-													let sqlCommand = "SELECT ";
-													for (let i = 0; i < columns.children.length; i++) {
-														sqlCommand += tree.get_node(columns.children[i]).original.column.name;
-														sqlCommand += ", ";
-													}
-													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
-													sqlCommand += " FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
-													messageHub.post({ data: sqlCommand }, 'database.sql.script');
-													$('.database').jstree(true).refresh();
-
-												}.bind(this)
-											};
-										}
-
-										// Insert
-										if ((node.original.type === 'table' || node.original.type === 'base table')
-											&& (internalMaybe !== null && internalMaybe.original !== "Loading Columns..." && internalMaybe.original !== "Loading Indices...")) {
-											ctxmenu.insertScript = {
-												"separator_before": false,
-												"label": "Insert",
-												"action": function (data) {
-													let tree = $.jstree.reference(data.reference);
-													let node = tree.get_node(data.reference);
-													let parentNodeName = tree.get_node(node.parent).text;
-													let columns = tree.get_node(node.children[0]);
-													let sqlCommand = "INSERT INTO \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" (";
-													for (let i = 0; i < columns.children.length; i++) {
-														sqlCommand += tree.get_node(columns.children[i]).original.column.name;
-														sqlCommand += ", ";
-													}
-													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
-													sqlCommand += ") VALUES (";
-													for (let i = 0; i < columns.children.length; i++) {
-														sqlCommand += "'" + tree.get_node(columns.children[i]).original.column.type;
-														sqlCommand += "', ";
-													}
-													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
-													sqlCommand += ")";
-													messageHub.post({ data: sqlCommand }, 'database.sql.script');
-													$('.database').jstree(true).refresh();
-
-												}.bind(this)
-											};
-										}
-
-										// Update
-										if ((node.original.type === 'table' || node.original.type === 'base table')
-											&& (internalMaybe !== null && internalMaybe.original !== "Loading Columns..." && internalMaybe.original !== "Loading Indices...")) {
-											ctxmenu.updateScript = {
-												"separator_before": false,
-												"label": "Update",
-												"action": function (data) {
-													let tree = $.jstree.reference(data.reference);
-													let node = tree.get_node(data.reference);
-													let parentNodeName = tree.get_node(node.parent).text;
-													let columns = tree.get_node(node.children[0]);
-													let sqlCommand = "UPDATE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" SET ";
-													for (let i = 0; i < columns.children.length; i++) {
-														sqlCommand += tree.get_node(columns.children[i]).original.column.name +
-															" = '" + tree.get_node(columns.children[i]).original.column.type
-														sqlCommand += "', ";
-													}
-													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
-													sqlCommand += " WHERE ";
-													for (let i = 0; i < columns.children.length; i++) {
-														sqlCommand += tree.get_node(columns.children[i]).original.column.name +
-															" = '" + tree.get_node(columns.children[i]).original.column.type
-														sqlCommand += "' AND ";
-													}
-													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 5);
-													messageHub.post({ data: sqlCommand }, 'database.sql.script');
-													$('.database').jstree(true).refresh();
-
-												}.bind(this)
-											};
-										}
-
-										// Delete
-										if ((node.original.type === 'table' || node.original.type === 'base table')
-											&& (internalMaybe !== null && internalMaybe.original !== "Loading Columns..." && internalMaybe.original !== "Loading Indices...")) {
-											ctxmenu.deleteScript = {
-												"separator_before": false,
-												"label": "Delete",
-												"action": function (data) {
-													let tree = $.jstree.reference(data.reference);
-													let node = tree.get_node(data.reference);
-													let parentNodeName = tree.get_node(node.parent).text;
-													let columns = tree.get_node(node.children[0]);
-													let sqlCommand = "DELETE FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
-													sqlCommand += " WHERE ";
-													for (let i = 0; i < columns.children.length; i++) {
-														sqlCommand += tree.get_node(columns.children[i]).original.column.name +
-															" = '" + tree.get_node(columns.children[i]).original.column.type
-														sqlCommand += "' AND ";
-													}
-													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 5);
-													messageHub.post({ data: sqlCommand }, 'database.sql.script');
-													$('.database').jstree(true).refresh();
-
-												}.bind(this)
-											};
-										}
-
-										// Drop table
-										if (node.original.type === 'table' || node.original.type === 'base table') {
-											ctxmenu.dropScript = {
-												"separator_before": false,
-												"label": "Drop",
-												"action": function (data) {
-													let tree = $.jstree.reference(data.reference);
-													let node = tree.get_node(data.reference);
-													let parentNodeName = tree.get_node(node.parent).text;
-													let sqlCommand = "DROP TABLE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
-													messageHub.post({ data: sqlCommand }, 'database.sql.script');
-												}.bind(this)
-											};
-										}
-										// Drop view
-										if (node.original.type === 'view') {
-											ctxmenu.dropScript = {
-												"separator_before": false,
-												"label": "Drop",
-												"action": function (data) {
-													let tree = $.jstree.reference(data.reference);
-													let node = tree.get_node(data.reference);
-													let parentNodeName = tree.get_node(node.parent).text;
-													let sqlCommand = "DROP VIEW \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
-													messageHub.post({ data: sqlCommand }, 'database.sql.script');
-												}.bind(this)
-											};
-										}
-
-
-										ctxmenu.exportData = {
-											"separator_before": true,
-											"label": "Export Data",
-											"action": function (data) {
-												let tree = $.jstree.reference(data.reference);
-												let node = tree.get_node(data.reference);
-												let parentNodeName = tree.get_node(node.parent).text;
-												let sqlCommand = parentNodeName + "." + node.original.text;
-												messageHub.post({ data: sqlCommand }, 'database.data.export.artifact');
-											}.bind(this)
-										};
-										ctxmenu.exportMetadata = {
-											"separator_before": false,
-											"label": "Export Metadata",
-											"action": function (data) {
-												let tree = $.jstree.reference(data.reference);
-												let node = tree.get_node(data.reference);
-												let parentNodeName = tree.get_node(node.parent).text;
-												let sqlCommand = parentNodeName + "." + node.original.text;
-												messageHub.post({ data: sqlCommand }, 'database.metadata.export.artifact');
-											}.bind(this)
-										};
-
-									}
-
-									// Procedure related actions
-									if (node.original.kind === 'procedure') {
-										ctxmenu.dropProcedure = {
-											"separator_before": false,
-											"label": "Drop",
-											"action": function (data) {
-												let tree = $.jstree.reference(data.reference);
-												let node = tree.get_node(data.reference);
-												let sqlCommand = "DROP PROCEDURE \"" + node.original.text + "\"";
-												messageHub.post({ data: sqlCommand }, 'database.sql.script');
-											}.bind(this)
-										};
-									}
-
-									// Schema related actions
-									if (node.original.kind === 'schema') {
-										ctxmenu.exportData = {
-											"separator_before": false,
-											"label": "Export Data",
-											"action": function (data) {
-												let tree = $.jstree.reference(data.reference);
-												let node = tree.get_node(data.reference);
-												let sqlCommand = node.original.text;
-												messageHub.post({ data: sqlCommand }, 'database.data.export.schema');
-											}.bind(this)
-										};
-										ctxmenu.exportMetadata = {
-											"separator_before": false,
-											"label": "Export Metadata",
-											"action": function (data) {
-												let tree = $.jstree.reference(data.reference);
-												let node = tree.get_node(data.reference);
-												let sqlCommand = node.original.text;
-												messageHub.post({ data: sqlCommand }, 'database.metadata.export.schema');
-											}.bind(this)
-										};
-									}
-									return ctxmenu;
-								}
-							},
-							"plugins": ['state', 'dnd', 'types', 'contextmenu', 'unique']
-						})
-							.on('select_node.jstree', function (e, data) {
-								//
-							})
-							.on('dblclick.jstree', function (evt, node) {
-								let data = $('.database').jstree().get_selected(true);
-								let kind = $('.database').jstree().get_node(evt.target).original.kind;
-								// if(['table'].indexOf(type)<0)
-								// 								messageHub.fireFileOpen(data[0].original._file);
-							})
-							.on('open_node.jstree', function (evt, data) {
-								if (data.node.children.length === 1 && $('.database').jstree().get_node(data.node.children[0]).original === "Loading Columns...") {
-									expandColumns(evt, data);
-								} else if (data.node.children.length === 1 && $('.database').jstree().get_node(data.node.children[0]).original === "Loading Indices...") {
-									expandIndices(evt, data);
-								}
-
-								//data.instance.set_icon(data.node, 'fa fa-folder-open-o');
-							})
-							.on('close_node.jstree', function (evt, data) {
-								//data.instance.set_icon(data.node, 'fa fa-folder-o');
-							});
-					}
+					$scope.jstreeWidget.jstree(true).settings.core.data = schemas;
+					$scope.jstreeWidget.jstree(true).refresh();
 				}.bind(this));
 		} else {
-			$('.database').jstree(true).settings.core.data = [];
-			$('.database').jstree(true).refresh();
+			$scope.jstreeWidget.jstree(true).settings.core.data = [];
+			$scope.jstreeWidget.jstree(true).refresh();
 		}
 	};
 
 	let build = function (f) {
 		let children = [];
-		let icon = 'fa fa-th-large';
+		let icon = 'sap-icon--grid';
 		let name = f.name;
 		if (f.kind == 'schema') {
-
 			let tablesChildren = f.tables.map(function (_table) {
 				return build(_table)
 			});
@@ -474,50 +636,38 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 			});
 			children = children.concat(functionsChildren);
 
-			icon = 'fa fa-database';
+			icon = 'sap-icon--database';
 		} else if (f.kind == 'table' && (f.type === 'TABLE' || f.type === 'BASE TABLE')) {
-			//children = ['Loading...'];
 			children = [
-				{ text: "Columns", "icon": "fa fa-columns", children: ['Loading Columns...'] },
-				{ text: "Indices", "icon": "fa fa-bars", children: ['Loading Indices...'] },
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
+				{ text: "Indices", "icon": "sap-icon--table-row", children: [$scope.spinnerIndices] },
 			];
-
-			icon = 'fa fa-table';
+			icon = 'sap-icon--table-view';
 		} else if (f.kind == 'table' && f.type === 'VIEW') {
-			//children = ['Loading...'];
 			children = [
-				{ text: "Columns", "icon": "fa fa-columns", children: ['Loading Columns...'] },
-				{ text: "Indices", "icon": "fa fa-bars", children: ['Loading Indices...'] },
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
+				{ text: "Indices", "icon": "sap-icon--table-row", children: [$scope.spinnerIndices] },
 			];
-
-			icon = 'fa fa-th';
+			icon = 'sap-icon--grid';
 		} else if (f.kind == 'table' && f.type !== 'TABLE' && f.type !== 'VIEW') {
-			//children = ['Loading...'];
 			children = [
-				{ text: "Columns", "icon": "fa fa-columns", children: ['Loading Columns...'] },
-				{ text: "Indices", "icon": "fa fa-bars", children: ['Loading Indices...'] },
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
+				{ text: "Indices", "icon": "sap-icon--table-row", children: [$scope.spinnerIndices] },
 			];
-
-			icon = 'fa fa-lock';
+			icon = 'sap-icon--locked';
 		} else if (f.kind == 'procedure') { // && f.type === 'XXX'
-			//children = ['Loading...'];
 			children = [
-				{ text: "Columns", "icon": "fa fa-columns", children: ['Loading Columns...'] },
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
 			];
-
-			icon = 'fa fa-cog';
+			icon = 'sap-icon--workflow-tasks';
 		} else if (f.kind == 'function') { // && f.type === 'XXX'
-			//children = ['Loading...'];
 			children = [
-				{ text: "Columns", "icon": "fa fa-columns", children: ['Loading Columns...'] },
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
 			];
-
-			icon = 'fa fa-calculator';
+			icon = 'sap-icon--settings';
 		} else if (f.kind == 'column') {
-			icon = 'fa fa-th-large';
-			name += ' [<i>' + f.type + '</i>';
-			name += ' <i>(' + f.size + ')</i>';
-			name += ']';
+			icon = 'sap-icon--grid';
+			name += ` [<i>${data.type}</i>(<i>${data.size}</i>)]`;
 		}
 		f.label = f.name;
 		return {
@@ -530,15 +680,26 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 		}
 	}
 
-	$scope.databaseChanged = function (evt) {
+	$scope.isSelectedDatabase = function (name) {
+		if ($scope.selectedDatabase === name) return true;
+		return false;
+	};
+
+	$scope.isSelectedDatasource = function (name) {
+		if ($scope.selectedDatasource === name) return true;
+		return false;
+	};
+
+	$scope.switchDatabase = function (name) {
+		$scope.selectedDatabase = name;
 		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase)
 			.then(function (data) {
 				$scope.datasources = data.data;
 				if ($scope.datasources[0]) {
 					$scope.selectedDatasource = $scope.datasources[0];
-					messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
-					messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
-					$scope.datasourceChanged();
+					messageHub.postMessage('database.database.selection.changed', $scope.selectedDatabase);
+					messageHub.postMessage('database.datasource.selection.changed', $scope.selectedDatasource);
+					$scope.switchDatasource();
 				} else {
 					$scope.selectedDatasource = undefined;
 				}
@@ -546,14 +707,15 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 			});
 	};
 
-	$scope.datasourceChanged = function (evt) {
+	$scope.switchDatasource = function (name) {
+		if (name) $scope.selectedDatasource = name;
 		localStorage.setItem('DIRIGIBLE.database', JSON.stringify({ "type": $scope.selectedDatabase, "name": $scope.selectedDatasource }));
-		messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
+		messageHub.postMessage('database.datasource.selection.changed', $scope.selectedDatasource);
 		$scope.refreshDatabase();
 	};
 
-	$scope.runSQL = function (evt) {
-		messageHub.post({}, 'database.sql.run');
+	$scope.runSQL = function () {
+		messageHub.postMessage('database.sql.run', {});
 	};
 
 });

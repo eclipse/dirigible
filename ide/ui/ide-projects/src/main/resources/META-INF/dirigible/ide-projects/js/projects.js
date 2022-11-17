@@ -323,6 +323,12 @@ projectsView.controller('ProjectsViewController', [
                 }
                 if (id) {
                     let node = $scope.jstreeWidget.jstree(true).get_node(id);
+                    if (!node.state.selected) {
+                        $scope.jstreeWidget.jstree(true).deselect_all();
+                        $scope.jstreeWidget.jstree(true).select_node(node, false, true);
+                    }
+                    let nodes = $scope.jstreeWidget.jstree(true).get_selected(false);
+                    if (nodes.length === 1) nodes.length = 0;
                     let newSubmenu = {
                         id: "new",
                         label: "New",
@@ -381,10 +387,10 @@ projectsView.controller('ProjectsViewController', [
                     };
                     let deleteObj = {
                         id: "delete",
-                        label: "Delete",
+                        label: (nodes.length) ? `Delete ${nodes.length} items` : "Delete",
                         shortcut: "Del",
                         icon: "sap-icon--delete",
-                        data: node,
+                        data: (nodes.length) ? nodes : node,
                     };
                     let publishObj = {
                         id: "publish",
@@ -659,24 +665,24 @@ projectsView.controller('ProjectsViewController', [
             messageHub.triggerEvent('editor.file.save.all', true);
         };
 
-        $scope.deleteFileFolder = function (workspace, path, callback) {
+        $scope.deleteFileFolder = function (workspace, path, nodeId) {
             workspaceApi.remove(workspace + path).then(function (response) {
                 if (response.status !== 204) {
                     messageHub.setStatusError(`Unable to delete '${path}'.`);
                 } else {
                     messageHub.setStatusMessage(`Deleted '${path}'.`);
-                    if (callback) callback();
+                    $scope.jstreeWidget.jstree(true).delete_node(nodeId);
                 }
             });
         };
 
-        $scope.deleteProject = function (workspace, project, callback) {
+        $scope.deleteProject = function (workspace, project, nodeId) {
             workspaceApi.deleteProject(workspace, project).then(function (response) {
                 if (response.status !== 204) {
                     messageHub.setStatusError(`Unable to delete '${project}'.`);
                 } else {
                     messageHub.setStatusMessage(`Deleted '${project}'.`);
-                    if (callback) callback();
+                    $scope.jstreeWidget.jstree(true).delete_node(nodeId);
                 }
             });
         };
@@ -1573,8 +1579,9 @@ projectsView.controller('ProjectsViewController', [
                         "Renameing..."
                     );
                 } else if (msg.data.itemId === 'delete') {
+                    let isMultiple = Array.isArray(msg.data.data);
                     messageHub.showDialogAsync(
-                        `Delete '${msg.data.data.text}'?`,
+                        (isMultiple) ? `Delete ${msg.data.data.length} items?` : `Delete '${msg.data.data.text}'?`,
                         'This action cannot be undone. It is recommended that you unpublish and delete.',
                         [{
                             id: 'b1',
@@ -1592,23 +1599,35 @@ projectsView.controller('ProjectsViewController', [
                             label: 'Cancel',
                         }],
                     ).then(function (dialogResponse) {
-                        function deleteNode() {
-                            $scope.jstreeWidget.jstree(true).delete_node(msg.data.data);
+                        function deleteNode(node) {
+                            if (node.type === 'project') {
+                                $scope.deleteProject(node.data.workspace, node.text, node.id);
+                            } else {
+                                $scope.deleteFileFolder(node.data.workspace, node.data.path, node.id);
+                            }
                         };
                         if (dialogResponse.data === 'b1') {
-                            if (msg.data.data.type === 'project') {
-                                $scope.deleteProject(msg.data.data.data.workspace, msg.data.data.text, deleteNode);
+                            if (isMultiple) {
+                                for (let i = 0; i < msg.data.data.length; i++) {
+                                    let node = $scope.jstreeWidget.jstree(true).get_node(msg.data.data[i]);
+                                    deleteNode(node);
+                                }
                             } else {
-                                $scope.deleteFileFolder(msg.data.data.data.workspace, msg.data.data.data.path, deleteNode);
+                                deleteNode(msg.data.data);
                             }
                         } else if (dialogResponse.data === 'b2') {
-                            $scope.unpublish(msg.data.data.data.path, msg.data.data.data.workspace, function () {
-                                if (msg.data.data.type === 'project') {
-                                    $scope.deleteProject(msg.data.data.data.workspace, msg.data.data.text, deleteNode);
-                                } else {
-                                    $scope.deleteFileFolder(msg.data.data.data.workspace, msg.data.data.data.path, deleteNode);
+                            if (isMultiple) {
+                                for (let i = 0; i < msg.data.data.length; i++) {
+                                    let node = $scope.jstreeWidget.jstree(true).get_node(msg.data.data[i]);
+                                    $scope.unpublish(node.data.path, node.data.workspace, function () {
+                                        deleteNode(node);
+                                    });
                                 }
-                            });
+                            } else {
+                                $scope.unpublish(msg.data.data.data.path, msg.data.data.data.workspace, function () {
+                                    deleteNode(msg.data.data);
+                                });
+                            }
                         }
                     });
                 } else if (msg.data.itemId === 'cut') {

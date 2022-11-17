@@ -1,6 +1,6 @@
 :root {
   --jstree-fiori-animation: 0.2s;
-  --jstree-spinner-animation: 0.8s;
+  --jstree-spinner-animation: 1s;
 }
 /* jsTree list mode */
 .jstree-list-mode .jstree-leaf > .jstree-ocl.jstree-icon:empty {
@@ -36,13 +36,13 @@
   background: var(--sapList_AlternatingBackground, #f2f2f2);
   border-bottom: var(--sapList_BorderWidth, 0.0625rem) solid transparent;
 }
-.jstree-loading {
+.jstree-loading:not([aria-busy="true"]) {
   color: var(--sapList_TextColor, #32363a);
 }
 li.jstree-hidden {
   display: none;
 }
-li.jstree-loading {
+li.jstree-loading:not([aria-busy="true"]) {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -57,12 +57,15 @@ li.jstree-loading {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-li.jstree-loading .jstree-anchor {
+li.jstree-loading:not([aria-busy="true"]) .jstree-anchor {
   padding: 0;
+  line-height: 1rem;
+  height: 1rem;
+  margin-top: 1rem;
 }
-li.jstree-loading .jstree-icon:empty {
-  width: 4rem;
-  height: 3em;
+li.jstree-loading:not([aria-busy="true"]) .jstree-icon:empty {
+  width: 6rem;
+  height: 2rem;
 }
 .jstree-node,
 .jstree-children,
@@ -444,22 +447,22 @@ li.jstree-loading .jstree-icon:empty {
   line-height: 2.75rem;
 }
 .jstree-fiori .jstree-node[spinner] .jstree-themeicon.jstree-icon:empty {
-  width: 0.875rem;
-  height: 0.875rem;
+  width: 1rem;
+  height: 1rem;
   line-height: 2.75rem;
   clear: both;
-  margin: 0.875rem 0.625rem;
+  margin: 0.875rem 0.5rem;
   box-sizing: border-box;
-  border: 0.188rem transparent solid;
-  border-top: 0.188rem var(--sapList_TextColor, #32363a) solid;
-  border-right: 0.188rem var(--sapList_TextColor, #32363a) solid;
+  border: 0.125rem transparent solid;
+  border-top: 0.125rem var(--sapList_TextColor, #32363a) solid;
+  border-right: 0.125rem var(--sapList_TextColor, #32363a) solid;
   border-radius: 50%;
   -webkit-animation: jstreeSpinnerRotate var(--jstree-spinner-animation) infinite linear;
   animation: jstreeSpinnerRotate var(--jstree-spinner-animation) infinite linear;
 }
 .jstree-fiori-compact .jstree-node[spinner] .jstree-themeicon.jstree-icon:empty {
   line-height: 2rem;
-  margin: 0.5rem 0.625rem;
+  margin: 0.5rem 0.5rem;
 }
 .jstree-fiori-compact .jstree-icon:empty {
   width: 2rem;
@@ -498,6 +501,27 @@ li.jstree-loading .jstree-icon:empty {
   background-color: var(--sapButton_IconColor, #0854a0);
   -webkit-mask-image: var(--jstree-arrow-down, url("../fiori/arrow-down.svg"));
   mask-image: var(--jstree-arrow-down, url("../fiori/arrow-down.svg"));
+}
+.jstree-fiori .jstree-loading[aria-busy="true"] > .jstree-ocl {
+  width: 1rem;
+  height: 1rem;
+  line-height: 2.75rem;
+  clear: both;
+  margin: 0.875rem 0.5rem;
+  box-sizing: border-box;
+  border: 0.125rem transparent solid;
+  border-top: 0.125rem var(--sapList_TextColor, #32363a) solid;
+  border-right: 0.125rem var(--sapList_TextColor, #32363a) solid;
+  border-radius: 50%;
+  -webkit-animation: jstreeSpinnerRotate var(--jstree-spinner-animation) infinite linear;
+  animation: jstreeSpinnerRotate var(--jstree-spinner-animation) infinite linear;
+  -webkit-mask-image: none;
+  mask-image: none;
+  background-color: transparent;
+}
+.jstree-fiori-compact .jstree-loading[aria-busy="true"] > .jstree-ocl {
+  line-height: 2rem;
+  margin: 0.5rem 0.5rem;
 }
 .jstree-fiori-compact .jstree-open > .jstree-ocl {
   -webkit-mask-size: 0.469rem;
@@ -607,9 +631,9 @@ li.jstree-loading .jstree-icon:empty {
   color: var(--sapList_TextColor, #32363a);
   font-size: 1rem;
 }
-.jstree-fiori > .jstree-container-ul .jstree-loading > .jstree-ocl {
-  -webkit-mask-size: 4rem;
-  mask-size: 4rem;
+.jstree-fiori > .jstree-container-ul .jstree-loading:not([aria-busy="true"]) > .jstree-ocl {
+  -webkit-mask-size: 6rem;
+  mask-size: 6rem;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
@@ -679,6 +703,9 @@ li.jstree-loading .jstree-icon:empty {
   margin-left: 0;
   margin-right: 0;
 }
+.jstree-fiori > .jstree-container-ul > .jstree-node a[isitalic="true"] {
+  font-style: italic;
+}
 #jstree-dnd.jstree-fiori {
   line-height: 2rem;
   padding: 0 0.25rem;
@@ -709,7 +736,7 @@ li.jstree-loading .jstree-icon:empty {
   -webkit-mask-image: var(--jstree-arrow-down, url("../fiori/arrow-down.svg"));
   mask-image: var(--jstree-arrow-down, url("../fiori/arrow-down.svg"));
 }
-.jstree-fiori > .jstree-no-dots .jstree-closed > .jstree-ocl {
+.jstree-fiori > .jstree-no-dots .jstree-closed:not([aria-busy="true"]) > .jstree-ocl {
   -webkit-mask-size: 0.469rem;
   mask-size: 0.469rem;
   -webkit-mask-repeat: no-repeat;
