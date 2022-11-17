@@ -1769,23 +1769,36 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
                 }
 
+                const getParentGroupRowIndex = function (index) {
+                    if (index >= 0) {
+                        let nestingLevel = rows[index].nestingLevel;
+                        if (nestingLevel > 1) {
+                            for (let i = index - 1; i >= 0; i--) {
+                                let row = rows[i];
+
+                                if (row.groupRow && row.nestingLevel < nestingLevel)
+                                    return i;
+                            }
+                        }
+                    }
+
+                    return -1;
+                }
+
                 this.shouldHideRow = function (rowElement) {
                     let index = findRowIndex(rowElement);
                     if (index >= 0) {
-                        let currentRow = rows[index];
+                        let parentRowIndex = index;
 
-                        if (currentRow.nestingLevel === 1)
-                            return false;
+                        while (parentRowIndex >= 0) {
+                            parentRowIndex = getParentGroupRowIndex(parentRowIndex);
 
-                        for (let i = index - 1; i >= 0; i--) {
-                            let row = rows[i];
+                            if (parentRowIndex >= 0) {
+                                let parentRow = rows[parentRowIndex];
 
-                            if (row.groupRow && row.nestingLevel < currentRow.nestingLevel && !row.expanded) {
-                                return true;
+                                if (!parentRow.expanded)
+                                    return true;
                             }
-
-                            if (row.nestingLevel === 1)
-                                break;
                         }
                     }
 
