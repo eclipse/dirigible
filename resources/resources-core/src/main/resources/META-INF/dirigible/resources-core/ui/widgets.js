@@ -26,9 +26,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         let backdrop = $document[0].createElement('div');
         backdrop.classList.add('dg-backdrop');
         $document[0].body.appendChild(backdrop);
-        backdrop.addEventListener('contextmenu', function (event) {
+        function contextmenuEvent(event) {
             event.stopPropagation();
-        });
+        }
+        backdrop.addEventListener('contextmenu', contextmenuEvent);
 
         let activate = function () {
             $document[0].body.classList.add('dg-backdrop--active');
@@ -36,10 +37,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         let deactivate = function () {
             $document[0].body.classList.remove('dg-backdrop--active');
         };
+        let cleanUp = function () {
+            backdrop.removeEventListener('contextmenu', contextmenuEvent);
+        }
         return {
             activate: activate,
             deactivate: deactivate,
             element: backdrop,
+            cleanUp: cleanUp,
         };
     }).factory('classNames', function () {
         function classNames(...args) {
@@ -631,6 +636,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdFormInputMessageGroup', ['uuid', function (uuid) {
         /**
          * dgInactive: Boolean - If the message popover should not be shown.
+         * messageFixed: Boolean - Message css position will be fixed, allowing for use in dialogs.
          */
         return {
             restrict: 'E',
@@ -640,6 +646,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             scope: {
                 dgInactive: '@',
+                messageFixed: '@',
             },
             replace: true,
             link: {
@@ -647,10 +654,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     scope.popoverId = `fimg${uuid.generate()}`;
                 },
                 post: function (scope, element) {
-                    element.on('focusout', function () {
+                    function focusoutEvent() {
                         if (scope.dgInactive !== "true")
                             scope.$apply(scope.togglePopover());
-                    });
+                    }
+                    element.on('focusout', focusoutEvent);
                     scope.$watch('dgInactive', function () {
                         if (scope.dgInactive === "true") {
                             if (!scope.popoverControl) {
@@ -661,6 +669,18 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             scope.popoverBody.setAttribute('aria-hidden', 'true');
                         }
                     });
+                    scope.getStyle = function () {
+                        if (scope.messageFixed === 'true') {
+                            let pos = element[0].getBoundingClientRect();
+                            return {
+                                transition: 'none',
+                                transform: 'none',
+                                position: 'fixed',
+                                top: `${pos.bottom}px`,
+                                left: `${pos.left}px`,
+                            };
+                        } else return {};
+                    };
                     scope.togglePopover = function () {
                         if (scope.dgInactive !== "true") {
                             if (!scope.popoverControl) {
@@ -676,11 +696,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             };
                         }
                     };
+                    function cleanUp() {
+                        element.off('focusout', focusoutEvent);
+                    }
+                    scope.$on('$destroy', cleanUp);
                 },
             },
             template: `<div class="fd-form-input-message-group fd-popover fd-popover--input-message-group">
                 <div class="fd-popover__control" aria-controls="{{ popoverId }}" aria-expanded="false" aria-haspopup="true" ng-click="togglePopover()" ng-transclude="control"></div>
-                <div class="fd-popover__body fd-popover__body--no-arrow" aria-hidden="true" id="{{ popoverId }}" ng-transclude="message"></div>
+                <div class="fd-popover__body fd-popover__body--no-arrow" aria-hidden="true" id="{{ popoverId }}" ng-style="getStyle()" ng-transclude="message"></div>
             </div>`,
         }
     }]).directive('fdFormMessage', [function () {
@@ -1013,17 +1037,18 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             scope.$apply(scope.hidePopover());
                         }
                     };
-                    element.on('focusout', function (e) {
+                    function focusoutEvent(e) {
                         if (e.relatedTarget && !element[0].contains(e.relatedTarget)) {
                             scope.$apply(scope.hidePopover);
                         }
-                    });
-
-                    element.on('pointerup', function (e) {
+                    }
+                    function pointerupEvent(e) {
                         if (e.originalEvent && e.originalEvent.isSubmenuItem) return;
                         else if (scope.popoverControl && e.target === scope.popoverControl) return;
                         else if (element[0].contains(e.target) && !isHidden) scope.hidePopover();
-                    });
+                    }
+                    element.on('focusout', focusoutEvent);
+                    element.on('pointerup', pointerupEvent);
 
                     scope.mainActionClicked = function () {
                         scope.callback();
@@ -1054,6 +1079,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             scope.hidePopover();
                         };
                     };
+                    function cleanUp() {
+                        element.off('focusout', focusoutEvent);
+                        element.off('pointerup', pointerupEvent);
+                        $window.removeEventListener('pointerup', scope.pointerHandler);
+                        backdrop.cleanUp();
+                    }
+                    scope.$on('$destroy', cleanUp);
                 },
             },
             template: `<div class="fd-button-split" ng-class="getSplitClasses()" role="group">
@@ -1099,17 +1131,19 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             scope.$apply(scope.hidePopover());
                         }
                     };
+                    function focusoutEvent(e) {
+                        if (e.relatedTarget && !element[0].contains(e.relatedTarget)) {
+                            scope.$apply(scope.hidePopover);
+                        }
+                    }
+                    function pointerupEvent(e) {
+                        if (e.originalEvent && e.originalEvent.isSubmenuItem) return;
+                        else if (scope.popoverControl && e.target === scope.popoverControl) return;
+                        else if (element[0].contains(e.target) && !isHidden) scope.hidePopover();
+                    }
                     if (scope.closeInnerclick) {
-                        element.on('focusout', function (e) {
-                            if (e.relatedTarget && !element[0].contains(e.relatedTarget)) {
-                                scope.$apply(scope.hidePopover);
-                            }
-                        });
-                        element.on('pointerup', function (e) {
-                            if (e.originalEvent && e.originalEvent.isSubmenuItem) return;
-                            else if (scope.popoverControl && e.target === scope.popoverControl) return;
-                            else if (element[0].contains(e.target) && !isHidden) scope.hidePopover();
-                        });
+                        element.on('focusout', focusoutEvent);
+                        element.on('pointerup', pointerupEvent);
                     }
 
                     scope.hidePopover = function () {
@@ -1137,6 +1171,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             scope.hidePopover();
                         };
                     };
+                    function cleanUp() {
+                        element.off('focusout', focusoutEvent);
+                        element.off('pointerup', pointerupEvent);
+                        $window.removeEventListener('pointerup', scope.pointerHandler);
+                        backdrop.cleanUp();
+                    }
+                    scope.$on('$destroy', cleanUp);
                 }
             },
             template: `<div class="fd-popover" ng-class="{'right': 'fd-popover--right'}[dgAlign]">
@@ -1150,14 +1191,19 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             link: function (scope, element) {
+                function clickEvent() {
+                    scope.$parent.togglePopover();
+                }
                 if (scope.$parent && scope.$parent.popoverId) {
                     scope.control = element[0].firstElementChild;
                     scope.control.setAttribute('aria-controls', scope.$parent.popoverId);
                     scope.control.setAttribute('aria-expanded', 'false');
                     scope.control.setAttribute('aria-haspopup', 'true');
-                    scope.control.addEventListener("click", function () {
-                        scope.$parent.togglePopover();
-                    });
+                    scope.control.addEventListener("click", clickEvent);
+                    function cleanUp() {
+                        scope.control.removeEventListener('click', clickEvent);
+                    }
+                    scope.$on('$destroy', cleanUp);
                 }
             },
             template: '<div class="fd-popover__control" ng-transclude></div>',
@@ -1194,9 +1240,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         scope.defaultHeight = $window.innerHeight - rect.top;
                     };
                     scope.setDefault();
-                    $window.addEventListener('resize', function () {
+                    function resizeEvent() {
                         scope.$apply(function () { scope.setDefault() });
-                    });
+                    }
+                    $window.addEventListener('resize', resizeEvent);
                     if (scope.$parent && scope.$parent.popoverId)
                         scope.popoverId = scope.$parent.popoverId;
                     else if (scope.$parent && scope.$parent.$parent && scope.$parent.$parent.popoverId)
@@ -1208,6 +1255,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (scope.dropdownFill === 'true') classList.push('fd-popover__body--dropdown-fill');
                         return classList.join(' ');
                     };
+                    function cleanUp() {
+                        $window.removeEventListener('resize', resizeEvent);
+                    }
+                    scope.$on('$destroy', cleanUp);
                 },
             },
             template: `<div id="{{ popoverId }}" class="fd-popover__body" ng-class="getClasses()" aria-hidden="true">
@@ -1254,10 +1305,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     scope.defaultHeight = $window.innerHeight - rect.top;
                 },
                 post: function (scope, element) {
-                    $window.addEventListener('resize', function () {
+                    function resizeEvent() {
                         let rect = element[0].getBoundingClientRect();
                         scope.defaultHeight = $window.innerHeight - rect.top;
-                    });
+                    }
+                    $window.addEventListener('resize', resizeEvent);
                     scope.backdropClickEvent = function () {
                         scope.$apply(function () { scope.show = false; });
                     };
@@ -1290,6 +1342,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     scope.getListClasses = () => classNames('fd-menu__list', {
                         'fd-menu__list--no-shadow': scope.noShadow === true
                     });
+                    function cleanUp() {
+                        $window.removeEventListener('resize', resizeEvent);
+                        backdrop.element.removeEventListener('click', scope.backdropClickEvent);
+                        backdrop.element.removeEventListener('contextmenu', scope.backdropRightClickEvent);
+                        backdrop.cleanUp();
+                    }
+                    scope.$on('$destroy', cleanUp);
                 },
             },
             template: `<nav class="fd-menu" ng-show="show" ng-class="getMenuClasses()"><ul ng-class="getListClasses()" role="menu" ng-transclude></ul></nav>`
@@ -1358,18 +1417,19 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 },
                 post: function (scope, element) {
                     let toHide = 0;
-                    $window.addEventListener('resize', function () {
+                    function resizeEvent() {
                         scope.$apply(function () {
                             scope.defaultHeight = $window.innerHeight;
                             scope.setPosition();
                         });
-                    });
+                    }
+                    $window.addEventListener('resize', resizeEvent);
                     scope.pointerHandler = function (e) {
                         if (!element[0].contains(e.target)) {
                             scope.$apply(scope.hideSubmenu());
                         }
                     };
-                    element.on('pointerup', function (e) {
+                    function pointerupEvent(e) {
                         let listItem;
                         let list;
                         if (e.target.tagName !== "LI") {
@@ -1387,7 +1447,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             if (e.originalEvent.pointerType !== 'mouse')
                                 scope.$apply(scope.show());
                         }
-                    });
+                    }
+                    element.on('pointerup', pointerupEvent);
                     scope.getClasses = function () {
                         let classList = [];
                         if (scope.isExpanded === 'true') classList.push('is-expanded');
@@ -1436,6 +1497,12 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             }
                         }
                     };
+                    function cleanUp() {
+                        element.off('pointerup', pointerupEvent);
+                        $window.removeEventListener('resize', resizeEvent);
+                        $window.removeEventListener('pointerup', scope.pointerHandler);
+                    }
+                    scope.$on('$destroy', cleanUp);
                 }
             },
             template: `<li class="fd-menu__item" role="presentation" ng-mouseenter="show()" ng-mouseleave="hide($event)">
@@ -2511,7 +2578,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * dgPlaceholder: String - Short hint displayed when no item is selected yet.
          * dropdownFill: Boolean - Adjusts the popover body that wraps the dropdown to match the text length
          * labelId: String - The id of the label element if present (Necessary for aria-labelledby)
-         * dropdownFixed: Boolean - Dropdown css position will be fixed, allowing for use in dialogs.
+         * dropdownFixed: Boolean - Dropdown css position will be fixed, allowing for use in dialogs. Works for the message popup as well.
          * placement: String - Placement of the dropdown. It can be any of 'top', 'bottom', 'right', and then can be suffixed with '-start' or '-end'. Deafult is 'bottom-start'. Incompatible with dropdownFixed.
          */
         return {
@@ -2704,12 +2771,16 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         };
                     } else return {};
                 };
-
-                $element.on('focusout', function (e) {
+                function focusoutEvent(e) {
                     if (!e.relatedTarget || !$element[0].contains(e.relatedTarget)) {
                         $scope.$apply($scope.closeDropdown);
                     }
-                });
+                }
+                $element.on('focusout', focusoutEvent);
+                function cleanUp() {
+                    $element.off('focusout', focusoutEvent);
+                }
+                $scope.$on('$destroy', cleanUp);
             }],
             template: `<div class="fd-popover">
                 <div class="fd-popover__control" aria-disabled="{{ !!dgDisabled }}">
@@ -2726,7 +2797,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     <div ng-if="message" aria-live="assertive" ng-class="getListMessageClasses()" role="alert">{{ message }}</div>
                     <ul ng-class="getListClasses()" aria-activedescendant="{{ getSelectedItemId() }}" aria-labelledby="{{ labelId }}" role="listbox" ng-transclude></ul>
                 </div>
-                <div ng-if="message" class="fd-popover__body fd-popover__body--no-arrow" aria-hidden="{{ bodyExpanded }}">
+                <div ng-if="message" class="fd-popover__body fd-popover__body--no-arrow" aria-hidden="{{ bodyExpanded }}" ng-style="getStyle()">
                     <span ng-class="getFormMessageClasses()">{{ message }}</span>
                 </div>
             </div>`
@@ -3405,15 +3476,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
                     scope.removeItemFromSelection(item);
                 }
-
-                element.on('focusout', function (e) {
+                function focusoutEvent(e) {
                     if (!scope.bodyExpanded)
                         return;
 
                     if (!e.relatedTarget || !element[0].contains(e.relatedTarget)) {
                         scope.$apply(scope.closeDropdown);
                     }
-                });
+                }
+                element.on('focusout', focusoutEvent);
 
                 scope.$watchCollection('dropdownItems', function (items) {
                     if (items === undefined || items === null)
@@ -3427,10 +3498,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     scope.defaultHeight = $window.innerHeight - rect.bottom;
                 };
                 scope.setDefault();
-
-                $window.addEventListener('resize', function () {
+                function resizeEvent() {
                     scope.$apply(function () { scope.setDefault() });
-                });
+                }
+                $window.addEventListener('resize', resizeEvent);
+                function cleanUp() {
+                    element.off('focusout', focusoutEvent);
+                    $window.removeEventListener('resize', resizeEvent);
+                }
+                scope.$on('$destroy', cleanUp);
             },
             template: `<div class="fd-popover" ng-keydown="onKeyDown($event)">
                 <div class="fd-popover__control" ng-attr-disabled="{{ isDisabled() }}" ng-attr-aria-disabled="{{isDisabled() }}" aria-expanded="{{ isBodyExpanded() }}" aria-haspopup="true" aria-controls="{{ bodyId }}">
