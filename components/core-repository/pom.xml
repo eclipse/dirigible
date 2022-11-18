@@ -20,11 +20,23 @@
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-api</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-commons-api</artifactId>
+				</exclusion>
+			</exclusions>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-local</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-commons-api</artifactId>
+				</exclusion>
+			</exclusions>
     	</dependency>
     
     </dependencies>

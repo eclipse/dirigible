@@ -14,8 +14,10 @@
     <packaging>pom</packaging>
 
 	<modules>
+		<module>commons-config</module>
+		<module>commons-helpers</module>
+		<module>commons-scripting</module>
 		<module>commons-api</module>
-        <module>commons-config</module>
 		<module>commons-process</module>
 		<module>commons-test</module>
 		<module>commons-xml2json</module>

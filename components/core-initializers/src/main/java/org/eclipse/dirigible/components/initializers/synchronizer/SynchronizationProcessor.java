@@ -24,11 +24,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
-import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
-import org.eclipse.dirigible.commons.api.topology.TopologicalSorter;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactState;
+import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
+import org.eclipse.dirigible.components.base.artefact.topology.TopologicalSorter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyFactory;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;

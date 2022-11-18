@@ -31,6 +31,12 @@
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-repository</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-commons-api</artifactId>
+				</exclusion>
+			</exclusions>
     	</dependency>
     	
     </dependencies>

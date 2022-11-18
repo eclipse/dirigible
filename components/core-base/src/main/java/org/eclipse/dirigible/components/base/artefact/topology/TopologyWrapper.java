@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.dirigible.commons.api.topology.ITopologicallyDepletable;
-import org.eclipse.dirigible.commons.api.topology.ITopologicallySortable;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.slf4j.Logger;
@@ -27,7 +25,7 @@ import org.slf4j.LoggerFactory;
  *
  * @param A the generic type
  */
-public class TopologyWrapper<A extends Artefact> implements ITopologicallySortable, ITopologicallyDepletable {
+public class TopologyWrapper<A extends Artefact> implements TopologicallySortable, TopologicallyDepletable {
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TopologyWrapper.class);
@@ -89,8 +87,8 @@ public class TopologyWrapper<A extends Artefact> implements ITopologicallySortab
 	 * @return the dependencies
 	 */
 	@Override
-	public List<ITopologicallySortable> getDependencies() {
-		List<ITopologicallySortable> dependencies = new ArrayList<ITopologicallySortable>();
+	public List<TopologicallySortable> getDependencies() {
+		List<TopologicallySortable> dependencies = new ArrayList<TopologicallySortable>();
 		if (this.artefact.getDependencies() != null) {
 			String[] keys = this.artefact.getDependencies().split(",");
 			for (String key : keys) {

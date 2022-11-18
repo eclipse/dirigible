@@ -13,7 +13,6 @@ package org.eclipse.dirigible.components.registry.endpoint;
 
 import java.nio.charset.StandardCharsets;
 
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.registry.accessor.RegistryAccessor;
 import org.eclipse.dirigible.components.registry.service.RegistryService;
@@ -59,7 +58,7 @@ public class RegistryEndpoint extends BaseEndpoint {
 				byte[] content;
 				try {
 					content = registryAccessor.getRegistryContent(path);
-				} catch (ScriptingException e) {
+				} catch (Exception e) {
 					throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, path, e);
 				}
 				if (content != null) {
