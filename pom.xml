@@ -773,7 +773,7 @@
 		<classgraph.version>4.8.151</classgraph.version>
 		<commons-compress.version>1.22</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.6</testcontainers.elasticsearch.version>
-		<testcontainers.version>1.17.5</testcontainers.version>
+		<testcontainers.version>1.17.6</testcontainers.version>
 		<testcontainers.rabbitmq.version>1.17.6</testcontainers.rabbitmq.version>
 		<amqp.client.version>5.16.0</amqp.client.version>
 		<elasticsearch.client.version>7.7.1</elasticsearch.client.version>
@@ -801,7 +801,7 @@
 		<wikitext.version>3.0.45.202211090110</wikitext.version>
 		<flexmark.version>0.64.0</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.344</qldb.sdk.version>
+		<qldb.sdk.version>1.12.345</qldb.sdk.version>
 		<cassandra.version>1.17.5</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>4.3.1</jedis.version>

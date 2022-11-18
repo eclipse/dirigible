@@ -573,6 +573,17 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     }
                     ideFormDialog.classList.add("fd-dialog--active");
                     scope.activeDialog = 'form';
+                    requestAnimationFrame(function () {
+                        if (scope.formDialog.items.length) {
+                            for (let i = 0; i < scope.formDialog.items.length; i++) {
+                                if (scope.formDialog.items[i].type === 'input') {
+                                    let input = ideFormDialog.querySelector(`#${scope.formDialog.items[i].id}`);
+                                    input.focus();
+                                    break;
+                                }
+                            }
+                        }
+                    });
                 };
 
                 scope.formDialogAction = function (buttonId) {

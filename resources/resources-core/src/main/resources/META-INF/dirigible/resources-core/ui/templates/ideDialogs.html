@@ -115,7 +115,8 @@
                                     for="{{ item.id }}">
                                     {{ item.label }}
                                 </fd-form-label>
-                                <fd-form-input-message-group dg-inactive="{{ item.error ? false : true }}">
+                                <fd-form-input-message-group message-fixed="true"
+                                    dg-inactive="{{ item.error ? false : true }}">
                                     <fd-input id="{{ item.id }}" type="{{ item.inputType ? item.inputType : 'text' }}"
                                         placeholder="{{ item.placeholder}}" state="{{ item.error ? 'error' : '' }}"
                                         name="{{ 'i' + item.id }}"
