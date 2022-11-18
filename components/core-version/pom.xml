@@ -12,7 +12,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Components - Version</name>
+    <name>Components - Core - Version</name>
     <artifactId>dirigible-components-core-version</artifactId>
     <packaging>jar</packaging>
 

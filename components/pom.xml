@@ -17,19 +17,22 @@
 		<module>core-configurations</module>
 		<module>core-base</module>
 		<module>core-initializers</module>
-		<module>core-jobs</module>
 		<module>core-extensions</module>
 		<module>core-database</module>
 		<module>core-repository</module>
 		<module>core-registry</module>
-		<module>core-openapi</module>
 		<module>core-version</module>
-		<module>core-websockets</module>
-		<module>core-security</module>
-		<module>core-listeners</module>
+		
+		<!-- Units -->
+		<module>unit-jobs</module>
+		<module>unit-openapi</module>
+		<module>unit-websockets</module>
+		<module>unit-security</module>
+		<module>unit-listeners</module>
 
 		<!-- Data -->
 		<module>data-structures</module>
+		<module>data-transfer</module>
 
 		<!-- Engines -->
 		<module>engine-javascript</module>

@@ -20,12 +20,12 @@
 		<!-- Components -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-core-configurations</artifactId>
+			<artifactId>dirigible-components-core-base</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-core-base</artifactId>
+			<artifactId>dirigible-components-core-configurations</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -55,19 +55,50 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-core-websockets</artifactId>
+			<artifactId>dirigible-components-core-version</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		<!-- Units -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-unit-jobs</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-core-listeners</artifactId>
+			<artifactId>dirigible-components-unit-listeners</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-unit-websockets</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-unit-security</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-unit-openapi</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		<!-- Data -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-data-structures</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-data-transfer</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		<!-- Engine -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-javascript</artifactId>
@@ -76,21 +107,6 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-web</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-core-openapi</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-core-version</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-core-jobs</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 

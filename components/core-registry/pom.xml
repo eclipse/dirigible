@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - Registry</name>
+	<name>Components - Core - Registry</name>
 	<artifactId>dirigible-components-core-registry</artifactId>
     <packaging>jar</packaging>
     

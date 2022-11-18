@@ -12,8 +12,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Components - Security</name>
-    <artifactId>dirigible-components-core-security</artifactId>
+    <name>Components - Unit - OpenAPI</name>
+    <artifactId>dirigible-components-unit-openapi</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -26,6 +26,17 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-repository</artifactId>
             <version>7.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-core-version</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>1.0.64</version>
         </dependency>
     </dependencies>
 

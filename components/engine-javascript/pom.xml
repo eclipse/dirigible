@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - JavaScript</name>
+	<name>Components - Engine - JavaScript</name>
 	<artifactId>dirigible-components-engine-javascript</artifactId>
     <packaging>jar</packaging>
 

@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - Configurations</name>
+	<name>Components - Core - Configurations</name>
 	<artifactId>dirigible-components-core-configurations</artifactId>
     <packaging>jar</packaging>
     

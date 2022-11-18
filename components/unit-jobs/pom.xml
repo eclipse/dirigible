@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - Jobs</name>
-	<artifactId>dirigible-components-core-jobs</artifactId>
+	<name>Components - Unit - Jobs</name>
+	<artifactId>dirigible-components-unit-jobs</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - Initializers</name>
+	<name>Components - Core - Initializers</name>
 	<artifactId>dirigible-components-core-initializers</artifactId>
     <packaging>jar</packaging>
     
