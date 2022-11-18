@@ -60,7 +60,6 @@ public class DataTransferManager {
 	 *
 	 * @param definition the definition
 	 * @param handler the handler
-	 * @throws DataTransferException the data transfer exception
 	 */
 	public static final void transfer(DataTransfer definition, DataTransferCallbackHandler handler) {
 		DataSource source = DatabaseModule.getDataSource(definition.getSource().getType(), definition.getSource().getName());
@@ -75,7 +74,6 @@ public class DataTransferManager {
 	 * @param target the target
 	 * @param configuration the configuration
 	 * @param handler the handler
-	 * @throws DataTransferException the data transfer exception
 	 */
 	public static final void transfer(DataSource source, DataSource target, DataTransferConfiguration configuration, DataTransferCallbackHandler handler) {
 		
