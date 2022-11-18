@@ -30,7 +30,7 @@ import static org.eclipse.dirigible.components.base.endpoint.BaseEndpoint.DEFAUL
  * The Class ListenerEndpoint.
  */
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "listeners")
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_UNIT + "listeners")
 public class ListenerEndpoint {
     
     /** The listener service. */

@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * The Class WebsocketEndpoint.
  */
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "websockets")
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_UNIT + "websockets")
 public class WebsocketEndpoint extends BaseEndpoint{
 
     /** The websocket service. */

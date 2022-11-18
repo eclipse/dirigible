@@ -28,6 +28,12 @@ public abstract class BaseEndpoint {
 	/** The Constant PREFIX_ENDPOINT_DATA. */
 	public static final String PREFIX_ENDPOINT_DATA = "services/v8/data/";
 	
+	/** The Constant PREFIX_ENDPOINT_CORE. */
+	public static final String PREFIX_ENDPOINT_UNIT = "services/v8/unit/";
+	
+	/** The Constant PREFIX_ENDPOINT_CORE. */
+	public static final String PREFIX_ENDPOINT_ENGINE = "services/v8/engine/";
+	
 	/** The Constant PREFIX_ENDPOINT_PUBLIC. */
 	public static final String PREFIX_ENDPOINT_PUBLIC = "public/v8/";
 	

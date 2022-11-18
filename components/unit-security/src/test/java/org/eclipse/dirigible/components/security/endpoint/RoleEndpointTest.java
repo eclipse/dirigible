@@ -66,7 +66,7 @@ class RoleEndpointTest {
 
     @Test
     public void testGetSecurityRoles() throws Exception {
-        mockMvc.perform(get("/services/v8/core/security/roles"))
+        mockMvc.perform(get("/services/v8/unit/security/roles"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

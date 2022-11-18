@@ -41,7 +41,7 @@ import java.util.HashMap;
  * The Class OpenAPIEndpoint.
  */
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "openapi")
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_UNIT + "openapi")
 public class OpenAPIEndpoint extends BaseEndpoint {
 
     /**

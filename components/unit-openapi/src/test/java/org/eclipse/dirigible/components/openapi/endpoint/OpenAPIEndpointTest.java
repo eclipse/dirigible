@@ -75,7 +75,7 @@ class OpenAPIEndpointTest {
         byte[] content = OpenAPISynchronizer.class.getResourceAsStream(openAPILocation).readAllBytes();
         openAPIRepository.save(createOpenAPI(openAPILocation, "test", "description"));
         repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + openAPILocation, content);
-        mockMvc.perform(get("/services/v8/core/openapi"))
+        mockMvc.perform(get("/services/v8/unit/openapi"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("{\"swagger\":\"2.0\",\"info\":{\"description\":\"Eclipse " +
