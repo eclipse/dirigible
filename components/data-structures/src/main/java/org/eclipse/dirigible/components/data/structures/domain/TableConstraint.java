@@ -154,6 +154,11 @@ public abstract class TableConstraint {
 		this.constraints = constraints;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "TableConstraint [name=" + name + ", modifiers=" + Arrays.toString(modifiers) + ", columns="

@@ -31,7 +31,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 /**
- * The Class Extension.
+ * The Class Table.
  */
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLES")
@@ -68,13 +68,14 @@ public class Table extends Artefact {
 	 * @param location the location
 	 * @param name the name
 	 * @param description the description
+	 * @param dependencies the dependencies
 	 */
 	public Table(String location, String name, String description, String dependencies) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 	}
 	
 	/**
-	 * Instantiates a new extension.
+	 * Instantiates a new table.
 	 */
 	public Table() {
 		super();
@@ -99,6 +100,8 @@ public class Table extends Artefact {
 	}
 
 	/**
+	 * Gets the columns.
+	 *
 	 * @return the columns
 	 */
 	public List<TableColumn> getColumns() {
@@ -106,6 +109,8 @@ public class Table extends Artefact {
 	}
 
 	/**
+	 * Sets the columns.
+	 *
 	 * @param columns the columns to set
 	 */
 	public void setColumns(List<TableColumn> columns) {
@@ -113,6 +118,8 @@ public class Table extends Artefact {
 	}
 
 	/**
+	 * Gets the indexes.
+	 *
 	 * @return the indexes
 	 */
 	public List<TableIndex> getIndexes() {
@@ -120,6 +127,8 @@ public class Table extends Artefact {
 	}
 
 	/**
+	 * Sets the indexes.
+	 *
 	 * @param indexes the indexes to set
 	 */
 	public void setIndexes(List<TableIndex> indexes) {
@@ -127,6 +136,8 @@ public class Table extends Artefact {
 	}
 	
 	/**
+	 * Gets the constraints.
+	 *
 	 * @return the constraints
 	 */
 	public TableConstraints getConstraints() {
@@ -134,12 +145,19 @@ public class Table extends Artefact {
 	}
 
 	/**
+	 * Sets the constraints.
+	 *
 	 * @param constraints the constraints to set
 	 */
 	public void setConstraints(TableConstraints constraints) {
 		this.constraints = constraints;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "Table [id=" + id + ", columns=" + (columns != null ? Objects.toString(columns) : "null") 
@@ -148,6 +166,19 @@ public class Table extends Artefact {
 				+ "]";
 	}
 
+	/**
+	 * Adds the column.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param length the length
+	 * @param nullable the nullable
+	 * @param primaryKey the primary key
+	 * @param defaultValue the default value
+	 * @param scale the scale
+	 * @param unique the unique
+	 * @return the table column
+	 */
 	public TableColumn addColumn(String name, String type, String length, boolean nullable, boolean primaryKey,
 			String defaultValue, String scale, boolean unique) {
 		TableColumn tableColumn = new TableColumn(name, type, length, nullable, primaryKey, defaultValue, scale, unique, this);
@@ -155,6 +186,15 @@ public class Table extends Artefact {
 		return tableColumn;
 	}
 	
+	/**
+	 * Adds the index.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param unique the unique
+	 * @param columns the columns
+	 * @return the table index
+	 */
 	public TableIndex addIndex(String name, String type, boolean unique, String columns) {
 		TableIndex tableIndex = new TableIndex(name, type, unique, columns, this);
 		indexes.add(tableIndex);

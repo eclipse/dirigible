@@ -9,13 +9,13 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.data.structures.endpoint;
+package org.eclipse.dirigible.components.data.sources.endpoint;
 
 import java.util.List;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.data.structures.domain.Table;
-import org.eclipse.dirigible.components.data.structures.service.TableService;
+import org.eclipse.dirigible.components.data.sources.domain.DataSource;
+import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,23 +31,23 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 
 /**
- * The Class TableEndpoint.
+ * The Class DataSourceEndpoint.
  */
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "tables")
-public class TableEndpoint extends BaseEndpoint {
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "sources")
+public class DataSourceEndpoint extends BaseEndpoint {
 
-	/** The table service. */
-	private final TableService tableService;
+	/** The data source service. */
+	private final DataSourceService datasourceService;
 
 	/**
 	 * Instantiates a new table endpoint.
 	 *
-	 * @param tableService the table service
+	 * @param datasourceService the datasource service
 	 */
 	@Autowired
-	public TableEndpoint(TableService tableService) {
-		this.tableService = tableService;
+	public DataSourceEndpoint(DataSourceService datasourceService) {
+		this.datasourceService = datasourceService;
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class TableEndpoint extends BaseEndpoint {
 	 * @return the page
 	 */
 	@GetMapping
-	public Page<Table> findAll(
+	public Page<DataSource> findAll(
 			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
 			@Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
 		if (size == null) {
@@ -68,7 +68,7 @@ public class TableEndpoint extends BaseEndpoint {
 			page = 0;
 		}
 		Pageable pageable = PageRequest.of(page, size);
-		Page<Table> tables = tableService.findAll(pageable);
+		Page<DataSource> tables = datasourceService.findAll(pageable);
 		return tables;
 	}
 
@@ -79,9 +79,9 @@ public class TableEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Table> get(
-			@ApiParam(value = "Id of the Table", required = true) @PathVariable("id") Long id) {
-		return ResponseEntity.ok(tableService.findById(id));
+	public ResponseEntity<DataSource> get(
+			@ApiParam(value = "Id of the DataSource", required = true) @PathVariable("id") Long id) {
+		return ResponseEntity.ok(datasourceService.findById(id));
 	}
 	
 	/**
@@ -91,9 +91,9 @@ public class TableEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/search")
-	public ResponseEntity<Table> findByName(
-			@ApiParam(value = "Name of the Table", required = true) @RequestParam("name") String name) {
-		return ResponseEntity.ok(tableService.findByName(name));
+	public ResponseEntity<DataSource> findByName(
+			@ApiParam(value = "Name of the DataSource", required = true) @RequestParam("name") String name) {
+		return ResponseEntity.ok(datasourceService.findByName(name));
 	}
 	
 	/**
@@ -102,8 +102,8 @@ public class TableEndpoint extends BaseEndpoint {
 	 * @return the all
 	 */
 	@GetMapping("/all")
-	public ResponseEntity<List<Table>> getAll() {
-		return ResponseEntity.ok(tableService.getAll());
+	public ResponseEntity<List<DataSource>> getAll() {
+		return ResponseEntity.ok(datasourceService.getAll());
 	}
 
 }

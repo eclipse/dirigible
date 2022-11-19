@@ -25,6 +25,9 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * The Class TableColumn.
+ */
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_COLUMNS")
 public class TableColumn {
@@ -67,12 +70,26 @@ public class TableColumn {
 	@Column(name = "COLUMN_UNIQUE", columnDefinition = "BOOLEAN", nullable = true)
 	private boolean unique;
 	
+	/** The table. */
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "TABLE_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Table table;
 
+	/**
+	 * Instantiates a new table column.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param length the length
+	 * @param nullable the nullable
+	 * @param primaryKey the primary key
+	 * @param defaultValue the default value
+	 * @param scale the scale
+	 * @param unique the unique
+	 * @param table the table
+	 */
 	TableColumn(String name, String type, String length, boolean nullable, boolean primaryKey,
 			String defaultValue, String scale, boolean unique, Table table) {
 		super();
@@ -87,11 +104,16 @@ public class TableColumn {
 		this.table = table;
 	}
 	
+	/**
+	 * Instantiates a new table column.
+	 */
 	public TableColumn() {
 		super();
 	}
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public Long getId() {
@@ -99,6 +121,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(Long id) {
@@ -106,6 +130,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -113,6 +139,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Sets the name.
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -120,6 +148,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -127,6 +157,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Sets the type.
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(String type) {
@@ -134,6 +166,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Gets the length.
+	 *
 	 * @return the length
 	 */
 	public String getLength() {
@@ -141,6 +175,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Sets the length.
+	 *
 	 * @param length the length to set
 	 */
 	public void setLength(String length) {
@@ -148,6 +184,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Checks if is nullable.
+	 *
 	 * @return the nullable
 	 */
 	public boolean isNullable() {
@@ -155,6 +193,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Sets the nullable.
+	 *
 	 * @param nullable the nullable to set
 	 */
 	public void setNullable(boolean nullable) {
@@ -162,6 +202,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Checks if is primary key.
+	 *
 	 * @return the primaryKey
 	 */
 	public boolean isPrimaryKey() {
@@ -169,6 +211,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Sets the primary key.
+	 *
 	 * @param primaryKey the primaryKey to set
 	 */
 	public void setPrimaryKey(boolean primaryKey) {
@@ -176,6 +220,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Gets the default value.
+	 *
 	 * @return the defaultValue
 	 */
 	public String getDefaultValue() {
@@ -183,6 +229,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Sets the default value.
+	 *
 	 * @param defaultValue the defaultValue to set
 	 */
 	public void setDefaultValue(String defaultValue) {
@@ -190,6 +238,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Gets the scale.
+	 *
 	 * @return the scale
 	 */
 	public String getScale() {
@@ -197,6 +247,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Sets the scale.
+	 *
 	 * @param scale the scale to set
 	 */
 	public void setScale(String scale) {
@@ -204,6 +256,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Checks if is unique.
+	 *
 	 * @return the unique
 	 */
 	public boolean isUnique() {
@@ -211,6 +265,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Sets the unique.
+	 *
 	 * @param unique the unique to set
 	 */
 	public void setUnique(boolean unique) {
@@ -218,6 +274,8 @@ public class TableColumn {
 	}
 
 	/**
+	 * Gets the table.
+	 *
 	 * @return the table
 	 */
 	public Table getTable() {
@@ -225,12 +283,19 @@ public class TableColumn {
 	}
 
 	/**
+	 * Sets the table.
+	 *
 	 * @param table the table to set
 	 */
 	public void setTable(Table table) {
 		this.table = table;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "TableColumn [id=" + id + ", name=" + name + ", type=" + type + ", length=" + length + ", nullable="

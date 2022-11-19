@@ -44,17 +44,31 @@ public class TableConstraintCheck extends TableConstraint {
 	@Nullable
 	private String expression;
 	
+	/**
+	 * Instantiates a new table constraint check.
+	 *
+	 * @param name the name
+	 * @param modifiers the modifiers
+	 * @param columns the columns
+	 * @param constraints the constraints
+	 * @param expression the expression
+	 */
 	public TableConstraintCheck(String name, String[] modifiers, String[] columns, TableConstraints constraints,
 			String expression) {
 		super(name, modifiers, columns, constraints);
 		this.expression = expression;
 	}
 
+	/**
+	 * Instantiates a new table constraint check.
+	 */
 	public TableConstraintCheck() {
 		super();
 	}
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public Long getId() {
@@ -62,6 +76,8 @@ public class TableConstraintCheck extends TableConstraint {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(Long id) {
@@ -69,6 +85,8 @@ public class TableConstraintCheck extends TableConstraint {
 	}
 
 	/**
+	 * Gets the expression.
+	 *
 	 * @return the expression
 	 */
 	public String getExpression() {
@@ -76,12 +94,19 @@ public class TableConstraintCheck extends TableConstraint {
 	}
 
 	/**
+	 * Sets the expression.
+	 *
 	 * @param expression the expression to set
 	 */
 	public void setExpression(String expression) {
 		this.expression = expression;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "TableConstraintCheck [id=" + id + ", expression=" + expression + ", name=" + name + ", modifiers="
