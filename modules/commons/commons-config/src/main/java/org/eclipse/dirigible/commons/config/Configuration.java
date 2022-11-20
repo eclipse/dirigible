@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -659,7 +660,7 @@ public class Configuration {
 			return;
 		}
 		try {
-			for (Field field : o.getClass().getDeclaredFields()) {
+			for (Field field : FieldUtils.getAllFields(o.getClass())) {
 				Object v = field.get(o);
 				if (v != null) {
 					if (v instanceof String) {
@@ -668,10 +669,10 @@ public class Configuration {
 							if (s.indexOf("}.{") > 0) {
 								String k = s.substring(2, s.indexOf("}.{"));
 								String d = s.substring(s.indexOf("}.{") + 3, s.length()-1);
-								field.set(o, Configuration.get(k, d));
+								FieldUtils.writeField(field, o, Configuration.get(k, d), true);
 							} else {
 								String k = s.substring(2, s.length()-1);
-								field.set(o, Configuration.get(k));
+								FieldUtils.writeField(field, o, Configuration.get(k), true);
 							}
 						}
 					}
