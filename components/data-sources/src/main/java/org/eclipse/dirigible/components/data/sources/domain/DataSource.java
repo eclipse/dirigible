@@ -77,6 +77,11 @@ public class DataSource extends Artefact {
 	 * @param name the name
 	 * @param description the description
 	 * @param dependencies the dependencies
+	 * @param driver the driver
+	 * @param url the url
+	 * @param username the username
+	 * @param password the password
+	 * @param type the type
 	 */
 	public DataSource(String location, String name, String description, String dependencies, String driver, String url, String username, String password, String type) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
@@ -113,6 +118,8 @@ public class DataSource extends Artefact {
 	}
 	
 	/**
+	 * Gets the driver.
+	 *
 	 * @return the driver
 	 */
 	public String getDriver() {
@@ -120,6 +127,8 @@ public class DataSource extends Artefact {
 	}
 
 	/**
+	 * Sets the driver.
+	 *
 	 * @param driver the driver to set
 	 */
 	public void setDriver(String driver) {
@@ -127,6 +136,8 @@ public class DataSource extends Artefact {
 	}
 
 	/**
+	 * Gets the url.
+	 *
 	 * @return the url
 	 */
 	public String getUrl() {
@@ -134,6 +145,8 @@ public class DataSource extends Artefact {
 	}
 
 	/**
+	 * Sets the url.
+	 *
 	 * @param url the url to set
 	 */
 	public void setUrl(String url) {
@@ -141,6 +154,8 @@ public class DataSource extends Artefact {
 	}
 
 	/**
+	 * Gets the username.
+	 *
 	 * @return the username
 	 */
 	public String getUsername() {
@@ -148,6 +163,8 @@ public class DataSource extends Artefact {
 	}
 
 	/**
+	 * Sets the username.
+	 *
 	 * @param username the username to set
 	 */
 	public void setUsername(String username) {
@@ -155,6 +172,8 @@ public class DataSource extends Artefact {
 	}
 
 	/**
+	 * Gets the password.
+	 *
 	 * @return the password
 	 */
 	public String getPassword() {
@@ -162,6 +181,8 @@ public class DataSource extends Artefact {
 	}
 
 	/**
+	 * Sets the password.
+	 *
 	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
@@ -169,6 +190,8 @@ public class DataSource extends Artefact {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -176,6 +199,8 @@ public class DataSource extends Artefact {
 	}
 
 	/**
+	 * Sets the type.
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(String type) {
@@ -183,6 +208,8 @@ public class DataSource extends Artefact {
 	}
 
 	/**
+	 * Sets the properties.
+	 *
 	 * @param properties the properties to set
 	 */
 	public void setProperties(List<DataSourceProperty> properties) {

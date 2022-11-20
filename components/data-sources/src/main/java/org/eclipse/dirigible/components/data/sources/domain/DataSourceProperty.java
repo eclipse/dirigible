@@ -140,7 +140,7 @@ public class DataSourceProperty {
 	/**
 	 * Sets the datasource.
 	 *
-	 * @param table the datasource to set
+	 * @param datasource the new datasource
 	 */
 	public void setDatasource(DataSource datasource) {
 		this.datasource = datasource;

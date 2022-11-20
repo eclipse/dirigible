@@ -31,21 +31,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DataSourceService implements ArtefactService<DataSource> {
 	
+	/** The datasource repository. */
 	@Autowired 
 	private DataSourceRepository datasourceRepository;
 
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public List<DataSource> getAll() {
 		return datasourceRepository.findAll();
 	}
 	
+	/**
+	 * Find all.
+	 *
+	 * @param pageable the pageable
+	 * @return the page
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public Page<DataSource> findAll(Pageable pageable) {
 		return datasourceRepository.findAll(pageable);
 	}
 	
+	/**
+	 * Find by id.
+	 *
+	 * @param id the id
+	 * @return the data source
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public DataSource findById(Long id) {
@@ -57,6 +75,12 @@ public class DataSourceService implements ArtefactService<DataSource> {
 		}
 	}
 	
+	/**
+	 * Find by name.
+	 *
+	 * @param name the name
+	 * @return the data source
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public DataSource findByName(String name) {
@@ -90,11 +114,22 @@ public class DataSourceService implements ArtefactService<DataSource> {
         return null;
     }
 	
+	/**
+	 * Save.
+	 *
+	 * @param datasource the datasource
+	 * @return the data source
+	 */
 	@Override
 	public DataSource save(DataSource datasource) {
 		return datasourceRepository.saveAndFlush(datasource);
 	}
 	
+	/**
+	 * Delete.
+	 *
+	 * @param datasource the datasource
+	 */
 	@Override
 	public void delete(DataSource datasource) {
 		datasourceRepository.delete(datasource);
