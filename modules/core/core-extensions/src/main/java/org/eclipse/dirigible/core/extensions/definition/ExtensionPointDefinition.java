@@ -157,7 +157,7 @@ public class ExtensionPointDefinition implements IArtefactDefinition {
 	 * @return the extension point definition
 	 */
 	public static ExtensionPointDefinition fromJson(String json) {
-		return GsonHelper.GSON.fromJson(json, ExtensionPointDefinition.class);
+		return GsonHelper.fromJson(json, ExtensionPointDefinition.class);
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class ExtensionPointDefinition implements IArtefactDefinition {
 	 * @return the JSON
 	 */
 	public String toJson() {
-		return GsonHelper.GSON.toJson(this, ExtensionPointDefinition.class);
+		return GsonHelper.toJson(this, ExtensionPointDefinition.class);
 	}
 
 	/**

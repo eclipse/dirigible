@@ -193,7 +193,7 @@ public class JwtUtils {
 	public static JwtHeader getHeader(String jwt) {
 		String header = getToken(jwt, JWT_HEADER);
 		if (header != null) {
-			return GsonHelper.GSON.fromJson(header, JwtHeader.class);
+			return GsonHelper.fromJson(header, JwtHeader.class);
 		}
 		return null;
 	}
@@ -208,12 +208,12 @@ public class JwtUtils {
 		String body = getToken(jwt, JWT_BODY);
 		if (body != null) {
 			try {
-				return GsonHelper.GSON.fromJson(body, XsuaaJwtClaim.class);
+				return GsonHelper.fromJson(body, XsuaaJwtClaim.class);
 			} catch (Exception e) {
 				// Do nothing
 			}
 			try {
-				return GsonHelper.GSON.fromJson(body, CognitoJwtClaim.class);
+				return GsonHelper.fromJson(body, CognitoJwtClaim.class);
 			} catch (Exception e) {
 				// Do nothing
 			}

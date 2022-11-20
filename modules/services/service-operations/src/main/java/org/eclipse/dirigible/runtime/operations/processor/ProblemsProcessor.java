@@ -32,7 +32,7 @@ public class ProblemsProcessor {
      * @throws ProblemsException the problems exception
      */
     public String list() throws ProblemsException {
-        return GsonHelper.GSON.toJson(problemsCoreService.getAllProblems());
+        return GsonHelper.toJson(problemsCoreService.getAllProblems());
     }
 
     /**
@@ -44,7 +44,7 @@ public class ProblemsProcessor {
      * @throws ProblemsException the problems exception
      */
     public String fetchProblemsBatch(String condition, int limit) throws ProblemsException {
-        return GsonHelper.GSON.toJson(new ProblemsCoreService().fetchProblemsBatch(condition, limit));
+        return GsonHelper.toJson(new ProblemsCoreService().fetchProblemsBatch(condition, limit));
     }
 
     /**

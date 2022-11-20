@@ -315,7 +315,7 @@ public class JobDefinition implements IArtefactDefinition {
 	 * @return the job definition
 	 */
 	public static JobDefinition fromJson(String json) {
-		return GsonHelper.GSON.fromJson(json, JobDefinition.class);
+		return GsonHelper.fromJson(json, JobDefinition.class);
 	}
 
 	/**
@@ -324,7 +324,7 @@ public class JobDefinition implements IArtefactDefinition {
 	 * @return the string
 	 */
 	public String toJson() {
-		return GsonHelper.GSON.toJson(this, JobDefinition.class);
+		return GsonHelper.toJson(this, JobDefinition.class);
 	}
 
 	/**

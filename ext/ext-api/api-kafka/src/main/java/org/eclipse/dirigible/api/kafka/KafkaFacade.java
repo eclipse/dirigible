@@ -89,7 +89,7 @@ public class KafkaFacade implements IScriptingFacade {
 			configuration = "{}";
 		}
 		
-		Map map = GsonHelper.GSON.fromJson(configuration, Map.class);
+		Map map = GsonHelper.fromJson(configuration, Map.class);
 		Producer<String, String> producer = null;
 		
 		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
@@ -142,7 +142,7 @@ public class KafkaFacade implements IScriptingFacade {
 			configuration = "{}";
 		}
 		
-		Map map = GsonHelper.GSON.fromJson(configuration, Map.class);
+		Map map = GsonHelper.fromJson(configuration, Map.class);
 		Producer<String, String> producer = null;
 		
 		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
@@ -172,7 +172,7 @@ public class KafkaFacade implements IScriptingFacade {
 			configuration = "{}";
 		}
 		
-		Map map = GsonHelper.GSON.fromJson(configuration, Map.class);
+		Map map = GsonHelper.fromJson(configuration, Map.class);
 		
 		Consumer<String, String> consumer = null;
 		KafkaConsumerRunner consumerRunner = null;
@@ -241,7 +241,7 @@ public class KafkaFacade implements IScriptingFacade {
 			configuration = "{}";
 		}
 		
-		Map map = GsonHelper.GSON.fromJson(configuration, Map.class);
+		Map map = GsonHelper.fromJson(configuration, Map.class);
 		
 		KafkaConsumerRunner consumerRunner = null;
 		

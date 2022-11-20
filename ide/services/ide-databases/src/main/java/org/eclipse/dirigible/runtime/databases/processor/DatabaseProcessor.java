@@ -447,7 +447,7 @@ public class DatabaseProcessor {
 		}
 
 		if (isJson) {
-			return GsonHelper.GSON.toJson(results);
+			return GsonHelper.toJson(results);
 		}
 		return String.join("\n", results);
 	}
@@ -495,7 +495,7 @@ public class DatabaseProcessor {
 				DataSource dataSource = getDataSource(type, name);
 				if (dataSource != null) {
 					String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
-					JsonElement database = GsonHelper.PARSER.parse(metadata);
+					JsonElement database = GsonHelper.parseJson(metadata);
 					JsonArray schemes = database.getAsJsonObject().get("schemas").getAsJsonArray();
 					for (int i=0; i<schemes.size(); i++) {
 						JsonObject scheme = schemes.get(i).getAsJsonObject();
@@ -623,7 +623,7 @@ public class DatabaseProcessor {
 		DataSource dataSource = getDataSource(type, name);
 		PersistenceTableModel model = DataTransferReverseTableProcessor.reverseTable(dataSource, schema, artifact);
 		if (model != null) {
-			return GsonHelper.GSON.toJson(DatabaseModelUtils.tableModelToStructure(model));
+			return GsonHelper.toJson(DatabaseModelUtils.tableModelToStructure(model));
 		}
 		return null;
 	}
@@ -640,7 +640,7 @@ public class DatabaseProcessor {
 	public String exportSchemaMetadata(String type, String name, String schema) throws SQLException {
 		DataSource dataSource = getDataSource(type, name);
 		List<PersistenceTableModel> models = DataTransferReverseTableProcessor.reverseTables(dataSource, schema, null);
-		return GsonHelper.GSON.toJson(DatabaseModelUtils.tableModelsToSchema(schema, models));
+		return GsonHelper.toJson(DatabaseModelUtils.tableModelsToSchema(schema, models));
 	}
 
 }

@@ -219,7 +219,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 	 */
 	@Override
 	public ListenerDefinition parseListener(String json) {
-		return GsonHelper.GSON.fromJson(json, ListenerDefinition.class);
+		return GsonHelper.fromJson(json, ListenerDefinition.class);
 	}
 
 	/*
@@ -228,7 +228,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 	 */
 	@Override
 	public ListenerDefinition parseListener(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ListenerDefinition.class);
+		return GsonHelper.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ListenerDefinition.class);
 	}
 
 	/*
@@ -238,7 +238,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 	 */
 	@Override
 	public String serializeListener(ListenerDefinition listenerDefinition) {
-		return GsonHelper.GSON.toJson(listenerDefinition);
+		return GsonHelper.toJson(listenerDefinition);
 	}
 
 }

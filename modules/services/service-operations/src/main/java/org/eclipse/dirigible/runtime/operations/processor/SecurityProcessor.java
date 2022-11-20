@@ -37,7 +37,7 @@ public class SecurityProcessor {
 		
 		List<AccessDefinition> access = securityCoreService.getAccessDefinitions();
 		
-        return GsonHelper.GSON.toJson(access);
+        return GsonHelper.toJson(access);
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class SecurityProcessor {
 		
 		List<RoleDefinition> access = securityCoreService.getRoles();
 		
-        return GsonHelper.GSON.toJson(access);
+        return GsonHelper.toJson(access);
 	}
 
 

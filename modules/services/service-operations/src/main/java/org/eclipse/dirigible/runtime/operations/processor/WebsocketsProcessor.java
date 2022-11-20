@@ -36,7 +36,7 @@ public class WebsocketsProcessor {
 		
 		List<WebsocketDefinition> websockets = websocketsCoreService.getWebsockets();
 		
-        return GsonHelper.GSON.toJson(websockets);
+        return GsonHelper.toJson(websockets);
 	}
 
 

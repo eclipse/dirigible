@@ -86,7 +86,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
             Map<Object, Object> context = new HashMap<>();
             ExecutionData executionData = new ExecutionData();
             BeanUtils.copyProperties(execution, executionData);
-            context.put("execution", GsonHelper.GSON.toJson(executionData));
+            context.put("execution", GsonHelper.toJson(executionData));
             if (type == null) {
                 type = new FixedValue(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT);
             }

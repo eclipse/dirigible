@@ -290,7 +290,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 	 */
 	@Override
 	public MigrationDefinition parseMigration(String json) {
-		return GsonHelper.GSON.fromJson(json, MigrationDefinition.class);
+		return GsonHelper.fromJson(json, MigrationDefinition.class);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 	 */
 	@Override
 	public MigrationDefinition parseMigration(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), MigrationDefinition.class);
+		return GsonHelper.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), MigrationDefinition.class);
 	}
 
 	/**
@@ -322,7 +322,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 	 */
 	@Override
 	public String serializeMigration(MigrationDefinition migration) {
-		return GsonHelper.GSON.toJson(migration);
+		return GsonHelper.toJson(migration);
 	}
 	
 	

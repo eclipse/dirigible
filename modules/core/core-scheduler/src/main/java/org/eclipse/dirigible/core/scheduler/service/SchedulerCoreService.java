@@ -519,7 +519,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	 */
 	@Override
 	public JobDefinition parseJob(String json) {
-		JobDefinition jobDefinition = GsonHelper.GSON.fromJson(json, JobDefinition.class);
+		JobDefinition jobDefinition = GsonHelper.fromJson(json, JobDefinition.class);
 		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_DEFINED);
 		for (JobParameterDefinition parameter : jobDefinition.getParameters()) {
 			parameter.setId(jobDefinition.getName(), parameter.getName());
@@ -540,7 +540,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	 */
 	@Override
 	public JobDefinition parseJob(byte[] content) {
-		JobDefinition jobDefinition = GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(content), StandardCharsets.UTF_8),
+		JobDefinition jobDefinition = GsonHelper.fromJson(new InputStreamReader(new ByteArrayInputStream(content), StandardCharsets.UTF_8),
 				JobDefinition.class);
 		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_DEFINED);
 		return jobDefinition;
@@ -554,7 +554,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	 */
 	@Override
 	public String serializeJob(JobDefinition jobDefinition) {
-		return GsonHelper.GSON.toJson(jobDefinition);
+		return GsonHelper.toJson(jobDefinition);
 	}
 	
 	// Job Log
@@ -937,7 +937,9 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 							|| emails.length > 0)
 					) {
 				
+				@SuppressWarnings("rawtypes")
 				List<Map> parts = new ArrayList<Map>();
+				@SuppressWarnings("unchecked")
 				Map<String, String> map  = new HashedMap();
 				map.put("contentType", ContentTypeHelper.TEXT_PLAIN);
 				map.put("type", "text");

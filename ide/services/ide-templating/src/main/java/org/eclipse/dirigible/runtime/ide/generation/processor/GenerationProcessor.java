@@ -73,7 +73,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		String wrapper = generateWrapper(parameters);
 		Object metadata = ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, wrapper, null);
 		if (metadata != null) {
-			GenerationTemplateMetadata metadataObject = GsonHelper.GSON.fromJson(metadata.toString(), GenerationTemplateMetadata.class);
+			GenerationTemplateMetadata metadataObject = GsonHelper.fromJson(metadata.toString(), GenerationTemplateMetadata.class);
 			
 			for (GenerationTemplateMetadataSource source : metadataObject.getSources()) {
 				String sourcePath = new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(source.getLocation()).build();

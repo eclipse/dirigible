@@ -120,8 +120,8 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 * @return the list
 	 */
 	@Override
-	public List load(String location, byte[] content) {
-		Table table = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Table.class);
+	public List<Table> load(String location, byte[] content) {
+		Table table = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Table.class);
 		table.setLocation(location);
 		table.setType(Table.ARTEFACT_TYPE);
 		table.updateKey();

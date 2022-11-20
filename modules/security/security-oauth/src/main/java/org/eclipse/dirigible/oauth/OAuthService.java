@@ -154,7 +154,7 @@ public class OAuthService extends AbstractRestService implements IRestService {
 		CloseableHttpResponse httpClientResponse = httpClient.execute(request);
 		HttpClientResponse clientResponse = HttpClientFacade.processHttpClientResponse(httpClientResponse, false);
 
-		return GsonHelper.GSON.fromJson(clientResponse.getText(), AccessToken.class);
+		return GsonHelper.fromJson(clientResponse.getText(), AccessToken.class);
 	}
 
 	private String getRedirectPath() {

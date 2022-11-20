@@ -262,7 +262,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		CsvimDefinition definition = new CsvimDefinition();
 		Type csvListType = new TypeToken<ArrayList<CsvFileDefinition>>() {
 		}.getType();
-		definition.setCsvFileDefinitions(GsonHelper.GSON.fromJson(json, csvListType));
+		definition.setCsvFileDefinitions(GsonHelper.fromJson(json, csvListType));
 		definition.setHash(DigestUtils.md5Hex(json.getBytes()));
 		return definition;
 	}
@@ -283,7 +283,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		CsvimDefinition definition = new CsvimDefinition();
 		Type csvListType = new TypeToken<ArrayList<CsvFileDefinition>>() {
 		}.getType();
-		definition.setCsvFileDefinitions(GsonHelper.GSON
+		definition.setCsvFileDefinitions(GsonHelper
 				.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), csvListType));
 		definition.setHash(DigestUtils.md5Hex(json));
 		return definition;
@@ -304,7 +304,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 	 */
 	@Override
 	public String serializeCsvim(CsvimDefinition csvimDefinition) {
-		return GsonHelper.GSON.toJson(csvimDefinition.getCsvFileDefinitions());
+		return GsonHelper.toJson(csvimDefinition.getCsvFileDefinitions());
 	}
 
 	// CSV

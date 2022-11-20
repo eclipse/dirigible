@@ -88,7 +88,7 @@ public class KafkaConsumerRunner implements Runnable {
 					if (logger.isTraceEnabled()) {logger.trace(format("Start processing a received record in [{0}] by [{1}] ...", this.name, this.handler));}
 					if (this.handler != null) {
 						Map<Object, Object> context = createMessagingContext();
-						context.put("message", escapeCodeString(GsonHelper.GSON.toJson(record)));
+						context.put("message", escapeCodeString(GsonHelper.toJson(record)));
 						try {
 							ScriptEngineExecutorsManager.executeServiceModule(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE, context);
 						} catch (ScriptingException e) {

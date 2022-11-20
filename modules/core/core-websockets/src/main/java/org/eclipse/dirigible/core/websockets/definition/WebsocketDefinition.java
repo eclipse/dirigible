@@ -203,7 +203,7 @@ public class WebsocketDefinition implements IArtefactDefinition {
 	 * @return the extension definition
 	 */
 	public static WebsocketDefinition fromJson(String json) {
-		return GsonHelper.GSON.fromJson(json, WebsocketDefinition.class);
+		return GsonHelper.fromJson(json, WebsocketDefinition.class);
 	}
 
 	/**
@@ -212,7 +212,7 @@ public class WebsocketDefinition implements IArtefactDefinition {
 	 * @return the JSON
 	 */
 	public String toJson() {
-		return GsonHelper.GSON.toJson(this, WebsocketDefinition.class);
+		return GsonHelper.toJson(this, WebsocketDefinition.class);
 	}
 
 	/**

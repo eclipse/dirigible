@@ -243,7 +243,7 @@ public class HttpClientFacade implements IScriptingFacade {
 	 */
 	private static String processResponse(CloseableHttpResponse response, boolean binary) throws IOException {
 		HttpClientResponse httpClientResponse = processHttpClientResponse(response, binary);
-		return GsonHelper.GSON.toJson(httpClientResponse);
+		return GsonHelper.toJson(httpClientResponse);
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class HttpClientFacade implements IScriptingFacade {
 	 * @return the http client request options
 	 */
 	public static HttpClientRequestOptions parseOptions(String options) {
-		return GsonHelper.GSON.fromJson(options, HttpClientRequestOptions.class);
+		return GsonHelper.fromJson(options, HttpClientRequestOptions.class);
 	}
 
 	/**

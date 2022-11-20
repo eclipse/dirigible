@@ -36,7 +36,7 @@ public class DataStructuresProcessor {
 		
 		List<DataStructureModel> dataStructures = dataStructuresCoreService.getDataStructures();
 		
-        return GsonHelper.GSON.toJson(dataStructures);
+        return GsonHelper.toJson(dataStructures);
 	}
 
 

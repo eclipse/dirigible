@@ -105,8 +105,8 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 * @return the list
 	 */
 	@Override
-	public List load(String location, byte[] content) {
-		ExtensionPoint extensionPoint = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), ExtensionPoint.class);
+	public List<ExtensionPoint> load(String location, byte[] content) {
+		ExtensionPoint extensionPoint = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), ExtensionPoint.class);
 		extensionPoint.setLocation(location);
 		extensionPoint.setType(ExtensionPoint.ARTEFACT_TYPE);
 		extensionPoint.updateKey();

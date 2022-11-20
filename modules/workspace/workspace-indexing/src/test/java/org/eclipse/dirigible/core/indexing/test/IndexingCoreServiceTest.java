@@ -70,19 +70,19 @@ public class IndexingCoreServiceTest extends AbstractDirigibleTest {
 				"Apache Lucene is an open source project available for free download. Please use the links on the right to access Lucene.".getBytes(),
 				new Date().getTime(), parameters);
 
-		List matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "Lucene"), List.class);
+		List matches = GsonHelper.fromJson(indexingCoreService.search(TEST_INDEX, "Lucene"), List.class);
 		assertNotNull(matches);
 		assertEquals(1, matches.size());
 
-		matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "Apache"), List.class);
+		matches = GsonHelper.fromJson(indexingCoreService.search(TEST_INDEX, "Apache"), List.class);
 		assertNotNull(matches);
 		assertEquals(2, matches.size());
 
-		matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "apache"), List.class);
+		matches = GsonHelper.fromJson(indexingCoreService.search(TEST_INDEX, "apache"), List.class);
 		assertNotNull(matches);
 		assertEquals(2, matches.size());
 
-		matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "NoMatches"), List.class);
+		matches = GsonHelper.fromJson(indexingCoreService.search(TEST_INDEX, "NoMatches"), List.class);
 		assertNotNull(matches);
 		assertEquals(0, matches.size());
 	}
@@ -108,7 +108,7 @@ public class IndexingCoreServiceTest extends AbstractDirigibleTest {
 				"Apache Lucene is an open source project available for free download. Please use the links on the right to access Lucene.".getBytes(),
 				new Date(789).getTime(), parameters);
 
-		List matches = GsonHelper.GSON.fromJson(indexingCoreService.between(TEST_INDEX, new Date(124).getTime(), new Date(689).getTime()),
+		List matches = GsonHelper.fromJson(indexingCoreService.between(TEST_INDEX, new Date(124).getTime(), new Date(689).getTime()),
 				List.class);
 		assertNotNull(matches);
 		assertEquals(1, matches.size());

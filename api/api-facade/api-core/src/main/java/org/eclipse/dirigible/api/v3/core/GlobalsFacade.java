@@ -59,7 +59,7 @@ public class GlobalsFacade implements IScriptingFacade {
 	 */
 	public static final String list() {
 		if (logger.isTraceEnabled()) {logger.trace("API - GlobalsFacade.get() -> begin");}
-		String value = GsonHelper.GSON.toJson(System.getProperties());
+		String value = GsonHelper.toJson(System.getProperties());
 		if (logger.isTraceEnabled()) {logger.trace("API - GlobalsFacade.get() -> end");}
 		return value;
 	}

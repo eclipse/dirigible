@@ -188,7 +188,7 @@ public class RepositoryProcessor {
 				prepared.add(truncated);
 			});
 
-			return GsonHelper.GSON.toJson(prepared);
+			return GsonHelper.toJson(prepared);
 		}
 		return "[]";
 	}

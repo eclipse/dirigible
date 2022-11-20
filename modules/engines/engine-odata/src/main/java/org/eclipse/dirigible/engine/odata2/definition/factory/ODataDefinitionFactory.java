@@ -31,7 +31,7 @@ public class ODataDefinitionFactory {
 	 * @return the o data definition
 	 */
 	public static ODataDefinition parseOData(String contentPath, String data) {
-		ODataDefinition odataDefinition = GsonHelper.GSON.fromJson(data, ODataDefinition.class);
+		ODataDefinition odataDefinition = GsonHelper.fromJson(data, ODataDefinition.class);
 		odataDefinition.setLocation(contentPath);
 		odataDefinition.setHash(DigestUtils.md5Hex(data));
 		odataDefinition.setCreatedBy(UserFacade.getName());

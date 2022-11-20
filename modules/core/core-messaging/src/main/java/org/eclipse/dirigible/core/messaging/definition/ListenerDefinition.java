@@ -196,7 +196,7 @@ public class ListenerDefinition implements IArtefactDefinition {
 	 * @return the listener definition
 	 */
 	public static ListenerDefinition fromJson(String json) {
-		return GsonHelper.GSON.fromJson(json, ListenerDefinition.class);
+		return GsonHelper.fromJson(json, ListenerDefinition.class);
 	}
 
 	/**
@@ -205,7 +205,7 @@ public class ListenerDefinition implements IArtefactDefinition {
 	 * @return the JSON
 	 */
 	public String toJson() {
-		return GsonHelper.GSON.toJson(this, ListenerDefinition.class);
+		return GsonHelper.toJson(this, ListenerDefinition.class);
 	}
 
 	/*

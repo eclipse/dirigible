@@ -36,7 +36,7 @@ public class SecurityProcessor {
 	 */
 	public String renderAccess() throws AccessException {
 		List<AccessDefinition> accessDefinitions = securityCoreService.getAccessDefinitions();
-		return GsonHelper.GSON.toJson(accessDefinitions);
+		return GsonHelper.toJson(accessDefinitions);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class SecurityProcessor {
 	 */
 	public String renderRoles() throws AccessException {
 		List<RoleDefinition> roleDefinitions = securityCoreService.getRoles();
-		return GsonHelper.GSON.toJson(roleDefinitions);
+		return GsonHelper.toJson(roleDefinitions);
 	}
 
 }

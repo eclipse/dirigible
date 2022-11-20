@@ -258,7 +258,7 @@ public class WebCoreService implements IWebCoreService {
 	 */
 	@Override
 	public WebModel parseProject(String path, String json) {
-		WebModel result = GsonHelper.GSON.fromJson(json, WebModel.class);
+		WebModel result = GsonHelper.fromJson(json, WebModel.class);
 		result.setLocation(path);
 		setName(path, result);
 		result.setHash(DigestUtils.md5Hex(json));
@@ -274,7 +274,7 @@ public class WebCoreService implements IWebCoreService {
 	 */
 	@Override
 	public WebModel parseWeb(String path, byte[] json) {
-		WebModel result = GsonHelper.GSON.fromJson(
+		WebModel result = GsonHelper.fromJson(
 				new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8),
 				WebModel.class);
 		result.setLocation(path);
@@ -331,7 +331,7 @@ public class WebCoreService implements IWebCoreService {
 	 */
 	@Override
 	public String serializeWeb(WebModel webModel) {
-		return GsonHelper.GSON.toJson(webModel);
+		return GsonHelper.toJson(webModel);
 	}
 
 }

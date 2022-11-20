@@ -492,7 +492,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	 */
 	@Override
 	public ExtensionPointDefinition parseExtensionPoint(String json) {
-		return GsonHelper.GSON.fromJson(json, ExtensionPointDefinition.class);
+		return GsonHelper.fromJson(json, ExtensionPointDefinition.class);
 	}
 
 	/**
@@ -507,7 +507,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	 */
 	@Override
 	public ExtensionDefinition parseExtension(String json) {
-		return GsonHelper.GSON.fromJson(json, ExtensionDefinition.class);
+		return GsonHelper.fromJson(json, ExtensionDefinition.class);
 	}
 
 	/**
@@ -522,7 +522,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	 */
 	@Override
 	public ExtensionPointDefinition parseExtensionPoint(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8),
+		return GsonHelper.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8),
 				ExtensionPointDefinition.class);
 	}
 
@@ -538,7 +538,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	 */
 	@Override
 	public ExtensionDefinition parseExtension(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ExtensionDefinition.class);
+		return GsonHelper.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ExtensionDefinition.class);
 	}
 
 	/**
@@ -555,7 +555,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	 */
 	@Override
 	public String serializeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) {
-		return GsonHelper.GSON.toJson(extensionPointDefinition);
+		return GsonHelper.toJson(extensionPointDefinition);
 	}
 
 	/**
@@ -572,7 +572,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	 */
 	@Override
 	public String serializeExtension(ExtensionDefinition extensionDefinition) {
-		return GsonHelper.GSON.toJson(extensionDefinition);
+		return GsonHelper.toJson(extensionDefinition);
 	}
 
 }

@@ -93,13 +93,13 @@ public class DestinationsFacade {
 			if (resource.exists()) {
 				Properties destinationPropeties = new Properties();
 				destinationPropeties.load(new ByteArrayInputStream(resource.getContent()));
-				return GsonHelper.GSON.toJson(destinationPropeties);
+				return GsonHelper.toJson(destinationPropeties);
 			} else {
 				throw new IllegalArgumentException(String.format("Destination: %s does not exist", fullName));
 			}
 		} else if (DIRIGIBLE_DESTINATIONS_PROVIDER_MANAGED.equals(destinationProvider)) {
 			Map destinationPropeties = initializeFromDestination(name);
-			return GsonHelper.GSON.toJson(destinationPropeties);
+			return GsonHelper.toJson(destinationPropeties);
 		} else {
 			throw new IllegalArgumentException(String.format("Unknown Destinations Provider: %s", destinationProvider));
 		}
@@ -129,7 +129,7 @@ public class DestinationsFacade {
 			String fullName = name + ".properties";
 			IRepository repository = getDestinationsRepostiory();
 			IResource resource = repository.getResource(fullName);
-			Properties destinationPropeties = GsonHelper.GSON.fromJson(content, Properties.class);
+			Properties destinationPropeties = GsonHelper.fromJson(content, Properties.class);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			destinationPropeties.store(out, null);
 			if (resource.exists()) {

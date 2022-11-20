@@ -107,8 +107,8 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	 * @return the list
 	 */
 	@Override
-	public List load(String location, byte[] content) {
-		Expose expose = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Expose.class);
+	public List<Expose> load(String location, byte[] content) {
+		Expose expose = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Expose.class);
 		expose.setLocation(location);
 		expose.setName(expose.getGuid());
 		expose.setType(Expose.ARTEFACT_TYPE);

@@ -24,7 +24,7 @@ public class BytesHelper {
 	 * @return the byte[]
 	 */
 	public static byte[] jsonToBytes(String input) {
-		return GsonHelper.GSON.fromJson(input, byte[].class);
+		return GsonHelper.fromJson(input, byte[].class);
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class BytesHelper {
 	 * @return the string
 	 */
 	public static String bytesToJson(byte[] bytes) {
-		return GsonHelper.GSON.toJson(bytes);
+		return GsonHelper.toJson(bytes);
 	}
 
 }

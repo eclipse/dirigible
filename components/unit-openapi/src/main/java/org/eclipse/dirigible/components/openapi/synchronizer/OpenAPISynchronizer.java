@@ -106,7 +106,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      */
     @Override
     public List<OpenAPI> load(String location, byte[] content) {
-        OpenAPI openAPI = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), OpenAPI.class);
+        OpenAPI openAPI = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), OpenAPI.class);
         openAPI.setLocation(location);
         openAPI.setName(FilenameUtils.getBaseName(location));
         openAPI.setType(OpenAPI.ARTEFACT_TYPE);

@@ -771,7 +771,7 @@ public class DatabaseMetadataHelper {
 		try {
 			connection = dataSource.getConnection();
 			DatabaseMetadata database = new DatabaseMetadata(connection, null, null, null);
-			String json = GsonHelper.GSON.toJson(database);
+			String json = GsonHelper.toJson(database);
 			return json;
 		} finally {
 			if (connection != null) {
@@ -802,7 +802,7 @@ public class DatabaseMetadataHelper {
 		try {
 			connection = dataSource.getConnection();
 			TableMetadata tableMetadata = describeTable(connection, null, schema, table);
-			String json = GsonHelper.GSON.toJson(tableMetadata);
+			String json = GsonHelper.toJson(tableMetadata);
 			return json;
 		} finally {
 			if (connection != null) {
@@ -833,7 +833,7 @@ public class DatabaseMetadataHelper {
 		try {
 			connection = dataSource.getConnection();
 			ProcedureMetadata procedureMetadata = describeProcedure(connection, null, schema, procedure);
-			String json = GsonHelper.GSON.toJson(procedureMetadata);
+			String json = GsonHelper.toJson(procedureMetadata);
 			return json;
 		} finally {
 			if (connection != null) {
@@ -864,7 +864,7 @@ public class DatabaseMetadataHelper {
 		try {
 			connection = dataSource.getConnection();
 			FunctionMetadata functionMetadata = describeFunction(connection, null, schema, function);
-			String json = GsonHelper.GSON.toJson(functionMetadata);
+			String json = GsonHelper.toJson(functionMetadata);
 			return json;
 		} finally {
 			if (connection != null) {

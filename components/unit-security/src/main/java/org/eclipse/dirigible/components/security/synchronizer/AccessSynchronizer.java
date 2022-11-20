@@ -116,8 +116,8 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * @return the list
      */
     @Override
-    public List load(String location, byte[] content) {
-        Constraints accessArtifact = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
+    public List<Access> load(String location, byte[] content) {
+        Constraints accessArtifact = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
 
         List<Access> accesses = accessArtifact.buildSecurityAccesses(location);
 

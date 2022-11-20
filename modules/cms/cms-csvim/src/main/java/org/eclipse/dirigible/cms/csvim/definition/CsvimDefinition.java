@@ -156,7 +156,7 @@ public class CsvimDefinition implements IArtefactDefinition {
 	 * @return the extension point definition
 	 */
 	public static CsvimDefinition fromJson(String json) {
-		return GsonHelper.GSON.fromJson(json, CsvimDefinition.class);
+		return GsonHelper.fromJson(json, CsvimDefinition.class);
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class CsvimDefinition implements IArtefactDefinition {
 	 * @return the JSON
 	 */
 	public String toJson() {
-		return GsonHelper.GSON.toJson(this, CsvimDefinition.class);
+		return GsonHelper.toJson(this, CsvimDefinition.class);
 	}
 
 	/**

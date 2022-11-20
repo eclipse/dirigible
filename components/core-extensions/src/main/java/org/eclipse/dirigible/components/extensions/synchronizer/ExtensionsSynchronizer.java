@@ -106,8 +106,8 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 * @return the list
 	 */
 	@Override
-	public List load(String location, byte[] content) {
-		Extension extension = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Extension.class);
+	public List<Extension> load(String location, byte[] content) {
+		Extension extension = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Extension.class);
 		extension.setLocation(location);
 		extension.setName("");
 		extension.setType(Extension.ARTEFACT_TYPE);

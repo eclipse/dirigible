@@ -42,7 +42,7 @@ public class JobFacade {
 	 * @throws SchedulerException the scheduler exception
 	 */
 	public static String getJobs() throws SchedulerException {
-		return GsonHelper.GSON.toJson(schedulerCoreService.getJobs());
+		return GsonHelper.toJson(schedulerCoreService.getJobs());
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class JobFacade {
 	 * @throws SchedulerException the scheduler exception
 	 */
 	public static String getJob(String name) throws SchedulerException {
-		return GsonHelper.GSON.toJson(schedulerCoreService.getJob(name));
+		return GsonHelper.toJson(schedulerCoreService.getJob(name));
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class JobFacade {
 			throw new SchedulerException(error);
 		}
 		
-        return GsonHelper.GSON.toJson(job);
+        return GsonHelper.toJson(job);
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class JobFacade {
 			throw new SchedulerException(error);
 		}
 		
-        return GsonHelper.GSON.toJson(job);
+        return GsonHelper.toJson(job);
 	}
 	
 	/**
@@ -108,7 +108,8 @@ public class JobFacade {
 	 * @throws SchedulerException the scheduler exception
 	 */
 	public static boolean trigger(String name, String parameters) throws JobExecutionException, SchedulerException {
-		Map<String, String> parametersMap = GsonHelper.GSON.fromJson(parameters, Map.class);
+		@SuppressWarnings("unchecked")
+		Map<String, String> parametersMap = GsonHelper.fromJson(parameters, Map.class);
 		JobDefinition job = schedulerCoreService.getJob(name);
 		if (job != null) {
 			Map<String, String> memento = new HashMap<String, String>();

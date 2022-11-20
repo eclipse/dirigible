@@ -40,54 +40,54 @@ public class CloudFoundryUtils {
 
 	public static VcapApplicationEnv getApplicationEnv() {
 		String envJson = EnvFacade.get(VCAP_APPLICATION);
-		return GsonHelper.GSON.fromJson(envJson, VcapApplicationEnv.class);
+		return GsonHelper.fromJson(envJson, VcapApplicationEnv.class);
 	}
 
 	public static XsuaaEnv getXsuaaEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
-		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.fromJson(envJson, VcapServicesEnv.class);
 		return vcapServicesEnv.getXsuaa() != null ? vcapServicesEnv.getXsuaa().get(0) : null;
 	}
 
 	public static PostgreDbEnv getPostgreDbEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
-		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.fromJson(envJson, VcapServicesEnv.class);
 		return vcapServicesEnv.getPostgreDbEnv() != null ? vcapServicesEnv.getPostgreDbEnv().get(0) : null;
 	}
 
 	public static PostgreHyperscalerDbEnv getPostgreHyperscalerDbEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
-		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.fromJson(envJson, VcapServicesEnv.class);
 		return vcapServicesEnv.getPostgreHyperscalerDbEnv() != null ? vcapServicesEnv.getPostgreHyperscalerDbEnv().get(0) : null;
 	}
 
 	public static HanaDbEnv getHanaDbEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
-		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.fromJson(envJson, VcapServicesEnv.class);
 		return vcapServicesEnv.getHanaDbEnv() != null ? vcapServicesEnv.getHanaDbEnv().get(0) : null;
 	}
 
 	public static HanaCloudDbEnv getHanaCloudDbEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
-		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.fromJson(envJson, VcapServicesEnv.class);
 		return vcapServicesEnv.getHanaCloudDbEnv() != null ? vcapServicesEnv.getHanaCloudDbEnv().get(0) : null;
 	}
 
 	public static HanaSchemaEnv getHanaSchemaEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
-		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.fromJson(envJson, VcapServicesEnv.class);
 		return vcapServicesEnv.getHanaSchemaEnv() != null ? vcapServicesEnv.getHanaSchemaEnv().get(0) : null;
 	}
 
 	public static DestinationEnv getDestinationEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
-		VcapServicesEnv vcapServicesEnv = org.eclipse.dirigible.commons.api.helpers.GsonHelper.GSON.fromJson(envJson, org.eclipse.dirigible.cf.utils.CloudFoundryUtils.VcapServicesEnv.class);
+		VcapServicesEnv vcapServicesEnv = org.eclipse.dirigible.commons.api.helpers.GsonHelper.fromJson(envJson, org.eclipse.dirigible.cf.utils.CloudFoundryUtils.VcapServicesEnv.class);
 		return vcapServicesEnv.getDestinationEnv() != null ? vcapServicesEnv.getDestinationEnv().get(0) : null;
 	}
 
 	public static ConnectivityEnv getConnectivityEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
-		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.fromJson(envJson, VcapServicesEnv.class);
 		return vcapServicesEnv.getConnectivityEnv() != null ? vcapServicesEnv.getConnectivityEnv().get(0) : null;
 	}
 

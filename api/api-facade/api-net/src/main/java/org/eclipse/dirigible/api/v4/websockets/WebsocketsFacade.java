@@ -99,7 +99,7 @@ public class WebsocketsFacade implements IScriptingFacade {
 	 * @return the list in JSON
 	 */
 	public static final String getClientsAsJson() {
-		return GsonHelper.GSON.toJson(CLIENTS);
+		return GsonHelper.toJson(CLIENTS);
 	}
 	
 	/**

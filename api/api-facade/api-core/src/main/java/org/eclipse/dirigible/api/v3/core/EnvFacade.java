@@ -45,7 +45,7 @@ public class EnvFacade implements IScriptingFacade {
 	 */
 	public static final String list() {
 		if (logger.isTraceEnabled()) {logger.trace("API - EnvFacade.get() -> begin");}
-		String value = GsonHelper.GSON.toJson(System.getenv());
+		String value = GsonHelper.toJson(System.getenv());
 		if (logger.isTraceEnabled()) {logger.trace("API - EnvFacade.get() -> end");}
 		return value;
 	}

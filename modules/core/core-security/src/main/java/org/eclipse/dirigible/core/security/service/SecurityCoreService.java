@@ -319,7 +319,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 */
 	@Override
 	public RoleDefinition[] parseRoles(String json) {
-		return GsonHelper.GSON.fromJson(json, RoleDefinition[].class);
+		return GsonHelper.fromJson(json, RoleDefinition[].class);
 	}
 
 	/**
@@ -334,7 +334,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 */
 	@Override
 	public RoleDefinition[] parseRoles(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), RoleDefinition[].class);
+		return GsonHelper.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), RoleDefinition[].class);
 	}
 
 	/**
@@ -351,7 +351,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 */
 	@Override
 	public String serializeRoles(RoleDefinition[] roles) {
-		return GsonHelper.GSON.toJson(roles);
+		return GsonHelper.toJson(roles);
 	}
 
 	// Access

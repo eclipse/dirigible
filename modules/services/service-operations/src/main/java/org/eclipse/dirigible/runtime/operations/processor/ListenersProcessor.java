@@ -36,7 +36,7 @@ public class ListenersProcessor {
 		
 		List<ListenerDefinition> listeners = messagingCoreService.getListeners();
 		
-        return GsonHelper.GSON.toJson(listeners);
+        return GsonHelper.toJson(listeners);
 	}
 
 

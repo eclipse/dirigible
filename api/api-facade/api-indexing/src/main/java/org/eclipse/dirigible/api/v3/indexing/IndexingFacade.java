@@ -44,7 +44,7 @@ public class IndexingFacade implements IScriptingFacade {
 	 * @throws IndexingException the indexing exception
 	 */
 	public static final void add(String index, String location, String contents, String lastModified, String parameters) throws IndexingException {
-		Map map = GsonHelper.GSON.fromJson(parameters, Map.class);
+		Map map = GsonHelper.fromJson(parameters, Map.class);
 		indexingCoreService.add(index, location, contents.getBytes(StandardCharsets.UTF_8), Long.parseLong(lastModified), map);
 	}
 

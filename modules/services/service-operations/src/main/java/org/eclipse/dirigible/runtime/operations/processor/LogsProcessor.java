@@ -76,7 +76,7 @@ public class LogsProcessor {
         } catch (IOException e) {
         	throw e;
         }
-        return GsonHelper.GSON.toJson(fileNames);
+        return GsonHelper.toJson(fileNames);
 	}
 	
 	/**

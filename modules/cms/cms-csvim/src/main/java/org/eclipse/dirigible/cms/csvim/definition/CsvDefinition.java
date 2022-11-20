@@ -180,7 +180,7 @@ public class CsvDefinition implements IArtefactDefinition {
 	 * @return the extension point definition
 	 */
 	public static CsvDefinition fromJson(String json) {
-		return GsonHelper.GSON.fromJson(json, CsvDefinition.class);
+		return GsonHelper.fromJson(json, CsvDefinition.class);
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class CsvDefinition implements IArtefactDefinition {
 	 * @return the JSON
 	 */
 	public String toJson() {
-		return GsonHelper.GSON.toJson(this, CsvDefinition.class);
+		return GsonHelper.toJson(this, CsvDefinition.class);
 	}
 
 	/**

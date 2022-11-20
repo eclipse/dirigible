@@ -255,7 +255,8 @@ public class BpmProviderFlowable implements IBpmProvider {
 	public String startProcess(String key, String parameters) {
 		if (logger.isDebugEnabled()) {logger.debug("Starting a BPMN process by key: " + key);}
 		RuntimeService runtimeService = getProcessEngine().getRuntimeService();
-		Map<String, Object> variables = GsonHelper.GSON.fromJson(parameters, HashMap.class);
+		@SuppressWarnings("unchecked")
+		Map<String, Object> variables = GsonHelper.fromJson(parameters, HashMap.class);
 		ProcessInstance processInstance;
 		try {
 			processInstance = runtimeService.startProcessInstanceByKey(key, variables);
@@ -287,7 +288,7 @@ public class BpmProviderFlowable implements IBpmProvider {
 			BeanUtils.copyProperties(task, taskData);
 			tasksData.add(taskData);
 		}
-		String json = GsonHelper.GSON.toJson(tasksData);
+		String json = GsonHelper.toJson(tasksData);
 		return json;
 	}
 
@@ -301,7 +302,7 @@ public class BpmProviderFlowable implements IBpmProvider {
 	public String getTaskVariables(String taskId) {
 		TaskService taskService = getProcessEngine().getTaskService();
 		Map<String, Object> processVariables = taskService.getVariables(taskId);
-		String json = GsonHelper.GSON.toJson(processVariables);
+		String json = GsonHelper.toJson(processVariables);
 		return json;
 	}
 
@@ -314,7 +315,8 @@ public class BpmProviderFlowable implements IBpmProvider {
 	@Override
 	public void setTaskVariables(String taskId, String variables) {
 		TaskService taskService = getProcessEngine().getTaskService();
-		Map<String, Object> processVariables = GsonHelper.GSON.fromJson(variables, HashMap.class);
+		@SuppressWarnings("unchecked")
+		Map<String, Object> processVariables = GsonHelper.fromJson(variables, HashMap.class);
 		taskService.setVariables(taskId, processVariables);
 	}
 	
@@ -327,7 +329,8 @@ public class BpmProviderFlowable implements IBpmProvider {
 	@Override
 	public void completeTask(String taskId, String variables) {
 		TaskService taskService = getProcessEngine().getTaskService();
-		Map<String, Object> processVariables = GsonHelper.GSON.fromJson(variables, HashMap.class);
+		@SuppressWarnings("unchecked")
+		Map<String, Object> processVariables = GsonHelper.fromJson(variables, HashMap.class);
 		taskService.complete(taskId, processVariables);
 	}
 

@@ -295,7 +295,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 		if (response == null) {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
-		Cookie cookie = GsonHelper.GSON.fromJson(cookieJson, Cookie.class);
+		Cookie cookie = GsonHelper.fromJson(cookieJson, Cookie.class);
 		response.addCookie(cookie);
 	}
 
@@ -623,7 +623,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 		if (response == null) {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
-		return GsonHelper.GSON.toJson(response.getHeaders(name).toArray());
+		return GsonHelper.toJson(response.getHeaders(name).toArray());
 	}
 
 	/**
@@ -636,7 +636,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 		if (response == null) {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
-		return GsonHelper.GSON.toJson(response.getHeaderNames().toArray());
+		return GsonHelper.toJson(response.getHeaderNames().toArray());
 	}
 
 	/**
@@ -649,7 +649,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 		if (response == null) {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
-		return GsonHelper.GSON.toJson(response.getLocale());
+		return GsonHelper.toJson(response.getLocale());
 	}
 	
 	/**

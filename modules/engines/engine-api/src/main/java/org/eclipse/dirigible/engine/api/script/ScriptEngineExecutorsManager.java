@@ -154,7 +154,7 @@ public class ScriptEngineExecutorsManager {
      * @return engine types as JSON
      */
     public static String getEngineTypesAsJson() {
-        return GsonHelper.GSON.toJson(getEngineTypes());
+        return GsonHelper.toJson(getEngineTypes());
     }
 
 }

@@ -107,7 +107,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 		HttpSession session = getSession();
 		if (session != null) { 
 			String[] array = Collections.list(session.getAttributeNames()).toArray(new String[] {});
-			return GsonHelper.GSON.toJson(array);
+			return GsonHelper.toJson(array);
 		}
 		return null;
 	}

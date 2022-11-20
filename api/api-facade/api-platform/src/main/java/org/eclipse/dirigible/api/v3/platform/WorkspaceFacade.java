@@ -59,7 +59,7 @@ public class WorkspaceFacade {
 		for (IWorkspace workspace : workspacesCoreService.getWorkspaces()) {
 			names.add(workspace.getName());
 		}
-		return GsonHelper.GSON.toJson(names);
+		return GsonHelper.toJson(names);
 	}
 
 	/**

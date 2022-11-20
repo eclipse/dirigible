@@ -137,7 +137,7 @@ public class BpmDefinition implements IArtefactDefinition {
 	 * @return the extension point definition
 	 */
 	public static BpmDefinition fromJson(String json) {
-		return GsonHelper.GSON.fromJson(json, BpmDefinition.class);
+		return GsonHelper.fromJson(json, BpmDefinition.class);
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class BpmDefinition implements IArtefactDefinition {
 	 * @return the JSON
 	 */
 	public String toJson() {
-		return GsonHelper.GSON.toJson(this, BpmDefinition.class);
+		return GsonHelper.toJson(this, BpmDefinition.class);
 	}
 
 	/**

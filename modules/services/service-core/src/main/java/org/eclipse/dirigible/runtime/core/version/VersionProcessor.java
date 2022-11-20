@@ -56,7 +56,7 @@ public class VersionProcessor {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public String version() throws IOException {
-		return GsonHelper.GSON.toJson(getVersion());
+		return GsonHelper.toJson(getVersion());
 	}
 	
 	

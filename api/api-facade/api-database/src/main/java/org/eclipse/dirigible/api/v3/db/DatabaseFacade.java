@@ -74,7 +74,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @return the database types
 	 */
 	public static final String getDatabaseTypes() {
-		return GsonHelper.GSON.toJson(DatabaseModule.getDatabaseTypes());
+		return GsonHelper.toJson(DatabaseModule.getDatabaseTypes());
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @return the data sources
 	 */
 	public static final String getDataSources(String databaseType) {
-		return GsonHelper.GSON.toJson(DatabaseModule.getDataSources(databaseType));
+		return GsonHelper.toJson(DatabaseModule.getDataSources(databaseType));
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @return the data sources
 	 */
 	public static final String getDataSources() {
-		return GsonHelper.GSON.toJson(getDatabase().getDataSources().keySet());
+		return GsonHelper.toJson(getDatabase().getDataSources().keySet());
 	}
 
 	/**
@@ -402,7 +402,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @throws SQLException the SQL exception
 	 */
 	private static void setParameters(String parameters, PreparedStatement preparedStatement) throws SQLException {
-		JsonElement parametersElement = GsonHelper.PARSER.parse(parameters);
+		JsonElement parametersElement = GsonHelper.parseJson(parameters);
 		if (parametersElement instanceof JsonArray) {
 			JsonArray parametersArray = (JsonArray) parametersElement;
 			Iterator<JsonElement> iterator = parametersArray.iterator();

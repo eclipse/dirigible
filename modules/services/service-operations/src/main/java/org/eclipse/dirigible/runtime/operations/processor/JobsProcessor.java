@@ -45,7 +45,7 @@ public class JobsProcessor {
 		
 		List<JobDefinition> jobs = schedulerCoreService.getJobs();
 		
-        return GsonHelper.GSON.toJson(jobs);
+        return GsonHelper.toJson(jobs);
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public class JobsProcessor {
 	public String logs(String name) throws SchedulerException {
 		List<JobLogDefinition> jobLogs = schedulerCoreService.getJobLogs(name);
 		
-        return GsonHelper.GSON.toJson(jobLogs);
+        return GsonHelper.toJson(jobLogs);
 	}
 	
 	/**
@@ -107,7 +107,7 @@ public class JobsProcessor {
 			parameter.setValue(Configuration.get(parameter.getName(), parameter.getDefaultValue()));
 		}
 		
-        return GsonHelper.GSON.toJson(parameters);
+        return GsonHelper.toJson(parameters);
 	}
 	
 	/**
@@ -127,7 +127,7 @@ public class JobsProcessor {
 			parametersMap.put(pair.getName(), pair.getValue());
 		}
 		
-		return JobFacade.trigger(name, GsonHelper.GSON.toJson(parametersMap));
+		return JobFacade.trigger(name, GsonHelper.toJson(parametersMap));
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class JobsProcessor {
 	 */
 	public String emails(String name) throws SchedulerException {
 		List<JobEmailDefinition> jobEmails = schedulerCoreService.getJobEmails(name);
-		return GsonHelper.GSON.toJson(jobEmails);
+		return GsonHelper.toJson(jobEmails);
 	}
 
 	/**

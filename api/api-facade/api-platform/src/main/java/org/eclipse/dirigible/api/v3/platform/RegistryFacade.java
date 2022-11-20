@@ -163,7 +163,7 @@ public class RegistryFacade {
 				}
 				prepared.add(truncated);
 			});
-			return GsonHelper.GSON.toJson(prepared);
+			return GsonHelper.toJson(prepared);
 		}
 		return "[]";
 	}

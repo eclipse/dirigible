@@ -194,7 +194,7 @@ public class IndexingCoreService implements IIndexingCoreService {
 					reader.close();
 				}
 			}
-			return GsonHelper.GSON.toJson(results);
+			return GsonHelper.toJson(results);
 		} catch (IOException | ParseException e) {
 			throw new IndexingException(e);
 		}
@@ -277,7 +277,7 @@ public class IndexingCoreService implements IIndexingCoreService {
 					reader.close();
 				}
 			}
-			return GsonHelper.GSON.toJson(results);
+			return GsonHelper.toJson(results);
 		} catch (IOException e) {
 			throw new IndexingException(e);
 		}

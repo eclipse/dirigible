@@ -591,7 +591,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	 */
 	@Override
 	public String serializeTable(DataStructureTableModel tableModel) {
-		return GsonHelper.GSON.toJson(tableModel);
+		return GsonHelper.toJson(tableModel);
 	}
 
 	/**
@@ -608,7 +608,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	 */
 	@Override
 	public String serializeView(DataStructureViewModel viewModel) {
-		return GsonHelper.GSON.toJson(viewModel);
+		return GsonHelper.toJson(viewModel);
 	}
 
 	// Replaces

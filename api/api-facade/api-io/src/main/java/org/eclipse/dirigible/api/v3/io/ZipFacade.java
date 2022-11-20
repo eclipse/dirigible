@@ -137,7 +137,7 @@ public class ZipFacade {
 	 */
 	public static final String read(ZipInputStream input) throws IOException {
 		byte[] bytes = IOUtils.toByteArray(input);
-		return GsonHelper.GSON.toJson(bytes);
+		return GsonHelper.toJson(bytes);
 	}
 
 	/**

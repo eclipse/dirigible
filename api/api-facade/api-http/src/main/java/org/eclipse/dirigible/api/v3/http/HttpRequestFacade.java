@@ -214,7 +214,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
-		return GsonHelper.GSON.toJson(request.getCookies());
+		return GsonHelper.toJson(request.getCookies());
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		List<String> list = Collections.list(request.getAttributeNames());
-		return GsonHelper.GSON.toJson(list.toArray());
+		return GsonHelper.toJson(list.toArray());
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		List<String> list = Collections.list(request.getHeaders(name));
-		return GsonHelper.GSON.toJson(list.toArray());
+		return GsonHelper.toJson(list.toArray());
 	}
 
 	/**
@@ -358,7 +358,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
-		return GsonHelper.GSON.toJson(request.getParameterMap());
+		return GsonHelper.toJson(request.getParameterMap());
 	}
 
 	/**
@@ -386,7 +386,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		List<String> list = Collections.list(request.getHeaderNames());
-		return GsonHelper.GSON.toJson(list.toArray());
+		return GsonHelper.toJson(list.toArray());
 	}
 
 	/**
@@ -400,7 +400,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		List<String> list = Collections.list(request.getParameterNames());
-		return GsonHelper.GSON.toJson(list.toArray());
+		return GsonHelper.toJson(list.toArray());
 	}
 
 	/**
@@ -415,7 +415,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
-		return GsonHelper.GSON.toJson(request.getParameterValues(name));
+		return GsonHelper.toJson(request.getParameterValues(name));
 	}
 
 	/**
@@ -562,7 +562,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
-		return GsonHelper.GSON.toJson(request.getLocale());
+		return GsonHelper.toJson(request.getLocale());
 	}
 
 	/**

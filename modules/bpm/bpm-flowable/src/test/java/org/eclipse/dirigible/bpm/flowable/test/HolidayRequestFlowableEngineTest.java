@@ -128,7 +128,7 @@ public class HolidayRequestFlowableEngineTest extends AbstractDirigibleTest {
 			BeanUtils.copyProperties(tasks.get(0), taskData);
 			taskData.setId(tasks.get(0).getId());
 
-			String json = GsonHelper.GSON.toJson(taskData);
+			String json = GsonHelper.toJson(taskData);
 			System.out.println(json);
 
 			Task task = tasks.get(0);

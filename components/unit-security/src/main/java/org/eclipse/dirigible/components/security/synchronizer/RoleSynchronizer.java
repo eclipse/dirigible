@@ -115,12 +115,12 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
      * @return the list
      */
     @Override
-    public List load(String location, byte[] content) {
-        Role[] securityRoles = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Role[].class);
+    public List<Role> load(String location, byte[] content) {
+        Role[] roles = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Role[].class);
 
         Integer roleIndex = 1;
 
-        for (Role role : securityRoles) {
+        for (Role role : roles) {
             role.setLocation(location);
             role.setName(roleIndex.toString());
             role.setType(Role.ARTEFACT_TYPE);
@@ -139,7 +139,7 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
             }
             roleIndex++;
         }
-        return List.of(securityRoles);
+        return List.of(roles);
     }
 
     /**

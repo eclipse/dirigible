@@ -536,7 +536,7 @@ public class FilesFacade {
 			}
 		});
 		
-		return GsonHelper.GSON.toJson(root.iterator().next());
+		return GsonHelper.toJson(root.iterator().next());
 	}
 	
 	/**
@@ -552,7 +552,7 @@ public class FilesFacade {
 		for (File next : listFiles) {
 			files.add(new FileObject(next.getName(), next.getPath(), null));
 		}
-		return GsonHelper.GSON.toJson(files);
+		return GsonHelper.toJson(files);
 	}
 	
 	/**
@@ -565,7 +565,7 @@ public class FilesFacade {
 	 * @throws ScriptingException in case of an error
 	 */
 	public static String find(String path, String pattern) throws IOException, ScriptingException {
-			return GsonHelper.GSON.toJson(FileSystemUtils.find(path, pattern));
+			return GsonHelper.toJson(FileSystemUtils.find(path, pattern));
 	}
 
 }

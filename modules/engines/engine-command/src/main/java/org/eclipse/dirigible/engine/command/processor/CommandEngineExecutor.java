@@ -203,7 +203,7 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		
 		CommandDefinition commandDefinition;
 		try {
-			commandDefinition = GsonHelper.GSON.fromJson(commandSource, CommandDefinition.class);
+			commandDefinition = GsonHelper.fromJson(commandSource, CommandDefinition.class);
 		} catch (Exception e2) {
 			if (logger.isErrorEnabled()) {logger.error(e2.getMessage(), e2);}
 			throw new ScriptingException(e2);

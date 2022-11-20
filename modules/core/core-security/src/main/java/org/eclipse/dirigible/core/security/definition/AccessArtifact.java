@@ -43,7 +43,7 @@ public class AccessArtifact {
 	 * @return the string
 	 */
 	public String serialize() {
-		return GsonHelper.GSON.toJson(this);
+		return GsonHelper.toJson(this);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class AccessArtifact {
 	 * @return the access artifact
 	 */
 	public static AccessArtifact parse(String json) {
-		return GsonHelper.GSON.fromJson(json, AccessArtifact.class);
+		return GsonHelper.fromJson(json, AccessArtifact.class);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class AccessArtifact {
 	 * @return the access artifact
 	 */
 	public static AccessArtifact parse(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), AccessArtifact.class);
+		return GsonHelper.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), AccessArtifact.class);
 	}
 
 	/**

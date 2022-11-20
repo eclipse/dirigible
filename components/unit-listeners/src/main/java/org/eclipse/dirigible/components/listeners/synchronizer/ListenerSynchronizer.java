@@ -88,7 +88,7 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
      */
     @Override
     public List<Listener> load(String location, byte[] content) {
-        Listener listener = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Listener.class);
+        Listener listener = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Listener.class);
         listener.setLocation(location);
         listener.setType(Listener.ARTEFACT_TYPE);
         listener.setName(FilenameUtils.getBaseName(location));

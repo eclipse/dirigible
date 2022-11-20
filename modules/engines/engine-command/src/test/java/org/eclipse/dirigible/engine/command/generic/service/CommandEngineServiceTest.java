@@ -34,7 +34,7 @@ public class CommandEngineServiceTest {
 		commandDefinition.getSet().put("var1", "val1");
 		commandDefinition.getUnset().add("var2");
 		
-		String json = GsonHelper.GSON.toJson(commandDefinition);
+		String json = GsonHelper.toJson(commandDefinition);
 		System.out.println(json);
 		
 	}

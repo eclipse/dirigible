@@ -108,7 +108,7 @@ public class TemplateEnginesFacade implements IScriptingFacade {
 		 */
 		@SuppressWarnings("unchecked")
 		public String generate(String template, String parametersJson) throws IOException {
-			Map<String, Object> parameters = GsonHelper.GSON.fromJson(parametersJson, Map.class);
+			Map<String, Object> parameters = GsonHelper.fromJson(parametersJson, Map.class);
 			byte[] result = engine.generate(parameters, LOCATION_API_FACADE, template.getBytes());
 			return new String(result);
 		}
@@ -125,7 +125,7 @@ public class TemplateEnginesFacade implements IScriptingFacade {
 		 */
 		@SuppressWarnings("unchecked")
 		public String generate(String template, String parametersJson, String sm, String em) throws IOException {
-			Map<String, Object> parameters = GsonHelper.GSON.fromJson(parametersJson, Map.class);
+			Map<String, Object> parameters = GsonHelper.fromJson(parametersJson, Map.class);
 			byte[] result = engine.generate(parameters, LOCATION_API_FACADE, template.getBytes(), sm, em);
 			return new String(result);
 		}

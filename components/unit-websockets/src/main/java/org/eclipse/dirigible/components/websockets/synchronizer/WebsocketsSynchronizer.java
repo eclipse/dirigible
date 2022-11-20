@@ -88,7 +88,7 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
      */
     @Override
     public List<Websocket> load(String location, byte[] content) {
-        Websocket websocket = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Websocket.class);
+        Websocket websocket = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Websocket.class);
         websocket.setLocation(location);
         websocket.setName(FilenameUtils.getBaseName(location));
         websocket.setType(Websocket.ARTEFACT_TYPE);

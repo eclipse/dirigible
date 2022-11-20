@@ -194,7 +194,7 @@ public class DataStructureModel implements IArtefactDefinition {
 	 * @return the string
 	 */
 	public String toJson() {
-		return GsonHelper.GSON.toJson(this);
+		return GsonHelper.toJson(this);
 	}
 
 	/**

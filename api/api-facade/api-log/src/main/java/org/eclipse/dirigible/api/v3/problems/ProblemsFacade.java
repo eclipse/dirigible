@@ -61,7 +61,7 @@ public class ProblemsFacade implements IScriptingFacade {
      * @throws ProblemsException the problems exception
      */
     public static final String fetchAllProblems() throws ProblemsException {
-        return GsonHelper.GSON.toJson(new ProblemsCoreService().getAllProblems());
+        return GsonHelper.toJson(new ProblemsCoreService().getAllProblems());
     }
 
     /**
@@ -73,7 +73,7 @@ public class ProblemsFacade implements IScriptingFacade {
      * @throws ProblemsException the problems exception
      */
     public static final String fetchProblemsBatch(String condition, int limit) throws ProblemsException {
-        return GsonHelper.GSON.toJson(new ProblemsCoreService().fetchProblemsBatch(condition, limit));
+        return GsonHelper.toJson(new ProblemsCoreService().fetchProblemsBatch(condition, limit));
     }
 
     /**

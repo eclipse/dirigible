@@ -43,7 +43,7 @@ public class ExtensionsProcessor {
 			ExtensionPoint bundle = new ExtensionPoint(extensionPointDefinition, extensions);
 			bundles.add(bundle);
 		}
-		return GsonHelper.GSON.toJson(bundles);
+		return GsonHelper.toJson(bundles);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class ExtensionsProcessor {
 		}
 		List<ExtensionDefinition> extensions = extensionsCoreService.getExtensionsByExtensionPoint(extensionPointDefinition.getName());
 		ExtensionPoint bundle = new ExtensionPoint(extensionPointDefinition, extensions);
-		return GsonHelper.GSON.toJson(bundle);
+		return GsonHelper.toJson(bundle);
 	}
 
 }

@@ -103,7 +103,7 @@ public class ConsoleWebsocketService {
 			synchronized (session) {
 				try {
 					if (session.isOpen()) {
-						session.getBasicRemote().sendText(GsonHelper.GSON.toJson(record));
+						session.getBasicRemote().sendText(GsonHelper.toJson(record));
 					}
 				} catch (IOException e) {
 					System.err.println(e.getMessage());

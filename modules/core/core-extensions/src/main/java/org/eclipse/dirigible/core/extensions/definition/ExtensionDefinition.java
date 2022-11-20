@@ -180,7 +180,7 @@ public class ExtensionDefinition implements IArtefactDefinition {
 	 * @return the extension definition
 	 */
 	public static ExtensionDefinition fromJson(String json) {
-		return GsonHelper.GSON.fromJson(json, ExtensionDefinition.class);
+		return GsonHelper.fromJson(json, ExtensionDefinition.class);
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class ExtensionDefinition implements IArtefactDefinition {
 	 * @return the JSON
 	 */
 	public String toJson() {
-		return GsonHelper.GSON.toJson(this, ExtensionDefinition.class);
+		return GsonHelper.toJson(this, ExtensionDefinition.class);
 	}
 
 	/**

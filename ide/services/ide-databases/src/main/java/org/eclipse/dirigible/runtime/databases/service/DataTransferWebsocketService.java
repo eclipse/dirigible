@@ -89,7 +89,7 @@ public class DataTransferWebsocketService {
 				HANDLERS.remove(session.getId());
 			}
 			try {
-				DataTransferDefinition definition = GsonHelper.GSON.fromJson(message, DataTransferDefinition.class);
+				DataTransferDefinition definition = GsonHelper.fromJson(message, DataTransferDefinition.class);
 
 				PipedOutputStream pos = new PipedOutputStream();
 				PipedInputStream pis = new PipedInputStream(pos, 1024);

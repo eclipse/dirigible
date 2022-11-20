@@ -104,7 +104,7 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 						value = "[BINARY]";
 					}
 				}
-				record.add(name, GsonHelper.GSON.toJsonTree(value));
+				record.add(name, GsonHelper.toJsonTree(value));
 			}
 
 			records.add(record);
@@ -114,7 +114,7 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 			}
 		}
 
-		return GsonHelper.GSON.toJson(records);
+		return GsonHelper.toJson(records);
 	}
 
 }

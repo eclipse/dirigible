@@ -274,7 +274,7 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 	 */
 	@Override
 	public WebsocketDefinition parseWebsocket(String json) {
-		return GsonHelper.GSON.fromJson(json, WebsocketDefinition.class);
+		return GsonHelper.fromJson(json, WebsocketDefinition.class);
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 	 */
 	@Override
 	public WebsocketDefinition parseWebsocket(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8),
+		return GsonHelper.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8),
 				WebsocketDefinition.class);
 	}
 
@@ -307,7 +307,7 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 	 */
 	@Override
 	public String serializeWebsocket(WebsocketDefinition websocketDefinition) {
-		return GsonHelper.GSON.toJson(websocketDefinition);
+		return GsonHelper.toJson(websocketDefinition);
 	}
 
 }

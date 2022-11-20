@@ -115,7 +115,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      */
     @Override
     public List<Job> load(String location, byte[] content) {
-        Job job = GsonHelper.GSON.fromJson(new String(content, StandardCharsets.UTF_8), Job.class);
+        Job job = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Job.class);
         job.setLocation(location);
         job.setName(FilenameUtils.getBaseName(location));
         job.setType(Job.ARTEFACT_TYPE);

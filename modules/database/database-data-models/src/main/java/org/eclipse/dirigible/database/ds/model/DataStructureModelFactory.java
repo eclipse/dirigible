@@ -42,7 +42,7 @@ public class DataStructureModelFactory {
 	 * @return the table model instance
 	 */
 	public static DataStructureTableModel parseTable(String content) {
-		DataStructureTableModel result = GsonHelper.GSON.fromJson(content, DataStructureTableModel.class);
+		DataStructureTableModel result = GsonHelper.fromJson(content, DataStructureTableModel.class);
 		result.setHash(DigestUtils.md5Hex(content));
 		return result;
 	}
@@ -55,7 +55,7 @@ public class DataStructureModelFactory {
 	 * @return the table model instance
 	 */
 	public static DataStructureTableModel parseTable(byte[] bytes) {
-		DataStructureTableModel result = GsonHelper.GSON.fromJson(
+		DataStructureTableModel result = GsonHelper.fromJson(
 				new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8),
 				DataStructureTableModel.class);
 		result.setHash(DigestUtils.md5Hex(bytes));
@@ -70,7 +70,7 @@ public class DataStructureModelFactory {
 	 * @return the view model instance
 	 */
 	public static DataStructureViewModel parseView(String content) {
-		DataStructureViewModel result = GsonHelper.GSON.fromJson(content, DataStructureViewModel.class);
+		DataStructureViewModel result = GsonHelper.fromJson(content, DataStructureViewModel.class);
 		result.setHash(DigestUtils.md5Hex(content));
 		return result;
 	}
@@ -83,7 +83,7 @@ public class DataStructureModelFactory {
 	 * @return the view model instance
 	 */
 	public static DataStructureViewModel parseView(byte[] bytes) {
-		DataStructureViewModel result = GsonHelper.GSON.fromJson(
+		DataStructureViewModel result = GsonHelper.fromJson(
 				new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8),
 				DataStructureViewModel.class);
 		result.setHash(DigestUtils.md5Hex(bytes));
@@ -185,7 +185,7 @@ public class DataStructureModelFactory {
 		DataStructureSchemaModel result = new DataStructureSchemaModel();
 		setContentModelAttributes(location, content, result, IDataStructureModel.TYPE_SCHEMA);
 		
-			JsonElement root = GsonHelper.PARSER.parse(content);
+			JsonElement root = GsonHelper.parseJson(content);
 			JsonArray structures = root.getAsJsonObject().get("schema").getAsJsonObject().get("structures").getAsJsonArray();
 			for (int i=0; i<structures.size(); i++) {
 				JsonObject structure = structures.get(i).getAsJsonObject();
