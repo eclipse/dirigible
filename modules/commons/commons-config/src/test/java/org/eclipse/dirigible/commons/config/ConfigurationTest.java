@@ -151,4 +151,59 @@ public class ConfigurationTest {
 		value = Configuration.get(property);
 		assertEquals("DIRIGIBLE_USERNAME_NEW", value);
 	}
+	
+	/**
+	 * Config precedence no env test.
+	 */
+	@Test
+	public void configureObjectTest() {
+		Configuration.set("S2_VALUE", "s2");
+		class TestObject {
+			String s1 = "s1";
+			String s2 = "${S2_VALUE}";
+			String s3 = "${S3_VALUE}.{s3}";
+			/**
+			 * @return the s1
+			 */
+			public String getS1() {
+				return s1;
+			}
+			/**
+			 * @param s1 the s1 to set
+			 */
+			public void setS1(String s1) {
+				this.s1 = s1;
+			}
+			/**
+			 * @return the s2
+			 */
+			public String getS2() {
+				return s2;
+			}
+			/**
+			 * @param s2 the s2 to set
+			 */
+			public void setS2(String s2) {
+				this.s2 = s2;
+			}
+			/**
+			 * @return the s3
+			 */
+			public String getS3() {
+				return s3;
+			}
+			/**
+			 * @param s3 the s3 to set
+			 */
+			public void setS3(String s3) {
+				this.s3 = s3;
+			}
+			
+		}
+		TestObject o = new TestObject();
+		Configuration.configureObject(o);
+		assertEquals("s1", o.getS1());
+		assertEquals("s2", o.getS2());
+		assertEquals("s3", o.getS3());
+	}
 }

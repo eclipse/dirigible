@@ -15,6 +15,7 @@ import static java.text.MessageFormat.format;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,32 +44,36 @@ public class Configuration {
 	 * The Enum ConfigType.
 	 */
 	private enum ConfigType {
-		
+
 		/** The runtime. */
-		RUNTIME, 
- /** The environment. */
- ENVIRONMENT, 
- /** The deployment. */
- DEPLOYMENT, 
- /** The module. */
- MODULE
+		RUNTIME,
+		/** The environment. */
+		ENVIRONMENT,
+		/** The deployment. */
+		DEPLOYMENT,
+		/** The module. */
+		MODULE
 	}
 
 	/** The Constant RUNTIME_VARIABLES. */
-	private static final Map<String, String> RUNTIME_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
-	
+	private static final Map<String, String> RUNTIME_VARIABLES = Collections
+			.synchronizedMap(new HashMap<String, String>());
+
 	/** The Constant ENVIRONMENT_VARIABLES. */
-	private static final Map<String, String> ENVIRONMENT_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
-	
+	private static final Map<String, String> ENVIRONMENT_VARIABLES = Collections
+			.synchronizedMap(new HashMap<String, String>());
+
 	/** The Constant DEPLOYMENT_VARIABLES. */
-	private static final Map<String, String> DEPLOYMENT_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
-	
+	private static final Map<String, String> DEPLOYMENT_VARIABLES = Collections
+			.synchronizedMap(new HashMap<String, String>());
+
 	/** The Constant MODULE_VARIABLES. */
-	private static final Map<String, String> MODULE_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+	private static final Map<String, String> MODULE_VARIABLES = Collections
+			.synchronizedMap(new HashMap<String, String>());
 
 	/** The Constant CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES. */
 	private static final String CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES = "/dirigible.properties";
-	
+
 	/** The Constant ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST. */
 	private static final String ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST = "Configuration file {0} does not exist";
 
@@ -139,14 +144,20 @@ public class Configuration {
 				} finally {
 					in.close();
 				}
-				if (logger.isDebugEnabled()) {logger.debug("Configuration loaded: " + path);}
-			} else if (!path.equals(CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES)) {					
+				if (logger.isDebugEnabled()) {
+					logger.debug("Configuration loaded: " + path);
+				}
+			} else if (!path.equals(CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES)) {
 				throw new IOException(format(ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST, path));
 			} else {
-				if (logger.isDebugEnabled()) {logger.debug(format(ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST, path));}
+				if (logger.isDebugEnabled()) {
+					logger.debug(format(ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST, path));
+				}
 			}
 		} catch (IOException e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 
@@ -154,10 +165,10 @@ public class Configuration {
 	 * Adds the config properties.
 	 *
 	 * @param properties the properties
-	 * @param type the type
+	 * @param type       the type
 	 */
 	private static void addConfigProperties(Map<String, String> properties, ConfigType type) {
-		switch(type) {
+		switch (type) {
 		case RUNTIME:
 			RUNTIME_VARIABLES.putAll(properties);
 			break;
@@ -172,7 +183,7 @@ public class Configuration {
 			break;
 		default:
 			break;
-		
+
 		}
 	}
 
@@ -180,10 +191,10 @@ public class Configuration {
 	 * Adds the config properties.
 	 *
 	 * @param properties the properties
-	 * @param type the type
+	 * @param type       the type
 	 */
 	private static void addConfigProperties(Properties properties, ConfigType type) {
-		switch(type) {
+		switch (type) {
 		case RUNTIME:
 			addConfigProperties(properties, RUNTIME_VARIABLES);
 			break;
@@ -205,10 +216,10 @@ public class Configuration {
 	 * Adds the config properties.
 	 *
 	 * @param properties the properties
-	 * @param map the map
+	 * @param map        the map
 	 */
 	private static void addConfigProperties(Properties properties, Map<String, String> map) {
-		for (String property: properties.stringPropertyNames()) {
+		for (String property : properties.stringPropertyNames()) {
 			map.put(property, properties.getProperty(property));
 		}
 	}
@@ -255,7 +266,8 @@ public class Configuration {
 	}
 
 	/**
-	 * Setter for the property's key and value. Sets the new value, only if the key value is null.
+	 * Setter for the property's key and value. Sets the new value, only if the key
+	 * value is null.
 	 *
 	 * @param key   the key
 	 * @param value the value
@@ -319,6 +331,7 @@ public class Configuration {
 	private static boolean isProtectedModeEnabled() {
 		return isKeycloakModeEnabled() || isOAuthAuthenticationEnabled() || isJwtModeEnabled();
 	}
+
 	/**
 	 * Checks if is anonymous user enabled.
 	 *
@@ -396,7 +409,7 @@ public class Configuration {
 	public static void setSystemProperty(String key, String value) {
 		System.setProperty(key, value);
 	}
-	
+
 	/**
 	 * Getter for the configurations set programmatically at runtime.
 	 *
@@ -405,7 +418,7 @@ public class Configuration {
 	public static Map<String, String> getRuntimeVariables() {
 		return new HashMap<String, String>(RUNTIME_VARIABLES);
 	}
-	
+
 	/**
 	 * Getter for the configurations from the environment.
 	 *
@@ -414,7 +427,7 @@ public class Configuration {
 	public static Map<String, String> getEnvironmentVariables() {
 		return new HashMap<String, String>(ENVIRONMENT_VARIABLES);
 	}
-	
+
 	/**
 	 * Getter for the configurations from the dirigible.properties files
 	 * 
@@ -423,16 +436,17 @@ public class Configuration {
 	public static Map<String, String> getDeploymentVariables() {
 		return new HashMap<String, String>(DEPLOYMENT_VARIABLES);
 	}
-	
+
 	/**
 	 * Getter for the configurations from the module's dirigible-*.properties files
 	 * 
-	 * @return the map of the variables from the module's dirigible-*.properties files
+	 * @return the map of the variables from the module's dirigible-*.properties
+	 *         files
 	 */
 	public static Map<String, String> getModuleVariables() {
 		return new HashMap<String, String>(MODULE_VARIABLES);
 	}
-	
+
 	/** The Constant CONFIGURATION_PARAMETERS. */
 	private static final String[] CONFIGURATION_PARAMETERS = new String[] {
 			"DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME",
@@ -577,8 +591,7 @@ public class Configuration {
 			"DIRIGIBLE_DESTINATION_CLIENT_ID",
 			"DIRIGIBLE_DESTINATION_CLIENT_SECRET",
 			"DIRIGIBLE_DESTINATION_URL",
-			"DIRIGIBLE_DESTINATION_URI"
-	};
+			"DIRIGIBLE_DESTINATION_URI" };
 
 	/**
 	 * Gets the os.
@@ -624,7 +637,7 @@ public class Configuration {
 	public static boolean isOSSolaris() {
 		return (getOS().indexOf("sunos") >= 0);
 	}
-	
+
 	/**
 	 * Gets the configuration parameters.
 	 *
@@ -632,6 +645,41 @@ public class Configuration {
 	 */
 	public static String[] getConfigurationParameters() {
 		return CONFIGURATION_PARAMETERS.clone();
+	}
+	
+	/**
+	 * Configure a runtime object from configuration sources.
+	 * The parameter patterns are:
+	 *   1) ${CONFIGURATION_PARAMETER}
+	 *   2) ${CONFIGURATION_PARAMETER}.{DEFAULT_VALUE}
+	 * @param o the object
+	 */
+	public static void configureObject(Object o) {
+		if (o == null) {
+			return;
+		}
+		try {
+			for (Field field : o.getClass().getDeclaredFields()) {
+				Object v = field.get(o);
+				if (v != null) {
+					if (v instanceof String) {
+						String s = (String) v;
+						if (s.startsWith("${") && s.endsWith("}")) {
+							if (s.indexOf("}.{") > 0) {
+								String k = s.substring(2, s.indexOf("}.{"));
+								String d = s.substring(s.indexOf("}.{") + 3, s.length()-1);
+								field.set(o, Configuration.get(k, d));
+							} else {
+								String k = s.substring(2, s.length()-1);
+								field.set(o, Configuration.get(k));
+							}
+						}
+					}
+				}
+			}
+		} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 }
