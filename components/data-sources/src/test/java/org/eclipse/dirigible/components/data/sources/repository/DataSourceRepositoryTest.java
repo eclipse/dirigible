@@ -44,10 +44,6 @@ public class DataSourceRepositoryTest {
 	@Autowired
 	private DataSourceRepository datasourceRepository;
 	
-	/** The datasource property repository. */
-	@Autowired
-	private DataSourcePropertyRepository datasourcePropertyRepository;
-	
 	/** The entity manager. */
 	@Autowired
 	EntityManager entityManager;
@@ -63,11 +59,11 @@ public class DataSourceRepositoryTest {
 		cleanup();
 
     	// create test Datasources
-		createDatasource(datasourceRepository, datasourcePropertyRepository, "/a/b/c/ds1.datasource", "ds1", "description", "");
-		createDatasource(datasourceRepository, datasourcePropertyRepository, "/a/b/c/ds2.datasource", "ds2", "description", "");
-		createDatasource(datasourceRepository, datasourcePropertyRepository, "/a/b/c/ds3.datasource", "ds3", "description", "");
-		createDatasource(datasourceRepository, datasourcePropertyRepository, "/a/b/c/ds4.datasource", "ds4", "description", "");
-		createDatasource(datasourceRepository, datasourcePropertyRepository, "/a/b/c/ds5.datasource", "ds5", "description", "");
+		createDataSource(datasourceRepository, "/a/b/c/ds1.datasource", "ds1", "description", "");
+		createDataSource(datasourceRepository, "/a/b/c/ds2.datasource", "ds2", "description", "");
+		createDataSource(datasourceRepository, "/a/b/c/ds3.datasource", "ds3", "description", "");
+		createDataSource(datasourceRepository, "/a/b/c/ds4.datasource", "ds4", "description", "");
+		createDataSource(datasourceRepository, "/a/b/c/ds5.datasource", "ds5", "description", "");
     }
 	
 	/**
@@ -126,7 +122,7 @@ public class DataSourceRepositoryTest {
 	 * @param dependencies the dependencies
 	 * @return the datasource
 	 */
-	public static DataSource createDatasource(DataSourceRepository datasourceRepository, DataSourcePropertyRepository datasourcePropertyRepository, String location, String name, String description, String dependencies) {
+	public static DataSource createDataSource(DataSourceRepository datasourceRepository, String location, String name, String description, String dependencies) {
 		DataSource datasource = new DataSource(location, name, description, dependencies, "driver", "url", "", "", "LOCAL");
 		datasource.addProperty(name + "_1", "v1");
 		datasource.addProperty(name + "_2", "v2");

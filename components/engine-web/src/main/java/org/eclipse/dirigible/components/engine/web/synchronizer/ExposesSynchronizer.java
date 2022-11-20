@@ -17,6 +17,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -109,6 +110,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	@Override
 	public List<Expose> load(String location, byte[] content) {
 		Expose expose = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Expose.class);
+		Configuration.configureObject(expose);
 		expose.setLocation(location);
 		expose.setName(expose.getGuid());
 		expose.setType(Expose.ARTEFACT_TYPE);

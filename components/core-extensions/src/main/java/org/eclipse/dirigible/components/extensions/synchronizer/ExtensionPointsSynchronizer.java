@@ -17,6 +17,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -107,6 +108,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	@Override
 	public List<ExtensionPoint> load(String location, byte[] content) {
 		ExtensionPoint extensionPoint = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), ExtensionPoint.class);
+		Configuration.configureObject(extensionPoint);
 		extensionPoint.setLocation(location);
 		extensionPoint.setType(ExtensionPoint.ARTEFACT_TYPE);
 		extensionPoint.updateKey();

@@ -17,6 +17,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -84,7 +85,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_EXTENSION_EXTENSION);
+		return file.toString().endsWith(getFileExtension());
 	}
 	
 	/**
@@ -108,6 +109,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	@Override
 	public List<Extension> load(String location, byte[] content) {
 		Extension extension = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Extension.class);
+		Configuration.configureObject(extension);
 		extension.setLocation(location);
 		extension.setName("");
 		extension.setType(Extension.ARTEFACT_TYPE);

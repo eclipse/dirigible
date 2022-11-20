@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -89,6 +90,7 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
     @Override
     public List<Websocket> load(String location, byte[] content) {
         Websocket websocket = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Websocket.class);
+        Configuration.configureObject(websocket);
         websocket.setLocation(location);
         websocket.setName(FilenameUtils.getBaseName(location));
         websocket.setType(Websocket.ARTEFACT_TYPE);

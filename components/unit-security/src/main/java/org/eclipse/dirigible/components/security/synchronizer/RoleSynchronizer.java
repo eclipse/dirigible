@@ -17,6 +17,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -117,10 +118,9 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
     @Override
     public List<Role> load(String location, byte[] content) {
         Role[] roles = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Role[].class);
-
         Integer roleIndex = 1;
-
         for (Role role : roles) {
+        	Configuration.configureObject(role);
             role.setLocation(location);
             role.setName(roleIndex.toString());
             role.setType(Role.ARTEFACT_TYPE);

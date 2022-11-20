@@ -17,6 +17,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -118,6 +119,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     @Override
     public List<Access> load(String location, byte[] content) {
         Constraints accessArtifact = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
+        Configuration.configureObject(accessArtifact);
 
         List<Access> accesses = accessArtifact.buildSecurityAccesses(location);
 

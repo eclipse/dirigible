@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -116,6 +117,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
     @Override
     public List<Job> load(String location, byte[] content) {
         Job job = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Job.class);
+        Configuration.configureObject(job);
         job.setLocation(location);
         job.setName(FilenameUtils.getBaseName(location));
         job.setType(Job.ARTEFACT_TYPE);

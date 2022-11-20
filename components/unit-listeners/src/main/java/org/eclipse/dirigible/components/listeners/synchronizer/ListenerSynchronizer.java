@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -89,6 +90,7 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
     @Override
     public List<Listener> load(String location, byte[] content) {
         Listener listener = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Listener.class);
+        Configuration.configureObject(listener);
         listener.setLocation(location);
         listener.setType(Listener.ARTEFACT_TYPE);
         listener.setName(FilenameUtils.getBaseName(location));
