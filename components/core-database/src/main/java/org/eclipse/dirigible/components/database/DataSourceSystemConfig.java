@@ -84,11 +84,11 @@ public class DataSourceSystemConfig {
 	}
 	
 	
-	@Bean(name = "dataSourcesManager")
-	public DataSourcesManager dataSourcesManager() {
-		DataSourcesManager dataSourcesManager = new DataSourcesManager();
-		dataSourcesManager.initialize();
-		return dataSourcesManager;
-	}
+//	@Bean(name = "dataSourcesManager")
+//	public DataSourcesManager dataSourcesManager() {
+//		DataSourcesManager dataSourcesManager = new DataSourcesManager();
+//		dataSourcesManager.initialize();
+//		return dataSourcesManager;
+//	}
 
 }

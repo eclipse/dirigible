@@ -51,7 +51,7 @@ public class Expose extends Artefact {
 	@Nullable
 	@ElementCollection
 	@OrderColumn
-	private String[] exposes;
+	private String[] exposes = new String[] {};
 	
 	/**
 	 * Instantiates a new web.

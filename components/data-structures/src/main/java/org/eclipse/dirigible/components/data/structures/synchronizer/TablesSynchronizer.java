@@ -30,6 +30,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDeplet
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableLifecycle;
 import org.eclipse.dirigible.components.data.structures.service.TableService;
@@ -38,7 +39,6 @@ import org.eclipse.dirigible.components.data.structures.synchronizer.table.Table
 import org.eclipse.dirigible.components.data.structures.synchronizer.table.TableDropProcessor;
 import org.eclipse.dirigible.components.data.structures.synchronizer.table.TableForeignKeysCreateProcessor;
 import org.eclipse.dirigible.components.data.structures.synchronizer.table.TableForeignKeysDropProcessor;
-import org.eclipse.dirigible.components.database.DataSourcesManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +64,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	/** The table service. */
 	private TableService tableService;
 	
-	private DataSourcesManager dataSourcesManager;
+	private DataSourcesManager datasourcesManager;
 	
 	/** The synchronization callback. */
 	private SynchronizerCallback callback;
@@ -75,9 +75,9 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 * @param tableService the table service
 	 */
 	@Autowired
-	public TablesSynchronizer(TableService tableService, DataSourcesManager dataSourcesManager) {
+	public TablesSynchronizer(TableService tableService, DataSourcesManager datasourcesManager) {
 		this.tableService = tableService;
-		this.dataSourcesManager = dataSourcesManager;
+		this.datasourcesManager = datasourcesManager;
 	}
 	
 	/**
@@ -226,7 +226,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
 		
-		try (Connection connection = dataSourcesManager.getDefaultDataSource().getConnection()) {
+		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
 		
 			Table table = null;
 			if (wrapper.getArtefact() instanceof Table) {

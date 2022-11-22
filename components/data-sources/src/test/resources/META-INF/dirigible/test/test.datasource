@@ -1,1 +1,0 @@
-{"location":"/test/test.datasource","name":"TestDB","driver":"org.h2.Driver","url":"jdbc:h2:~/test","username":"sa","password":""}

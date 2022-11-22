@@ -661,7 +661,7 @@ public class Configuration {
 		}
 		try {
 			for (Field field : FieldUtils.getAllFields(o.getClass())) {
-				Object v = field.get(o);
+				Object v = FieldUtils.readField(field, o, true);
 				if (v != null) {
 					if (v instanceof String) {
 						String s = (String) v;

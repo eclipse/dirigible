@@ -1,0 +1,11 @@
+{
+  "location":"/datasources/SystemDB.datasource",
+  "name":"SystemDB",
+  "driver":"org.h2.jdbcx.JdbcDataSource",
+  "url":"jdbc:h2:~/SystemDB",
+  "username":"sa",
+  "password":"",
+  "nature":"local",
+  "properties":[
+  ]
+}

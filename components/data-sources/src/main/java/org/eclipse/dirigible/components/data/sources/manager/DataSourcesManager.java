@@ -1,0 +1,178 @@
+/*
+ * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
+package org.eclipse.dirigible.components.data.sources.manager;
+
+import static java.text.MessageFormat.format;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.data.sources.domain.DataSource;
+import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
+import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+/**
+ * The Class DataSourcesManager.
+ */
+@Component
+public class DataSourcesManager {
+	
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(DataSourcesManager.class);
+	
+	/** The Constant DATASOURCES. */
+	private static final Map<String, javax.sql.DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
+	
+	/** The datasource service. */
+	private DataSourceService datasourceService;
+	
+	/**
+	 * Instantiates a new data sources manager.
+	 *
+	 * @param datasourceService the datasource service
+	 */
+	@Autowired
+	public DataSourcesManager(DataSourceService datasourceService) {
+		this.datasourceService = datasourceService;
+	}
+	
+	/**
+	 * Gets the data source.
+	 *
+	 * @param name the name
+	 * @return the data source
+	 */
+	public javax.sql.DataSource getDataSource(String name) {
+		javax.sql.DataSource dataSource = DATASOURCES.get(name);
+		if (dataSource != null) {
+			return dataSource;
+		}
+		dataSource = initializeDataSource(name);
+		return dataSource;
+	}
+	
+	/**
+	 * Gets the default data source.
+	 *
+	 * @return the default data source
+	 */
+	public javax.sql.DataSource getDefaultDataSource() {
+		return getDataSource(getDefaultDataSourceName());
+	}
+	
+	/**
+	 * Gets the system DB.
+	 *
+	 * @return the system DB
+	 */
+	public javax.sql.DataSource getSystemDataSource() {
+		return getDataSource(getSystemDataSourceName());
+	}
+
+	/**
+	 * Initialize data source.
+	 *
+	 * @param name the name
+	 * @return the javax.sql. data source
+	 */
+	private javax.sql.DataSource initializeDataSource(String name) {
+		if (logger.isInfoEnabled()) {logger.info("Initializing a datasource with name: " + name);}
+		DataSource datasource = datasourceService.findByName(name);
+		try {
+			prepareRootFolder(name);
+		} catch (IOException e) {
+			logger.error("Invalid configuration for the datasource: " + name);
+		}
+		Properties properties = new Properties();
+		properties.put("dataSourceClassName", datasource.getDriver());
+		properties.put("dataSource.url", datasource.getUrl());
+		properties.put("dataSource.user", datasource.getUsername());
+		properties.put("dataSource.password", datasource.getPassword());
+		properties.put("dataSource.logWriter", new PrintWriter(System.out));
+		
+		HikariConfig config = new HikariConfig(properties);
+		config.setPoolName(name);
+		config.setAutoCommit(true);
+		datasource.getProperties().forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
+		HikariDataSource hds = new HikariDataSource(config);
+		
+		WrappedDataSource wrappedDataSource = new WrappedDataSource(hds);
+		DATASOURCES.put(name, wrappedDataSource);
+		if (logger.isInfoEnabled()) {logger.info("Initialized a datasource with name: " + name);}
+		return wrappedDataSource;	
+	}
+	
+	/**
+	 * Gets the default data source name.
+	 *
+	 * @return the default data source name
+	 */
+	public String getDefaultDataSourceName() {
+		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
+	}
+	
+	/**
+	 * Gets the system data source name.
+	 *
+	 * @return the system data source name
+	 */
+	public String getSystemDataSourceName() {
+		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
+	}
+	
+	/** The Constant DIRIGIBLE_DATABASE_H2_ROOT_FOLDER. */
+	public static final String DIRIGIBLE_DATABASE_H2_ROOT_FOLDER = "DIRIGIBLE_DATABASE_H2_ROOT_FOLDER"; //$NON-NLS-1$
+
+	/** The Constant DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT. */
+	public static final String DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT = DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + "_DEFAULT"; //$NON-NLS-1$
+	
+	/**
+	 * Prepare root folder.
+	 *
+	 * @param name
+	 *            the name
+	 * @return the string
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	private String prepareRootFolder(String name) throws IOException {
+		// TODO validate name parameter
+		// TODO get by name from Configuration
+
+		String rootFolder = (IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+				: DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
+		String h2Root = Configuration.get(rootFolder, name);
+		File rootFile = new File(h2Root);
+		File parentFile = rootFile.getCanonicalFile().getParentFile();
+		if (!parentFile.exists()) {
+			if (!parentFile.mkdirs()) {
+				throw new IOException(format("Creation of the root folder [{0}] of the embedded H2 database failed.", h2Root));
+			}
+		}
+		return h2Root;
+	}
+
+}

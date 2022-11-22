@@ -53,7 +53,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationProcessor.class);
 	
 	/** The definitions. */
-	private Map<Synchronizer<Artefact>, List<Definition>> definitions = new HashMap<>();
+	private Map<Synchronizer<Artefact>, Map<String, Definition>> definitions = new HashMap<>();
 	
 	/** The artefacts. */
 	private List<? extends Artefact> artefacts = new ArrayList<>();
@@ -93,7 +93,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		if (logger.isDebugEnabled()) {logger.debug("Processing synchronizers started...");}
 		
 		// prepare map
-		synchronizers.forEach(s -> definitions.put(s, new ArrayList<>()));
+		synchronizers.forEach(s -> definitions.put(s, new HashMap<>()));
 		
 		if (logger.isDebugEnabled()) {logger.debug("Collecting files...");}
 		// collect definitions for processing
@@ -187,7 +187,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 */
 	private void loadDefinitions() {
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
-			for (Definition definition : definitions.get(synchronizer)) {
+			for (Definition definition : definitions.get(synchronizer).values()) {
 				try {
 					List loaded = synchronizer.load(definition.getLocation(), definition.getContent());
 					artefacts.addAll(loaded);
@@ -273,11 +273,13 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 				// update the artefact with the new checksum and status
 				definitionService.save(maybe);
 				// added to artefacts for processing
-				definitions.get(synchronizer).add(maybe);
+				definitions.get(synchronizer).put(maybe.getKey(), maybe);
 			} else if (maybe.getState().equals(ArtefactLifecycle.CREATED.toString())
 					|| maybe.getState().equals(ArtefactLifecycle.MODIFIED.toString())) {
 				// pending from a previous run, add again for processing
-				definitions.get(synchronizer).add(maybe);
+				if (definitions.get(synchronizer).get(maybe.getKey()) == null) {
+					definitions.get(synchronizer).put(maybe.getKey(), maybe);
+				}
 			} else if (maybe.getState().equals(ArtefactLifecycle.FAILED.toString())) {
 				// report the erronous state
 				logger.warn("Definition with key: {} has been failed with reason {}", maybe.getKey(), maybe.getMessage());
@@ -286,7 +288,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			// artefact is new, hence stored for processing
 			definition.setState(ArtefactLifecycle.CREATED.toString());
 			definitionService.save(definition);
-			definitions.get(synchronizer).add(definition);
+			definitions.get(synchronizer).put(definition.getKey(), definition);
 		}
 	}
 	

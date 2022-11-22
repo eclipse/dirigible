@@ -118,6 +118,7 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 			if (maybe != null) {
 				datasource.setId(maybe.getId());
 			}
+			datasource.getProperties().forEach(p -> p.setDatasource(datasource));
 			getService().save(datasource);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
