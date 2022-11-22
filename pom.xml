@@ -809,7 +809,7 @@
 		<path-to-regexp.version>6.2.1</path-to-regexp.version>
 		
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
-		<org.springdoc.openapi.ui.version>1.6.12</org.springdoc.openapi.ui.version>
+		<org.springdoc.openapi.ui.version>1.6.13</org.springdoc.openapi.ui.version>
 
 		<sonar.organization>eclipse</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
