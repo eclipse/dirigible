@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-releng-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>6.3.28</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -98,62 +98,62 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 
 		<!-- API -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 
 		<!-- Repository -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-local</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-master</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 
 		<!-- Database -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-h2</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-custom</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 
 		<!-- Core Services -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-core</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 
 		<!-- Services -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-services</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -165,14 +165,14 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 
 		<!-- CMS -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-cms</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>6.3.28</version>
 		 	<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -189,35 +189,35 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-bpm</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 
 		<!-- MAIL -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-mail</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 		
 		<!-- Templating Core -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-templating-all</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 
 		<!-- Templates Plugins -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-templates</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 
 		<!-- Resources Plugins -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-resources</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.28</version>
 		</dependency>
 
 		<!-- External -->
