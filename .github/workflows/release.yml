@@ -237,10 +237,10 @@ jobs:
 
 #---------------Publish to Maven Central-----------------#
 
-    - name: Publish packages to Maven Central
-      run: |
-        mvn javadoc:jar
-        mvn deploy -P release -DskipTests -Dgpg.passphrase=${{ secrets.MAVEN_GPG_PASS_PHRASE }}
+    # - name: Publish packages to Maven Central
+    #   run: |
+    #     mvn javadoc:jar
+    #     mvn deploy -P release -DskipTests -Dgpg.passphrase=${{ secrets.MAVEN_GPG_PASS_PHRASE }}
 
 #---------------Publish to Maven Central-----------------#
 
