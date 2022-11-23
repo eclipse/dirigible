@@ -123,7 +123,7 @@ public class DataSourceRepositoryTest {
 	 * @return the datasource
 	 */
 	public static DataSource createDataSource(DataSourceRepository datasourceRepository, String location, String name, String description, String dependencies) {
-		DataSource datasource = new DataSource(location, name, description, dependencies, "driver", "url", "", "", "LOCAL");
+		DataSource datasource = new DataSource(location, name, description, dependencies, "driver", "url", "", "");
 		datasource.addProperty(name + "_1", "v1");
 		datasource.addProperty(name + "_2", "v2");
 		datasourceRepository.save(datasource);

@@ -61,10 +61,6 @@ public class DataSource extends Artefact {
 	@Column(name = "DS_PASSWORD", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String password;
 	
-	/** The nature. */
-	@Column(name = "DS_NATURE", columnDefinition = "VARCHAR", nullable = false, length = 25)
-	private String nature;
-	
 	/** The columns. */
 	@OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -81,15 +77,13 @@ public class DataSource extends Artefact {
 	 * @param url the url
 	 * @param username the username
 	 * @param password the password
-	 * @param nature the nature
 	 */
-	public DataSource(String location, String name, String description, String dependencies, String driver, String url, String username, String password, String nature) {
+	public DataSource(String location, String name, String description, String dependencies, String driver, String url, String username, String password) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.driver = driver;
 		this.url = url;
 		this.username = username;
 		this.password = password;
-		this.nature = nature;
 	}
 	
 	/**
@@ -190,24 +184,6 @@ public class DataSource extends Artefact {
 	}
 
 	/**
-	 * Gets the nature.
-	 *
-	 * @return the nature
-	 */
-	public String getNature() {
-		return nature;
-	}
-
-	/**
-	 * Sets the nature.
-	 *
-	 * @param nature the new nature
-	 */
-	public void setNature(String nature) {
-		this.nature = nature;
-	}
-
-	/**
 	 * Sets the properties.
 	 *
 	 * @param properties the properties to set
@@ -242,7 +218,7 @@ public class DataSource extends Artefact {
 	@Override
 	public String toString() {
 		return "DataSource [id=" + id + ", driver=" + driver + ", url=" + url + ", username=" + username + ", password="
-				+ password + ", nature=" + nature + ", properties=" + (properties != null ? Objects.toString(properties) : "null") + ", location=" + location + ", name="
+				+ password + ", properties=" + (properties != null ? Objects.toString(properties) : "null") + ", location=" + location + ", name="
 				+ name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies="
 				+ dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy
 				+ ", updatedAt=" + updatedAt + "]";

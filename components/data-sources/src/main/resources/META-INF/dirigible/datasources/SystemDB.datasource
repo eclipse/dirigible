@@ -1,11 +1,10 @@
 {
   "location":"/datasources/SystemDB.datasource",
   "name":"SystemDB",
-  "driver":"org.h2.jdbcx.JdbcDataSource",
-  "url":"jdbc:h2:~/SystemDB",
-  "username":"sa",
-  "password":"",
-  "nature":"local",
+  "driver":"${DIRIGIBLE_DATASOURCE_SYSTEM_DRIVER}.{org.h2.jdbcx.JdbcDataSource}",
+  "url":"${DIRIGIBLE_DATASOURCE_SYSTEM_URL}.{jdbc:h2:~/SystemDB}",
+  "username":"${DIRIGIBLE_DATASOURCE_SYSTEM_USERNAME}.{sa}",
+  "password":"${DIRIGIBLE_DATASOURCE_SYSTEM_PASSWORD}.{}",
   "properties":[
   ]
 }
