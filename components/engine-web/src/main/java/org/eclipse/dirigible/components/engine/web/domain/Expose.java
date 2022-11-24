@@ -24,7 +24,6 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
-import org.springframework.data.annotation.Transient;
 
 /**
  * The Class Expose.
@@ -44,6 +43,7 @@ public class Expose extends Artefact {
 	
 	/** The guid. */
 	@Column(name = "EXPOSE_GUID", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@com.google.gson.annotations.Expose
 	private String guid;
 	
 	/** The exposes. */
@@ -51,6 +51,7 @@ public class Expose extends Artefact {
 	@Nullable
 	@ElementCollection
 	@OrderColumn
+	@com.google.gson.annotations.Expose
 	private String[] exposes = new String[] {};
 	
 	/**

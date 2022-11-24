@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class SynchronizationJobService {
 
-	public static final long EXECUTION_TIME = 5000L;
-
     private Logger logger = LoggerFactory.getLogger(SynchronizationJobService.class);
 
     private AtomicInteger count = new AtomicInteger();
@@ -42,12 +40,12 @@ public class SynchronizationJobService {
 
     public void executeSynchronizationJob() {
 
-        logger.info("The synchronization job has begun...");
+        logger.debug("The synchronization job has begun...");
         try {
         	synchronizationProcessor.processSynchronizers();
         } finally {
             count.incrementAndGet();
-            logger.info("Synchronization job has finished...");
+            logger.debug("Synchronization job has finished...");
         }
     }
 

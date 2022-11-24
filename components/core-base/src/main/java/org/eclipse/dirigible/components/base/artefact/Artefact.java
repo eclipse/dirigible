@@ -17,6 +17,8 @@ import javax.persistence.Column;
 import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * The Class Artefact.
  */
@@ -28,30 +30,36 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 
 	/** The location. */
 	@Column(name = "ARTEFACT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	protected String location;
 	
 	/** The name. */
 	@Column(name = "ARTEFACT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	protected String name;
 	
 	/** The key. */
 	@Column(name = "ARTEFACT_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	protected String type;
 	
 	/** The description. */
 	@Column(name = "ARTEFACT_DESCRIPTION")
 	@Lob()
+	@Expose
 	protected String description;
 	
 	/** The key
 	 * e.g. table:/sales/domain/customer.table:customer
 	 */
 	@Column(name = "ARTEFACT_KEY", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
+	@Expose
 	protected String key;
 	
 	/** The dependencies as comma separated keys. */
 	@Column(name = "ARTEFACT_DEPENDENCIES")
 	@Lob()
+	@Expose
 	protected String dependencies;
 	
 	

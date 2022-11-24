@@ -186,7 +186,7 @@ public class TableCreateProcessor {
 				String name = indexModel.getName();
 				String type = indexModel.getType();
 				Boolean isUnique = indexModel.isUnique();
-				Set<String> indexColumns = indexModel.getColumnNames();
+				Set<String> indexColumns = Set.of(indexModel.getColumns());
 				createTableBuilder.index(name, isUnique, type, indexColumns);
 			}
 		}

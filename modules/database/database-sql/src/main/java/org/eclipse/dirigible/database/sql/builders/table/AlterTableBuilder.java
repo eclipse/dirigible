@@ -188,10 +188,24 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
                 // COLUMNS
                 generateColumns(sql);
             }
+            if (!getForeignKeys().isEmpty()) {
+                // FOREIGN KEYS
+                generateForeignKeyNames(sql);
+            }
+            if (!getUniqueIndices().isEmpty()) {
+                generateUniqueIndices(sql);
+            }
         } else if (KEYWORD_DROP.equals(this.action)) {
             if (!getColumns().isEmpty()) {
                 // COLUMNS
                 generateColumnNamesForDrop(sql);
+            }
+            if (!getForeignKeys().isEmpty()) {
+                // FOREIGN KEYS
+                generateForeignKeyNamesForDrop(sql);
+            }
+            if (!getUniqueIndices().isEmpty()) {
+                generateUniqueIndicesForDrop(sql);
             }
         } else {
             if (!getColumns().isEmpty()) {
@@ -201,13 +215,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
             }
         }
 
-        if (!getForeignKeys().isEmpty()) {
-            // FOREIGN KEYS
-            generateForeignKeyNames(sql);
-        }
-        if (!getUniqueIndices().isEmpty()) {
-            generateUniqueIndices(sql);
-        }
+        
         String generated = sql.append(SEMICOLON).toString().trim();
 
         if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
@@ -215,8 +223,29 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         return generated;
     }
 
+	private void generateForeignKeyNamesForDrop(StringBuilder sql) {
+		if (!this.getForeignKeys().isEmpty()) {
+			sql.append(KEYWORD_DROP)
+				.append(SPACE)
+            	.append(KEYWORD_CONSTRAINT)
+            	.append(SPACE);
+			this.getForeignKeys().forEach(fk -> sql.append(fk.getName() + ", "));
+			sql.delete(sql.length()-2, sql.length());
+        }
+	}
+	
+	private void generateUniqueIndicesForDrop(StringBuilder sql) {
+		if (!this.getUniqueIndices().isEmpty()) {
+			sql.append(KEYWORD_DROP)
+				.append(SPACE)
+	        	.append(KEYWORD_CONSTRAINT)
+	        	.append(SPACE);
+			this.getUniqueIndices().forEach(ui -> sql.append(ui.getName() + ", "));
+			sql.delete(sql.length()-2, sql.length());
+        }
+	}
 
-    /**
+	/**
      * Generate foreign key names.
      *
      * @param sql the sql
@@ -228,7 +257,6 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
                     .append(KEYWORD_CONSTRAINT)
                     .append(SPACE)
                     .append(foreignKey.getName())
-                    .append(SPACE)
                     .append(SPACE)
                     .append(KEYWORD_FOREIGN)
                     .append(SPACE)

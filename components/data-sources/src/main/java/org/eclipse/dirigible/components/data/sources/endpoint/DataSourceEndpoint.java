@@ -41,7 +41,7 @@ public class DataSourceEndpoint extends BaseEndpoint {
 	private final DataSourceService datasourceService;
 
 	/**
-	 * Instantiates a new table endpoint.
+	 * Instantiates a new data source endpoint.
 	 *
 	 * @param datasourceService the datasource service
 	 */

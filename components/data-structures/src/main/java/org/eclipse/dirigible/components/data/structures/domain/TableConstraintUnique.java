@@ -18,6 +18,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * The Class TableConstraintUnique.
  */
@@ -34,11 +36,13 @@ public class TableConstraintUnique extends TableConstraint {
 	/** The index type. */
 	@Column(name = "UNIQUE_INDEXTYPE", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Nullable
+	@Expose
     private String indexType;
 
     /** The order. */
 	@Column(name = "UNIQUE_ORDER", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Nullable
+	@Expose
     private String order;
 
 	/**

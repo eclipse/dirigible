@@ -25,18 +25,32 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * The Class ConfigurationsEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "configurations")
 public class ConfigurationsEndpoint extends BaseEndpoint {
 	
 	
+	/** The configurations service. */
 	private final ConfigurationsService configurationsService;
 	
+	/**
+	 * Instantiates a new configurations endpoint.
+	 *
+	 * @param configurationsService the configurations service
+	 */
 	@Autowired
 	public ConfigurationsEndpoint(ConfigurationsService configurationsService) {
 		this.configurationsService = configurationsService;
 	}
 	
+    /**
+     * Find all.
+     *
+     * @return the response entity
+     */
     @GetMapping
     public ResponseEntity<List<List<String>>> findAll() {
         return ResponseEntity.ok(configurationsService.findAll());

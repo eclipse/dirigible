@@ -19,17 +19,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
 
 /**
  * The Class DataSourceProperty.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_SOURCE_PROPERTIES")
+@Table(name = "DIRIGIBLE_DATA_SOURCE_PROPERTIES")
 public class DataSourceProperty {
 
 	/** The id. */
@@ -40,10 +42,12 @@ public class DataSourceProperty {
 	
 	/** The name. */
 	@Column(name = "DSP_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	private String name;
 	
 	/** The default value. */
 	@Column(name = "DSP_VALUE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Expose
 	private String value;
 		
 	/** The table. */

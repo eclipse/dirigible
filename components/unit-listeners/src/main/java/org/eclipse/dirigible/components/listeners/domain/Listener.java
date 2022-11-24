@@ -13,6 +13,8 @@ package org.eclipse.dirigible.components.listeners.domain;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 
 /**
@@ -33,6 +35,7 @@ public class Listener extends Artefact {
 
     /** The handler. */
     @Column(name = "LISTENER_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String handler;
 
 

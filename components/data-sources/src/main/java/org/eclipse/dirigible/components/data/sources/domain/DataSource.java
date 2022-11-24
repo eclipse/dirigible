@@ -29,6 +29,8 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * The Class DataSource.
  */
@@ -47,23 +49,28 @@ public class DataSource extends Artefact {
 	
 	/** The driver. */
 	@Column(name = "DS_DRIVER", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	private String driver;
 	
 	/** The url. */
 	@Column(name = "DS_URL", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	private String url;
 	
 	/** The username. */
 	@Column(name = "DS_USERNAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	private String username;
 	
 	/** The password. */
 	@Column(name = "DS_PASSWORD", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	private String password;
 	
 	/** The columns. */
 	@OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
+	@Expose
 	private List<DataSourceProperty> properties = new ArrayList<DataSourceProperty>();
 	
 	/**

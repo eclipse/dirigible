@@ -83,5 +83,35 @@ public class AlterTableTest {
 		assertNotNull(sql);
 		assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME ;", sql);
 	}
+	
+	/**
+	 * Alter table add foreign key
+	 */
+	@Test
+	public void alterAddForeignKey() {
+		String sql = SqlFactory.getDefault().alter()
+				.table("ORDERS")
+				.add()
+				.foreignKey("FK1", new String[]{"ORDER_CUSTOMER_ID"}, "CUSTOMERS", new String[]{"CUSTOMER_ID"})
+				.build();
+
+		assertNotNull(sql);
+		assertEquals("ALTER TABLE ORDERS ADD CONSTRAINT FK1 FOREIGN KEY ( ORDER_CUSTOMER_ID ) REFERENCES CUSTOMERS ( CUSTOMER_ID );", sql);
+	}
+	
+	/**
+	 * Alter table drop foreign key
+	 */
+	@Test
+	public void alterDropForeignKey() {
+		String sql = SqlFactory.getDefault().alter()
+				.table("ORDERS")
+				.drop()
+				.foreignKey("FK1", new String[]{"ORDER_CUSTOMER_ID"}, "CUSTOMERS", new String[]{"CUSTOMER_ID"})
+				.build();
+
+		assertNotNull(sql);
+		assertEquals("ALTER TABLE ORDERS DROP CONSTRAINT FK1;", sql);
+	}
 
 }

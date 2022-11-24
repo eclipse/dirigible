@@ -17,6 +17,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -37,23 +39,27 @@ public abstract class Auditable<U> {
     /** The created by. */
     @CreatedBy
     @Column(name = "CREATED_BY", columnDefinition = "VARCHAR", nullable = true, length = 128)
+    @Expose
     protected U createdBy;
 
     /** The created at. */
     @CreatedDate
     @Temporal(TIMESTAMP)
     @Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP", nullable = true)
+    @Expose
     protected Date createdAt;
 
     /** The updated by. */
     @LastModifiedBy
     @Column(name = "UPDATED_BY", columnDefinition = "VARCHAR", nullable = true, length = 128)
+    @Expose
     protected U updatedBy;
 
     /** The updated at. */
     @LastModifiedDate
     @Temporal(TIMESTAMP)
     @Column(name = "UPDATED_AT", columnDefinition = "TIMESTAMP", nullable = true)
+    @Expose
     protected Date updatedAt;
 
 	/**

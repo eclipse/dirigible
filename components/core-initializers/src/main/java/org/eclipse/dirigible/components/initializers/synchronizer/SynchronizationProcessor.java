@@ -92,6 +92,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		
 		if (logger.isDebugEnabled()) {logger.debug("Processing synchronizers started...");}
 		
+		prepare();
+		
 		// prepare map
 		synchronizers.forEach(s -> definitions.put(s, new HashMap<>()));
 		
@@ -164,6 +166,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		artefacts.clear();
 	}
 
+	private void prepare() {
+		errors.clear();
+		definitions.clear();
+		artefacts.clear();
+	}
+
 	/**
 	 * Collect files.
 	 *
@@ -217,7 +225,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 */
 	@Override
 	public void visitFile(Path file, BasicFileAttributes attrs, String location) {
-		logger.debug("visited file: " + file.toString());
 		checkFile(file, attrs, location);
 	}
 

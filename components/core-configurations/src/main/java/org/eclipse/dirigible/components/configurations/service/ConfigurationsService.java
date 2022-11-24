@@ -19,9 +19,17 @@ import java.util.StringTokenizer;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Class ConfigurationsService.
+ */
 @Service
 public class ConfigurationsService {
 	
+	/**
+	 * Find all.
+	 *
+	 * @return the list
+	 */
 	public List<List<String>> findAll() {
 		
 		Map<String, String> runtimeVariables = Configuration.getRuntimeVariables();

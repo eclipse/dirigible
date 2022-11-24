@@ -16,6 +16,8 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.annotation.Transient;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -41,42 +43,49 @@ public class Job extends Artefact {
      * The group.
      */
     @Column(name = "JOB_GROUP", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String group;
 
     /**
      * The clazz.
      */
     @Column(name = "JOB_CLASS", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String clazz = "";
 
     /**
      * The expression.
      */
     @Column(name = "JOB_EXPRESSION", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String expression;
 
     /**
      * The handler.
      */
     @Column(name = "JOB_HANDLER", columnDefinition = "VARCHAR", nullable = true, length = 255)
+    @Expose
     private String handler;
 
     /**
      * The engine.
      */
     @Column(name = "JOB_ENGINE", columnDefinition = "VARCHAR", nullable = true, length = 100)
+    @Expose
     private String engine;
 
     /**
      * The singleton.
      */
     @Column(name = "JOB_SINGLETON", columnDefinition = "BOOLEAN", nullable = false)
+    @Expose
     private boolean singleton = false;
 
     /**
      * The enabled.
      */
     @Column(name = "JOB_ENABLED", columnDefinition = "BOOLEAN", nullable = false)
+    @Expose
     private boolean enabled = true;
 
     /**
@@ -89,18 +98,21 @@ public class Job extends Artefact {
 
     /** The status. */
     @Column(name = "JOB_STATUS", columnDefinition = "SMALLINT", nullable = true)
+    @Expose
     private short status = 99;
 
     /**
      * The message.
      */
     @Column(name = "JOB_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+    @Expose
     private String message;
 
     /**
      * The executed at.
      */
     @Column(name = "JOB_EXECUTED_AT", columnDefinition = "TIMESTAMP", nullable = true)
+    @Expose
     private Timestamp executedAt;
 
     /**

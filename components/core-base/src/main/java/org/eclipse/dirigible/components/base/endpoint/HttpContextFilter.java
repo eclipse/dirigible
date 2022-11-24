@@ -22,8 +22,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.dirigible.commons.api.context.ContextException;
-import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
+import org.eclipse.dirigible.components.base.context.ContextException;
+import org.eclipse.dirigible.components.base.context.ThreadContextFacade;
 import org.springframework.stereotype.Component;
 
 /**

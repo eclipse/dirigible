@@ -46,20 +46,25 @@
 			}
 		],
 	"constraints": {
+		"name":"PERSONS_CONSTRAINTS",
 		"primaryKey": {
+			"name":"PERSONS_PK",
 			"columns": ["PERSON_FIRST_NAME", "PERSON_LAST_NAME"]
 		},
 		"foreignKeys":[{
+				"name":"PERSONS_FK",
 				"columns": ["PERSON_ADDRESS_ID"],
 				"referencedTable": "ADDRESSES",
 				"referencedColumns": ["ADDRESS_ID"]
 			}
 		],
 		"uniqueIndices":[{
+				"name":"PERSONS_UI",
 				"columns": ["PERSON_SOCIAL_NUMBER"]
 			}
 		],
 		"checks":[{
+				"name":"PERSONS_CK",
 				"expression": "PERSON_YEAR_OF_BIRTH > 2000"
 			}
 		]

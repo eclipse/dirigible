@@ -26,6 +26,8 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.springframework.data.annotation.Transient;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * The Class Extension.
  */
@@ -41,14 +43,17 @@ public class Definition extends Artefact {
 	
 	/** The checksum. */
 	@Column(name = "DEFINITION_CHECKSUM", columnDefinition = "VARCHAR", nullable = true, length = 32)
+	@Expose
     protected String checksum;
 	
 	/** The status. */
 	@Column(name = "DEFINITION_STATE", columnDefinition = "VARCHAR", nullable = true, length = 32)
+	@Expose
     protected String state;
 	
 	/** The status. */
 	@Column(name = "DEFINITION_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+	@Expose
     protected String message;
 	
 	@Transient

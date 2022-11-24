@@ -29,11 +29,11 @@ public class SynchronizationJob implements Job {
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
 
-        logger.info("Job ** {} ** fired @ {}", context.getJobDetail().getKey().getName(), context.getFireTime());
+        logger.debug("Job ** {} ** fired @ {}", context.getJobDetail().getKey().getName(), context.getFireTime());
 
         jobService.executeSynchronizationJob();
 
-        logger.info("Next job scheduled @ {}", context.getNextFireTime());
+        logger.debug("Next job scheduled @ {}", context.getNextFireTime());
     }
 
 }

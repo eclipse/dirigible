@@ -13,6 +13,8 @@ package org.eclipse.dirigible.components.websockets.domain;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 
 /**
@@ -33,14 +35,17 @@ public class Websocket extends Artefact {
 
     /** The endpoint. */
     @Column(name = "WEBSOCKET_ENDPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
+    @Expose
     private String endpoint;
 
     /** The handler. */
     @Column(name = "WEBSOCKET_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String handler;
 
     /** The engine. */
     @Column(name = "WEBSOCKET_ENGINE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+    @Expose
     private String engine;
 
     /**

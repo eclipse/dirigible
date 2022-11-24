@@ -33,6 +33,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
 
 /**
  * The Class TableConstraints.
@@ -50,24 +51,28 @@ public class TableConstraints {
 	/** The primary key. */
 	@OneToOne(mappedBy = "constraints", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
 	@Nullable
+	@Expose
 	private TableConstraintPrimaryKey primaryKey;
 
 	/** The foreign keys. */
 	@OneToMany(mappedBy = "constraints", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Nullable
+	@Expose
 	private List<TableConstraintForeignKey> foreignKeys = new ArrayList<TableConstraintForeignKey>();
 
 	/** The unique indices. */
 	@OneToMany(mappedBy = "constraints", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Nullable
+	@Expose
 	private List<TableConstraintUnique> uniqueIndexes = new ArrayList<TableConstraintUnique>();
 
 	/** The checks. */
 	@OneToMany(mappedBy = "constraints", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Nullable
+	@Expose
 	private List<TableConstraintCheck> checks = new ArrayList<TableConstraintCheck>();
 	
 	/** The table. */
@@ -76,6 +81,15 @@ public class TableConstraints {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Table table;
+
+	/**
+	 * Instantiates a new table constraints.
+	 *
+	 * @param table the table
+	 */
+	public TableConstraints() {
+		super();
+	}
 
 	/**
 	 * Gets the id.

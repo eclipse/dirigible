@@ -31,9 +31,10 @@
 		<module>unit-listeners</module>
 
 		<!-- Data -->
-		<module>data-structures</module>
 		<module>data-sources</module>
+		<module>data-structures</module>
 		<module>data-transfer</module>
+		<module>data-metadata</module>
 
 		<!-- Engines -->
 		<module>engine-javascript</module>

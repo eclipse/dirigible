@@ -24,6 +24,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
 
 /**
  * The Class TableColumn.
@@ -36,38 +37,47 @@ public class TableColumn {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "COLUMN_ID", nullable = false)
+	@Expose
 	private Long id;
 	
 	/** The name. */
 	@Column(name = "COLUMN_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	private String name;
 	
 	/** The type. */
 	@Column(name = "COLUMN_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	private String type;
 	
 	/** The length. */
 	@Column(name = "COLUMN_LENGTH", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Expose
 	private String length;
 	
 	/** The nullable. */
 	@Column(name = "COLUMN_NULLABLE", columnDefinition = "BOOLEAN", nullable = true)
+	@Expose
 	private boolean nullable;
 	
 	/** The primary key. */
 	@Column(name = "COLUMN_PRIMARY_KEY", columnDefinition = "BOOLEAN", nullable = true)
+	@Expose
 	private boolean primaryKey;
 	
 	/** The default value. */
 	@Column(name = "COLUMN_DEFAULT_VALUE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Expose
 	private String defaultValue;
 	
 	/** The scale. */
 	@Column(name = "COLUMN_SCALE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Expose
 	private String scale;
 	
 	/** The unique. */
 	@Column(name = "COLUMN_UNIQUE", columnDefinition = "BOOLEAN", nullable = true)
+	@Expose
 	private boolean unique;
 	
 	/** The table. */
@@ -90,7 +100,7 @@ public class TableColumn {
 	 * @param unique the unique
 	 * @param table the table
 	 */
-	TableColumn(String name, String type, String length, boolean nullable, boolean primaryKey,
+	public TableColumn(String name, String type, String length, boolean nullable, boolean primaryKey,
 			String defaultValue, String scale, boolean unique, Table table) {
 		super();
 		this.name = name;

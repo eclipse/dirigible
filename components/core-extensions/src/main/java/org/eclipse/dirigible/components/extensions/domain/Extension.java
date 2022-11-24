@@ -20,6 +20,8 @@ import javax.persistence.Table;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * The Class Extension.
  */
@@ -38,10 +40,12 @@ public class Extension extends Artefact {
 	
 	/** The extension point. */
 	@Column(name = "EXTENSION_EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = false)
+	@Expose
 	private String extensionPoint;
 
 	/** The module. */
 	@Column(name = "EXTENSION_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	private String module;
 
 	

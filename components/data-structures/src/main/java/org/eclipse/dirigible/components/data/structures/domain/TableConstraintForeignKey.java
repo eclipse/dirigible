@@ -20,6 +20,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OrderColumn;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * The Class TableConstraintForeignKey.
  */
@@ -36,6 +38,7 @@ public class TableConstraintForeignKey extends TableConstraint {
 	/** The referenced table. */
 	@Column(name = "FOREIGNKEY_REF_TABLE", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Nullable
+	@Expose
 	private String referencedTable;
 	
 	/** The referenced columns. */
@@ -43,6 +46,7 @@ public class TableConstraintForeignKey extends TableConstraint {
 	@Nullable
 	@ElementCollection
 	@OrderColumn
+	@Expose
 	private String[] referencedColumns;
 	
 	/**

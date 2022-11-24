@@ -12,6 +12,9 @@
 package org.eclipse.dirigible.components.jobs.domain;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
+
+import com.google.gson.annotations.Expose;
+
 import java.sql.Timestamp;
 import javax.persistence.*;
 
@@ -57,30 +60,37 @@ public class JobLog extends Artefact {
     
     /** The job name. */
     @Column(name = "JOBLOG_JOB_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String jobName;
 
     /** The handler. */
     @Column(name = "JOBLOG_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String handler;
 
     /** The started at. */
     @Column(name = "JOBLOG_TRIGGERED_AT", columnDefinition = "TIMESTAMP", nullable = true)
+    @Expose
     private Timestamp triggeredAt;
 
     /** The triggered id. */
     @Column(name = "JOBLOG_TRIGGERED_ID", columnDefinition = "BIGINT", nullable = true)
+    @Expose
     private long triggeredId;
 
     /** The finished at. */
     @Column(name = "JOBLOG_FINISHED_AT", columnDefinition = "TIMESTAMP", nullable = true)
+    @Expose
     private Timestamp finishedAt;
 
     /**  The status. */
     @Column(name = "JOBLOG_STATUS", columnDefinition = "SMALLINT", nullable = false)
+    @Expose
     private short status;
 
     /** The message. */
     @Column(name = "JOBLOG_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+    @Expose
     private String message;
 
     /**

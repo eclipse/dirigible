@@ -25,6 +25,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
 
 /**
  * The Class TableConstraintCheck.
@@ -42,6 +43,7 @@ public class TableConstraintCheck extends TableConstraint {
 	/** The expression. */
 	@Column(name = "CHECK_EXPRESSION", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Nullable
+	@Expose
 	private String expression;
 	
 	/**

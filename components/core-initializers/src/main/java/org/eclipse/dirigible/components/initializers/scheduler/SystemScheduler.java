@@ -41,6 +41,8 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 @Configuration
 public class SystemScheduler {
 	
+	private static final String DIRIGIBLE_SYNCHRONIZER_FREQUENCY = "DIRIGIBLE_SYNCHRONIZER_FREQUENCY";
+
 	private static final Logger logger = LoggerFactory.getLogger(SystemScheduler.class);
 
     @Autowired
@@ -89,16 +91,23 @@ public class SystemScheduler {
     @Bean
     public JobDetail jobDetail() {
 
-        return newJob().ofType(SynchronizationJob.class).storeDurably().withIdentity(JobKey.jobKey("SynchronizationJob_Detail")).withDescription("Invoke Synchronization Job service...").build();
+        return newJob().ofType(SynchronizationJob.class).storeDurably()
+        		.withIdentity(JobKey.jobKey("SynchronizationJob_Detail"))
+        		.withDescription("Invoke Synchronization Job service...")
+        		.build();
     }
 
     @Bean
     public Trigger trigger(JobDetail job) {
 
+    	String frequency = org.eclipse.dirigible.commons.config.Configuration.get(
+    			DIRIGIBLE_SYNCHRONIZER_FREQUENCY, "10");
         int frequencyInSec = 10;
         logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
 
-        return newTrigger().forJob(job).withIdentity(TriggerKey.triggerKey("Synchronization_Trigger")).withDescription("Synchronization trigger").withSchedule(simpleSchedule().withIntervalInSeconds(frequencyInSec).repeatForever()).build();
+        return newTrigger().forJob(job).withIdentity(TriggerKey.triggerKey("Synchronization_Trigger"))
+        		.withDescription("Synchronization trigger")
+        		.withSchedule(simpleSchedule().withIntervalInSeconds(frequencyInSec).repeatForever()).build();
     }
 
 }

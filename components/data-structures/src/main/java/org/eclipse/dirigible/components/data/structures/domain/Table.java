@@ -30,6 +30,8 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * The Class Table.
  */
@@ -46,21 +48,39 @@ public class Table extends Artefact {
 	@Column(name = "TABLE_ID", nullable = false)
 	private Long id;
 	
+	/** The name. */
+	@Column(name = "TABLE_NAME", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Expose
+	protected String tableName;
+	
+	/** The key. */
+	@Column(name = "TABLE_TYPE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Expose
+	protected String tableType;
+	
+	/** The name. */
+	@Column(name = "TABLE_SCHEMA", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Expose
+	protected String schemaName;
+	
 	/** The columns. */
 	@OneToMany(mappedBy = "table", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
+	@Expose
 	private List<TableColumn> columns = new ArrayList<TableColumn>();
 	
 	/** The indexes. */
 	@OneToMany(mappedBy = "table", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Nullable
+	@Expose
 	private List<TableIndex> indexes = new ArrayList<TableIndex>();
 
 	/** The constraints. */
 	@OneToOne(mappedBy = "table", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
 	@Nullable
-	private TableConstraints constraints = new TableConstraints();
+	@Expose
+	private TableConstraints constraints;
 
 	/**
 	 * Instantiates a new table.
@@ -69,9 +89,15 @@ public class Table extends Artefact {
 	 * @param name the name
 	 * @param description the description
 	 * @param dependencies the dependencies
+	 * @param tableName the table name
+	 * @param tableType the table type
 	 */
-	public Table(String location, String name, String description, String dependencies) {
+	public Table(String location, String name, String description, String dependencies, String tableName, String tableType, String schemaName) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
+		this.constraints = new TableConstraints();
+		this.tableName = tableName;
+		this.tableType = tableType;
+		this.schemaName = schemaName;
 	}
 	
 	/**
@@ -79,6 +105,7 @@ public class Table extends Artefact {
 	 */
 	public Table() {
 		super();
+		this.constraints = new TableConstraints();
 	}
 
 	/**
@@ -97,6 +124,66 @@ public class Table extends Artefact {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * Gets the table name.
+	 *
+	 * @return the tableName
+	 */
+	public String getTableName() {
+		if (tableName == null) {
+			return name;
+		}
+		return tableName;
+	}
+
+	/**
+	 * Sets the table name.
+	 *
+	 * @param tableName the tableName to set
+	 */
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	/**
+	 * Gets the table type.
+	 *
+	 * @return the tableType
+	 */
+	public String getTableType() {
+		if (tableType == null) {
+			return type;
+		}
+		return tableType;
+	}
+
+	/**
+	 * Sets the table type.
+	 *
+	 * @param tableType the tableType to set
+	 */
+	public void setTableType(String tableType) {
+		this.tableType = tableType;
+	}
+	
+	/**
+	 * Gets the schema name.
+	 *
+	 * @return the schemaName
+	 */
+	public String getSchemaName() {
+		return schemaName;
+	}
+
+	/**
+	 * Sets the schema name.
+	 *
+	 * @param schemaName the schemaName to set
+	 */
+	public void setSchemaName(String schemaName) {
+		this.schemaName = schemaName;
 	}
 
 	/**
@@ -195,7 +282,7 @@ public class Table extends Artefact {
 	 * @param columns the columns
 	 * @return the table index
 	 */
-	public TableIndex addIndex(String name, String type, boolean unique, String columns) {
+	public TableIndex addIndex(String name, String type, boolean unique, String[] columns) {
 		TableIndex tableIndex = new TableIndex(name, type, unique, columns, this);
 		indexes.add(tableIndex);
 		return tableIndex;

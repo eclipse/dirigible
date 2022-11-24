@@ -20,6 +20,8 @@ import javax.persistence.Table;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * The Class SecurityAccess.
  */
@@ -45,24 +47,28 @@ public class Access extends Artefact {
      * The scope.
      */
     @Column(name = "ACCESS_SCOPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String scope;
 
     /**
      * The path.
      */
     @Column(name = "ACCESS_PATH", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String path;
 
     /**
      * The method.
      */
     @Column(name = "ACCESS_METHOD", columnDefinition = "VARCHAR", nullable = false, length = 20)
+    @Expose
     private String method;
 
     /**
      * The role.
      */
     @Column(name = "ACCESS_ROLE", columnDefinition = "VARCHAR", nullable = false, length = 64)
+    @Expose
     private String role;
 
     /**

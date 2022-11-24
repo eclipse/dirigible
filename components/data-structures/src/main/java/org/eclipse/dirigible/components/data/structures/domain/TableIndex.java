@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,12 +24,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
 
 /**
  * The Class TableIndex.
@@ -45,19 +48,25 @@ public class TableIndex {
 	
 	/** The name. */
 	@Column(name = "INDEX_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	private String name;
 	
 	/** The type. */
 	@Column(name = "INDEX_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Expose
 	private String type;
     
 	/** The unique. */
 	@Column(name = "INDEX_UNIQUE", columnDefinition = "BOOLEAN", nullable = true)
+	@Expose
 	private boolean unique;
     
     /** The index columns. */
 	@Column(name = "INDEX_COLUMNS", columnDefinition = "VARCHAR", nullable = false, length = 2000)
-    private String columns;
+	@ElementCollection
+	@OrderColumn
+	@Expose
+    private String[] columns;
 	
 	/** The table. */
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -66,10 +75,6 @@ public class TableIndex {
     @JsonIgnore
     private Table table;
 	
-	/** The column names. */
-	@Transient
-	private transient Set<String> columnNames;
-
 	/**
 	 * Instantiates a new table index.
 	 *
@@ -79,7 +84,7 @@ public class TableIndex {
 	 * @param columns the columns
 	 * @param table the table
 	 */
-	TableIndex(String name, String type, boolean unique, String columns, Table table) {
+	TableIndex(String name, String type, boolean unique, String[] columns, Table table) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -172,7 +177,7 @@ public class TableIndex {
 	 *
 	 * @return the columns
 	 */
-	public String getColumns() {
+	public String[] getColumns() {
 		return columns;
 	}
 
@@ -181,7 +186,7 @@ public class TableIndex {
 	 *
 	 * @param columns the columns to set
 	 */
-	public void setColumns(String columns) {
+	public void setColumns(String[] columns) {
 		this.columns = columns;
 	}
 
@@ -203,51 +208,6 @@ public class TableIndex {
 		this.table = table;
 	}
 	
-	/**
-	 * Adds the column.
-	 *
-	 * @param column the column
-	 */
-	public void addColumn(String column) {
-		if (columns == null && columns.trim().length() == 0) {
-			columns = column;
-			return;
-		}
-		columns += "," + column;
-		if (columnNames != null) {
-			columnNames.add(column);
-		}
-	}
-	
-	/**
-	 * Removes the column.
-	 *
-	 * @param column the column
-	 */
-	public void removeColumn(String column) {
-		if (columnNames == null) {
-			columnNames = getColumnNames();
-		}
-		columnNames.remove(column);
-		columns = String.join(",", columnNames);
-	}
-	
-	/**
-	 * Gets the column names.
-	 *
-	 * @return the column names
-	 */
-	public Set<String> getColumnNames() {
-		if (columnNames != null) {
-			return columnNames;
-		}
-		columnNames = new HashSet<>();
-		if (columns != null) {
-			Arrays.asList(columns.split(",")).forEach(n -> columnNames.add(n));;
-		}
-		return columnNames;
-	}
-
 	/**
 	 * To string.
 	 *

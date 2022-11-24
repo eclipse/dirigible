@@ -12,6 +12,9 @@
 package org.eclipse.dirigible.components.jobs.domain;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
+
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 
 /**
@@ -32,10 +35,12 @@ public class JobEmail extends Artefact {
 
     /** The job name. */
     @Column(name = "JOBEMAIL_JOB_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String jobName;
 
     /** The name. */
     @Column(name = "JOBEMAIL_EMAIL", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String email;
 
     /**

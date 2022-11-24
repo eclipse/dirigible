@@ -26,6 +26,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
 
 /**
  * The Class TableConstraint.
@@ -36,6 +37,7 @@ public abstract class TableConstraint {
 	/** The name. */
 	@Column(name = "CONSTRAINT_NAME", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Nullable
+	@Expose
 	protected String name;
 	
 	/** The modifiers. */
@@ -43,6 +45,7 @@ public abstract class TableConstraint {
 	@Nullable
 	@ElementCollection
 	@OrderColumn
+	@Expose
 	protected String[] modifiers;
 	
 	/** The columns. */
@@ -50,6 +53,7 @@ public abstract class TableConstraint {
 	@Nullable
 	@ElementCollection
 	@OrderColumn
+	@Expose
 	protected String[] columns;
 	
 	/** The constraints. */
