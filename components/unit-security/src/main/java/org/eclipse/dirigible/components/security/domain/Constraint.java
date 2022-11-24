@@ -14,6 +14,8 @@ package org.eclipse.dirigible.components.security.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * The Class Constraint.
  */
@@ -22,21 +24,25 @@ public class Constraint {
     /**
      * The scope.
      */
+	@Expose
     private String scope;
 
     /**
      * The path.
      */
+	@Expose
     private String path;
 
     /**
      * The method.
      */
+	@Expose
     private String method;
 
     /**
      * The roles.
      */
+	@Expose
     private List<String> roles = new ArrayList<String>();
 
     /**
@@ -101,4 +107,10 @@ public class Constraint {
     public List<String> getRoles() {
         return roles;
     }
+
+	@Override
+	public String toString() {
+		return "Constraint [scope=" + scope + ", path=" + path + ", method=" + method + ", roles=" + roles + "]";
+	}
+	
 }

@@ -23,7 +23,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.helpers.GsonHelper;
+import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.security.domain.Role;
@@ -117,7 +117,7 @@ public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> 
      */
     @Override
     public List<Role> load(String location, byte[] content) {
-        Role[] roles = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Role[].class);
+        Role[] roles = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Role[].class);
         Integer roleIndex = 1;
         for (Role role : roles) {
         	Configuration.configureObject(role);

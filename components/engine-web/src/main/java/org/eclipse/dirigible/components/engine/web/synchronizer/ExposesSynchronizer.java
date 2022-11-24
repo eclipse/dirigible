@@ -23,7 +23,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.helpers.GsonHelper;
+import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.engine.web.domain.Expose;
@@ -109,7 +109,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	 */
 	@Override
 	public List<Expose> load(String location, byte[] content) {
-		Expose expose = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Expose.class);
+		Expose expose = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Expose.class);
 		Configuration.configureObject(expose);
 		expose.setLocation(location);
 		expose.setName(expose.getGuid());

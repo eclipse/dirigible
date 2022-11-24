@@ -14,12 +14,15 @@ package org.eclipse.dirigible.components.security.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * The Class Constraints.
  */
 public class Constraints {
 
     /** The constraints. */
+	@Expose
     private List<Constraint> constraints = new ArrayList<>();
 
     /**
@@ -52,4 +55,11 @@ public class Constraints {
 
         return securityAccesses;
     }
+
+	@Override
+	public String toString() {
+		return "Constraints [constraints=" + constraints + "]";
+	}
+    
+    
 }

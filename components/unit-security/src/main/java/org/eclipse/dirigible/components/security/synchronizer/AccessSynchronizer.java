@@ -23,7 +23,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.helpers.GsonHelper;
+import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.security.domain.Access;
@@ -118,10 +118,10 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      */
     @Override
     public List<Access> load(String location, byte[] content) {
-        Constraints accessArtifact = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
-        Configuration.configureObject(accessArtifact);
+        Constraints constraints = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
+        Configuration.configureObject(constraints);
 
-        List<Access> accesses = accessArtifact.buildSecurityAccesses(location);
+        List<Access> accesses = constraints.buildSecurityAccesses(location);
 
         for (Access access : accesses) {
             try {

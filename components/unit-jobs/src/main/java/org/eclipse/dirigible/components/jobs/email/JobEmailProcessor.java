@@ -22,8 +22,8 @@ import javax.mail.MessagingException;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.dirigible.api.v3.mail.MailFacade;
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobEmail;
 import org.eclipse.dirigible.components.jobs.service.JobEmailService;

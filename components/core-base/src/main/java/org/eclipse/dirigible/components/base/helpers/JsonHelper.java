@@ -22,7 +22,7 @@ import com.google.gson.JsonParser;
 /**
  * The GsonHelper utility class.
  */
-public class GsonHelper {
+public class JsonHelper {
 
 	/** The GSON instance. */
 	private static final transient Gson GSON = 

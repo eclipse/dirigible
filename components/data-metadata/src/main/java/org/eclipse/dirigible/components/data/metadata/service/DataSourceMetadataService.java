@@ -15,7 +15,7 @@ package org.eclipse.dirigible.components.data.metadata.service;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.eclipse.dirigible.components.base.helpers.GsonHelper;
+import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.metadata.load.DataSourceMetadataLoader;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
@@ -49,7 +49,7 @@ public class DataSourceMetadataService {
 		javax.sql.DataSource datasource = datasourceManager.getDataSource(name);
 		List<Table> model = datasourceMetadataLoader.getSchemaMetadata(schema, datasource);
 		if (model != null) {
-			return GsonHelper.toJson(model);
+			return JsonHelper.toJson(model);
 		}
 		return null;
 		
@@ -59,7 +59,7 @@ public class DataSourceMetadataService {
 		javax.sql.DataSource datasource = datasourceManager.getDataSource(name);
 		Table model = datasourceMetadataLoader.getTableMetadata(schema, structure, datasource);
 		if (model != null) {
-			return GsonHelper.toJson(model);
+			return JsonHelper.toJson(model);
 		}
 		return null;
 	}

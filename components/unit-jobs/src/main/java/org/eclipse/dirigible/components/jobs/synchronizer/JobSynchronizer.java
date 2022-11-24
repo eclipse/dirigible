@@ -24,7 +24,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.helpers.GsonHelper;
+import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.jobs.domain.Job;
@@ -116,7 +116,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      */
     @Override
     public List<Job> load(String location, byte[] content) {
-        Job job = GsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Job.class);
+        Job job = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Job.class);
         Configuration.configureObject(job);
         job.setLocation(location);
         job.setName(FilenameUtils.getBaseName(location));
