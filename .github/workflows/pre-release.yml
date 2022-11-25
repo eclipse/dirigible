@@ -9,18 +9,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
     - name: Set up JDK 13
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
-        java-version: 13
-        gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+        distribution: 'zulu'
+        java-version: '13'
+        pg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
         architecture: x64
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v2
       with:
         install: true
     - name: Set Multi-Builder Docker Buildx
@@ -236,7 +237,7 @@ jobs:
 #----------------Publish Helm Release------------------#
 
     - name: Helm tool installer
-      uses: Azure/setup-helm@v1
+      uses: Azure/setup-helm@v3
     - name: Helm Charts Release - Checkout gh-pages
       run: |
         mkdir charts-temp
