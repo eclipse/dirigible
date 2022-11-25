@@ -266,7 +266,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag_name: v${{ env.DIRIGIBLE_VERSION }}
-        release_name: ${{ env.DIRIGIBLE_VERSION }}
+        name: ${{ env.DIRIGIBLE_VERSION }}
         draft: false
         prerelease: false
         files: |
