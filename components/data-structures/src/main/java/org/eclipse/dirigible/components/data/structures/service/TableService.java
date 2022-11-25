@@ -31,21 +31,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TableService implements ArtefactService<Table> {
 	
+	/** The table repository. */
 	@Autowired 
 	private TableRepository tableRepository;
 
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public List<Table> getAll() {
 		return tableRepository.findAll();
 	}
 	
+	/**
+	 * Find all.
+	 *
+	 * @param pageable the pageable
+	 * @return the page
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public Page<Table> findAll(Pageable pageable) {
 		return tableRepository.findAll(pageable);
 	}
 	
+	/**
+	 * Find by id.
+	 *
+	 * @param id the id
+	 * @return the table
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public Table findById(Long id) {
@@ -57,6 +75,12 @@ public class TableService implements ArtefactService<Table> {
 		}
 	}
 	
+	/**
+	 * Find by name.
+	 *
+	 * @param name the name
+	 * @return the table
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public Table findByName(String name) {
@@ -90,11 +114,22 @@ public class TableService implements ArtefactService<Table> {
         return null;
     }
 	
+	/**
+	 * Save.
+	 *
+	 * @param table the table
+	 * @return the table
+	 */
 	@Override
 	public Table save(Table table) {
 		return tableRepository.saveAndFlush(table);
 	}
 	
+	/**
+	 * Delete.
+	 *
+	 * @param table the table
+	 */
 	@Override
 	public void delete(Table table) {
 		tableRepository.delete(table);

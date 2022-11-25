@@ -91,6 +91,7 @@ public class Table extends Artefact {
 	 * @param dependencies the dependencies
 	 * @param tableName the table name
 	 * @param tableType the table type
+	 * @param schemaName the schema name
 	 */
 	public Table(String location, String name, String description, String dependencies, String tableName, String tableType, String schemaName) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
