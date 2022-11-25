@@ -84,8 +84,6 @@ public class TableConstraints {
 
 	/**
 	 * Instantiates a new table constraints.
-	 *
-	 * @param table the table
 	 */
 	public TableConstraints() {
 		super();

@@ -104,7 +104,7 @@ public class DataSourceMetadataLoader {
 	/**
 	 * Instantiates a new data source endpoint.
 	 *
-	 * @param datasourceService the datasource service
+	 * @param datasourceManager the datasource manager
 	 */
 	@Autowired
 	public DataSourceMetadataLoader(DataSourcesManager datasourceManager) {
@@ -137,8 +137,8 @@ public class DataSourceMetadataLoader {
     /**
      * Gets the table metadata.
      *
-     * @param tableName the table name
      * @param schemaName the schema name
+     * @param tableName the table name
      * @param dataSource the data source
      * @return the table metadata
      * @throws SQLException the SQL exception
@@ -485,6 +485,14 @@ public class DataSourceMetadataLoader {
         return null;
     }
 
+	/**
+	 * Gets the schema metadata.
+	 *
+	 * @param schema the schema
+	 * @param datasource the datasource
+	 * @return the schema metadata
+	 * @throws SQLException the SQL exception
+	 */
 	public List<Table> getSchemaMetadata(String schema, DataSource datasource) throws SQLException {
 		List<Table> tables = new ArrayList<Table>();
 		

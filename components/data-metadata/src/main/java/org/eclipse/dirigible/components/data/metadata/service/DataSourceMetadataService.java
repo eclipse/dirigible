@@ -22,6 +22,9 @@ import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Class DataSourceMetadataService.
+ */
 @Service
 public class DataSourceMetadataService {
 	
@@ -36,7 +39,7 @@ public class DataSourceMetadataService {
 	/**
 	 * Instantiates a new data source endpoint.
 	 *
-	 * @param datasourceService the datasource service
+	 * @param datasourceManager the datasource manager
 	 * @param datasourceMetadataLoader the datasource metadata loader
 	 */
 	@Autowired
@@ -45,6 +48,14 @@ public class DataSourceMetadataService {
 		this.datasourceMetadataLoader = datasourceMetadataLoader;
 	}
 	
+	/**
+	 * Gets the schema metadata.
+	 *
+	 * @param name the name
+	 * @param schema the schema
+	 * @return the schema metadata
+	 * @throws SQLException the SQL exception
+	 */
 	public String getSchemaMetadata(String name, String schema) throws SQLException {
 		javax.sql.DataSource datasource = datasourceManager.getDataSource(name);
 		List<Table> model = datasourceMetadataLoader.getSchemaMetadata(schema, datasource);
@@ -55,6 +66,15 @@ public class DataSourceMetadataService {
 		
 	}
 
+	/**
+	 * Gets the structure metadata.
+	 *
+	 * @param name the name
+	 * @param schema the schema
+	 * @param structure the structure
+	 * @return the structure metadata
+	 * @throws SQLException the SQL exception
+	 */
 	public String getStructureMetadata(String name, String schema, String structure) throws SQLException {
 		javax.sql.DataSource datasource = datasourceManager.getDataSource(name);
 		Table model = datasourceMetadataLoader.getTableMetadata(schema, structure, datasource);

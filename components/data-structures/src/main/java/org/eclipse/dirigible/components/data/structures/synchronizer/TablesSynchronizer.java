@@ -49,7 +49,7 @@ import org.springframework.stereotype.Component;
 /**
  * The Class TableSynchronizer.
  *
- * @param A the generic type
+ * @param <A> the generic type
  */
 @Component
 @Order(210)
@@ -64,6 +64,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	/** The table service. */
 	private TableService tableService;
 	
+	/** The datasources manager. */
 	private DataSourcesManager datasourcesManager;
 	
 	/** The synchronization callback. */
@@ -73,6 +74,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 * Instantiates a new table synchronizer.
 	 *
 	 * @param tableService the table service
+	 * @param datasourcesManager the datasources manager
 	 */
 	@Autowired
 	public TablesSynchronizer(TableService tableService, DataSourcesManager datasourcesManager) {
@@ -220,6 +222,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	/**
 	 * Complete.
 	 *
+	 * @param wrapper the wrapper
 	 * @param flow the flow
 	 * @return true, if successful
 	 */
@@ -307,6 +310,11 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 		}
 	}
 	
+	/**
+	 * Sets the callback.
+	 *
+	 * @param callback the new callback
+	 */
 	@Override
 	public void setCallback(SynchronizerCallback callback) {
 		this.callback = callback;
@@ -403,11 +411,21 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 		TableForeignKeysDropProcessor.execute(connection, tableModel);
 	}
 	
+	/**
+	 * Gets the file extension.
+	 *
+	 * @return the file extension
+	 */
 	@Override
 	public String getFileExtension() {
 		return FILE_EXTENSION_TABLE;
 	}
 
+	/**
+	 * Gets the artefact type.
+	 *
+	 * @return the artefact type
+	 */
 	@Override
 	public String getArtefactType() {
 		return Table.ARTEFACT_TYPE;
