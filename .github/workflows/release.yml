@@ -9,18 +9,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
     - name: Set up JDK 13
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
-        java-version: 13
-        gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+        distribution: 'zulu'
+        java-version: '13'
+        pg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
         architecture: x64
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v2
       with:
         install: true
     - name: Set Multi-Builder Docker Buildx
@@ -261,14 +262,24 @@ jobs:
 
     - name: Create Release
       id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v1
       with:
+        token: ${{ secrets.GITHUB_TOKEN }}
         tag_name: v${{ env.DIRIGIBLE_VERSION }}
-        release_name: ${{ env.DIRIGIBLE_VERSION }}
+        name: ${{ env.DIRIGIBLE_VERSION }}
         draft: false
         prerelease: false
+        files: |
+          ./anonymous-all.zip
+          ./anonymous-runtime.zip
+          ./desktop-all.zip
+          ./sap-cf-all.zip
+          ./sap-cf-runtime.zip
+          ./server-all.zip
+          ./server-minimal.zip
+          ./server-oauth.zip
+          ./server-runtime.zip
+          ./trial-all.zip
         body: |
           ## Eclipse Dirigible - ${{ env.DIRIGIBLE_VERSION }}
 
@@ -357,114 +368,13 @@ jobs:
           > _**Note:** Unzip the downloaded file to extract the `ROOT.war` binary._
           
           For more information go to [https://www.dirigible.io/help/setup/](https://www.dirigible.io/help/setup/).
-          
-    - name: Upload anonymous-all
-      id: upload-anonymous-all 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./anonymous-all.zip
-        asset_name: anonymous-all.zip
-        asset_content_type: application/zip
-    - name: Upload anonymous-runtime
-      id: upload-anonymous-runtime 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./anonymous-runtime.zip
-        asset_name: anonymous-runtime.zip
-        asset_content_type: application/zip
-    - name: Upload desktop-all
-      id: upload-desktop-all 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./desktop-all.zip
-        asset_name: desktop-all.zip
-        asset_content_type: application/zip
-    - name: Upload sap-cf-all
-      id: upload-sap-cf-all 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./sap-cf-all.zip
-        asset_name: sap-cf-all.zip
-        asset_content_type: application/zip
-    - name: Upload sap-cf-runtime
-      id: upload-sap-cf-runtime
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./sap-cf-runtime.zip
-        asset_name: sap-cf-runtime.zip
-        asset_content_type: application/zip
-    - name: Upload server-all
-      id: upload-server-all 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./server-all.zip
-        asset_name: server-all.zip
-        asset_content_type: application/zip
-    - name: Upload server-minimal
-      id: upload-server-minimal 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./server-minimal.zip
-        asset_name: server-minimal.zip
-        asset_content_type: application/zip
-    - name: Upload server-oauth
-      id: upload-server-oauth
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./server-oauth.zip
-        asset_name: server-oauth.zip
-        asset_content_type: application/zip
-    - name: Upload server-runtime
-      id: upload-server-runtime
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./server-runtime.zip
-        asset_name: server-runtime.zip
-        asset_content_type: application/zip
-    - name: Upload trial-all
-      id: upload-trial-all
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./trial-all.zip
-        asset_name: trial-all.zip
-        asset_content_type: application/zip
-
+    
 #----------------Publish GitHub Release------------------#
 
 #----------------Publish Helm Release------------------#
 
     - name: Helm tool installer
-      uses: Azure/setup-helm@v1
+      uses: Azure/setup-helm@v3
     - name: Helm Charts Release - Checkout gh-pages
       run: |
         mkdir charts-temp
