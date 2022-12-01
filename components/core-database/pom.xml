@@ -15,13 +15,6 @@
     
     <dependencies>
     
-    	<!-- Database -->
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-api</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-    	</dependency>
-
     	<!-- Configuration -->
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>

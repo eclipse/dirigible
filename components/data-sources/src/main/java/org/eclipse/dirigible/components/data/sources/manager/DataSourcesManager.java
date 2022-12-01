@@ -24,8 +24,7 @@ import java.util.Properties;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
-import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
+import org.eclipse.dirigible.components.database.DatabaseConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +118,7 @@ public class DataSourcesManager {
 		datasource.getProperties().forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
 		HikariDataSource hds = new HikariDataSource(config);
 		
-		WrappedDataSource wrappedDataSource = new WrappedDataSource(hds);
+		ManagedDataSource wrappedDataSource = new ManagedDataSource(hds);
 		DATASOURCES.put(name, wrappedDataSource);
 		if (logger.isInfoEnabled()) {logger.info("Initialized a datasource with name: " + name);}
 		return wrappedDataSource;	
@@ -131,7 +130,7 @@ public class DataSourcesManager {
 	 * @return the default data source name
 	 */
 	public String getDefaultDataSourceName() {
-		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
+		return Configuration.get(DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 	}
 	
 	/**
@@ -140,14 +139,8 @@ public class DataSourcesManager {
 	 * @return the system data source name
 	 */
 	public String getSystemDataSourceName() {
-		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
+		return Configuration.get(DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM, DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
 	}
-	
-	/** The Constant DIRIGIBLE_DATABASE_H2_ROOT_FOLDER. */
-	public static final String DIRIGIBLE_DATABASE_H2_ROOT_FOLDER = "DIRIGIBLE_DATABASE_H2_ROOT_FOLDER"; //$NON-NLS-1$
-
-	/** The Constant DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT. */
-	public static final String DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT = DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + "_DEFAULT"; //$NON-NLS-1$
 	
 	/**
 	 * Prepare root folder.
@@ -162,8 +155,8 @@ public class DataSourcesManager {
 		// TODO validate name parameter
 		// TODO get by name from Configuration
 
-		String rootFolder = (IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
-				: DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
+		String rootFolder = (DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? DatabaseConfig.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+				: DatabaseConfig.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
 		String h2Root = Configuration.get(rootFolder, name);
 		File rootFile = new File(h2Root);
 		File parentFile = rootFile.getCanonicalFile().getParentFile();

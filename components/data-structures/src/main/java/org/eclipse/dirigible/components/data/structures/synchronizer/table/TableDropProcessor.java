@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
-import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.components.database.DatabaseConfig;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class TableDropProcessor {
 	 *             the SQL exception
 	 */
 	public static void execute(Connection connection, Table tableModel) throws SQLException {
-		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(DatabaseConfig.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String tableName = tableModel.getName();
 		if (caseSensitive) {
 			tableName = "\"" + tableName + "\"";

@@ -11,15 +11,13 @@
  */
 package org.eclipse.dirigible.components.version.service;
 
-import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.version.domain.Version;
-import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.Properties;
+
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.version.domain.Version;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.springframework.stereotype.Service;
 
 /**
  * The Class VersionService.
@@ -65,8 +63,8 @@ public class VersionService {
         version.setProductType(properties.getProperty(DIRIGIBLE_PRODUCT_TYPE));
         version.setInstanceName(properties.getProperty(DIRIGIBLE_INSTANCE_NAME));
         version.setRepositoryProvider(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER));
-        version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
-        version.getModules().addAll(DirigibleModulesInstallerModule.getModules());
+//        version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
+//        version.getModules().addAll(DirigibleModulesInstallerModule.getModules());
         // TODO: Fix commented line below. Missing a dependency.
         // version.getEngines().addAll(EngineExecutorFactory.getEnginesNames());
         return version;

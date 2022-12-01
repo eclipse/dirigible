@@ -16,15 +16,19 @@ import org.eclipse.dirigible.components.security.repository.RoleRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.FilterChainProxy;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
 
@@ -32,6 +36,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {RoleRepository.class})
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
@@ -43,7 +49,13 @@ class RoleEndpointTest {
     private RoleRepository roleRepository;
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
+
+    @Autowired
+    protected WebApplicationContext wac;
+
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
     @BeforeEach
     public void setup() {

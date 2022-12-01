@@ -27,6 +27,7 @@ import org.eclipse.dirigible.components.extensions.service.ExtensionPointService
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -36,9 +37,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.FilterChainProxy;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
+@WithMockUser
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
@@ -58,7 +65,13 @@ public class ExtensionPointEndpointTest {
 	private ExtensionPoint testExtensionPoint;
 	
 	@Autowired
-	MockMvc mockMvc;
+    private MockMvc mockMvc;
+
+    @Autowired
+    protected WebApplicationContext wac;
+
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 	
 	@BeforeEach
     public void setup() throws Exception {
@@ -79,6 +92,7 @@ public class ExtensionPointEndpointTest {
 		testExtensionPoint = extensionPoints.getContent().get(0);
 		
 		entityManager.refresh(testExtensionPoint);
+		
     }
 	
 	@AfterEach

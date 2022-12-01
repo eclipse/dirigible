@@ -11,21 +11,11 @@
  */
 package org.eclipse.dirigible.components.database;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
-import java.util.StringTokenizer;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -38,7 +28,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @org.springframework.context.annotation.Configuration

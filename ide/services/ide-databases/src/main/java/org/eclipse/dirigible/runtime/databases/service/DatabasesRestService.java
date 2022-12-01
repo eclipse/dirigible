@@ -227,7 +227,7 @@ public class DatabasesRestService extends AbstractRestService implements IRestSe
 			String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
+			String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}
 		String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
@@ -269,7 +269,7 @@ public class DatabasesRestService extends AbstractRestService implements IRestSe
 			String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
+			String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}
 		String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
@@ -311,7 +311,7 @@ public class DatabasesRestService extends AbstractRestService implements IRestSe
 			String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
+			String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}
 		String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
