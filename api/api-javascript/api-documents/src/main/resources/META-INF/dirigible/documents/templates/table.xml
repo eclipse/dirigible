@@ -56,11 +56,13 @@
                                 <xsl:apply-templates select="rows" />
                                 #else
                                 <fo:table-row text-align="${alignRows}">
+                                    #foreach ($column in $columns)
                                     <fo:table-cell border-width="0.01cm" border-style="solid">
                                         <fo:block>
-                                            <xsl:value-of select="No Data" />
+                                            No Data
                                         </fo:block>
                                     </fo:table-cell>
+                                    #end
                                 </fo:table-row>
                                 #end
                             </fo:table-body>
