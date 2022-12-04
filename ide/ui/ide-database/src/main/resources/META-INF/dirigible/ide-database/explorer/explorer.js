@@ -404,7 +404,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	// $scope.jstreeWidget.on('close_node.jstree', function (event) {
 	// });
 
-	function getDatabases(setConfig = false) {
+	function getDatabases() {
 		$http.get(databasesSvcUrl)
 			.then(function (data) {
 				$scope.databases = data.data;
@@ -427,7 +427,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 								}
 								if ($scope.selectedDatasource) {
 									messageHub.postMessage('database.datasource.selection.changed', $scope.selectedDatasource);
-									$scope.refreshDatabase(setConfig);
+									$scope.refreshDatabase();
 								}
 							}
 						});
@@ -435,7 +435,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 				}
 			});
 	}
-	setTimeout(getDatabases, 500, true);
+	setTimeout(getDatabases, 500);
 
 	let expandColumns = function (evt, data) {
 		let parent = $scope.jstreeWidget.jstree(true).get_node(data.node);
@@ -597,8 +597,8 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	// 	}
 	// };
 
-	$scope.refreshDatabase = function (setConfig = false) {
-		if (setConfig) $scope.jstreeWidget.jstree($scope.jstreeConfig);
+	$scope.refreshDatabase = function () {
+		if ($scope.jstreeWidget.jstree(true).settings === undefined) $scope.jstreeWidget.jstree($scope.jstreeConfig);
 		if ($scope.selectedDatabase && $scope.selectedDatasource) {
 			$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
 				.then(function (data) {

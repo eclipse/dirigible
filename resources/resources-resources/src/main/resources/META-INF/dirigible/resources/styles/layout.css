@@ -33,7 +33,7 @@
   flex-grow: 1;
   min-height: 0;
 }
-.dg-tabs .dg-tabs-content > .ng-scope {
+.dg-tabs .dg-tabs-content > .dg-panes {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;

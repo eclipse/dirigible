@@ -9,90 +9,30 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('page', [])
-    .controller('PageController', function ($scope) {
-
-        let messageHub = new FramesMessageHub();
+angular.module('page', ["ideUI", "ideView"])
+    .controller('PageController', function ($scope, messageHub, ViewParameters) {
         let contents;
         let csrfToken;
-
-        $scope.methods = [{
-            'key': '*',
-            'label': '*'
-        }, {
-            'key': 'GET',
-            'label': 'GET'
-        }, {
-            'key': 'POST',
-            'label': 'POST'
-        }, {
-            'key': 'PUT',
-            'label': 'PUT'
-        }, {
-            'key': 'DELETE',
-            'label': 'DELETE'
-        }, {
-            'key': 'READ',
-            'label': 'READ'
-        }, {
-            'key': 'WRITE',
-            'label': 'WRITE'
-        }];
-
-        $scope.scopes = [{
-            'key': 'HTTP',
-            'label': 'HTTP'
-        }, {
-            'key': 'CMIS',
-            'label': 'CMIS'
-        }];
-
-        $scope.openNewDialog = function () {
-            $scope.actionType = 'new';
-            $scope.entity = {};
-            $scope.entity.method = '*';
-            $scope.entity.scope = 'HTTP';
-            toggleEntityModal();
+        $scope.errorMessage = 'Аn unknown error was encountered. Please see console for more information.';
+        $scope.state = {
+            isBusy: true,
+            error: false,
+            busyText: "Loading...",
         };
-
-        $scope.openEditDialog = function (entity) {
-            $scope.actionType = 'update';
-            $scope.entity = entity;
-            toggleEntityModal();
-        };
-
-        $scope.openDeleteDialog = function (entity) {
-            $scope.actionType = 'delete';
-            $scope.entity = entity;
-            toggleEntityModal();
-        };
-
-        $scope.close = function () {
-            load();
-            toggleEntityModal();
-        };
-
-        $scope.create = function () {
-            $scope.access.constraints.push($scope.entity);
-            toggleEntityModal();
-        };
-
-        $scope.update = function () {
-            // auto-wired
-            toggleEntityModal();
-        };
-
-        $scope.delete = function () {
-            $scope.access.constraints = $scope.access.constraints.filter(function (e) {
-                return e !== $scope.entity;
-            });
-            toggleEntityModal();
-        };
-
-        function toggleEntityModal() {
-            $('#entityModal').modal('toggle');
-            $scope.error = null;
-        }
+        $scope.methods = [
+            { value: '*', label: '*' },
+            { value: 'GET', label: 'GET' },
+            { value: 'POST', label: 'POST' },
+            { value: 'PUT', label: 'PUT' },
+            { value: 'DELETE', label: 'DELETE' },
+            { value: 'READ', label: 'READ' },
+            { value: 'WRITE', label: 'WRITE' },
+        ];
+        $scope.scopes = [
+            { value: 'HTTP', label: 'HTTP' },
+            { value: 'CMIS', label: 'CMIS' },
+        ];
+        $scope.editConstraintIndex = 0;
 
         function getResource(resourcePath) {
             let xhr = new XMLHttpRequest();
@@ -102,111 +42,273 @@ angular.module('page', [])
             if (xhr.status === 200) {
                 csrfToken = xhr.getResponseHeader("x-csrf-token");
                 return xhr.responseText;
-            }
-        }
-
-        function loadContents(file) {
-            if (file) {
-                return getResource('/services/v4/ide/workspaces' + file);
-            }
-            console.error('file parameter is not present in the URL');
-        }
-
-        function getViewParameters() {
-            if (window.frameElement.hasAttribute("data-parameters")) {
-                let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
-                $scope.file = params["file"];
             } else {
-                let searchParams = new URLSearchParams(window.location.search);
-                $scope.file = searchParams.get('file');
+                $scope.state.error = true;
+                $scope.errorMessage = "Unable to load the file. See console, for more information.";
+                messageHub.setStatusError(`Error loading '${$scope.dataParameters.file}'`);
+                return '{}';
             }
         }
 
-        function load() {
-            getViewParameters();
-            contents = loadContents($scope.file);
-            $scope.access = JSON.parse(contents);
-            $scope.access.constraints.forEach(function (constraint) {
-                constraint.rolesLine = constraint.roles.join();
-            });
-
-        }
-
-        load();
+        $scope.load = function () {
+            if (!$scope.state.error) {
+                contents = getResource('/services/v4/ide/workspaces' + $scope.dataParameters.file);
+                $scope.access = JSON.parse(contents);
+                contents = JSON.stringify($scope.access, null, 4);
+                $scope.state.isBusy = false;
+            }
+        };
 
         function saveContents(text) {
-            console.log('Save called...');
-            if ($scope.file) {
-                let xhr = new XMLHttpRequest();
-                xhr.open('PUT', '/services/v4/ide/workspaces' + $scope.file);
-                xhr.setRequestHeader('X-Requested-With', 'Fetch');
-                xhr.setRequestHeader('X-CSRF-Token', csrfToken);
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4) {
-                        console.log('file saved: ' + $scope.file);
-                    }
-                };
-                xhr.send(text);
-                messageHub.post({
-                    name: $scope.file.substring($scope.file.lastIndexOf('/') + 1),
-                    path: $scope.file.substring($scope.file.indexOf('/', 1)),
-                    contentType: 'application/json+access', // TODO: Take this from data-parameters
-                    workspace: $scope.file.substring(1, $scope.file.indexOf('/', 1)),
-                }, 'ide.file.saved');
-                messageHub.post({ message: `File '${$scope.file}' saved` }, 'ide.status.message');
-            } else {
-                console.error('file parameter is not present in the request');
-            }
-        }
-
-        let serializeAccess = function () {
-            let accessContents = JSON.parse(JSON.stringify($scope.access));
-            accessContents.constraints.forEach(function (constraint) {
-                if (constraint.rolesLine) {
-                    constraint.roles = constraint.rolesLine.split(',');
-                    delete constraint.rolesLine;
-                    delete constraint.$$hashKey;
+            let xhr = new XMLHttpRequest();
+            xhr.open('PUT', '/services/v4/ide/workspaces' + $scope.dataParameters.file);
+            xhr.setRequestHeader('X-Requested-With', 'Fetch');
+            xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    messageHub.announceFileSaved({
+                        name: $scope.dataParameters.file.substring($scope.dataParameters.file.lastIndexOf('/') + 1),
+                        path: $scope.dataParameters.file.substring($scope.dataParameters.file.indexOf('/', 1)),
+                        contentType: $scope.dataParameters.contentType,
+                        workspace: $scope.dataParameters.file.substring(1, $scope.dataParameters.file.indexOf('/', 1)),
+                    });
+                    messageHub.setStatusMessage(`File '${$scope.dataParameters.file}' saved`);
+                    messageHub.setEditorDirty($scope.dataParameters.file, false);
+                    $scope.$apply(function () {
+                        $scope.state.isBusy = false;
+                    });
                 }
-            });
-            return accessContents;
+            };
+            xhr.onerror = function (error) {
+                console.error(`Error saving '${$scope.dataParameters.file}'`, error);
+                messageHub.setStatusError(`Error saving '${$scope.dataParameters.file}'`);
+                messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
+                $scope.$apply(function () {
+                    $scope.state.isBusy = false;
+                });
+            };
+            xhr.send(text);
         }
 
         $scope.save = function () {
-            let accessContents = serializeAccess();
-            contents = JSON.stringify(accessContents);
+            $scope.state.busyText = "Saving...";
+            $scope.state.isBusy = true;
+            contents = JSON.stringify($scope.access, null, 4);
             saveContents(contents);
         };
 
-        messageHub.subscribe(
+        messageHub.onDidReceiveMessage(
+            "editor.file.save.all",
             function () {
-                let accessContents = serializeAccess();
-                let access = JSON.stringify(accessContents);
-                if (contents !== access) {
-                    $scope.save();
+                if (!$scope.state.error) {
+                    let access = JSON.stringify($scope.access, null, 4);
+                    if (contents !== access) {
+                        $scope.save();
+                    }
                 }
             },
-            "editor.file.save.all"
+            true,
         );
 
-        messageHub.subscribe(
+        messageHub.onDidReceiveMessage(
+            "editor.file.save",
             function (msg) {
-                let file = msg.data && typeof msg.data === 'object' && msg.data.file;
-                let accessContents = serializeAccess();
-                let access = JSON.stringify(accessContents);
-                if (file && file === $scope.file && contents !== access)
-                    $scope.save();
+                if (!$scope.state.error) {
+                    let file = msg.data && typeof msg.data === 'object' && msg.data.file;
+                    if (file && file === $scope.dataParameters.file) {
+                        let access = JSON.stringify($scope.access, null, 4);
+                        if (contents !== access) $scope.save();
+                    }
+                }
             },
-            "editor.file.save"
+            true,
         );
 
-        $scope.$watch(function () {
-            let accessContents = serializeAccess();
-            let access = JSON.stringify(accessContents);
-            if (contents !== access) {
-                messageHub.post({ resourcePath: $scope.file, isDirty: true }, 'ide-core.setEditorDirty');
-            } else {
-                messageHub.post({ resourcePath: $scope.file, isDirty: false }, 'ide-core.setEditorDirty');
-            }
-        });
+        messageHub.onDidReceiveMessage(
+            "accessEditor.constraint.add",
+            function (msg) {
+                if (msg.data.buttonId === "b1") {
+                    $scope.$apply(function () {
+                        $scope.access.constraints.push({
+                            path: msg.data.formData[0].value,
+                            method: msg.data.formData[1].value,
+                            scope: msg.data.formData[2].value,
+                            roles: msg.data.formData[3].value
+                                .split(',').map(element => element.trim()).filter(element => element !== ''),
+                        });
+                    });
+                }
+                messageHub.hideFormDialog("accessEditorAddConstraint");
+            },
+            true
+        );
 
+        messageHub.onDidReceiveMessage(
+            "accessEditor.constraint.edit",
+            function (msg) {
+                if (msg.data.buttonId === "b1") {
+                    $scope.$apply(function () {
+                        $scope.access.constraints[$scope.editConstraintIndex].path = msg.data.formData[0].value;
+                        $scope.access.constraints[$scope.editConstraintIndex].method = msg.data.formData[1].value;
+                        $scope.access.constraints[$scope.editConstraintIndex].scope = msg.data.formData[2].value;
+                        $scope.access.constraints[$scope.editConstraintIndex].roles = msg.data.formData[3].value
+                            .split(',').map(element => element.trim()).filter(element => element !== '');
+                    });
+                }
+                messageHub.hideFormDialog("accessEditorEditConstraint");
+            },
+            true
+        );
+
+        $scope.$watch('access', function () {
+            if (!$scope.state.error) {
+                let access = JSON.stringify($scope.access, null, 4);
+                messageHub.setEditorDirty($scope.dataParameters.file, contents !== access);
+            }
+        }, true);
+
+        $scope.addConstraint = function () {
+            messageHub.showFormDialog(
+                "accessEditorAddConstraint",
+                "Add constraint",
+                [{
+                    id: "aeciPath",
+                    type: "input",
+                    label: "Path",
+                    required: true,
+                    placeholder: "Enter path",
+                    minlength: 1,
+                    maxlength: 255,
+                    inputRules: {
+                        patterns: ['^[a-zA-Z0-9_.-/$-]*$'],
+                    },
+                    value: '',
+                },
+                {
+                    id: "aecdMethod",
+                    type: "dropdown",
+                    label: "Method",
+                    required: true,
+                    value: 'GET',
+                    items: $scope.methods,
+                },
+                {
+                    id: "aecdScope",
+                    type: "dropdown",
+                    label: "Scope",
+                    required: true,
+                    value: 'HTTP',
+                    items: $scope.scopes,
+                },
+                {
+                    id: "aeciRoles",
+                    type: "input",
+                    label: "Roles",
+                    placeholder: "Comma separated roles",
+                    value: '',
+                }],
+                [{
+                    id: "b1",
+                    type: "emphasized",
+                    label: "Add",
+                    whenValid: true,
+                },
+                {
+                    id: "b2",
+                    type: "transparent",
+                    label: "Cancel",
+                }],
+                "accessEditor.constraint.add",
+                "Adding constraint..."
+            );
+        };
+
+        $scope.editConstraint = function (index) {
+            $scope.editConstraintIndex = index;
+            messageHub.showFormDialog(
+                "accessEditorEditConstraint",
+                "Edit constraint",
+                [{
+                    id: "aeciPath",
+                    type: "input",
+                    label: "Path",
+                    required: true,
+                    placeholder: "Enter path",
+                    minlength: 1,
+                    maxlength: 255,
+                    inputRules: {
+                        patterns: ['^[a-zA-Z0-9_.-/$-]*$'],
+                    },
+                    value: $scope.access.constraints[index].path,
+                },
+                {
+                    id: "aecdMethod",
+                    type: "dropdown",
+                    label: "Method",
+                    required: true,
+                    value: $scope.access.constraints[index].method,
+                    items: $scope.methods,
+                },
+                {
+                    id: "aecdScope",
+                    type: "dropdown",
+                    label: "Scope",
+                    required: true,
+                    value: $scope.access.constraints[index].scope,
+                    items: $scope.scopes,
+                },
+                {
+                    id: "aeciRoles",
+                    type: "input",
+                    label: "Roles",
+                    placeholder: "Comma separated roles",
+                    value: $scope.access.constraints[index].roles.join(', '),
+                }],
+                [{
+                    id: "b1",
+                    type: "emphasized",
+                    label: "Update",
+                    whenValid: true,
+                },
+                {
+                    id: "b2",
+                    type: "transparent",
+                    label: "Cancel",
+                }],
+                "accessEditor.constraint.edit",
+                "Updating constraint..."
+            );
+        };
+
+        $scope.deleteConstraint = function (index) {
+            messageHub.showDialogAsync(
+                `Delete ${$scope.access.constraints[index].path}?`,
+                'This action cannot be undone.',
+                [{
+                    id: 'b1',
+                    type: 'negative',
+                    label: 'Delete',
+                },
+                {
+                    id: 'b2',
+                    type: 'transparent',
+                    label: 'Cancel',
+                }],
+            ).then(function (dialogResponse) {
+                if (dialogResponse.data === 'b1') {
+                    $scope.$apply(function () {
+                        $scope.access.constraints.splice(index, 1);
+                    });
+                }
+            });
+        };
+
+        $scope.dataParameters = ViewParameters.get();
+        if (!$scope.dataParameters.hasOwnProperty('file')) {
+            $scope.state.error = true;
+            $scope.errorMessage = "The 'file' data parameter is missing.";
+        } else if (!$scope.dataParameters.hasOwnProperty('contentType')) {
+            $scope.state.error = true;
+            $scope.errorMessage = "The 'contentType' data parameter is missing.";
+        } else $scope.load();
     });

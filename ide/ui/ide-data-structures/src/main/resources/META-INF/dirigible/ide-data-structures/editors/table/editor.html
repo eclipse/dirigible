@@ -1,182 +1,107 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="page">
+<html lang="en" ng-app="page" ng-controller="PageController">
 
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-        <link type="text/css" rel="stylesheet" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css">
-        <link type="image/png" rel="shortcut icon" href="/services/v4/web/resources/images/favicon.png" />
-
-        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-        <script type="text/javascript" src="/services/v4/web/resources-core/ui/message-hub.js"></script>
-
-        <!-- Custom IDE Styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
+        <title dg-view-title></title>
+        <script type="text/javascript" src="../../services/table-editor.js"></script>
+        <theme></theme>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js">
+        </script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
+        <script type="text/javascript" src="editor.js"></script>
     </head>
 
-    <body ng-controller="PageController">
-
-        <div class="container">
-            <div class="page-header">
-                <h1>Table Description: {{file}}</h1>
-            </div>
-            <form>
-                <div class="form-group">
-                    <label>Type</label>
-                    <input type="text" class="form-control" ng-model="table.type" value="TABLE" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" class="form-control" placeholder="Enter name" ng-model="table.name">
-                </div>
-
-
-                <div class="container">
-                    <button type="button" ng-click="openNewDialog()"
-                        class="btn btn-lg btn-outline-primary pull-right"><i class="fa fa-plus"
-                            aria-hidden="true"></i></button>
-                    <table class="table product-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Length</th>
-                                <th>Primary Key</th>
-                                <th>Unique</th>
-                                <th>Nullable</th>
-                                <th>Default</th>
-                                <th>Precision</th>
-                                <th>Scale</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="next in table.columns">
-                                <td>{{next.name}}</td>
-                                <td>{{next.type}}</td>
-                                <td>{{next.length}}</td>
-                                <td><span class="fa"
-                                        ng-class="{'fa-square-o': !next.primaryKey , 'fa-check-square-o': next.primaryKey}">
-                                </td>
-                                <td><span class="fa"
-                                        ng-class="{'fa-square-o': !next.unique , 'fa-check-square-o': next.unique}">
-                                </td>
-                                <td><span class="fa"
-                                        ng-class="{'fa-square-o': !next.nullable , 'fa-check-square-o': next.nullable}"></span>
-                                </td>
-                                <td>{{next.defaultValue}}</td>
-                                <td>{{next.precision}}</td>
-                                <td>{{next.scale}}</td>
-                                <td>
-                                    <i class="close fa fa-2x fa-remove" ng-click="openDeleteDialog(next)"></i>
-                                    <i class="close fa fa-2x fa-bars" ng-click="openEditDialog(next)"
-                                        style="margin-right: 0.5em"></i>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-
-                <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
-            </form>
-        </div>
-
-        <div class="dirigible-modal modal fade" id="entityModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 ng-show="actionType === 'new'" class="modal-title" id="exampleModalLabel">Create Column</h3>
-                        <h3 ng-show="actionType === 'update'" class="modal-title" id="exampleModalLabel">Update Column
-                        </h3>
-                        <h3 ng-show="actionType === 'delete'" class="modal-title" id="exampleModalLabel">Delete Column
-                        </h3>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-danger" ng-show="error">
-                            {{error}}
-                        </div>
-                        <form ng-hide="actionType === 'delete'">
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control" placeholder="Enter name" ng-model="entity.name">
-                            </div>
-                            <div class="form-group">
-                                <label for="type">Type: </label>
-                                <div>
-                                    <select class="form-control" name="type" id="type" ng-model="entity.type">
-                                        <option ng-repeat="option in types" value="{{option.key}}">{{option.label}}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Length</label>
-                                <input type="number" class="form-control" placeholder="Enter length"
-                                    ng-model="entity.length">
-                            </div>
-                            <div class="form-group">
-                                <label>Primary Key</label>
-                                <input type="checkbox" class="form-control" placeholder="Enter primary key flag"
-                                    ng-model="entity.primaryKey" ng-true-value="'true'" ng-false-value="'false'">
-                            </div>
-                            <div class="form-group">
-                                <label>Unique</label>
-                                <input type="checkbox" class="form-control" placeholder="Enter unique flag"
-                                    ng-model="entity.unique" ng-true-value="'true'" ng-false-value="'false'">
-                            </div>
-                            <div class="form-group">
-                                <label>Nullable</label>
-                                <input type="checkbox" class="form-control" placeholder="Enter nullable flag"
-                                    ng-model="entity.nullable" ng-true-value="'true'" ng-false-value="'false'">
-                            </div>
-                            <div class="form-group">
-                                <label>Default Value</label>
-                                <input type="text" class="form-control" placeholder="Enter default value"
-                                    ng-model="entity.defaultValue">
-                            </div>
-                            <div class="form-group">
-                                <label>Precision</label>
-                                <input type="number" class="form-control" placeholder="Enter precision"
-                                    ng-model="entity.precision">
-                            </div>
-                            <div class="form-group">
-                                <label>Scale</label>
-                                <input type="number" class="form-control" placeholder="Enter scale"
-                                    ng-model="entity.scale">
-                            </div>
-                        </form>
-                        <div ng-show="actionType === 'delete'">
-                            You are going to delete <b>Column</b> with <b>name = {{entity.name}}</b>?
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" ng-show="actionType === 'new'"
-                            ng-click="create()">Save</button>
-                        <button type="button" class="btn btn-primary" ng-show="actionType === 'update'"
-                            ng-click="update()">Update</button>
-                        <button type="button" class="btn btn-primary" ng-show="actionType === 'delete'"
-                            ng-click="delete()">Delete</button>
-                        <button type="button" class="btn" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script type="text/javascript" src="editor.js"></script>
-
+    <body class="dg-vbox dg-center__horizontal">
+        <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
+            {{state.busyText}}
+        </fd-busy-indicator-extended>
+        <fd-toolbar class="dg-full-width" has-title="true" dg-size="cozy" ng-show="!state.error && !state.isBusy">
+            <h4>Table:</h4>
+            <fd-toolbar-spacer></fd-toolbar-spacer>
+            <fd-button compact="true" dg-label="Save" ng-click="save()"
+                state="{{ forms.editor.$valid ? '' : 'disabled'  }}">
+            </fd-button>
+        </fd-toolbar>
+        <fd-scrollbar class="dg-full-width" ng-show="!state.error && !state.isBusy">
+            <fd-fieldset class="fd-margin--md" ng-form="forms.editor">
+                <fd-form-group name="entityForm">
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="Name" dg-required="true" dg-colon="true">Name</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ forms.editor['name'].$valid ? 'true' : 'false' }}">
+                            <fd-input id="idName" name="name" state="{{ forms.editor['name'].$valid ? '' : 'error' }}"
+                                ng-required="true" ng-model="table.name" ng-maxlength="255" dg-input-rules="nameRegex"
+                                type="text" placeholder="Enter name">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Allowed characters include all letters, numbers,
+                                '_', '-', '.', ':' and '"'. Maximum length is 255.</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+                </fd-form-group>
+            </fd-fieldset>
+            <fd-toolbar has-title="true">
+                <h4>Columns:</h4>
+                <fd-toolbar-spacer></fd-toolbar-spacer>
+                <fd-button compact="true" dg-label="Add" ng-click="addColumn()"></fd-button>
+            </fd-toolbar>
+            <table fd-table outer-borders="none" class="dg-list-border-bottom">
+                <thead fd-table-header>
+                    <tr fd-table-row>
+                        <th fd-table-header-cell>Name</th>
+                        <th fd-table-header-cell>Type</th>
+                        <th fd-table-header-cell>Length</th>
+                        <th fd-table-header-cell>Primary Key</th>
+                        <th fd-table-header-cell>Unique</th>
+                        <th fd-table-header-cell>Nullable</th>
+                        <th fd-table-header-cell>Default</th>
+                        <th fd-table-header-cell>Precision</th>
+                        <th fd-table-header-cell>Scale</th>
+                        <th fd-table-header-cell></th>
+                    </tr>
+                </thead>
+                <tbody fd-table-body>
+                    <tr ng-if="table.columns.length === 0" fd-table-row>
+                        <td fd-table-cell no-data="true">Table has no columns</td>
+                    </tr>
+                    <tr fd-table-row hoverable="false" activable="false"
+                        ng-repeat="item in table.columns track by $index">
+                        <td fd-table-cell>{{item.name}}</td>
+                        <td fd-table-cell>{{item.type}}</td>
+                        <td fd-table-cell>{{item.length}}</td>
+                        <td fd-table-cell>
+                            <span fd-object-status status="{{ item.primaryKey ? 'positive' : 'negative' }}"
+                                text="{{ item.primaryKey ? 'True' : 'False' }}"></span>
+                        </td>
+                        <td fd-table-cell>
+                            <span fd-object-status status="{{ item.unique ? 'positive' : 'negative' }}"
+                                text="{{ item.unique ? 'True' : 'False' }}"></span>
+                        </td>
+                        <td fd-table-cell>
+                            <span fd-object-status status="{{ item.nullable ? 'positive' : 'negative' }}"
+                                text="{{ item.nullable ? 'True' : 'False' }}"></span>
+                        </td>
+                        <td fd-table-cell>{{item.defaultValue}}</td>
+                        <td fd-table-cell>{{item.precision}}</td>
+                        <td fd-table-cell>{{item.scale}}</td>
+                        <td fd-table-cell fit-content="true">
+                            <fd-button compact="true" glyph="sap-icon--edit" dg-type="transparent" aria-label="Edit"
+                                ng-click="editColumn($index)"></fd-button>
+                            <fd-button compact="true" glyph="sap-icon--delete" dg-type="transparent" aria-label="Delete"
+                                ng-click="deleteColumn($index)"></fd-button>
+                            </fd-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fd-scrollbar>
+        <fd-message-page glyph="sap-icon--error" ng-if="state.error">
+            <fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
+            <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
+        </fd-message-page>
     </body>
 
 </html>

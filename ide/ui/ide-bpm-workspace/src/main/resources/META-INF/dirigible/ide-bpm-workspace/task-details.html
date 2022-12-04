@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ Copyright (c) 2010-2022 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -9,61 +9,70 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="taskDetails" ng-controller="TaskDetailsController as task">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="taskDetails" ng-controller="TaskDetailsController">
 
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-
-        <script type="text/javascript" src="/services/v4/web/ide-bpm-workspace/services/task-details-window.js"></script>
-
-        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
-
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
+        <title dg-view-title></title>
+        <script type="text/javascript" src="services/tasks-details-window.js"></script>
         <theme></theme>
-
+        <script type="text/javascript" src="/services/v4/web/ide-bpm-workspace/services/task-details-window.js">
+        </script>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
     </head>
 
-    <body>
-        <table fd-table outer-btasks="none" display-mode="compact">
+    <body class="dg-vbox">
+        <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
+            {{state.busyText}}
+        </fd-busy-indicator-extended>
+        <table fd-table outer-borders="none" display-mode="compact" class="dg-list-border-bottom">
             <thead fd-table-header>
                 <tr fd-table-row></tr>
             </thead>
             <tbody fd-table-body>
-                <tr fd-table-row ng-repeat="prop in task.rows">
+                <tr fd-table-row ng-repeat="prop in rows">
                     <td fd-table-cell><strong>{{ prop.name }}</strong></td>
                     <td fd-table-cell>{{ prop.value }}</td>
                 </tr>
             </tbody>
         </table>
+        <fd-message-page glyph="sap-icon--error" ng-if="state.error">
+            <fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
+            <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
+        </fd-message-page>
 
         <script type="text/javascript">
             angular.module('taskDetails', ['ideUI', 'ideView'])
-                .controller('TaskDetailsController', ['$scope', function ($scope) {
-
-                    this.rows = [];
-                    
+                .controller('TaskDetailsController', ['$scope', 'ViewParameters' function ($scope, ViewParameters) {
+                    $scope.errorMessage = 'Аn unknown error was encountered. Please see console for more information.';
+                    $scope.state = {
+                        isBusy: true,
+                        error: false,
+                        busyText: "Loading...",
+                    };
+                    $scope.rows = [];
                     const props = [
                         ['Operation type', 'operationType'],
                         ['Email', 'email'],
                         ['Created', 'createdAt'],
                         ['Finished', 'isFinished']
                     ];
-
-                    let taskDetails = {};
-
-                    if (window.frameElement.hasAttribute("data-parameters")) {
-                        let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
-                        taskDetails = params.taskDetails;
+                    
+                    $scope.dataParameters = ViewParameters.get();
+                    if (!$scope.dataParameters.hasOwnProperty('taskDetails')) {
+                        $scope.state.error = true;
+                        $scope.errorMessage = "The 'taskDetails' data parameter is missing.";
+                    } else {
+                        for (let prop of props){
+                            const value = $scope.dataParameters.taskDetails[prop[1]] || '';
+                            $scope.rows.push({ name: prop[0], value });
+                        }
+                        $scope.state.isBusy = false;
                     }
-
-                    for(let prop of props){
-                        const value = taskDetails[prop[1]] || '';
-                        this.rows.push({ name: prop[0], value });
-                    }
-
                 }]);
         </script>
     </body>

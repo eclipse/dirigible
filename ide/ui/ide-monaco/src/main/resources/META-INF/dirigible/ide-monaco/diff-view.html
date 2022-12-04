@@ -179,6 +179,24 @@
                             });
                         }
                     });
+                    monaco.editor.defineTheme('quartz-dark', {
+                        base: 'vs-dark',
+                        inherit: true,
+                        rules: [{ background: '1c2228' }],
+                        colors: {
+                            'editor.background': '#1c2228',
+                            'breadcrumb.background': '#1c2228',
+                            'minimap.background': '#1c2228',
+                            'editorGutter.background': '#1c2228',
+                            'editorMarkerNavigation.background': '#1c2228',
+                            'input.background': '#29313a',
+                            'input.border': '#8696a9',
+                            'editorWidget.background': '#1c2228',
+                            'editorWidget.border': '#495767',
+                            'editorSuggestWidget.background': '#29313a',
+                            'dropdown.background': '#29313a',
+                        }
+                    });
                     monaco.editor.setTheme(monacoTheme);
                 });
 

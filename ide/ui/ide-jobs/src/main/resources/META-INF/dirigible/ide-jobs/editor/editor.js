@@ -9,163 +9,346 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('page', [])
-	.controller('PageController', function ($scope) {
-
-		let messageHub = new FramesMessageHub();
+angular.module('page', ["ideUI", "ideView"])
+	.controller('PageController', function ($scope, messageHub, ViewParameters) {
 		let contents;
+		let csrfToken;
+		$scope.errorMessage = 'Аn unknown error was encountered. Please see console for more information.';
+		$scope.forms = {
+			editor: {},
+		};
+		$scope.state = {
+			isBusy: true,
+			error: false,
+			busyText: "Loading...",
+		};
+		$scope.types = [
+			{ value: "string", label: "string" },
+			{ value: "number", label: "number" },
+			{ value: "boolean", label: "boolean" },
+			{ value: "choice", label: "choice" },
+		];
+		$scope.editParameterIndex = 0;
 
 		function getResource(resourcePath) {
 			let xhr = new XMLHttpRequest();
 			xhr.open('GET', resourcePath, false);
+			xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
 			xhr.send();
 			if (xhr.status === 200) {
+				csrfToken = xhr.getResponseHeader("x-csrf-token");
 				return xhr.responseText;
-			}
-		}
-
-		function loadContents(file) {
-			if (file) {
-				return getResource('/services/v4/ide/workspaces' + file);
-			}
-			console.error('file parameter is not present in the URL');
-		}
-
-		function getViewParameters() {
-			if (window.frameElement.hasAttribute("data-parameters")) {
-				let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
-				$scope.file = params["file"];
 			} else {
-				let searchParams = new URLSearchParams(window.location.search);
-				$scope.file = searchParams.get('file');
+				$scope.state.error = true;
+				$scope.errorMessage = "Unable to load the file. See console, for more information.";
+				messageHub.setStatusError(`Error loading '${$scope.dataParameters.file}'`);
+				return '{}';
 			}
 		}
 
 		function load() {
-			getViewParameters();
-			contents = loadContents($scope.file);
-			$scope.job = JSON.parse(contents);
-			if (!$scope.job.parameters)
-				$scope.job.parameters = [];
+			if (!$scope.state.error) {
+				contents = getResource('/services/v4/ide/workspaces' + $scope.dataParameters.file);
+				$scope.job = JSON.parse(contents);
+				if (!$scope.job.parameters)
+					$scope.job.parameters = [];
+				contents = JSON.stringify($scope.job, null, 4);
+				$scope.state.isBusy = false;
+			}
 		}
 
-		load();
-
 		function saveContents(text) {
-			console.log('Save called...');
-			if ($scope.file) {
-				let xhr = new XMLHttpRequest();
-				xhr.open('PUT', '/services/v4/ide/workspaces' + $scope.file);
-				xhr.onreadystatechange = function () {
-					if (xhr.readyState === 4) {
-						console.log('file saved: ' + $scope.file);
-					}
-				};
-				xhr.send(text);
-				messageHub.post({
-					name: $scope.file.substring($scope.file.lastIndexOf('/') + 1),
-					path: $scope.file.substring($scope.file.indexOf('/', 1)),
-					contentType: 'application/json+job', // TODO: Take this from data-parameters
-					workspace: $scope.file.substring(1, $scope.file.indexOf('/', 1)),
-				}, 'ide.file.saved');
-				messageHub.post({ message: `File '${$scope.file}' saved` }, 'ide.status.message');
-			} else {
-				console.error('file parameter is not present in the request');
-			}
+			let xhr = new XMLHttpRequest();
+			xhr.open('PUT', '/services/v4/ide/workspaces' + $scope.dataParameters.file);
+			xhr.setRequestHeader('X-Requested-With', 'Fetch');
+			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState === 4) {
+					messageHub.announceFileSaved({
+						name: $scope.dataParameters.file.substring($scope.dataParameters.file.lastIndexOf('/') + 1),
+						path: $scope.dataParameters.file.substring($scope.dataParameters.file.indexOf('/', 1)),
+						contentType: $scope.dataParameters.contentType,
+						workspace: $scope.dataParameters.file.substring(1, $scope.dataParameters.file.indexOf('/', 1)),
+					});
+					messageHub.setStatusMessage(`File '${$scope.dataParameters.file}' saved`);
+					messageHub.setEditorDirty($scope.dataParameters.file, false);
+					$scope.$apply(function () {
+						$scope.state.isBusy = false;
+					});
+				}
+			};
+			xhr.onerror = function (error) {
+				console.error(`Error saving '${$scope.dataParameters.file}'`, error);
+				messageHub.setStatusError(`Error saving '${$scope.dataParameters.file}'`);
+				messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
+				$scope.$apply(function () {
+					$scope.state.isBusy = false;
+				});
+			};
+			xhr.send(text);
 		}
 
 		$scope.save = function () {
-			contents = JSON.stringify($scope.job);
-			saveContents(contents);
+			if ($scope.forms.editor.$valid) {
+				$scope.state.busyText = "Saving...";
+				$scope.state.isBusy = true;
+				contents = JSON.stringify($scope.job, null, 4);
+				saveContents(contents);
+			}
 		};
 
-		messageHub.subscribe(
+		messageHub.onDidReceiveMessage(
+			"editor.file.save.all",
 			function () {
-				if (isFileChanged) {
-					$scope.save();
+				if (!$scope.state.error && $scope.forms.editor.$valid) {
+					let job = JSON.stringify($scope.job, null, 4);
+					if (contents !== job) {
+						$scope.save();
+					}
 				}
 			},
-			"editor.file.save.all"
+			true,
 		);
 
-		messageHub.subscribe(
+		messageHub.onDidReceiveMessage(
+			"editor.file.save",
 			function (msg) {
-				let file = msg.data && typeof msg.data === 'object' && msg.data.file;
-				let job = JSON.stringify($scope.job);
-				if (file && file === $scope.file && contents !== job)
-					$scope.save();
+				if (!$scope.state.error && $scope.forms.editor.$valid) {
+					let file = msg.data && typeof msg.data === 'object' && msg.data.file;
+					if (file && file === $scope.dataParameters.file) {
+						let job = JSON.stringify($scope.job, null, 4);
+						if (contents !== job) $scope.save();
+					}
+				}
 			},
-			"editor.file.save"
+			true,
 		);
 
-		$scope.$watch(function () {
-			let job = JSON.stringify($scope.job);
-			if (contents !== job) {
-				messageHub.post({ resourcePath: $scope.file, isDirty: true }, 'ide-core.setEditorDirty');
-			} else {
-				messageHub.post({ resourcePath: $scope.file, isDirty: false }, 'ide-core.setEditorDirty');
+		messageHub.onDidReceiveMessage(
+			"jobsEditor.parameter.add",
+			function (msg) {
+				if (msg.data.buttonId === "b1") {
+					let parameter = {
+						name: msg.data.formData[0].value,
+						type: msg.data.formData[1].value,
+						defaultValue: msg.data.formData[2].value,
+						choices: msg.data.formData[3].value,
+						description: msg.data.formData[4].value,
+					};
+					if (parameter.type !== 'choice') delete parameter['choices'];
+					$scope.$apply(function () {
+						$scope.job.parameters.push(parameter);
+					});
+				}
+				messageHub.hideFormDialog("jobsEditorAddParameter");
+			},
+			true
+		);
+
+		messageHub.onDidReceiveMessage(
+			"jobsEditor.parameter.edit",
+			function (msg) {
+				if (msg.data.buttonId === "b1") {
+					$scope.$apply(function () {
+						$scope.job.parameters[$scope.editParameterIndex].name = msg.data.formData[0].value;
+						$scope.job.parameters[$scope.editParameterIndex].type = msg.data.formData[1].value;
+						$scope.job.parameters[$scope.editParameterIndex].defaultValue = msg.data.formData[2].value;
+						$scope.job.parameters[$scope.editParameterIndex].description = msg.data.formData[4].value;
+						if (msg.data.formData[1].value === 'choice') $scope.job.parameters[$scope.editParameterIndex]['choices'] = msg.data.formData[3].value;
+						else delete $scope.job.parameters[$scope.editParameterIndex]['choices'];
+					});
+				}
+				messageHub.hideFormDialog("jobsEditorEditParameter");
+			},
+			true
+		);
+
+		$scope.$watch('job', function () {
+			if (!$scope.state.error) {
+				let job = JSON.stringify($scope.job, null, 4);
+				messageHub.setEditorDirty($scope.dataParameters.file, contents !== job);
 			}
-		});
+		}, true);
 
-		$scope.types = [
-			{ "key": "string", "label": "string" },
-			{ "key": "number", "label": "number" },
-			{ "key": "boolean", "label": "boolean" },
-			{ "key": "choice", "label": "choice" }
-		];
-
-		$scope.openNewDialog = function () {
-			$scope.actionType = 'new';
-			$scope.entity = {};
-			$scope.entity.type = "string";
-			toggleEntityModal();
-		};
-
-		$scope.openEditDialog = function (entity) {
-			$scope.actionType = 'update';
-			$scope.entity = entity;
-			toggleEntityModal();
-		};
-
-		$scope.openDeleteDialog = function (entity) {
-			$scope.actionType = 'delete';
-			$scope.entity = entity;
-			toggleEntityModal();
-		};
-
-		$scope.close = function () {
-			load();
-			toggleEntityModal();
-		};
-
-		$scope.create = function () {
-			let exists = $scope.job.parameters.filter(function (e) {
-				return e.name === $scope.entity.name;
-			});
-			if (exists.length === 0) {
-				$scope.job.parameters.push($scope.entity);
-				toggleEntityModal();
-			} else {
-				$scope.error = "Parameter with a name [" + $scope.entity.name + "] already exists!";
+		$scope.addParameter = function () {
+			let excludedNames = [];
+			for (let i = 0; i < $scope.job.parameters.length; i++) {
+				excludedNames.push($scope.job.parameters[i].name);
 			}
+			messageHub.showFormDialog(
+				"jobsEditorAddParameter",
+				"Add parameter",
+				[
+					{
+						id: "jeapiName",
+						type: "input",
+						label: "Name",
+						required: true,
+						placeholder: "Enter name",
+						minlength: 1,
+						maxlength: 255,
+						inputRules: {
+							excluded: excludedNames,
+							patterns: ['^[a-zA-Z0-9_.-]*$'],
+						},
+						value: '',
+					},
+					{
+						id: "jeapdType",
+						type: "dropdown",
+						label: "Type",
+						required: true,
+						value: 'string',
+						items: $scope.types,
+					},
+					{
+						id: "jeapiDefaultValue",
+						type: "input",
+						label: "Default Value",
+						placeholder: "Enter default value",
+						value: '',
+					},
+					{
+						id: "jeapiChoices",
+						type: "input",
+						label: "Choices",
+						placeholder: "Comma separated choices",
+						value: '',
+						visibility: {
+							hidden: true,
+							id: "jeapdType",
+							value: "choice",
+						},
+					},
+					{
+						id: "jeapiDescription",
+						type: "input",
+						label: "Description",
+						placeholder: "Enter description",
+						value: '',
+					},
+				],
+				[{
+					id: "b1",
+					type: "emphasized",
+					label: "Add",
+					whenValid: true,
+				},
+				{
+					id: "b2",
+					type: "transparent",
+					label: "Cancel",
+				}],
+				"jobsEditor.parameter.add",
+				"Adding parameter..."
+			);
 		};
 
-		$scope.update = function () {
-			// auto-wired
-			toggleEntityModal();
+		$scope.editParameter = function (index) {
+			$scope.editParameterIndex = index;
+			let excludedNames = [];
+			for (let i = 0; i < $scope.job.parameters.length; i++) {
+				if (i !== index)
+					excludedNames.push($scope.job.parameters[i].name);
+			}
+			messageHub.showFormDialog(
+				"jobsEditorEditParameter",
+				"Edit parameter",
+				[
+					{
+						id: "jeepiName",
+						type: "input",
+						label: "Name",
+						required: true,
+						placeholder: "Enter name",
+						minlength: 1,
+						maxlength: 255,
+						inputRules: {
+							excluded: excludedNames,
+							patterns: ['^[a-zA-Z0-9_.-]*$'],
+						},
+						value: $scope.job.parameters[index].name,
+					},
+					{
+						id: "jeepdType",
+						type: "dropdown",
+						label: "Type",
+						required: true,
+						value: $scope.job.parameters[index].type,
+						items: $scope.types,
+					},
+					{
+						id: "jeepiDefaultValue",
+						type: "input",
+						label: "Default Value",
+						placeholder: "Enter default value",
+						value: $scope.job.parameters[index].defaultValue,
+					},
+					{
+						id: "jeepiChoices",
+						type: "input",
+						label: "Choices",
+						placeholder: "Comma separated choices",
+						value: $scope.job.parameters[index]['choices'] || '',
+						visibility: {
+							hidden: true,
+							id: "jeepdType",
+							value: "choice",
+						},
+					},
+					{
+						id: "jeepiDescription",
+						type: "input",
+						label: "Description",
+						placeholder: "Enter description",
+						value: $scope.job.parameters[index].description,
+					},
+				],
+				[{
+					id: "b1",
+					type: "emphasized",
+					label: "Update",
+					whenValid: true,
+				},
+				{
+					id: "b2",
+					type: "transparent",
+					label: "Cancel",
+				}],
+				"jobsEditor.parameter.edit",
+				"Updating parameter..."
+			);
 		};
 
-		$scope.delete = function () {
-			$scope.job.parameters = $scope.job.parameters.filter(function (e) {
-				return e !== $scope.entity;
+		$scope.deleteParameter = function (index) {
+			messageHub.showDialogAsync(
+				`Delete ${$scope.job.parameters[index].name}?`,
+				'This action cannot be undone.',
+				[{
+					id: 'b1',
+					type: 'negative',
+					label: 'Delete',
+				},
+				{
+					id: 'b2',
+					type: 'transparent',
+					label: 'Cancel',
+				}],
+			).then(function (dialogResponse) {
+				if (dialogResponse.data === 'b1') {
+					$scope.$apply(function () {
+						$scope.job.parameters.splice(index, 1);
+					});
+				}
 			});
-			toggleEntityModal();
 		};
 
-
-		function toggleEntityModal() {
-			$('#entityModal').modal('toggle');
-			$scope.error = null;
-		}
-
+		$scope.dataParameters = ViewParameters.get();
+		if (!$scope.dataParameters.hasOwnProperty('file')) {
+			$scope.state.error = true;
+			$scope.errorMessage = "The 'file' data parameter is missing.";
+		} else if (!$scope.dataParameters.hasOwnProperty('contentType')) {
+			$scope.state.error = true;
+			$scope.errorMessage = "The 'contentType' data parameter is missing.";
+		} else load();
 	});

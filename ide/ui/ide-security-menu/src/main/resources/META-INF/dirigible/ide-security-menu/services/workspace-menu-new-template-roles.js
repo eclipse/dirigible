@@ -21,12 +21,12 @@ exports.getTemplate = function () {
 					"description": "Administrator Role"
 				},
 				{
-					"name": "Operator",
+					"name": "operator",
 					"description": "Operator Role"
 				}
 			],
 			null,
-			2
+			4
 		)
 	};
 };

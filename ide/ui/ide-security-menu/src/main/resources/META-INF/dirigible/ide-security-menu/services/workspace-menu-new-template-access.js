@@ -20,6 +20,7 @@ exports.getTemplate = function () {
 					{
 						"path": "/myproject/myfolder/myservice.js",
 						"method": "GET",
+						"scope": "HTTP",
 						"roles": [
 							"administrator",
 							"operator"
@@ -28,7 +29,7 @@ exports.getTemplate = function () {
 				]
 			},
 			null,
-			2
+			4
 		)
 	};
 };

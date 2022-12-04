@@ -16,7 +16,7 @@ try {
         connection.close();
     }
 }
-
+response.setContentType("application/json");
 response.println(JSON.stringify(extensionPoints));
 response.flush();
 response.close();

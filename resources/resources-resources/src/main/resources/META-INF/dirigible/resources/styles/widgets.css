@@ -157,6 +157,24 @@ body {
   justify-content: center;
 }
 
+.dg-center__vertical {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.dg-center__horizontal {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
 .dg-contain-image {
   -o-object-fit: contain;
   object-fit: contain;
@@ -262,6 +280,19 @@ body {
 }
 .dg-font--italic {
   font-style: italic;
+}
+.dg-restrict-width--sm {
+  max-width: 600px;
+}
+.dg-restrict-width,
+.dg-restrict-width--lg {
+  max-width: 1024px;
+}
+.dg-restrict-width--lg {
+  max-width: 1280px;
+}
+.dg-restrict-width--xl {
+  max-width: 1600px;
 }
 /* fd-page helper classes */
 .dg-page__content-card {

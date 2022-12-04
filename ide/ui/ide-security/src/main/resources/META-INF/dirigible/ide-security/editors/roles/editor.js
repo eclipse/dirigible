@@ -9,64 +9,17 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('page', [])
-    .controller('PageController', function ($scope) {
-
-        let messageHub = new FramesMessageHub();
+angular.module('page', ["ideUI", "ideView"])
+    .controller('PageController', function ($scope, messageHub, ViewParameters) {
         let contents;
         let csrfToken;
-
-        $scope.openNewDialog = function () {
-            $scope.actionType = 'new';
-            $scope.entity = {};
-            toggleEntityModal();
+        $scope.errorMessage = 'Аn unknown error was encountered. Please see console for more information.';
+        $scope.state = {
+            isBusy: true,
+            error: false,
+            busyText: "Loading...",
         };
-
-        $scope.openEditDialog = function (entity) {
-            $scope.actionType = 'update';
-            $scope.entity = entity;
-            toggleEntityModal();
-        };
-
-        $scope.openDeleteDialog = function (entity) {
-            $scope.actionType = 'delete';
-            $scope.entity = entity;
-            toggleEntityModal();
-        };
-
-        $scope.close = function () {
-            load();
-            toggleEntityModal();
-        };
-
-        $scope.create = function () {
-            let exists = $scope.roles.filter(function (e) {
-                return e.name === $scope.entity.name;
-            });
-            if (exists.length === 0) {
-                $scope.roles.push($scope.entity);
-                toggleEntityModal();
-            } else {
-                $scope.error = "Role with a name [" + $scope.entity.name + "] already exists!";
-            }
-        };
-
-        $scope.update = function () {
-            // auto-wired
-            toggleEntityModal();
-        };
-
-        $scope.delete = function () {
-            $scope.roles = $scope.roles.filter(function (e) {
-                return e !== $scope.entity;
-            });
-            toggleEntityModal();
-        };
-
-        function toggleEntityModal() {
-            $('#entityModal').modal('toggle');
-            $scope.error = null;
-        }
+        $scope.editRoleIndex = 0;
 
         function getResource(resourcePath) {
             let xhr = new XMLHttpRequest();
@@ -76,91 +29,237 @@ angular.module('page', [])
             if (xhr.status === 200) {
                 csrfToken = xhr.getResponseHeader("x-csrf-token");
                 return xhr.responseText;
-            }
-        }
-
-        function loadContents(file) {
-            if (file) {
-                return getResource('/services/v4/ide/workspaces' + file);
-            }
-            console.error('file parameter is not present in the URL');
-        }
-
-        function getViewParameters() {
-            if (window.frameElement.hasAttribute("data-parameters")) {
-                let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
-                $scope.file = params["file"];
             } else {
-                let searchParams = new URLSearchParams(window.location.search);
-                $scope.file = searchParams.get('file');
+                $scope.state.error = true;
+                $scope.errorMessage = "Unable to load the file. See console, for more information.";
+                messageHub.setStatusError(`Error loading '${$scope.dataParameters.file}'`);
+                return '{}';
             }
         }
 
-        function load() {
-            getViewParameters();
-            contents = loadContents($scope.file);
-            $scope.roles = JSON.parse(contents);
-        }
-
-        load();
+        $scope.load = function () {
+            if (!$scope.state.error) {
+                contents = getResource('/services/v4/ide/workspaces' + $scope.dataParameters.file);
+                $scope.roles = JSON.parse(contents);
+                contents = JSON.stringify($scope.roles, null, 4);
+                $scope.state.isBusy = false;
+            }
+        };
 
         function saveContents(text) {
-            console.log('Save called...');
-            if ($scope.file) {
-                let xhr = new XMLHttpRequest();
-                xhr.open('PUT', '/services/v4/ide/workspaces' + $scope.file);
-                xhr.setRequestHeader('X-Requested-With', 'Fetch');
-                xhr.setRequestHeader('X-CSRF-Token', csrfToken);
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4) {
-                        console.log('file saved: ' + $scope.file);
-                    }
-                };
-                xhr.send(text);
-                messageHub.post({
-                    name: $scope.file.substring($scope.file.lastIndexOf('/') + 1),
-                    path: $scope.file.substring($scope.file.indexOf('/', 1)),
-                    contentType: 'application/json+roles', // TODO: Take this from data-parameters
-                    workspace: $scope.file.substring(1, $scope.file.indexOf('/', 1)),
-                }, 'ide.file.saved');
-                messageHub.post({ message: `File '${$scope.file}' saved` }, 'ide.status.message');
-            } else {
-                console.error('file parameter is not present in the request');
-            }
+            let xhr = new XMLHttpRequest();
+            xhr.open('PUT', '/services/v4/ide/workspaces' + $scope.dataParameters.file);
+            xhr.setRequestHeader('X-Requested-With', 'Fetch');
+            xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    messageHub.announceFileSaved({
+                        name: $scope.dataParameters.file.substring($scope.dataParameters.file.lastIndexOf('/') + 1),
+                        path: $scope.dataParameters.file.substring($scope.dataParameters.file.indexOf('/', 1)),
+                        contentType: $scope.dataParameters.contentType,
+                        workspace: $scope.dataParameters.file.substring(1, $scope.dataParameters.file.indexOf('/', 1)),
+                    });
+                    messageHub.setStatusMessage(`File '${$scope.dataParameters.file}' saved`);
+                    messageHub.setEditorDirty($scope.dataParameters.file, false);
+                    $scope.$apply(function () {
+                        $scope.state.isBusy = false;
+                    });
+                }
+            };
+            xhr.onerror = function (error) {
+                console.error(`Error saving '${$scope.dataParameters.file}'`, error);
+                messageHub.setStatusError(`Error saving '${$scope.dataParameters.file}'`);
+                messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
+                $scope.$apply(function () {
+                    $scope.state.isBusy = false;
+                });
+            };
+            xhr.send(text);
         }
 
         $scope.save = function () {
-            contents = angular.toJson($scope.roles);
+            $scope.state.busyText = "Saving...";
+            $scope.state.isBusy = true;
+            contents = JSON.stringify($scope.roles, null, 4);
             saveContents(contents);
         };
 
-        messageHub.subscribe(
+        messageHub.onDidReceiveMessage(
+            "editor.file.save.all",
             function () {
-                let roles = angular.toJson($scope.roles);
-                if (contents !== roles) {
-                    $scope.save();
+                if (!$scope.state.error) {
+                    let roles = JSON.stringify($scope.roles, null, 4);
+                    if (contents !== roles) {
+                        $scope.save();
+                    }
                 }
             },
-            "editor.file.save.all"
+            true,
         );
 
-        messageHub.subscribe(
+        messageHub.onDidReceiveMessage(
+            "roleEditor.role.add",
             function (msg) {
-                let file = msg.data && typeof msg.data === 'object' && msg.data.file;
-                let roles = angular.toJson($scope.roles);
-                if (file && file === $scope.file && contents !== roles)
-                    $scope.save();
+                if (msg.data.buttonId === "b1") {
+                    $scope.$apply(function () {
+                        $scope.roles.push({
+                            name: msg.data.formData[0].value,
+                            description: msg.data.formData[1].value,
+                        });
+                    });
+                }
+                messageHub.hideFormDialog("rolesEditorAddRole");
             },
-            "editor.file.save"
+            true
         );
 
-        $scope.$watch(function () {
-            let roles = angular.toJson($scope.roles);
-            if (contents !== roles) {
-                messageHub.post({ resourcePath: $scope.file, isDirty: true }, 'ide-core.setEditorDirty');
-            } else {
-                messageHub.post({ resourcePath: $scope.file, isDirty: false }, 'ide-core.setEditorDirty');
-            }
-        });
+        messageHub.onDidReceiveMessage(
+            "roleEditor.role.edit",
+            function (msg) {
+                if (msg.data.buttonId === "b1") {
+                    $scope.$apply(function () {
+                        $scope.roles[$scope.editRoleIndex].name = msg.data.formData[0].value;
+                        $scope.roles[$scope.editRoleIndex].description = msg.data.formData[1].value;
+                    });
+                }
+                messageHub.hideFormDialog("rolesEditorEditRole");
+            },
+            true
+        );
 
+        messageHub.onDidReceiveMessage(
+            "editor.file.save",
+            function (msg) {
+                if (!$scope.state.error) {
+                    let file = msg.data && typeof msg.data === 'object' && msg.data.file;
+                    if (file && file === $scope.dataParameters.file) {
+                        let roles = JSON.stringify($scope.roles, null, 4);
+                        if (contents !== roles) $scope.save();
+                    }
+                }
+            },
+            true,
+        );
+
+        $scope.$watch('roles', function () {
+            if (!$scope.state.error) {
+                let roles = JSON.stringify($scope.roles, null, 4);
+                messageHub.setEditorDirty($scope.dataParameters.file, contents !== roles);
+            }
+        }, true);
+
+        $scope.addRole = function () {
+            messageHub.showFormDialog(
+                "rolesEditorAddRole",
+                "Add role",
+                [
+                    {
+                        id: "reriName",
+                        type: "input",
+                        label: "Name",
+                        required: true,
+                        placeholder: "Enter name",
+                        minlength: 1,
+                        maxlength: 255,
+                        inputRules: {
+                            patterns: ['^[a-zA-Z0-9_.-]*$'],
+                        },
+                        value: '',
+                    },
+                    {
+                        id: "reriRoles",
+                        type: "input",
+                        label: "Description",
+                        placeholder: "Enter description",
+                        value: '',
+                    },
+                ],
+                [{
+                    id: "b1",
+                    type: "emphasized",
+                    label: "Add",
+                    whenValid: true,
+                },
+                {
+                    id: "b2",
+                    type: "transparent",
+                    label: "Cancel",
+                }],
+                "roleEditor.role.add",
+                "Adding role..."
+            );
+        };
+
+        $scope.editRole = function (index) {
+            $scope.editRoleIndex = index;
+            messageHub.showFormDialog(
+                "rolesEditorEditRole",
+                "Edit role",
+                [{
+                    id: "reriName",
+                    type: "input",
+                    label: "Name",
+                    required: true,
+                    placeholder: "Enter name",
+                    minlength: 1,
+                    maxlength: 255,
+                    inputRules: {
+                        patterns: ['^[a-zA-Z0-9_.-]*$'],
+                    },
+                    value: $scope.roles[index].name,
+                },
+                {
+                    id: "reriRoles",
+                    type: "input",
+                    label: "Description",
+                    placeholder: "Enter description",
+                    value: $scope.roles[index].description,
+                }],
+                [{
+                    id: "b1",
+                    type: "emphasized",
+                    label: "Update",
+                    whenValid: true,
+                },
+                {
+                    id: "b2",
+                    type: "transparent",
+                    label: "Cancel",
+                }],
+                "roleEditor.role.edit",
+                "Updating role..."
+            );
+        };
+
+        $scope.deleteRole = function (index) {
+            messageHub.showDialogAsync(
+                `Delete ${$scope.roles[index].name}?`,
+                'This action cannot be undone.',
+                [{
+                    id: 'b1',
+                    type: 'negative',
+                    label: 'Delete',
+                },
+                {
+                    id: 'b2',
+                    type: 'transparent',
+                    label: 'Cancel',
+                }],
+            ).then(function (dialogResponse) {
+                if (dialogResponse.data === 'b1') {
+                    $scope.$apply(function () {
+                        $scope.roles.splice(index, 1);
+                    });
+                }
+            });
+        };
+
+        $scope.dataParameters = ViewParameters.get();
+        if (!$scope.dataParameters.hasOwnProperty('file')) {
+            $scope.state.error = true;
+            $scope.errorMessage = "The 'file' data parameter is missing.";
+        } else if (!$scope.dataParameters.hasOwnProperty('contentType')) {
+            $scope.state.error = true;
+            $scope.errorMessage = "The 'contentType' data parameter is missing.";
+        } else $scope.load();
     });

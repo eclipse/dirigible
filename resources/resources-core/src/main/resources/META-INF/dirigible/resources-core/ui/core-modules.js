@@ -15,6 +15,9 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
     .constant('branding', brandingInfo)
     .constant('perspective', perspectiveData)
     .constant('extensionPoint', {})
+    .config(function config($compileProvider) {
+        $compileProvider.debugInfoEnabled(false);
+    })
     .service('Perspectives', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
         let url = '/services/v4/js/resources-core/services/perspectives.js';
         if (extensionPoint && extensionPoint.perspectives) {
@@ -576,10 +579,12 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     requestAnimationFrame(function () {
                         if (scope.formDialog.items.length) {
                             for (let i = 0; i < scope.formDialog.items.length; i++) {
-                                if (scope.formDialog.items[i].type === 'input') {
+                                if (scope.formDialog.items[i].type === 'input' || scope.formDialog.items[i].type === 'textarea') {
                                     let input = ideFormDialog.querySelector(`#${scope.formDialog.items[i].id}`);
-                                    input.focus();
-                                    break;
+                                    if (!scope.formDialog.items[i].visibility || scope.formDialog.items[i].visibility.$isVisible) {
+                                        input.focus();
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -762,13 +767,16 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                             if (scope.formDialog.items[i].id === item.visibility.id && scope.formDialog.items[i].value === item.visibility.value) {
                                 if (item.visibility.hidden) {
                                     scope.excludeFromRequired[item.id] = true;
+                                    item.visibility.$isVisible = true;
                                     return false;
                                 } else {
                                     scope.excludeFromRequired[item.id] = false;
+                                    item.visibility.$isVisible = false;
                                     return true;
                                 }
                             }
                         }
+                        item.visibility.$isVisible = !item.visibility.hidden;
                         return item.visibility.hidden;
                     }
                     return false;
