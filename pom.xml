@@ -734,7 +734,7 @@
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.1.214</h2database.version>
 		<postgresql.version>42.5.1</postgresql.version>
-		<activemq.version>5.17.2</activemq.version>
+		<activemq.version>5.17.3</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.48.v20220622</jetty.version>
 		<lucene.version>9.4.2</lucene.version>
