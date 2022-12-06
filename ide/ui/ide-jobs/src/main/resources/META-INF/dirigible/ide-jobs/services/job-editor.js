@@ -9,14 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getEditor = function () {
-	return {
-		"id": "job",
-		"name": "Job Editor",
-		"factory": "frame",
-		"region": "center-top",
-		"label": "Job Editor",
-		"link": "../ide-jobs/editor/editor.html",
-		"contentTypes": ["application/json+job"]
-	};
+const editorData = {
+	id: "job",
+	label: "Job Editor",
+	factory: "frame",
+	region: "center",
+	link: "../ide-jobs/editor/editor.html",
+	contentTypes: ["application/json+job"]
 };
+if (typeof exports !== 'undefined') {
+	exports.getEditor = function () {
+		return editorData;
+	}
+}

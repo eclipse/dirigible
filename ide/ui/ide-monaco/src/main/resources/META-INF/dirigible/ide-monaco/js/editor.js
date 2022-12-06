@@ -318,9 +318,9 @@ function createSaveAction() {
         run: function (editor) {
             loadingMessage.innerText = 'Saving...';
             if (loadingOverview) loadingOverview.classList.remove("dg-hidden");
-            if(isAutoFormattingEnabledForCurrentFile()) {
+            if (isAutoFormattingEnabledForCurrentFile()) {
                 editor.getAction('editor.action.formatDocument').run().then(() => {
-                   saveFileContent(editor);
+                    saveFileContent(editor);
                 });
             }
             else {
@@ -501,8 +501,8 @@ function createToggleAutoFormattingAction() {
 
             let jsonString = null;
 
-            if(filesWithDisabledFormattingList) {
-                if(filesWithDisabledFormattingList.includes(fileName)) {
+            if (filesWithDisabledFormattingList) {
+                if (filesWithDisabledFormattingList.includes(fileName)) {
                     let removed = filesWithDisabledFormattingList.filter(entry => entry !== fileName);
                     jsonString = JSON.stringify(removed);
                     console.log("Re-enabled auto formatting for file: " + fileName);
@@ -536,7 +536,7 @@ function isAutoFormattingEnabledForCurrentFile() {
     let filesWithDisabledFormattingListJson = window.localStorage.getItem('DIRIGIBLE.filesWithDisabledFormattingList');
     let filesWithDisabledFormattingList = JSON.parse(filesWithDisabledFormattingListJson);
 
-    if(filesWithDisabledFormattingList && filesWithDisabledFormattingList.includes(fileName)) {
+    if (filesWithDisabledFormattingList && filesWithDisabledFormattingList.includes(fileName)) {
         return false;
     }
     else {
@@ -982,6 +982,24 @@ function isDirty(model) {
             end_with_newline: true,
             indent_with_tabs: false,
             space_around_combinator: true
+        });
+        monaco.editor.defineTheme('quartz-dark', {
+            base: 'vs-dark',
+            inherit: true,
+            rules: [{ background: '1c2228' }],
+            colors: {
+                'editor.background': '#1c2228',
+                'breadcrumb.background': '#1c2228',
+                'minimap.background': '#1c2228',
+                'editorGutter.background': '#1c2228',
+                'editorMarkerNavigation.background': '#1c2228',
+                'input.background': '#29313a',
+                'input.border': '#8696a9',
+                'editorWidget.background': '#1c2228',
+                'editorWidget.border': '#495767',
+                'editorSuggestWidget.background': '#29313a',
+                'dropdown.background': '#29313a',
+            }
         });
         monaco.editor.setTheme(monacoTheme);
     });

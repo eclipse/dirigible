@@ -1,324 +1,96 @@
-<html lang="en" ng-app="ui.schema.modeler">
+<html lang="en" ng-app="ui.schema.modeler" ng-controller="ModelerCtrl as ctrl">
 
     <head>
-        <meta charset="utf-8" />
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-        <title>Schema Modeler</title>
-
-        <!-- FontAwesome icon set -->
-        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-        <!-- Sets the basepath for the library if not in same directory -->
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
+        <title dg-view-title></title>
+        <script type="text/javascript" src="services/schema-editor.js"></script>
+        <theme></theme>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js">
+        </script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" href="css/styles.css" rel="stylesheet">
         <script type="text/javascript">
             mxBasePath = '/services/v4/web/resources/mxgraph/3.9.1/src';
         </script>
-        <!-- Loads and initializes the library -->
         <script type="text/javascript" type="text/javascript"
             src="/services/v4/web/resources/mxgraph/3.9.1/src/js/mxClient.js">
         </script>
-
-        <script type="text/javascript" src="/services/v4/web/resources-core/ui/message-hub.js"></script>
-
-        <!-- jQuery -->
-        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-
-        <!-- AngularJS -->
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-animate.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
-
-        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-        <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="/services/v4/web/resources-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
-
-        <!-- Custom IDE Styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
-
         <script type="text/javascript" src="js/model.js"></script>
-        <script type="text/javascript" src="js/dialogs.js"></script>
         <script type="text/javascript" src="js/widgets.js"></script>
         <script type="text/javascript" src="js/serializer.js"></script>
         <script type="text/javascript" src="js/sql.js"></script>
-        <script type="text/javascript" src="js/angular-dialogs.js"></script>
+        <script type="text/javascript" src="js/editor.js"></script>
         <script type="text/javascript" src="js/clipboard.js"></script>
-        <script type="text/javascript" src="js/controller.js"></script>
+    </head>
 
-        <style>
-            .button:hover {
-                background: #333333 !important;
-            }
-
-        </style>
-
-        <!-- Page passes the container for the graph to the program -->
-
-    <body id="ModelerCtrl" ng-controller="ModelerCtrl as ctrl">
-
-        <!-- Creates a container for the splash screen -->
-        <div id="splash"
-            style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background: white; z-index: 1;">
-            <center id="splash" style="padding-top: 230px;">
-                <img src="images/loading.gif">
-            </center>
+    <body class="dg-vbox">
+        <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
+            {{state.busyText}}
+        </fd-busy-indicator-extended>
+        <fd-toolbar id="toolbarContainer" dg-size="cozy">
+            <fd-toolbar-spacer></fd-toolbar-spacer>
+            <fd-button dg-type="transparent" glyph="sap-icon--save" aria-label="Save" title="Save" ng-click="save()">
+            </fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--list" aria-label="Properties" title="Properties"
+                ng-click="properties()">
+            </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button dg-type="transparent" glyph="sap-icon--copy" aria-label="Copy" title="Copy" ng-click="copy()">
+            </fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--paste" aria-label="Paste" title="Paste"
+                ng-click="paste()">
+            </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button dg-type="transparent" glyph="sap-icon--undo" aria-label="Undo" title="Undo" ng-click="undo()">
+            </fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--redo" aria-label="Redo" title="Redo" ng-click="redo()">
+            </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button dg-type="transparent" glyph="sap-icon--delete" aria-label="Delete" title="Delete"
+                ng-click="delete()">
+            </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button dg-type="transparent" glyph="sap-icon--show" aria-label="Show" title="Show" ng-click="show()">
+            </fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--print" aria-label="Print" title="Print"
+                ng-click="print()">
+            </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button dg-type="transparent" glyph="sap-icon--database" aria-label="Show SQL" title="Show SQL"
+                ng-click="showSql()">
+            </fd-button>
+        </fd-toolbar>
+        <div class="dg-full-height dg-hbox">
+            <div id="sidebarContainer" class="dg-vbox dg-border-right"></div>
+            <div id="graphContainer" class="dg-full-width"></div>
         </div>
-
-        <!-- Creates a container for the sidebar -->
-        <div id="toolbarContainer" class="toolbarContainer"></div>
-
-        <!-- Creates a container for the toolboox -->
-        <div id="sidebarContainer" class="sidebarContainer"></div>
-
-        <!-- Creates a container for the graph -->
-        <div id="graphContainer" class="graphContainer"></div>
-
-        <!-- Creates a container for the outline -->
         <div id="outlineContainer" class="outlineContainer"></div>
-
-        <!-- Creates a container for the statusbar -->
-        <div id="statusContainer" class="statusContainer">
-        </div>
-
-        <!-- Triggers -->
-        <button type="button" id="tablePropertiesOpen" ng-show=false data-toggle="modal"
-            data-target="#dialogTableProperties"></button>
-        <button type="button" id="columnPropertiesOpen" ng-show=false data-toggle="modal"
-            data-target="#dialogColumnProperties"></button>
-        <button type="button" id="columnSQLPropertiesOpen" ng-show=false data-toggle="modal"
-            data-target="#dialogSQLColumnProperties"></button>
-        <!-- button type="button" id="connectorPropertiesOpen" ng-show=false data-toggle="modal" data-target="#dialogConnectorProperties"></button -->
-        <button type="button" id="alertOpen" ng-show=false data-toggle="modal" data-target="#dialogAlert"></button>
-        <button type="button" id="infoOpen" ng-show=false data-toggle="modal" data-target="#dialogInfo"></button>
-
-        <!-- Table Properties -->
-        <div class="dirigible-modal modal fade" id="dialogTableProperties" tabindex="-1" role="dialog"
-            aria-labelledby="dialogTablePropertiesLabel" aria-hidden="true">
-            <div class="modal-header">
-                <h3>Table Details</h3>
-            </div>
-            <div class="modal-body">
-
-                <ul class="nav nav-pills">
-                    <li class="active"><a data-toggle="pill" href="#generalTable">General</a></li>
-                </ul>
-
-                <div class="tab-content">
-                    <div id="generalTable" class="tab-pane fade in active">
-                        <br><br>
-                        <div class="form-group row">
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">Name: </label>
-                                <div class="col-xs-5">
-                                    <input class="form-control" type="text" placeholder="table name"
-                                        ng-model="ctrl.$scope.$parent.cell.value.name" required="required">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="ctrl.okTableProperties()" data-toggle="modal"
-                    data-target="#dialogTableProperties">OK
-                </button>
-                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-
-
-        <!-- Column Properties -->
-        <div class="dirigible-modal modal fade" id="dialogColumnProperties" tabindex="-1" role="dialog"
-            aria-labelledby="dialogColumnPropertiesLabel" aria-hidden="true">
-            <div class="modal-header">
-                <h3>Column Details</h3>
-            </div>
-            <div class="modal-body">
-
-                <ul class="nav nav-pills">
-                    <li class="active"><a data-toggle="pill" href="#generalColumn">General</a></li>
-                </ul>
-
-                <div class="tab-content">
-                    <div id="generalColumn" class="tab-pane fade in active">
-                        <br><br>
-                        <div class="form-group row">
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">Database Name: </label>
-                                <div class="col-xs-6">
-                                    <input class="form-control" type="text" placeholder="data name"
-                                        ng-model="ctrl.$scope.$parent.cell.value.name" required="required">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label" for="dataType">Data Type: </label>
-                                <div class="col-xs-4">
-                                    <select class="form-control" name="d" id="dataType"
-                                        ng-model="ctrl.$scope.$parent.cell.value.type">
-                                        <option ng-repeat="option in ctrl.dataTypes" value="{{option.key}}">
-                                            {{option.label}}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">Length: </label>
-                                <div class="col-xs-3">
-                                    <input class="form-control" type="text" placeholder="20"
-                                        ng-model="ctrl.$scope.$parent.cell.value.columnLength" required="required">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">Is Primary Key: </label>
-                                <div class="col-xs-9">
-                                    <input class="form-control" type="checkbox"
-                                        ng-model="ctrl.$scope.$parent.cell.value.primaryKey" required="required"
-                                        data-ng-true-value="'true'" data-ng-false-value="'false'">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">Is Auto Increment: </label>
-                                <div class="col-xs-9">
-                                    <input class="form-control" type="checkbox"
-                                        ng-model="ctrl.$scope.$parent.cell.value.autoIncrement" required="required"
-                                        data-ng-true-value="'true'" data-ng-false-value="'false'">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">Is Not Null: </label>
-                                <div class="col-xs-9">
-                                    <input class="form-control" type="checkbox"
-                                        ng-model="ctrl.$scope.$parent.cell.value.notNull" required="required"
-                                        data-ng-true-value="'true'" data-ng-false-value="'false'">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">Is Unique: </label>
-                                <div class="col-xs-9">
-                                    <input class="form-control" type="checkbox"
-                                        ng-model="ctrl.$scope.$parent.cell.value.unique" required="required"
-                                        data-ng-true-value="'true'" data-ng-false-value="'false'">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">Precision: </label>
-                                <div class="col-xs-3">
-                                    <input class="form-control" type="text" placeholder="0"
-                                        ng-model="ctrl.$scope.$parent.cell.value.precision" required="required">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">Scale: </label>
-                                <div class="col-xs-3">
-                                    <input class="form-control" type="text" placeholder="0"
-                                        ng-model="ctrl.$scope.$parent.cell.value.scale" required="required">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">Default Value: </label>
-                                <div class="col-xs-3">
-                                    <input class="form-control" type="text" placeholder="default value"
-                                        ng-model="ctrl.$scope.$parent.cell.value.defaultValue" required="required">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="ctrl.okColumnProperties()" data-toggle="modal"
-                    data-target="#dialogColumnProperties">OK
-                </button>
-                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-
-        <!-- SQL Column Properties -->
-        <div class="dirigible-modal modal fade" id="dialogSQLColumnProperties" tabindex="-1" role="dialog"
-            aria-labelledby="dialogSQLColumnPropertiesLabel" aria-hidden="true">
-            <div class="modal-header">
-                <h3>SQL Details</h3>
-            </div>
-            <div class="modal-body">
-
-                <ul class="nav nav-pills">
-                    <li class="active"><a data-toggle="pill" href="#generalSQLColumn">General</a></li>
-                </ul>
-
-                <div class="tab-content">
-                    <div id="generalSQLProperty" class="tab-pane fade in active">
-                        <br><br>
-                        <div class="form-group row">
-                            <div class="row">
-                                <label class="col-xs-3 col-form-label">SQL: </label>
-                                <div class="col-xs-6">
-                                    <textarea class="form-control" cols='20' rows='10'
-                                        ng-model="ctrl.$scope.$parent.cell.value.name" required="required"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="ctrl.okSQLColumnProperties()" data-toggle="modal"
-                    data-target="#dialogSQLColumnProperties">OK
-                </button>
-                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Alert Dialog -->
-        <div class="dirigible-modal modal fade" id="dialogAlert" tabindex="-1" role="dialog"
-            aria-labelledby="dialogAlertLabel" aria-hidden="true">
-            <div class="modal-header">
-                <h3>{{$parent.alertTitle}}</h3>
-            </div>
-            <div class="modal-body">
-
-                <br><br>
-                <div class="form-group row">
-                    <div class="row">
-                        <label class="col-xs-3 col-form-label"><i
-                                class="fa fa-{{$parent.alertStatus}} fa-4x"></i></label>
-                        <div class="col-xs-5">
-                            <h3>{{$parent.alertMessage}}</h3>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-
-        <!-- Info Dialog -->
-        <div class="dirigible-modal modal fade" id="dialogInfo" tabindex="-1" role="dialog"
-            aria-labelledby="dialogInfoLabel" aria-hidden="true">
-            <div class="modal-header">
-                <h3>{{$parent.infoTitle}}</h3>
-            </div>
-            <div class="modal-body">
-
-                <br><br>
-                <div class="form-group row">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <textarea cols='60' , rows='20' class="form-control">{{$parent.infoMessage}}</textarea>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-
+        <fd-toolbar id="statusContainer" class="dg-border-top" dg-size="cozy" no-bottom-border="true">
+            <fd-toolbar-spacer></fd-toolbar-spacer>
+            <fd-button dg-type="transparent" glyph="sap-icon--collapse" aria-label="Collapse all" title="Collapse all"
+                ng-click="collapseAll()">
+            </fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--expand" aria-label="Expand all" title="Expand all"
+                ng-click="expandAll()">
+            </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button dg-type="transparent" glyph="sap-icon--zoom-in" aria-label="Zoom in" title="Zoom in"
+                ng-click="zoomIn()">
+            </fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--zoom-out" aria-label="Zoom out" title="Zoom out"
+                ng-click="zoomOut()">
+            </fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--search" aria-label="Actual size" title="Actual size"
+                ng-click="actualSize()">
+            </fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--exitfullscreen" aria-label="Fit to screen" title="Fit"
+                ng-click="fit()">
+            </fd-button>
+        </fd-toolbar>
     </body>
 
 </html>

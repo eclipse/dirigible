@@ -16,51 +16,17 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-
-        <!-- Title directive -->
         <title dg-view-title></title>
-
-        <!-- View data -->
         <script type="text/javascript" src="view.js"></script>
-
         <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
-
         <script src="controller.js"></script>
-
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
-
-        <style>
-            .main-container {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                overflow: hidden;
-                height: 100%;
-                width: 100%;
-            }
-
-            .preview {
-                flex-grow: 1;
-                overflow: auto;
-                min-height: 0;
-            }
-
-            iframe {
-                background-color: white;
-            }
-
-            .input-url {
-                flex-grow: 1;
-            }
-
-        </style>
-
     </head>
 
-    <body>
+    <body class="dg-vbox">
         <!-- <form class="input-group navbar-fixed-top" name="previewForm">
             <span class="input-group-btn input-group-addon view-toolbar">
                 <button class="btn btn-default preview-button" type="button" ng-click="preview.refresh()">
@@ -74,46 +40,39 @@
             <iframe class="responsive-iframe" ng-src="{{preview.previewUrl}}" frameborder="0" onload="previewLoaded()">
             </iframe>
         </div> -->
-
-
-
-        <div class="main-container">
-            <fd-bar cozy="true">
-                <fd-bar-left>
-                    <fd-bar-element>
-                        <fd-button glyph="sap-icon--arrow-left" aria-label="Go back" dg-type="transparent"
-                            state="{{ preview.hasBack() ? undefined : 'disabled' }}" ng-click="preview.goBack()">
-                        </fd-button>
-                    </fd-bar-element>
-                    <fd-bar-element>
-                        <fd-button glyph="sap-icon--arrow-right" aria-label="Go forward" dg-type="transparent"
-                            state="{{ preview.hasForward() ? undefined : 'disabled' }}" ng-click="preview.goForward()">
-                        </fd-button>
-                    </fd-bar-element>
-                    <fd-bar-element>
-                        <fd-button glyph="sap-icon--refresh" aria-label="Reload" dg-type="transparent"
-                            state="{{ preview.getCurrentUrl() ? undefined : 'disabled' }}" ng-click="preview.reload()">
-                        </fd-button>
-                    </fd-bar-element>
-                    <fd-bar-element class="input-url">
-                        <fd-input-group state="{{preview.urlLocked ? 'warning' : undefined}}">
-                            <fd-input type="text" compact="true" in-group="true" ng-model="preview.previewUrl"
-                                ng-keyup="preview.inputUrlKeyUp($event)" placeholder="Url">
-                            </fd-input>
-                            <fd-input-group-addon compact="true" has-button="true">
-                                <fd-button compact="true" dg-label="{{ preview.urlLocked ? 'Locked' : 'Unlocked'}}"
-                                    in-group="true"
-                                    glyph="{{ preview.urlLocked ? 'sap-icon--locked' : 'sap-icon--unlocked'}}"
-                                    dg-type="transparent" ng-click="preview.urlLocked = !preview.urlLocked"></fd-button>
-                            </fd-input-group-addon>
-                        </fd-input-group>
-                    </fd-bar-element>
-                </fd-bar-left>
-            </fd-bar>
-            <div class="preview">
-                <iframe id="preview-iframe" frameborder="0"></iframe>
-            </div>
-        </div>
+        <fd-bar cozy="true">
+            <fd-bar-left>
+                <fd-bar-element>
+                    <fd-button glyph="sap-icon--arrow-left" aria-label="Go back" dg-type="transparent"
+                        state="{{ preview.hasBack() ? undefined : 'disabled' }}" ng-click="preview.goBack()">
+                    </fd-button>
+                </fd-bar-element>
+                <fd-bar-element>
+                    <fd-button glyph="sap-icon--arrow-right" aria-label="Go forward" dg-type="transparent"
+                        state="{{ preview.hasForward() ? undefined : 'disabled' }}" ng-click="preview.goForward()">
+                    </fd-button>
+                </fd-bar-element>
+                <fd-bar-element>
+                    <fd-button glyph="sap-icon--refresh" aria-label="Reload" dg-type="transparent"
+                        state="{{ preview.getCurrentUrl() ? undefined : 'disabled' }}" ng-click="preview.reload()">
+                    </fd-button>
+                </fd-bar-element>
+                <fd-bar-element class="dg-stretch">
+                    <fd-input-group state="{{preview.urlLocked ? 'warning' : undefined}}">
+                        <fd-input type="text" compact="true" in-group="true" ng-model="preview.previewUrl"
+                            ng-keyup="preview.inputUrlKeyUp($event)" placeholder="Url">
+                        </fd-input>
+                        <fd-input-group-addon compact="true" has-button="true">
+                            <fd-button compact="true" dg-label="{{ preview.urlLocked ? 'Locked' : 'Unlocked'}}"
+                                in-group="true"
+                                glyph="{{ preview.urlLocked ? 'sap-icon--locked' : 'sap-icon--unlocked'}}"
+                                dg-type="transparent" ng-click="preview.urlLocked = !preview.urlLocked"></fd-button>
+                        </fd-input-group-addon>
+                    </fd-input-group>
+                </fd-bar-element>
+            </fd-bar-left>
+        </fd-bar>
+        <iframe id="preview-iframe" style="background-color: white"></iframe>
     </body>
 
 </html>

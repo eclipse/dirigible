@@ -11,9 +11,9 @@
  */
 exports.getTemplate = function () {
 	return {
-		"name": "listener",
-		"label": "Message Listener",
-		"extension": "listener",
-		"data": JSON.stringify(JSON.parse('{"name":"/myproject/mylistener","type":"Q","handler":"myproject/myhandler.js","description":"My Listener"}'), null, 2)
+		name: "listener",
+		label: "Message Listener",
+		extension: "listener",
+		data: '{"name":"mylistener","type":"Q","handler":"myproject/myhandler.js","description":"My Listener"}'
 	};
 };

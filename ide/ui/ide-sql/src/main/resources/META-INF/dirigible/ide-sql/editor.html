@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ Copyright (c) 2010-2022 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -9,157 +9,37 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=" />
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+    <title>Code Editor</title>
+    <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/core.css" />
+    <link type="text/css" rel="stylesheet" href="/webjars/fundamental-styles/0.24.4/dist/busy-indicator.css">
     <link type="text/css" data-name="/webjars/monaco-editor/0.33.0/min/vs/editor/editor.main" rel="stylesheet"
       href="/webjars/monaco-editor/0.33.0/min/vs/editor/editor.main.css">
-    <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-    <style>
-      body {
-        overflow: hidden;
-        height: 100%;
-      }
-
-      #embeddedEditor {
-        margin: 0;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-
-    </style>
-
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css" />
-    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/services/v4/web/resources-core/ui/message-hub.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/editor.css" />
+    <script type="text/javascript" src="/services/v4/web/resources-core/core/message-hub.js"></script>
+    <script type="text/javascript" src="/webjars/diff/5.1.0/dist/diff.js"></script>
+    <script type="text/javascript" src="/webjars/monaco-editor/0.33.0/min/vs/loader.js"></script>
+    <script type="text/javascript" src="js/theme.js"></script>
   </head>
 
-  <body id="monaco-browser" spellcheck="false">
-    <script type="text/javascript" src="/services/v4/js/theme/resources.js/monaco.js"></script>
-
+  <body spellcheck="false">
+    <div id="loadingOverview" class="fd-busy-indicator-extended">
+      <div class="fd-busy-indicator fd-busy-indicator--l" aria-hidden="false" aria-label="Loading">
+        <div class="fd-busy-indicator--circle-0"></div>
+        <div class="fd-busy-indicator--circle-1"></div>
+        <div class="fd-busy-indicator--circle-2"></div>
+      </div>
+      <div id="loadingMessage" class="fd-busy-indicator-extended__label">Loading data...</div>
+    </div>
     <div id="embeddedEditor"></div>
-
-    <script type="text/javascript" src="/webjars/monaco-editor/0.33.0/min/vs/loader.js"></script>
-    <script>
-      let messageHub = new FramesMessageHub();
-      let sqlPlaceholder = "-- Ctrl+X to execute all or selected text only (Cmd+X for Mac)\n";
-      let csrfToken;
-
-      function createEditorInstance() {
-        return new Promise((resolve, reject) => {
-          setTimeout(function () {
-            try {
-              let containerEl = document.getElementById("embeddedEditor");
-              if (containerEl.childElementCount > 0) {
-                for (let i = 0; i < containerEl.childElementCount; i++)
-                  containerEl.removeChild(containerEl.children.item(i));
-              }
-              let editor = monaco.editor.create(containerEl, {
-                value: sqlPlaceholder,
-                automaticLayout: true,
-                language: "sql",
-              });
-              resolve(editor);
-              window.onresize = function () {
-                editor.layout();
-              };
-            } catch (err) {
-              reject(err);
-            }
-          });
-        });
-      }
-
-      function createExecuteAction() {
-        return {
-          // An unique identifier of the contributed action.
-          id: "dirigible-sql-execute",
-
-          // A label of the action that will be presented to the user.
-          label: "Execute",
-
-          // An optional array of keybindings for the action.
-          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyX],
-
-          // Method that will be executed when the action is triggered.
-          // @param editor The editor instance is passed in as a convinience
-          run: function (editor) {
-            let text = editor.getModel().getValueInRange(editor.getSelection());
-            if (text.length === 0) {
-              text = editor.getModel().getValue();
-            }
-            let sqlCommand = getSQLCommand(text);
-            messageHub.post({ data: sqlCommand }, "database.sql.execute");
-          },
-        };
-      }
-
-      (function init() {
-        require.config({ paths: { vs: "/webjars/monaco-editor/0.33.0/min/vs" } });
-
-        require(["vs/editor/editor.main"], function () {
-          let _editor;
-          createEditorInstance()
-            .then((editor) => {
-              _editor = editor;
-              messageHub.subscribe(function () {
-                let executionObject = createExecuteAction();
-                executionObject.run(_editor);
-              }, "database.sql.run");
-              messageHub.subscribe(function (command) {
-                //_editor.trigger('keyboard', 'type', {text: command.data});
-                 var line = editor.getPosition();
-                 var range = new monaco.Range(line.lineNumber, 1, line.lineNumber, 1);
-                 var id = { major: 1, minor: 1 };             
-                 var text = command.data;
-                 var op = {identifier: id, range: range, text: text, forceMoveMarkers: true};
-                 editor.executeEdits("source", [op]);
-              }, "database.sql.script");
-              let sqlCommand = loadSQLCommand();
-              return sqlPlaceholder + sqlCommand;
-            })
-            .then((fileText) => {
-              let model = monaco.editor.createModel(fileText, "sql");
-              _editor.setModel(model);
-              _editor.addAction(createExecuteAction());
-              _editor.onDidChangeCursorPosition(function (e) {
-                let caretInfo = "Line " + e.position.lineNumber + " : Column " + e.position.column;
-                messageHub.post({ data: caretInfo }, "status.caret");
-              });
-              _editor.onDidChangeModelContent(function (e) {
-                saveSQLCommand(_editor.getValue());
-              });
-            });
-          monaco.editor.setTheme(monacoTheme);
-        });
-      })();
-
-      function getSQLCommand(text) {
-        let sqlCommand = text;
-        let sqlPlaceHolderIndex = text.indexOf(sqlPlaceholder);
-        if (sqlPlaceHolderIndex >= 0) {
-          sqlCommand = text.substring(sqlPlaceholder.length);
-        }
-        return sqlCommand;
-      }
-
-      function saveSQLCommand(text) {
-        let sqlCommand = getSQLCommand(text);
-        localStorage.setItem("DIRIGIBLE.IDE.DATABASE.sqlCommand", sqlCommand);
-      }
-
-      function loadSQLCommand() {
-        let sqlCommand = localStorage.getItem("DIRIGIBLE.IDE.DATABASE.sqlCommand");
-        return sqlCommand ? sqlCommand : "";
-      }
-    </script>
+    <script type="text/javascript" src="js/editor.js"></script>
   </body>
 
 </html>
