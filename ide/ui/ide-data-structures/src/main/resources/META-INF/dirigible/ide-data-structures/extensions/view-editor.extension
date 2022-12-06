@@ -1,1 +1,5 @@
-{"module":"ide-data-structures/editors/view/view-editor.js","extensionPoint":"ide-editor","description":"Database View Editor"}
+{
+    "module": "ide-data-structures/services/view-editor.js",
+    "extensionPoint": "ide-editor",
+    "description": "Database View Editor"
+}
