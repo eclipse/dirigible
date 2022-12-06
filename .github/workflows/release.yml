@@ -24,7 +24,11 @@ jobs:
       with:
         distribution: 'zulu'
         java-version: '13'
-        pg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+        server-id: ossrh
+        server-username: ${{ secrets.MAVEN_USERNAME }}
+        server-password: ${{ secrets.MAVEN_PASSWORD }}
+        gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+        gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
         architecture: x64
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -34,8 +38,6 @@ jobs:
       run: docker buildx create --use --name multi-builder --platform linux/arm64,linux/amd64,linux/arm64/v8
     - name: Set Dirigible Version
       run: echo DIRIGIBLE_VERSION=${GITHUB_REF#refs/*/} | tr v " " | sed 's/ //'  >> $GITHUB_ENV
-    - name: Updates /.m2/settings.xml
-      run: echo '${{ secrets.MAVEN_M2_SETTINGS }}' > /home/runner/.m2/settings.xml
 
     - name: Build Dirigible
       run: mvn clean install -Dmaven.javadoc.skip=false
