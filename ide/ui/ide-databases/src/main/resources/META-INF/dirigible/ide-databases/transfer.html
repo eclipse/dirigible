@@ -18,7 +18,8 @@
         <title dg-view-title></title>
         <script type="text/javascript" src="services/transfer-view.js"></script>
         <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
         <script type="text/javascript" src="transfer.js"></script>
     </head>
@@ -109,7 +110,7 @@
             </fd-button>
         </fd-toolbar>
 
-        <fd-scrollbar>
+        <fd-scrollbar class="dg-stretch">
             <div id="logContent">
                 <fd-list compact="true" no-border="true">
                     <fd-list-item ng-repeat="next in logs track by $index">
