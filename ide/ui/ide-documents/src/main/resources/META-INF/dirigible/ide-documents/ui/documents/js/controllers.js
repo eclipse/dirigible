@@ -21,13 +21,25 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 	const documentsApi = '/services/v4/js/ide-documents/api/documents.js';
 	const folderApi = '/services/v4/js/ide-documents/api/documents.js/folder';
 	const zipApi = '/services/v4/js/ide-documents/api/documents.js/zip';
+	const unknownFileTypeIcon = 'sap-icon--document';
+	const knownFileTypesIcons = {
+		'sap-icon--syntax': ['js', 'mjs', 'xsjs', 'ts', 'json'],
+		'sap-icon--number-sign': ['css', 'less', 'scss'],
+		'sap-icon--text': ['txt'],
+		'sap-icon--pdf-attachment': ['pdf'],
+		'sap-icon--picture': ['ico', 'bmp', 'png', 'jpg', 'jpeg', 'gif', 'svg'],
+		'sap-icon--document-text': ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'],
+		'sap-icon--attachment-html': ['html', 'xhtml', 'xml'],
+		'sap-icon--attachment-zip-file': ['zip', 'bzip2', 'gzip', 'tar', 'wim', 'xz', '7z', 'rar'],
+		'sap-icon--doc-attachment': ['doc', 'docx', 'odt', 'rtf'],
+		'sap-icon--excel-attachment': ['xls', 'xlsx', 'ods'],
+		'sap-icon--ppt-attachment': ['ppt', 'pptx', 'odp'],
+	};
 
 	const mapFormData = formData => formData.reduce((ret, item) => {
 		ret[item.id] = item.value;
 		return ret;
 	}, {});
-
-	const fileTypesIcons = new FileTypesIcons();
 
 	let loading = false;
 	let iframe;
@@ -44,9 +56,15 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 	$scope.breadcrumbs = new Breadcrumbs();
 	$scope.history = new HistoryStack();
 
+	$scope.getFileExtension = function (fileName) {
+		return fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length).toLowerCase();
+	};
+
 	$scope.getFileIcon = function (fileName) {
-		return fileTypesIcons.getFileIcon(fileName);
-	}
+		const ext = $scope.getFileExtension(fileName);
+		const ret = Object.entries(knownFileTypesIcons).find(([icon, exts]) => exts.indexOf(ext) >= 0);
+		return ret ? ret[0] : unknownFileTypeIcon;
+	};
 
 	$scope.hasBack = () => $scope.history.hasBack();
 	$scope.hasForward = () => $scope.history.hasForward();
@@ -55,7 +73,7 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 
 	$scope.getFullPath = function (itemName) {
 		return ($scope.folder.path + '/' + itemName).replace(/\/\//g, '/');
-	}
+	};
 
 	$scope.isDocument = (item) => item && item.type === 'cmis:document';
 	$scope.isFolder = (item) => item && item.type === 'cmis:folder';
@@ -64,7 +82,7 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 		setSelectedFile(null);
 		$scope.selection.allSelected = false;
 		$scope.folder.children.forEach(item => item.selected = false);
-	}
+	};
 
 	$scope.handleExplorerClick = function (cmisObject, e) {
 		e.stopPropagation();
@@ -86,24 +104,24 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 
 	$scope.selectAllChanged = function () {
 		$scope.folder.children.forEach(item => item.selected = $scope.selection.allSelected);
-	}
+	};
 
 	$scope.selectionChanged = function () {
 		$scope.selection.allSelected = $scope.folder.children.every(item => item.selected);
-	}
+	};
 
 	$scope.getDeleteItemsButtonState = function () {
 		return $scope.folder && $scope.folder.children.some(x => x.selected) ? undefined : 'disabled';
-	}
+	};
 
 	$scope.getFilePreviewUrl = function (item) {
 		return $scope.isDocument(item) ?
 			`${$scope.previewPath}?path=${$scope.getFullPath(item.name)}` : 'about:blank';
-	}
+	};
 
 	$scope.getNoDataMessage = function () {
 		return $scope.search.filterBy ? 'No items match your search.' : 'This folder is empty.';
-	}
+	};
 
 	$scope.showNewFolderDialog = function () {
 		messageHub.showFormDialog(
@@ -133,7 +151,7 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 			'ide-documents.folder.create',
 			'Please, wait...'
 		);
-	}
+	};
 
 	messageHub.onDidReceiveMessage(
 		'ide-documents.folder.create',
@@ -196,7 +214,7 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 			'ide-documents.item.rename',
 			'Please, wait...'
 		);
-	}
+	};
 
 	messageHub.onDidReceiveMessage(
 		'ide-documents.item.rename',
@@ -249,7 +267,7 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 			}],
 			'ide-documents.documents.delete'
 		);
-	}
+	};
 
 	$scope.showDeleteItemsDialog = function (e) {
 		e.stopPropagation();
@@ -276,7 +294,7 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 			}],
 			'ide-documents.documents.delete'
 		);
-	}
+	};
 
 	messageHub.onDidReceiveMessage(
 		'ide-documents.documents.delete',
@@ -328,11 +346,11 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 					setSelectedFile(null);
 				}
 			}, () => hideProgressDialog());
-	}
+	};
 
 	function setUploaderFolder(folderPath) {
 		$scope.uploader.url = documentsApi + '?path=' + folderPath;
-	}
+	};
 
 	function setCurrentFolder(folderData) {
 		$scope.folder = folderData;
@@ -348,15 +366,14 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 		if (iframe) {
 			iframe.contentWindow.location.replace($scope.getFilePreviewUrl($scope.selectedFile));
 		}
-	}
+	};
 
 	function openFolder(path) {
 		if (path) {
 			$scope.history.push(path);
 		}
-
 		loadFolder(path);
-	}
+	};
 
 	function loadFolder(path) {
 		getFolder(path)
@@ -365,21 +382,21 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 			}, data => {
 				messageHub.showAlertError('Failed to open folder', data.data.err.message);
 			});
-	}
+	};
 
 	function showProgressDialog(text = '') {
 		if (loading) return;
 
 		messageHub.showBusyDialog('documentsProgressDialog', text);
 		loading = true;
-	}
+	};
 
 	function hideProgressDialog() {
 		if (loading) {
 			messageHub.hideBusyDialog('documentsProgressDialog');
 			loading = false;
 		}
-	}
+	};
 
 	// FILE UPLOADER
 
@@ -536,33 +553,5 @@ class HistoryStack {
 
 		this.history.state.push(stateItem);
 		this.history.idx++;
-	}
-}
-
-class FileTypesIcons {
-	static knownFileTypesIcons = {
-		'sap-icon--syntax': ['js', 'mjs', 'xsjs', 'ts', 'json'],
-		'sap-icon--number-sign': ['css', 'less', 'scss'],
-		'sap-icon--text': ['txt'],
-		'sap-icon--pdf-attachment': ['pdf'],
-		'sap-icon--picture': ['ico', 'bmp', 'png', 'jpg', 'jpeg', 'gif', 'svg'],
-		'sap-icon--document-text': ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'],
-		'sap-icon--attachment-html': ['html', 'xhtml', 'xml'],
-		'sap-icon--attachment-zip-file': ['zip', 'bzip2', 'gzip', 'tar', 'wim', 'xz', '7z', 'rar'],
-		'sap-icon--doc-attachment': ['doc', 'docx', 'odt', 'rtf'],
-		'sap-icon--excel-attachment': ['xls', 'xlsx', 'ods'],
-		'sap-icon--ppt-attachment': ['ppt', 'pptx', 'odp']
-	};
-
-	static unknownFileTypeIcon = 'sap-icon--document';
-
-	getFileExtension(fileName) {
-		return fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length).toLowerCase();
-	}
-
-	getFileIcon(fileName) {
-		const ext = this.getFileExtension(fileName);
-		const ret = Object.entries(FileTypesIcons.knownFileTypesIcons).find(([icon, exts]) => exts.indexOf(ext) >= 0);
-		return ret ? ret[0] : FileTypesIcons.unknownFileTypeIcon;
 	}
 }
