@@ -28,7 +28,7 @@ jobs:
         server-username: ${{ secrets.MAVEN_USERNAME }}
         server-password: ${{ secrets.MAVEN_PASSWORD }}
         gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-        gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        gpg-passphrase: ${{ secrets.MAVEN_GPG_PASS_PHRASE }}
         architecture: x64
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -249,7 +249,7 @@ jobs:
     - name: Publish packages to Maven Central
       run: |
         mvn javadoc:jar
-        mvn deploy -P release -DskipTests -Dgpg.passphrase=${{ secrets.MAVEN_GPG_PASS_PHRASE }}
+        mvn deploy -P release -DskipTests -Dmaven.test.skip=true
 
 #---------------Publish to Maven Central-----------------#
 
@@ -448,17 +448,4 @@ jobs:
         git push origin $DIRIGIBLE_VERSION
 
 #-----------------Create GitHub Branch-------------------#
-
-#-----------------Update Trial Instance------------------#
-
-#     - name: Kubectl tool installer
-#       uses: Azure/setup-kubectl@v1
-#     - name: Setup Kube Config File
-#       run: |
-#         mkdir $HOME/.kube
-#         echo "${{ secrets.KUBE_CONFIG }}" >> $HOME/.kube/config
-#     - name: Update Trial Instance
-#       run: kubectl -n trial set image deployment/trial dirigible=dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
-
-#-----------------Update Trial Instance------------------#
 
