@@ -1,24 +1,36 @@
 name: Release
 
 on:
-  push:
-    tags:
-    - 'v*'
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: Release Version
+        required: true
+        default: 7.0.0
+      snapshotVersion:
+        description: Snapshot Version
+        required: true
+        default: 7.0.0-SNAPSHOT
+
+run-name: 'version set to ${{ github.event.inputs.releaseVersion }} for release'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
+
     - name: Cache local Maven repository
       uses: actions/cache@v3
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-maven-
+
     - name: Set up JDK 13
       uses: actions/setup-java@v3
       with:
@@ -30,17 +42,27 @@ jobs:
         gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
         gpg-passphrase: ${{ secrets.MAVEN_GPG_PASS_PHRASE }}
         architecture: x64
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
       with:
         install: true
+
     - name: Set Multi-Builder Docker Buildx
       run: docker buildx create --use --name multi-builder --platform linux/arm64,linux/amd64,linux/arm64/v8
+
+    - name: "Configure Git"
+      run: |
+        git fetch
+        git checkout main
+        git config user.name "$GITHUB_ACTOR"
+        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
     - name: Set Dirigible Version
       run: echo DIRIGIBLE_VERSION=${GITHUB_REF#refs/*/} | tr v " " | sed 's/ //'  >> $GITHUB_ENV
 
     - name: Build Dirigible
-      run: mvn clean install -Dmaven.javadoc.skip=false
+      run: mvn -T 1C clean install -Dmaven.javadoc.skip=false
 
 #-----------------Publish to DockerHub-------------------#
 
@@ -57,6 +79,7 @@ jobs:
         docker push dirigiblelabs/dirigible-anonymous:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
+
     - name: Push Anonymous - Runtime
       run: |
         cd releng/anonymous-runtime
@@ -68,6 +91,7 @@ jobs:
         docker push dirigiblelabs/dirigible-runtime-anonymous:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
+
     - name: Push OpenShift
       run: |
         cd releng/openshift-all
@@ -79,6 +103,7 @@ jobs:
         docker push dirigiblelabs/dirigible-openshift:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
+
     - name: Push SAP Cloud Foundry
       run: |
         cd releng/sap-cf-all
@@ -89,6 +114,7 @@ jobs:
         docker tag dirigible-sap-cf dirigiblelabs/dirigible-sap-cf:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-sap-cf:$DIRIGIBLE_VERSION
         cd ../../
+
     - name: Push SAP Cloud Foundry - Runtime
       run: |
         cd releng/sap-cf-runtime
@@ -100,6 +126,7 @@ jobs:
         docker push dirigiblelabs/dirigible-sap-cf-runtime:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
+
     - name: Push SAP Kyma
       run: |
         cd releng/sap-kyma-all
@@ -110,6 +137,7 @@ jobs:
         docker tag dirigible-sap-kyma dirigiblelabs/dirigible-sap-kyma:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-sap-kyma:$DIRIGIBLE_VERSION
         cd ../../
+
     - name: Push SAP Kyma - Runtime
       run: |
         cd releng/sap-kyma-runtime
@@ -121,6 +149,7 @@ jobs:
         docker push dirigiblelabs/dirigible-sap-kyma-runtime:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
+
     - name: Push Dirigible
       run: |
         cd releng/server-all
@@ -132,6 +161,7 @@ jobs:
         docker push dirigiblelabs/dirigible-all:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
+
     - name: Push Dirigible - Runtime
       run: |
         cd releng/server-runtime
@@ -143,6 +173,7 @@ jobs:
         docker push dirigiblelabs/dirigible-runtime:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
+
     - name: Push Dirigible - Trial
       run: |
         cd releng/trial-all
@@ -154,6 +185,7 @@ jobs:
         docker push dirigiblelabs/dirigible-trial:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
+
     - name: Push Dirigible - Keycloak
       run: |
         cd releng/server-keycloak-all
@@ -165,6 +197,7 @@ jobs:
         docker push dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
+
     - name: Push Dirigible - Keycloak - Runtime
       run: |
         cd releng/server-runtime-keycloak
@@ -199,6 +232,7 @@ jobs:
         docker tag dirigiblelabs/buildpacks-builder-dirigible dirigiblelabs/buildpacks-builder-dirigible:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-builder-dirigible:${{ env.DIRIGIBLE_VERSION }}
         cd ../../../../
+
     - name: Eclipse Dirigible Kyma Buildpack
       run: |
         cd releng/buildpacks/sap-kyma/
@@ -220,6 +254,7 @@ jobs:
         docker tag dirigiblelabs/buildpacks-builder-dirigible-kyma dirigiblelabs/buildpacks-builder-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-builder-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
         cd ../../../../
+
     - name: Eclipse Dirigible Cloud Foundry Buildpack
       run: |
         cd releng/buildpacks/sap-cf/
@@ -245,6 +280,9 @@ jobs:
 #-----------------Publish to DockerHub-------------------#
 
 #---------------Publish to Maven Central-----------------#
+
+    - name: "Maven: Set Release Version"
+      run: mvn versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }}
 
     - name: Publish packages to Maven Central
       run: |
@@ -379,6 +417,24 @@ jobs:
     
 #----------------Publish GitHub Release------------------#
 
+    - name: "Git: Commit Release Version"
+      run: |
+        git add .
+        git commit -m "version set to ${{ github.event.inputs.releaseVersion }} for release"
+        git push
+        git checkout -b ${{ env.DIRIGIBLE_VERSION }}
+        git push origin ${{ env.DIRIGIBLE_VERSION }}
+        git checkout main
+
+    - name: "Maven: Set Snapshot Version"
+      run: mvn versions:set -DnewVersion=${{ github.event.inputs.snapshotVersion }}
+
+    - name: "Git: Commit Snapshot Version"
+      run: |
+        git add .
+        git commit -m "version set to ${{ github.event.inputs.snapshotVersion }} for development"
+        git push
+
 #----------------Publish Helm Release------------------#
 
     - name: Helm tool installer
@@ -439,13 +495,3 @@ jobs:
         git reset --hard
         git checkout master
 #----------------Publish Helm Release------------------#
-
-#-----------------Create GitHub Branch-------------------#
-
-    - name: Create GitHub Branch
-      run: |
-        git checkout -b $DIRIGIBLE_VERSION
-        git push origin $DIRIGIBLE_VERSION
-
-#-----------------Create GitHub Branch-------------------#
-
