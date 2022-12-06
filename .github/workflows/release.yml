@@ -54,7 +54,7 @@ jobs:
     - name: "Configure Git"
       run: |
         git fetch
-        git checkout main
+        git checkout master
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
@@ -424,7 +424,7 @@ jobs:
         git push
         git checkout -b ${{ env.DIRIGIBLE_VERSION }}
         git push origin ${{ env.DIRIGIBLE_VERSION }}
-        git checkout main
+        git checkout master
 
     - name: "Maven: Set Snapshot Version"
       run: mvn versions:set -DnewVersion=${{ github.event.inputs.snapshotVersion }}
