@@ -1,1 +1,5 @@
-{"module":"ide-data-structures/editors/table/table-editor.js","extensionPoint":"ide-editor","description":"Database Table Editor"}
+{
+    "module": "ide-data-structures/services/table-editor.js",
+    "extensionPoint": "ide-editor",
+    "description": "Database Table Editor"
+}
