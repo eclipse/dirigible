@@ -5,9 +5,9 @@ uri = "."
 [[order]]
     [[order.group]]
     id = "dirigiblelabs/buildpacks-dirigible"
-    version = "#{DirigibleVersion}#"
+    version = "6.3.30"
 
 [stack]
 id = "org.eclipse.dirigible"
-build-image = "dirigiblelabs/buildpacks-stack-build-dirigible:#{DirigibleVersion}#"
-run-image = "dirigiblelabs/buildpacks-stack-run-dirigible:#{DirigibleVersion}#"
+build-image = "dirigiblelabs/buildpacks-stack-build-dirigible:6.3.30"
+run-image = "dirigiblelabs/buildpacks-stack-run-dirigible:6.3.30"

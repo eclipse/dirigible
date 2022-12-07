@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-components-parent</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
+        <version>6.3.30</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -21,110 +21,110 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-base</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-configurations</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-initializers</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-extensions</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-database</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-repository</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-registry</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-version</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		
 		<!-- Units -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-unit-jobs</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-unit-listeners</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-unit-websockets</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-unit-security</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-unit-openapi</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		
 		<!-- Data -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-data-structures</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-data-sources</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-data-transfer</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-data-management</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		
 		<!-- Engine -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-javascript</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-web</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 
 		<!-- Test Project -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-test-project</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.30</version>
 		</dependency>
 
 	</dependencies>

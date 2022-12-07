@@ -4,7 +4,7 @@ api = "0.5"
 # Buildpack ID and metadata
 [buildpack]
 id = "dirigiblelabs/buildpacks-dirigible-kyma"
-version = "#{DirigibleVersion}#"
+version = "6.3.30"
 name = "Eclipse Dirigible Kyma Buildpack"
 
 # Stacks that the buildpack will work with
