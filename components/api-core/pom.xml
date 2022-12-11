@@ -23,14 +23,6 @@
 
 	</dependencies>
 
-	<build>
-		<resources>
-			<resource>
-				<directory>src/main/dirigible</directory>
-			</resource>
-		</resources>
-	</build>
-
 	<properties>
 		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
