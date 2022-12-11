@@ -16,6 +16,7 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -71,13 +72,5 @@ public class DataSourceSystemConfig {
 			@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
 		return new JpaTransactionManager(entityManagerFactory);
 	}
-	
-	
-//	@Bean(name = "dataSourcesManager")
-//	public DataSourcesManager dataSourcesManager() {
-//		DataSourcesManager dataSourcesManager = new DataSourcesManager();
-//		dataSourcesManager.initialize();
-//		return dataSourcesManager;
-//	}
 
 }

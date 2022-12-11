@@ -17,7 +17,7 @@
 
 	<dependencies>
 
-		<!-- Components -->
+		<!-- Core -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-base</artifactId>
@@ -117,6 +117,13 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-web</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		<!-- API -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-api-core</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 

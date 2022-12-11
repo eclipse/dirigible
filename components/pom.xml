@@ -39,6 +39,9 @@
 		<!-- Engines -->
 		<module>engine-javascript</module>
 		<module>engine-web</module>
+		
+		<!-- API -->
+		<module>api-core</module>
 
 		<!-- Applications -->
 		<module>app-all</module>
