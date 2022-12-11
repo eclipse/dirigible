@@ -53,12 +53,12 @@ public class ObjectStoreTest {
 		objectStore.save("Customer", json);
 		
 		String results = objectStore.list("Customer");
-		System.out.println(JsonHelper.toJson(results));
+		System.out.println(results);
 		List list = JsonHelper.fromJson(results, List.class);
 		
         assertNotNull(list);
         assertNotNull(list.get(0));
-        assertEquals("John", ((Object[])list.get(0))[1]);
+        assertEquals("John", ((List)list.get(0)).get(1));
     }
 	
 	/** The mapping. */
