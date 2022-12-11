@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.base.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,12 +64,12 @@ public class ObjectStoreTest {
 		objectStore.save("Customer", json);
 		
 		String results = objectStore.list("Customer");
-		System.out.println(JsonHelper.toJson(results));
+		System.out.println(results);
 		List list = JsonHelper.fromJson(results, List.class);
 		
         assertNotNull(list);
         assertNotNull(list.get(0));
-        assertEquals("John", ((Object[])list.get(0))[1]);
+        assertEquals("John", ((List)list.get(0)).get(1));
     }
 	
 	/** The mapping. */
