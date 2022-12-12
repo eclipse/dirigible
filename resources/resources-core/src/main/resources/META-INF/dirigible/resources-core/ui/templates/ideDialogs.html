@@ -112,8 +112,7 @@
                     <div class="fd-form-group">
                         <div class="dg-fd-repeat" ng-repeat="item in formDialog.items">
                             <div ng-if="item.type === 'input'" ng-hide="shouldHide(item)" class="fd-form-item">
-                                <fd-form-label dg-colon="true" dg-required="{{ isRequired(item.id, item.required) }}"
-                                    for="{{ item.id }}">
+                                <fd-form-label dg-colon="true" dg-required="item.required" for="{{ item.id }}">
                                     {{ item.label }}
                                 </fd-form-label>
                                 <fd-form-input-message-group message-fixed="true"
@@ -121,7 +120,7 @@
                                     <fd-input id="{{ item.id }}" type="{{ item.inputType ? item.inputType : 'text' }}"
                                         placeholder="{{ item.placeholder}}" state="{{ item.error ? 'error' : '' }}"
                                         name="{{ 'i' + item.id }}"
-                                        ng-required="{{ isRequired(item.id, item.required) }}" ng-model="item.value"
+                                        ng-required="isRequired(item.visibility, item.required)" ng-model="item.value"
                                         ng-trim="false" ng-minlength="item.minlength || 0"
                                         ng-maxlength="item.maxlength || -1" dg-input-rules="item.inputRules || {}"
                                         ng-change="isValid(formFieldset['i' + item.id].$valid, item)">
@@ -130,16 +129,27 @@
                                     </fd-form-message>
                                 </fd-form-input-message-group>
                             </div>
+                            <div ng-if="item.type === 'number'" ng-hide="shouldHide(item)" class="fd-form-item">
+                                <fd-form-label dg-colon="true" dg-required="item.required)" for="{{ item.id }}">
+                                    {{ item.label }}
+                                </fd-form-label>
+                                <fd-step-input dg-id="{{ item.id }}" ng-model="item.value"
+                                    state="{{ item.error ? 'error' : '' }}" name="{{ 'i' + item.id }}"
+                                    dg-required="isRequired(item.visibility, item.required)" ng-attr-dg-min="item.min"
+                                    ng-attr-dg-max="item.max" ng-attr-placeholder="{{ item.placeholder}}"
+                                    ng-change="isValid(formFieldset['i' + item.id].$valid, item)"
+                                    ng-attr-dg-step="item.step">
+                                </fd-step-input>
+                            </div>
                             <div ng-if="item.type === 'textarea'" ng-hide="shouldHide(item)" class="fd-form-item">
-                                <fd-form-label dg-colon="true" dg-required="{{ isRequired(item.id, item.required) }}"
-                                    for="{{ item.id }}">
+                                <fd-form-label dg-colon="true" dg-required="item.required" for="{{ item.id }}">
                                     {{ item.label }}
                                 </fd-form-label>
                                 <fd-form-input-message-group message-fixed="true"
                                     dg-inactive="{{ item.error ? false : true }}">
                                     <fd-textarea id="{{ item.id }}" placeholder="{{ item.placeholder}}"
                                         state="{{ item.error ? 'error' : '' }}" name="{{ 'i' + item.id }}"
-                                        ng-required="{{ isRequired(item.id, item.required) }}" ng-model="item.value"
+                                        ng-required="isRequired(item.visibility, item.required)" ng-model="item.value"
                                         ng-trim="false" ng-minlength="item.minlength || 0"
                                         ng-attr-rows="{{item.rows || '1'}}" ng-maxlength="item.maxlength || -1"
                                         dg-input-rules="item.inputRules || {}"
@@ -163,21 +173,19 @@
                                 <div class="fd-form-group__item fd-form-item" ng-repeat="radio in item.items">
                                     <input type="radio" class="fd-radio fd-radio--compact"
                                         ng-class="{'is-error' : radio.error }" id="{{ radio.id }}" ng-model="item.value"
-                                        ng-required="{{ isRequired(item.id, item.required) }}" ng-value="radio.value">
-                                    <label class="fd-radio__label"
-                                        aria-required="{{ isRequired(item.id, item.required) }}" for="{{ radio.id }}">
+                                        ng-required="isRequired(item.visibility, item.required)" ng-value="radio.value">
+                                    <label class="fd-radio__label" aria-required="item.required" for="{{ radio.id }}">
                                         {{ radio.label }}
                                     </label>
                                 </div>
                             </div>
                             <div ng-if="item.type === 'dropdown'" ng-hide="shouldHide(item)" class="fd-form-item">
-                                <fd-form-label dg-colon="true" dg-required="{{ isRequired(item.id, item.required) }}"
-                                    for="{{ item.id }}">
+                                <fd-form-label dg-colon="true" dg-required="item.required" for="{{ item.id }}">
                                     {{ item.label }}
                                 </fd-form-label>
                                 <fd-select dg-placeholder="{{ item.placeholder }}" label-id="{{ item.id }}"
-                                    ng-required="{{ isRequired(item.id, item.required) }}" ng-model="item.value"
-                                    dropdown-fixed="true" ng-model="item.value">
+                                    ng-required="isRequired(item.visibility, item.required)" dropdown-fixed="true"
+                                    ng-model="item.value">
                                     <fd-option text="{{ menuItem.label }}" value="menuItem.value"
                                         ng-repeat="menuItem in item.items">
                                     </fd-option>

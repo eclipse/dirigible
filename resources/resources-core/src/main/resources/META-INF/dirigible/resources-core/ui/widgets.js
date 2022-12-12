@@ -538,7 +538,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdInput', [function () {
         /**
          * compact: Boolean - Input size.
-         * dgRequired: Boolean - If the input is required.
          * dgDisabled: Boolean - If the input is disabled.
          * inGroup: Boolean - If the input is inside an fd-input-group element.
          * state: String - You have five options - 'error', 'success', 'warning' and 'information'.
@@ -549,7 +548,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 compact: '@',
-                dgRequired: '@',
                 dgDisabled: '@',
                 inGroup: '@',
                 state: '@',
@@ -559,9 +557,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     if (!attrs.type)
                         console.error('fd-input error: Inputs must have the "type" HTML attribute');
                     else {
-                        let forbiddenTypes = ['checkbox', 'radio', 'file', 'image', 'range'];
+                        let forbiddenTypes = ['checkbox', 'radio', 'file', 'image', 'range']; // Should add number to this list.
                         if (forbiddenTypes.includes(attrs.type))
-                            console.error('fd-input error: Invalid input type. Possible options are "color", "date", "datetime-local", "email", "hidden", "month", "number", "password", "search", "tel", "text", "time", "url" and "week".');
+                            console.error('fd-input error: Invalid input type. Possible options are "color", "date", "datetime-local", "email", "hidden", "month", "password", "search", "tel", "text", "time", "url" and "week".');
                     }
                     scope.getClasses = function () {
                         let classList = [];
@@ -732,6 +730,82 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 },
             },
             template: '<div class="fd-form-message" ng-class="getClasses()" ng-transclude></div>',
+        }
+    }]).directive('fdStepInput', [function () {
+        /**
+         * compact: Boolean - Input size.
+         * dgId: String - The input id.
+         * dgDisabled: Boolean - If the input is disabled.
+         * dgReqired: Boolen - If the input is required.
+         * dgMin: Number - Minimum input value.
+         * dgMin: Number - Maximum input value.
+         * dgStep: Number - Input step.
+         * state: String - You have five options - 'error', 'success', 'warning' and 'information'.
+         * isFocus: Boolean - The input will have a focus outline. This will not focus the input automatically.
+         * isReadonly: Boolean - Sets the input to readonly mode.
+         */
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            require: '?ngModel',
+            scope: {
+                compact: '@?',
+                dgId: '@',
+                dgDisabled: '@?',
+                dgRequired: '=?',
+                dgMin: '=?',
+                dgMax: '=?',
+                dgStep: '=?',
+                placeholder: '@?',
+                name: '@?',
+                state: '@?',
+                isFocus: '@?',
+                isReadonly: '@?',
+            },
+            link: function (scope, element, attrs, ngModel) {
+                let input = element[0].querySelector(`input`);
+                scope.value;
+                if (ngModel) {
+                    scope.$watch('value', function (value) {
+                        ngModel.$setViewValue(value);
+                        ngModel.$validate();
+                    });
+                    ngModel.$render = function () {
+                        scope.value = ngModel.$viewValue;
+                    }
+                }
+                scope.getInputClasses = function () {
+                    let classList = [];
+                    if (scope.compact === 'true') classList.push('fd-input--compact');
+                    return classList.join(' ');
+                };
+                scope.getButtonClasses = function () {
+                    let classList = [];
+                    if (scope.compact === 'true') classList.push('fd-button--compact');
+                    return classList.join(' ');
+                };
+                scope.getClasses = function () {
+                    let classList = [];
+                    if (scope.compact === 'true') classList.push('fd-step-input--compact');
+                    if (scope.dgDisabled === 'true') classList.push('is-disabled');
+                    if (scope.isReadonly === 'true') classList.push('is-readonly');
+                    if (scope.isFocus === 'true') classList.push('is-focus');
+                    if (scope.state) classList.push(`is-${scope.state}`);
+                    return classList.join(' ');
+                };
+                scope.stepDown = function () {
+                    input.stepDown();
+                    scope.value = Number(input.value);
+                };
+                scope.stepUp = function () {
+                    input.stepUp();
+                    scope.value = Number(input.value);
+                };
+            },
+            template: `<div class="fd-step-input" ng-class="getClasses()"><button aria-label="Step down" class="fd-button fd-button--transparent fd-step-input__button" ng-class="getButtonClasses()" tabindex="-1" type="button" ng-click="stepDown()"><i class="sap-icon--less"></i></button>
+<input ng-attr-id="{{dgId}}" class="fd-input fd-input--no-number-spinner fd-step-input__input" ng-class="getClasses(true)" type="number" ng-attr-name="{{name}}" placeholder="{{placeholder}}" ng-disabled="dgDisabled" ng-required="dgRequired" ng-model="value" ng-attr-max="{{dgMax}}" ng-attr-min="{{dgMin}}" ng-attr-step="{{dgStep}}" ng-readonly="isReadonly === 'true'"/>
+<button aria-label="Step up" class="fd-button fd-button--transparent fd-step-input__button" ng-class="getButtonClasses()" tabindex="-1" type="button" ng-click="stepUp()"><i class="sap-icon--add"></i></button></div>`,
         }
     }]).directive('fdCheckbox', [function () {
         /**

@@ -486,7 +486,6 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 element.on('contextmenu', event => event.stopPropagation());
                 scope.searchInput = { value: "" }; // AngularJS - "If you use ng-model, you have to use an object property, not just a variable"
                 scope.activeDialog = null;
-                scope.excludeFromRequired = {};
                 scope.alert = {
                     title: "",
                     message: "",
@@ -571,9 +570,6 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     if (element[0].classList.contains("dg-hidden"))
                         element[0].classList.remove("dg-hidden");
                     scope.formDialog = formDialogs[0];
-                    for (let key in scope.excludeFromRequired) {
-                        delete scope.excludeFromRequired[key];
-                    }
                     ideFormDialog.classList.add("fd-dialog--active");
                     scope.activeDialog = 'form';
                     requestAnimationFrame(function () {
@@ -766,11 +762,9 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                         for (let i = 0; i < scope.formDialog.items.length; i++) {
                             if (scope.formDialog.items[i].id === item.visibility.id && scope.formDialog.items[i].value === item.visibility.value) {
                                 if (item.visibility.hidden) {
-                                    scope.excludeFromRequired[item.id] = true;
                                     item.visibility.$isVisible = true;
                                     return false;
                                 } else {
-                                    scope.excludeFromRequired[item.id] = false;
                                     item.visibility.$isVisible = false;
                                     return true;
                                 }
@@ -1002,12 +996,10 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     true
                 );
 
-                scope.isRequired = function (id, required = false) {
-                    if (scope.excludeFromRequired[id] === true) {
-                        return false;
-                    }
+                scope.isRequired = function (visibility = { $isVisible: true }, required = false) {
+                    if (visibility.$isVisible === false) return false;
                     return required;
-                }
+                };
 
                 scope.isValid = function (isValid, item) {
                     if (isValid) {
