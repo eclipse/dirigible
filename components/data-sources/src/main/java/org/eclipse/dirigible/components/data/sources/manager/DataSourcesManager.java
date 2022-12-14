@@ -152,9 +152,6 @@ public class DataSourcesManager {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private String prepareRootFolder(String name) throws IOException {
-		// TODO validate name parameter
-		// TODO get by name from Configuration
-
 		String rootFolder = (DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? DatabaseConfig.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
 				: DatabaseConfig.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
 		String h2Root = Configuration.get(rootFolder, name);
@@ -166,6 +163,10 @@ public class DataSourcesManager {
 			}
 		}
 		return h2Root;
+	}
+	
+	public void addDataSource(String name, javax.sql.DataSource datasource) {
+		DATASOURCES.put(name, datasource);
 	}
 
 }

@@ -35,6 +35,7 @@
 		<module>data-structures</module>
 		<module>data-transfer</module>
 		<module>data-management</module>
+		<module>data-store</module>
 
 		<!-- Engines -->
 		<module>engine-javascript</module>
