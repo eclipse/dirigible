@@ -1,8 +1,0 @@
-{
-	"guid": "dirigible/components/api-core",
-	"repository": {
-		"type": "git",
-		"branch": "master",
-		"url": "https://github.com/eclipse/dirigible.git#components/api-core"
-	}
-}

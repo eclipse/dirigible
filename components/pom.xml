@@ -43,6 +43,7 @@
 		
 		<!-- API -->
 		<module>api-core</module>
+		<module>api-test</module>
 
 		<!-- Applications -->
 		<module>app-all</module>
@@ -188,34 +189,6 @@
 		</dependency>
 
 	</dependencies>
-	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${maven.resource.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>target/classes/META-INF/dirigible</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/dirigible</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 
 	<properties>
 		<license.header.location>../licensing-header.txt</license.header.location>

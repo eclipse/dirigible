@@ -8,30 +8,23 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - API - Core</name>
-	<artifactId>dirigible-components-api-core</artifactId>
+	<name>Components - API - Test</name>
+	<artifactId>dirigible-components-api-test</artifactId>
 	<packaging>jar</packaging>
-
-	<dependencies>
-
-		<!-- Helpers -->
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-helpers</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-		</dependency>
-		
-		<!-- Test -->
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-api-test</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-		</dependency>
-
-	</dependencies>
 
 	<properties>
 		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
+
+	<dependencies>
+
+		<!-- Engine -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-javascript</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		
+	</dependencies>
 
 </project>
