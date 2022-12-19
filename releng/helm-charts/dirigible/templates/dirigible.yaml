@@ -97,7 +97,7 @@ spec:
           env:
             {{- if eq .Values.dirigible.terminalEnabled false }}
             - name: DIRIGIBLE_TERMINAL_ENABLED
-              value: disable
+              value: "false"
             {{- end }}
             {{- if .Values.kyma.enabled }}
             - name: DIRIGIBLE_HOST
