@@ -31,7 +31,7 @@
         <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
             {{state.busyText}}
         </fd-busy-indicator-extended>
-        <fd-toolbar id="toolbarContainer" dg-size="cozy">
+        <fd-toolbar id="toolbarContainer" dg-size="cozy" ng-show="!state.error && !state.isBusy">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button dg-type="transparent" glyph="sap-icon--save" aria-label="Save" title="Save" ng-click="save()">
             </fd-button>
@@ -64,12 +64,13 @@
                 ng-click="showSql()">
             </fd-button>
         </fd-toolbar>
-        <div class="dg-full-height dg-hbox">
+        <div class="dg-full-height dg-hbox" ng-show="!state.error && !state.isBusy">
             <div id="sidebarContainer" class="dg-vbox dg-border-right"></div>
             <div id="graphContainer" class="dg-full-width"></div>
         </div>
-        <div id="outlineContainer" class="outlineContainer"></div>
-        <fd-toolbar id="statusContainer" class="dg-border-top" dg-size="cozy" no-bottom-border="true">
+        <div id="outlineContainer" class="outlineContainer" ng-show="!state.error && !state.isBusy"></div>
+        <fd-toolbar id="statusContainer" class="dg-border-top" dg-size="cozy" no-bottom-border="true"
+            ng-show="!state.error && !state.isBusy">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button dg-type="transparent" glyph="sap-icon--collapse" aria-label="Collapse all" title="Collapse all"
                 ng-click="collapseAll()">
@@ -91,6 +92,10 @@
                 ng-click="fit()">
             </fd-button>
         </fd-toolbar>
+        <fd-message-page glyph="sap-icon--error" ng-if="state.error">
+            <fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
+            <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
+        </fd-message-page>
     </body>
 
 </html>

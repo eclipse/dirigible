@@ -9,13 +9,6 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-function showAlert(title, message, $scope) {
-	$scope.$parent.alertTitle = title;
-	$scope.$parent.alertStatus = 'warning';
-	$scope.$parent.alertMessage = message;
-	$scope.$apply();
-	$('#alertOpen').click();
-}
 
 function openReferEntity(title, message, $scope, graph) {
 	$scope.$parent.dialogTitle = title;

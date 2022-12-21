@@ -113,7 +113,7 @@ angular.module('ui.schema.modeler', ["ideUI", "ideView"])
 						workspace: resourcePath.substring(1, resourcePath.indexOf('/', 1)),
 					});
 					messageHub.setStatusMessage(`File '${resourcePath}' saved`);
-					messageHub.setEditorDirty(resourcePath, false);
+					messageHub.setEditorDirty($scope.dataParameters.file, false);
 					$scope.$apply(function () {
 						$scope.state.isBusy = false;
 					});

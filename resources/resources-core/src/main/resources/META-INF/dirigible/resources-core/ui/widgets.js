@@ -9,7 +9,11 @@
  *   SAP - initial API and implementation
  */
 angular.module('ideUI', ['ngAria', 'ideMessageHub'])
-    .constant('SplitPaneState', {
+    .constant('ScreenEdgeMargin', {
+        FULL: 16,
+        DOUBLE: 32,
+        QUADRUPLE: 64
+    }).constant('SplitPaneState', {
         EXPANDED: 0,
         COLLAPSED: 1
     }).config(function config($compileProvider) {
@@ -1287,7 +1291,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: '<div class="fd-popover__control" ng-transclude></div>',
         }
-    }]).directive('fdPopoverBody', ['$window', function ($window) {
+    }]).directive('fdPopoverBody', ['$window', 'ScreenEdgeMargin', function ($window, ScreenEdgeMargin) {
         /**
          * dgAlign: String - Relative position of the popover. Possible values are "left" and "right". If not provided, left is assumed.
          * maxHeight: Number - Maximum popover height in pixels before it starts scrolling. Default is the height of the window.
@@ -1316,7 +1320,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (!angular.isDefined(scope.canScroll))
                             scope.canScroll = true;
                         let rect = element[0].getBoundingClientRect();
-                        scope.defaultHeight = $window.innerHeight - rect.top;
+                        scope.defaultHeight = $window.innerHeight - ScreenEdgeMargin.FULL - rect.top;
                     };
                     scope.setDefault();
                     function resizeEvent() {
@@ -1471,7 +1475,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 </span>
             </li>`
         }
-    }]).directive('fdMenuSublist', ['uuid', '$window', function (uuid, $window) {
+    }]).directive('fdMenuSublist', ['uuid', '$window', 'ScreenEdgeMargin', function (uuid, $window, ScreenEdgeMargin) {
         /**
          * title: String - Title/label of the menu item.
          * maxHeight: Number - Maximum height in pixels before it starts scrolling. Default is the height of the window.
@@ -1492,13 +1496,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 pre: function (scope) {
                     scope.sublistId = `sl${uuid.generate()}`;
                     scope.isExpanded = false;
-                    scope.defaultHeight = $window.innerHeight;
+                    scope.defaultHeight = $window.innerHeight - ScreenEdgeMargin.DOUBLE;
                 },
                 post: function (scope, element) {
                     let toHide = 0;
                     function resizeEvent() {
                         scope.$apply(function () {
-                            scope.defaultHeight = $window.innerHeight;
+                            scope.defaultHeight = $window.innerHeight - ScreenEdgeMargin.DOUBLE;
                             scope.setPosition();
                         });
                     }
@@ -1537,7 +1541,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (!angular.isDefined(scope.menu)) scope.menu = element[0].querySelector(`#${scope.sublistId}`);
                         requestAnimationFrame(function () {
                             let rect = scope.menu.getBoundingClientRect();
-                            let bottom = $window.innerHeight - rect.bottom;
+                            let bottom = $window.innerHeight - ScreenEdgeMargin.FULL - rect.bottom;
                             let right = $window.innerWidth - rect.right;
                             if (bottom < 0) scope.menu.style.top = `${bottom}px`;
                             if (right < 0) {
@@ -2647,7 +2651,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             template: `<i ng-if="glyph" ng-class="getIconClasses()" role="presentation"></i>
                        <span ng-if="text" ng-class="getTextClasses()">{{text}}</span>`
         }
-    }]).directive('fdSelect', ['uuid', function (uuid) {
+    }]).directive('fdSelect', ['uuid', '$window', 'ScreenEdgeMargin', function (uuid, $window, ScreenEdgeMargin) {
         /**
          * dgSize: String - The size of the select. One of 'compact' or 'large'. 
          * dgDisabled: Boolean - Disable the select
@@ -2690,6 +2694,17 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
             },
             controller: ['$scope', '$element', function ($scope, $element) {
+                let control = $element[0].querySelector(`.fd-popover__control`);
+                let rect;
+                $scope.setDefault = function () {
+                    rect = control.getBoundingClientRect();
+                    $scope.defaultHeight = $window.innerHeight - ScreenEdgeMargin.FULL - rect.bottom;
+                };
+                function resizeEvent() {
+                    $scope.$apply(function () { $scope.setDefault() });
+                }
+                $window.addEventListener('resize', resizeEvent);
+                $scope.defaultHeight = 0;
                 $scope.items = [];
                 $scope.bodyExpanded = false;
                 $scope.buttonId = `select-btn-${uuid.generate()}`;
@@ -2709,7 +2724,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
 
                     return classList.join(' ');
-                }
+                };
 
                 $scope.getControlClasses = function () {
                     let classList = ['fd-select__control'];
@@ -2717,11 +2732,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     if ($scope.state) classList.push(`is-${$scope.state}`);
 
                     return classList.join(' ');
-                }
+                };
 
                 $scope.getPopoverBodyClasses = function () {
-                    let classList = ['fd-popover__body', 'fd-popover__body--no-arrow', 'fd-popover__body--dropdown', 'fd-scrollbar', 'dg-menu__sublist--overflow'];
-
+                    let classList = ['fd-popover__body', 'fd-popover__body--no-arrow', 'fd-popover__body--dropdown', 'fd-scrollbar'];
                     if ($scope.dropdownFill) {
                         classList.push('fd-popover__body--dropdown-fill');
                     }
@@ -2748,10 +2762,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                                 break;
                         }
                     }
-
                     return classList.join(' ');
-                }
-
+                };
 
                 $scope.getListClasses = function () {
                     let classList = ['fd-list', 'fd-list--dropdown'];
@@ -2770,7 +2782,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
 
                     return classList.join(' ');
-                }
+                };
 
                 $scope.getListMessageClasses = function () {
                     let classList = ['fd-list__message'];
@@ -2780,7 +2792,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
 
                     return classList.join(' ');
-                }
+                };
 
                 $scope.getFormMessageClasses = function () {
                     let classList = ['fd-form-message', 'fd-form-message--static'];
@@ -2790,16 +2802,17 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
 
                     return classList.join(' ');
-                }
+                };
 
                 $scope.onControllClick = function ($event) {
+                    $scope.setDefault();
                     $scope.bodyExpanded = !$scope.bodyExpanded;
                     $event.currentTarget.focus();
-                }
+                };
 
                 $scope.closeDropdown = function () {
                     $scope.bodyExpanded = false;
-                }
+                };
 
                 $scope.getSelectedItem = function () {
                     if ($scope.selectedValue === undefined || $scope.selectedValue === null)
@@ -2807,17 +2820,17 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
 
                     let index = $scope.items.findIndex(x => x.value === $scope.selectedValue);
                     return index >= 0 ? $scope.items[index] : null;
-                }
+                };
 
                 $scope.getSelectedItemText = function () {
                     const selectedItem = $scope.getSelectedItem();
                     return selectedItem ? selectedItem.text : $scope.dgPlaceholder || '';
-                }
+                };
 
                 $scope.getSelectedItemId = function () {
                     const selectedItem = $scope.getSelectedItem();
                     return selectedItem ? selectedItem.optionId : '';
-                }
+                };
 
                 this.addItem = function (item) {
                     $scope.items.push(item);
@@ -2839,16 +2852,30 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
 
                 $scope.getStyle = function () {
-                    if ($scope.dropdownFixed === 'true') {
-                        let pos = $element[0].getBoundingClientRect();
+                    if ($scope.dropdownFixed === 'true' && rect !== undefined) {
+                        if ($scope.defaultHeight < ScreenEdgeMargin.QUADRUPLE) {
+                            return {
+                                transition: 'none',
+                                transform: 'none',
+                                position: 'fixed',
+                                top: 'auto',
+                                bottom: `${$window.innerHeight - rect.top}px`,
+                                left: `${rect.left}px`,
+                                'max-height': `${rect.top - ScreenEdgeMargin.FULL}px`,
+                            };
+                        }
                         return {
                             transition: 'none',
                             transform: 'none',
                             position: 'fixed',
-                            top: `${pos.bottom}px`,
-                            left: `${pos.left}px`,
+                            top: `${rect.bottom}px`,
+                            left: `${rect.left}px`,
+                            'max-height': `${$scope.defaultHeight}px`,
                         };
-                    } else return {};
+                    }
+                    return {
+                        'max-height': `${$scope.defaultHeight}px`,
+                    };
                 };
                 function focusoutEvent(e) {
                     if (!e.relatedTarget || !$element[0].contains(e.relatedTarget)) {
@@ -2857,6 +2884,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
                 $element.on('focusout', focusoutEvent);
                 function cleanUp() {
+                    $window.removeEventListener('resize', resizeEvent);
                     $element.off('focusout', focusoutEvent);
                 }
                 $scope.$on('$destroy', cleanUp);

@@ -42,8 +42,11 @@ angular.module('page', ["ideUI", "ideView"])
 		$scope.load = function () {
 			if (!$scope.state.error) {
 				contents = getResource('/services/v4/ide/workspaces' + $scope.dataParameters.file);
-				$scope.extension = JSON.parse(contents);
-				contents = JSON.stringify($scope.extension, null, 4);
+				if (contents === '') $scope.extension = {};
+				else {
+					$scope.extension = JSON.parse(contents);
+					contents = JSON.stringify($scope.extension, null, 4);
+				}
 				$scope.state.isBusy = false;
 			}
 		};

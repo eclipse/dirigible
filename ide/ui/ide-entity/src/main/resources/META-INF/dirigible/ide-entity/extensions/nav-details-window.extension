@@ -1,0 +1,5 @@
+{
+    "module": "ide-entity/services/nav-details-window.js",
+    "extensionPoint": "ide-dialog-window",
+    "description": "EDM navigation details dialog window"
+}

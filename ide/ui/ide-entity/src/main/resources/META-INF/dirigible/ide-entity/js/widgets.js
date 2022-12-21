@@ -9,34 +9,6 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-function addToolbarButton(editor, toolbar, action, label, image, isTransparent) {
-	let button = document.createElement('button');
-	button.id = label;
-	button.title = label;
-	// button.style.fontSize = '10';
-	if (image !== null) {
-		let img = document.createElement('i');
-		img.setAttribute('class', 'fa fa-' + image + ' fa-2x');
-		// img.style.width = '16px';
-		// img.style.height = '16px';
-		img.style.verticalAlign = 'middle';
-		img.style.marginRight = '2px';
-		button.appendChild(img);
-	}
-	if (isTransparent) {
-		//button.style.background = 'black';
-		//button.style.color = 'white';
-		//button.style.border = 'none';
-		button.setAttribute('class', 'button');
-		button.setAttribute('style', 'background: transparent; color: white; border: none');
-	}
-	mxEvent.addListener(button, 'click', function (evt) {
-		editor.execute(action);
-	});
-	//mxUtils.write(button, label);
-	toolbar.appendChild(button);
-}
-
 function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 	// Function that is executed when the image is dropped on
 	// the graph. The cell argument points to the cell under
@@ -163,9 +135,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 	};
 
 	let img = document.createElement('i');
-	img.setAttribute('class', 'fa fa-' + image + ' fa-2x');
-	img.setAttribute('style', 'margin-bottom: 0.4em');
-	//img.color = '#337ab7';
+	img.setAttribute('class', `mx-sidebar-icon ${image}`);
 	img.title = hint;
 	sidebar.appendChild(img);
 

@@ -20,7 +20,8 @@
         <script type="text/javascript" src="/services/v4/web/ide-git/services/git-perspective.js">
         </script>
         <theme></theme>
-        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-perspective-js"></script>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-perspective-js">
+        </script>
         <link type="text/css" rel="stylesheet"
             href="/services/v4/js/resources-core/services/loader.js?id=ide-perspective-css" />
     </head>
@@ -41,7 +42,24 @@
             .controller('GitController', ["$scope", "messageHub", function ($scope, messageHub) {
 
                 $scope.layoutModel = {
-                    views: ['gitProjects', 'branchesLocal', 'branchesRemote', 'diff', 'staging', 'history', 'console']
+                    views: ['gitProjects', 'branchesLocal', 'branchesRemote', 'diff', 'staging', 'history', 'console'],
+                    viewSettings: {
+                        gitProjects: {
+                            expanded: true
+                        },
+                        branchesLocal: {
+                            expanded: true
+                        },
+                        branchesRemote: {
+                            expanded: true
+                        },
+                        diff: {
+                            closable: false
+                        }
+                    },
+                    layoutSettings: {
+                        hideCenterTabs: true
+                    }
                 };
 
                 let getParameterByName = function (name) {

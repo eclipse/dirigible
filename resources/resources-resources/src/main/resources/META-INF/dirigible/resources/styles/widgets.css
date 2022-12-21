@@ -240,7 +240,18 @@ body {
 .dg-page-header-bg {
   background: var(--sapPageHeader_Background, #fff);
 }
-
+.dg-padding-top--none {
+  padding-top: 0 !important;
+}
+.dg-padding-end--none {
+  padding-right: 0 !important;
+}
+.dg-padding-bottom--none {
+  padding-bottom: 0 !important;
+}
+.dg-padding-begin--none {
+  padding-left: 0 !important;
+}
 .dg-checkered-bg {
   background-image:
     -o-linear-gradient(45deg, #949494 25%, transparent 25%, transparent 75%, #949494 75%),
@@ -340,6 +351,14 @@ body {
 }
 .fd-container.fd-form-layout-grid-container .fd-input-group {
   margin: 0;
+}
+/* fd-form-item fixes */
+.fd-form-item > .fd-popover:not(.fd-popover--input-message-group) .fd-popover__control.is-expanded .fd-input-group,
+.fd-popover__control[aria-expanded="true"] .fd-input-group {
+  margin-bottom: 0.25rem;
+}
+.fd-form-item > .fd-popover:not(.fd-popover--input-message-group) .fd-popover__body {
+  top: calc(100% - 0.25rem);
 }
 /* Dialog padding fixes */
 .fd-dialog__body.fd-scrollbar:not(.fd-dialog__body--no-vertical-padding) {

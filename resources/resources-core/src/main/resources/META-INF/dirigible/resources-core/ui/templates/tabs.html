@@ -1,5 +1,5 @@
 <div class="dg-tabs">
-  <div ng-show="!hideTabs" class="dg-tabs-list">
+  <div ng-show="!hideTabs || panes.length > 1" class="dg-tabs-list">
     <ul class="fd-tabs" role="tablist" ng-class="{'dg-blured': focused !== undefined && !focused}">
       <li ng-repeat="pane in panes" aria-selected="{{isPaneSelected(pane)}}" role="tab" class="fd-tabs__item"
         ng-class="{'dirty': pane.dirty}">
