@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-components-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>6.3.31</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -18,18 +18,18 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-repository</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.31</version>
     	</dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-base</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.31</version>
             <scope>compile</scope>
         </dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-templating-core</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.31</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-mail</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.31</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-registry</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.31</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -71,7 +71,7 @@
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-scripting</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.31</version>
             <scope>compile</scope>
         </dependency>
 	</dependencies>
