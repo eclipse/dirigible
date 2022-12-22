@@ -16,7 +16,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
         <title dg-view-title></title>
-        <script type="text/javascript" src="../services/details-window.js"></script>
+        <script type="text/javascript" src="../services/nav-details-window.js"></script>
         <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
         <link type="text/css" rel="stylesheet"
             href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
@@ -43,12 +43,12 @@
                             state="{{ forms.newForm['sPath'].$valid ? '' : 'error' }}" ng-model="editElement.path">
                         </fd-input>
                     </fd-form-item>
-                    <fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
                         <fd-form-label for="navidl" dg-required="true" dg-colon="true">Label</fd-form-label>
                         <fd-input id="navidl" type="text" ng-required="true" ng-model="editElement.label">
                         </fd-input>
                     </fd-form-item>
-                    <fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
                         <fd-form-label for="navidi" dg-required="true" dg-colon="true">Icon</fd-form-label>
                         <fd-select dg-placeholder="Select an icon" label-id="navidi" ng-required="true"
                             ng-model="editElement.icon" dropdown-fixed="true">
@@ -56,13 +56,13 @@
                             </fd-option>
                         </fd-select>
                     </fd-form-item>
-                    <fd-form-item ng-if="tabNumber === 0">
+                    <fd-form-item ng-if="tabNumber === 0" class="fd-margin-top--tiny">
                         <fd-form-label for="navido" dg-required="true" dg-colon="true">Order number</fd-form-label>
-                        <fd-step-input dg-id="navido" name="orderNumber" dg-required="true"
-                            ng-model="editElement.order">
+                        <fd-step-input dg-id="navido" name="orderNumber" dg-required="true" ng-model="editElement.order"
+                            style="max-width: 320px">
                         </fd-step-input>
                     </fd-form-item>
-                    <fd-form-item ng-if="tabNumber === 1">
+                    <fd-form-item ng-if="tabNumber === 1" class="fd-margin-top--tiny">
                         <fd-form-label for="sideUrl" dg-required="true" dg-colon="true">URL</fd-form-label>
                         <fd-input dg-id="sideUrl" type="text" name="sideUrl" dg-required="true"
                             ng-model="editElement.url">
@@ -77,13 +77,13 @@
                             ng-model="dataParameters.perspectives[editElement.index].id">
                         </fd-input>
                     </fd-form-item>
-                    <fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
                         <fd-form-label for="navidl" dg-required="true" dg-colon="true">Label</fd-form-label>
                         <fd-input id="navidl" type="text" ng-required="true"
                             ng-model="dataParameters.perspectives[editElement.index].label">
                         </fd-input>
                     </fd-form-item>
-                    <fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
                         <fd-form-label for="navidi" dg-required="true" dg-colon="true">Icon</fd-form-label>
                         <fd-select dg-placeholder="Select an icon" label-id="navidi" ng-required="true"
                             ng-model="dataParameters.perspectives[editElement.index].icon" dropdown-fixed="true">
@@ -91,10 +91,10 @@
                             </fd-option>
                         </fd-select>
                     </fd-form-item>
-                    <fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
                         <fd-form-label for="navido" dg-required="true" dg-colon="true">Order number</fd-form-label>
                         <fd-step-input dg-id="navido" name="orderNumber" string-to-number dg-required="true"
-                            ng-model="dataParameters.perspectives[editElement.index].order">
+                            ng-model="dataParameters.perspectives[editElement.index].order" style="max-width: 320px">
                         </fd-step-input>
                     </fd-form-item>
                 </fd-form-group>
@@ -106,13 +106,13 @@
                             ng-model="dataParameters.sidebar[editElement.index].path">
                         </fd-input>
                     </fd-form-item>
-                    <fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
                         <fd-form-label for="sideLabel" dg-required="true" dg-colon="true">Label</fd-form-label>
                         <fd-input id="sideLabel" type="text" ng-required="true"
                             ng-model="dataParameters.sidebar[editElement.index].label">
                         </fd-input>
                     </fd-form-item>
-                    <fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
                         <fd-form-label for="sideIcon" dg-required="true" dg-colon="true">Icon</fd-form-label>
                         <fd-select dg-placeholder="Select an icon" label-id="sideIcon" ng-required="true"
                             ng-model="dataParameters.sidebar[editElement.index].icon" dropdown-fixed="true">
@@ -120,7 +120,7 @@
                             </fd-option>
                         </fd-select>
                     </fd-form-item>
-                    <fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
                         <fd-form-label for="sideUrl" dg-required="true" dg-colon="true">URL</fd-form-label>
                         <fd-input id="sideUrl" type="text" ng-required="true"
                             ng-model="dataParameters.sidebar[editElement.index].url">

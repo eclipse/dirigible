@@ -58,12 +58,12 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 
 			if (prototype.style === 'copied') {
 				$scope.$cell = graph.getSelectionCell();
-				openCopiedEntity('Drop', 'Will be creating a Copy of an Entity', $scope, graph);
+				$scope.showCopiedEntityDialog($scope.$cell.id);
 			}
 
 			if (prototype.style === 'projection') {
 				$scope.$cell = graph.getSelectionCell();
-				openReferEntity('Drop', 'Will be creating a Projection Entity', $scope, graph);
+				$scope.showReferDialog($scope.$cell.id);
 			}
 
 			if (prototype.style === 'extension') {

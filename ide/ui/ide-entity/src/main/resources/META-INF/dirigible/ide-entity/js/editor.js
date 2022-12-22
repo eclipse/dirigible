@@ -36,44 +36,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 			{ value: "n_1", label: "many-to-one" },
 		];
 
-		$scope.loadModels = function () {
-			return new Promise((resolve, reject) => {
-				const xhr = new XMLHttpRequest();
-				xhr.open('POST', '/services/v4/ide/workspace-find/');
-				xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
-				xhr.setRequestHeader('Dirigible-Editor', 'EntityDataModeler');
-				xhr.onload = () => {
-					if (xhr.status === 200) {
-						resolve(xhr.responseText);
-					} else {
-						reject(xhr.status)
-					}
-					csrfToken = xhr.getResponseHeader("x-csrf-token");
-				};
-				xhr.onerror = () => reject(xhr.status);
-				xhr.send('*.model');
-			});
-		};
-
-		$scope.loadEntities = function () {
-			return new Promise((resolve, reject) => {
-				const xhr = new XMLHttpRequest();
-				xhr.open('GET', '/services/v4/ide/workspaces' + $scope.$parent.referencedModel);
-				xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
-				xhr.setRequestHeader('Dirigible-Editor', 'EntityDataModeler');
-				xhr.onload = () => {
-					if (xhr.status === 200) {
-						resolve(xhr.responseText);
-					} else {
-						reject(xhr.status)
-					}
-					csrfToken = xhr.getResponseHeader("x-csrf-token");
-				};
-				xhr.onerror = () => reject(xhr.status);
-				xhr.send();
-			});
-		};
-
 		function getResource() {
 			let xhr = new XMLHttpRequest();
 			xhr.open('GET', '/services/v4/ide/workspaces' + $scope.dataParameters.file, false);
@@ -307,6 +269,83 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 				$scope.graph.model.sidebar = msg.data.sidebar;
 				messageHub.setEditorDirty($scope.dataParameters.file, true);
 				messageHub.closeDialogWindow("edmNavDetails");
+			},
+			true
+		);
+
+		messageHub.onDidReceiveMessage(
+			"edm.editor.reference",
+			function (msg) {
+				let model = $scope.graph.getModel();
+				model.beginUpdate();
+				try {
+					let cell = $scope.graph.model.getCell(msg.data.cellId);
+					cell.value.name = msg.data.model + ":" + msg.data.entity;
+					cell.value.entityType = "PROJECTION";
+					cell.value.projectionReferencedModel = msg.data.model;
+					cell.value.projectionReferencedEntity = msg.data.entity;
+					$scope.graph.model.setValue(cell, cell.value);
+
+					let propertyObject = new Property('propertyName');
+					let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
+					property.setVertex(true);
+					property.setConnectable(false);
+
+					for (let i = 0; i < msg.data.entityProperties.length; i++) {
+						let newProperty = property.clone();
+
+						for (let attributeName in msg.data.entityProperties[i]) {
+							newProperty.value[attributeName] = msg.data.entityProperties[i][attributeName];
+						}
+						newProperty.style = 'projectionproperty';
+						cell.insert(newProperty);
+					}
+					model.setCollapsed(cell, true);
+				} finally {
+					model.endUpdate();
+				}
+				$scope.graph.refresh();
+				messageHub.setEditorDirty($scope.dataParameters.file, true);
+				messageHub.closeDialogWindow("edmReference");
+			},
+			true
+		);
+
+		messageHub.onDidReceiveMessage(
+			"edm.editor.copiedEntity",
+			function (msg) {
+				let model = $scope.graph.getModel();
+				model.beginUpdate();
+				try {
+					let cell = $scope.graph.model.getCell(msg.data.cellId);
+					cell.value.name = msg.data.entity;
+					cell.value.entityType = "COPIED";
+					cell.value.projectionReferencedModel = msg.data.model;
+					cell.value.projectionReferencedEntity = msg.data.entity;
+					$scope.graph.model.setValue(cell, cell.value);
+
+					let propertyObject = new Property('propertyName');
+					let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
+					property.setVertex(true);
+					property.setConnectable(false);
+
+					for (let i = 0; i < msg.data.entityProperties.length; i++) {
+						let newProperty = property.clone();
+
+						for (let attributeName in msg.data.entityProperties[i]) {
+							newProperty.value[attributeName] = msg.data.entityProperties[i][attributeName];
+						}
+						cell.insert(newProperty);
+					}
+					model.setCollapsed(cell, true);
+				} finally {
+					model.endUpdate();
+				}
+
+				model.setCollapsed($scope.$cell, true);
+				$scope.graph.refresh();
+				messageHub.setEditorDirty($scope.dataParameters.file, true);
+				messageHub.closeDialogWindow("edmReference");
 			},
 			true
 		);
@@ -587,12 +626,28 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 				let copied = new mxCell(copiedObject, new mxGeometry(0, 0, 200, 28), 'copied');
 				copied.setVertex(true);
 				addSidebarIcon($scope.graph, sidebar, copied, ICON_COPIED, 'Drag this to the diagram to create a copy to an Entity from external model', $scope);
+				$scope.showCopiedEntityDialog = function (cellId) {
+					messageHub.showDialogWindow(
+						"edmReference",
+						{ cellId: cellId, dialogType: 'copiedEntity' },
+						null,
+						false,
+					);
+				};
 
 				// Adds sidebar icon for the projection entity object
 				let projectionObject = new Entity('EntityName');
 				let projection = new mxCell(projectionObject, new mxGeometry(0, 0, 200, 28), 'projection');
 				projection.setVertex(true);
 				addSidebarIcon($scope.graph, sidebar, projection, ICON_PROJECTION, 'Drag this to the diagram to create a reference to an Entity from external model', $scope);
+				$scope.showReferDialog = function (cellId) {
+					messageHub.showDialogWindow(
+						"edmReference",
+						{ cellId: cellId, dialogType: 'refer' },
+						null,
+						false,
+					);
+				};
 
 				// Adds sidebar icon for the extension entity object
 				let extensionObject = new Entity('EntityName');
@@ -1026,25 +1081,6 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 			$scope.state.error = true;
 			$scope.errorMessage = "The 'contentType' data parameter is missing.";
 		} else {
-			$scope.loadModels().then(
-				result => $scope.availableModels = JSON.parse(result),
-				error => {
-					$scope.state.error = true;
-					$scope.errorMessage = "There was an error while loading the models.";
-					console.log(error);
-				}
-			);
-
-			$scope.updateEntities = function () {
-				$scope.loadEntities().then(
-					result => $scope.availableEntities = $scope.$parent.availableEntities = JSON.parse(result).model.entities,
-					error => {
-						$scope.state.error = true;
-						$scope.errorMessage = "There was an error while loading the entities.";
-						console.log(error);
-					}
-				);
-			};
 			$scope.load();
 			main(document.getElementById('graphContainer'),
 				document.getElementById('outlineContainer'),
