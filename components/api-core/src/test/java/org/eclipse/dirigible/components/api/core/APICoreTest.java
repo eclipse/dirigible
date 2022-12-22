@@ -49,40 +49,40 @@ public class APICoreTest {
 
 	@Test
 	public void executeConfigurationGetTest() throws Exception {
-		javascriptService.handleRequest("core", "configurations-get-test.js", null, null, false);
+		javascriptService.handleRequest("core-tests", "configurations-get-test.js", null, null, false);
 	}
 	
 	@Test
 	public void executeContextGetTest() throws Exception {
-		mockMvc.perform(get("/services/v8/js/core/context-get-test.js"))
+		mockMvc.perform(get("/services/v8/js/core-tests/context-get-test.js"))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
 	}
 	
 	@Test
 	public void executeEnvGetTest() throws Exception {
-		mockMvc.perform(get("/services/v8/js/core/env-get-test.js"))
+		mockMvc.perform(get("/services/v8/js/core-tests/env-get-test.js"))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
 	}
 	
 	@Test
 	public void executeEnvListTest() throws Exception {
-		mockMvc.perform(get("/services/v8/js/core/env-list-test.js"))
+		mockMvc.perform(get("/services/v8/js/core-tests/env-list-test.js"))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
 	}
 	
 	@Test
 	public void executeGlobalsGetTest() throws Exception {
-		mockMvc.perform(get("/services/v8/js/core/globals-get-test.js"))
+		mockMvc.perform(get("/services/v8/js/core-tests/globals-get-test.js"))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
 	}
 	
 	@Test
 	public void executeGlobalsListTest() throws Exception {
-		mockMvc.perform(get("/services/v8/js/core/globals-list-test.js"))
+		mockMvc.perform(get("/services/v8/js/core-tests/globals-list-test.js"))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
 	}

@@ -9,10 +9,10 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var configurations = require('core/configurations');
-var assertTrue = require('test/assert').assertTrue;
+var globals = require('core/globals');
+var assertEquals = require('test/assert').assertEquals;
 
-configurations.set('name1', 'value1');
-var result = configurations.get('name1');
+globals.set("name1", "value1");
+var result = globals.get('name1');
 
-assertTrue(result === 'value1');
+assertEquals(result, 'value1');

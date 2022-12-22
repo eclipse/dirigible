@@ -22,19 +22,19 @@ exports.assertFalse = function (condition, message) {
 }
 
 exports.assertNull = function (object, message) {
-    if (object !== null) {
+    if (object !== undefined && object !== null) {
         throw(message || "Assertion 'assertNull' failed");
     }
 }
 
 exports.assertNotNull = function (object, message) {
-    if (object === null) {
+    if (object === undefined || object === null) {
         throw(message || "Assertion 'assertNotNull' failed");
     }
 }
 
 exports.assertEquals = function assertEquals(actual, expected, message) {
     if (expected !== actual) {
-        throw(message || "Assertion 'assertEquals' failed");
+        throw (message || "Assertion 'assertEquals' failed - expected: '" + expected + "', but found: '" + actual + "'");
     }
 }

@@ -10,9 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var context = require('core/context');
-var assertTrue = require('test/assert').assertTrue;
+var assertEquals = require('test/assert').assertEquals;
 
 context.set('name1', 'value1');
 var result = context.get('name1');
 
-assertTrue(result === 'value1');
+assertEquals(result, 'value1');

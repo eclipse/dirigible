@@ -12,7 +12,6 @@
 var globals = require('core/globals');
 var assertTrue = require('test/assert').assertTrue;
 
-globals.set("name1", "value1");
-var result = globals.get('name1');
+var result = globals.list();
 
-assertTrue(result === 'value1');
+assertTrue(result !== undefined && result !== null, "Result of globals.list() is undefined or null");
