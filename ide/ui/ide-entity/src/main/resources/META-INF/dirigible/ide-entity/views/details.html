@@ -1,0 +1,385 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2022 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="edmDetails" ng-controller="DetailsController">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+        <title dg-view-title></title>
+        <script type="text/javascript" src="../services/details-window.js"></script>
+        <script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-view-js"></script>
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/js/resources-core/services/loader.js?id=ide-view-css" />
+        <theme></theme>
+        <script type="text/javascript" src="../js/details.js"></script>
+    </head>
+
+    <body class="dg-vbox">
+        <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
+            {{state.busyText}}
+        </fd-busy-indicator-extended>
+        <div class="fd-icon-tab-bar fd-icon-tab-bar--sm" ng-show="!state.error && !state.isBusy">
+            <ul role="tablist" class="fd-icon-tab-bar__header">
+                <li role="presentation" class="fd-icon-tab-bar__item">
+                    <a role="tab" class="fd-icon-tab-bar__tab" href="#section1" ng-click="tabNumber = 0"
+                        ng-attr-aria-selected="{{ tabNumber === 0 ? true : undefined }}" id="tab1">
+                        <span class="fd-icon-tab-bar__tag">General</span>
+                    </a>
+                </li>
+                <li role="presentation" class="fd-icon-tab-bar__item">
+                    <a role="tab" class="fd-icon-tab-bar__tab" href="#section2" ng-click="tabNumber = 1"
+                        ng-attr-aria-selected="{{ tabNumber === 1 ? true : undefined }}" id="tab2">
+                        <span class="fd-icon-tab-bar__tag">Data</span>
+                    </a>
+                </li>
+                <li role="presentation" class="fd-icon-tab-bar__item">
+                    <a role="tab" class="fd-icon-tab-bar__tab" href="#section3" ng-click="tabNumber = 2"
+                        ng-attr-aria-selected="{{ tabNumber === 2 ? true : undefined }}" id="tab3">
+                        <span class="fd-icon-tab-bar__tag">User interface</span>
+                    </a>
+                </li>
+                <li role="presentation" class="fd-icon-tab-bar__item">
+                    <a role="tab" class="fd-icon-tab-bar__tab" href="#section4" ng-click="tabNumber = 3"
+                        ng-attr-aria-selected="{{ tabNumber === 3 ? true : undefined }}" id="tab4">
+                        <span class="fd-icon-tab-bar__tag">Feed</span>
+                    </a>
+                </li>
+                <li role="presentation" class="fd-icon-tab-bar__item">
+                    <a role="tab" class="fd-icon-tab-bar__tab" href="#section5" ng-click="tabNumber = 4"
+                        ng-attr-aria-selected="{{ tabNumber === 4 ? true : undefined }}" id="tab5">
+                        <span class="fd-icon-tab-bar__tag">Security</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <fd-scrollbar class="fd-padding dg-full-height" ng-show="!state.error && !state.isBusy">
+            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="section1" aria-labelledby="tab1"
+                ng-show="tabNumber === 0">
+                <fd-form-group ng-if="dialogType === 'entity'">
+                    <fd-form-item>
+                        <fd-form-label for="generalName" dg-required="true" dg-colon="true">Name</fd-form-label>
+                        <fd-input id="generalName" type="text" ng-required="true" ng-model="dataParameters.name"
+                            placeholder="Entity name"></fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="generalType" dg-required="true" dg-colon="true">Type</fd-form-label>
+                        <fd-select dg-placeholder="Select a type" label-id="generalType" ng-required="true"
+                            ng-model="dataParameters.entityType" dropdown-fixed="true">
+                            <fd-option text="{{ type.label }}" value="type.value" ng-repeat="type in entityTypes">
+                            </fd-option>
+                        </fd-select>
+                    </fd-form-item>
+                </fd-form-group>
+                <fd-form-group ng-if="dialogType === 'property'">
+                    <fd-form-item>
+                        <fd-form-label for="generalName" dg-required="true" dg-colon="true">Name</fd-form-label>
+                        <fd-input id="generalName" type="text" ng-required="true" ng-model="dataParameters.name"
+                            placeholder="Property name"></fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-checkbox id="generalCalc" compact="false" dg-required="true"
+                            ng-model="dataParameters.isCalculatedProperty" data-ng-true-value="'true'"
+                            data-ng-false-value="'false'">
+                        </fd-checkbox>
+                        <fd-checkbox-label for="generalCalc" dg-required="true">Calculated</fd-checkbox-label>
+                    </fd-form-item>
+                    <fd-form-item ng-show="dataParameters.isCalculatedProperty === 'true'" class="fd-margin-top--tiny">
+                        <fd-form-label for="generalCpe" dg-colon="true">Calculated property expression</fd-form-label>
+                        <fd-textarea id="generalCpe" placeholder="calculated property expression"
+                            ng-model="dataParameters.calculatedPropertyExpression" rows="10"></fd-textarea>
+                    </fd-form-item>
+                </fd-form-group>
+            </section>
+            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="section2" aria-labelledby="tab2"
+                ng-show="tabNumber === 1">
+                <fd-form-group ng-if="dialogType === 'entity'">
+                    <fd-form-item>
+                        <fd-form-label for="ddn" dg-required="true" dg-colon="true">Database name</fd-form-label>
+                        <fd-input id="ddn" type="text" ng-required="true" ng-model="dataParameters.dataName"
+                            placeholder="Data name">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="ddc" dg-colon="true">Databse count</fd-form-label>
+                        <fd-textarea id="ddc" ng-model="dataParameters.dataCount" rows="10"></fd-textarea>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="ddq" dg-colon="true">Databse query</fd-form-label>
+                        <fd-textarea id="ddq" ng-model="dataParameters.dataQuery" rows="10"></fd-textarea>
+                    </fd-form-item>
+                </fd-form-group>
+                <fd-form-group ng-if="dialogType === 'property'">
+                    <fd-form-item>
+                        <fd-form-label for="ddn" dg-required="true" dg-colon="true">Database name</fd-form-label>
+                        <fd-input id="ddn" type="text" ng-required="true" ng-model="dataParameters.dataName"
+                            placeholder="Data name"></fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="dbtype" dg-required="true" dg-colon="true">Data type</fd-form-label>
+                        <fd-select dg-placeholder="Select an data type" label-id="dbtype" ng-required="true"
+                            ng-model="dataParameters.dataType" dropdown-fixed="true">
+                            <fd-option text="{{ type.label }}" value="type.value" ng-repeat="type in dataTypes">
+                            </fd-option>
+                        </fd-select>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="dblen" dg-required="true" dg-colon="true">Length</fd-form-label>
+                        <fd-step-input dg-id="dblen" name="dblen" string-to-number dg-required="true"
+                            ng-model="dataParameters.dataLength" placeholder="20" style="max-width: 320px">
+                        </fd-step-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-checkbox id="dbpk" compact="false" dg-required="true"
+                            ng-model="dataParameters.dataPrimaryKey" data-ng-true-value="'true'"
+                            data-ng-false-value="'false'">
+                        </fd-checkbox>
+                        <fd-checkbox-label for="dbpk" dg-required="true">Primary key</fd-checkbox-label>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-checkbox id="dbpk" compact="false" dg-required="true"
+                            ng-model="dataParameters.dataAutoIncrement" data-ng-true-value="'true'"
+                            data-ng-false-value="'false'">
+                        </fd-checkbox>
+                        <fd-checkbox-label for="dbpk" dg-required="true">Auto increment</fd-checkbox-label>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-checkbox id="dbnn" compact="false" dg-required="true" ng-model="dataParameters.dataNotNull"
+                            data-ng-true-value="'true'" data-ng-false-value="'false'">
+                        </fd-checkbox>
+                        <fd-checkbox-label for="dbnn" dg-required="true">Not null</fd-checkbox-label>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-checkbox id="dbu" compact="false" dg-required="true" ng-model="dataParameters.dataUnique"
+                            data-ng-true-value="'true'" data-ng-false-value="'false'">
+                        </fd-checkbox>
+                        <fd-checkbox-label for="dbu" dg-required="true">Unique</fd-checkbox-label>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="dbprecision" dg-required="true" dg-colon="true">Precision</fd-form-label>
+                        <fd-step-input dg-id="dbprecision" name="dbprecision" string-to-number dg-required="true"
+                            ng-model="dataParameters.dataPrecision" placeholder="0" style="max-width: 320px">
+                        </fd-step-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="dbscale" dg-required="true" dg-colon="true">Scale</fd-form-label>
+                        <fd-step-input dg-id="dbscale" name="dbscale" string-to-number dg-required="true"
+                            ng-model="dataParameters.dataScale" placeholder="0" style="max-width: 320px">
+                        </fd-step-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="dbdv" dg-required="true" dg-colon="true">Default value</fd-form-label>
+                        <fd-input id="dbdv" type="text" ng-required="true" ng-model="dataParameters.dataDefaultValue">
+                        </fd-input>
+                    </fd-form-item>
+                </fd-form-group>
+            </section>
+            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="section3" aria-labelledby="tab3"
+                ng-show="tabNumber === 2">
+                <fd-form-group ng-if="dialogType === 'entity'">
+                    <fd-form-item>
+                        <fd-form-label for="uit" dg-required="true" dg-colon="true">Title</fd-form-label>
+                        <fd-input id="uit" type="text" ng-required="true" ng-model="dataParameters.title">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uic" dg-colon="true">Caption</fd-form-label>
+                        <fd-textarea id="uic" ng-model="dataParameters.caption" rows="3"></fd-textarea>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uith" dg-required="true" dg-colon="true">Tooltip</fd-form-label>
+                        <fd-input id="uith" type="text" ng-required="true" ng-model="dataParameters.tooltip"
+                            placeholder="Tooltip hint"></fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uii" dg-required="true" dg-colon="true">Icon</fd-form-label>
+                        <fd-select dg-placeholder="Select an icon" label-id="uui" ng-required="true"
+                            ng-model="dataParameters.icon" dropdown-fixed="true">
+                            <fd-option text="{{ icon.name }}" value="icon.url" ng-repeat="icon in icons">
+                            </fd-option>
+                        </fd-select>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uimk" dg-required="true" dg-colon="true">Menu key</fd-form-label>
+                        <fd-input id="uimk" type="text" ng-required="true" ng-model="dataParameters.menuKey">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uiml" dg-required="true" dg-colon="true">Menu label</fd-form-label>
+                        <fd-input id="uiml" type="text" ng-required="true" ng-model="dataParameters.menuLabel">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uimi" dg-required="true" dg-colon="true">Menu index</fd-form-label>
+                        <fd-step-input dg-id="uimi" name="manuIndex" dg-required="true"
+                            ng-model="dataParameters.menuIndex" style="max-width: 320px">
+                        </fd-step-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uilt" dg-required="true" dg-colon="true">Layout type</fd-form-label>
+                        <fd-select dg-placeholder="Select a layout" label-id="uilt" ng-required="true"
+                            ng-model="dataParameters.layoutType" dropdown-fixed="true">
+                            <fd-option text="{{ type.label }}" value="type.value" ng-repeat="type in layoutTypes">
+                            </fd-option>
+                        </fd-select>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uip" dg-required="true" dg-colon="true">Perspective</fd-form-label>
+                        <fd-select dg-placeholder="Select an perspective" label-id="uip" ng-required="true"
+                            ng-model="dataParameters.perspectiveName" dropdown-fixed="true">
+                            <fd-option text="{{ perspectives.label }}" value="perspectives.value"
+                                ng-repeat="perspective in perspectives">
+                            </fd-option>
+                        </fd-select>
+                    </fd-form-item>
+                </fd-form-group>
+                <fd-form-group ng-if="dialogType === 'property'">
+                    <fd-form-item>
+                        <fd-form-label for="uiwt" dg-required="true" dg-colon="true">Widget type</fd-form-label>
+                        <fd-select dg-placeholder="Select a type" label-id="uiwt" ng-required="true"
+                            ng-model="dataParameters.widgetType" dropdown-fixed="true">
+                            <fd-option text="{{ type.label }}" value="type.value" ng-repeat="type in widgetTypes">
+                            </fd-option>
+                        </fd-select>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uilen" dg-required="true" dg-colon="true">Length</fd-form-label>
+                        <fd-step-input dg-id="uilen" name="uilen" string-to-number dg-required="true"
+                            ng-model="dataParameters.widgetLength" placeholder="20" style="max-width: 320px">
+                        </fd-step-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uilab" dg-required="true" dg-colon="true">Label</fd-form-label>
+                        <fd-input id="uilab" type="text" ng-required="true" ng-model="dataParameters.widgetLabel">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uislab" dg-required="true" dg-colon="true">Short label</fd-form-label>
+                        <fd-input id="uislab" type="text" ng-required="true" ng-model="dataParameters.widgetShortLabel">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uipat" dg-required="true" dg-colon="true">Pattern</fd-form-label>
+                        <fd-input id="uipat" type="text" ng-required="true" ng-model="dataParameters.widgetPattern">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uif" dg-required="true" dg-colon="true">Format</fd-form-label>
+                        <fd-input id="uif" type="text" ng-required="true" ng-model="dataParameters.widgetFormat">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uiser" dg-required="true" dg-colon="true">Service (feed)</fd-form-label>
+                        <fd-input id="uiser" type="text" ng-required="true" ng-model="dataParameters.widgetService">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uisec" dg-required="true" dg-colon="true">Section</fd-form-label>
+                        <fd-input id="uisec" type="text" ng-required="true" ng-model="dataParameters.widgetSection">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uimt" dg-required="true" dg-colon="true">Major type</fd-form-label>
+                        <fd-select dg-placeholder="Select a type" label-id="uimt" ng-required="true"
+                            ng-model="dataParameters.widgetIsMajor" dropdown-fixed="true">
+                            <fd-option text="{{ type.label }}" value="type.value" ng-repeat="type in majorTypes">
+                            </fd-option>
+                        </fd-select>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uidk" dg-required="true" dg-colon="true">Dropdown key</fd-form-label>
+                        <fd-input id="uidk" type="text" ng-required="true" ng-model="dataParameters.widgetDropDownKey">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="uidv" dg-required="true" dg-colon="true">Dropdown value</fd-form-label>
+                        <fd-input id="uidv" type="text" ng-required="true"
+                            ng-model="dataParameters.widgetDropDownValue">
+                        </fd-input>
+                    </fd-form-item>
+                </fd-form-group>
+            </section>
+            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="section3" aria-labelledby="tab4"
+                ng-show="tabNumber === 3">
+                <fd-form-group ng-if="dialogType === 'entity'">
+                    <fd-form-item>
+                        <fd-form-label for="furl" dg-required="true" dg-colon="true">Feed URL</fd-form-label>
+                        <fd-input id="furl" type="text" ng-required="true" ng-model="dataParameters.feedUrl"></fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="fun" dg-required="true" dg-colon="true">Username</fd-form-label>
+                        <fd-input id="fun" type="text" ng-required="true" ng-model="dataParameters.feedUsername">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="fp" dg-required="true" dg-colon="true">Password</fd-form-label>
+                        <fd-input id="fp" type="password" ng-required="true" ng-model="dataParameters.feedPassword">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="fs" dg-required="true" dg-colon="true">Schedule</fd-form-label>
+                        <fd-input id="fs" type="text" ng-required="true" ng-model="dataParameters.feedSchedule">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="fpth" dg-required="true" dg-colon="true">Path</fd-form-label>
+                        <fd-input id="fpth" type="text" ng-required="true" ng-model="dataParameters.feedPath">
+                        </fd-input>
+                    </fd-form-item>
+                </fd-form-group>
+                <fd-form-group ng-if="dialogType === 'property'">
+                    <fd-form-item>
+                        <fd-form-label for="furl" dg-required="true" dg-colon="true">Property name</fd-form-label>
+                        <fd-input id="furl" type="text" ng-required="true" ng-model="dataParameters.feedPropertyName">
+                        </fd-input>
+                    </fd-form-item>
+                </fd-form-group>
+            </section>
+            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="section3" aria-labelledby="tab5"
+                ng-show="tabNumber === 4">
+                <fd-form-group>
+                    <fd-form-item>
+                        <fd-form-label for="srr" dg-required="true" dg-colon="true">Read role</fd-form-label>
+                        <fd-input id="srr" type="text" ng-required="true" ng-model="dataParameters.roleRead"
+                            placeholder="role name">
+                        </fd-input>
+                    </fd-form-item>
+                    <fd-form-item class="fd-margin-top--tiny">
+                        <fd-form-label for="swr" dg-required="true" dg-colon="true">Write role</fd-form-label>
+                        <fd-input id="swr" type="text" ng-required="true" ng-model="dataParameters.roleWrite"
+                            placeholder="role name">
+                        </fd-input>
+                    </fd-form-item>
+                </fd-form-group>
+            </section>
+        </fd-scrollbar>
+        <fd-bar bar-design="footer" in-page="true" size="s" ng-show="!state.error && !state.isBusy">
+            <fd-bar-right>
+                <fd-bar-element>
+                    <fd-button dg-label="Save" dg-type="emphasized" compact="true" ng-click="save()"></fd-button>
+                </fd-bar-element>
+                <fd-bar-element>
+                    <fd-button dg-label="Cancel" dg-type="transparent" ng-click="cancel()" compact="true">
+                    </fd-button>
+                </fd-bar-element>
+            </fd-bar-right>
+        </fd-bar>
+        <fd-message-page glyph="sap-icon--error" ng-if="state.error">
+            <fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
+            <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
+            <fd-message-page-actions>
+                <fd-button compact="true" dg-label="Close" ng-click="cancel()"></fd-button>
+            </fd-message-page-actions>
+        </fd-message-page>
+    </body>
+
+</html>

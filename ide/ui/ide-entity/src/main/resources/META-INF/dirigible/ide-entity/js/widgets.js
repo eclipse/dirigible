@@ -9,34 +9,6 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-function addToolbarButton(editor, toolbar, action, label, image, isTransparent) {
-	let button = document.createElement('button');
-	button.id = label;
-	button.title = label;
-	// button.style.fontSize = '10';
-	if (image !== null) {
-		let img = document.createElement('i');
-		img.setAttribute('class', 'fa fa-' + image + ' fa-2x');
-		// img.style.width = '16px';
-		// img.style.height = '16px';
-		img.style.verticalAlign = 'middle';
-		img.style.marginRight = '2px';
-		button.appendChild(img);
-	}
-	if (isTransparent) {
-		//button.style.background = 'black';
-		//button.style.color = 'white';
-		//button.style.border = 'none';
-		button.setAttribute('class', 'button');
-		button.setAttribute('style', 'background: transparent; color: white; border: none');
-	}
-	mxEvent.addListener(button, 'click', function (evt) {
-		editor.execute(action);
-	});
-	//mxUtils.write(button, label);
-	toolbar.appendChild(button);
-}
-
 function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 	// Function that is executed when the image is dropped on
 	// the graph. The cell argument points to the cell under
@@ -86,12 +58,12 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 
 			if (prototype.style === 'copied') {
 				$scope.$cell = graph.getSelectionCell();
-				openCopiedEntity('Drop', 'Will be creating a Copy of an Entity', $scope, graph);
+				$scope.showCopiedEntityDialog($scope.$cell.id);
 			}
 
 			if (prototype.style === 'projection') {
 				$scope.$cell = graph.getSelectionCell();
-				openReferEntity('Drop', 'Will be creating a Projection Entity', $scope, graph);
+				$scope.showReferDialog($scope.$cell.id);
 			}
 
 			if (prototype.style === 'extension') {
@@ -163,9 +135,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 	};
 
 	let img = document.createElement('i');
-	img.setAttribute('class', 'fa fa-' + image + ' fa-2x');
-	img.setAttribute('style', 'margin-bottom: 0.4em');
-	//img.color = '#337ab7';
+	img.setAttribute('class', `mx-sidebar-icon ${image}`);
 	img.title = hint;
 	sidebar.appendChild(img);
 
@@ -198,7 +168,8 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = '#609dd2'; // 'var(--modeler-entity-color)';
+	//style[mxConstants.STYLE_INDICATOR_COLOR] = 'var(--sapTextColor)';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
 	style[mxConstants.STYLE_FONTSIZE] = '11';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';
@@ -213,14 +184,10 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
 	//style[mxConstants.STYLE_GRADIENTCOLOR] = 'var(--modeler-entity-fill)';
-	style[mxConstants.STYLE_FILLCOLOR] = '#609dd2'; // 'var(--modeler-entity-header-background)';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
-	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FILLCOLOR] = '#0854a0'; // 'var(--modeler-entity-header-background)';
+	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#0854a0'; // 'var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
-	style[mxConstants.STYLE_FILLCOLOR] = '#609dd2';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd';
-	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
@@ -234,8 +201,9 @@ function configureStylesheet(graph) {
 	graph.getStylesheet().putCellStyle('entity', style);
 
 	style = graph.stylesheet.getDefaultEdgeStyle();
-	style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
-	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd'; // var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
+	style[mxConstants.STYLE_LABEL_COLOR] = 'var(--sapTextColor)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#0854a0'; // var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
@@ -247,14 +215,10 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
 	//style[mxConstants.STYLE_GRADIENTCOLOR] = 'var(--modeler-entity-fill)';
-	style[mxConstants.STYLE_FILLCOLOR] = '#407db2'; // 'var(--modeler-entity-header-background)';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
-	style[mxConstants.STYLE_STROKECOLOR] = '#6895bd'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FILLCOLOR] = '#7700b3'; // 'var(--modeler-entity-header-background)';
+	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#7700b3'; // 'var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
-	style[mxConstants.STYLE_FILLCOLOR] = '#407db2';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#6895bd';
-	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
@@ -273,16 +237,10 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	style[mxConstants.STYLE_FILLCOLOR] = '#b3b3b3';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#999999';
+	style[mxConstants.STYLE_FILLCOLOR] = '#b32d00';
+	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#b32d00';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
-
-	style[mxConstants.STYLE_FILLCOLOR] = '#b3b3b3';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#999999';
-	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
-
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
@@ -301,16 +259,10 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	style[mxConstants.STYLE_FILLCOLOR] = '#a5cd98';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#b5dd88';
+	style[mxConstants.STYLE_FILLCOLOR] = '#117dd4';
+	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#117dd4';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
-
-	style[mxConstants.STYLE_FILLCOLOR] = '#a5cd98';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#b5dd88';
-	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
-
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
@@ -329,7 +281,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = '#444444';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
 	style[mxConstants.STYLE_FONTSIZE] = '11';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';
@@ -343,7 +295,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = '#78b464';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
 	style[mxConstants.STYLE_FONTSIZE] = '11';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';

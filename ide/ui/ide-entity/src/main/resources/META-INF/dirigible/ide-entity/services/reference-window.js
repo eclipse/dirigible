@@ -9,16 +9,13 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const editorData = {
-	id: "edm",
-	label: "Entity Data Modeler",
-	factory: "frame",
-	region: "center",
-	link: "../ide-entity/modeler.html",
-	contentTypes: ["application/entity-data-model+xml"]
+const viewData = {
+    id: "edmReference",
+    label: "Entity from External Model",
+    link: "../ide-entity/views/reference.html"
 };
 if (typeof exports !== 'undefined') {
-	exports.getEditor = function () {
-		return editorData;
-	}
+    exports.getDialogWindow = function () {
+        return viewData;
+    }
 }

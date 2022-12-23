@@ -29,12 +29,12 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 			let pstate = graph.getView().getState(parent);
 
 			if (parent === null || pstate === null) {
-				showAlert('Drop', 'Drop target must be a table', $scope);
+				$scope.showAlert('Drop', 'Drop target must be a table');
 				return;
 			}
 
 			if (pstate.cell.value.type === "VIEW") {
-				showAlert('Drop', 'Drop target must be a table not a view', $scope);
+				$scope.showAlert('Drop', 'Drop target must be a table not a view');
 				return;
 			}
 
@@ -130,7 +130,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = '#32363a';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
 	style[mxConstants.STYLE_FONTSIZE] = '12';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';
@@ -138,15 +138,16 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
 	graph.getStylesheet().putDefaultVertexStyle(style);
 
+	// Table
 	style = new Object();
 	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	style[mxConstants.STYLE_GRADIENTCOLOR] = '#8ba8c1';
-	style[mxConstants.STYLE_FILLCOLOR] = '#8ba8c1';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#7a9bb8';
+	//style[mxConstants.STYLE_GRADIENTCOLOR] = '#8ba8c1';
+	style[mxConstants.STYLE_FILLCOLOR] = '#2b96ee';
+	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#2b96ee';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
@@ -160,9 +161,32 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_SHADOW] = 1;
 	graph.getStylesheet().putCellStyle('table', style);
 
+	// View
+	style = new Object();
+	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+	//style[mxConstants.STYLE_GRADIENTCOLOR] = '#8ba8c1';
+	style[mxConstants.STYLE_FILLCOLOR] = '#00b300';
+	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#00b300';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
+	style[mxConstants.STYLE_STROKEWIDTH] = '2';
+	style[mxConstants.STYLE_STARTSIZE] = '28';
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+	style[mxConstants.STYLE_FONTSIZE] = '12';
+	style[mxConstants.STYLE_FONTSTYLE] = 1;
+	style[mxConstants.STYLE_ARCSIZE] = 4;
+	// Looks better without opacity if shadow is enabled
+	style[mxConstants.STYLE_OPACITY] = '80';
+	style[mxConstants.STYLE_ROUNDED] = true;
+	style[mxConstants.STYLE_SHADOW] = 1;
+	graph.getStylesheet().putCellStyle('view', style);
+
 	style = graph.stylesheet.getDefaultEdgeStyle();
-	style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
-	style[mxConstants.STYLE_STROKECOLOR] = '#999';
+	//style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
+	style[mxConstants.STYLE_STROKECOLOR] = '#2b96ee';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
