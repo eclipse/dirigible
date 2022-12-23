@@ -39,4 +39,8 @@ declare module "@dirigible/test" {
         
     }
     
+    module runner {
+        function run(settings);
+    }
+    
 }

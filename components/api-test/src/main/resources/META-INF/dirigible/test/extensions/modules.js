@@ -25,6 +25,15 @@ exports.getContent = function() {
 				"test/assert"
 			],
 			"pathDefault": "test/assert"
+		},
+		{
+			"name": "test/runner",
+			"description": "Test Runner API",
+			"api": "runner",
+			"versionedPaths": [
+				"test/runner"
+			],
+			"pathDefault": "test/runner"
 		}
 	];
 };

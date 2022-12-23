@@ -15,7 +15,7 @@ QUnit.module('core:');
 QUnit.test("configurations", function (assert) {
     assert.ok(require('core-tests/configurations-get-test'), "get - ok");
 });
-QUnit.test("env", function (assert) {
+QUnit.test("context", function (assert) {
     assert.ok(require('core-tests/context-get-test'), "get - ok");
 });
 QUnit.test("env", function (assert) {

@@ -9,12 +9,3 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getAssert = function() {
-	const assert = require('test/assert');
-	return assert;
-};
-
-exports.getRunner = function() {
-	var runner = require('test/runner');
-	return runner;
-};
