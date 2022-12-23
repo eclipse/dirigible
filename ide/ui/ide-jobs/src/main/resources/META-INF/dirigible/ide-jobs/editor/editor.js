@@ -89,7 +89,7 @@ angular.module('page', ["ideUI", "ideView"])
 		}
 
 		$scope.save = function () {
-			if ($scope.forms.editor.$valid) {
+			if ($scope.forms.editor.$valid && !$scope.state.error) {
 				$scope.state.busyText = "Saving...";
 				$scope.state.isBusy = true;
 				contents = JSON.stringify($scope.job, null, 4);

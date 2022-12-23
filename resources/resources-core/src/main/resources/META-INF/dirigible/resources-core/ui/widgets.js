@@ -56,11 +56,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }).factory('classNames', function () {
         function classNames(...args) {
             let classes = [];
-
             for (let i = 0; i < args.length; i++) {
                 let arg = args[i];
                 if (!arg) continue;
-
                 const argType = typeof arg;
 
                 if (argType === 'string' || argType === 'number') {
@@ -68,31 +66,151 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 } else if (Array.isArray(arg)) {
                     if (arg.length) {
                         let inner = classNames(...arg);
-                        if (inner) {
-                            classes.push(inner);
-                        }
+                        if (inner) classes.push(inner);
                     }
                 } else if (argType === 'object') {
                     if (arg.toString === Object.prototype.toString) {
                         for (const [key, value] of Object.entries(arg)) {
-                            if (value)
-                                classes.push(key)
+                            if (value) classes.push(key)
                         }
-                    } else {
-                        classes.push(arg.toString());
-                    }
+                    } else classes.push(arg.toString());
                 }
             }
-
             return classes.join(' ');
         }
-
         return classNames;
+    }).factory('shortcuts', ['$document', function ($document) {
+        // Factory is based on example code from zachsnow
+        let shortcuts = [];
+        let ignoreInputs = false;
+        let separateCtrl = false;
+        let isMac = navigator.userAgent.indexOf('Mac') >= 0;
+        let charKeyCodes = { "0": 58, "1": 49, "2": 50, "3": 51, "4": 52, "5": 53, "6": 54, "7": 55, "8": 56, "9": 57, "delete": 8, "tab": 9, "enter": 13, "return": 13, "esc": 27, "space": 32, "left": 37, "up": 38, "right": 39, "down": 40, ";": 186, "=": 187, ",": 188, "-": 189, ".": 190, "/": 191, "`": 192, "[": 219, "\\": 220, "]": 221, "'": 222, "a": 65, "b": 66, "c": 67, "d": 68, "e": 69, "f": 70, "g": 71, "h": 72, "i": 73, "j": 74, "k": 75, "l": 76, "m": 77, "n": 78, "o": 79, "p": 80, "q": 81, "r": 82, "s": 83, "t": 84, "u": 85, "v": 86, "w": 87, "x": 88, "y": 89, "z": 90 };
+        let keyCodeChars = { 8: "delete", 9: "tab", 13: "return", 27: "esc", 32: "space", 37: "left", 38: "up", 39: "right", 40: "down", 49: "1", 50: "2", 51: "3", 52: "4", 53: "5", 54: "6", 55: "7", 56: "8", 57: "9", 58: "0", 65: "a", 66: "b", 67: "c", 68: "d", 69: "e", 70: "f", 71: "g", 72: "h", 73: "i", 74: "j", 75: "k", 76: "l", 77: "m", 78: "n", 79: "o", 80: "p", 81: "q", 82: "r", 83: "s", 84: "t", 85: "u", 86: "v", 87: "w", 88: "x", 89: "y", 90: "z", 186: ";", 187: "=", 188: ",", 189: "-", 190: ".", 191: "/", 192: "`", 219: "[", 220: "\\", 221: "]", 222: "'" };
+        let modifierKeys = { 'shift': 'shift', 'ctrl': 'ctrl', 'meta': 'meta', 'alt': 'alt' };
 
-    }).directive('dgInputRules', function ($parse) {
+        function parseKeySet(keySet) {
+            let names;
+            let keys = {};
+            if (isMac && !separateCtrl) {
+                keySet = keySet.replace('ctrl', 'meta');
+                names = keySet.split('+');
+            } else names = keySet.split('+');
+            for (const name in modifierKeys) {
+                keys[modifierKeys[name]] = false;
+            }
+            for (const name in names) {
+                let modifierKey = modifierKeys[names[name]];
+                if (modifierKey) keys[modifierKey] = true;
+                else {
+                    keys.keyCode = charKeyCodes[names[name]];
+                    if (!keys.keyCode) return;
+                }
+            }
+            return keys;
+        };
+
+        function parseEvent(e) {
+            return {
+                keyCode: charKeyCodes[keyCodeChars[e.which]],
+                meta: e.metaKey || false,
+                alt: e.altKey || false,
+                ctrl: e.ctrlKey || false,
+                shift: e.shiftKey || false,
+            };
+        }
+
+        function match(k1, k2) {
+            return (
+                k1.keyCode === k2.keyCode &&
+                k1.ctrl === k2.ctrl &&
+                k1.alt === k2.alt &&
+                k1.meta === k2.meta &&
+                k1.shift === k2.shift
+            );
+        };
+
+        $document.bind('keydown', function (e) {
+            console.log('sd');
+            if (ignoreInputs && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+            let eventKeys = parseEvent(e);
+            let shortcut;
+            for (let i = 0; i < shortcuts.length; i++) {
+                shortcut = shortcuts[i];
+                if (match(eventKeys, shortcut.keys)) {
+                    e.preventDefault();
+                    shortcut.action();
+                    return;
+                }
+            }
+        });
+
+        return {
+            ignoreInputs: function (ignore) {
+                ignoreInputs = ignore;
+            },
+            separateCtrl: function (separate) {
+                separateCtrl = separate;
+            },
+            shortcuts: shortcuts,
+            register: function (shortcut) {
+                shortcut.keys = parseKeySet(shortcut.keySet);
+                if (!shortcut.keys) return;
+                shortcuts.push(shortcut);
+                return shortcut;
+            },
+            unregister: function (shortcut) {
+                overwriteWithout(shortcuts, shortcut);
+            }
+        };
+    }]).directive('dgShortcut', ['$parse', 'shortcuts', function ($parse, shortcuts) {
+        /**
+         * Directive is based on example code from zachsnow 
+         * How to use:
+         * <div dg-shortcut="'ctrl+s|ctrl+k'" dg-shortcut-action="save()" ignore-inputs separate-ctrl>
+         * Options:
+         * * dg-shortcut - String containing the shortcut or shortcuts. There can be multiple shortcuts for a single action. You can separate the shortcuts using '|'.
+         * * dg-shortcut-action - Reference to a function that will get called when the shortcut is activated.
+         * * ignore-inputs - If this attribute is present, then events from 'input' and 'textarea' controls will be ignored.
+         * * separate-ctrl - On macOS, by default, the ctrl key is replaced with the meta (cmd) key, so shortcuts like 'Ctrl+S' are automatically translated to 'Cmd+S'.
+         * If you want the ctrl key to match the ctrl and be separate from the meta on a mac, then use this attribute.
+         * If you want to register someting mac-specific to the Cmd key, then use 'meta' instead of 'ctrl'.
+         */
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                let shortcutKeySets = scope.$eval(attrs.dgShortcut);
+                let ignoreInputs = 'ignoreInputs' in attrs;
+                let separateCtrl = 'separateCtrl' in attrs;
+                shortcuts.ignoreInputs(ignoreInputs);
+                shortcuts.separateCtrl(separateCtrl);
+                if (shortcutKeySets === undefined) return;
+                shortcutKeySets = shortcutKeySets.split('|');
+                let action;
+                if (attrs.dgShortcutAction) {
+                    let fn = $parse(attrs.dgShortcutAction);
+                    action = function () {
+                        scope.$apply(function () {
+                            fn(scope);
+                        });
+                    };
+                }
+                for (let i = 0; i < shortcutKeySets.length; i++) {
+                    let shortcut = shortcuts.register({
+                        keySet: shortcutKeySets[i],
+                        action: action,
+                        description: attrs.dgShortcutDescription || ''
+                    });
+                    scope.$on("$destroy", function () {
+                        shortcuts.unregister(shortcut);
+                    });
+                }
+            }
+        }
+    }]).directive('dgInputRules', function ($parse) {
         /**
          * How to use:
-         * <input ng-model="inputModel" ng-required dg-input-rules="inputRules"
+         * <input ng-model="inputModel" ng-required dg-input-rules="inputRules">
          * Example object (inputRules):
          * {
          *    excluded: ['this', 'that'],
