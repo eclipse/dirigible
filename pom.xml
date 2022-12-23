@@ -739,7 +739,7 @@
 		<jetty.version>9.4.48.v20220622</jetty.version>
 		<lucene.version>9.4.2</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
-		<flowable.version>6.7.2</flowable.version>
+		<flowable.version>6.8.0</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
 		<jaxws.version>2.3.3</jaxws.version>
 		<jakarta.ws.rs-api.version>2.1.5</jakarta.ws.rs-api.version>
