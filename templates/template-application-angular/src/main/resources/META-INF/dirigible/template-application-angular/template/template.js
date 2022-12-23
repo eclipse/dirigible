@@ -29,11 +29,7 @@ exports.getTemplate = function (parameters) {
     templateSources = templateSources.concat(uiAngularjsTemplate.sources);
     templateSources = templateSources.concat(odataTemplate.sources);
 
-    let templateParameters = [];
-    templateParameters = templateParameters.concat(schemaTemplate.parameters);
-    templateParameters = templateParameters.concat(feedTemplate.parameters);
-    templateParameters = templateParameters.concat(uiAngularjsTemplate.parameters);
-    templateParameters.push({
+    odataTemplate.parameters.push({
         name: "generateOData",
         label: "OData",
         type: "checkbox"
@@ -48,13 +44,12 @@ exports.getTemplate = function (parameters) {
             };
         }
     });
-    templateParameters = templateParameters.concat(odataTemplate.parameters);
 
     return {
         name: "Application - Full Stack",
         description: "Application - full stack with a Database Schema, a set of REST Services and an AngularJS User Interfaces",
         extension: "model",
         sources: templateSources,
-        parameters: templateParameters
+        parameters: parameterUtils.getUniqueParameters(schemaTemplate.parameters, feedTemplate.parameters, uiAngularjsTemplate.parameters, odataTemplate.parameters)
     };
 };

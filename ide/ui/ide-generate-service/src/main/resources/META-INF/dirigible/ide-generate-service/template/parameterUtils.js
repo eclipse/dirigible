@@ -89,3 +89,19 @@ exports.process = function (model, parameters) {
         }
     });
 }
+
+exports.getUniqueParameters = function (...parameters) {
+    const uniqueTemplateParameters = [];
+    const parametersMap = new Map();
+
+    for (const templateParameters of parameters) {
+        for (const parameter of templateParameters) {
+            parametersMap.set(parameter.name, parameter);
+        }
+    }
+
+    for (const next of parametersMap.values()) {
+        uniqueTemplateParameters.push(next);
+    }
+    return uniqueTemplateParameters;
+}

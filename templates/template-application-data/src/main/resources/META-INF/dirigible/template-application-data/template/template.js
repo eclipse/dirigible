@@ -23,15 +23,12 @@ exports.getTemplate = function (parameters) {
     templateSources = templateSources.concat(schemaTemplate.sources);
     templateSources = templateSources.concat(daoTemplate.sources);
 
-    let templateParameters = [];
-    templateParameters = templateParameters.concat(schemaTemplate.parameters);
-    templateParameters = templateParameters.concat(daoTemplate.parameters);
-
     return {
         name: "Application - Data",
         description: "Application with a Database Schema and DAO",
         extension: "model",
         sources: templateSources,
-        parameters: templateParameters
+        parameters: parameterUtils.getUniqueParameters(schemaTemplate.parameters, daoTemplate.parameters)
     };
 };
+
