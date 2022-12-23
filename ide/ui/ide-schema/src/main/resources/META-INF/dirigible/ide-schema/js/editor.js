@@ -54,6 +54,10 @@ angular.module('ui.schema.modeler', ["ideUI", "ideView"])
 			}
 		};
 
+		$scope.showAlert = function (title, message) {
+			messageHub.showAlertError(title, message);
+		};
+
 		function getResource() {
 			let xhr = new XMLHttpRequest();
 			xhr.open('GET', '/services/v4/ide/workspaces' + $scope.dataParameters.file, false);
@@ -438,7 +442,7 @@ angular.module('ui.schema.modeler', ["ideUI", "ideView"])
 
 				// Adds sidebar icon for the view object
 				let viewObject = new View('VIEWENAME');
-				let view = new mxCell(viewObject, new mxGeometry(0, 0, 200, 28), 'table');
+				let view = new mxCell(viewObject, new mxGeometry(0, 0, 200, 28), 'view');
 
 				view.setVertex(true);
 				addSidebarIcon($scope.graph, sidebar, view, 'sap-icon--border', 'Drag this to the diagram to create a new View', $scope);

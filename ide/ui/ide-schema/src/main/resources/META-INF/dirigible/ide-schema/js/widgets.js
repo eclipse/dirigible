@@ -29,12 +29,12 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 			let pstate = graph.getView().getState(parent);
 
 			if (parent === null || pstate === null) {
-				showAlert('Drop', 'Drop target must be a table', $scope);
+				$scope.showAlert('Drop', 'Drop target must be a table');
 				return;
 			}
 
 			if (pstate.cell.value.type === "VIEW") {
-				showAlert('Drop', 'Drop target must be a table not a view', $scope);
+				$scope.showAlert('Drop', 'Drop target must be a table not a view');
 				return;
 			}
 
@@ -130,7 +130,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = '#777777';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
 	style[mxConstants.STYLE_FONTSIZE] = '12';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';

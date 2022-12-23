@@ -168,7 +168,8 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = '#609dd2'; // 'var(--modeler-entity-color)';
+	//style[mxConstants.STYLE_INDICATOR_COLOR] = 'var(--sapTextColor)';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
 	style[mxConstants.STYLE_FONTSIZE] = '11';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';
@@ -183,14 +184,10 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
 	//style[mxConstants.STYLE_GRADIENTCOLOR] = 'var(--modeler-entity-fill)';
-	style[mxConstants.STYLE_FILLCOLOR] = '#609dd2'; // 'var(--modeler-entity-header-background)';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
-	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FILLCOLOR] = '#0854a0'; // 'var(--modeler-entity-header-background)';
+	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#0854a0'; // 'var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
-	style[mxConstants.STYLE_FILLCOLOR] = '#609dd2';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd';
-	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
@@ -204,8 +201,9 @@ function configureStylesheet(graph) {
 	graph.getStylesheet().putCellStyle('entity', style);
 
 	style = graph.stylesheet.getDefaultEdgeStyle();
-	style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
-	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd'; // var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
+	style[mxConstants.STYLE_LABEL_COLOR] = 'var(--sapTextColor)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#0854a0'; // var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
@@ -217,14 +215,10 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
 	//style[mxConstants.STYLE_GRADIENTCOLOR] = 'var(--modeler-entity-fill)';
-	style[mxConstants.STYLE_FILLCOLOR] = '#407db2'; // 'var(--modeler-entity-header-background)';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
-	style[mxConstants.STYLE_STROKECOLOR] = '#6895bd'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FILLCOLOR] = '#7700b3'; // 'var(--modeler-entity-header-background)';
+	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#7700b3'; // 'var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
-	style[mxConstants.STYLE_FILLCOLOR] = '#407db2';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#6895bd';
-	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
@@ -243,16 +237,10 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	style[mxConstants.STYLE_FILLCOLOR] = '#b3b3b3';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#999999';
+	style[mxConstants.STYLE_FILLCOLOR] = '#b32d00';
+	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#b32d00';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
-
-	style[mxConstants.STYLE_FILLCOLOR] = '#b3b3b3';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#999999';
-	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
-
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
@@ -271,16 +259,10 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	style[mxConstants.STYLE_FILLCOLOR] = '#a5cd98';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#b5dd88';
+	style[mxConstants.STYLE_FILLCOLOR] = '#117dd4';
+	//style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#117dd4';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
-
-	style[mxConstants.STYLE_FILLCOLOR] = '#a5cd98';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#b5dd88';
-	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
-
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
@@ -299,7 +281,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = '#444444';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
 	style[mxConstants.STYLE_FONTSIZE] = '11';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';
@@ -313,7 +295,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = '#78b464';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--sapTextColor)';
 	style[mxConstants.STYLE_FONTSIZE] = '11';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';

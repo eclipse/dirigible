@@ -60,7 +60,7 @@ td.mxPopupMenuIcon {
   background: transparent;
 }
 .dsm-table-icon {
-  color: #32363a;
+  color: var(--sapTextColor, #32363a);
   margin-right: 0.125rem;
   font-family: var(--sapFontFamily, "72", "72full", Arial, Helvetica);
   font-weight: 400;
