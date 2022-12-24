@@ -16,7 +16,7 @@
         <script type="text/javascript" src="editor.js"></script>
     </head>
 
-    <body class="dg-vbox">
+    <body class="dg-vbox" dg-shortcut="'ctrl+s'" dg-shortcut-action="save()">
         <fd-busy-indicator-extended class="dg-full-height" ng-hide="state.error || !state.isBusy" dg-size="l">
             {{state.busyText}}
         </fd-busy-indicator-extended>

@@ -91,10 +91,12 @@ angular.module('page', ["ideUI", "ideView"])
         }
 
         $scope.save = function () {
-            $scope.state.busyText = "Saving...";
-            $scope.state.isBusy = true;
-            contents = JSON.stringify($scope.access, null, 4);
-            saveContents(contents);
+            if (!$scope.state.error) {
+                $scope.state.busyText = "Saving...";
+                $scope.state.isBusy = true;
+                contents = JSON.stringify($scope.access, null, 4);
+                saveContents(contents);
+            }
         };
 
         messageHub.onDidReceiveMessage(
