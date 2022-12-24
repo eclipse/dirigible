@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-groups-parent</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
+        <version>7.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-branding</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -30,12 +30,12 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-terminal</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-console</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -55,12 +55,12 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-preview</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-problems</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -75,12 +75,12 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-template-service</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-transport-service</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -95,17 +95,17 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-registry-service</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-repository-service</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
       <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-git-service</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -115,7 +115,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-import</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -150,12 +150,12 @@
       <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-git-projects</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
       <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-git-branches</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
       <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -165,7 +165,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-repository</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -180,7 +180,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-entity</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -190,32 +190,32 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-monaco</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-monaco-extensions</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-debugger</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-logs</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-jobs</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-jobs-menu</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -230,7 +230,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-operations</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -245,17 +245,17 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-listeners</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-listeners-menu</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-data-structures</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -270,17 +270,17 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-plugins</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-deploy-manager</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-websockets</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -300,7 +300,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-image</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>

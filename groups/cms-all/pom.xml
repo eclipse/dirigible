@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-groups-parent</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
+        <version>7.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-documents</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -69,17 +69,17 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-core</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-documents</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-documents-ext-content-type-ms</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>

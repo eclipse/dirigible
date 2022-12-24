@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-groups-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>7.0.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -51,32 +51,32 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-http-async</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-indexing</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-io</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-log</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-mail</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-messaging</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
@@ -91,12 +91,12 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-utils</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-net</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
@@ -106,7 +106,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-job</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.0.0</version>
 		</dependency>
 	</dependencies>
 
