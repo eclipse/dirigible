@@ -136,6 +136,16 @@
 			<artifactId>dirigible-components-api-qunit</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-api-utils</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-api-io</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Test Project -->
 		<dependency>

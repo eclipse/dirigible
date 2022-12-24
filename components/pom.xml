@@ -45,6 +45,8 @@
 		<module>api-core</module>
 		<module>api-test</module>
 		<module>api-qunit</module>
+		<module>api-utils</module>
+		<module>api-io</module>
 
 		<!-- Applications -->
 		<module>app-all</module>
