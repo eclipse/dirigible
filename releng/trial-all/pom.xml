@@ -104,14 +104,14 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Repository -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -128,7 +128,7 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -145,14 +145,14 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-services</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -169,14 +169,14 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- CMS -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-cms</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 		 	<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -193,42 +193,42 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-bpm</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- MAIL -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-mail</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- IDE Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Templating Core -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-templating-all</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Templates Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-templates</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Resources Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- External -->

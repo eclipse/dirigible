@@ -137,7 +137,7 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-log</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
 
 		<dependency>
