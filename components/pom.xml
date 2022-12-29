@@ -47,6 +47,7 @@
 		<module>api-qunit</module>
 		<module>api-utils</module>
 		<module>api-io</module>
+		<module>api-bpm</module>
 
 		<!-- Applications -->
 		<module>app-all</module>
