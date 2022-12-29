@@ -41,6 +41,9 @@
 		<module>engine-javascript</module>
 		<module>engine-web</module>
 		
+		<!-- CMS -->
+		<module>cms-internal</module>
+		
 		<!-- API -->
 		<module>api-core</module>
 		<module>api-test</module>
@@ -48,6 +51,7 @@
 		<module>api-utils</module>
 		<module>api-io</module>
 		<module>api-bpm</module>
+		<module>api-cms</module>
 
 		<!-- Applications -->
 		<module>app-all</module>

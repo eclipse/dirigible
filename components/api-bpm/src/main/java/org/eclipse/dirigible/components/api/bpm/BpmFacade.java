@@ -12,10 +12,12 @@
 package org.eclipse.dirigible.components.api.bpm;
 
 import org.eclipse.dirigible.bpm.api.BpmModule;
+import org.springframework.stereotype.Component;
 
 /**
  * The Class BpmFacade.
  */
+@Component
 public class BpmFacade {
 	
 	/**
