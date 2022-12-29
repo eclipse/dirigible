@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var url = require('utils/url');
-var assertEquals = require('utils/assert').assertEquals;
+var assertEquals = require('test/assert').assertEquals;
 
 var input = 'http://www.test.com?var1=abc123&var2=123 456&var3=стойност';
 var result = url.escape(input);

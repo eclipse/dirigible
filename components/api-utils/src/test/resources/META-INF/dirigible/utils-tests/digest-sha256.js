@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var digest = require('utils/digest');
-var assertTrue = require('utils/assert').assertTrue;
+var assertTrue = require('test/assert').assertTrue;
 
 var input = [41, 42, 43];
 var result = digest.sha256(input);

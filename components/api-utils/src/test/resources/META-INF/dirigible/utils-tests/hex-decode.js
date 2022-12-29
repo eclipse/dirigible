@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var hex = require('utils/hex');
-var assertTrue = require('utils/assert').assertTrue;
+var assertTrue = require('test/assert').assertTrue;
 
 var input = '414243';
 var result = hex.decode(input);

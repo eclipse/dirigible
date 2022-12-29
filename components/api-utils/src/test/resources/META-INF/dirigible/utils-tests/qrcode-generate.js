@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var qrCodeGenerator = require('utils/qrcode');
-var assertTrue      = require('utils/assert').assertTrue;
+var assertTrue      = require('test/assert').assertTrue;
 
 var input           = "Dirigible";
 var expectedResult  = [-119, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 1, 44, 0, 0, 1, 44, 1, 0, 0,

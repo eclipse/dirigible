@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var hex = require('utils/hex');
-var assertEquals = require('utils/assert').assertEquals;
+var assertEquals = require('test/assert').assertEquals;
 
 var input = [65, 66, 67];
 var result = hex.encode(input);

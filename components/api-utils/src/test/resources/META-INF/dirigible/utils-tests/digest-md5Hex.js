@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var digest = require('utils/digest');
-var assertEquals = require('utils/assert').assertEquals;
+var assertEquals = require('test/assert').assertEquals;
 
 var input = 'ABC';
 var result = digest.md5Hex(input);

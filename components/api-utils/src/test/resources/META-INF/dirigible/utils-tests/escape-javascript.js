@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var escape = require('utils/escape');
-var assertEquals = require('utils/assert').assertEquals;
+var assertEquals = require('test/assert').assertEquals;
 
 var input = 'javascript \t characters \n';
 var result = escape.escapeJavascript(input);

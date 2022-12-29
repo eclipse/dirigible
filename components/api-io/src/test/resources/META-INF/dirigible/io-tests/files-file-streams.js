@@ -11,7 +11,7 @@
  */
 var files = require('io/files');
 var streams = require('io/streams');
-var assertEquals = require('utils/assert').assertEquals;
+var assertEquals = require('test/assert').assertEquals;
 
 var tempFile1 = files.createTempFile("dirigible", ".txt");
 console.log('Temp file 1: ' + tempFile1);

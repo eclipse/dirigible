@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var escape = require('utils/v4/escape');
-var assertEquals = require('utils/assert').assertEquals;
+var escape = require('utils/escape');
+var assertEquals = require('test/assert').assertEquals;
 
 var input = '&quot;&lt;&gt;';
 var result = escape.unescapeXml(input);

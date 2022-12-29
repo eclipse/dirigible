@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var files = require('io/files');
-var assertTrue = require('utils/assert').assertTrue;
+var assertTrue = require('test/assert').assertTrue;
 
 var tempFile = files.createTempFile("dirigible", ".txt");
 console.log('Temp file: ' + tempFile);

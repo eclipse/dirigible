@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var streams = require('io/streams');
-var assertEquals = require('utils/assert').assertEquals;
+var assertEquals = require('test/assert').assertEquals;
 
 var bais = streams.createByteArrayInputStream([61, 62, 63]);
 var baos = streams.createByteArrayOutputStream();

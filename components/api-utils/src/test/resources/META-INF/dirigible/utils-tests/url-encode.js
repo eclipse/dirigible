@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var url = require('utils/url');
-var assertEquals = require('utils/assert').assertEquals;
+var assertEquals = require('test/assert').assertEquals;
 
 var input = '<![CDATA[<meta http-equiv="refresh" content="0;url=javascript:document.vulnerable=true;">]]>';
 var result = url.encode(input, 'UTF-8');

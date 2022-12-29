@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var ftp = require("io/ftp");
-var assertTrue = require('utils/assert').assertTrue;
+var assertTrue = require('test/assert').assertTrue;
 
 var host = "test.rebex.net";
 var port = 21;
