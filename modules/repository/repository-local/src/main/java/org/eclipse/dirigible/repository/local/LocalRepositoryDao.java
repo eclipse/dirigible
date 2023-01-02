@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.repository.api.RepositoryCache;
@@ -34,21 +33,6 @@ public class LocalRepositoryDao {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(LocalRepositoryDao.class);
-
-	/** The Constant LAST. */
-	private static final String LAST = "last";
-
-	/** The Constant MODIFIED_AT. */
-	private static final String MODIFIED_AT = "modifiedAt";
-
-	/** The Constant MODIFIED_BY. */
-	private static final String MODIFIED_BY = "modifiedBy";
-
-	/** The Constant CREATED_AT. */
-	private static final String CREATED_AT = "createdAt";
-
-	/** The Constant CREATED_BY. */
-	private static final String CREATED_BY = "createdBy";
 
 	/** The Constant OBJECT_TYPE_FOLDER. */
 	static final int OBJECT_TYPE_FOLDER = 0;
@@ -381,15 +365,6 @@ public class LocalRepositoryDao {
 	public boolean directoryExists(String path) {
 		String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 		return FileSystemUtils.directoryExists(workspacePath);
-	}
-	
-	/**
-	 * Gets the user.
-	 *
-	 * @return the user
-	 */
-	private String getUser() {
-		return UserFacade.getName();
 	}
 	
 }

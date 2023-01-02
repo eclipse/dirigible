@@ -11,8 +11,8 @@
  */
 package org.eclipse.dirigible.components.api.core;
 
-import org.eclipse.dirigible.commons.api.context.ContextException;
-import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
+import org.eclipse.dirigible.components.base.context.ContextException;
+import org.eclipse.dirigible.components.base.context.ThreadContextFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

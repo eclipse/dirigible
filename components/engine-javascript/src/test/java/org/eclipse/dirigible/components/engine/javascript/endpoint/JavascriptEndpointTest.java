@@ -60,8 +60,10 @@ public class JavascriptEndpointTest {
     public void setup() throws Exception {
 
     	// create test javascript service
-		repository.createResource("/registry/public/test/hello-world.js", "var response = require(\"http/v4/response\"); response.println(\"Hello World!\");".getBytes());
-		repository.createResource("/registry/public/test1/test2/hello-world.js", "var response = require(\"http/v4/response\"); response.println(\"Hello World!\");".getBytes());
+		repository.createResource("/registry/public/test/hello-world.js",
+				"org.eclipse.dirigible.components.base.http.access.UserResponseVerifier.getResponse().getOutputStream().println(\"Hello World!\");".getBytes());
+		repository.createResource("/registry/public/test1/test2/hello-world.js",
+				"org.eclipse.dirigible.components.base.http.access.UserResponseVerifier.getResponse().getOutputStream().println(\"Hello World!\");".getBytes());
     }
 	
 	@AfterEach

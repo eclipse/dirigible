@@ -22,14 +22,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.dirigible.commons.api.context.ContextException;
-import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
+import org.eclipse.dirigible.components.base.context.ContextException;
+import org.eclipse.dirigible.components.base.context.ThreadContextFacade;
 import org.springframework.stereotype.Component;
 
 /**
  * The HTTP Context Filter.
  */
-//@WebFilter(urlPatterns = {"/services/v8/*", "/public/v8/*"}, filterName = "HttpContextFilter", description = "Set the HTTP Request and Response to the Context for all URIs")
 @Component
 public class HttpContextFilter implements Filter {
 

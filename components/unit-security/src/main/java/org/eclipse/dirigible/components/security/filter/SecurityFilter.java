@@ -11,8 +11,8 @@
  */
 package org.eclipse.dirigible.components.security.filter;
 
-import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -152,7 +152,7 @@ public class SecurityFilter implements Filter {
                     }
                 } else {
                     for (Access securityAccess : securityAccesses) {
-                        if (ROLE_PUBLIC.equalsIgnoreCase(securityAccess.getRole()) || HttpRequestFacade.isUserInRole(securityAccess.getRole())) {
+                        if (ROLE_PUBLIC.equalsIgnoreCase(securityAccess.getRole()) || UserRequestVerifier.isUserInRole(securityAccess.getRole())) {
                             isInRole = true;
                             break;
                         }

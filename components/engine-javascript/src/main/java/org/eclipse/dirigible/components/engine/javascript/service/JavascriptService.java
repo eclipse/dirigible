@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
-import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
+import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
 import org.graalvm.polyglot.Source;
@@ -48,8 +48,8 @@ public class JavascriptService {
      */
     public Object handleRequest(String projectName, String projectFilePath, String projectFilePathParam, Map<Object, Object> parameters, boolean debug) {
         try {
-            if (HttpRequestFacade.isValid()) {
-                HttpRequestFacade.setAttribute(HttpRequestFacade.ATTRIBUTE_REST_RESOURCE_PATH, projectFilePathParam);
+            if (UserRequestVerifier.isValid()) {
+            	UserRequestVerifier.getRequest().setAttribute("dirigible-rest-resource-path", projectFilePathParam);
             }
 
             String sourceFilePath = Path.of(projectName, projectFilePath).toString();
@@ -70,6 +70,17 @@ public class JavascriptService {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             throw new RuntimeException(e);
         }
+    }
+    
+    public Object handleCallback(String filePath, Map<Object, Object> parameters) {
+    	if (filePath == null) {
+    		throw new RuntimeException("Path to the file to be executed cannot be null");
+    	}
+    	Path path = Path.of(filePath);
+    	if (path.getNameCount() > 1) {
+    		return handleRequest(path.getRoot().toString(), path.subpath(1, path.getNameCount() - 1).toString(), null, parameters, false);
+    	}
+    	throw new RuntimeException("Path to the file to be executed must contain a parent folder");
     }
 
 	/**
@@ -119,4 +130,5 @@ public class JavascriptService {
 	public DirigibleSourceProvider getSourceProvider() {
 		return dirigibleSourceProvider;
 	}
+
 }

@@ -56,11 +56,6 @@
             <artifactId>dirigible-repository-zip</artifactId>
             <version>8.0.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-facade-security</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
-    	</dependency>
     	
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>

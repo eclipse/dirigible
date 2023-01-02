@@ -33,9 +33,6 @@ public class ClasspathExpander {
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ClasspathExpander.class);
 	
-	/** The Constant ROOT. */
-	private static final String ROOT = "META-INF/dirigible";
-	
 	private IRepository repository;
 	
 	@Autowired
@@ -44,6 +41,11 @@ public class ClasspathExpander {
 	}
 	
 	public void expandContent() {
+		expandContent("META-INF/dirigible");
+		expandContent("META-INF/webjars");
+	}
+	
+	public void expandContent(String ROOT) {
 		try {
 			Enumeration<URL> urls = ClasspathContentInitializer.class.getClassLoader().getResources("META-INF");
 			while (urls.hasMoreElements()) {
