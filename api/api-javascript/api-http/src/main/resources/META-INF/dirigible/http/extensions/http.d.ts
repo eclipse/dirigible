@@ -1,4 +1,14 @@
 declare module "@dirigible/http" {
+
+    const Controller;
+    function Get(path: string);
+    function Post(path: string);
+    function Put(path: string);
+    function Patch(path: string);
+    function Delete(path: string);
+    function Head(path: string);
+    function Options(path: string);
+
     module clientAsync {
     /**
      * Returns HttpAsyncClient instance
@@ -591,6 +601,16 @@ declare module "@dirigible/http" {
      *
      */
     module rs {
+
+        const Controller;
+        function Get(path: string);
+        function Post(path: string);
+        function Put(path: string);
+        function Patch(path: string);
+        function Delete(path: string);
+        function Head(path: string);
+        function Options(path: string);
+
         function service(oConfig?: ResourceMappings): HttpController
 
         interface HttpController {

@@ -19,7 +19,13 @@ exports.isValid = function() {
 	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.isValid();
 };
 
-exports.print = function(text) {
+exports.json = function(obj) {
+    this.addHeader("Content-Type", "application/json")
+    const objJson = JSON.stringify(obj);
+    this.print(objJson);
+}
+
+exports.print = function print(text) {
 	text = (text && text.toString()) || "";
 	const out = this.getOutputStream().native;
 	const writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
@@ -106,7 +112,7 @@ exports.setHeader = function(name, value) {
 	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setHeader(name, value);
 };
 
-exports.addHeader = function(name, value) {
+exports.addHeader = function (name, value) {
 	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.addHeader(name, value);
 };
 
