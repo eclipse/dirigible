@@ -54,6 +54,7 @@
 		<module>api-cms</module>
 		<module>api-http</module>
 		<module>api-log</module>
+		<module>api-database</module>
 
 		<!-- Applications -->
 		<module>app-all</module>

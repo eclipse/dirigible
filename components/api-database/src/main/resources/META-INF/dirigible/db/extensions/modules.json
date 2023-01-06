@@ -1,0 +1,98 @@
+[
+  {
+    "name": "@dirigible/db",
+    "description": "Dirigible DB module",
+    "isPackageDescription": true,
+    "dtsPath": "db/extensions/db.d.ts"
+  },
+  {
+    "name": "db/v4/dao",
+    "description": "Database DAO API",
+    "api": "dao",
+    "versionedPaths": [
+      "db/v3/dao",
+      "db/v4/dao"
+    ],
+    "pathDefault": "db/v4/dao"
+  },
+  {
+    "name": "db/v4/database",
+    "description": "Database API",
+    "api": "database",
+    "versionedPaths": [
+      "db/v3/database",
+      "db/v4/database"
+    ],
+    "pathDefault": "db/v4/database"
+  },
+  {
+    "name": "db/v4/orm",
+    "description": "Database ORM API",
+    "api": "orm",
+    "versionedPaths": [
+      "db/v3/orm",
+      "db/v4/orm"
+    ],
+    "pathDefault": "db/v4/orm"
+  },
+  {
+    "name": "db/v4/ormstatements",
+    "description": "Database ORM Statements API",
+    "api": "ormstatements",
+    "versionedPaths": [
+      "db/v3/ormstatements",
+      "db/v4/ormstatements"
+    ],
+    "pathDefault": "db/v4/ormstatements"
+  },
+  {
+    "name": "db/v4/procedure",
+    "description": "Database Procedure API",
+    "api": "procedure",
+    "versionedPaths": [
+      "db/v3/procedure",
+      "db/v4/procedure"
+    ],
+    "pathDefault": "db/v4/procedure"
+  },
+  {
+    "name": "db/v4/query",
+    "description": "Database Query API",
+    "api": "query",
+    "versionedPaths": [
+      "db/v3/query",
+      "db/v4/query"
+    ],
+    "pathDefault": "db/v4/query"
+  },
+  {
+    "name": "db/v4/sequence",
+    "description": "Database Sequence API",
+    "api": "sequence",
+    "versionedPaths": [
+      "db/v3/sequence",
+      "db/v4/sequence"
+    ],
+    "pathDefault": "db/v4/sequence"
+  },
+  {
+    "name": "db/v4/sql",
+    "description": "SQL API",
+    "api": "sql",
+    "versionedPaths": [
+      "db/v3/sql",
+      "db/v4/sql"
+    ],
+    "pathDefault": "db/v4/sql"
+  },
+  {
+    "name": "db/v4/update",
+    "description": "Database Update API",
+    "api": "update",
+    "versionedPaths": [
+      "db/v3/update",
+      "db/v4/update"
+    ],
+    "pathDefault": "db/v4/update"
+  }
+]

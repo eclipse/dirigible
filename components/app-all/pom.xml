@@ -173,6 +173,11 @@
 			<artifactId>dirigible-components-api-log</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-api-database</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Test Project -->
 		<dependency>

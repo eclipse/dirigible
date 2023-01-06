@@ -106,7 +106,8 @@ public class DataSourcesManager {
 			logger.error("Invalid configuration for the datasource: " + name);
 		}
 		Properties properties = new Properties();
-		properties.put("dataSourceClassName", datasource.getDriver());
+		properties.put("driverClassName", datasource.getDriver());
+		properties.put("jdbcUrl", datasource.getUrl());
 		properties.put("dataSource.url", datasource.getUrl());
 		properties.put("dataSource.user", datasource.getUsername());
 		properties.put("dataSource.password", datasource.getPassword());
