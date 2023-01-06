@@ -9,12 +9,9 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.componenets.api.io;
+package org.eclipse.dirigible.componenets.api.security;
 
-import org.eclipse.dirigible.components.data.sources.domain.DataSource;
-import org.eclipse.dirigible.components.data.sources.repository.DataSourceRepository;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -35,10 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
 @TestInstance(Lifecycle.PER_CLASS)
-public class DbTestSuite {
-	
-	@Autowired
-	private DataSourceRepository datasourceRepository;
+public class SecurityTestSuite {
 	
 	@Autowired
 	private JavascriptService javascriptService;
@@ -49,34 +43,10 @@ public class DbTestSuite {
     @Autowired
     protected WebApplicationContext wac;
     
-    @BeforeAll
-    public void setup() {
-		DataSource datasource = new DataSource("/test/DefaultDB.datasource", "DefaultDB", "", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
-		datasourceRepository.save(datasource);
-    }
-
 	@Test
 	public void executeDatabaseTest() throws Exception {
-		javascriptService.handleRequest("db-tests", "database-get-connection.js", null, null, false);
-		javascriptService.handleRequest("db-tests", "database-get-datasources.js", null, null, false);
-		javascriptService.handleRequest("db-tests", "database-get-metadata.js", null, null, false);
+		javascriptService.handleRequest("security-tests", "user-get-name.js", null, null, false);
 	}
-	
-	@Test
-	public void executeQueryTest() throws Exception {
-		javascriptService.handleRequest("db-tests", "query-execute.js", null, null, false);
-	}
-	
-	@Test
-	public void executeUpdateTest() throws Exception {
-		javascriptService.handleRequest("db-tests", "update-execute.js", null, null, false);
-	}
-	
-	@Test
-	public void executeSequenceTest() throws Exception {
-		javascriptService.handleRequest("db-tests", "sequence-nextval.js", null, null, false);
-	}
-
 	
 	@SpringBootApplication
 	static class TestConfiguration {
