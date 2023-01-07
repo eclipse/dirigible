@@ -41,6 +41,9 @@
 		<module>engine-javascript</module>
 		<module>engine-web</module>
 		
+		<!-- IDE -->
+		<module>ide-workspace</module>
+		
 		<!-- CMS -->
 		<module>cms-internal</module>
 		
@@ -55,6 +58,7 @@
 		<module>api-http</module>
 		<module>api-log</module>
 		<module>api-database</module>
+		<module>api-extensions</module>
 
 		<!-- Applications -->
 		<module>app-all</module>

@@ -54,7 +54,7 @@ public class DatabaseFacade implements InitializingBean {
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
 	
 	/** The database facade. */
-	private static DatabaseFacade DATABASE_FACADE;
+	private static DatabaseFacade INSTANCE;
 
 	/** The database definition service. */
 	private DatabaseDefinitionService databaseDefinitionService;
@@ -81,16 +81,16 @@ public class DatabaseFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		DATABASE_FACADE = this;		
+		INSTANCE = this;		
 	}
 	
 	/**
-	 * Gets the.
+	 * Gets the instance.
 	 *
 	 * @return the database facade
 	 */
 	public static DatabaseFacade get() {
-        return DATABASE_FACADE;
+        return INSTANCE;
     }
 	
 	/**

@@ -31,7 +31,7 @@ import java.util.List;
 
 import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
 import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {AccessRepository.class, RoleRepository.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

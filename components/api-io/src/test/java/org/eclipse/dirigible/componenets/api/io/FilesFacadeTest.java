@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.componenets.api.io;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 

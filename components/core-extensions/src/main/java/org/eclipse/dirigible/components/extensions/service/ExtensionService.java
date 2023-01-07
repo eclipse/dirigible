@@ -113,6 +113,20 @@ public class ExtensionService implements ArtefactService<Extension> {
         }
         return null;
     }
+    
+    /**
+	 * Find by extension point.
+	 *
+	 * @param name the name
+	 * @return the extension
+	 */
+	@Transactional(readOnly = true)
+	public List<Extension> findByExtensionPoint(String extensionPoint) {
+		Extension filter = new Extension();
+		filter.setExtensionPoint(extensionPoint);
+		Example<Extension> example = Example.of(filter);
+		return extensionRepository.findAll(example);
+	}
 	
 	/**
 	 * Save.

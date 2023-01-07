@@ -11,13 +11,13 @@
  */
 package org.eclipse.dirigible.components.base.artefact.topology;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TopologicalSorterTest {
 

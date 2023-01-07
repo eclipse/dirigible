@@ -11,10 +11,13 @@
  */
 package org.eclipse.dirigible.components.security.config;
 
+import java.util.Arrays;
+
 import org.eclipse.dirigible.components.security.filter.SecurityFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 /**
  * The Class SecurityFilterConfig.
@@ -51,4 +54,13 @@ public class SecurityFilterConfig {
 
         return filterRegistrationBean;
     }
+    
+//    @Bean
+//    public FilterRegistrationBean<HiddenHttpMethodFilter> hiddenFilterRegistrationBean() {
+//        FilterRegistrationBean<HiddenHttpMethodFilter> filterRegistrationBean = new FilterRegistrationBean<>(new HiddenHttpMethodFilter());
+//
+//        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
+//
+//        return filterRegistrationBean;
+//    }
 }

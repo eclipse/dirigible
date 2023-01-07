@@ -34,6 +34,9 @@ public abstract class BaseEndpoint {
 	/** The Constant PREFIX_ENDPOINT_CORE. */
 	public static final String PREFIX_ENDPOINT_ENGINE = "services/v8/engine/";
 	
+	/** The Constant PREFIX_ENDPOINT_CORE. */
+	public static final String PREFIX_ENDPOINT_IDE = "services/v8/ide/";
+	
 	/** The Constant PREFIX_ENDPOINT_PUBLIC. */
 	public static final String PREFIX_ENDPOINT_PUBLIC = "public/v8/";
 	

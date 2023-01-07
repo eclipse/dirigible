@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.configurations.endpoint;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.eclipse.dirigible.components.configurations.service.ConfigurationsService;
 import org.junit.jupiter.api.Test;

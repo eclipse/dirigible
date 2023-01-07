@@ -94,11 +94,25 @@ public class ExtensionEndpoint extends BaseEndpoint {
 	 * @param name the name
 	 * @return the response entity
 	 */
-	@GetMapping("/search")
+	@GetMapping("/search/{name}")
 	public ResponseEntity<Extension> findByName(
 			@ApiParam(value = "Name of the Extension", required = true) @RequestParam("name") String name) {
 
 		return ResponseEntity.ok(extensionService.findByName(name));
+
+	}
+	
+	/**
+	 * Find by extension point.
+	 *
+	 * @param name the name of the extension point
+	 * @return the response entity
+	 */
+	@GetMapping("/group/{name}")
+	public ResponseEntity<List<Extension>> findByExtensionPoint(
+			@ApiParam(value = "Name of the Extension Point", required = true) @RequestParam("name") String name) {
+
+		return ResponseEntity.ok(extensionService.findByExtensionPoint(name));
 
 	}
 	
