@@ -11,30 +11,34 @@
  */
 package org.eclipse.dirigible.graalium.core.modules;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
  * The Class DirigibleModule.
  */
 public class DirigibleModule {
-    
+
     /** The name. */
     private final String name;
-    
+
     /** The api. */
     private final String api;
-    
+
     /** The versioned paths. */
     private final String[] versionedPaths;
-    
+
     /** The path default. */
     private final String pathDefault;
-    
+
     /** The is package description. */
     private final boolean isPackageDescription;
-    
+
     /** The should be unexposed to ESM. */
     private final Boolean shouldBeUnexposedToESM;
+
+    /** The CJS exported members to re-export in a deconstructed manner */
+    private final List<String> deconstruct;
 
     /**
      * Instantiates a new dirigible module.
@@ -45,14 +49,24 @@ public class DirigibleModule {
      * @param pathDefault the path default
      * @param isPackageDescription the is package description
      * @param shouldBeUnexposedToESM the should be unexposed to ESM
+     * @param deconstruct the CJS exported members to re-export in a deconstructed manner
      */
-    DirigibleModule(String name, String api, String[] versionedPaths, String pathDefault, boolean isPackageDescription, Boolean shouldBeUnexposedToESM) {
+    DirigibleModule(
+            String name,
+            String api,
+            String[] versionedPaths,
+            String pathDefault,
+            boolean isPackageDescription,
+            Boolean shouldBeUnexposedToESM,
+            List<String> deconstruct
+    ) {
         this.name = name;
         this.api = api;
         this.versionedPaths = versionedPaths;
         this.pathDefault = pathDefault;
         this.isPackageDescription = isPackageDescription;
         this.shouldBeUnexposedToESM = shouldBeUnexposedToESM;
+        this.deconstruct = deconstruct;
     }
 
     /**
@@ -107,5 +121,13 @@ public class DirigibleModule {
      */
     public boolean isPackageDescription() {
         return isPackageDescription;
+    }
+
+    /**
+     * Gets the CJS exported members to re-export in a deconstructed manner
+     * @return names of the exported members
+     */
+    public List<String> getDeconstruct() {
+        return deconstruct;
     }
 }

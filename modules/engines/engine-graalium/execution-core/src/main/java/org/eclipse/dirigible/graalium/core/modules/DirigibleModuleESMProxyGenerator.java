@@ -40,6 +40,10 @@ public class DirigibleModuleESMProxyGenerator {
     /** The Constant EXPORT_PATTERN. */
     private static final String EXPORT_PATTERN =
             "export const " + NAME_PLACEHOLDER + " = dirigibleRequire('" + PATH_PLACEHOLDER + "');";
+
+    /** The Constant DECONSTRUCTED_EXPORT_PATTERN. */
+    private static final String DECONSTRUCTED_EXPORT_PATTERN =
+            "export const { " + NAMES_LIST_PLACEHOLDER + " } = dirigibleRequire('" + PATH_PLACEHOLDER + "');";
     
     /** The gson. */
     private final Gson gson = new Gson();
@@ -64,15 +68,11 @@ public class DirigibleModuleESMProxyGenerator {
                 continue;
             }
 
-            String api = module.getApi();
-            String dir = resolvePath(module, apiVersion);
-
-            source.append(EXPORT_PATTERN
-                    .replace(NAME_PLACEHOLDER, api)
-                    .replace(PATH_PLACEHOLDER, dir));
-            source.append(System.lineSeparator());
-            moduleNames.append(api);
-            moduleNames.append(',');
+            if (shouldDeconstructModule(module)) {
+                writeDeconstructedExportedCJSModule(source, module, apiVersion);
+            } else {
+                writeExportedCJSModule(source, module, moduleNames, apiVersion);
+            }
         }
 
         if (moduleNames.length() > 0) {
@@ -82,6 +82,42 @@ public class DirigibleModuleESMProxyGenerator {
         source.append(DEFAULT_EXPORT_PATTERN.replace(NAMES_LIST_PLACEHOLDER, moduleNames.toString()));
         source.append(System.lineSeparator());
         return source.toString();
+    }
+
+    private static boolean shouldDeconstructModule(DirigibleModule module) {
+        List<String> deconstructs = module.getDeconstruct();
+        return deconstructs != null && !deconstructs.isEmpty();
+    }
+
+    private static void writeExportedCJSModule(
+            StringBuilder sourceBuilder,
+            DirigibleModule module,
+            StringBuilder moduleNames,
+            String apiVersion
+    ) {
+        String api = module.getApi();
+        String dir = resolvePath(module, apiVersion);
+
+        sourceBuilder.append(EXPORT_PATTERN
+                .replace(NAME_PLACEHOLDER, api)
+                .replace(PATH_PLACEHOLDER, dir));
+        sourceBuilder.append(System.lineSeparator());
+        moduleNames.append(api);
+        moduleNames.append(',');
+    }
+
+    private static void writeDeconstructedExportedCJSModule(
+            StringBuilder sourceBuilder,
+            DirigibleModule module,
+            String apiVersion
+    ) {
+        List<String> deconstructs = module.getDeconstruct();
+        String dir = resolvePath(module, apiVersion);
+
+        sourceBuilder.append(DECONSTRUCTED_EXPORT_PATTERN
+                .replace(NAMES_LIST_PLACEHOLDER, String.join(", ", deconstructs))
+                .replace(PATH_PLACEHOLDER, dir));
+        sourceBuilder.append(System.lineSeparator());
     }
 
     /**
@@ -102,7 +138,7 @@ public class DirigibleModuleESMProxyGenerator {
      * @param apiVersion the api version
      * @return the string
      */
-    private String resolvePath(DirigibleModule module, String apiVersion) {
+    private static String resolvePath(DirigibleModule module, String apiVersion) {
         if (apiVersion.isEmpty()) {
             return module.getPathDefault();
         }

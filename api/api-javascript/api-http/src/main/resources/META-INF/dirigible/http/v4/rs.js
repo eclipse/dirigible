@@ -576,8 +576,14 @@ var ResourceMappings = exports.ResourceMappings = function(oConfiguration, contr
  * @returns {Resource}
  */
 ResourceMappings.prototype.path = ResourceMappings.prototype.resourcePath = ResourceMappings.prototype.resource = function(sPath, oConfiguration){
-	if(this.resources[sPath] === undefined)
-		this.resources[sPath] = new Resource(sPath, oConfiguration, this.controller, this);
+	if(sPath !== "" && sPath[0] === "/") {
+	    sPath = sPath.substring(1); // transform "/test" into "test"
+	}
+
+	if(this.resources[sPath] === undefined) {
+	    this.resources[sPath] = new Resource(sPath, oConfiguration, this.controller, this);
+	}
+
 	return this.resources[sPath];
 };
 
@@ -792,7 +798,11 @@ function transformPathParamsDeclaredInBraces(pathDefinition) {
 		if(resourceHandler){
 			const ctx = {
 				"pathParameters": {},
-				"queryParameters": {}
+				"queryParameters": {},
+				"response": response,
+				"res": response,
+				"request": request,
+				"req": request
 			};
 			if(matches[0].pathParams){
 				ctx.pathParameters = request.params =  matches[0].pathParams;
@@ -914,8 +924,8 @@ HttpController.prototype.closeResponse = function(){
  * @param {Object|ResourceMappings} [oMappings] configuration object or configuration builder with configuration() getter function
  *
  */
-exports.service = function(oConfig){
-	let config;
+function service(oConfig) {
+    let config;
 	if(oConfig!==undefined){
 		if(typeof oConfig === 'object' || oConfig instanceof ResourceMappings){
 			config = oConfig;
@@ -924,4 +934,6 @@ exports.service = function(oConfig){
 		}
 	}
 	return new HttpController(config);
-};
+}
+
+exports.service = service;

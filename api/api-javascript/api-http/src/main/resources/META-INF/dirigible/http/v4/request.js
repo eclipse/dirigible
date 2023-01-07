@@ -88,9 +88,13 @@ var getText = exports.getText = function () {
     return textData;
 };
 
-exports.getJSON = function () {
-    let text = getText();
-    return JSON.parse(text);
+exports.getJSON = exports.json = function () {
+    try {
+        let text = getText();
+        return JSON.parse(text);
+    } catch(e) {
+        return null;
+    }
 };
 
 exports.getParameter = function (name) {

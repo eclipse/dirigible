@@ -939,6 +939,9 @@ function isDirty(model) {
             noSyntaxValidation: false,
             noSuggestionDiagnostics: false,
             diagnosticCodesToIgnore: [
+                2792, // Cannot find module - for local module imports
+                6196, // declared but never used - class
+                1219, // Experimental support for decorators
                 2307,
                 2304, // Cannot find name 'exports'.(2304)
                 2683, // 'this' implicitly has type 'any' because it does not have a type annotation.(2683)

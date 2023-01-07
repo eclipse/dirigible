@@ -71,7 +71,7 @@ public class GraalJSEngineCreator {
     private static Engine.Builder getDefaultEngineBuilder() {
         return Engine.newBuilder()
                 .allowExperimentalOptions(true)
-                .option("js.ecmascript-version", "2022")
+                .option("js.ecmascript-version", "staging")
                 .option("engine.WarnInterpreterOnly", "false")
                 .option("js.esm-eval-returns-exports", "true")
                 .out(new PrintStream(new GraalJSLogging(sysOutLogger, false), true))
