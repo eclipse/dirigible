@@ -41,7 +41,7 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc(addFilters = false)
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
 @EntityScan("org.eclipse.dirigible.components")
-public class WorkspaceFindEndpointTest {
+public class WorkspaceSearchEndpointTest {
 	
 	@Autowired
     private MockMvc mockMvc;
@@ -55,7 +55,7 @@ public class WorkspaceFindEndpointTest {
 	@BeforeEach
     public void setup() throws Exception {
 		cleanup();
-
+    	
     }
 	
 	@AfterEach
@@ -63,17 +63,8 @@ public class WorkspaceFindEndpointTest {
     }
 	
 	@Test
-	public void findAll() throws Exception {
-		mockMvc.perform(post("/services/v8/ide/workspace-find")
-				.content("test")
-				.with(csrf()))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
-	}
-	
-	@Test
 	public void findInWorkspace() throws Exception {
-		mockMvc.perform(post("/services/v8/ide/workspace-find/workspace1")
+		mockMvc.perform(post("/services/v8/ide/workspace-search/workspace1")
 				.content("test")
 				.with(csrf()))
 			.andDo(print())

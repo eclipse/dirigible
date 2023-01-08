@@ -21,12 +21,18 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
+import org.eclipse.dirigible.repository.api.RepositorySearchException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Workspace's Folder.
  */
 public class Folder implements ICollection {
+	
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(Folder.class);
 
 	/** The internal. */
 	private transient ICollection internal;
@@ -492,17 +498,21 @@ public class Folder implements ICollection {
 	 * @return the list
 	 */
 	public List<File> search(String term) {
-		List<IEntity> entities = this.getRepository().searchText(term);
 		List<File> files = new ArrayList<File>();
-		for (IEntity entity : entities) {
-			if (entity instanceof IResource) {
-				IResource resource = (IResource) entity;
-				if (resource.getPath().startsWith(this.getPath())) {
-					if (resource.exists()) {
-						files.add(new File(resource));
+		try {
+			List<IEntity> entities = this.getRepository().searchText(term);
+			for (IEntity entity : entities) {
+				if (entity instanceof IResource) {
+					IResource resource = (IResource) entity;
+					if (resource.getPath().startsWith(this.getPath())) {
+						if (resource.exists()) {
+							files.add(new File(resource));
+						}
 					}
 				}
 			}
+		} catch (RepositorySearchException | RepositoryReadException e) {
+			logger.warn(e.getMessage(), e);
 		}
 		return files;
 	}
@@ -514,15 +524,20 @@ public class Folder implements ICollection {
 	 * @return the list
 	 */
 	public List<File> find(String pattern) {
-		List<String> entities = this.getRepository().find(this.getPath(), pattern);
 		List<File> files = new ArrayList<File>();
-		for (String entity : entities) {
-			IResource resource = this.getRepository().getResource(entity);
-			if (resource.getPath().startsWith(this.getPath())) {
-				if (resource.exists()) {
-					files.add(new File(resource));
+		try {
+			List<String> entities = this.getRepository().find(this.getPath(), pattern);
+			
+			for (String entity : entities) {
+				IResource resource = this.getRepository().getResource(entity);
+				if (resource.getPath().startsWith(this.getPath())) {
+					if (resource.exists()) {
+						files.add(new File(resource));
+					}
 				}
 			}
+		} catch (RepositorySearchException | RepositoryReadException e) {
+			logger.warn(e.getMessage(), e);
 		}
 		return files;
 	}

@@ -33,51 +33,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspace-find")
-public class WorkspaceFindEndpoint {
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspace-search")
+public class WorkspaceSearchEndpoint {
 	
 	/** The websocket service. */
     @Autowired
     private WorkspaceService workspaceService;
     
-    /**
-	 * Find.
-	 *
-	 * @param pattern the pattern
-	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
-	 * @throws UnsupportedEncodingException the unsupported encoding exception
-	 * @throws DecoderException the decoder exception
-	 */
-	@PostMapping
-	public ResponseEntity<List<FileDescriptor>> find(@Valid @RequestBody String pattern)
-			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
-		if ((pattern == null) || pattern.isEmpty()) {
-			ResponseEntity.ok("No find pattern provided in the request body");
-		}
-
-		List<File> files = workspaceService.find(pattern);
-		return ResponseEntity.ok(workspaceService.renderFileDescriptions(files));
-	}
-	
 	/**
-	 * Find.
+	 * Search.
 	 *
 	 * @param workspace the workspace
-	 * @param pattern the pattern
+	 * @param term the term
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 * @throws UnsupportedEncodingException the unsupported encoding exception
 	 * @throws DecoderException the decoder exception
 	 */
 	@PostMapping("{workspace}")
-	public ResponseEntity<List<FileDescriptor>> find(@PathVariable("workspace") String workspace, @Valid @RequestBody String pattern)
+	public ResponseEntity<List<FileDescriptor>> find(@PathVariable("workspace") String workspace, @Valid @RequestBody String term)
 			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
-		if ((pattern == null) || pattern.isEmpty()) {
-			ResponseEntity.ok("No find pattern provided in the request body");
+		if ((term == null) || term.isEmpty()) {
+			ResponseEntity.ok("No search term provided in the request body");
 		}
 
-		List<File> files = workspaceService.find(workspace, pattern);
+		List<File> files = workspaceService.search(workspace, term);
 		return ResponseEntity.ok(workspaceService.renderFileDescriptions(files));
 	}
 
