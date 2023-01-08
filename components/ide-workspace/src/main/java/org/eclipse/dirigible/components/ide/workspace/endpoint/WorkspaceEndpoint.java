@@ -21,18 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
-import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Folder;
