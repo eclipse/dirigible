@@ -18,8 +18,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Arrays;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,15 +27,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 @WithMockUser
 @ExtendWith(SpringExtension.class)
@@ -89,16 +85,65 @@ public class WorkspaceEndpointTest {
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
 	}
+	
+	@Test
+	public void createGetDeleteProject() throws Exception {
+		mockMvc.perform(post("/services/v8/ide/workspaces/workspace1")
+					.with(csrf()))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(post("/services/v8/ide/workspaces/workspace1/project1")
+				.with(csrf()))
+			.andDo(print())
+			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(get("/services/v8/ide/workspaces/workspace1/project1"))
+			.andDo(print())
+			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1/project1")
+				.with(csrf()))
+			.andDo(print())
+			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1")
+				.with(csrf()))
+			.andDo(print())
+			.andExpect(status().is2xxSuccessful());
+	}
+	
+	@Test
+	public void createGetDeleteFile() throws Exception {
+		mockMvc.perform(post("/services/v8/ide/workspaces/workspace1")
+					.with(csrf()))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(post("/services/v8/ide/workspaces/workspace1/project1")
+				.with(csrf()))
+			.andDo(print())
+			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(post("/services/v8/ide/workspaces/workspace1/project1/file1.txt")
+				.content("test1".getBytes())
+				.contentType(MediaType.APPLICATION_OCTET_STREAM)
+				.with(csrf()))
+			.andDo(print())
+			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(get("/services/v8/ide/workspaces", "workspace1", "project1", "file1.txt")
+				.header("describe", "application/json"))
+			.andDo(print())
+			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1/project1/file1.txt")
+				.with(csrf()))
+			.andDo(print())
+			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1/project1")
+				.with(csrf()))
+			.andDo(print())
+			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1")
+				.with(csrf()))
+			.andDo(print())
+			.andExpect(status().is2xxSuccessful());
+	}
 
 	@SpringBootApplication
 	static class TestConfiguration {
-//	    @Bean
-//	    public FilterRegistrationBean<HiddenHttpMethodFilter> hiddenFilterRegistrationBean() {
-//	        FilterRegistrationBean<HiddenHttpMethodFilter> filterRegistrationBean = new FilterRegistrationBean<>(new HiddenHttpMethodFilter());
-//	
-//	        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
-//	
-//	        return filterRegistrationBean;
-//	    }
 	}
 }
