@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -86,8 +85,8 @@ public class WorkspaceEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PostMapping
-	public ResponseEntity<URI> createWorkspace(@RequestBody String workspace) throws URISyntaxException {
+	@PostMapping("{workspace}")
+	public ResponseEntity<URI> createWorkspace(@PathVariable("workspace") String workspace) throws URISyntaxException {
 		if (workspaceService.existsWorkspace(workspace)) {
 			return new ResponseEntity(HttpStatus.NOT_MODIFIED);
 		}
@@ -106,8 +105,8 @@ public class WorkspaceEndpoint {
 	 * @param workspace the workspace
 	 * @return the response
 	 */
-	@DeleteMapping
-	public ResponseEntity<String> deleteWorkspace(@RequestBody String workspace) {
+	@DeleteMapping("{workspace}")
+	public ResponseEntity<String> deleteWorkspace(@PathVariable("workspace") String workspace) {
 		if (!workspaceService.existsWorkspace(workspace)) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, workspace);
 		}

@@ -77,16 +77,14 @@ public class WorkspaceEndpointTest {
 	
 	@Test
 	public void createGetDeleteWorkspace() throws Exception {
-		mockMvc.perform(post("/services/v8/ide/workspaces")
-					.content("workspace1")
+		mockMvc.perform(post("/services/v8/ide/workspaces/workspace1")
 					.with(csrf()))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
-		mockMvc.perform(get("/services/v8/ide/workspaces", "workspace1"))
+		mockMvc.perform(get("/services/v8/ide/workspaces/workspace1"))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
-		mockMvc.perform(delete("/services/v8/ide/workspaces")
-				.content("workspace1")
+		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1")
 				.with(csrf()))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
@@ -94,13 +92,13 @@ public class WorkspaceEndpointTest {
 
 	@SpringBootApplication
 	static class TestConfiguration {
-	    @Bean
-	    public FilterRegistrationBean<HiddenHttpMethodFilter> hiddenFilterRegistrationBean() {
-	        FilterRegistrationBean<HiddenHttpMethodFilter> filterRegistrationBean = new FilterRegistrationBean<>(new HiddenHttpMethodFilter());
-	
-	        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
-	
-	        return filterRegistrationBean;
-	    }
+//	    @Bean
+//	    public FilterRegistrationBean<HiddenHttpMethodFilter> hiddenFilterRegistrationBean() {
+//	        FilterRegistrationBean<HiddenHttpMethodFilter> filterRegistrationBean = new FilterRegistrationBean<>(new HiddenHttpMethodFilter());
+//	
+//	        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
+//	
+//	        return filterRegistrationBean;
+//	    }
 	}
 }
