@@ -59,6 +59,7 @@
 		<module>api-log</module>
 		<module>api-database</module>
 		<module>api-extensions</module>
+		<module>api-security</module>
 
 		<!-- Applications -->
 		<module>app-all</module>
