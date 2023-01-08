@@ -195,11 +195,21 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 		this.callback = callback;
 	}
 	
+	/**
+	 * Gets the file extension.
+	 *
+	 * @return the file extension
+	 */
 	@Override
 	public String getFileExtension() {
 		return FILE_EXTENSION_EXTENSION;
 	}
 
+	/**
+	 * Gets the artefact type.
+	 *
+	 * @return the artefact type
+	 */
 	@Override
 	public String getArtefactType() {
 		return Extension.ARTEFACT_TYPE;

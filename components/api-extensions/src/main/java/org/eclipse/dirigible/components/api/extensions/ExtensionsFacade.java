@@ -41,6 +41,12 @@ public class ExtensionsFacade implements InitializingBean {
 	/** The extension service. */
 	private final ExtensionService extensionService;
 	
+	/**
+	 * Instantiates a new extensions facade.
+	 *
+	 * @param extensionPointService the extension point service
+	 * @param extensionService the extension service
+	 */
 	@Autowired
 	public ExtensionsFacade(ExtensionPointService extensionPointService, ExtensionService extensionService) {
 		this.extensionPointService = extensionPointService;
@@ -66,10 +72,20 @@ public class ExtensionsFacade implements InitializingBean {
         return INSTANCE;
     }
 	
+	/**
+	 * Gets the extension point service.
+	 *
+	 * @return the extension point service
+	 */
 	public ExtensionPointService getExtensionPointService() {
 		return extensionPointService;
 	}
 	
+	/**
+	 * Gets the extension service.
+	 *
+	 * @return the extension service
+	 */
 	public ExtensionService getExtensionService() {
 		return extensionService;
 	}
@@ -79,7 +95,7 @@ public class ExtensionsFacade implements InitializingBean {
 	 *
 	 * @param extensionPointName the extension point name
 	 * @return the extensions
-	 * @throws ExtensionsException the extensions exception
+	 * @throws Exception the exception
 	 */
 	public static final String[] getExtensions(String extensionPointName) throws Exception {
 		if (logger.isTraceEnabled()) {logger.trace("API - ExtensionsServiceFacade.getExtensions() -> begin");}
@@ -97,8 +113,7 @@ public class ExtensionsFacade implements InitializingBean {
 	 * Gets all the extension points.
 	 *
 	 * @return the extension points
-	 * @throws ExtensionsException
-	 *             the extensions exception
+	 * @throws Exception the exception
 	 */
 	public static final String[] getExtensionPoints() throws Exception {
 		if (logger.isTraceEnabled()) {logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> begin");}

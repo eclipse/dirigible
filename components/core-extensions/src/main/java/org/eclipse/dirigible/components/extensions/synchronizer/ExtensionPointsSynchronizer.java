@@ -193,11 +193,21 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 		this.callback = callback;
 	}
 
+	/**
+	 * Gets the file extension.
+	 *
+	 * @return the file extension
+	 */
 	@Override
 	public String getFileExtension() {
 		return FILE_EXTENSION_EXTENSIONPOINT;
 	}
 
+	/**
+	 * Gets the artefact type.
+	 *
+	 * @return the artefact type
+	 */
 	@Override
 	public String getArtefactType() {
 		return ExtensionPoint.ARTEFACT_TYPE;

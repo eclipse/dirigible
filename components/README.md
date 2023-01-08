@@ -9,11 +9,11 @@ This is stil an experimental feature to replace older frameworks to recent Sprin
 	
 #### Run
 
-	java -jar app-all/target/dirigible-application-all-7.0.0-SNAPSHOT.jar
+	java -jar app-all/target/dirigible-application-all-8.0.0-SNAPSHOT.jar
 
 #### Debug
 
-	java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar app-all/target/dirigible-application-all-7.0.0-SNAPSHOT.jar
+	java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar app-all/target/dirigible-application-all-8.0.0-SNAPSHOT.jar
 	
 #### REST API
 

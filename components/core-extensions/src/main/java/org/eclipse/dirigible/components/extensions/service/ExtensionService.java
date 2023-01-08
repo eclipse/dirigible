@@ -115,11 +115,11 @@ public class ExtensionService implements ArtefactService<Extension> {
     }
     
     /**
-	 * Find by extension point.
-	 *
-	 * @param name the name
-	 * @return the extension
-	 */
+     * Find by extension point.
+     *
+     * @param extensionPoint the extension point
+     * @return the extension
+     */
 	@Transactional(readOnly = true)
 	public List<Extension> findByExtensionPoint(String extensionPoint) {
 		Extension filter = new Extension();
