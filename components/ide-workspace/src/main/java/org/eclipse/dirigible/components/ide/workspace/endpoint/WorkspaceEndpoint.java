@@ -52,6 +52,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * The Class WorkspaceEndpoint.
+ */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces")
 public class WorkspaceEndpoint {
@@ -227,6 +230,7 @@ public class WorkspaceEndpoint {
 	 * @param workspace the workspace
 	 * @param project the project
 	 * @param path the path
+	 * @param headerContentType the header content type
 	 * @return the file
 	 */
 	@GetMapping("{workspace}/{project}/{*path}")
@@ -273,7 +277,8 @@ public class WorkspaceEndpoint {
 	 * @param project the project
 	 * @param path the path
 	 * @param content the content
-	 * @param request the request
+	 * @param headerContentTransferEncoding the header content transfer encoding
+	 * @param headerContentType the header content type
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
@@ -322,6 +327,8 @@ public class WorkspaceEndpoint {
 	 * @param project the project
 	 * @param path the path
 	 * @param content the content
+	 * @param headerContentTransferEncoding the header content transfer encoding
+	 * @param headerContentType the header content type
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
