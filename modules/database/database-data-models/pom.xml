@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-database-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>7.1.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,17 +34,17 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-config</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.0</version>
         </dependency>
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.0</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-api</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.0</version>
     	</dependency>
     	<dependency>
 		    <groupId>org.eclipse.persistence</groupId>
@@ -54,17 +54,17 @@
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-persistence</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.0</version>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.0</version>
         </dependency>
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-security</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.0</version>
     	</dependency>
         <dependency>
 		    <groupId>commons-codec</groupId>
@@ -74,7 +74,7 @@
 		<dependency>
     		<groupId>org.eclipse.dirigible</groupId>
     		<artifactId>dirigible-commons-xml2json</artifactId>
-    		<version>8.0.0-SNAPSHOT</version>
+    		<version>7.1.0</version>
     	</dependency>
     	
     	<!-- Test dependencies -->
@@ -105,19 +105,19 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.0</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-h2</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.0</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-local</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
