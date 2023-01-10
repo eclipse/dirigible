@@ -76,7 +76,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
                 id: 'parameters',
                 type: 'input',
                 label: 'Parameters',
-                required: true,
+                required: false,
                 placeholder: 'Enter parameters...',
                 value: values['parameters'] || ''
             }
