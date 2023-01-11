@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspace-find")
 public class WorkspaceFindEndpoint {
 	
-	/** The websocket service. */
+	/** The workspace service. */
     @Autowired
     private WorkspaceService workspaceService;
     

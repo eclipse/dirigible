@@ -37,23 +37,23 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
 @EntityScan("org.eclipse.dirigible.components")
-public class WorkspacesCoreServiceTest {
+public class WorkspacesServiceTest {
 
 	/** The workspaces core service. */
 	@Autowired
-	private WorkspacesCoreService workspacesCoreService;
+	private WorkspaceService workspaceService;
 
 	/**
 	 * Creates the workspace test.
 	 */
 	@Test
 	public void createWorkspaceTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		assertNotNull(workspace1);
 		assertNotNull(workspace1.getInternal());
 		assertEquals("TestWorkspace1", workspace1.getName());
 		assertEquals("/users/guest/TestWorkspace1", workspace1.getInternal().getPath());
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -63,17 +63,17 @@ public class WorkspacesCoreServiceTest {
 	 */
 	@Test
 	public void getWorkspaceTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		assertNotNull(workspace1);
 		assertNotNull(workspace1.getInternal());
 		assertEquals("TestWorkspace1", workspace1.getName());
 		assertEquals("/users/guest/TestWorkspace1", workspace1.getInternal().getPath());
-		Workspace workspace = workspacesCoreService.getWorkspace("TestWorkspace1");
+		Workspace workspace = workspaceService.getWorkspace("TestWorkspace1");
 		assertNotNull(workspace);
 		assertNotNull(workspace.getInternal());
 		assertEquals("TestWorkspace1", workspace.getName());
 		assertEquals("/users/guest/TestWorkspace1", workspace.getInternal().getPath());
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -83,9 +83,9 @@ public class WorkspacesCoreServiceTest {
 	 */
 	@Test
 	public void getWorkspacesTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
-		Workspace workspace2 = workspacesCoreService.createWorkspace("TestWorkspace2");
-		List<Workspace> workspaces = workspacesCoreService.getWorkspaces();
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
+		Workspace workspace2 = workspaceService.createWorkspace("TestWorkspace2");
+		List<Workspace> workspaces = workspaceService.getWorkspaces();
 		assertNotNull(workspaces);
 		//assertEquals(2, workspaces.size());
 		Workspace worskapce3 = workspaces.get(0);
@@ -95,8 +95,8 @@ public class WorkspacesCoreServiceTest {
 		} else {
 			assertEquals("/users/guest/TestWorkspace2", workspace2.getInternal().getPath());
 		}
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace2");
+		workspaceService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace2");
 	}
 
 	/**
@@ -104,13 +104,13 @@ public class WorkspacesCoreServiceTest {
 	 */
 	@Test
 	public void deleteWorkspaceTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		assertNotNull(workspace1);
 		assertNotNull(workspace1.getInternal());
 		assertEquals("TestWorkspace1", workspace1.getName());
 		assertEquals("/users/guest/TestWorkspace1", workspace1.getInternal().getPath());
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
-		Workspace workspace2 = workspacesCoreService.getWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
+		Workspace workspace2 = workspaceService.getWorkspace("TestWorkspace1");
 		assertNotNull(workspace2);
 		assertNotNull(workspace2.getInternal());
 		assertEquals(false, workspace2.exists());

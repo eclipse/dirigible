@@ -46,14 +46,14 @@ public class WorkspaceTest {
 
 	/** The workspaces core service. */
 	@Autowired
-	private WorkspacesCoreService workspacesCoreService;
+	private WorkspaceService workspaceService;
 
 	/**
 	 * Creates the project test.
 	 */
 	@Test
 	public void createProjectTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		assertNotNull(project1);
 		assertNotNull(project1.getInternal());
@@ -61,7 +61,7 @@ public class WorkspaceTest {
 		assertEquals("/users/guest/TestWorkspace1/Project1", project1.getInternal().getPath());
 
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void getProjectTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		assertNotNull(project1);
 		assertNotNull(project1.getInternal());
@@ -85,7 +85,7 @@ public class WorkspaceTest {
 		assertEquals("/users/guest/TestWorkspace1/Project1", project1_1.getInternal().getPath());
 
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void getProjectsTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Project project2 = workspace1.createProject("Project2");
 		assertNotNull(project1);
@@ -116,7 +116,7 @@ public class WorkspaceTest {
 
 		workspace1.deleteProject("Project1");
 		workspace1.deleteProject("Project2");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void deleteProjectTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		assertNotNull(project1);
 		assertNotNull(project1.getInternal());
@@ -137,7 +137,7 @@ public class WorkspaceTest {
 		assertNotNull(project2.getInternal());
 		assertFalse(project2.exists());
 
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void copyProjectTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1");
 		assertNotNull(project1);
@@ -183,7 +183,7 @@ public class WorkspaceTest {
 
 		workspace1.deleteProject("Project1");
 		workspace1.deleteProject("Project2");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void moveProjectTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1");
 		assertNotNull(project1);
@@ -226,7 +226,7 @@ public class WorkspaceTest {
 		assertTrue(folder1_2.exists());
 
 		workspace1.deleteProject("Project2");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void createFolderTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1");
 		assertNotNull(folder1);
@@ -244,7 +244,7 @@ public class WorkspaceTest {
 
 		project1.deleteFolder("Folder1");
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -254,7 +254,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void getFolderTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1");
 		assertNotNull(folder1);
@@ -270,7 +270,7 @@ public class WorkspaceTest {
 
 		project1.deleteFolder("Folder1");
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -280,7 +280,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void getFoldersTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1");
 		Folder folder2 = project1.createFolder("Folder2");
@@ -303,7 +303,7 @@ public class WorkspaceTest {
 		project1.deleteFolder("Folder1");
 		project1.deleteFolder("Folder2");
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -311,7 +311,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void deleteFolderTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1");
 		assertNotNull(folder1);
@@ -326,7 +326,7 @@ public class WorkspaceTest {
 		assertFalse(folder2.exists());
 
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -334,7 +334,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void createFileTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		File file1 = project1.createFile("File1.txt", "test".getBytes());
 		assertNotNull(file1);
@@ -344,7 +344,7 @@ public class WorkspaceTest {
 
 		project1.deleteFile("File1.txt");
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -354,7 +354,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void getFileTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		File file1 = project1.createFile("File1.txt", "test".getBytes());
 		assertNotNull(file1);
@@ -371,7 +371,7 @@ public class WorkspaceTest {
 
 		project1.deleteFile("File1.txt");
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -381,7 +381,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void getFilesTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		File file1 = project1.createFile("File1.txt", "test".getBytes());
 		File file2 = project1.createFile("File2.txt", "test".getBytes());
@@ -404,7 +404,7 @@ public class WorkspaceTest {
 		project1.deleteFile("File1.txt");
 		project1.deleteFile("File2.txt");
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -412,7 +412,7 @@ public class WorkspaceTest {
 	 */
 	@Test
 	public void deleteFileTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		File file1 = project1.createFile("File1.txt", "test".getBytes());
 		assertNotNull(file1);
@@ -427,7 +427,7 @@ public class WorkspaceTest {
 		assertFalse(file2.exists());
 
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 	
 	@SpringBootApplication

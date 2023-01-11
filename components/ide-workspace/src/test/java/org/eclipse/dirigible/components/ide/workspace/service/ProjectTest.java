@@ -43,14 +43,14 @@ public class ProjectTest {
 
 	/** The workspaces core service. */
 	@Autowired
-	private WorkspacesCoreService workspacesCoreService;
+	private WorkspaceService workspaceService;
 
 	/**
 	 * Creates the folder test.
 	 */
 	@Test
 	public void createFolderTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1");
 		assertNotNull(folder1);
@@ -59,7 +59,7 @@ public class ProjectTest {
 		assertEquals("/users/guest/TestWorkspace1/Project1/Folder1", folder1.getInternal().getPath());
 		project1.deleteFolder("Folder1");
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class ProjectTest {
 	 */
 	@Test
 	public void createFolderDeepTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1/Folder2/Folder3");
 		assertNotNull(folder1);
@@ -76,7 +76,7 @@ public class ProjectTest {
 		assertEquals("/users/guest/TestWorkspace1/Project1/Folder1/Folder2/Folder3", folder1.getInternal().getPath());
 		project1.deleteFolder("Folder1");
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class ProjectTest {
 	 */
 	@Test
 	public void getFolderTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1");
 		assertNotNull(folder1);
@@ -102,7 +102,7 @@ public class ProjectTest {
 
 		project1.deleteFolder("Folder1");
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class ProjectTest {
 	 */
 	@Test
 	public void getFoldersTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1");
 		Folder folder2 = project1.createFolder("Folder2");
@@ -131,7 +131,7 @@ public class ProjectTest {
 		project1.deleteFolder("Folder1");
 		project1.deleteFolder("Folder2");
 		workspace1.deleteProject("Project1");
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class ProjectTest {
 	 */
 	@Test
 	public void deleteFolderTest() {
-		Workspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		Workspace workspace1 = workspaceService.createWorkspace("TestWorkspace1");
 		Project project1 = workspace1.createProject("Project1");
 		Folder folder1 = project1.createFolder("Folder1");
 		assertNotNull(folder1);
@@ -151,7 +151,7 @@ public class ProjectTest {
 		assertNotNull(folder2);
 		assertNotNull(folder2.getInternal());
 		assertEquals(false, folder2.exists());
-		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 	
 	@SpringBootApplication

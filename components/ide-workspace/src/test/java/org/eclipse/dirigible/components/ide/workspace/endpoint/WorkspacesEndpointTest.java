@@ -11,6 +11,10 @@
  */
 package org.eclipse.dirigible.components.ide.workspace.endpoint;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -18,6 +22,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.eclipse.dirigible.components.ide.workspace.domain.File;
+import org.eclipse.dirigible.components.ide.workspace.domain.Project;
+import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
+import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +49,10 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc(addFilters = false)
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
 @EntityScan("org.eclipse.dirigible.components")
-public class WorkspaceEndpointTest {
+public class WorkspacesEndpointTest {
+	
+	@Autowired
+	private WorkspaceService workspaceService; 
 	
 	@Autowired
     private MockMvc mockMvc;
@@ -77,6 +88,10 @@ public class WorkspaceEndpointTest {
 					.with(csrf()))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
+		Workspace workspace = workspaceService.getWorkspace("workspace1");
+		assertNotNull(workspace);
+		assertEquals("workspace1", workspace.getName());
+		assertTrue(workspace.exists());
 		mockMvc.perform(get("/services/v8/ide/workspaces/workspace1"))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
@@ -96,6 +111,12 @@ public class WorkspaceEndpointTest {
 				.with(csrf()))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
+		Workspace workspace = workspaceService.getWorkspace("workspace1");
+		assertNotNull(workspace);
+		Project project = workspace.getProject("project1");
+		assertNotNull(project);
+		assertEquals("project1", project.getName());
+		assertTrue(project.exists());
 		mockMvc.perform(get("/services/v8/ide/workspaces/workspace1/project1"))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
@@ -103,6 +124,9 @@ public class WorkspaceEndpointTest {
 				.with(csrf()))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
+		project = workspace.getProject("project1");
+		assertNotNull(project);
+		assertFalse(project.exists());
 		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1")
 				.with(csrf()))
 			.andDo(print())
@@ -125,6 +149,14 @@ public class WorkspaceEndpointTest {
 				.with(csrf()))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
+		Workspace workspace = workspaceService.getWorkspace("workspace1");
+		assertNotNull(workspace);
+		Project project = workspace.getProject("project1");
+		assertNotNull(project);
+		File file = project.getFile("file1.txt");
+		assertNotNull(file);
+		assertEquals("file1.txt", file.getName());
+		assertTrue(file.exists());
 		mockMvc.perform(get("/services/v8/ide/workspaces", "workspace1", "project1", "file1.txt")
 				.header("describe", "application/json"))
 			.andDo(print())
@@ -133,6 +165,9 @@ public class WorkspaceEndpointTest {
 				.with(csrf()))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
+		file = project.getFile("file1.txt");
+		assertNotNull(file);
+		assertFalse(file.exists());
 		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1/project1")
 				.with(csrf()))
 			.andDo(print())
