@@ -69,7 +69,6 @@ public class WorkspaceEndpoint {
     @Autowired
     private PublisherService publisherService;
     
-    
     /**
      * Copy.
      *
