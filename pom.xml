@@ -801,7 +801,7 @@
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<velocity.version>2.3</velocity.version>
-		<wikitext.version>3.0.45.202211090110</wikitext.version>
+		<wikitext.version>3.0.46.202301111837</wikitext.version>
 		<flexmark.version>0.64.0</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
 		<qldb.sdk.version>1.12.380</qldb.sdk.version>
