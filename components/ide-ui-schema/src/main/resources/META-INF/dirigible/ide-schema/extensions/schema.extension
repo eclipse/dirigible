@@ -1,0 +1,5 @@
+{
+    "module": "ide-schema/services/schema-editor.js",
+    "extensionPoint": "ide-editor",
+    "description": "Database Schema Modeler"
+}

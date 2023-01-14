@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Resources - Theme - Quartz - Dark</name>
+	<name>Components - Resources - Theme - Quartz - Dark</name>
 	<artifactId>dirigible-components-resources-theme-quartz-dark</artifactId>
     <packaging>jar</packaging>
 

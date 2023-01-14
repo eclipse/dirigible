@@ -1,0 +1,1 @@
+{"expression":"0/30 * * * * ?","group":"ide-documents-security","handler":"ide-documents/security/synchronize.js","description":"Security Synchronize Job"}

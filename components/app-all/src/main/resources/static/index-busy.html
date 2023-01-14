@@ -49,7 +49,7 @@
 
                     $http({
                         method: 'GET',
-                        url: '/services/v4/healthcheck'
+                        url: '/services/v8/healthcheck'
                     }).then(function(healthStatus){
                         if (healthStatus.data.status === "Ready") {
                             window.location='/home';

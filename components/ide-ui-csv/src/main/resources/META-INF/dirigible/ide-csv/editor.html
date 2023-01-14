@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+
+        <!-- AngularJS -->
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+
+        <!-- Font Awesome -->
+        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link rel="stylesheet" href="/services/v8/js/theme/resources.js/bootstrap.min.css">
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <!-- MessageHub -->
+        <script type="text/javascript" src="/services/v8/web/resources-core/ui/message-hub.js"></script>
+
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v8/js/theme/resources.js/ide.css" />
+
+        <!-- Project-specific stuff -->
+        <script type="text/javascript" src="js/papaparse.min.js"></script>
+        <script type="text/javascript" src="js/ag-grid-community.min.noStyle.js"></script>
+        <script type="text/javascript" src="js/editor.js"></script>
+        <link type="text/css" rel="stylesheet" href="/services/v8/js/theme/resources.js/csv.css" />
+        <link type="text/css" rel="stylesheet" href="/services/v8/js/theme/resources.js/ag-grid.min.css" />
+        <link type="text/css" rel="stylesheet" href="/services/v8/js/theme/resources.js/ag-theme-alpine.min.css" />
+
+    </head>
+
+    <body ng-app="csv-editor" ng-controller="CsvViewController as cvc" class="view csv-editor-body"
+        ng-mousedown="handleClick($event)" oncontextmenu="return false" ng-keydown="keyDownFunc($event)">
+
+        <div class="quick-actions-bar">
+            <div class="pull-left btn-actionbar">Data rows: {{rowsCount}}</div>
+            <input class="form-control" type="text" placeholder="Search..." ng-keyup="searchCsv()"
+                ng-model="searchInput">
+            <div class="btn-group pull-right" role="group" aria-label="toolbar">
+                <button type="button" class="btn btn-default btn-actionbar btn-icon-left" title="Save"
+                    ng-click="save()"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-default btn-actionbar btn-icon-left" title="Export"
+                    ng-click="downloadCsv()"><i class="fa fa-download"></i> Export</button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-actionbar" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-left-manual">
+                        <li class="dropdown-item" ng-click="hasHeader(true)" ng-hide="papaConfig.header">Enable Header
+                        </li>
+                        <li class="dropdown-item" ng-click="hasHeader(false)" ng-show="papaConfig.header">Disable Header
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div ag-grid="gridOptions" class="ag-grid-editor ag-theme-alpine">
+        </div>
+
+        <!-- Context menu -->
+        <ul class="dropdown-menu" ng-style="menuStyle">
+            <span ng-show="menuContext.viewport">
+                <li class="dropdown-item" ng-click="addRow()">Add Row</li>
+            </span>
+            <span ng-show="menuContext.row">
+                <li class="dropdown-item" ng-click="addRowAbove()">Add Row Above</li>
+                <li class="dropdown-item" ng-click="addRowBelow()">Add Row Below</li>
+                <li class="divider"></li>
+                <li class="dropdown-item" ng-click="deleteRow()">Delete Row(s)</li>
+            </span>
+            <span ng-show="menuContext.column">
+                <li class="dropdown-item" ng-click="addColumn()">Add Column</li>
+                <li class="dropdown-item" ng-click="editColumn()">Edit Column</li>
+                <li class="divider"></li>
+                <li class="dropdown-item" ng-click="deleteColumn()">Delete Column</li>
+            </span>
+        </ul>
+
+    </body>
+
+</html>

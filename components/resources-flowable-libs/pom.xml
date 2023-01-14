@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Resources - Flowable Libraries</name>
+	<name>Components - Resources - Flowable Libraries</name>
 	<artifactId>dirigible-components-resources-flowable-libs</artifactId>
     <packaging>jar</packaging>
 

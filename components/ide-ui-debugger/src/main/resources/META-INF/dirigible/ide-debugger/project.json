@@ -1,0 +1,8 @@
+{
+	"guid": "ide-debugger",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/ide-debugger.git"
+	}
+}

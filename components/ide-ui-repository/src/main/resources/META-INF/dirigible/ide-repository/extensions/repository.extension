@@ -1,0 +1,5 @@
+{
+    "module": "ide-repository/services/repository-view.js",
+    "extensionPoint": "ide-view",
+    "description": "Repository View"
+}

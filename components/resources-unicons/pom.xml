@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Resources - Unicons</name>
+	<name>Components - Resources - Unicons</name>
 	<artifactId>dirigible-components-resources-unicons</artifactId>
     <packaging>jar</packaging>
 

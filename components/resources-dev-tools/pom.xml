@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Resources - Dev Tools</name>
+	<name>Components - Resources - Dev Tools</name>
 	<artifactId>dirigible-components-resources-dev-tools</artifactId>
     <packaging>jar</packaging>
 

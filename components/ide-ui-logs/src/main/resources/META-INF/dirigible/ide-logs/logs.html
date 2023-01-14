@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="logs" ng-controller="LogsController as controller">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Fake favicon to silent console errors and not waste a get request -->
+
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+
+        <!-- Title directive -->
+        <title dg-view-title></title>
+
+        <!-- View data -->
+        <script type="text/javascript" src="services/logs-view.js"></script>
+
+        <script type="text/javascript" src="/services/v8/js/resources-core/services/loader.js?id=ide-view-js"></script>
+
+        <script type="text/javascript" src="js/logs.js"></script>
+
+        <link type="text/css" rel="stylesheet" href="/services/v8/js/resources-core/services/loader.js?id=ide-view-css" />
+        <theme></theme>
+    </head>
+
+    <body class="dg-vbox">
+        <fd-toolbar has-title="true" dg-type="solid">
+            <span>Log File</span>
+            <fd-combobox-input dropdown-items="log.logsList" compact="true" ng-model="log.selectedLog"
+                ng-change="logChanged()" dg-placeholder="Select log file..." dg-aria-label="Log files">
+            </fd-combobox-input>
+        </fd-toolbar>
+        <fd-textarea class="dg-stretch">{{ logContent }}
+        </fd-textarea>
+    </body>
+
+</html>

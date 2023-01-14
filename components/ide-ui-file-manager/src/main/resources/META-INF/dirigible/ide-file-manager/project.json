@@ -1,0 +1,8 @@
+{
+    "guid": "ide-file-manager",
+    "repository": {
+        "type": "git",
+        "branch": "master",
+        "url": "https://github.com/dirigiblelabs/ide-file-manager.git"
+    }
+}

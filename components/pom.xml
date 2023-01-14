@@ -44,6 +44,75 @@
 		<!-- IDE -->
 		<module>ide-workspace</module>
 		
+		<!-- IDE UI -->
+		<module>ide-ui-about</module>
+		<module>ide-ui-bpm</module>
+		<module>ide-ui-bpm-menu</module>
+		<module>ide-ui-bpm-workspace</module>
+		<module>ide-ui-branding</module>
+		<module>ide-ui-console</module>
+		<module>ide-ui-csv</module>
+		<module>ide-ui-csvim</module>
+		<module>ide-ui-data-structures</module>
+		<module>ide-ui-database</module>
+		<module>ide-ui-database-menu</module>
+		<module>ide-ui-databases</module>
+		<module>ide-ui-debugger</module>
+		<module>ide-ui-deploy-manager</module>
+		<module>ide-ui-documents</module>
+		<module>ide-ui-documents-ext-content-type-ms</module>
+		<module>ide-ui-entity</module>
+		<module>ide-ui-entity-menu</module>
+		<module>ide-ui-extensions</module>
+		<module>ide-ui-extensions-menu</module>
+		<module>ide-ui-file-manager</module>
+		<module>ide-ui-form-builder</module>
+		<module>ide-ui-form-builder-menu</module>
+		<module>ide-ui-generate-service</module>
+		<module>ide-ui-git</module>
+		<module>ide-ui-git-branches</module>
+		<module>ide-ui-git-projects</module>
+		<module>ide-ui-git-service</module>
+		<module>ide-ui-image</module>
+		<module>ide-ui-import</module>
+		<module>ide-ui-jobs</module>
+		<module>ide-ui-jobs-menu</module>
+		<module>ide-ui-listeners</module>
+		<module>ide-ui-listeners-menu</module>
+		<module>ide-ui-logs</module>
+		<module>ide-ui-monaco</module>
+		<module>ide-ui-monaco-extensions</module>
+		<module>ide-ui-operations</module>
+		<module>ide-ui-plugins</module>
+		<module>ide-ui-preview</module>
+		<module>ide-ui-problems</module>
+		<module>ide-ui-projects</module>
+		<module>ide-ui-properties</module>
+		<module>ide-ui-publisher-service</module>
+		<module>ide-ui-registry</module>
+		<module>ide-ui-registry-service</module>
+		<module>ide-ui-repository</module>
+		<module>ide-ui-repository-service</module>
+		<module>ide-ui-result</module>
+		<module>ide-ui-schema</module>
+		<module>ide-ui-schema-menu</module>
+		<module>ide-ui-search</module>
+		<module>ide-ui-security</module>
+		<module>ide-ui-security-menu</module>
+		<module>ide-ui-sql</module>
+		<module>ide-ui-staging</module>
+		<module>ide-ui-swagger</module>
+		<module>ide-ui-template-service</module>
+		<module>ide-ui-terminal</module>
+		<module>ide-ui-transport-service</module>
+		<module>ide-ui-websockets</module>
+		<module>ide-ui-websockets-menu</module>
+		<module>ide-ui-welcome</module>
+		<module>ide-ui-workbench</module>
+		<module>ide-ui-workspace</module>
+		<module>ide-ui-workspace-menu</module>
+		<module>ide-ui-workspace-service</module>
+		
 		<!-- CMS -->
 		<module>cms-internal</module>
 		
@@ -106,6 +175,14 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>
+						cxf-rt-rs-service-description-swagger
+					</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Spring Boot -->
@@ -113,6 +190,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${spring.boot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-to-slf4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
@@ -211,6 +294,12 @@
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
 					<artifactId>dirigible-commons-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>
+						cxf-rt-rs-service-description-swagger
+					</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

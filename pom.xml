@@ -593,25 +593,6 @@
 			<version>${commons.lang3}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-rs-service-description-swagger</artifactId>
-			<version>${cxf.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.jboss.spec.javax.rmi</groupId>
-					<artifactId>jboss-rmi-api_1.0_spec</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jackson-databind</artifactId>
-					<groupId>com.fasterxml.jackson.core</groupId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.google.guava</groupId>
-					<artifactId>guava</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>${jackson.databind.version}</version>
@@ -784,7 +765,7 @@
 		<jackson.databind.version>2.14.1</jackson.databind.version>
 
 		<spring.boot.version>2.7.5</spring.boot.version>
-		<spring.boot.slf4j.version>2.0.6</spring.boot.slf4j.version>
+		<spring.boot.slf4j.version>1.7.36</spring.boot.slf4j.version>
 		<spring.boot.logback.version>1.2.11</spring.boot.logback.version>
 		<spring-context-support.version>5.3.24</spring-context-support.version>
 		<spring-security.version>5.8.0</spring-security.version>

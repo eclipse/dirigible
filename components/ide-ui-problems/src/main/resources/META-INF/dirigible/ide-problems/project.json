@@ -1,0 +1,8 @@
+{
+    "guid": "ide-problems",
+    "repository": {
+        "type": "git",
+        "branch": "master",
+        "url": "https://github.com/dirigiblelabs/ide-problems.git"
+    }
+}

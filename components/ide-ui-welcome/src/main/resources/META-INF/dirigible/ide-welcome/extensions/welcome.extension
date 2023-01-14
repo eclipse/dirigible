@@ -1,0 +1,5 @@
+{
+    "module": "ide-welcome/services/welcome-view.js",
+    "extensionPoint": "ide-view",
+    "description": "Welcome page"
+}

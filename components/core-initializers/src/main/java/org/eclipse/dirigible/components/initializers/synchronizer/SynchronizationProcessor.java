@@ -197,6 +197,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
 			for (Definition definition : definitions.get(synchronizer).values()) {
 				try {
+					if (definition.getContent() == null) {
+						String error = String.format("Content of %s has not been loaded correctly", definition.getLocation());
+						logger.error(error);
+						addError(error);
+						continue;
+					}
 					List loaded = synchronizer.load(definition.getLocation(), definition.getContent());
 					artefacts.addAll(loaded);
 				} catch (Exception e) {
@@ -268,6 +274,10 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		}
 		// load the content to calculate the checksum
 		byte[] content = Files.readAllBytes(file);
+		if (content == null) {
+			logger.error("Reading file {} returns null content", file.toString());
+			return;
+		}
 		Definition definition = new Definition(location, FilenameUtils.getBaseName(file.getFileName().toString()), type, content);
 		// check whether this artefact has been processed in the past already
 		Definition maybe = definitionService.findByKey(definition.getKey());
@@ -280,12 +290,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 				// update the artefact with the new checksum and status
 				definitionService.save(maybe);
 				// added to artefacts for processing
-				definitions.get(synchronizer).put(maybe.getKey(), maybe);
+				definitions.get(synchronizer).put(definition.getKey(), definition);
 			} else if (maybe.getState().equals(ArtefactLifecycle.CREATED.toString())
 					|| maybe.getState().equals(ArtefactLifecycle.MODIFIED.toString())) {
 				// pending from a previous run, add again for processing
-				if (definitions.get(synchronizer).get(maybe.getKey()) == null) {
-					definitions.get(synchronizer).put(maybe.getKey(), maybe);
+				if (definitions.get(synchronizer).get(definition.getKey()) == null) {
+					definitions.get(synchronizer).put(definition.getKey(), definition);
 				}
 			} else if (maybe.getState().equals(ArtefactLifecycle.FAILED.toString())) {
 				// report the erronous state

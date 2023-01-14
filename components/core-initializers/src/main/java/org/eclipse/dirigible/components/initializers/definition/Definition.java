@@ -56,20 +56,34 @@ public class Definition extends Artefact {
 	@Expose
     protected String message;
 	
+	/** The content. */
 	@Transient
 	private transient byte[] content;
 
+	/**
+	 * Instantiates a new definition.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param type the type
+	 * @param content the content
+	 */
 	public Definition(String location, String name, String type, byte[] content) {
 		super(location, name, type, null, null);
 		this.content = content;
 		updateChecksum(content);
 	}
 	
+	/**
+	 * Instantiates a new definition.
+	 */
 	public Definition() {
 		super();
 	}
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return the id
 	 */
 	public Long getId() {
@@ -77,6 +91,8 @@ public class Definition extends Artefact {
 	}
 
 	/**
+	 * Sets the id.
+	 *
 	 * @param id the id to set
 	 */
 	public void setId(Long id) {
@@ -119,10 +135,20 @@ public class Definition extends Artefact {
 		this.state = state;
 	}
 	
+	/**
+	 * Gets the message.
+	 *
+	 * @return the message
+	 */
 	public String getMessage() {
 		return message;
 	}
 	
+	/**
+	 * Sets the message.
+	 *
+	 * @param message the new message
+	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}
@@ -145,12 +171,28 @@ public class Definition extends Artefact {
 	}
 	
 	/**
+	 * Gets the content.
+	 *
 	 * @return the content
 	 */
 	public byte[] getContent() {
 		return content;
 	}
+	
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the new content
+	 */
+	public void setContent(byte[] content) {
+		this.content = content;
+	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "Definition [id=" + id + ", location=" + location + ", name=" + name + ", description=" + description

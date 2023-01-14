@@ -45,7 +45,7 @@ public class SecurityFilter implements Filter {
     /**
      * The Constant SKIP_PATH_ANGULAR_ARIA.
      */
-    private static final String SKIP_PATH_ANGULAR_ARIA = "/js/resources-core/services/angular-aria.min.js.map";
+    private static final String SKIP_PATH_ANGULAR_ARIA = "/services/v8/js/resources-core/services/angular-aria.min.js.map";
 
     /**
      * The Constant PATH_WEB_RESOURCES.
@@ -171,7 +171,7 @@ public class SecurityFilter implements Filter {
             }
         }
 
-        if (((HttpServletRequest) request).getPathInfo().equals(SKIP_PATH_ANGULAR_ARIA)) {
+        if (SKIP_PATH_ANGULAR_ARIA.equals(((HttpServletRequest) request).getServletPath())) {
             return;
         }
 

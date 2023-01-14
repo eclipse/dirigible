@@ -1,0 +1,8 @@
+{
+	"guid": "ide-extensions",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/ide-extensions.git"
+	}
+}
