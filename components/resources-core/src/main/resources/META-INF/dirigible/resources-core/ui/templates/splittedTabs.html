@@ -1,0 +1,26 @@
+<div class="dg-splitted-tabs">
+    <split direction="{{direction}}" ng-transclude>
+        <split-pane ng-repeat="pane in panes" size="50" min-size="100" ng-transclude>
+            <splitted-tabs ng-if="!!pane.panes" direction="pane.direction" panes="pane.panes" focused-pane="focusedPane"
+                remove-tab="onRemoveTab(pane)" split-tabs="onSplitTabs(direction, pane)" ng-transclude>
+            </splitted-tabs>
+            <tabs ng-if="!!pane.tabs" selected-pane="pane.selectedTab" remove-tab="onRemoveTab(pane)" closable="true"
+                focused="isFocused(pane)" hide-tabs="hideTabs">
+                <buttons ng-if="canSplit(pane)" class="dg-split-pane-buttons">
+                    <button class="fd-button fd-button--compact fd-button--transparent"
+                        ng-click="splitVertically(pane)">
+                        <i class="sap-icon--screen-split-two" ng-style="{transform: 'rotate(90deg)'}"></i>
+                    </button>
+                    <button class="fd-button fd-button--compact fd-button--transparent"
+                        ng-click="splitHorizontally(pane)">
+                        <i class="sap-icon--screen-split-two"></i>
+                    </button>
+                </buttons>
+                <panes class="dg-panes">
+                    <tab-pane ng-repeat="tab in pane.tabs" tab="tab">
+                    </tab-pane>
+                </panes>
+            </tabs>
+        </split-pane>
+    </split>
+</div>

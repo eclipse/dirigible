@@ -96,7 +96,7 @@ class OpenAPIEndpointTest {
                         "\"title\":\"Eclipse Dirigible - Applications REST Services API\"," +
                         "\"contact\":{\"email\":\"dirigible-dev@eclipse.org\"},\"license\":{\"name\":\"Eclipse Public" +
                         " License - v 2.0\",\"url\":\"https://www.eclipse.org/legal/epl-v20.html\"}}," +
-                        "\"basePath\":\"/services/v4\",\"tags\":[],\"schemes\":[\"http\"]," +
+                        "\"basePath\":\"/services/v8\",\"tags\":[],\"schemes\":[\"http\"]," +
                         "\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"security\":[]," +
                         "\"paths\":{\"/healthcheck\":{\"get\":{\"description\":\"Returns dirigible status\"," +
                         "\"operationId\":\"getHealthcheck\",\"produces\":[\"application/json\",\"application/xml\"," +

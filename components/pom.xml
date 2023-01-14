@@ -60,6 +60,17 @@
 		<module>api-database</module>
 		<module>api-extensions</module>
 		<module>api-security</module>
+		
+		<!-- Resources -->
+		<module>resources-core</module>
+		<module>resources-dev-tools</module>
+		<module>resources-flowable-libs</module>
+		<module>resources-mxgraph</module>
+		<module>resources-resources</module>
+		<module>resources-theme-quartz-dark</module>
+		<module>resources-theme-quartz-light</module>
+		<module>resources-themes</module>
+		<module>resources-unicons</module>
 
 		<!-- Applications -->
 		<module>app-all</module>

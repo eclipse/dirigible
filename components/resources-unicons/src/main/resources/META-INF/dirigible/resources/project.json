@@ -1,0 +1,8 @@
+{
+    "guid": "resources-unicons",
+    "repository": {
+        "type": "git",
+        "branch": "main",
+        "url": "https://github.com/dirigiblelabs/resources-unicons.git"
+    }
+}

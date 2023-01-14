@@ -1,0 +1,48 @@
+<div class="dg-main-header">
+    <fd-tool-header has-menu="true">
+        <div fd-tool-header-group>
+            <div class="dg-hamburger-menu" fd-tool-header-element header-hamburger-menu menu-handler="menuClick"
+                menu-list="menu"></div>
+            <a fd-tool-header-element class="dg-header-logo" href="{{ branding.brandUrl }}">
+                <img ng-cloak fd-tool-header-logo ng-src="{{ branding.logo }}" alt="" />
+            </a>
+            <a fd-tool-header-element href="{{ branding.brandUrl }}" style="text-decoration: none">
+                <h5 fd-title header-size="h5" fd-tool-header--title>{{ branding.brand }}</h5>
+            </a>
+            <div class="dg-menubar" fd-tool-header-group header-menu menu-handler="menuClick" menu-list="menu"></div>
+        </div>
+        <div fd-tool-header-group>
+            <div fd-tool-header-element class="dg-backdrop-element">
+                <fd-popover dg-align="right" close-innerclick="true">
+                    <fd-popover-control>
+                        <fd-button compact="true" dg-label="Theme" dg-type="transparent" is-menu="true"
+                            fd-tool-header-button>
+                        </fd-button>
+                    </fd-popover-control>
+                    <fd-popover-body no-arrow="true" dg-align="right">
+                        <fd-menu aria-label="theme menu">
+                            <fd-menu-item title="{{ theme.name }}" ng-repeat="theme in themes"
+                                icon-before="{{ theme.id === currentTheme.id ? 'sap-icon--accept' : 'none' }}"
+                                ng-click="setTheme(theme.id, theme.name)"></fd-menu-item>
+                            <fd-menu-separator></fd-menu-separator>
+                            <fd-menu-item title="Reset" icon-before="sap-icon--reset" ng-click="resetTheme()">
+                            </fd-menu-item>
+                        </fd-menu>
+                    </fd-popover-body>
+                </fd-popover>
+                <fd-popover dg-align="right" close-innerclick="true">
+                    <fd-popover-control>
+                        <fd-button compact="true" dg-label="{{ user.name }}" dg-type="transparent" is-menu="true"
+                            fd-tool-header-button>
+                        </fd-button>
+                    </fd-popover-control>
+                    <fd-popover-body no-arrow="true" dg-align="right" can-scroll="false">
+                        <fd-menu aria-label="user menu">
+                            <fd-menu-item title="Logout" ng-click="logout()"></fd-menu-item>
+                        </fd-menu>
+                    </fd-popover-body>
+                </fd-popover>
+            </div>
+        </div>
+    </fd-tool-header>
+</div>
