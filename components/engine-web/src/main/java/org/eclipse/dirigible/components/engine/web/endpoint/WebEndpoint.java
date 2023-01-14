@@ -11,13 +11,12 @@
  */
 package org.eclipse.dirigible.components.engine.web.endpoint;
 
-import javax.ws.rs.core.Response;
-
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.web.service.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +53,7 @@ public class WebEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@GetMapping("/{*path}")
-	public Response get(
+	public ResponseEntity get(
 			@PathVariable("path") String path
 	) {
 		return webService.getResource(path);

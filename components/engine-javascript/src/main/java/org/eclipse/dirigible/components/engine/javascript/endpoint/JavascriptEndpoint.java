@@ -15,10 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -27,6 +23,8 @@ import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -78,7 +76,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@GetMapping(HTTP_PATH_MATCHER)
-	public Response get(
+	public ResponseEntity get(
 			@PathVariable("projectName") String projectName,
 			@PathVariable("projectFilePath") String projectFilePath,
 			@RequestParam("debug") Optional<String> debug
@@ -95,10 +93,10 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@PostMapping(HTTP_PATH_MATCHER)
-	public Response post(
-			@PathParam("projectName") String projectName,
-			@PathParam("projectFilePath") String projectFilePath,
-			@QueryParam("debug") String debug
+	public ResponseEntity post(
+			@PathVariable("projectName") String projectName,
+			@PathVariable("projectFilePath") String projectFilePath,
+			@RequestParam("debug") String debug
 	) {
 		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
@@ -112,10 +110,10 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@PutMapping(HTTP_PATH_MATCHER)
-	public Response put(
-			@PathParam("projectName") String projectName,
-			@PathParam("projectFilePath") String projectFilePath,
-			@QueryParam("debug") String debug
+	public ResponseEntity put(
+			@PathVariable("projectName") String projectName,
+			@PathVariable("projectFilePath") String projectFilePath,
+			@RequestParam("debug") String debug
 	) {
 		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
@@ -129,10 +127,10 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@PatchMapping(HTTP_PATH_MATCHER)
-	public Response patch(
-			@PathParam("projectName") String projectName,
-			@PathParam("projectFilePath") String projectFilePath,
-			@QueryParam("debug") String debug
+	public ResponseEntity patch(
+			@PathVariable("projectName") String projectName,
+			@PathVariable("projectFilePath") String projectFilePath,
+			@RequestParam("debug") String debug
 	) {
 		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
@@ -146,10 +144,10 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@DeleteMapping(HTTP_PATH_MATCHER)
-	public Response delete(
-			@PathParam("projectName") String projectName,
-			@PathParam("projectFilePath") String projectFilePath,
-			@QueryParam("debug") String debug
+	public ResponseEntity delete(
+			@PathVariable("projectName") String projectName,
+			@PathVariable("projectFilePath") String projectFilePath,
+			@RequestParam("debug") String debug
 	) {
 		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
@@ -181,7 +179,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param debug the debug
 	 * @return the response
 	 */
-	private Response executeJavaScript(String projectName, String projectFilePath, boolean debug) {
+	private ResponseEntity executeJavaScript(String projectName, String projectFilePath, boolean debug) {
 		String projectFilePathParam = extractPathParam(projectFilePath);
 		projectFilePath = extractProjectFilePath(projectFilePath);
 		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug);
@@ -241,14 +239,14 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param debug the debug
 	 * @return the response
 	 */
-	private Response executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
+	private ResponseEntity executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
 		try {
 			if (!isValid(projectName) || !isValid(projectFilePath)) {
-				return Response.status(Response.Status.FORBIDDEN).build();
+				return new ResponseEntity(HttpStatus.FORBIDDEN);
 			}
 
-			getJavascriptHandler().handleRequest(projectName, projectFilePath, projectFilePathParam, null, debug);
-			return Response.ok().build();
+			Object result = getJavascriptHandler().handleRequest(projectName, projectFilePath, projectFilePathParam, null, debug);
+			return ResponseEntity.ok(result);
 		} catch (RepositoryNotFoundException e) {
 			String message = e.getMessage() + ". Try to publish the service before execution.";
 			throw new RepositoryNotFoundException(message, e);

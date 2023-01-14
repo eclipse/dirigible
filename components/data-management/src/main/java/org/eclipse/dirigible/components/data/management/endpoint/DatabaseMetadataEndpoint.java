@@ -14,15 +14,15 @@ package org.eclipse.dirigible.components.data.management.endpoint;
 import java.sql.SQLException;
 import java.util.Set;
 
-import javax.ws.rs.QueryParam;
-
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.management.service.DatabaseMetadataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiParam;
@@ -99,7 +99,7 @@ public class DatabaseMetadataEndpoint extends BaseEndpoint {
 			@ApiParam(value = "Name of the DataSource", required = true) @PathVariable("datasource") String datasource,
 			@ApiParam(value = "Schema requested", required = true) @PathVariable("schema") String schema,
 			@ApiParam(value = "Structure requested", required = true) @PathVariable("structure") String structure,
-			@ApiParam(value = "Kind of the Structure", required = true) @QueryParam("kind") String kind) throws SQLException {
+			@ApiParam(value = "Kind of the Structure", required = true) @Nullable @RequestParam("kind") String kind) throws SQLException {
 		
 		return ResponseEntity.ok(databasesService.getStructureMetadata(datasource, schema, structure, kind));
 	}

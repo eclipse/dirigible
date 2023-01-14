@@ -21,11 +21,6 @@ import java.util.InputMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.DecoderException;
 import org.eclipse.dirigible.components.api.security.UserFacade;
