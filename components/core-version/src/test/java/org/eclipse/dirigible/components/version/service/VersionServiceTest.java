@@ -11,20 +11,20 @@
  */
 package org.eclipse.dirigible.components.version.service;
 
-import org.eclipse.dirigible.components.version.domain.Version;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.junit4.SpringRunner;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.eclipse.dirigible.components.version.domain.Version;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SpringBootTest(classes = {VersionService.class})
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 class VersionServiceTest {
 

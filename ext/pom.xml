@@ -18,6 +18,15 @@
 		<module>ext-api</module>
 		<module>ext-modules</module>
 	</modules>
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit4.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<properties>
 		<license.header.location>../licensing-header.txt</license.header.location>
