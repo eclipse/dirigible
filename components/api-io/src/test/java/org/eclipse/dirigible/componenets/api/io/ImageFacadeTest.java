@@ -17,7 +17,7 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.api.io.ImageFacade;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ImageFacadeTest {
 

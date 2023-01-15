@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 
 import org.eclipse.dirigible.components.api.io.FilesFacade;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FilesFacadeTest {
 
