@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.componenets.api.security;
+package org.eclipse.dirigible.components.api.platform;
 
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
 @TestInstance(Lifecycle.PER_CLASS)
-public class SecurityTestSuite {
+public class PlatformTestSuite {
 	
 	@Autowired
 	private JavascriptService javascriptService;
@@ -44,8 +44,11 @@ public class SecurityTestSuite {
     protected WebApplicationContext wac;
     
 	@Test
-	public void executeSecurityTest() throws Exception {
-		javascriptService.handleRequest("security-tests", "user-get-name.js", null, null, false);
+	public void executePlatformTest() throws Exception {
+		javascriptService.handleRequest("platform-tests", "engines-get-types.js", null, null, false);
+		javascriptService.handleRequest("platform-tests", "lifecycle-publish-project.js", null, null, false);
+		javascriptService.handleRequest("platform-tests", "repository-create-file.js", null, null, false);
+		javascriptService.handleRequest("platform-tests", "workspace-create-workspace.js", null, null, false);
 	}
 	
 	@SpringBootApplication

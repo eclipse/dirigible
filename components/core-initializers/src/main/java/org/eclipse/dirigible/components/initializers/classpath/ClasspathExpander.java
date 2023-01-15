@@ -42,7 +42,7 @@ public class ClasspathExpander {
 	
 	public void expandContent() {
 		expandContent("META-INF/dirigible");
-		expandContent("META-INF/webjars");
+		expandContent("META-INF/resources/webjars");
 	}
 	
 	public void expandContent(String ROOT) {

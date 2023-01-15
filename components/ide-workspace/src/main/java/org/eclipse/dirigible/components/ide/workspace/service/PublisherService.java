@@ -64,7 +64,17 @@ public class PublisherService {
 	 */
 	public void publish(String workspace, String path) {
 		String user = UserFacade.getName();
+		publish(user, workspace, path);
+	}
 		
+	/**
+	 * Publish.
+	 *
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param path the path
+	 */
+	public void publish(String user, String workspace, String path) {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
 		if ("*".equals(path)) {
 			path = "";

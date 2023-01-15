@@ -71,6 +71,10 @@ public class ExposeManager {
 				
 				// project is known, so to be checked
 				String[] exposedPaths = EXPOSABLE_PROJECTS.get(name);
+				if (exposedPaths.length == 0) {
+					// no expose elements present
+					return true;
+				}
 				for (String exposedPath : exposedPaths) {
 					
 					// normalize the exposed path value

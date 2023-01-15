@@ -129,6 +129,7 @@
 		<module>api-database</module>
 		<module>api-extensions</module>
 		<module>api-security</module>
+		<module>api-platform</module>
 		
 		<!-- Resources -->
 		<module>resources-core</module>
@@ -136,6 +137,7 @@
 		<module>resources-flowable-libs</module>
 		<module>resources-mxgraph</module>
 		<module>resources-resources</module>
+		<module>resources-theme-default</module>
 		<module>resources-theme-quartz-dark</module>
 		<module>resources-theme-quartz-light</module>
 		<module>resources-themes</module>
@@ -228,6 +230,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>${spring.boot.version}</version>
 			<scope>test</scope>
+			<exclusions>
+            <exclusion>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+            </exclusion>
+        </exclusions>
 		</dependency>
 		<dependency>
 	        <groupId>org.springframework.security</groupId>
