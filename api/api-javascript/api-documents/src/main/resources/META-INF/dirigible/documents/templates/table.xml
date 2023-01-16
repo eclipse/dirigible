@@ -87,7 +87,7 @@
                 <xsl:attribute name="break-after">page</xsl:attribute>
             </xsl:if>
             #foreach ($column in $columns)
-            <fo:table-cell border-width="0.01cm" border-style="solid">
+            <fo:table-cell number-columns-spanned="3" border-width="0.01cm" border-style="solid">
                 <fo:block>
                     <xsl:value-of select="${column.key}" />
                 </fo:block>
