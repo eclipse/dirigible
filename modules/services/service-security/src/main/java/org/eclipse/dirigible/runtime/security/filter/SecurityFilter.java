@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.security.filter;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -85,7 +86,7 @@ import org.slf4j.LoggerFactory;
 	}, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
 public class SecurityFilter implements Filter {
 
-	private static final String SKIP_PATH_ANGULAR_ARIA = "/js/resources-core/services/angular-aria.min.js.map";
+	private static final List<String> FILTER_CHAIN_SKIP_PATHS = Arrays.asList("/js/resources-core/services/angular-aria.min.js.map");
 
 
 	/** The Constant PATH_WEB_RESOURCES. */
@@ -198,7 +199,8 @@ public class SecurityFilter implements Filter {
 			throw new ServletException(e);
 		}
 
-		if (((HttpServletRequest) request).getPathInfo().equals(SKIP_PATH_ANGULAR_ARIA)) {
+		String pathInfo = ((HttpServletRequest) request).getPathInfo();
+		if (FILTER_CHAIN_SKIP_PATHS.contains(pathInfo)) {
 			return;
 		}
 		chain.doFilter(request, response);
