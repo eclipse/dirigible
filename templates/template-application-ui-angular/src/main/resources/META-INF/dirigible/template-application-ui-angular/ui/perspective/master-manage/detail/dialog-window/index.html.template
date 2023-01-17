@@ -39,7 +39,7 @@
                     </fd-form-item>
 #elseif($property.widgetType == "CHECKBOX")
                     <fd-form-item>
-                        <fd-checkbox id="id${property.name}" compact="false" dg-required="${property.dataNotNull}" ng-model="entity.${property.name}">
+                        <fd-checkbox id="id${property.name}" compact="false" ng-required="${property.dataNotNull}" ng-model="entity.${property.name}">
                         </fd-checkbox>
                         <fd-checkbox-label for="id${property.name}" dg-required="${property.dataNotNull}">${property.widgetLabel}</fd-checkbox-label>
                     </fd-form-item>

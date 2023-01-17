@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
-	.controller('ModelerCtrl', function ($scope, messageHub, ViewParameters) {
+	.controller('ModelerCtrl', function ($scope, messageHub, $window, ViewParameters) {
 		let contents;
 		let csrfToken;
 		$scope.errorMessage = 'Аn unknown error was encountered. Please see console for more information.';
@@ -35,6 +35,11 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 			{ value: "1_n", label: "one-to-many" },
 			{ value: "n_1", label: "many-to-one" },
 		];
+
+		angular.element($window).bind("focus", function () {
+			messageHub.setFocusedEditor($scope.dataParameters.file);
+			messageHub.setStatusCaret('');
+		});
 
 		function getResource() {
 			let xhr = new XMLHttpRequest();
@@ -139,6 +144,10 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 			// let modelJson = createModelJson($scope.graph);
 			// saveContents(modelJson, $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.model');
 		};
+
+		messageHub.onEditorFocusGain(function (msg) {
+			if (msg.resourcePath === $scope.dataParameters.file) messageHub.setStatusCaret('');
+		});
 
 		messageHub.onDidReceiveMessage(
 			"editor.file.save.all",

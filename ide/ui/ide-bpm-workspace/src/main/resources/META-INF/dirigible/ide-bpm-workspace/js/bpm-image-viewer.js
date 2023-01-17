@@ -11,30 +11,33 @@
  */
 let editorView = angular.module('bpm-image-app', ['ideUI', 'ideView']);
 
-editorView.controller('BpmImageViewController', ['$scope', function ($scope) {
+editorView.controller('BpmImageViewController', ['$scope', '$window', 'messageHub', 'ViewParameters', function ($scope, $window, messageHub, ViewParameters) {
     $scope.imageLink = "";
-    $scope.dataLoaded = false;
+    $scope.state = {
+        isBusy: true,
+        error: false,
+        busyText: "Loading...",
+    };
 
-    $scope.getViewParameters = function () {
-        if (window.frameElement.hasAttribute("data-parameters")) {
-            let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
-            $scope.file = params["file"];
-        } else {
-            let searchParams = new URLSearchParams(window.location.search);
-            $scope.file = searchParams.get('file');
-        }
-    }
+    angular.element($window).bind("focus", function () {
+        messageHub.setFocusedEditor($scope.dataParameters.file);
+        messageHub.setStatusCaret('');
+    });
 
     $scope.loadFileContents = function () {
-        $scope.getViewParameters();
-        if ($scope.file) {
-            $scope.imageLink = '/services/v4/ide/bpm/bpm-processes/' + $scope.file + '/image';
-            $scope.dataLoaded = true;
-        } else {
-            console.error('file parameter is not present in the URL');
-        }
+        $scope.imageLink = '/services/v4/ide/bpm/bpm-processes/' + $scope.dataParameters.file + '/image';
+        $scope.state.isBusy = false;
+    };
+
+    messageHub.onEditorFocusGain(function (msg) {
+        if (msg.resourcePath === $scope.dataParameters.file) messageHub.setStatusCaret('');
+    });
+
+    $scope.dataParameters = ViewParameters.get();
+    if (!$scope.dataParameters.hasOwnProperty('file')) {
+        $scope.state.error = true;
+        $scope.errorMessage = "The 'file' data parameter is missing.";
+    } else {
+        $scope.loadFileContents();
     }
-
-    $scope.loadFileContents();
-
 }]);
