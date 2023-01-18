@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-service-parent</artifactId>
-		<version>7.1.1</version>
+		<version>8.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,17 +34,17 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>7.1.1</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-core-scheduler</artifactId>
-			<version>7.1.1</version>
+			<version>8.0.0-SNAPSHOT</version>
     	</dependency>
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-service-core</artifactId>
-			<version>7.1.1</version>
+			<version>8.0.0-SNAPSHOT</version>
     	</dependency>
     	
     	<dependency>
