@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-service-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>7.1.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,22 +34,22 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-websockets</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.1</version>
         </dependency>
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-api</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.1</version>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-net</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.1</version>
         </dependency>
         
     	<dependency>
