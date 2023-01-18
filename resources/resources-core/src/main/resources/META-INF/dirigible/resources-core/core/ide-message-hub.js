@@ -1,14 +1,3 @@
-/*
- * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
 angular.module('ideMessageHub', [])
     .provider('messageHub', function MessageHubProvider() {
         this.eventIdPrefix = '';
@@ -337,13 +326,28 @@ angular.module('ideMessageHub', [])
                 isDirty,
             ) {
                 if (resourcePath === undefined)
-                    throw Error("openEditor: resourcePath must be specified");
+                    throw Error("setEditorDirty: resourcePath must be specified");
                 if (isDirty === undefined)
-                    throw Error("openEditor: isDirty must be specified");
+                    throw Error("setEditorDirty: isDirty must be specified");
                 messageHub.post({
                     resourcePath: resourcePath,
                     isDirty: isDirty,
                 }, 'ide-core.setEditorDirty');
+            };
+            let setFocusedEditor = function (resourcePath) {
+                if (resourcePath === undefined)
+                    throw Error("setFocusedEditor: resourcePath must be specified");
+                messageHub.post({ resourcePath: resourcePath }, 'ide-core.setFocusedEditor');
+            };
+            let setEditorFocusGain = function (resourcePath) {
+                if (resourcePath === undefined)
+                    throw Error("setFocusedEditor: resourcePath must be specified");
+                messageHub.post({ resourcePath: resourcePath }, 'ide-core.setEditorFocusGain');
+            };
+            let onEditorFocusGain = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide-core.setEditorFocusGain');
             };
             let closeEditor = function (
                 resourcePath,
@@ -532,6 +536,9 @@ angular.module('ideMessageHub', [])
                 openPerspective: openPerspective,
                 openEditor: openEditor,
                 setEditorDirty: setEditorDirty,
+                setFocusedEditor: setFocusedEditor,
+                setEditorFocusGain: setEditorFocusGain,
+                onEditorFocusGain: onEditorFocusGain,
                 closeEditor: closeEditor,
                 closeOtherEditors: closeOtherEditors,
                 closeAllEditors: closeAllEditors,

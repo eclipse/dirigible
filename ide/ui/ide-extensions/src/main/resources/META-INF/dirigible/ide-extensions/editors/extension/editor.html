@@ -28,7 +28,6 @@
                         </fd-form-label>
                         <fd-combobox-input id="idExtensionPoint" name="extensionPoint"
                             state="{{ formErrors.extensionPoint ? 'error' : '' }}" ng-required="true"
-                            ng-change="isValid(forms.editor['extensionPoint'].$valid, 'extensionPoint')"
                             ng-model="extension.extensionPoint" dropdown-items="optionsExtensionPoints"
                             dg-placeholder="Search Extension Point...">
                         </fd-combobox-input>

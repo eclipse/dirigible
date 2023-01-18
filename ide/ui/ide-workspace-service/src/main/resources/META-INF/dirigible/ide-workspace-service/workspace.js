@@ -18,7 +18,15 @@ angular.module('ideWorkspace', [])
             let setWorkspace = function (workspaceName) {
                 if (workspaceName !== undefined && !(typeof workspaceName === 'string'))
                     throw Error("setWorkspace: workspaceName must be an string");
-                localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({ name: workspaceName }));
+                let workspace = { name: workspaceName };
+                localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify(workspace));
+                return workspace;
+            };
+
+            let getCurrentWorkspace = function () {
+                let storedWorkspace = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace') || '{}');
+                if (!('name' in storedWorkspace)) storedWorkspace = setWorkspace('workspace');
+                return storedWorkspace;
             };
 
             let listWorkspaceNames = function () {
@@ -200,6 +208,7 @@ angular.module('ideWorkspace', [])
 
             return {
                 setWorkspace: setWorkspace,
+                getCurrentWorkspace: getCurrentWorkspace,
                 listWorkspaceNames: listWorkspaceNames,
                 load: load,
                 getMetadata: getMetadata,
