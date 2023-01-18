@@ -10,7 +10,7 @@ on:
       snapshotVersion:
         description: Snapshot Version
         required: true
-        default: 7.0.0-SNAPSHOT
+        default: 8.0.0-SNAPSHOT
 
 run-name: 'version set to ${{ github.event.inputs.releaseVersion }} for release'
 
