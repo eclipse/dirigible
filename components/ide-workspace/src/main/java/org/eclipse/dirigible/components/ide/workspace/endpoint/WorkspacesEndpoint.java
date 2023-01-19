@@ -67,9 +67,9 @@ public class WorkspacesEndpoint {
     @Autowired
     private WorkspaceService workspaceService;
     
-    /** The publisher service. */
-    @Autowired
-    private PublisherService publisherService;
+//    /** The publisher service. */
+//    @Autowired
+//    private PublisherService publisherService;
     
     // Workspace
     
@@ -200,7 +200,7 @@ public class WorkspacesEndpoint {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, error);
 		}
 		
-		publisherService.publish(workspace, project);
+//		publisherService.publish(workspace, project);
 		
 		return ResponseEntity.created(workspaceService.getURI(workspace, project, null)).build();
 	}
@@ -225,7 +225,7 @@ public class WorkspacesEndpoint {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
 		}
 		
-		publisherService.unpublish(project);
+//		publisherService.unpublish(project);
 
 		workspaceService.deleteProject(workspace, project);
 		return ResponseEntity.noContent().build();
@@ -327,7 +327,7 @@ public class WorkspacesEndpoint {
 		}
 		file = workspaceService.createFile(workspace, project, path, content, headerContentType);
 		
-		publisherService.publish(workspace, project + "/" + path);
+//		publisherService.publish(workspace, project + "/" + path);
 		
 		return ResponseEntity.created(workspaceService.getURI(workspace, project, path)).build();
 	}
@@ -383,7 +383,7 @@ public class WorkspacesEndpoint {
 
 		file = workspaceService.updateFile(workspace, project, path, content);
 		
-		publisherService.publish(workspace, project + "/" + path);
+//		publisherService.publish(workspace, project + "/" + path);
 		
 		return ResponseEntity.ok(workspaceService.getURI(workspace, project, path));
 	}
@@ -438,7 +438,7 @@ public class WorkspacesEndpoint {
 		}
 		workspaceService.deleteFolder(workspace, project, path);
 		
-		publisherService.unpublish(project + "/" + path);
+//		publisherService.unpublish(project + "/" + path);
 		
 		return ResponseEntity.noContent().build();
 	}
