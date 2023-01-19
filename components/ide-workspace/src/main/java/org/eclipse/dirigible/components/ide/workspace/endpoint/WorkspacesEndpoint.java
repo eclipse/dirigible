@@ -32,6 +32,7 @@ import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.json.ProjectDescriptor;
 import org.eclipse.dirigible.components.ide.workspace.json.WorkspaceDescriptor;
+import org.eclipse.dirigible.components.ide.workspace.service.PublisherService;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
@@ -65,6 +66,10 @@ public class WorkspacesEndpoint {
 	/** The websocket service. */
     @Autowired
     private WorkspaceService workspaceService;
+    
+    /** The publisher service. */
+    @Autowired
+    private PublisherService publisherService;
     
     // Workspace
     
@@ -195,6 +200,8 @@ public class WorkspacesEndpoint {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, error);
 		}
 		
+		publisherService.publish(workspace, project);
+		
 		return ResponseEntity.created(workspaceService.getURI(workspace, project, null)).build();
 	}
 
@@ -217,6 +224,8 @@ public class WorkspacesEndpoint {
 			String error = format("Failed to delete project {0} in workspace {1}, because it does not exist", project, workspace);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
 		}
+		
+		publisherService.unpublish(project);
 
 		workspaceService.deleteProject(workspace, project);
 		return ResponseEntity.noContent().build();
@@ -317,6 +326,9 @@ public class WorkspacesEndpoint {
 			content = Base64.decodeBase64(content);
 		}
 		file = workspaceService.createFile(workspace, project, path, content, headerContentType);
+		
+		publisherService.publish(workspace, project + "/" + path);
+		
 		return ResponseEntity.created(workspaceService.getURI(workspace, project, path)).build();
 	}
 
@@ -332,7 +344,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PostMapping(value = "{workspace}/{project}/{*path}", consumes = "text/plain")
+	@PostMapping(value = "{workspace}/{project}/{*path}", consumes = {"text/plain", "application/json"})
 	public ResponseEntity<?> createFile(@PathVariable("workspace") String workspace, @PathVariable("project") String project, @PathVariable("path") String path,
 			@Valid @RequestBody String content, @Nullable @RequestHeader("Content-Transfer-Encoding") String headerContentTransferEncoding, 
 			@Nullable @RequestHeader("Content-Type") String headerContentType) throws URISyntaxException {
@@ -370,6 +382,9 @@ public class WorkspacesEndpoint {
 		}
 
 		file = workspaceService.updateFile(workspace, project, path, content);
+		
+		publisherService.publish(workspace, project + "/" + path);
+		
 		return ResponseEntity.ok(workspaceService.getURI(workspace, project, path));
 	}
 
@@ -383,7 +398,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PutMapping(value = "{workspace}/{project}/{*path}", consumes = "text/plain")
+	@PutMapping(value = "{workspace}/{project}/{*path}", consumes = {"text/plain", "application/json"})
 	public ResponseEntity<URI>  updateFile(@PathVariable("workspace") String workspace, @PathVariable("project") String project, @PathVariable("path") String path,
 			@Valid @RequestBody String content) throws URISyntaxException {
 		return updateFile(workspace, project, path, content.getBytes(StandardCharsets.UTF_8));
@@ -422,6 +437,9 @@ public class WorkspacesEndpoint {
 			return ResponseEntity.noContent().build();
 		}
 		workspaceService.deleteFolder(workspace, project, path);
+		
+		publisherService.unpublish(project + "/" + path);
+		
 		return ResponseEntity.noContent().build();
 	}
 

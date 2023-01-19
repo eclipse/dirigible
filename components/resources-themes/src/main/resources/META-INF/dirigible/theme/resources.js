@@ -33,7 +33,7 @@ rs.service()
 		response.setContentType('text/plain');
 		response.print(theme);
 	})
-	.resource('themes')
+	.resource('/themes')
 	.get(function (ctx, request, response) {
 		let legacy = ctx.queryParameters.legacy;
 		if (legacy === "false") legacy = false;

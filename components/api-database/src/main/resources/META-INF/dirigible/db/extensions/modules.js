@@ -11,7 +11,8 @@
  */
 exports.getContent = function () {
     return [
-		"name": @dirigible/db",
+	  {
+		"name": "@dirigible/db",
 	    "description": "Dirigible DB module",
 	    "isPackageDescription": true,
 	    "dtsPath": "db/extensions/db.d.ts"
