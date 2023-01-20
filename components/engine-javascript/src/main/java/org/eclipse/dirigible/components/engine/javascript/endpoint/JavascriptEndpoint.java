@@ -20,6 +20,7 @@ import org.eclipse.dirigible.components.engine.javascript.service.JavascriptServ
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
+import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -245,7 +246,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 				return new ResponseEntity(HttpStatus.FORBIDDEN);
 			}
 
-			Object result = getJavascriptHandler().handleRequest(projectName, projectFilePath, projectFilePathParam, null, debug);
+			Object result = getJavascriptHandler().handleRequest(projectName, normalizePath(projectFilePath), normalizePath(projectFilePathParam), null, debug);
 			return ResponseEntity.ok(result);
 		} catch (RepositoryNotFoundException e) {
 			String message = e.getMessage() + ". Try to publish the service before execution.";
@@ -287,6 +288,15 @@ public class JavascriptEndpoint extends BaseEndpoint {
 		} catch (IOException e) {
 			return false;
 		}
+	}
+	
+	private String normalizePath(String path) {
+		if (path != null) {
+			if (path.startsWith(IRepository.SEPARATOR)) {
+				return path.substring(1);
+			}
+		}
+		return path;
 	}
 
 }
