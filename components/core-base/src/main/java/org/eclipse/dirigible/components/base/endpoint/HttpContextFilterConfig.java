@@ -34,9 +34,7 @@ public class HttpContextFilterConfig {
         filterRegistrationBean.setFilter(httpContextFilter);
         filterRegistrationBean.addUrlPatterns(
                 "/services/v8/*",
-
                 "/public/v8/*",
-
                 "/odata/v2/*"
         );
 

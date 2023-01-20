@@ -130,6 +130,7 @@
 		<module>api-extensions</module>
 		<module>api-security</module>
 		<module>api-platform</module>
+		<module>api-indexing</module>
 		
 		<!-- Resources -->
 		<module>resources-core</module>
