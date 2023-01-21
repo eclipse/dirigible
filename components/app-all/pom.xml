@@ -126,6 +126,11 @@
 			<artifactId>dirigible-components-ide-workspace</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-ide-git</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
 		
 		<!-- IDE UI -->
 		<dependency>

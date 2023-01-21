@@ -43,6 +43,7 @@
 		
 		<!-- IDE -->
 		<module>ide-workspace</module>
+		<module>ide-git</module>
 		
 		<!-- IDE UI -->
 		<module>ide-ui-about</module>

@@ -18,13 +18,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
-import org.eclipse.dirigible.components.ide.workspace.domain.ProjectStatusProvider;
 import org.eclipse.dirigible.components.ide.workspace.domain.ProjectStatus;
+import org.eclipse.dirigible.components.ide.workspace.domain.ProjectStatusProvider;
 import org.eclipse.dirigible.components.ide.workspace.domain.Status;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -32,17 +31,51 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * The Workspace Json Helper.
  */
-public class WorkspaceJsonHelper {
+@Component
+public class WorkspaceJsonHelper implements InitializingBean {
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WorkspaceJsonHelper.class);
 	
-	/** The status providers. */
-	private static ServiceLoader<ProjectStatusProvider> statusProviders = ServiceLoader.load(ProjectStatusProvider.class);
+	/** The workspace json helper instance. */
+	private static WorkspaceJsonHelper INSTANCE;
+	
+	private ProjectStatusProvider projectStatusProvider;
+	
+	@Autowired
+	private WorkspaceJsonHelper(ProjectStatusProvider projectStatusProvider) {
+		this.projectStatusProvider = projectStatusProvider;
+	}
+	
+	/**
+	 * After properties set.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		INSTANCE = this;		
+	}
+	
+	/**
+	 * Gets the instance.
+	 *
+	 * @return the database facade
+	 */
+	public static WorkspaceJsonHelper get() {
+        return INSTANCE;
+    }
+	
+	public ProjectStatusProvider getProjectStatusProvider() {
+		return projectStatusProvider;
+	}
 
 	/**
 	 * Describe workspace.
@@ -164,28 +197,22 @@ public class WorkspaceJsonHelper {
 		projectPojo.setGitName(gitInfo.getRight());
 		if (projectPojo.isGit()) {
 			String git = "";
-			for (ProjectStatusProvider statusProvider : statusProviders) {
-				try {
-					git = statusProvider.getProjectGitFolder(workspace, projectPojo.getName());
-					if (git != null) {
-						git = findRootGit(git);
-					}
-				} catch (IOException e) {
-					if (logger.isWarnEnabled()) {logger.warn(git);}
+			try {
+				git = WorkspaceJsonHelper.get().getProjectStatusProvider().getProjectGitFolder(workspace, projectPojo.getName());
+				if (git != null) {
+					git = findRootGit(git);
 				}
+			} catch (IOException e) {
+				if (logger.isWarnEnabled()) {logger.warn(git);}
 			}
 			ProjectStatus status = null;
 			if (projectStatusCache.containsKey(projectPojo.getGitName())) {
 				status = projectStatusCache.get(projectPojo.getGitName());
 				status = remapPaths(projectPojo.getName(), git, status);
-			} else 
-				if (projectPojo.isGit()) {
-				for (ProjectStatusProvider statusProvider : statusProviders) {
-					status = statusProvider.getProjectStatus(collection.getParent().getName(), collection.getName());
+			} else if (projectPojo.isGit()) {
+					status = WorkspaceJsonHelper.get().getProjectStatusProvider().getProjectStatus(collection.getParent().getName(), collection.getName());
 					projectStatusCache.put(projectPojo.getGitName(), status);
 					status = remapPaths(projectPojo.getName(), git, status);
-					break;
-				}
 			}
 			return status;
 		}

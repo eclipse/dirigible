@@ -18,10 +18,12 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
+import org.springframework.stereotype.Component;
 
 /**
  * The ProjectMetadataManager is the controller of reading and writing the project.json files.
  */
+@Component
 public class ProjectMetadataManager {
 
 	/**  The default branch. */

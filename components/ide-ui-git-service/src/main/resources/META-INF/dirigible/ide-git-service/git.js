@@ -22,8 +22,10 @@ angular.module('ideGit', [])
             let listProjects = function (resourcePath) {
                 if (resourcePath !== undefined && !(typeof resourcePath === 'string'))
                     throw Error("listProjects: resourcePath must be an string path");
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(resourcePath.split('/')).build();
-                return $http.get(url, { headers: { describe: 'application/json' } })
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(resourcePath.split('/')).build();
+                return $http.get(url + '/', { headers: { describe: 'application/json' } })
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
@@ -33,7 +35,10 @@ angular.module('ideGit', [])
             }.bind(this);
 
             let cloneRepository = function (workspace, repository, branch = '', username, password) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path('clone').build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace)
+                	.path('clone').build();
                 return $http.post(url, {
                     repository: repository,
                     branch: branch,
@@ -49,7 +54,11 @@ angular.module('ideGit', [])
             }.bind(this);
 
             let pullRepository = function (workspace, project, branch = '', username, password) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('pull').build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace)
+                	.path(project)
+                	.path('pull').build();
                 return $http.post(url, {
                     publish: true,
                     username: username,
@@ -77,7 +86,11 @@ angular.module('ideGit', [])
             }.bind(this);
 
             let pushRepository = function (workspace, project, branch = '', username, email, password) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('push').build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace)
+                	.path(project)
+                	.path('push').build();
                 return $http.post(url, {
                     username: username,
                     password: btoa(password),
@@ -92,7 +105,10 @@ angular.module('ideGit', [])
             }.bind(this);
 
             let pushAllRepositories = function (workspace, username, email, password, autoAdd = false, autoCommit = false) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path('push').build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace)
+                	.path('push').build();
                 return $http.post(url, {
                     username: username,
                     password: btoa(password),
@@ -108,7 +124,11 @@ angular.module('ideGit', [])
             }.bind(this);
 
             let resetRepository = function (workspace, project) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('reset').build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace)
+                	.path(project)
+                	.path('reset').build();
                 return $http.post(url, {}).then(function successCallback(response) {
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
@@ -118,7 +138,11 @@ angular.module('ideGit', [])
             }.bind(this);
 
             let importProjects = function (workspace, repository) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(repository).path('import').build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace)
+                	.path(repository)
+                	.path('import').build();
                 return $http.post(url, {}).then(function successCallback(response) {
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
@@ -128,7 +152,11 @@ angular.module('ideGit', [])
             }.bind(this);
 
             let deleteRepository = function (workspace, repositoryName, unpublish) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(repositoryName).path("delete").build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace)
+                	.path(repositoryName)
+                	.path("delete").build();
                 return $http.delete(`${url}?unpublish=${unpublish}`)
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
@@ -149,7 +177,11 @@ angular.module('ideGit', [])
                 email,
                 shareInRootFolder,
             ) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('share').build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace)
+                	.path(project)
+                	.path('share').build();
                 return $http.post(url, {
                     project: project,
                     repository: repository,
@@ -168,7 +200,10 @@ angular.module('ideGit', [])
             }.bind(this);
 
             let checkoutBranch = function (workspace, project, branch, username, password) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('checkout').build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace).path(project)
+                	.path('checkout').build();
                 return $http.post(url, {
                     project: project,
                     branch: branch,
@@ -241,7 +276,11 @@ angular.module('ideGit', [])
                 email,
                 branch,
             ) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('commit').build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace)
+                	.path(project)
+                	.path('commit').build();
                 return $http.post(url, {
                     commitMessage: commitMessage,
                     username: username,
@@ -265,7 +304,10 @@ angular.module('ideGit', [])
                 email,
                 branch,
             ) {
-                let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('push').build();
+                let url = new UriBuilder()
+                	.path(this.gitServiceUrl.split('/'))
+                	.path(workspace).path(project)
+                	.path('push').build();
                 return $http.post(url, {
                     commitMessage: commitMessage,
                     username: username,
