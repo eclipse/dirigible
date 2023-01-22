@@ -31,7 +31,7 @@ import org.eclipse.dirigible.components.data.structures.domain.TableConstraint;
 import org.eclipse.dirigible.components.data.structures.domain.TableConstraintCheck;
 import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
 import org.eclipse.dirigible.components.data.structures.domain.TableConstraintUnique;
-import org.eclipse.dirigible.components.database.DatabaseConfig;
+import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,13 +45,13 @@ import com.google.common.base.CaseFormat;
  * The Class DataSourceMetadataLoader.
  */
 @Component
-public class DataSourceMetadataLoader implements DatabaseConfig {
+public class DataSourceMetadataLoader implements DatabaseParameters {
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataSourceMetadataLoader.class);
 
     /** The Constant IS_CASE_SENSETIVE. */
-    private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(DatabaseConfig.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
+    private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
     /** The data source service. */
 	private final DataSourcesManager datasourceManager;

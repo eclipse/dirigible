@@ -27,7 +27,7 @@ import org.eclipse.dirigible.components.data.management.domain.FunctionMetadata;
 import org.eclipse.dirigible.components.data.management.domain.ProcedureMetadata;
 import org.eclipse.dirigible.components.data.management.domain.SchemaMetadata;
 import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
-import org.eclipse.dirigible.components.database.DatabaseConfig;
+import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.components.database.DatabaseNameNormalizer;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Database Metadata Helper.
  */
-public class DatabaseMetadataHelper implements DatabaseConfig {
+public class DatabaseMetadataHelper implements DatabaseParameters {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseMetadataHelper.class);

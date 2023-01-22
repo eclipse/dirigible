@@ -24,7 +24,7 @@ import java.util.Properties;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
-import org.eclipse.dirigible.components.database.DatabaseConfig;
+import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +131,7 @@ public class DataSourcesManager {
 	 * @return the default data source name
 	 */
 	public String getDefaultDataSourceName() {
-		return Configuration.get(DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
+		return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 	}
 	
 	/**
@@ -140,7 +140,7 @@ public class DataSourcesManager {
 	 * @return the system data source name
 	 */
 	public String getSystemDataSourceName() {
-		return Configuration.get(DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM, DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
+		return Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM, DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
 	}
 	
 	/**
@@ -153,8 +153,8 @@ public class DataSourcesManager {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private String prepareRootFolder(String name) throws IOException {
-		String rootFolder = (DatabaseConfig.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? DatabaseConfig.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
-				: DatabaseConfig.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
+		String rootFolder = (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+				: DatabaseParameters.DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
 		String h2Root = Configuration.get(rootFolder, name);
 		File rootFile = new File(h2Root);
 		File parentFile = rootFile.getCanonicalFile().getParentFile();

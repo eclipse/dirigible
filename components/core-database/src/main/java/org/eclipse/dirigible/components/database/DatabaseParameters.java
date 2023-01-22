@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.database;
 
-public interface DatabaseConfig {
+public interface DatabaseParameters {
 	
 	/**  Whether or not to use case sensitive syntax for table or view names and column names. */
 	public static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";

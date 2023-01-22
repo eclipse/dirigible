@@ -1,10 +1,10 @@
 {
   "location":"/datasources/DefaultDB.datasource",
   "name":"DefaultDB",
-  "driver":"${DIRIGIBLE_DATASOURCE_SYSTEM_DRIVER}.{org.h2.jdbcx.JdbcDataSource}",
-  "url":"${DIRIGIBLE_DATASOURCE_SYSTEM_URL}.{jdbc:h2:~/DefaultDB}",
-  "username":"${DIRIGIBLE_DATASOURCE_SYSTEM_USERNAME}.{sa}",
-  "password":"${DIRIGIBLE_DATASOURCE_SYSTEM_PASSWORD}.{}",
+  "driver":"${DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER}.{org.h2.Driver}",
+  "url":"${DIRIGIBLE_DATASOURCE_DEFAULT_URL}.{jdbc:h2:file:./target/dirigible/h2/DefaultDB}",
+  "username":"${DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME}.{sa}",
+  "password":"${DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD}.{}",
   "properties":[
   ]
 }

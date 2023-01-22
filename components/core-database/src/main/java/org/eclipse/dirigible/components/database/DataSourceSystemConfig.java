@@ -37,16 +37,15 @@ import com.zaxxer.hikari.HikariDataSource;
     transactionManagerRef = "transactionManager", basePackages = {"org.eclipse.dirigible.components"})
 public class DataSourceSystemConfig {
 	
-	@Bean(name = "SystemDBProperties")
-	@ConfigurationProperties("app.datasource.system")
-	public DataSourceProperties getDataSourceProperties() {
-		return new DataSourceProperties();
-	}
-
 	@Bean(name = "SystemDB")
-	@ConfigurationProperties("app.datasource.system.configuration")
 	public HikariDataSource getDataSource() {
-		return getDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
+		DataSourceProperties dataSourceProperties = new DataSourceProperties();
+		dataSourceProperties.setName("SystemDB");
+		dataSourceProperties.setDriverClassName("org.h2.Driver");
+		dataSourceProperties.setUrl("jdbc:h2:file:./target/dirigible/h2/SystemDB");
+		dataSourceProperties.setUsername("sa");
+		dataSourceProperties.setPassword("");
+		return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
 	}
 
 	@Bean(name = "entityManagerFactory")

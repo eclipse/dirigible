@@ -24,7 +24,7 @@ import java.util.Map;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
-import org.eclipse.dirigible.components.database.DatabaseConfig;
+import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.components.database.DatabaseNameNormalizer;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
@@ -53,7 +53,7 @@ public class TableAlterProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, Table tableModel) throws SQLException {
-		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(DatabaseConfig.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String tableName = tableModel.getName();
 		if (caseSensitive) {
 			tableName = "\"" + tableName + "\"";

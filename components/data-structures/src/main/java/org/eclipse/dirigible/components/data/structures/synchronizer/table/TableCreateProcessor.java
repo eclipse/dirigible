@@ -24,7 +24,7 @@ import org.eclipse.dirigible.components.data.structures.domain.TableConstraintCh
 import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
 import org.eclipse.dirigible.components.data.structures.domain.TableConstraintUnique;
 import org.eclipse.dirigible.components.data.structures.domain.TableIndex;
-import org.eclipse.dirigible.components.database.DatabaseConfig;
+import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -60,7 +60,7 @@ public class TableCreateProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, Table tableModel, boolean skipForeignKeys) throws SQLException {
-		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(DatabaseConfig.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String tableName = tableModel.getName();
 		if (caseSensitive) {
 			tableName = "\"" + tableName + "\"";

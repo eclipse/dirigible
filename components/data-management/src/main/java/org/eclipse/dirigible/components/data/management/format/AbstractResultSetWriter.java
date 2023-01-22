@@ -12,7 +12,7 @@
 package org.eclipse.dirigible.components.data.management.format;
 
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.database.DatabaseConfig;
+import org.eclipse.dirigible.components.database.DatabaseParameters;
 
 /**
  * The Abstract ResultSet Writer.
@@ -34,7 +34,7 @@ public abstract class AbstractResultSetWriter<T> implements ResultSetWriter<T> {
 	 * Default Constructor.
 	 */
 	public AbstractResultSetWriter() {
-		this.limit = Integer.parseInt(Configuration.get(DatabaseConfig.DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT, "1000"));
+		this.limit = Integer.parseInt(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT, "1000"));
 	}
 	
 	/**
