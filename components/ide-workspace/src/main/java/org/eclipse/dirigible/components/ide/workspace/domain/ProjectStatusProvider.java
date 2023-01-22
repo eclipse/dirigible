@@ -14,7 +14,7 @@ package org.eclipse.dirigible.components.ide.workspace.domain;
 import java.io.IOException;
 
 /**
- * The Interface IProjectStatusProvider.
+ * The Interface ProjectStatusProvider.
  */
 public interface ProjectStatusProvider {
 	

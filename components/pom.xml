@@ -31,7 +31,6 @@
 		<module>unit-listeners</module>
 
 		<!-- Data -->
-		<module>data-sources</module>
 		<module>data-structures</module>
 		<module>data-transfer</module>
 		<module>data-management</module>

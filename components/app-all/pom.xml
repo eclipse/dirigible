@@ -89,12 +89,12 @@
 		<!-- Data -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-data-structures</artifactId>
+			<artifactId>dirigible-components-data-sources</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-data-sources</artifactId>
+			<artifactId>dirigible-components-data-structures</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>

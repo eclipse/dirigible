@@ -11,10 +11,11 @@
  */
 package org.eclipse.dirigible.components.data.management.endpoint;
 
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExecutionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.annotations.ApiParam;
 
 /**
  * The Class DatabaseExecutionEndpoint.
@@ -56,9 +55,9 @@ public class DatabaseExecutionEndpoint {
 	 *
 	 * @return the message
 	 */
-	@GetMapping
-	public ResponseEntity<String> getSupported() {
-		return ResponseEntity.ok("Only POST requests are supported");
+	@GetMapping(value = "/", produces = "application/json")
+	public ResponseEntity<String> getDatabases() {
+		return ResponseEntity.ok(GsonHelper.toJson(Arrays.asList("metadata")));
 	}
 	
 	/**
@@ -70,9 +69,9 @@ public class DatabaseExecutionEndpoint {
 	 * @return the data sources
 	 * @throws SQLException the SQL exception
 	 */
-	@PostMapping("/query/{datasource}")
+	@PostMapping(value = "/{datasource}/query", consumes = "text/plain")
 	public ResponseEntity<String> executeQuery(
-			@ApiParam(value = "Name of the DataSource", required = true) @PathVariable("datasource") String datasource,
+			@PathVariable("datasource") String datasource,
 			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws SQLException {
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
 			String result = databaseExecutionService.executeQuery(datasource, sql, false, false);
@@ -94,9 +93,9 @@ public class DatabaseExecutionEndpoint {
 	 * @return the data sources
 	 * @throws SQLException the SQL exception
 	 */
-	@PostMapping("/update/{datasource}")
+	@PostMapping(value = "/{datasource}/update", consumes = "text/plain")
 	public ResponseEntity<String> executeUpdate(
-			@ApiParam(value = "Name of the DataSource", required = true) @PathVariable("datasource") String datasource,
+			@PathVariable("datasource") String datasource,
 			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws SQLException {
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
 			String result = databaseExecutionService.executeUpdate(datasource, sql, false, false);
@@ -118,9 +117,9 @@ public class DatabaseExecutionEndpoint {
 	 * @return the data sources
 	 * @throws SQLException the SQL exception
 	 */
-	@PostMapping("/procedure/{datasource}")
+	@PostMapping(value = "/{datasource}/procedure", consumes = "text/plain")
 	public ResponseEntity<String> executeProcedure(
-			@ApiParam(value = "Name of the DataSource", required = true) @PathVariable("datasource") String datasource,
+			@PathVariable("datasource") String datasource,
 			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws SQLException {
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
 			String result = databaseExecutionService.executeProcedure(datasource, sql, false, false);
@@ -142,9 +141,9 @@ public class DatabaseExecutionEndpoint {
 	 * @return the data sources
 	 * @throws SQLException the SQL exception
 	 */
-	@PostMapping("/execute/{datasource}")
+	@PostMapping(value = "/{datasource}/execute", consumes = "text/plain")
 	public ResponseEntity<String> execute(
-			@ApiParam(value = "Name of the DataSource", required = true) @PathVariable("datasource") String datasource,
+			@PathVariable("datasource") String datasource,
 			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws SQLException {
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
 			String result = databaseExecutionService.execute(datasource, sql, false, false);

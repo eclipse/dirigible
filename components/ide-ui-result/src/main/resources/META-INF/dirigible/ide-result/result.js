@@ -28,7 +28,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
         console.error("Error getting token.");
     });
 
-    $scope.database = "local";
+    // $scope.database = "metadata";
     $scope.datasource = "DefaultDB";
 
     messageHub.subscribe(function (evt) {
@@ -40,7 +40,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
     }, "database.datasource.selection.changed");
 
     messageHub.subscribe(function (command) {
-        let url = "/services/v8/ide/databases/" + $scope.database + "/" + $scope.datasource;
+        let url = "/services/v8/data/" + $scope.datasource;
         let sql = command.data.trim().toLowerCase();
         if (sql.startsWith('select')) {
             $http({
@@ -48,7 +48,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
                 url: url + "/query",
                 data: command.data,
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Content-Type': 'text/plain',
                     'X-Requested-With': 'Fetch',
                     'X-CSRF-Token': csrfToken
                 }
@@ -75,7 +75,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
                 url: url + "/procedure",
                 data: command.data,
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Content-Type': 'text/plain',
                     'X-Requested-With': 'Fetch',
                     'X-CSRF-Token': csrfToken
                 }
@@ -122,7 +122,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
                 url: url + "/update",
                 data: command.data,
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/plain',
+                    'Content-Type': 'text/plain', 'Accept': 'text/plain',
                     'X-Requested-With': 'Fetch',
                     'X-CSRF-Token': csrfToken
                 }
@@ -143,25 +143,25 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
 
     messageHub.subscribe(function (command) {
         let artifact = command.data.split('.');
-        let url = "/services/v8/ide/data/export/" + $scope.database + "/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
+        let url = "/services/v8/data/export/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
         window.open(url);
     }, "database.data.export.artifact");
 
     messageHub.subscribe(function (command) {
         let schema = command.data;
-        let url = "/services/v8/ide/data/export/" + $scope.database + "/" + $scope.datasource + "/" + schema;
+        let url = "/services/v8/data/export/" + $scope.datasource + "/" + schema;
         window.open(url);
     }, "database.data.export.schema");
 
     messageHub.subscribe(function (command) {
         let artifact = command.data.split('.');
-        let url = "/services/v8/ide/metadata/export/" + $scope.database + "/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
+        let url = "/services/v8/data/definition/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
         window.open(url);
     }, "database.metadata.export.artifact");
 
     messageHub.subscribe(function (command) {
         let schema = command.data;
-        let url = "/services/v8/ide/metadata/export/" + $scope.database + "/" + $scope.datasource + "/" + schema;
+        let url = "/services/v8/data/definition/" + $scope.datasource + "/" + schema;
         window.open(url);
     }, "database.metadata.export.schema");
 

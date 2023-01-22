@@ -19,7 +19,7 @@ databasesView.config(["messageHubProvider", function (messageHubProvider) {
 databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
 
     $scope.listDatabases = function () {
-        $http.get('/services/v8/ide/database').then(function (response) {
+        $http.get('/services/v8/data/sources/').then(function (response) {
             $scope.list = response.data;
         });
     }

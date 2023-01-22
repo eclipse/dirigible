@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
 /**
  * The Class GitProjectStatusProvider.
  */
-@Component
 public class GitProjectStatusProvider implements ProjectStatusProvider {
 	
 	/** The Constant logger. */

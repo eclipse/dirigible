@@ -76,6 +76,18 @@ public class DatabaseMetadataService {
 	}
 	
 	/**
+	 * Exists the structures.
+	 *
+	 * @param datasource the datasource
+	 * @return the structures
+	 * @throws SQLException the SQL exception
+	 */
+	public boolean existsDataSourceMetadata(String datasource) throws SQLException {
+		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+		return dataSource != null;
+	}
+	
+	/**
 	 * Gets the schema metadata.
 	 *
 	 * @param datasource the datasource

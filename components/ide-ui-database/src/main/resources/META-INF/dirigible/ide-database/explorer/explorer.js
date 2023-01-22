@@ -15,7 +15,7 @@
 // }
 let database = angular.module('database', ['ideUI', 'ideView']);
 database.controller('DatabaseController', function ($scope, $http, messageHub) {
-	let databasesSvcUrl = "/services/ide/databases";
+	let databasesSvcUrl = "/services/v8/data/";
 	$scope.selectedDatabase;
 	$scope.jstreeWidget = angular.element('#dgDatabases');
 	$scope.spinnerColumns = {
@@ -383,13 +383,6 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		}
 	};
 
-	/*$scope.jstreeWidget.on('dblclick.jstree', function (event, node) {
-		let data = $scope.jstreeWidget.jstree(true).get_selected(true);
-		let kind = $scope.jstreeWidget.jstree(true).get_node(event.target).original.kind;
-		// if(['table'].indexOf(type)<0)
-		// 								messageHub.fireFileOpen(data[0].original._file);
-	});*/
-
 	$scope.jstreeWidget.on('open_node.jstree', function (event, data) {
 		if (data.node.children.length === 1 && $scope.jstreeWidget.jstree(true).get_text(data.node.children[0]) === "Loading Columns...") {
 			expandColumns(event, data);
@@ -397,12 +390,6 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			expandIndices(event, data);
 		}
 	});
-
-	// $scope.jstreeWidget.on('select_node.jstree', function (event) {
-	// });
-
-	// $scope.jstreeWidget.on('close_node.jstree', function (event) {
-	// });
 
 	function getDatabases() {
 		$http.get(databasesSvcUrl)
@@ -417,7 +404,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 					}
 					if ($scope.selectedDatabase) {
 						messageHub.postMessage('database.database.selection.changed', $scope.selectedDatabase);
-						$http.get(databasesSvcUrl + "/" + $scope.selectedDatabase).then(function (data) {
+						$http.get(databasesSvcUrl + $scope.selectedDatabase + "/").then(function (data) {
 							$scope.datasources = data.data;
 							if ($scope.datasources.length > 0) {
 								if (storedDatabase !== null) {
@@ -445,7 +432,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		$scope.jstreeWidget.jstree("delete_node", $scope.jstreeWidget.jstree(true).get_node(data.node.children[0]));
 		let position = 'last';
 
-		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
+		$http.get(databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource
 			+ '/' + schemaParent + '/' + tableParent.text + "?kind=" + tableParent.original.kind.toUpperCase())
 			.then(function (data) {
 				data.data.columns.forEach(function (column) {
@@ -509,7 +496,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		$scope.jstreeWidget.jstree("delete_node", $scope.jstreeWidget.jstree(true).get_node(data.node.children[0]));
 		let position = 'last';
 
-		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
+		$http.get(databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource
 			+ '/' + schemaParent + '/' + tableParent.text)
 			.then(function (data) {
 				data.data.indices.forEach(function (index) {
@@ -520,90 +507,13 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			});
 	}
 
-	// $scope.processData = function (data) {
-	// 	let children = [];
-	// 	let name = data.name;
-	// 	let type = (data.type) ? data.type.toLowerCase() : data.kind;
-	// 	if (data.kind == 'schema') {
-	// 		type = 'schema';
-	// 		let tablesChildren = data.tables.map(function (_table) {
-	// 			return $scope.processData(_table)
-	// 		});
-	// 		children = children.concat(tablesChildren);
-
-	// 		let proceduresChildren = data.procedures.map(function (_procedure) {
-	// 			return $scope.processData(_procedure)
-	// 		});
-	// 		children = children.concat(proceduresChildren);
-
-	// 		let functionsChildren = data.functions.map(function (_function) {
-	// 			return $scope.processData(_function)
-	// 		});
-	// 		children = children.concat(functionsChildren);
-	// 	} else if (data.kind == 'table' && (data.type === 'TABLE' || data.type === 'BASE TABLE')) { // table
-	// 		type = 'table';
-	// 		children = [
-	// 			{ text: "Columns", type: 'columns', children: true },
-	// 			{ text: "Indices", type: 'indices', children: true },
-	// 		];
-	// 	} else if (data.kind == 'table' && data.type === 'VIEW') { // tableView
-	// 		type = 'tableView';
-	// 		children = [
-	// 			{ text: "Columns", type: 'columns', children: true },
-	// 			{ text: "Indices", type: 'indices', children: true },
-	// 		];
-	// 	} else if (data.kind == 'table' && data.type !== 'TABLE' && data.type !== 'VIEW') { // tableLock
-	// 		type = 'tableLock';
-	// 		children = [
-	// 			{ text: "Columns", type: 'columns', children: true },
-	// 			{ text: "Indices", type: 'indices', children: true },
-	// 		];
-	// 	} else if (data.kind == 'procedure') {
-	// 		type = 'procedure';
-	// 		children = [
-	// 			{ text: "Columns", type: 'columns', children: true },
-	// 		];
-	// 	} else if (data.kind == 'function') {
-	// 		type = 'function';
-	// 		children = [
-	// 			{ text: "Columns", type: 'columns', children: true },
-	// 		];
-	// 	} else if (data.kind == 'column') {
-	// 		type = 'column';
-	// 		name += `[<i>${data.type}</i>(<i>${data.size}</i>)]`;
-	// 	}
-	// 	data.label = data.name; // ?
-	// 	return {
-	// 		text: name,
-	// 		children: children,
-	// 		type: type,
-	// 		kind: data.kind,
-	// 		'_file': data,
-	// 	}
-	// };
-
-	// $scope.refreshDatabase = function () {
-	// 	if ($scope.selectedDatabase && $scope.selectedDatasource) {
-	// 		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
-	// 			.then(function (data) {
-	// 				$scope.datasource = data.data;
-	// 				let schemas = $scope.datasource.schemas.map(function (schemas) {
-	// 					return $scope.processData(schemas);
-	// 				})
-	// 			}.bind(this));
-	// 	} else {
-	// 		$scope.treeData.length = 0;
-	// 		$scope.jstreeWidget.jstree(true).refresh();
-	// 	}
-	// };
-
 	$scope.refreshDatabase = function () {
 		if ($scope.jstreeWidget.jstree(true).settings === undefined) $scope.jstreeWidget.jstree($scope.jstreeConfig);
 		if ($scope.selectedDatabase && $scope.selectedDatasource) {
-			$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
+			$http.get(databasesSvcUrl  + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
 				.then(function (data) {
 					$scope.datasource = data.data;
-					this.baseUrl = databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource;
+					this.baseUrl = databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource;
 					let schemas = $scope.datasource.schemas.map(function (schemas) {
 						return build(schemas);
 					})
@@ -692,7 +602,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 
 	$scope.switchDatabase = function (name) {
 		$scope.selectedDatabase = name;
-		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase)
+		$http.get(databasesSvcUrl + $scope.selectedDatabase)
 			.then(function (data) {
 				$scope.datasources = data.data;
 				if ($scope.datasources[0]) {
