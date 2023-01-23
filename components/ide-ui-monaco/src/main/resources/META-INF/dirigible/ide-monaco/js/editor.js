@@ -198,7 +198,7 @@ function FileIO() {
                         'X-Requested-With': 'Fetch',
                         'X-CSRF-Token': csrfToken,
                         'Dirigible-Editor': 'Monaco',
-                        'Content-Type': 'plain/text'
+                        'Content-Type': 'text/plain'
                     }
                 })
                     .then(response => {

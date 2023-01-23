@@ -18,7 +18,7 @@ var session = cmis.getSession();
 var rootFolder = session.getRootFolder();
 
 var inputStream = streams.createByteArrayInputStream([101,102,103,104]);
-var contentStream = session.getObjectFactory().createContentStream('test1.txt', 4, 'plain/text', inputStream);
+var contentStream = session.getObjectFactory().createContentStream('test1.txt', 4, 'text/plain', inputStream);
 var properties = {};
 properties[cmis.OBJECT_TYPE_ID] = cmis.OBJECT_TYPE_DOCUMENT;
 properties[cmis.NAME] = 'test1.txt';

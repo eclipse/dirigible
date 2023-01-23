@@ -103,7 +103,7 @@ public class CmisDatabaseRepositoryTest {
 //		root.put(CmisConstants.OBJECT_TYPE_ID, CmisConstants.OBJECT_TYPE_FOLDER);
 //		root.put(CmisConstants.NAME, "/");
 //		folder.createFolder(root);
-		ContentStream contentStream = new ContentStream(cmisSession, "/test.txt", 6, "plain/text", new ByteArrayInputStream(new byte[] {121, 122, 121, 122, 121, 122}));
+		ContentStream contentStream = new ContentStream(cmisSession, "/test.txt", 6, "text/plain", new ByteArrayInputStream(new byte[] {121, 122, 121, 122, 121, 122}));
 		Map<String, String> properties = new HashMap<String, String>();
 		properties.put(CmisConstants.OBJECT_TYPE_ID, CmisConstants.OBJECT_TYPE_DOCUMENT);
 		properties.put(CmisConstants.NAME, "test.txt");

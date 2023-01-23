@@ -1123,7 +1123,7 @@ declare module "@dirigible/http" {
          */
         characterEncoding?: string;
         /**
-         * The content type parameter. Default is plain/text
+         * The content type parameter. Default is text/plain
          */
         contentType?: string;
         /**

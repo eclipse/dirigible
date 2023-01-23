@@ -117,7 +117,7 @@ function setHttpClientConfigContentType(httpClientConfig) {
             // Do nothing
         }
 
-        httpClientConfig.options.contentType = "plain/text";
+        httpClientConfig.options.contentType = "text/plain";
     }
 }
 

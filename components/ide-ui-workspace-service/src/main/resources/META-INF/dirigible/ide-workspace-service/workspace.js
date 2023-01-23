@@ -118,7 +118,7 @@ angular.module('ideWorkspace', [])
                 let url = new UriBuilder().path((this.workspacesServiceUrl + targetPath).split('/')).path(name).build();
                 if (isDirectory)
                     url += "/";
-                return $http.post(url, content, { headers: { 'Dirigible-Editor': 'Workspace', 'Content-Type': 'plain/text' } })
+                return $http.post(url, content, { headers: { 'Dirigible-Editor': 'Workspace', 'Content-Type': 'text/plain' } })
                     .then(function successCallback(response) {
                         return {
                             status: response.status,
