@@ -39,11 +39,21 @@ public class StatusCommand {
 	/** The verifier. */
 	private ProjectPropertiesVerifier projectPropertiesVerifier;
 	
+	/**
+	 * Instantiates a new status command.
+	 *
+	 * @param projectPropertiesVerifier the project properties verifier
+	 */
 	@Autowired
 	public StatusCommand(ProjectPropertiesVerifier projectPropertiesVerifier) {
 		this.projectPropertiesVerifier = projectPropertiesVerifier;
 	}
 	
+	/**
+	 * Gets the project properties verifier.
+	 *
+	 * @return the project properties verifier
+	 */
 	public ProjectPropertiesVerifier getProjectPropertiesVerifier() {
 		return projectPropertiesVerifier;
 	}

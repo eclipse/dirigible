@@ -11,7 +11,7 @@
  */
 angular.module('ideWorkspace', [])
     .provider('workspaceApi', function WorkspaceApiProvider() {
-        this.workspacesServiceUrl = '/services/v8/ide/workspaces';
+        this.workspacesServiceUrl = '/services/v8/ide/workspaces/';
         this.workspaceManagerServiceUrl = '/services/v8/ide/workspace';
         this.workspaceSearchServiceUrl = '/services/v8/ide/workspace-search';
         this.$get = ['$http', function workspaceApiFactory($http) {
@@ -118,7 +118,7 @@ angular.module('ideWorkspace', [])
                 let url = new UriBuilder().path((this.workspacesServiceUrl + targetPath).split('/')).path(name).build();
                 if (isDirectory)
                     url += "/";
-                return $http.post(url, JSON.stringify(content), { headers: { 'Dirigible-Editor': 'Workspace' } })
+                return $http.post(url, content, { headers: { 'Dirigible-Editor': 'Workspace', 'Content-Type': 'plain/text' } })
                     .then(function successCallback(response) {
                         return {
                             status: response.status,

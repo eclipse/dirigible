@@ -87,6 +87,9 @@ public class ShareComandTest {
 		}
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

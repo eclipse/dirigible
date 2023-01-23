@@ -84,6 +84,9 @@ public class PullComandTest {
 		}
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

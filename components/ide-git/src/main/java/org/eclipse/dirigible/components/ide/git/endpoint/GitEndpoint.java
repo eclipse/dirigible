@@ -74,11 +74,21 @@ public class GitEndpoint {
 	/** The git service. */
 	private GitService gitService;
 	
+	/**
+	 * Instantiates a new git endpoint.
+	 *
+	 * @param gitService the git service
+	 */
 	@Autowired
 	public GitEndpoint(GitService gitService) {
 		this.gitService = gitService;
 	}
 	
+	/**
+	 * Gets the git service.
+	 *
+	 * @return the git service
+	 */
 	public GitService getGitService() {
 		return gitService;
 	}
@@ -212,7 +222,6 @@ public class GitEndpoint {
 	 * @param unpublish the unpublish
 	 * @return the response
 	 * @throws GitConnectorException in case of exception
-	 * @throws PublisherException in case of exception
 	 */
 	@DeleteMapping(value = {"/{repositoryName}/delete"}, produces = {"application/json"})
 	public ResponseEntity<?> deleteGitRepository(
@@ -345,10 +354,10 @@ public class GitEndpoint {
 	 * @param branch the branch
 	 * @return the response
 	 * @throws GitConnectorException the git connector exception
-	 * @throws GitAPIException 
-	 * @throws InvalidRefNameException 
-	 * @throws RefNotFoundException 
-	 * @throws RefAlreadyExistsException 
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
 	 */
 	@PostMapping(value = {"/{project}/branches/local/{branch}"}, consumes = {"application/json"})
 	public ResponseEntity<?> createLocalBranch(
@@ -368,10 +377,10 @@ public class GitEndpoint {
 	 * @param branch the branch
 	 * @return the response
 	 * @throws GitConnectorException the git connector exception
-	 * @throws GitAPIException 
-	 * @throws InvalidRefNameException 
-	 * @throws RefNotFoundException 
-	 * @throws RefAlreadyExistsException 
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
 	 */
 	@DeleteMapping(value = {"/{project}/branches/local/{branch}"}, consumes = {"application/json"})
 	public ResponseEntity<?> deleteLocalBranch(
@@ -406,12 +415,13 @@ public class GitEndpoint {
 	 * @param workspace the workspace
 	 * @param project the project
 	 * @param branch the branch
+	 * @param model the model
 	 * @return the response
 	 * @throws GitConnectorException the git connector exception
-	 * @throws GitAPIException 
-	 * @throws InvalidRefNameException 
-	 * @throws RefNotFoundException 
-	 * @throws RefAlreadyExistsException 
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
 	 */
 	@PostMapping(value = {"/{project}/branches/remote/{branch}"}, consumes = {"application/json"})
 	public ResponseEntity<?> createRemoteBranch(
@@ -430,12 +440,13 @@ public class GitEndpoint {
 	 * @param workspace the workspace
 	 * @param project the project
 	 * @param branch the branch
+	 * @param model the model
 	 * @return the response
 	 * @throws GitConnectorException the git connector exception
-	 * @throws GitAPIException 
-	 * @throws InvalidRefNameException 
-	 * @throws RefNotFoundException 
-	 * @throws RefAlreadyExistsException 
+	 * @throws RefAlreadyExistsException the ref already exists exception
+	 * @throws RefNotFoundException the ref not found exception
+	 * @throws InvalidRefNameException the invalid ref name exception
+	 * @throws GitAPIException the git API exception
 	 */
 	@DeleteMapping(value = {"/{project}/branches/remote/{branch}"}, consumes = {"application/json"})
 	public ResponseEntity<?> deleteRemoteBranch(

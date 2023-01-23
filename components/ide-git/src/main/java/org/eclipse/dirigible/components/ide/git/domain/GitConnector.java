@@ -388,6 +388,8 @@ public class GitConnector implements IGitConnector {
 	 *
 	 * @param name       the name
 	 * @param startPoint the start point
+	 * @param username the username
+	 * @param password the password
 	 * @throws RefAlreadyExistsException the ref already exists exception
 	 * @throws RefNotFoundException      the ref not found exception
 	 * @throws InvalidRefNameException   the invalid ref name exception
@@ -428,6 +430,8 @@ public class GitConnector implements IGitConnector {
 	 * Deletes the remote branch.
 	 *
 	 * @param name the name
+	 * @param username the username
+	 * @param password the password
 	 * @throws RefAlreadyExistsException the ref already exists exception
 	 * @throws RefNotFoundException      the ref not found exception
 	 * @throws InvalidRefNameException   the invalid ref name exception

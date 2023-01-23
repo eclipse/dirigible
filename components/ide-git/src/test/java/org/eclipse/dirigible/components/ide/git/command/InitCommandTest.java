@@ -62,6 +62,9 @@ public class InitCommandTest {
         }
     }
     
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
 	static class TestConfiguration {
 	}

@@ -91,6 +91,11 @@ public class GitFileUtils implements InitializingBean {
 	/** The database facade. */
 	private static GitFileUtils INSTANCE;
 	
+	/**
+	 * Instantiates a new git file utils.
+	 *
+	 * @param repository the repository
+	 */
 	private GitFileUtils(IRepository repository) {
 		this.repository = repository;
 	}
@@ -114,6 +119,11 @@ public class GitFileUtils implements InitializingBean {
         return INSTANCE;
     }
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	public IRepository getRepository() {
 		return repository;
 	}

@@ -50,16 +50,32 @@ public class CloneCommand {
 	/** The project metadata manager. */
 	private ProjectMetadataManager projectMetadataManager;
 
+	/**
+	 * Instantiates a new clone command.
+	 *
+	 * @param publisherService the publisher service
+	 * @param projectMetadataManager the project metadata manager
+	 */
 	@Autowired
 	public CloneCommand(PublisherService publisherService, ProjectMetadataManager projectMetadataManager) {
 		this.publisherService = publisherService;
 		this.projectMetadataManager = projectMetadataManager;
 	}
 	
+	/**
+	 * Gets the publisher service.
+	 *
+	 * @return the publisher service
+	 */
 	public PublisherService getPublisherService() {
 		return publisherService;
 	}
 	
+	/**
+	 * Gets the project metadata manager.
+	 *
+	 * @return the project metadata manager
+	 */
 	public ProjectMetadataManager getProjectMetadataManager() {
 		return projectMetadataManager;
 	}

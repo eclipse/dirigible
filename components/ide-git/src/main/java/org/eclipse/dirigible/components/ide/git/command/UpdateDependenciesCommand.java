@@ -33,6 +33,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateDependenciesCommand extends CloneCommand {
 
+	/**
+	 * Instantiates a new update dependencies command.
+	 *
+	 * @param publisherService the publisher service
+	 * @param projectMetadataManager the project metadata manager
+	 */
 	@Autowired
 	public UpdateDependenciesCommand(PublisherService publisherService, ProjectMetadataManager projectMetadataManager) {
 		super(publisherService, projectMetadataManager);

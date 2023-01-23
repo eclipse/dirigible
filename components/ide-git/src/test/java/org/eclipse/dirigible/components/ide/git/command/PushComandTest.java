@@ -102,6 +102,9 @@ public class PushComandTest {
 		}
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

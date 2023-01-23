@@ -214,19 +214,15 @@ public interface IGitConnector {
 	/**
 	 * Creates new remote branch from a particular start point.
 	 *
-	 * @param name
-	 *            the branch name
-	 * @param startPoint
-	 *            valid tree-ish object example: "5c15e8", "master", "HEAD",
+	 * @param name            the branch name
+	 * @param startPoint            valid tree-ish object example: "5c15e8", "master", "HEAD",
 	 *            "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
-	 * @throws RefAlreadyExistsException
-	 *             Already Exists Exception
-	 * @throws RefNotFoundException
-	 *             Ref Not Found Exception
-	 * @throws InvalidRefNameException
-	 *             Invalid Ref Name Exception
-	 * @throws GitAPIException
-	 *             Git API Exception
+	 * @param username the username
+	 * @param password the password
+	 * @throws RefAlreadyExistsException             Already Exists Exception
+	 * @throws RefNotFoundException             Ref Not Found Exception
+	 * @throws InvalidRefNameException             Invalid Ref Name Exception
+	 * @throws GitAPIException             Git API Exception
 	 */
 	void createRemoteBranch(String name, String startPoint, String username, String password)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException;
@@ -235,6 +231,8 @@ public interface IGitConnector {
 	 * Deletes the remote branch.
 	 *
 	 * @param name the name
+	 * @param username the username
+	 * @param password the password
 	 * @throws RefAlreadyExistsException the ref already exists exception
 	 * @throws RefNotFoundException the ref not found exception
 	 * @throws InvalidRefNameException the invalid ref name exception

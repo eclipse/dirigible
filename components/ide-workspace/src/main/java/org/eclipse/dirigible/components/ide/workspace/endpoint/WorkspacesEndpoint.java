@@ -32,7 +32,6 @@ import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.json.ProjectDescriptor;
 import org.eclipse.dirigible.components.ide.workspace.json.WorkspaceDescriptor;
-import org.eclipse.dirigible.components.ide.workspace.service.PublisherService;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
@@ -78,7 +77,7 @@ public class WorkspacesEndpoint {
 	 *
 	 * @return the list of workspaces names
 	 */
-	@GetMapping
+	@GetMapping(value = "/", produces = "application/json")
 	public ResponseEntity<List<String>> listWorkspaces() {
 		List<Workspace> workspaces = workspaceService.listWorkspaces();
 		List<String> workspacesNames = new ArrayList<String>();
@@ -95,7 +94,8 @@ public class WorkspacesEndpoint {
 	 * @return the workspace
 	 */
 	@GetMapping(value = "{workspace}", produces = "application/json")
-	public ResponseEntity<WorkspaceDescriptor> getWorkspace(@PathVariable("workspace") String workspace) {
+	public ResponseEntity<WorkspaceDescriptor> getWorkspace(
+			@PathVariable("workspace") String workspace) {
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
@@ -113,7 +113,8 @@ public class WorkspacesEndpoint {
 	 * @throws URISyntaxException the URI syntax exception
 	 */
 	@PostMapping("{workspace}")
-	public ResponseEntity<URI> createWorkspace(@PathVariable("workspace") String workspace) throws URISyntaxException {
+	public ResponseEntity<URI> createWorkspace(
+			@PathVariable("workspace") String workspace) throws URISyntaxException {
 		if (workspaceService.existsWorkspace(workspace)) {
 			return new ResponseEntity<URI>(workspaceService.getURI(workspace, null, null), HttpStatus.NOT_MODIFIED);
 		}
@@ -134,7 +135,8 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 */
 	@DeleteMapping("{workspace}")
-	public ResponseEntity<String> deleteWorkspace(@PathVariable("workspace") String workspace) {
+	public ResponseEntity<String> deleteWorkspace(
+			@PathVariable("workspace") String workspace) {
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Failed to delete workspace {0}, because it does not exist", workspace);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
@@ -154,7 +156,9 @@ public class WorkspacesEndpoint {
 	 * @return the project
 	 */
 	@GetMapping(value = "{workspace}/{project}", produces = "application/json")
-	public ResponseEntity<ProjectDescriptor> getProject(@PathVariable("workspace") String workspace, @PathVariable("project") String project) {
+	public ResponseEntity<ProjectDescriptor> getProject(
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project) {
 
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
@@ -183,7 +187,9 @@ public class WorkspacesEndpoint {
 	 * @throws URISyntaxException the URI syntax exception
 	 */
 	@PostMapping("{workspace}/{project}")
-	public ResponseEntity<URI> createProject(@PathVariable("workspace") String workspace, @PathVariable("project") String project)
+	public ResponseEntity<URI> createProject(
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project)
 			throws URISyntaxException {
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
@@ -214,7 +220,9 @@ public class WorkspacesEndpoint {
 	 * @throws IOException in case of exception
 	 */
 	@DeleteMapping("{workspace}/{project}")
-	public ResponseEntity<String> deleteProject(@PathVariable("workspace") String workspace, @PathVariable("project") String project) throws IOException {
+	public ResponseEntity<String> deleteProject(
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project) throws IOException {
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
@@ -243,7 +251,10 @@ public class WorkspacesEndpoint {
 	 * @return the file
 	 */
 	@GetMapping("{workspace}/{project}/{*path}")
-	public ResponseEntity<?> getFile(@PathVariable("workspace") String workspace, @PathVariable("project") String project, @PathVariable("path") String path,
+	public ResponseEntity<?> getFile(
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project,
+			@PathVariable("path") String path,
 			@Nullable @RequestHeader("describe") String headerContentType) {
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
@@ -292,9 +303,18 @@ public class WorkspacesEndpoint {
 	 * @throws URISyntaxException the URI syntax exception
 	 */
 	@PostMapping(value = "{workspace}/{project}/{*path}", consumes = "application/octet-stream")
-	public ResponseEntity<?> createFile(@PathVariable("workspace") String workspace, @PathVariable("project") String project, @PathVariable("path") String path,
-			@Valid @RequestBody byte[] content, @Nullable @RequestHeader("Content-Transfer-Encoding") String headerContentTransferEncoding, 
+	public ResponseEntity<?> createFile(
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project,
+			@PathVariable("path") String path,
+			@Valid @RequestBody byte[] content,
+			@Nullable @RequestHeader("Content-Transfer-Encoding") String headerContentTransferEncoding, 
 			@Nullable @RequestHeader("Content-Type") String headerContentType) throws URISyntaxException {
+		
+		if (content == null) {
+			content = new byte[] {};
+		}
+		
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
@@ -344,10 +364,19 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PostMapping(value = "{workspace}/{project}/{*path}", consumes = {"text/plain", "application/json"})
-	public ResponseEntity<?> createFile(@PathVariable("workspace") String workspace, @PathVariable("project") String project, @PathVariable("path") String path,
-			@Valid @RequestBody String content, @Nullable @RequestHeader("Content-Transfer-Encoding") String headerContentTransferEncoding, 
+	@PostMapping(value = "{workspace}/{project}/{*path}", consumes = {"plain/text"})
+	public ResponseEntity<?> createFile(
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project,
+			@PathVariable("path") String path,
+			@Nullable @RequestBody String content,
+			@Nullable @RequestHeader("Content-Transfer-Encoding") String headerContentTransferEncoding, 
 			@Nullable @RequestHeader("Content-Type") String headerContentType) throws URISyntaxException {
+		
+		if (content == null) {
+			content = "";
+		}
+		
 		return createFile(workspace, project, path, content.getBytes(StandardCharsets.UTF_8), headerContentTransferEncoding, headerContentType);
 	}
 
@@ -363,8 +392,16 @@ public class WorkspacesEndpoint {
 	 *             the URI syntax exception
 	 */
 	@PutMapping(value = "{workspace}/{project}/{*path}", consumes = "application/octet-stream")
-	public ResponseEntity<URI> updateFile(@PathVariable("workspace") String workspace, @PathVariable("project") String project, @PathVariable("path") String path,
-			@Valid @RequestBody byte[] content) throws URISyntaxException {
+	public ResponseEntity<URI> updateFile(
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project,
+			@PathVariable("path") String path,
+			@Nullable @RequestBody byte[] content) throws URISyntaxException {
+		
+		if (content == null) {
+			content = new byte[] {};
+		}
+		
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
@@ -398,9 +435,17 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PutMapping(value = "{workspace}/{project}/{*path}", consumes = {"text/plain", "application/json"})
-	public ResponseEntity<URI>  updateFile(@PathVariable("workspace") String workspace, @PathVariable("project") String project, @PathVariable("path") String path,
-			@Valid @RequestBody String content) throws URISyntaxException {
+	@PutMapping(value = "{workspace}/{project}/{*path}", consumes = {"plain/text"})
+	public ResponseEntity<URI>  updateFile(
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project,
+			@PathVariable("path") String path,
+			@Nullable @RequestBody String content) throws URISyntaxException {
+		
+		if (content == null) {
+			content = "";
+		}
+		
 		return updateFile(workspace, project, path, content.getBytes(StandardCharsets.UTF_8));
 	}
 
@@ -414,7 +459,10 @@ public class WorkspacesEndpoint {
 	 * @throws URISyntaxException the URI syntax exception
 	 */
 	@DeleteMapping("{workspace}/{project}/{*path}")
-	public ResponseEntity<?> deleteFile(@PathVariable("workspace") String workspace, @PathVariable("project") String project, @PathVariable("path") String path) throws URISyntaxException {
+	public ResponseEntity<?> deleteFile(
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project,
+			@PathVariable("path") String path) throws URISyntaxException {
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);

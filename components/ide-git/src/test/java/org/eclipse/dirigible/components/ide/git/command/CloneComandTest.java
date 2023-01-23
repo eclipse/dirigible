@@ -144,6 +144,9 @@ public class CloneComandTest {
 		}
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

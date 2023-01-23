@@ -48,16 +48,32 @@ public class PushCommand {
 	/** The verifier. */
 	private ProjectPropertiesVerifier projectPropertiesVerifier;
 	
+	/**
+	 * Instantiates a new push command.
+	 *
+	 * @param projectMetadataManager the project metadata manager
+	 * @param projectPropertiesVerifier the project properties verifier
+	 */
 	@Autowired
 	public PushCommand(ProjectMetadataManager projectMetadataManager, ProjectPropertiesVerifier projectPropertiesVerifier) {
 		this.projectMetadataManager = projectMetadataManager;
 		this.projectPropertiesVerifier = projectPropertiesVerifier;
 	}
 	
+	/**
+	 * Gets the project metadata manager.
+	 *
+	 * @return the project metadata manager
+	 */
 	public ProjectMetadataManager getProjectMetadataManager() {
 		return projectMetadataManager;
 	}
 	
+	/**
+	 * Gets the project properties verifier.
+	 *
+	 * @return the project properties verifier
+	 */
 	public ProjectPropertiesVerifier getProjectPropertiesVerifier() {
 		return projectPropertiesVerifier;
 	}

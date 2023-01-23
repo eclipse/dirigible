@@ -83,6 +83,9 @@ public class UpdateDepenedenciesComandTest {
 		}
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

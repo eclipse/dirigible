@@ -31,8 +31,14 @@ public class GitProjectStatusProvider implements ProjectStatusProvider {
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GitProjectStatusProvider.class);
 	
+	/** The status command. */
 	private StatusCommand statusCommand;
 	
+	/**
+	 * Instantiates a new git project status provider.
+	 *
+	 * @param statusCommand the status command
+	 */
 	@Autowired
 	public GitProjectStatusProvider(StatusCommand statusCommand) {
 		this.statusCommand = statusCommand;
@@ -55,6 +61,14 @@ public class GitProjectStatusProvider implements ProjectStatusProvider {
 		return null;
 	}
 
+	/**
+	 * Gets the project git folder.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the project git folder
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Override
 	public String getProjectGitFolder(String workspace, String project) throws IOException {
 		File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project).getCanonicalFile();

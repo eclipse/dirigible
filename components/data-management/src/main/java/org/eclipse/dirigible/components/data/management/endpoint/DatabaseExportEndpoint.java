@@ -48,16 +48,32 @@ public class DatabaseExportEndpoint {
 	/** The database metadata service. */
 	private DatabaseMetadataService databaseMetadataService;
 	
+	/**
+	 * Instantiates a new database export endpoint.
+	 *
+	 * @param databaseExportService the database export service
+	 * @param databaseMetadataService the database metadata service
+	 */
 	@Autowired
 	public DatabaseExportEndpoint(DatabaseExportService databaseExportService, DatabaseMetadataService databaseMetadataService) {
 		this.databaseExportService = databaseExportService;
 		this.databaseMetadataService = databaseMetadataService;
 	}
 	
+	/**
+	 * Gets the database export service.
+	 *
+	 * @return the database export service
+	 */
 	public DatabaseExportService getDatabaseExportService() {
 		return databaseExportService;
 	}
 	
+	/**
+	 * Gets the database metadata service.
+	 *
+	 * @return the database metadata service
+	 */
 	public DatabaseMetadataService getDatabaseMetadataService() {
 		return databaseMetadataService;
 	}
@@ -70,7 +86,7 @@ public class DatabaseExportEndpoint {
 	 * @param schema the schema name
 	 * @param structure the structure name
 	 * @return the response
-	 * @throws SQLException 
+	 * @throws SQLException the SQL exception
 	 */
 	@GetMapping(value = "/{datasource}/{schema}/{structure}", produces = "application/octet-stream")
 	public ResponseEntity<byte[]> exportArtifact(
@@ -95,7 +111,7 @@ public class DatabaseExportEndpoint {
 	 * @param datasource the datasource
 	 * @param schema the schema name
 	 * @return the response
-	 * @throws SQLException 
+	 * @throws SQLException the SQL exception
 	 */
 	@GetMapping(value = "/{datasource}/{schema}", produces = "application/octet-stream")
 	public ResponseEntity<byte[]> exportSchema(

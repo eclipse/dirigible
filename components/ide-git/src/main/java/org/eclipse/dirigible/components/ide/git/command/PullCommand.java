@@ -51,6 +51,13 @@ public class PullCommand {
 	/** The verifier. */
 	private ProjectPropertiesVerifier projectPropertiesVerifier;
 	
+	/**
+	 * Instantiates a new pull command.
+	 *
+	 * @param publisherService the publisher service
+	 * @param projectMetadataManager the project metadata manager
+	 * @param projectPropertiesVerifier the project properties verifier
+	 */
 	@Autowired
 	public PullCommand(PublisherService publisherService, ProjectMetadataManager projectMetadataManager, ProjectPropertiesVerifier projectPropertiesVerifier) {
 		this.publisherService = publisherService;
@@ -58,14 +65,29 @@ public class PullCommand {
 		this.projectPropertiesVerifier = projectPropertiesVerifier;
 	}
 	
+	/**
+	 * Gets the publisher service.
+	 *
+	 * @return the publisher service
+	 */
 	public PublisherService getPublisherService() {
 		return publisherService;
 	}
 	
+	/**
+	 * Gets the project metadata manager.
+	 *
+	 * @return the project metadata manager
+	 */
 	public ProjectMetadataManager getProjectMetadataManager() {
 		return projectMetadataManager;
 	}
 	
+	/**
+	 * Gets the project properties verifier.
+	 *
+	 * @return the project properties verifier
+	 */
 	public ProjectPropertiesVerifier getProjectPropertiesVerifier() {
 		return projectPropertiesVerifier;
 	}

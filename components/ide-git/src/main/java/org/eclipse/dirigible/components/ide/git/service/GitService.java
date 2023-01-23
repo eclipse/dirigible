@@ -105,6 +105,20 @@ public class GitService {
 	/** The update dependencies command. */
 	private UpdateDependenciesCommand updateDependenciesCommand;
 	
+	/**
+	 * Instantiates a new git service.
+	 *
+	 * @param workspacesService the workspaces service
+	 * @param publisherService the publisher service
+	 * @param cloneCommand the clone command
+	 * @param pullCommand the pull command
+	 * @param pushCommand the push command
+	 * @param resetCommand the reset command
+	 * @param shareCommand the share command
+	 * @param checkoutCommand the checkout command
+	 * @param commitCommand the commit command
+	 * @param updateDependenciesCommand the update dependencies command
+	 */
 	public GitService(WorkspaceService workspacesService, PublisherService publisherService, CloneCommand cloneCommand, PullCommand pullCommand, 
 			PushCommand pushCommand, ResetCommand resetCommand, ShareCommand shareCommand, CheckoutCommand checkoutCommand, 
 			CommitCommand commitCommand, UpdateDependenciesCommand updateDependenciesCommand) {

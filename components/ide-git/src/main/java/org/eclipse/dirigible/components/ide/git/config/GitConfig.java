@@ -17,9 +17,18 @@ import org.eclipse.dirigible.components.ide.workspace.domain.ProjectStatusProvid
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class GitConfig.
+ */
 @Configuration
 public class GitConfig {
 	
+	/**
+	 * Creates the project status provider.
+	 *
+	 * @param statusCommand the status command
+	 * @return the project status provider
+	 */
 	@Bean
 	public ProjectStatusProvider createProjectStatusProvider(StatusCommand statusCommand) {
 		return new GitProjectStatusProvider(statusCommand);

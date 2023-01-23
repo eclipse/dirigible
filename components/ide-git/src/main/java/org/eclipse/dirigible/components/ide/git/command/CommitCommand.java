@@ -41,11 +41,21 @@ public class CommitCommand {
 	/** The verifier. */
 	private ProjectPropertiesVerifier projectPropertiesVerifier;
 	
+	/**
+	 * Instantiates a new commit command.
+	 *
+	 * @param projectPropertiesVerifier the project properties verifier
+	 */
 	@Autowired
 	public CommitCommand(ProjectPropertiesVerifier projectPropertiesVerifier) {
 		this.projectPropertiesVerifier = projectPropertiesVerifier;
 	}
 	
+	/**
+	 * Gets the project properties verifier.
+	 *
+	 * @return the project properties verifier
+	 */
 	public ProjectPropertiesVerifier getProjectPropertiesVerifier() {
 		return projectPropertiesVerifier;
 	}
