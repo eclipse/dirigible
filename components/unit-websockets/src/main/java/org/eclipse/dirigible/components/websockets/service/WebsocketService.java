@@ -96,6 +96,25 @@ public class WebsocketService implements ArtefactService<Websocket> {
     }
     
     /**
+     * Find by endpoint.
+     *
+     * @param name the endpoint
+     * @return the websocket
+     */
+    @Transactional(readOnly = true)
+    public Websocket findByEndpoint(String endpoint) {
+        Websocket filter = new Websocket();
+        filter.setEndpoint(endpoint);
+        Example<Websocket> example = Example.of(filter);
+        Optional<Websocket> extension = websocketRepository.findOne(example);
+        if (extension.isPresent()) {
+            return extension.get();
+        } else {
+            throw new IllegalArgumentException("Websocket for endpoint does not exist: " + endpoint);
+        }
+    }
+    
+    /**
      * Find by key.
      *
      * @param key the key

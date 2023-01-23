@@ -22,6 +22,7 @@
 		<module>core-repository</module>
 		<module>core-registry</module>
 		<module>core-version</module>
+		<module>core-websockets</module>
 		
 		<!-- Units -->
 		<module>unit-jobs</module>
@@ -44,6 +45,7 @@
 		<!-- IDE -->
 		<module>ide-workspace</module>
 		<module>ide-git</module>
+		<module>ide-console</module>
 		
 		<!-- IDE UI -->
 		<module>ide-ui-about</module>
@@ -132,6 +134,7 @@
 		<module>api-security</module>
 		<module>api-platform</module>
 		<module>api-indexing</module>
+		<module>api-net</module>
 		
 		<!-- Resources -->
 		<module>resources-core</module>
@@ -291,25 +294,6 @@
 				<exclusion>
 					<groupId>javax.ws.rs</groupId>
 					<artifactId>javax.ws.rs-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<!-- Modules -->
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-ide-service-console</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-commons-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.cxf</groupId>
-					<artifactId>
-						cxf-rt-rs-service-description-swagger
-					</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

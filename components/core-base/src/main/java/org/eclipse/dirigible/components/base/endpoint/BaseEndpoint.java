@@ -40,4 +40,7 @@ public abstract class BaseEndpoint {
 	/** The Constant PREFIX_ENDPOINT_PUBLIC. */
 	public static final String PREFIX_ENDPOINT_PUBLIC = "public/v8/";
 	
+	/** The Constant PREFIX_ENDPOINT_WEBSOCKETS. */
+	public static final String PREFIX_ENDPOINT_WEBSOCKETS = "/websockets/v8/";
+	
 }

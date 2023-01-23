@@ -785,6 +785,7 @@
 		<jedis.version>4.3.1</jedis.version>
 		<spark.version>3.3.1</spark.version>
 		<path-to-regexp.version>6.2.1</path-to-regexp.version>
+		<javax.websocket-api.version>1.1</javax.websocket-api.version>
 
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<org.springdoc.openapi.ui.version>1.6.14</org.springdoc.openapi.ui.version>
