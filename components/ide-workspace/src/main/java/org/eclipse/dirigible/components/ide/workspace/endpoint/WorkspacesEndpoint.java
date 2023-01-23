@@ -77,7 +77,7 @@ public class WorkspacesEndpoint {
 	 *
 	 * @return the list of workspaces names
 	 */
-	@GetMapping(value = "/", produces = "application/json")
+	@GetMapping(produces = "application/json")
 	public ResponseEntity<List<String>> listWorkspaces() {
 		List<Workspace> workspaces = workspaceService.listWorkspaces();
 		List<String> workspacesNames = new ArrayList<String>();
@@ -93,7 +93,7 @@ public class WorkspacesEndpoint {
 	 * @param workspace the workspace
 	 * @return the workspace
 	 */
-	@GetMapping(value = "{workspace}", produces = "application/json")
+	@GetMapping(value = "/{workspace}", produces = "application/json")
 	public ResponseEntity<WorkspaceDescriptor> getWorkspace(
 			@PathVariable("workspace") String workspace) {
 		if (!workspaceService.existsWorkspace(workspace)) {
@@ -112,7 +112,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PostMapping("{workspace}")
+	@PostMapping("/{workspace}")
 	public ResponseEntity<URI> createWorkspace(
 			@PathVariable("workspace") String workspace) throws URISyntaxException {
 		if (workspaceService.existsWorkspace(workspace)) {
@@ -134,7 +134,7 @@ public class WorkspacesEndpoint {
 	 * @param workspace the workspace
 	 * @return the response
 	 */
-	@DeleteMapping("{workspace}")
+	@DeleteMapping("/{workspace}")
 	public ResponseEntity<String> deleteWorkspace(
 			@PathVariable("workspace") String workspace) {
 		if (!workspaceService.existsWorkspace(workspace)) {
@@ -155,7 +155,7 @@ public class WorkspacesEndpoint {
 	 * @param project the project
 	 * @return the project
 	 */
-	@GetMapping(value = "{workspace}/{project}", produces = "application/json")
+	@GetMapping(value = "/{workspace}/{project}", produces = "application/json")
 	public ResponseEntity<ProjectDescriptor> getProject(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project) {
@@ -186,7 +186,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PostMapping("{workspace}/{project}")
+	@PostMapping("/{workspace}/{project}")
 	public ResponseEntity<URI> createProject(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project)
@@ -219,7 +219,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws IOException in case of exception
 	 */
-	@DeleteMapping("{workspace}/{project}")
+	@DeleteMapping("/{workspace}/{project}")
 	public ResponseEntity<String> deleteProject(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project) throws IOException {
@@ -250,7 +250,7 @@ public class WorkspacesEndpoint {
 	 * @param headerContentType the header content type
 	 * @return the file
 	 */
-	@GetMapping("{workspace}/{project}/{*path}")
+	@GetMapping("/{workspace}/{project}/{*path}")
 	public ResponseEntity<?> getFile(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,
@@ -302,7 +302,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PostMapping(value = "{workspace}/{project}/{*path}", consumes = "application/octet-stream")
+	@PostMapping(value = "/{workspace}/{project}/{*path}", consumes = "application/octet-stream")
 	public ResponseEntity<?> createFile(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,
@@ -364,7 +364,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PostMapping(value = "{workspace}/{project}/{*path}", consumes = {"text/plain"})
+	@PostMapping(value = "/{workspace}/{project}/{*path}", consumes = {"plain/text"})
 	public ResponseEntity<?> createFile(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,
@@ -391,7 +391,7 @@ public class WorkspacesEndpoint {
 	 * @throws URISyntaxException
 	 *             the URI syntax exception
 	 */
-	@PutMapping(value = "{workspace}/{project}/{*path}", consumes = "application/octet-stream")
+	@PutMapping(value = "/{workspace}/{project}/{*path}", consumes = "application/octet-stream")
 	public ResponseEntity<URI> updateFile(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,
@@ -435,7 +435,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PutMapping(value = "{workspace}/{project}/{*path}", consumes = {"text/plain"})
+	@PutMapping(value = "/{workspace}/{project}/{*path}", consumes = {"plain/text"})
 	public ResponseEntity<URI>  updateFile(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,
@@ -458,7 +458,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@DeleteMapping("{workspace}/{project}/{*path}")
+	@DeleteMapping("/{workspace}/{project}/{*path}")
 	public ResponseEntity<?> deleteFile(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,

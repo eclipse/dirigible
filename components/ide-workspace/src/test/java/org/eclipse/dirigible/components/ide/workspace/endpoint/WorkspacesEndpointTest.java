@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
@@ -65,14 +66,14 @@ public class WorkspacesEndpointTest {
 	
 	@BeforeEach
     public void setup() throws Exception {
-		
 		cleanup();
-
-    	
     }
 	
 	@AfterEach
     public void cleanup() throws Exception {
+		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1")
+				.with(csrf()))
+			.andDo(print());
     }
 	
 	@Test
