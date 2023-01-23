@@ -364,7 +364,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PostMapping(value = "/{workspace}/{project}/{*path}", consumes = {"plain/text"})
+	@PostMapping(value = "/{workspace}/{project}/{*path}", consumes = {"text/plain"})
 	public ResponseEntity<?> createFile(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,
@@ -435,7 +435,7 @@ public class WorkspacesEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PutMapping(value = "/{workspace}/{project}/{*path}", consumes = {"plain/text"})
+	@PutMapping(value = "/{workspace}/{project}/{*path}", consumes = {"text/plain"})
 	public ResponseEntity<URI>  updateFile(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,
