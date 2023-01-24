@@ -35,11 +35,15 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: releng-folder
-        path: releng/
+        path: |
+          releng/**/Dockerfile
+          releng/**/Dockerfile-base
+          releng/**/Dockerfile-base
+          releng/**/target/ROOT.war
 
   docker-1:
     needs: build
-    name: Docker - Anonymous
+    name: Anonymous
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/anonymous-all
@@ -49,7 +53,7 @@ jobs:
 
   docker-2:
     needs: build
-    name: Docker - Anonymous - Runtime
+    name: Anonymous - Runtime
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/anonymous-runtime
@@ -59,7 +63,7 @@ jobs:
 
   docker-3:
     needs: build
-    name: Docker - OpenShift
+    name: OpenShift
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/openshift-all
@@ -69,7 +73,7 @@ jobs:
 
   docker-4:
     needs: build
-    name: Docker - SAP Cloud Foundry
+    name: SAP Cloud Foundry
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/sap-cf-all
@@ -79,7 +83,7 @@ jobs:
 
   docker-5:
     needs: build
-    name: Docker - SAP Cloud Foundry - Runtime
+    name: SAP Cloud Foundry - Runtime
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/sap-cf-runtime
@@ -89,7 +93,7 @@ jobs:
 
   docker-6:
     needs: build
-    name: Docker - SAP Kyma
+    name: SAP Kyma
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/sap-kyma-all
@@ -99,7 +103,7 @@ jobs:
 
   docker-7:
     needs: build
-    name: Docker - SAP Kyma - Runtime
+    name: SAP Kyma - Runtime
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/sap-kyma-runtime
@@ -109,7 +113,7 @@ jobs:
 
   docker-8:
     needs: build
-    name: Docker - Dirigible
+    name: Dirigible
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/server-all
@@ -119,7 +123,7 @@ jobs:
 
   docker-9:
     needs: build
-    name: Docker - Dirigible - Runtime
+    name: Dirigible - Runtime
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/server-runtime
@@ -129,7 +133,7 @@ jobs:
 
   docker-10:
     needs: build
-    name: Docker - Dirigible - Trial
+    name: Dirigible - Trial
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/trial-all
@@ -139,7 +143,7 @@ jobs:
 
   docker-11:
     needs: build
-    name: Docker - Dirigible - Keycloak
+    name: Dirigible - Keycloak
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/server-keycloak-all
@@ -149,7 +153,7 @@ jobs:
 
   docker-12:
     needs: build
-    name: Docker - Dirigible - Keycloak - Runtime
+    name: Dirigible - Keycloak - Runtime
     uses: ./.github/workflows/push-docker.yml
     with:
       location: releng/server-runtime-keycloak

@@ -15,7 +15,7 @@ on:
 
 jobs:
   push:
-    name: Build & Push Docker Image
+    name: Docker Image
     runs-on: ubuntu-latest
     steps:
 
@@ -24,6 +24,8 @@ jobs:
       with:
         name: releng-folder
         path: releng
+
+    - run: ls -R
 
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
