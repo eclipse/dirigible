@@ -58,7 +58,6 @@ public class WebsocketsFacade implements IScriptingFacade {
 	 *
 	 * @param uri the URI
 	 * @param handler the handler
-	 * @param engine the engine type
 	 * @return the Websocket Session object
 	 * @throws DeploymentException in case of an error
 	 * @throws IOException  in case of an error

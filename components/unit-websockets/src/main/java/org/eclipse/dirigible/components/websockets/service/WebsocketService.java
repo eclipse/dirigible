@@ -98,7 +98,7 @@ public class WebsocketService implements ArtefactService<Websocket> {
     /**
      * Find by endpoint.
      *
-     * @param name the endpoint
+     * @param endpoint the endpoint
      * @return the websocket
      */
     @Transactional(readOnly = true)
