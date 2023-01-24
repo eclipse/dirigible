@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2010-2022 SAP and others.
+  ~ Copyright (c) 2010-2023 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -8,49 +8,31 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-<html lang="en" ng-app="IDEBPMWorkspace" ng-controller="ExampleViewController" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" ng-app="IDEBPMWorkspace" ng-controller="BpmWorkspaceViewController"
+	xmlns="http://www.w3.org/1999/xhtml">
 
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-
 		<title dg-brand-title></title>
-
-		<!-- 'brandicon' is an AngularJS directive to set the proper favicon. Do this only for perspective and not regular views -->
 		<link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
-
-		<!-- Perspective data -->
-		<script type="text/javascript" src="/services/v8/web/ide-bpm-workspace/services/perspective.js"></script>
-
+		<script type="text/javascript" src="/services/v4/web/ide-bpm-workspace/services/perspective.js"></script>
 		<theme></theme>
-
-		<script type="text/javascript" src="/services/v8/js/resources-core/services/loader.js?id=ide-perspective-js"></script>
-
+		<script type="text/javascript" src="/services/v4/js/resources-core/services/loader.js?id=ide-perspective-js">
+		</script>
 		<link type="text/css" rel="stylesheet"
-			href="/services/v8/js/resources-core/services/loader.js?id=ide-perspective-css" />
-
-		<!-- Project-specific stuff -->
+			href="/services/v4/js/resources-core/services/loader.js?id=ide-perspective-css" />
 		<script type="text/javascript" src="js/perspective.js"></script>
-
 	</head>
 
-	<body dg-contextmenu="contextMenuContent">
-
-		<!-- Top IDE panel and it's contents -->
+	<body>
 		<ide-header menu-ext-id="ide-bpm-workspace-menu"></ide-header>
-		<!-- Context menu overlay -->
 		<ide-contextmenu></ide-contextmenu>
-
-		<!-- The container which holds the sidebar and this perspective -->
 		<ide-container>
 			<ide-layout views-layout-model="layoutModel"></ide-layout>
 		</ide-container>
-
-		<!-- Alert dialog Overlay for alerts, notifications, dialogs -->
 		<ide-dialogs></ide-dialogs>
-		<!-- Bottom IDE status bar -->
 		<ide-status-bar></ide-status-bar>
-
 	</body>
 
 </html>

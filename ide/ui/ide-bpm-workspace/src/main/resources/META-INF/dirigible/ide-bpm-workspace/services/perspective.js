@@ -10,10 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const perspectiveData = {
-	id: "ide-bpm-workspace", // ID used for sidebar indication and layout settings
-	name: "BPM Workspace", // User-facing name
-	link: "../ide-bpm-workspace/perspective.html", // Link to the main perspective view
-	order: "1000", // Used to sort the tabs in the sidebar
+	id: "ide-bpm-workspace",
+	name: "BPM Workspace",
+	link: "../ide-bpm-workspace/perspective.html",
+	order: "820",
 	icon: "../ide-bpm-workspace/images/process.svg",
 };
 if (typeof exports !== 'undefined') {

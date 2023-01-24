@@ -9,35 +9,35 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let editorView = angular.module('bpm-image-app', ['ideUI', 'ideView']);
+let bpmImageView = angular.module('bpm-image-app', ['ideUI', 'ideView']);
 
-editorView.controller('BpmImageViewController', ['$scope', '$window', 'messageHub', 'ViewParameters', function ($scope, $window, messageHub, ViewParameters) {
+bpmImageView.config(["messageHubProvider", function (messageHubProvider) {
+    messageHubProvider.eventIdPrefix = 'IDEBPMWorkspace';
+}]);
+
+bpmImageView.controller('BpmImageViewController', ['$scope', 'messageHub', function ($scope, messageHub) {
     $scope.imageLink = "";
     $scope.state = {
-        isBusy: true,
+        isBusy: false,
         error: false,
         busyText: "Loading...",
     };
 
-    angular.element($window).bind("focus", function () {
-        messageHub.setFocusedEditor($scope.dataParameters.file);
-        messageHub.setStatusCaret('');
-    });
-
-    $scope.loadFileContents = function () {
-        $scope.imageLink = '/services/v4/ide/bpm/bpm-processes/' + $scope.dataParameters.file + '/image';
+    $scope.loadImageLink = function (filename) {
+        $scope.imageLink = `/services/v4/ide/bpm/bpm-processes/${filename}/image`;
         $scope.state.isBusy = false;
     };
 
-    messageHub.onEditorFocusGain(function (msg) {
-        if (msg.resourcePath === $scope.dataParameters.file) messageHub.setStatusCaret('');
+    messageHub.onDidReceiveMessage('image-viewer.image', function (msg) {
+        $scope.$apply(function () {
+            $scope.state.isBusy = true;
+            if (!msg.data.hasOwnProperty('filename')) {
+                $scope.state.error = true;
+                $scope.errorMessage = "The 'filename' parameter is missing.";
+            } else {
+                $scope.state.error = false;
+                $scope.loadImageLink(msg.data.filename);
+            }
+        });
     });
-
-    $scope.dataParameters = ViewParameters.get();
-    if (!$scope.dataParameters.hasOwnProperty('file')) {
-        $scope.state.error = true;
-        $scope.errorMessage = "The 'file' data parameter is missing.";
-    } else {
-        $scope.loadFileContents();
-    }
 }]);

@@ -1,0 +1,4 @@
+{
+    "name": "ide-bpm-workspace-menu",
+    "description": "Extension Point for the IDE BPM Workspace Menu"
+}

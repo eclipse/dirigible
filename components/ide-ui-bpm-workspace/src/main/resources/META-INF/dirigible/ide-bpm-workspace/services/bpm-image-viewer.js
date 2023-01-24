@@ -9,19 +9,15 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const editorData = {
-	id: "bpmImage",
+const viewData = {
+	id: "ide-bpm-image-viewer",
+	label: "BPM Image Viewer",
 	factory: "frame",
 	region: "center",
-	label: "BPM Image Viewer",
 	link: "../ide-bpm-workspace/bpm-image-viewer.html",
-	contentTypes: [
-		"image/jpeg",
-		"image/png"
-	]
 };
 if (typeof exports !== 'undefined') {
-	exports.getEditor = function () {
-		return editorData;
+	exports.getView = function () {
+		return viewData;
 	}
 }
