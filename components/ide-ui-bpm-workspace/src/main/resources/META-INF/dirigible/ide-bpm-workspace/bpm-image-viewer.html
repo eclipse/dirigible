@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ Copyright (c) 2010-2023 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -18,23 +18,21 @@
 		<script type="text/javascript" src="services/bpm-image-viewer.js"></script>
 		<theme></theme>
 		<script type="text/javascript" src="/services/v8/js/resources-core/services/loader.js?id=ide-view-js"></script>
-
-		<link type="text/css" rel="stylesheet" href="/services/v8/js/resources-core/services/loader.js?id=ide-view-css" />
+		<link type="text/css" rel="stylesheet"
+			href="/services/v8/js/resources-core/services/loader.js?id=ide-view-css" />
 		<script type="text/javascript" src="js/bpm-image-viewer.js"></script>
 	</head>
 
-	<body class="fd-scrollbar dg-center">
-		<div class="fd-busy-indicator-extended" ng-hide="dataLoaded">
-			<div class="fd-busy-indicator fd-busy-indicator--l" aria-hidden="false" aria-label="Loading">
-				<div class="fd-busy-indicator--circle-0"></div>
-				<div class="fd-busy-indicator--circle-1"></div>
-				<div class="fd-busy-indicator--circle-2"></div>
-			</div>
-			<div class="fd-busy-indicator-extended__label">Loading image...</div>
-		</div>
-
-		<img id="image-view" class="dg-contain-image" ng-src="{{ imageLink }}" alt="Image"
-			ng-show="dataLoaded" />
+	<body class="dg-center" fd-scrollbar>
+		<fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
+			{{state.busyText}}
+		</fd-busy-indicator-extended>
+		<img ng-if="imageLink !== ''" class="dg-contain-image" style="background-color: #f2f2f2"
+			ng-src="{{ imageLink }}" alt="Image" ng-show="!state.error && !state.isBusy" />
+		<fd-message-page glyph="sap-icon--error" ng-if="state.error">
+			<fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
+			<fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
+		</fd-message-page>
 	</body>
 
 </html>

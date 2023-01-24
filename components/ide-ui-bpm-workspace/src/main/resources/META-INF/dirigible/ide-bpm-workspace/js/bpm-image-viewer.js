@@ -9,32 +9,35 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let editorView = angular.module('bpm-image-app', ['ideUI', 'ideView']);
+let bpmImageView = angular.module('bpm-image-app', ['ideUI', 'ideView']);
 
-editorView.controller('BpmImageViewController', ['$scope', function ($scope) {
+bpmImageView.config(["messageHubProvider", function (messageHubProvider) {
+    messageHubProvider.eventIdPrefix = 'IDEBPMWorkspace';
+}]);
+
+bpmImageView.controller('BpmImageViewController', ['$scope', 'messageHub', function ($scope, messageHub) {
     $scope.imageLink = "";
-    $scope.dataLoaded = false;
+    $scope.state = {
+        isBusy: false,
+        error: false,
+        busyText: "Loading...",
+    };
 
-    $scope.getViewParameters = function () {
-        if (window.frameElement.hasAttribute("data-parameters")) {
-            let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
-            $scope.file = params["file"];
-        } else {
-            let searchParams = new URLSearchParams(window.location.search);
-            $scope.file = searchParams.get('file');
-        }
-    }
+    $scope.loadImageLink = function (filename) {
+        $scope.imageLink = `/services/v8/ide/bpm/bpm-processes/${filename}/image`;
+        $scope.state.isBusy = false;
+    };
 
-    $scope.loadFileContents = function () {
-        $scope.getViewParameters();
-        if ($scope.file) {
-            $scope.imageLink = '/services/v8/ide/bpm/bpm-processes/' + $scope.file + '/image';
-            $scope.dataLoaded = true;
-        } else {
-            console.error('file parameter is not present in the URL');
-        }
-    }
-
-    $scope.loadFileContents();
-
+    messageHub.onDidReceiveMessage('image-viewer.image', function (msg) {
+        $scope.$apply(function () {
+            $scope.state.isBusy = true;
+            if (!msg.data.hasOwnProperty('filename')) {
+                $scope.state.error = true;
+                $scope.errorMessage = "The 'filename' parameter is missing.";
+            } else {
+                $scope.state.error = false;
+                $scope.loadImageLink(msg.data.filename);
+            }
+        });
+    });
 }]);
