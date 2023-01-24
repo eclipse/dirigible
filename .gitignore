@@ -8,6 +8,9 @@ log/
 .idea
 .history
 
+# Ignore log/ folder rule, for logs API
+!components/api-log/src/**/
+
 # files
 .DS_Store
 .project
