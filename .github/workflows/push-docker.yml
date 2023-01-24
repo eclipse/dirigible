@@ -1,0 +1,48 @@
+name: Push Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      location:
+        required: true
+        type: string
+      baseImageRepository:
+        required: true
+        type: string
+      imageRepository:
+        required: true
+        type: string
+
+jobs:
+  push:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Download Releng Folder
+      uses: actions/download-artifact@v3
+      with:
+        name: releng-folder
+        path: releng
+
+    - name: Docker Login
+      run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      with:
+        install: true
+
+    - name: Set Multi-Builder Docker Buildx
+      run: docker buildx create --use --name multi-builder --platform linux/arm64,linux/amd64,linux/arm64/v8
+
+    - name: Push Image
+      run: |
+        cd ${{ inputs.location }}
+        docker build --load -t dirigible-base -f Dockerfile-base .
+        docker tag dirigible-base ${{ inputs.baseImageRepository }}
+        docker push ${{ inputs.baseImageRepository }}
+
+        docker build --load -t dirigible-anonymous .
+        docker tag dirigible-anonymous ${{ inputs.imageRepository }}
+        docker push ${{ inputs.imageRepository }}

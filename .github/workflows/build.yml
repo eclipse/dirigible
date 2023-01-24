@@ -5,8 +5,12 @@ on:
     branches: 
       - main
       - master
+      - build-action-improvements
+
 jobs:
+
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -24,195 +28,206 @@ jobs:
         distribution: 'zulu'
         java-version: '13'
         architecture: x64
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-      with:
-        install: true
-    - name: Set Multi-Builder Docker Buildx
-      run: docker buildx create --use --name multi-builder --platform linux/arm64,linux/amd64,linux/arm64/v8
     - name: Maven Build
-      run: mvn clean install -Dmaven.javadoc.skip=false
-    - name: Docker Login
-      run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
-    - name: Push Anonymous
-      run: |
-        cd releng/anonymous-all
-        docker build --load -t dirigible-base-platform-anonymous -f Dockerfile-base .
-        docker tag dirigible-base-platform-anonymous dirigiblelabs/dirigible-base-platform-anonymous
-        docker push dirigiblelabs/dirigible-base-platform-anonymous
-        docker build --load -t dirigible-anonymous .
-        docker tag dirigible-anonymous dirigiblelabs/dirigible-anonymous
-        docker push dirigiblelabs/dirigible-anonymous
-        docker image prune -a -f
-        cd ../../
-    - name: Push Anonymous - Runtime
-      run: |
-        cd releng/anonymous-runtime
-        docker build --load -t dirigible-base-platform-runtime-anonymous -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime-anonymous dirigiblelabs/dirigible-base-platform-runtime-anonymous
-        docker push dirigiblelabs/dirigible-base-platform-runtime-anonymous
-        docker build --load -t dirigible-runtime-anonymous .
-        docker tag dirigible-runtime-anonymous dirigiblelabs/dirigible-runtime-anonymous
-        docker push dirigiblelabs/dirigible-runtime-anonymous
-        docker image prune -a -f
-        cd ../../
-    - name: Push OpenShift
-      run: |
-        cd releng/openshift-all
-        docker build --load -t dirigible-base-platform-openshift -f Dockerfile-base .
-        docker tag dirigible-base-platform-openshift dirigiblelabs/dirigible-base-platform-openshift
-        docker push dirigiblelabs/dirigible-base-platform-openshift
-        docker build --load -t dirigible-openshift .
-        docker tag dirigible-openshift dirigiblelabs/dirigible-openshift
-        docker push dirigiblelabs/dirigible-openshift
-        docker image prune -a -f
-        cd ../../
-    - name: Push SAP Cloud Foundry
-      run: |
-        cd releng/sap-cf-all
-        docker build --load -t dirigible-base-platform-sap-cf -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-cf dirigiblelabs/dirigible-base-platform-sap-cf
-        docker push dirigiblelabs/dirigible-base-platform-sap-cf
-        docker build --load -t dirigible-sap-cf .
-        docker tag dirigible-sap-cf dirigiblelabs/dirigible-sap-cf
-        docker push dirigiblelabs/dirigible-sap-cf
-        docker image prune -a -f
-        cd ../../
-    - name: Push SAP Cloud Foundry - Runtime
-      run: |
-        cd releng/sap-cf-runtime
-        docker build --load -t dirigible-base-platform-sap-cf-runtime -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-cf-runtime dirigiblelabs/dirigible-base-platform-sap-cf-runtime
-        docker push dirigiblelabs/dirigible-base-platform-sap-cf-runtime
-        docker build --load -t dirigible-sap-cf-runtime .
-        docker tag dirigible-sap-cf-runtime dirigiblelabs/dirigible-sap-cf-runtime
-        docker push dirigiblelabs/dirigible-sap-cf-runtime
-        docker image prune -a -f
-        cd ../../
-    - name: Push SAP Kyma
-      run: |
-        cd releng/sap-kyma-all
-        docker build --load -t dirigible-base-platform-sap-kyma -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-kyma dirigiblelabs/dirigible-base-platform-sap-kyma
-        docker push dirigiblelabs/dirigible-base-platform-sap-kyma
-        docker build --load -t dirigible-sap-kyma .
-        docker tag dirigible-sap-kyma dirigiblelabs/dirigible-sap-kyma
-        docker push dirigiblelabs/dirigible-sap-kyma
-        docker image prune -a -f
-        cd ../../
-    - name: Push SAP Kyma - Runtime
-      run: |
-        cd releng/sap-kyma-runtime
-        docker build --load -t dirigible-base-platform-sap-kyma-runtime -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-kyma-runtime dirigiblelabs/dirigible-base-platform-sap-kyma-runtime
-        docker push dirigiblelabs/dirigible-base-platform-sap-kyma-runtime
-        docker build --load -t dirigible-sap-kyma-runtime .
-        docker tag dirigible-sap-kyma-runtime dirigiblelabs/dirigible-sap-kyma-runtime
-        docker push dirigiblelabs/dirigible-sap-kyma-runtime
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible
-      run: |
-        cd releng/server-all
-        docker build --load -t dirigible-base-platform -f Dockerfile-base .
-        docker tag dirigible-base-platform dirigiblelabs/dirigible-base-platform
-        docker push dirigiblelabs/dirigible-base-platform
-        docker build --load -t dirigible-all .
-        docker tag dirigible-all dirigiblelabs/dirigible-all
-        docker push dirigiblelabs/dirigible-all
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible - Runtime
-      run: |
-        cd releng/server-runtime
-        docker build --load -t dirigible-base-platform-runtime -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime dirigiblelabs/dirigible-base-platform-runtime
-        docker push dirigiblelabs/dirigible-base-platform-runtime
-        docker build --load -t dirigible-runtime .
-        docker tag dirigible-runtime dirigiblelabs/dirigible-runtime
-        docker push dirigiblelabs/dirigible-runtime
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible - Trial
-      run: |
-        cd releng/trial-all
-        docker build --load -t dirigible-base-platform-trial -f Dockerfile-base .
-        docker tag dirigible-base-platform-trial dirigiblelabs/dirigible-base-platform-trial
-        docker push dirigiblelabs/dirigible-base-platform-trial
-        docker build --load -t dirigible-trial .
-        docker tag dirigible-trial dirigiblelabs/dirigible-trial
-        docker push dirigiblelabs/dirigible-trial
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible - Keycloak
-      run: |
-        cd releng/server-keycloak-all
-        docker build --load -t dirigible-base-platform-keycloak -f Dockerfile-base .
-        docker tag dirigible-base-platform-keycloak dirigiblelabs/dirigible-base-platform-keycloak
-        docker push dirigiblelabs/dirigible-base-platform-keycloak
-        docker build --load -t dirigible-keycloak .
-        docker tag dirigible-keycloak dirigiblelabs/dirigible-keycloak
-        docker push dirigiblelabs/dirigible-keycloak
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible - Keycloak - Runtime
-      run: |
-        cd releng/server-runtime-keycloak
-        docker build --load -t dirigible-base-platform-runtime-keycloak -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime-keycloak dirigiblelabs/dirigible-base-platform-runtime-keycloak
-        docker push dirigiblelabs/dirigible-base-platform-runtime-keycloak
-        docker build --load -t dirigible-runtime-keycloak .
-        docker tag dirigible-runtime-keycloak dirigiblelabs/dirigible-runtime-keycloak
-        docker push dirigiblelabs/dirigible-runtime-keycloak
-        docker image prune -a -f
-        cd ../../
-    - uses: buildpacks/github-actions/setup-pack@v4.1.0
-    - name: Eclipse Dirigible Buildpack
-      run: |
-        cd releng/buildpacks/server/
-        docker build --load -t dirigiblelabs/buildpacks-stack-base-dirigible . --target base
-        docker push dirigiblelabs/buildpacks-stack-base-dirigible
-        docker build --load -t dirigiblelabs/buildpacks-stack-run-dirigible . --target run
-        docker push dirigiblelabs/buildpacks-stack-run-dirigible
-        docker build --load -t dirigiblelabs/buildpacks-stack-build-dirigible . --target build
-        docker push dirigiblelabs/buildpacks-stack-build-dirigible
-        cd buildpack/
-        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/latest/g'' {} \;
-        pack buildpack package dirigiblelabs/buildpacks-dirigible --config ./package.toml
-        docker push dirigiblelabs/buildpacks-dirigible
-        pack builder create dirigiblelabs/buildpacks-builder-dirigible --config ./builder.toml
-        docker push dirigiblelabs/buildpacks-builder-dirigible
-        cd ../../../../
-    - name: Eclipse Dirigible Kyma Buildpack
-      run: |
-        cd releng/buildpacks/sap-kyma/
-        docker build --load -t dirigiblelabs/buildpacks-stack-base-dirigible-kyma . --target base
-        docker push dirigiblelabs/buildpacks-stack-base-dirigible-kyma
-        docker build --load -t dirigiblelabs/buildpacks-stack-run-dirigible-kyma . --target run
-        docker push dirigiblelabs/buildpacks-stack-run-dirigible-kyma
-        docker build --load -t dirigiblelabs/buildpacks-stack-build-dirigible-kyma . --target build
-        docker push dirigiblelabs/buildpacks-stack-build-dirigible-kyma
-        cd buildpack/
-        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/latest/g'' {} \;
-        pack buildpack package dirigiblelabs/buildpacks-dirigible-kyma --config ./package.toml
-        docker push dirigiblelabs/buildpacks-dirigible-kyma
-        pack builder create dirigiblelabs/buildpacks-builder-dirigible-kyma --config ./builder.toml
-        docker push dirigiblelabs/buildpacks-builder-dirigible-kyma
-        cd ../../../../
-    - name: Eclipse Dirigible Cloud Foundry Buildpack
-      run: |
-        cd releng/buildpacks/sap-cf/
-        docker build --load -t dirigiblelabs/buildpacks-stack-base-dirigible-cf . --target base
-        docker push dirigiblelabs/buildpacks-stack-base-dirigible-cf
-        docker build --load -t dirigiblelabs/buildpacks-stack-run-dirigible-cf . --target run
-        docker push dirigiblelabs/buildpacks-stack-run-dirigible-cf
-        docker build --load -t dirigiblelabs/buildpacks-stack-build-dirigible-cf . --target build
-        docker push dirigiblelabs/buildpacks-stack-build-dirigible-cf
-        cd buildpack/
-        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/latest/g'' {} \;
-        pack buildpack package dirigiblelabs/buildpacks-dirigible-cf --config ./package.toml
-        docker push dirigiblelabs/buildpacks-dirigible-cf
-        pack builder create dirigiblelabs/buildpacks-builder-dirigible-cf --config ./builder.toml
-        docker push dirigiblelabs/buildpacks-builder-dirigible-cf
-        cd ../../../../
+      # run: mvn clean install -Dmaven.javadoc.skip=false
+      run:  mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true -Dlicense.skip=true
 
+    - uses: actions/upload-artifact@v3
+      with:
+        name: releng-folder
+        path: releng/
+
+  docker-1:
+    needs: build
+    name: Docker - Anonymous
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/anonymous-all
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-anonymous
+      imageRepository: dirigiblelabs/dirigible-anonymous
+    secrets: inherit
+
+  docker-2:
+    needs: build
+    name: Docker - Anonymous - Runtime
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/anonymous-runtime
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-runtime-anonymous
+      imageRepository: dirigiblelabs/dirigible-runtime-anonymous
+    secrets: inherit
+
+  docker-3:
+    needs: build
+    name: Docker - OpenShift
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/openshift-all
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-openshift
+      imageRepository: dirigiblelabs/dirigible-openshift
+    secrets: inherit
+
+  docker-4:
+    needs: build
+    name: Docker - SAP Cloud Foundry
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/sap-cf-all
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-sap-cf
+      imageRepository: dirigiblelabs/dirigible-sap-cf
+    secrets: inherit
+
+  docker-5:
+    needs: build
+    name: Docker - SAP Cloud Foundry - Runtime
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/sap-cf-runtime
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-sap-cf-runtime
+      imageRepository: dirigiblelabs/dirigible-sap-cf-runtime
+    secrets: inherit
+
+  docker-6:
+    needs: build
+    name: Docker - SAP Kyma
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/sap-kyma-all
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-sap-kyma
+      imageRepository: dirigiblelabs/dirigible-sap-kyma
+    secrets: inherit
+
+  docker-7:
+    needs: build
+    name: Docker - SAP Kyma - Runtime
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/sap-kyma-runtime
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-sap-kyma-runtime
+      imageRepository: dirigiblelabs/dirigible-sap-kyma-runtime
+    secrets: inherit
+
+  docker-8:
+    needs: build
+    name: Docker - Dirigible
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/server-all
+      baseImageRepository: dirigiblelabs/dirigible-base-platform
+      imageRepository: dirigiblelabs/dirigible-all
+    secrets: inherit
+
+  docker-9:
+    needs: build
+    name: Docker - Dirigible - Runtime
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/server-runtime
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-runtime
+      imageRepository: dirigiblelabs/dirigible-runtime
+    secrets: inherit
+
+  docker-10:
+    needs: build
+    name: Docker - Dirigible - Trial
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/trial-all
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-trial
+      imageRepository: dirigiblelabs/dirigible-trial
+    secrets: inherit
+
+  docker-11:
+    needs: build
+    name: Docker - Dirigible - Keycloak
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/server-keycloak-all
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-keycloak
+      imageRepository: dirigiblelabs/dirigible-keycloak
+    secrets: inherit
+
+  docker-12:
+    needs: build
+    name: Docker - Dirigible - Keycloak - Runtime
+    uses: ./.github/workflows/push-docker.yml
+    with:
+      location: releng/server-runtime-keycloak
+      baseImageRepository: dirigiblelabs/dirigible-base-platform-runtime-keycloak
+      imageRepository: dirigiblelabs/dirigible-runtime-keycloak
+    secrets: inherit
+
+    # - uses: buildpacks/github-actions/setup-pack@v4.1.0
+    # - name: Eclipse Dirigible Buildpack
+    #   run: |
+    #     cd releng/buildpacks/server/
+    #     docker build --load -t dirigiblelabs/buildpacks-stack-base-dirigible . --target base
+    #     docker push dirigiblelabs/buildpacks-stack-base-dirigible
+    #     docker build --load -t dirigiblelabs/buildpacks-stack-run-dirigible . --target run
+    #     docker push dirigiblelabs/buildpacks-stack-run-dirigible
+    #     docker build --load -t dirigiblelabs/buildpacks-stack-build-dirigible . --target build
+    #     docker push dirigiblelabs/buildpacks-stack-build-dirigible
+    #     cd buildpack/
+    #     find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/latest/g'' {} \;
+    #     pack buildpack package dirigiblelabs/buildpacks-dirigible --config ./package.toml
+    #     docker push dirigiblelabs/buildpacks-dirigible
+    #     pack builder create dirigiblelabs/buildpacks-builder-dirigible --config ./builder.toml
+    #     docker push dirigiblelabs/buildpacks-builder-dirigible
+    #     cd ../../../../
+    # - name: Eclipse Dirigible Kyma Buildpack
+    #   run: |
+    #     cd releng/buildpacks/sap-kyma/
+    #     docker build --load -t dirigiblelabs/buildpacks-stack-base-dirigible-kyma . --target base
+    #     docker push dirigiblelabs/buildpacks-stack-base-dirigible-kyma
+    #     docker build --load -t dirigiblelabs/buildpacks-stack-run-dirigible-kyma . --target run
+    #     docker push dirigiblelabs/buildpacks-stack-run-dirigible-kyma
+    #     docker build --load -t dirigiblelabs/buildpacks-stack-build-dirigible-kyma . --target build
+    #     docker push dirigiblelabs/buildpacks-stack-build-dirigible-kyma
+    #     cd buildpack/
+    #     find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/latest/g'' {} \;
+    #     pack buildpack package dirigiblelabs/buildpacks-dirigible-kyma --config ./package.toml
+    #     docker push dirigiblelabs/buildpacks-dirigible-kyma
+    #     pack builder create dirigiblelabs/buildpacks-builder-dirigible-kyma --config ./builder.toml
+    #     docker push dirigiblelabs/buildpacks-builder-dirigible-kyma
+    #     cd ../../../../
+    # - name: Eclipse Dirigible Cloud Foundry Buildpack
+    #   run: |
+    #     cd releng/buildpacks/sap-cf/
+    #     docker build --load -t dirigiblelabs/buildpacks-stack-base-dirigible-cf . --target base
+    #     docker push dirigiblelabs/buildpacks-stack-base-dirigible-cf
+    #     docker build --load -t dirigiblelabs/buildpacks-stack-run-dirigible-cf . --target run
+    #     docker push dirigiblelabs/buildpacks-stack-run-dirigible-cf
+    #     docker build --load -t dirigiblelabs/buildpacks-stack-build-dirigible-cf . --target build
+    #     docker push dirigiblelabs/buildpacks-stack-build-dirigible-cf
+    #     cd buildpack/
+    #     find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/latest/g'' {} \;
+    #     pack buildpack package dirigiblelabs/buildpacks-dirigible-cf --config ./package.toml
+    #     docker push dirigiblelabs/buildpacks-dirigible-cf
+    #     pack builder create dirigiblelabs/buildpacks-builder-dirigible-cf --config ./builder.toml
+    #     docker push dirigiblelabs/buildpacks-builder-dirigible-cf
+    #     cd ../../../../
+
+  clean-up:
+    name: Clean-up
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - build
+      - docker-1
+      - docker-2
+      - docker-3
+      - docker-4
+      - docker-5
+      - docker-6
+      - docker-7
+      - docker-8
+      - docker-9
+      - docker-10
+      - docker-11
+      - docker-12
+    steps:
+    - run: echo Do nothing
+#     - uses: geekyeggo/delete-artifact@v2
+#       with:
+#           name: releng-folder
+#           failOnError: false
