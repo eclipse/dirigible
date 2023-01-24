@@ -40,7 +40,7 @@ tasksView.controller('TasksController', ['$http', '$timeout', 'messageHub', func
                     return;
                 }
 
-                $http.get('/services/v4/js/ide-bpm-workspace/api/tasks.mjs/tasks', { params: { 'condition': this.filterBy, 'limit': limit } })
+                $http.get('/services/v8/js/ide-bpm-workspace/api/tasks.mjs/tasks', { params: { 'condition': this.filterBy, 'limit': limit } })
                     .then((response) => {
                         if (this.tasksList.length < response.data.length ) {
                             messageHub.showAlertInfo("User tasks", "A new user task has been added");
