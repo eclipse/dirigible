@@ -90,7 +90,7 @@ exports.getLogger = function(loggerName) {
 
 	return {
 		setLevel: function(level){
-			org.eclipse.dirigible.api.v3.log.LogFacade.setLevel(loggerName, level);
+			org.eclipse.dirigible.components.api.log.LogFacade.setLevel(loggerName, level);
 			return this;
 		},
 		log: function(msg, level){
@@ -109,7 +109,7 @@ exports.getLogger = function(loggerName) {
 					return typeof param === 'object' ? JSON.stringify(param) : param;
 				});
 			}
-			org.eclipse.dirigible.api.v3.log.LogFacade.log(loggerName, level, msg, JSON.stringify(msgParameters), errObjectJson);
+			org.eclipse.dirigible.components.api.log.LogFacade.log(loggerName, level, msg, JSON.stringify(msgParameters), errObjectJson);
 		},
 		debug: function(msg){
 			const args = Array.prototype.slice.call(arguments);

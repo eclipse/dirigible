@@ -9,8 +9,22 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let registry = require("platform/v4/registry");
 exports.getContent = function () {
-    let file = registry.getText("log/extensions/modules.json");
-    return JSON.parse(file);
+    return [
+	  {
+	    "name": "@dirigible/log",
+	    "description": "Dirigible Log module",
+	    "isPackageDescription": true,
+	    "dtsPath": "log/extensions/log.d.ts"
+	  },
+	  {
+	    "name": "log/logging",
+	    "description": "Logging API",
+	    "api": "logging",
+	    "versionedPaths": [
+	      "log/logging"
+	    ],
+	    "pathDefault": "log/logging"
+	  }
+	];
 };
