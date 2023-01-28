@@ -70,7 +70,7 @@ class RoleServiceTest {
 
     @Test
     void testFindAll() {
-        Page<Role> securityRolePage = roleService.findAll(Pageable.ofSize(1));
+        Page<Role> securityRolePage = roleService.getPages(Pageable.ofSize(1));
         assertEquals(5, securityRolePage.getTotalElements());
     }
 

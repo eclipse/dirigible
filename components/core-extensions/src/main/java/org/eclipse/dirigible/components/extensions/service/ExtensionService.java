@@ -54,7 +54,7 @@ public class ExtensionService implements ArtefactService<Extension> {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Page<Extension> findAll(Pageable pageable) {
+	public Page<Extension> getPages(Pageable pageable) {
 		return extensionRepository.findAll(pageable);
 	}
 	

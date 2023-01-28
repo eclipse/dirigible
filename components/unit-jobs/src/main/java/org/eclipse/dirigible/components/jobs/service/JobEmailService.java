@@ -54,7 +54,7 @@ public class JobEmailService implements ArtefactService<JobEmail> {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<JobEmail> findAll(Pageable pageable) {
+    public Page<JobEmail> getPages(Pageable pageable) {
         return jobEmailRepository.findAll(pageable);
     }
 

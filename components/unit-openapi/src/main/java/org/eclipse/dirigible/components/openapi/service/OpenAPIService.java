@@ -91,7 +91,7 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<OpenAPI> findAll(Pageable pageable) {
+    public Page<OpenAPI> getPages(Pageable pageable) {
         return openAPIRepository.findAll(pageable);
     }
 

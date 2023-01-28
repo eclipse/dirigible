@@ -57,7 +57,7 @@ public class ExtensionEndpoint extends BaseEndpoint {
 	 * @param page the page
 	 * @return the page
 	 */
-	@GetMapping
+	@GetMapping("/pages")
 	public Page<Extension> findAll(
 			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
 			@Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
@@ -69,7 +69,7 @@ public class ExtensionEndpoint extends BaseEndpoint {
 			page = 0;
 		}
 		Pageable pageable = PageRequest.of(page, size);
-		Page<Extension> extensions = extensionService.findAll(pageable);
+		Page<Extension> extensions = extensionService.getPages(pageable);
 		return extensions;
 
 	}
@@ -121,7 +121,7 @@ public class ExtensionEndpoint extends BaseEndpoint {
 	 *
 	 * @return the all
 	 */
-	@GetMapping("/all")
+	@GetMapping
 	public ResponseEntity<List<Extension>> getAll() {
 
 		return ResponseEntity.ok(extensionService.getAll());

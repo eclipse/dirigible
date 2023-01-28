@@ -96,7 +96,7 @@ consoleView.controller('ConsoleController', ['$scope', 'messageHub', function ($
                 ((location.protocol === 'https:') ? "wss://" : "ws://")
                 + window.location.host
                 + window.location.pathname.substr(0, window.location.pathname.indexOf('/services/'))
-                + "/websockets/v8/ide/console");
+                + "/websockets/ide/console");
         } catch (e) {
             let record = {
                 message: e.message,

@@ -85,7 +85,7 @@ public class ExtensionPointEndpointTest {
 		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e4.extensionpoint", "e4", "description"));
 		extensionPointService.save(ExtensionPointRepositoryTest.createExtensionPoint("/a/b/c/e5.extensionpoint", "e5", "description"));
 		
-		Page<ExtensionPoint> extensionPoints = extensionPointService.findAll(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
+		Page<ExtensionPoint> extensionPoints = extensionPointService.getPages(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
 		assertNotNull(extensionPoints);
 		assertEquals(5L, extensionPoints.getTotalElements());
 		
@@ -105,7 +105,7 @@ public class ExtensionPointEndpointTest {
 		Integer size = 10;
 		Integer page = 0;
 		Pageable pageable = PageRequest.of(page, size);
-		assertNotNull(extensionPointService.findAll(pageable));
+		assertNotNull(extensionPointService.getPages(pageable));
 	}
 	
 	@Test
@@ -129,10 +129,20 @@ public class ExtensionPointEndpointTest {
 	}
 	
 	@Test
+	public void getPagesExtensionPoints() throws Exception {
+		String name = testExtensionPoint.getName();
+
+		mockMvc.perform(get("/services/core/extensionpoints/pages", name))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful())
+		;
+	}
+	
+	@Test
 	public void getAllExtensionPoints() throws Exception {
 		String name = testExtensionPoint.getName();
 
-		mockMvc.perform(get("/services/core/extensionpoints/all", name))
+		mockMvc.perform(get("/services/core/extensionpoints", name))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful())
 		;

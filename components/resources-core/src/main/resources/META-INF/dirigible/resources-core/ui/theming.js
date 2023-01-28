@@ -3,7 +3,7 @@ angular.module('ideTheming', ['ngResource', 'ideMessageHub'])
         this.$get = ['$resource', '$http', 'messageHub', function editorsFactory($resource, $http, messageHub) {
             let theme = JSON.parse(localStorage.getItem('DIRIGIBLE.theme') || '{}');
             // legacySwitcher is deprecated. Remove once all views have been migrated.
-            let legacySwitcher = $resource('/public/v8/js/theme/resources.js?name=:themeId', { themeId: 'default' });
+            let legacySwitcher = $resource('/public/js/theme/resources.js?name=:themeId', { themeId: 'default' });
             let themes = [];
 
             function processThemeResponse(response) {
@@ -23,7 +23,7 @@ angular.module('ideTheming', ['ngResource', 'ideMessageHub'])
                 messageHub.triggerEvent("ide.themesLoaded", true);
             }
 
-            $http.get('/public/v8/js/theme/resources.js/themes?legacy=false')
+            $http.get('/public/js/theme/resources.js/themes?legacy=false')
                 .then(function (response) {
                     processThemeResponse(response);
                 }, function (response) {

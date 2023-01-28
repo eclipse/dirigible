@@ -85,7 +85,7 @@ public class DataSourceEndpointTest {
 		datasourceService.save(DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds4.datasource", "ds4", "description", ""));
 		datasourceService.save(DataSourceRepositoryTest.createDataSource(datasourceRepository, "/a/b/c/ds5.datasource", "ds5", "description", ""));
 		
-		Page<DataSource> datasources = datasourceService.findAll(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
+		Page<DataSource> datasources = datasourceService.getPages(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
 		assertNotNull(datasources);
 		assertEquals(5L, datasources.getTotalElements());
 		
@@ -104,7 +104,7 @@ public class DataSourceEndpointTest {
 		Integer size = 10;
 		Integer page = 0;
 		Pageable pageable = PageRequest.of(page, size);
-		assertNotNull(datasourceService.findAll(pageable));
+		assertNotNull(datasourceService.getPages(pageable));
 	}
 	
 	@Test
@@ -128,10 +128,20 @@ public class DataSourceEndpointTest {
 	}
 	
 	@Test
+	public void getPagesDataSources() throws Exception {
+		String name = testDataSource.getName();
+
+		mockMvc.perform(get("/services/data/sources/pages", name))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful())
+		;
+	}
+	
+	@Test
 	public void getAllDataSources() throws Exception {
 		String name = testDataSource.getName();
 
-		mockMvc.perform(get("/services/data/sources/all", name))
+		mockMvc.perform(get("/services/data/sources", name))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful())
 		;

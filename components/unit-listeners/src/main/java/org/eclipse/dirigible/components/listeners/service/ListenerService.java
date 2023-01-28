@@ -41,7 +41,7 @@ public class ListenerService implements ArtefactService<Listener> {
      * @return the all
      */
     @Override
-    public List getAll() {
+    public List<Listener> getAll() {
         return listenerRepository.findAll();
     }
 
@@ -52,7 +52,7 @@ public class ListenerService implements ArtefactService<Listener> {
      * @return the page
      */
     @Override
-    public Page findAll(Pageable pageable) {
+    public Page<Listener> getPages(Pageable pageable) {
         return listenerRepository.findAll(pageable);
     }
 

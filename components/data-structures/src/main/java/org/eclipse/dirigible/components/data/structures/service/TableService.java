@@ -54,7 +54,7 @@ public class TableService implements ArtefactService<Table> {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Page<Table> findAll(Pageable pageable) {
+	public Page<Table> getPages(Pageable pageable) {
 		return tableRepository.findAll(pageable);
 	}
 	

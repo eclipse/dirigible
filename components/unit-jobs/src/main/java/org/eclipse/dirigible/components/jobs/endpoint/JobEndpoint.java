@@ -44,7 +44,7 @@ public class JobEndpoint extends BaseEndpoint {
      * @param page the page
      * @return the page
      */
-    @GetMapping
+    @GetMapping("/pages")
     public Page<Job> findAll(
             @Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
             @Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
@@ -56,7 +56,7 @@ public class JobEndpoint extends BaseEndpoint {
             page = 0;
         }
         Pageable pageable = PageRequest.of(page, size);
-        Page<Job> extensions = jobService.findAll(pageable);
+        Page<Job> extensions = jobService.getPages(pageable);
         return extensions;
 
     }
@@ -80,7 +80,7 @@ public class JobEndpoint extends BaseEndpoint {
      *
      * @return the response entity
      */
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<Job>> listJobs(){
         return ResponseEntity.ok(jobService.getAll());
     }

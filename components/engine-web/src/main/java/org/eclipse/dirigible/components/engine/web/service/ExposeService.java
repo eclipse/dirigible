@@ -54,7 +54,7 @@ public class ExposeService implements ArtefactService<Expose> {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Page<Expose> findAll(Pageable pageable) {
+	public Page<Expose> getPages(Pageable pageable) {
 		return exposeRepository.findAll(pageable);
 	}
 	

@@ -68,7 +68,7 @@ public class OpenAPIEndpoint extends BaseEndpoint {
     private static final String TITLE = "Eclipse Dirigible - Applications REST Services API";
 
     /** The Constant VERSION. */
-    private static final String VERSION = "6.0.0";
+    private static final String VERSION = "8.0.0";
 
     /**
      * The openapi service.

@@ -56,7 +56,7 @@ public class AccessService implements ArtefactService<Access> {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Access> findAll(Pageable pageable) {
+    public Page<Access> getPages(Pageable pageable) {
         return accessRepository.findAll(pageable);
     }
 

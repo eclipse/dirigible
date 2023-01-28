@@ -36,7 +36,7 @@ public interface ArtefactService<A extends Artefact> {
 	 * @param pageable the pageable
 	 * @return the page
 	 */
-	public Page<A> findAll(Pageable pageable);
+	public Page<A> getPages(Pageable pageable);
 	
 	/**
 	 * Find by id.

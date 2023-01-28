@@ -57,7 +57,7 @@ public class TableEndpoint extends BaseEndpoint {
 	 * @param page the page
 	 * @return the page
 	 */
-	@GetMapping
+	@GetMapping("/pages")
 	public Page<Table> findAll(
 			@Parameter(description = "The size of the page to be returned") @RequestParam(required = false) Integer size,
 			@Parameter(description = "Zero-based page index") @RequestParam(required = false) Integer page) {
@@ -68,7 +68,7 @@ public class TableEndpoint extends BaseEndpoint {
 			page = 0;
 		}
 		Pageable pageable = PageRequest.of(page, size);
-		Page<Table> tables = tableService.findAll(pageable);
+		Page<Table> tables = tableService.getPages(pageable);
 		return tables;
 	}
 
@@ -101,7 +101,7 @@ public class TableEndpoint extends BaseEndpoint {
 	 *
 	 * @return the all
 	 */
-	@GetMapping("/all")
+	@GetMapping
 	public ResponseEntity<List<Table>> getAll() {
 		return ResponseEntity.ok(tableService.getAll());
 	}

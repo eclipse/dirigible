@@ -28,19 +28,22 @@ public abstract class BaseEndpoint {
 	/** The Constant PREFIX_ENDPOINT_DATA. */
 	public static final String PREFIX_ENDPOINT_DATA = "services/data/";
 	
-	/** The Constant PREFIX_ENDPOINT_CORE. */
+	/** The Constant PREFIX_ENDPOINT_UNIT. */
 	public static final String PREFIX_ENDPOINT_UNIT = "services/unit/";
 	
-	/** The Constant PREFIX_ENDPOINT_CORE. */
+	/** The Constant PREFIX_ENDPOINT_ENDINE. */
 	public static final String PREFIX_ENDPOINT_ENGINE = "services/engine/";
 	
-	/** The Constant PREFIX_ENDPOINT_CORE. */
+	/** The Constant PREFIX_ENDPOINT_IDE. */
 	public static final String PREFIX_ENDPOINT_IDE = "services/ide/";
 	
+	/** The Constant PREFIX_ENDPOINT_OPS. */
+	public static final String PREFIX_ENDPOINT_OPS = "services/ops/";
+	
 	/** The Constant PREFIX_ENDPOINT_PUBLIC. */
-	public static final String PREFIX_ENDPOINT_PUBLIC = "public/v8/";
+	public static final String PREFIX_ENDPOINT_PUBLIC = "public/";
 	
 	/** The Constant PREFIX_ENDPOINT_WEBSOCKETS. */
-	public static final String PREFIX_ENDPOINT_WEBSOCKETS = "/websockets/v8/";
+	public static final String PREFIX_ENDPOINT_WEBSOCKETS = "/websockets/";
 	
 }

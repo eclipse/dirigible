@@ -54,7 +54,7 @@ public class ExtensionPointService implements ArtefactService<ExtensionPoint> {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Page<ExtensionPoint> findAll(Pageable pageable) {
+	public Page<ExtensionPoint> getPages(Pageable pageable) {
 		return extensionPointRepository.findAll(pageable);
 	}
 	

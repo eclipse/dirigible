@@ -66,7 +66,7 @@ public class JobLogService implements ArtefactService<JobLog> {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<JobLog> findAll(Pageable pageable) {
+    public Page<JobLog> getPages(Pageable pageable) {
         return jobLogRepository.findAll(pageable);
     }
 

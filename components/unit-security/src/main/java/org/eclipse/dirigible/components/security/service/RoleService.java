@@ -58,7 +58,7 @@ public class RoleService implements ArtefactService<Role> {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Role> findAll(Pageable pageable) {
+    public Page<Role> getPages(Pageable pageable) {
         return roleRepository.findAll(pageable);
     }
 

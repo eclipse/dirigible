@@ -71,7 +71,7 @@ class OpenAPIServiceTest {
 
     @Test
     void testFindAll() {
-        Page<OpenAPI> openApiPage = openAPIService.findAll(Pageable.ofSize(1));
+        Page<OpenAPI> openApiPage = openAPIService.getPages(Pageable.ofSize(1));
         assertEquals(5, openApiPage.getTotalElements());
     }
 

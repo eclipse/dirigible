@@ -54,7 +54,7 @@ public class WebsocketService implements ArtefactService<Websocket> {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Websocket> findAll(Pageable pageable) {
+    public Page<Websocket> getPages(Pageable pageable) {
         return websocketRepository.findAll(pageable);
     }
 

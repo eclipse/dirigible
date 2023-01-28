@@ -43,11 +43,11 @@ public class SecurityFilterConfig {
                 "/services/wiki/*",
                 "/services/command/*",
 
-                "/public/v8/js/*",
-                "/public/v8/public/*",
-                "/public/v8/web/*",
-                "/public/v8/wiki/*",
-                "/public/v8/command/*",
+                "/public/js/*",
+                "/public/public/*",
+                "/public/web/*",
+                "/public/wiki/*",
+                "/public/command/*",
 
                 "/odata/v2/*"
         );

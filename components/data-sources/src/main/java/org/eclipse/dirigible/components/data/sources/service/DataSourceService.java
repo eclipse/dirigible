@@ -54,7 +54,7 @@ public class DataSourceService implements ArtefactService<DataSource> {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Page<DataSource> findAll(Pageable pageable) {
+	public Page<DataSource> getPages(Pageable pageable) {
 		return datasourceRepository.findAll(pageable);
 	}
 	

@@ -75,7 +75,7 @@ class AccessServiceTest {
 
     @Test
     void testFindAll() {
-        Page<Access> securityAccessPage = accessService.findAll(Pageable.ofSize(1));
+        Page<Access> securityAccessPage = accessService.getPages(Pageable.ofSize(1));
         assertEquals(5, securityAccessPage.getTotalElements());
     }
 
