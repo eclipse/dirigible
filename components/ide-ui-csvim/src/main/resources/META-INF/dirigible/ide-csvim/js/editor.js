@@ -399,7 +399,7 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
     $scope.checkResource = function (resourcePath) {
         if (resourcePath != "") {
             let xhr = new XMLHttpRequest();
-            xhr.open('HEAD', `/services/v8/ide/workspaces/${workspace}${resourcePath}`, false);
+            xhr.open('HEAD', `/services/ide/workspaces/${workspace}${resourcePath}`, false);
             xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
             xhr.send();
             if (xhr.status === 200) {
@@ -452,7 +452,7 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
     function loadFileContents() {
         getViewParameters();
         if ($scope.file) {
-            $http.get('/services/v8/ide/workspaces' + $scope.file)
+            $http.get('/services/ide/workspaces' + $scope.file)
                 .then(function (response) {
                     let contents = response.data;
                     if (!contents || !Array.isArray(contents)) {
@@ -494,7 +494,7 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
     function saveContents(text) {
         if ($scope.file) {
             let xhr = new XMLHttpRequest();
-            xhr.open('PUT', '/services/v8/ide/workspaces' + $scope.file);
+            xhr.open('PUT', '/services/ide/workspaces' + $scope.file);
             xhr.setRequestHeader('X-Requested-With', 'Fetch');
             xhr.setRequestHeader('X-CSRF-Token', csrfToken);
             xhr.onreadystatechange = function () {

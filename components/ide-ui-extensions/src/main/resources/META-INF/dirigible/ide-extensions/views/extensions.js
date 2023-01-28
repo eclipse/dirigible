@@ -17,7 +17,7 @@ extensionsView.config(["messageHubProvider", function (messageHubProvider) {
 
 extensionsView.controller('ExtensionsController', ['$scope', '$http', function ($scope, $http) {
 
-    $http.get('/services/v8/core/extensions').then(function (response) {
+    $http.get('/services/core/extensions').then(function (response) {
         $scope.list = response.data;
     });
 

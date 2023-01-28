@@ -55,7 +55,7 @@
 
       function loadContents(file) {
         if (file) {
-          return getResource('/services/v8/ide/workspaces' + file);
+          return getResource('/services/ide/workspaces' + file);
         }
         console.error('file parameter is not present in the URL');
       }
@@ -130,7 +130,7 @@
         console.log('Save called...');
         if ($scope.file) {
           let xhr = new XMLHttpRequest();
-          xhr.open('PUT', '/services/v8/ide/workspaces' + $scope.file);
+          xhr.open('PUT', '/services/ide/workspaces' + $scope.file);
           xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
               console.log('file saved: ' + $scope.file);
@@ -163,7 +163,7 @@
         console.log('Publish called...');
         if ($scope.file) {
           let xhr = new XMLHttpRequest();
-          xhr.open('POST', '/services/v8/ide/publisher/request' + $scope.file.substring(0, $scope.file.lastIndexOf('/')));
+          xhr.open('POST', '/services/ide/publisher/request' + $scope.file.substring(0, $scope.file.lastIndexOf('/')));
           xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
               console.log('publish request sent for file: ' + $scope.file);

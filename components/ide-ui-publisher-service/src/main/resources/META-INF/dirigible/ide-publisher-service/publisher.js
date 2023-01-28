@@ -11,7 +11,7 @@
  */
 angular.module('idePublisher', [])
     .provider('publisherApi', function PublisherApiProvider() {
-        this.publisherServiceUrl = '/services/v8/ide/publisher';
+        this.publisherServiceUrl = '/services/ide/publisher';
         this.$get = ['$http', function publisherApiFactory($http) {
 
             let publish = function (resourcePath, workspace) {

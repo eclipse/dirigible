@@ -24,7 +24,7 @@ bpmImageView.controller('BpmImageViewController', ['$scope', 'messageHub', funct
     };
 
     $scope.loadImageLink = function (filename) {
-        $scope.imageLink = `/services/v8/ide/bpm/bpm-processes/${filename}/image`;
+        $scope.imageLink = `/services/ide/bpm/bpm-processes/${filename}/image`;
         $scope.state.isBusy = false;
     };
 

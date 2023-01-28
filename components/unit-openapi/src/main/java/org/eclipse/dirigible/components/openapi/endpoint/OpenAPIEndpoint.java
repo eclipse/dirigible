@@ -50,7 +50,7 @@ public class OpenAPIEndpoint extends BaseEndpoint {
     private static final Logger logger = LoggerFactory.getLogger(OpenAPIEndpoint.class);
 
     /** The Constant BASE_PATH. */
-    private static final String BASE_PATH = "/services/v8";
+    private static final String BASE_PATH = "/services";
 
     /** The Constant CONTACT_EMAIL. */
     private static final String CONTACT_EMAIL = "dirigible-dev@eclipse.org";

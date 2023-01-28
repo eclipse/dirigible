@@ -17,7 +17,7 @@ configurationsView.config(["messageHubProvider", function (messageHubProvider) {
 
 configurationsView.controller('ConfigurationsController', ['$scope', '$http', function ($scope, $http) {
 
-    $http.get('/services/v8/core/configurations').then(function (response) {
+    $http.get('/services/core/configurations').then(function (response) {
         $scope.configurations = response.data;
     });
 

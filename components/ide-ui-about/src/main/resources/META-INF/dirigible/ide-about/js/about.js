@@ -16,7 +16,7 @@ angular.module('about', ['ideUI', 'ideView'])
 		$scope.getHealthStatus = function () {
 			$http({
 				method: 'GET',
-				url: '/services/v8/healthcheck'
+				url: '/services/healthcheck'
 			}).then(function (healthStatus) {
 				$scope.jobs.length = 0;
 				for (const [key, value] of Object.entries(healthStatus.data.jobs.statuses)) {
@@ -34,7 +34,7 @@ angular.module('about', ['ideUI', 'ideView'])
 			$scope.getHealthStatus();
 		}, 10000);
 
-		$http.get('/services/v8/version').then(function (response) {
+		$http.get('/services/version').then(function (response) {
 			$scope.version = response.data;
 		});
 

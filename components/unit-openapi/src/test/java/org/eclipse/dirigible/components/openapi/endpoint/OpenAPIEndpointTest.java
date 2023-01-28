@@ -88,7 +88,7 @@ class OpenAPIEndpointTest {
         byte[] content = OpenAPISynchronizer.class.getResourceAsStream(openAPILocation).readAllBytes();
         openAPIRepository.save(createOpenAPI(openAPILocation, "test", "description"));
         repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + openAPILocation, content);
-        mockMvc.perform(get("/services/v8/unit/openapi"))
+        mockMvc.perform(get("/services/unit/openapi"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("{\"swagger\":\"2.0\",\"info\":{\"description\":\"Eclipse " +
@@ -96,7 +96,7 @@ class OpenAPIEndpointTest {
                         "\"title\":\"Eclipse Dirigible - Applications REST Services API\"," +
                         "\"contact\":{\"email\":\"dirigible-dev@eclipse.org\"},\"license\":{\"name\":\"Eclipse Public" +
                         " License - v 2.0\",\"url\":\"https://www.eclipse.org/legal/epl-v20.html\"}}," +
-                        "\"basePath\":\"/services/v8\",\"tags\":[],\"schemes\":[\"http\"]," +
+                        "\"basePath\":\"/services\",\"tags\":[],\"schemes\":[\"http\"]," +
                         "\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"security\":[]," +
                         "\"paths\":{\"/healthcheck\":{\"get\":{\"description\":\"Returns dirigible status\"," +
                         "\"operationId\":\"getHealthcheck\",\"produces\":[\"application/json\",\"application/xml\"," +

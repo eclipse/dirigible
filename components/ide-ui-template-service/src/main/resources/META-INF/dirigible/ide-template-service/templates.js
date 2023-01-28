@@ -11,7 +11,7 @@
  */
 angular.module('ideTemplates', [])
     .provider('templatesApi', function PublisherApiProvider() {
-        this.templatesServiceUrl = '/services/v8/js/ide-template-service/api/templates.js';
+        this.templatesServiceUrl = '/services/js/ide-template-service/api/templates.js';
         this.$get = ['$http', function publisherApiFactory($http) {
 
             let listTemplates = function () {

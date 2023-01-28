@@ -78,7 +78,7 @@ class AccessEndpointTest {
 
     @Test
     public void testGetSecurityAccesses() throws Exception {
-        mockMvc.perform(get("/services/v8/unit/security/access").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/services/unit/security/access").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

@@ -44,7 +44,7 @@ public class ForbiddenTest {
 
 	@Test
 	public void forbidden() throws Exception {
-		mockMvc.perform(get("/services/v8/js/test/successful.js"))
+		mockMvc.perform(get("/services/js/test/successful.js"))
 				.andDo(print())
 				.andExpect(status().is4xxClientError());
 	}

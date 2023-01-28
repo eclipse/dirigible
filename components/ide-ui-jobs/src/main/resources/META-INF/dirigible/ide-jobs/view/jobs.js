@@ -17,12 +17,12 @@ jobsView.config(["messageHubProvider", function (messageHubProvider) {
 
 jobsView.controller('JobsController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
 
-	$http.get('/services/v8/ops/jobs').then(function (response) {
+	$http.get('/services/ops/jobs').then(function (response) {
 		$scope.list = response.data;
 	});
 
 	$scope.enable = function (job) {
-		$http.post('/services/v8/ops/jobs/enable/' + job.name)
+		$http.post('/services/ops/jobs/enable/' + job.name)
 			.then(function (response) {
 				console.info(response.data.name + " has been enabled.");
 				job.enabled = true;
@@ -32,7 +32,7 @@ jobsView.controller('JobsController', ['$scope', '$http', 'messageHub', function
 	}
 
 	$scope.disable = function (job) {
-		$http.post('/services/v8/ops/jobs/disable/' + job.name)
+		$http.post('/services/ops/jobs/disable/' + job.name)
 			.then(function (response) {
 				console.info(response.data.name + " has been disabled.");
 				job.enabled = false;
@@ -64,7 +64,7 @@ jobsView.controller('JobsController', ['$scope', '$http', 'messageHub', function
 
 	$scope.getEmails = function (job) {
 		$scope.job = job;
-		$http.get('/services/v8/ops/jobs/emails/' + job.name)
+		$http.get('/services/ops/jobs/emails/' + job.name)
 			.then(function (response) {
 				$scope.name = job.name;
 				$scope.job.email = 'my-email@examle.com';
@@ -75,7 +75,7 @@ jobsView.controller('JobsController', ['$scope', '$http', 'messageHub', function
 	}
 
 	$scope.addEmail = function () {
-		$http.post('/services/v8/ops/jobs/emailadd/' + $scope.job.name, $scope.job.email)
+		$http.post('/services/ops/jobs/emailadd/' + $scope.job.name, $scope.job.email)
 			.then(function (response) {
 				$scope.getEmails($scope.job);
 			}, function (response) {
@@ -84,7 +84,7 @@ jobsView.controller('JobsController', ['$scope', '$http', 'messageHub', function
 	}
 
 	$scope.removeEmail = function (id) {
-		$http.delete('/services/v8/ops/jobs/emailremove/' + id)
+		$http.delete('/services/ops/jobs/emailremove/' + id)
 			.then(function (response) {
 				$scope.getEmails($scope.job);
 			}, function (response) {

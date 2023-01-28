@@ -24,9 +24,9 @@ let DIRIGIBLE_BRANDING_WELCOME_PAGE = 'DIRIGIBLE_BRANDING_WELCOME_PAGE';
 let DIRIGIBLE_BRANDING_NAME_DEFAULT = 'Eclipse Dirigible';
 let DIRIGIBLE_BRANDING_BRAND_DEFAULT = 'Eclipse Dirigible';
 let DIRIGIBLE_BRANDING_BRAND_URL_DEFAULT = "https://www.dirigible.io/";
-let DIRIGIBLE_BRANDING_ICON_DEFAULT = '/services/v8/web/resources/images/favicon.png';
-let DIRIGIBLE_BRANDING_LOGO_DEFAULT = '/services/v8/web/resources/images/dirigible.svg';
-let DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT = '/services/v8/web/ide/welcome.html';
+let DIRIGIBLE_BRANDING_ICON_DEFAULT = '/services/web/resources/images/favicon.png';
+let DIRIGIBLE_BRANDING_LOGO_DEFAULT = '/services/web/resources/images/dirigible.svg';
+let DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT = '/services/web/ide/welcome.html';
 
 rs.service()
 	.resource('')

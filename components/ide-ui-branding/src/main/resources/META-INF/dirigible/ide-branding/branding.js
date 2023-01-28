@@ -14,10 +14,10 @@ const brandingInfo = {
     brand: 'Eclipse Dirigible',
     brandUrl: 'https://www.dirigible.io/',
     icons: {
-        faviconIco: '/services/v8/web/resources/images/favicon.ico',
-        favicon32: '/services/v8/web/resources/images/favicon-32x32.png',
-        favicon16: '/services/v8/web/resources/images/favicon-16x16.png',
+        faviconIco: '/services/web/resources/images/favicon.ico',
+        favicon32: '/services/web/resources/images/favicon-32x32.png',
+        favicon16: '/services/web/resources/images/favicon-16x16.png',
     },
-    logo: '/services/v8/web/resources/images/dirigible.svg',
+    logo: '/services/web/resources/images/dirigible.svg',
     keyPrefix: 'dirigible'
 };

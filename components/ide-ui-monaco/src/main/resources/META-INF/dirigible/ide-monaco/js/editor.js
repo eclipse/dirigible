@@ -112,7 +112,7 @@ function FileIO() {
     this.getFileType = function (fileName) {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", "/services/v8/js/ide-monaco/api/fileTypes.js");
+            xhr.open("GET", "/services/js/ide-monaco/api/fileTypes.js");
             xhr.onload = () => {
                 if (xhr.status === 200) {
                     let fileTypes = JSON.parse(xhr.responseText);
@@ -241,7 +241,7 @@ function FileIO() {
 function getViewParameters() {
     if (window.frameElement.hasAttribute("data-parameters")) {
         let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
-        parameters.resourceType = params["resourceType"] || "/services/v8/ide/workspaces";
+        parameters.resourceType = params["resourceType"] || "/services/ide/workspaces";
         parameters.contentType = params["contentType"] || "";
         parameters.readOnly = params["readOnly"] || false;
         parameters.gitName = params["gitName"] || "";
@@ -251,7 +251,7 @@ function getViewParameters() {
 }
 
 function setResourceApiUrl() {
-    gitApiUrl = "/services/v8/ide/git";
+    gitApiUrl = "/services/ide/git";
     editorUrl = new URL(window.location.href);
     getViewParameters();
     let rtype;
@@ -259,10 +259,10 @@ function setResourceApiUrl() {
         rtype = parameters.resourceType;
     else
         rtype = editorUrl.searchParams.get('rtype');
-    if (rtype === "workspace") resourceApiUrl = "/services/v8/ide/workspaces";
-    else if (rtype === "repository") resourceApiUrl = "/services/v8/core/repository";
-    else if (rtype === "registry") resourceApiUrl = "/services/v8/core/registry";
-    else resourceApiUrl = "/services/v8/ide/workspaces";
+    if (rtype === "workspace") resourceApiUrl = "/services/ide/workspaces";
+    else if (rtype === "repository") resourceApiUrl = "/services/core/repository";
+    else if (rtype === "registry") resourceApiUrl = "/services/core/registry";
+    else resourceApiUrl = "/services/ide/workspaces";
 }
 
 function createEditorInstance(readOnly = false) {
@@ -547,7 +547,7 @@ function isAutoFormattingEnabledForCurrentFile() {
 
 function loadModuleSuggestions(modulesSuggestions) {
     let xhrModules = new XMLHttpRequest();
-    xhrModules.open('GET', '/services/v8/js/ide-monaco-extensions/api/modules.js');
+    xhrModules.open('GET', '/services/js/ide-monaco-extensions/api/modules.js');
     xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
     xhrModules.onload = function (xhrModules) {
         let modules = JSON.parse(xhrModules.target.responseText);
@@ -568,7 +568,7 @@ function loadDTS() {
         monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "")
     } else {
         let xhrModules = new XMLHttpRequest();
-        xhrModules.open('GET', '/services/v8/js/ide-monaco-extensions/api/dts.js');
+        xhrModules.open('GET', '/services/js/ide-monaco-extensions/api/dts.js');
         xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
         xhrModules.onload = function (xhrModules) {
             let dtsContent = xhrModules.target.responseText;
@@ -595,7 +595,7 @@ function loadSuggestions(moduleName, suggestions) {
     }
 
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', '/services/v8/js/ide-monaco-extensions/api/suggestions.js?moduleName=' + moduleName);
+    xhr.open('GET', '/services/js/ide-monaco-extensions/api/suggestions.js?moduleName=' + moduleName);
     xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
     xhr.onload = function (xhr) {
         if (xhr.target.status === 200) {

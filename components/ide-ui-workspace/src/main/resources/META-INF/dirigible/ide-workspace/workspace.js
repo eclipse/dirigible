@@ -818,12 +818,12 @@ TemplatesService.prototype.listTemplates = function () {
 };
 
 angular.module('workspace.config', [])
-    .constant('WS_SVC_URL', '/services/v8/ide/workspaces')
-    .constant('WS_SVC_MANAGER_URL', '/services/v8/ide/workspace')
-    .constant('PUBLISH_SVC_URL', '/services/v8/ide/publisher/request')
-    .constant('EXPORT_SVC_URL', '/services/v8/transport/project')
-    .constant('TEMPLATES_SVC_URL', '/services/v8/js/resources-core/services/templates.js')
-    .constant('GENERATION_SVC_URL', '/services/v8/ide/generate');
+    .constant('WS_SVC_URL', '/services/ide/workspaces')
+    .constant('WS_SVC_MANAGER_URL', '/services/ide/workspace')
+    .constant('PUBLISH_SVC_URL', '/services/ide/publisher/request')
+    .constant('EXPORT_SVC_URL', '/services/transport/project')
+    .constant('TEMPLATES_SVC_URL', '/services/js/resources-core/services/templates.js')
+    .constant('GENERATION_SVC_URL', '/services/ide/generate');
 
 angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'angularFileUpload'])
     .factory('httpRequestInterceptor', function () {
@@ -1016,7 +1016,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         // get the new by template extensions
         let templates = $.ajax({
             type: "GET",
-            url: '/services/v8/js/ide-workspace/services/workspace-menu-new-templates.js',
+            url: '/services/js/ide-workspace/services/workspace-menu-new-templates.js',
             cache: false,
             async: false
         }).responseText;
@@ -1024,7 +1024,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         // get file extensions with available generation templates
         let fileExtensions = $.ajax({
             type: "GET",
-            url: '/services/v8/js/resources-core/services/templates.js/extensions',
+            url: '/services/js/resources-core/services/templates.js/extensions',
             cache: false,
             async: false
         }).responseText;
@@ -1032,14 +1032,14 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         // get available generation templates count
         let templatesCountNonFile = parseInt($.ajax({
             type: "GET",
-            url: '/services/v8/js/resources-core/services/templates.js/count',
+            url: '/services/js/resources-core/services/templates.js/count',
             cache: false,
             async: false
         }).responseText);
 
         let priorityFileTemplates = JSON.parse(templates).filter(e => e.order !== undefined).sort((a, b) => a.order - b.order);
         let specificFileTemplates = JSON.parse(templates).filter(e => e.order === undefined);
-        let post_no_edit_URL = '/services/v8/ide/workspaces/';
+        let post_no_edit_URL = '/services/ide/workspaces/';
 
         for (let i = 0; i < priorityFileTemplates.length; i++) {
             if (priorityFileTemplates[i].isModel) {
@@ -1442,8 +1442,8 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         $scope.projectName = '';
         $scope.pathToImportIn = '';
 
-        $scope.TRANSPORT_PROJECT_URL = "/services/v8/transport/project";
-        $scope.TRANSPORT_ZIPTOFOLDER_URL = "/services/v8/transport/zipimport";
+        $scope.TRANSPORT_PROJECT_URL = "/services/transport/project";
+        $scope.TRANSPORT_ZIPTOFOLDER_URL = "/services/transport/zipimport";
 
         // FILE UPLOADER
         $scope.uploader = uploader = new FileUploader({

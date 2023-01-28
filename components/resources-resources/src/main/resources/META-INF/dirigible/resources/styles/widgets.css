@@ -1,16 +1,16 @@
 :root {
-  --jstree-git: url("/services/v8/web/resources/images/jstree/git.svg");
-  --jstree-project: url("/services/v8/web/resources/images/jstree/project.svg");
-  --jstree-folder: url("/services/v8/web/resources/images/jstree/folder.svg");
-  --jstree-file: url("/services/v8/web/resources/images/jstree/file-code.svg");
-  --jstree-menu-arrow-right: url(/services/v8/web/resources/images/jstree/menu-arrow-right.svg);
-  --jstree-arrow-down: url("/services/v8/web/resources/images/jstree/arrow-down.svg");
-  --jstree-arrow-right: url("/services/v8/web/resources/images/jstree/arrow-right.svg");
-  --jstree-arrow-left: url("/services/v8/web/resources/images/jstree/arrow-left.svg");
-  --jstree-checkbox-checked: url("/services/v8/web/resources/images/jstree/checkbox-checked.svg");
-  --jstree-checkbox-unchecked: url("/services/v8/web/resources/images/jstree/checkbox-unchecked.svg");
-  --jstree-checkbox-tristate: url("/services/v8/web/resources/images/jstree/checkbox-tristate.svg");
-  --jstree-loader: url("/services/v8/web/resources/images/jstree/loading.svg");
+  --jstree-git: url("/services/web/resources/images/jstree/git.svg");
+  --jstree-project: url("/services/web/resources/images/jstree/project.svg");
+  --jstree-folder: url("/services/web/resources/images/jstree/folder.svg");
+  --jstree-file: url("/services/web/resources/images/jstree/file-code.svg");
+  --jstree-menu-arrow-right: url(/services/web/resources/images/jstree/menu-arrow-right.svg);
+  --jstree-arrow-down: url("/services/web/resources/images/jstree/arrow-down.svg");
+  --jstree-arrow-right: url("/services/web/resources/images/jstree/arrow-right.svg");
+  --jstree-arrow-left: url("/services/web/resources/images/jstree/arrow-left.svg");
+  --jstree-checkbox-checked: url("/services/web/resources/images/jstree/checkbox-checked.svg");
+  --jstree-checkbox-unchecked: url("/services/web/resources/images/jstree/checkbox-unchecked.svg");
+  --jstree-checkbox-tristate: url("/services/web/resources/images/jstree/checkbox-tristate.svg");
+  --jstree-loader: url("/services/web/resources/images/jstree/loading.svg");
 }
 html,
 body {

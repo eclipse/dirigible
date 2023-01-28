@@ -38,7 +38,7 @@ ideBpmFilesView.controller('IDEBpmFilesViewController', ['$scope', 'messageHub',
         $scope.searchVisible = !$scope.searchVisible;
     };
 
-    fetch("/services/v8/ide/bpm/bpm-processes/keys")
+    fetch("/services/ide/bpm/bpm-processes/keys")
         .then((response) => response.json())
         .then((data) => {
             $scope.jstreeWidget.jstree({ // JSTree should NOT be initialized here

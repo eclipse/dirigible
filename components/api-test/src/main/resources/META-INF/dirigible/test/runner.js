@@ -40,8 +40,8 @@ exports.run = function(settings) {
 			console.info('[Test Runner] Handling request for HTML test run results');
 			
 			var requestUrl = URI(request.getRequestURL()).normalizePath().path();
-			console.info('[Test Runner] redirecting to /services/v8/web/test/ui/dashboard.html with URL query string rewrite to url='+requestUrl);
-			response.addHeader('Location', '/services/v8/web/test/ui/dashboard.html?url='+requestUrl);
+			console.info('[Test Runner] redirecting to /services/web/test/ui/dashboard.html with URL query string rewrite to url='+requestUrl);
+			response.addHeader('Location', '/services/web/test/ui/dashboard.html?url='+requestUrl);
 			response.setStatus(response.FOUND);
 			
 		} else if (findInAcceptHeader(httpReqHeaderAccept, 'application/xml') || findInAcceptHeader(httpReqHeaderAccept, 'text/xml') || findInAcceptHeader(httpReqHeaderAccept, '*/xml')){

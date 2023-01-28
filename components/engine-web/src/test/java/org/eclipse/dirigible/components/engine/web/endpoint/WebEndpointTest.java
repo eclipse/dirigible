@@ -121,14 +121,14 @@ public class WebEndpointTest {
 			assertTrue(ExposeManager.listRegisteredProjects().size() > 0);
 			assertTrue(ExposeManager.isPathExposed("demo/ui"));
 			assertFalse(ExposeManager.isPathExposed("demo/hidden"));
-			mockMvc.perform(get("/services/v8/web/demo/ui/hello-world.txt")).andDo(print())
+			mockMvc.perform(get("/services/web/demo/ui/hello-world.txt")).andDo(print())
 					.andExpect(content().string(containsString("Hello World!"))).andExpect(status().is2xxSuccessful());
-			mockMvc.perform(get("/services/v8/web/demo/hidden/hidden.txt")).andDo(print())
+			mockMvc.perform(get("/services/web/demo/hidden/hidden.txt")).andDo(print())
 					.andExpect(status().isForbidden());
-			mockMvc.perform(get("/services/v8/web/demo/ui/not-existing.txt")).andDo(print())
+			mockMvc.perform(get("/services/web/demo/ui/not-existing.txt")).andDo(print())
 					.andExpect(status().isNotFound());
-			mockMvc.perform(get("/services/v8/web/demo/ui")).andDo(print()).andExpect(status().isNotFound());
-			mockMvc.perform(get("/services/v8/web/demo/ui/")).andDo(print()).andExpect(status().is2xxSuccessful());
+			mockMvc.perform(get("/services/web/demo/ui")).andDo(print()).andExpect(status().isNotFound());
+			mockMvc.perform(get("/services/web/demo/ui/")).andDo(print()).andExpect(status().is2xxSuccessful());
 		} finally {
 			FileUtils.deleteDirectory(Paths.get(registyrFolder, "demo").toFile());
 			synchronizationProcessor.processSynchronizers();

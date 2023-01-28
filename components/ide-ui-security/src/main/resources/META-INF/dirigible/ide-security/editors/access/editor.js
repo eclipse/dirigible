@@ -52,7 +52,7 @@ angular.module('page', ["ideUI", "ideView"])
 
         $scope.load = function () {
             if (!$scope.state.error) {
-                contents = getResource('/services/v8/ide/workspaces' + $scope.dataParameters.file);
+                contents = getResource('/services/ide/workspaces' + $scope.dataParameters.file);
                 $scope.access = JSON.parse(contents);
                 contents = JSON.stringify($scope.access, null, 4);
                 $scope.state.isBusy = false;
@@ -61,7 +61,7 @@ angular.module('page', ["ideUI", "ideView"])
 
         function saveContents(text) {
             let xhr = new XMLHttpRequest();
-            xhr.open('PUT', '/services/v8/ide/workspaces' + $scope.dataParameters.file);
+            xhr.open('PUT', '/services/ide/workspaces' + $scope.dataParameters.file);
             xhr.setRequestHeader('X-Requested-With', 'Fetch');
             xhr.setRequestHeader('X-CSRF-Token', csrfToken);
             xhr.onreadystatechange = function () {

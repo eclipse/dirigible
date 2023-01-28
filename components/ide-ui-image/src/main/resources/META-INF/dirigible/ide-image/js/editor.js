@@ -28,7 +28,7 @@ editorView.controller('ImageViewController', ['$scope', function ($scope) {
     $scope.loadFileContents = function () {
         $scope.getViewParameters();
         if ($scope.file) {
-            $scope.imageLink = '/services/v8/ide/workspaces' + $scope.file;
+            $scope.imageLink = '/services/ide/workspaces' + $scope.file;
             $scope.dataLoaded = true;
         } else {
             console.error('file parameter is not present in the URL');

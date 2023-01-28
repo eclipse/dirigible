@@ -19,7 +19,7 @@ var FLOWABLE = FLOWABLE || {};
 
 FLOWABLE.CONFIG = {
 	'onPremise': true,
-	'contextRoot': '/services/v8/ide/bpm',
-	'webContextRoot': '/services/v8/web/ide-bpm',
+	'contextRoot': '/services/ide/bpm',
+	'webContextRoot': '/services/web/ide-bpm',
 	'datesLocalization': false
 };

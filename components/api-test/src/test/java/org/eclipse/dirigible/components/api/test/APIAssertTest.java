@@ -57,7 +57,7 @@ public class APIAssertTest {
 	public void successful() throws Exception {
 //		javascriptService.handleRequest("test", "successful.js", null, null, false);
 		
-		mockMvc.perform(get("/services/v8/js/test/successful.js"))
+		mockMvc.perform(get("/services/js/test/successful.js"))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
 	}
@@ -65,7 +65,7 @@ public class APIAssertTest {
 	@Test
 	public void failed() throws Exception {
 		try {
-			mockMvc.perform(get("/services/v8/js/test/failed.js"))
+			mockMvc.perform(get("/services/js/test/failed.js"))
 					.andDo(print())
 					.andExpect(status().is5xxServerError());
 		} catch (Exception e) {

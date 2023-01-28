@@ -44,7 +44,7 @@ debuggerView.controller('DebuggerController', ['$scope', 'messageHub', function 
 	let protocol = window.location.protocol === "http:" ? "ws" : "wss";
 	let hostPortIndexOf = window.location.host.indexOf(":");
 	let host = hostPortIndexOf > 0 ? window.location.host.substring(0, hostPortIndexOf) : window.location.host;
-	let devToolsLocation = "/services/v8/web/dev-tools/js_app.html"; // "devtools://devtools/bundled/js_app.html";
+	let devToolsLocation = "/services/web/dev-tools/js_app.html"; // "devtools://devtools/bundled/js_app.html";
 	// TODO: The debug port can be configured
 	let debugPort = 8081;
 	let debuggerLocation = devToolsLocation + "?" + protocol + "=" + host + ":" + debugPort + "/debug";

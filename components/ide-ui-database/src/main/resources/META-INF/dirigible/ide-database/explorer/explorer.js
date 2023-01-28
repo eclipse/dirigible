@@ -15,7 +15,7 @@
 // }
 let database = angular.module('database', ['ideUI', 'ideView']);
 database.controller('DatabaseController', function ($scope, $http, messageHub) {
-	let databasesSvcUrl = "/services/v8/data/";
+	let databasesSvcUrl = "/services/data/";
 	$scope.selectedDatabase;
 	$scope.jstreeWidget = angular.element('#dgDatabases');
 	$scope.spinnerColumns = {

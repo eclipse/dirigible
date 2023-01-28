@@ -11,8 +11,8 @@
  */
 angular.module('ideGenerate', [])
     .provider('generateApi', function GenerateApiProvider() {
-        this.generateServiceUrl = '/services/v8/ide/generate';
-        this.generateModelServiceUrl = '/services/v8/js/ide-generate-service/generate.mjs';
+        this.generateServiceUrl = '/services/ide/generate';
+        this.generateModelServiceUrl = '/services/js/ide-generate-service/generate.mjs';
         this.$get = ['$http', function generateApiFactory($http) {
 
             let generateFromTemplate = function (workspace, project, file, template, parameters = []) {

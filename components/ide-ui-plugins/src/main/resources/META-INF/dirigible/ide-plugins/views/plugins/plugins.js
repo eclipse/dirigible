@@ -17,7 +17,7 @@ pluginsView.config(["messageHubProvider", function (messageHubProvider) {
 
 pluginsView.controller('PluginsController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
 
-	let pluginsApi = '/services/v8/js/ide-plugins/views/plugins/plugins-service.js';
+	let pluginsApi = '/services/js/ide-plugins/views/plugins/plugins-service.js';
 
 	function loadPlugins() {
 		$http.get(pluginsApi)

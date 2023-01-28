@@ -7,7 +7,7 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
             if (cachedViews) {
                 return cachedViews;
             } else {
-                let url = '/services/v8/js/resources-core/services/views.js';
+                let url = '/services/js/resources-core/services/views.js';
                 if (extensionPoint && extensionPoint.views) {
                     url = `${url}?extensionPoint=${extensionPoint.views}`;
                 }

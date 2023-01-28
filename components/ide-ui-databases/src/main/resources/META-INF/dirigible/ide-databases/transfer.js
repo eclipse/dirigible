@@ -18,7 +18,7 @@ transferView.config(["messageHubProvider", function (messageHubProvider) {
 
 transferView.controller('TransferController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
 
-    let databasesSvcUrl = "/services/v8/data/sources/";
+    let databasesSvcUrl = "/services/data/sources/";
     let transferWsUrl = "/websockets/v8/data/transfer";
 
     $scope.databases = [];

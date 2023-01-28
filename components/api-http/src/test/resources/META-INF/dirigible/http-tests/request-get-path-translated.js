@@ -12,4 +12,4 @@
 var request = require('http/request');
 var assertTrue = require('test/assert').assertTrue;
 
-assertTrue(request.getPathTranslated().endsWith('/services/v8/js/http-tests/request-get-path-translated.js'));
+assertTrue(request.getPathTranslated().endsWith('/services/js/http-tests/request-get-path-translated.js'));

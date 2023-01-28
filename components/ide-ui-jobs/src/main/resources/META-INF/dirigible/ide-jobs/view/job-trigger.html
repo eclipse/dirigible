@@ -17,11 +17,11 @@
 
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-        <script type="text/javascript" src="/services/v8/web/ide-jobs/services/job-trigger-window.js"></script>
+        <script type="text/javascript" src="/services/web/ide-jobs/services/job-trigger-window.js"></script>
 
-        <script type="text/javascript" src="/services/v8/js/resources-core/services/loader.js?id=ide-view-js"></script>
+        <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
 
-        <link type="text/css" rel="stylesheet" href="/services/v8/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
 
     </head>
@@ -112,7 +112,7 @@
                         $scope.loading = true;
                         $scope.loadingError = false;
                         $scope.map = [];
-                        $http.get('/services/v8/ops/jobs/parameters/' + jobName)
+                        $http.get('/services/ops/jobs/parameters/' + jobName)
                             .then(function (response) {
                                 $scope.loading = false;
                                 $scope.parameters = response.data.map(p => {
@@ -175,7 +175,7 @@
                             expanded: false
                         };
                         $scope.triggerResults.push(trigger);
-                        $http.post('/services/v8/ops/jobs/trigger/' + $scope.jobName, trigger.parameters)
+                        $http.post('/services/ops/jobs/trigger/' + $scope.jobName, trigger.parameters)
                             .then(function (response) {
                                 trigger.result = `Job '${$scope.jobName}' has been triggered successfully`;
                             }, function (response) {

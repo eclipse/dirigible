@@ -88,7 +88,7 @@ public class WorkspaceEndpointTest {
 		pair.setTargetWorkspace("workspace1");
 		pair.setSource("project1/folder1/file1.txt");
 		pair.setTarget("project1");
-		mockMvc.perform(post("/services/v8/ide/workspace/workspace1/copy")
+		mockMvc.perform(post("/services/ide/workspace/workspace1/copy")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(GsonHelper.toJson(pair))
 					.with(csrf()))
@@ -98,7 +98,7 @@ public class WorkspaceEndpointTest {
 		assertNotNull(file);
 		assertEquals("file1.txt", file.getName());
 		assertTrue(file.exists());
-		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1")
+		mockMvc.perform(delete("/services/ide/workspaces/workspace1")
 				.with(csrf()))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
@@ -115,7 +115,7 @@ public class WorkspaceEndpointTest {
 		pair.setTargetWorkspace("workspace1");
 		pair.setSource("project1/folder1/file1.txt");
 		pair.setTarget("project1/file1.txt");
-		mockMvc.perform(post("/services/v8/ide/workspace/workspace1/move")
+		mockMvc.perform(post("/services/ide/workspace/workspace1/move")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(GsonHelper.toJson(pair))
 					.with(csrf()))
@@ -125,7 +125,7 @@ public class WorkspaceEndpointTest {
 		assertNotNull(file);
 		assertEquals("file1.txt", file.getName());
 		assertTrue(file.exists());
-		mockMvc.perform(delete("/services/v8/ide/workspaces/workspace1")
+		mockMvc.perform(delete("/services/ide/workspaces/workspace1")
 				.with(csrf()))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());

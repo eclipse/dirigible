@@ -37,11 +37,11 @@ public class SecurityFilterConfig {
 
         filterRegistrationBean.setFilter(securityFilter);
         filterRegistrationBean.addUrlPatterns(
-                "/services/v8/js/*",
-                "/services/v8/public/*",
-                "/services/v8/web/*",
-                "/services/v8/wiki/*",
-                "/services/v8/command/*",
+                "/services/js/*",
+                "/services/public/*",
+                "/services/web/*",
+                "/services/wiki/*",
+                "/services/command/*",
 
                 "/public/v8/js/*",
                 "/public/v8/public/*",

@@ -21,7 +21,7 @@ logconfigurationsView.controller('LogConfigurationsController', ['$scope', '$htt
         name: ''
     }
 
-    let logConfigurationsApi = '/services/v8/ops/logconfig';
+    let logConfigurationsApi = '/services/ops/logconfig';
 
     function loadLogConfigurations() {
         $http.get(logConfigurationsApi)

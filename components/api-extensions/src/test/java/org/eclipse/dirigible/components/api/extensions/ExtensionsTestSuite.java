@@ -81,10 +81,10 @@ public class ExtensionsTestSuite {
 	
 	@Test
 	public void executeExtensionsMockTest() throws Exception {
-		mockMvc.perform(get("/services/v8/js/extensions-tests/extensions-get-extension-points.js"))
+		mockMvc.perform(get("/services/js/extensions-tests/extensions-get-extension-points.js"))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
-		mockMvc.perform(get("/services/v8/js/extensions-tests/extensions-get-extensions.js"))
+		mockMvc.perform(get("/services/js/extensions-tests/extensions-get-extensions.js"))
 			.andDo(print())
 			.andExpect(status().is2xxSuccessful());
 	}

@@ -43,7 +43,7 @@ angular.module('ui.schema.modeler', ["ideUI", "ideView"])
 		$scope.checkSchema = function () {
 			let xhr = new XMLHttpRequest();
 			let resourcePath = $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.schema';
-			xhr.open('HEAD', `/services/v8/ide/workspaces${resourcePath}`, false);
+			xhr.open('HEAD', `/services/ide/workspaces${resourcePath}`, false);
 			xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
 			xhr.send();
 			if (xhr.status === 200) {
@@ -60,7 +60,7 @@ angular.module('ui.schema.modeler', ["ideUI", "ideView"])
 
 		function getResource() {
 			let xhr = new XMLHttpRequest();
-			xhr.open('GET', '/services/v8/ide/workspaces' + $scope.dataParameters.file, false);
+			xhr.open('GET', '/services/ide/workspaces' + $scope.dataParameters.file, false);
 			xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
 			xhr.send();
 			if (xhr.status === 200) {
@@ -78,7 +78,7 @@ angular.module('ui.schema.modeler', ["ideUI", "ideView"])
 			if (!$scope.checkSchema()) {
 				let xhr = new XMLHttpRequest();
 				let resourcePath = $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.schema';
-				xhr.open('POST', '/services/v8/ide/workspaces' + resourcePath);
+				xhr.open('POST', '/services/ide/workspaces' + resourcePath);
 				xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
 				xhr.onreadystatechange = function () {
 					if (xhr.readyState === 4) {
@@ -105,7 +105,7 @@ angular.module('ui.schema.modeler', ["ideUI", "ideView"])
 
 		function saveContents(text, resourcePath) {
 			let xhr = new XMLHttpRequest();
-			xhr.open('PUT', '/services/v8/ide/workspaces' + resourcePath);
+			xhr.open('PUT', '/services/ide/workspaces' + resourcePath);
 			xhr.setRequestHeader('X-Requested-With', 'Fetch');
 			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
 			xhr.onreadystatechange = function () {

@@ -45,12 +45,12 @@ public class SecurityFilter implements Filter {
     /**
      * The Constant SKIP_PATH_ANGULAR_ARIA.
      */
-    private static final String SKIP_PATH_ANGULAR_ARIA = "/services/v8/js/resources-core/services/angular-aria.min.js.map";
+    private static final String SKIP_PATH_ANGULAR_ARIA = "/services/js/resources-core/services/angular-aria.min.js.map";
     
     /**
      * The Constant SKIP_PATH_SPLIT_JS.
      */
-    private static final String SKIP_PATH_SPLIT_JS = "/services/v8/js/resources-core/services/split.min.js.map";
+    private static final String SKIP_PATH_SPLIT_JS = "/services/js/resources-core/services/split.min.js.map";
     
     /**
      * The Constant PATH_WEB_RESOURCES.

@@ -11,9 +11,9 @@
  */
 angular.module('ideWorkspace', [])
     .provider('workspaceApi', function WorkspaceApiProvider() {
-        this.workspacesServiceUrl = '/services/v8/ide/workspaces/';
-        this.workspaceManagerServiceUrl = '/services/v8/ide/workspace';
-        this.workspaceSearchServiceUrl = '/services/v8/ide/workspace-search';
+        this.workspacesServiceUrl = '/services/ide/workspaces/';
+        this.workspaceManagerServiceUrl = '/services/ide/workspace';
+        this.workspaceSearchServiceUrl = '/services/ide/workspace-search';
         this.$get = ['$http', function workspaceApiFactory($http) {
             let setWorkspace = function (workspaceName) {
                 if (workspaceName !== undefined && !(typeof workspaceName === 'string'))

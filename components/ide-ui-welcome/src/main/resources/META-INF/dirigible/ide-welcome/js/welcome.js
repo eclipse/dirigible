@@ -61,11 +61,11 @@ app.controller('welcomeCtrl', ['$scope', '$http', 'messageHub', function ($scope
         }))
     ];
 
-    $http.get('/services/v8/js/resources-core/services/templates.js').then(function (response) {
+    $http.get('/services/js/resources-core/services/templates.js').then(function (response) {
         $scope.templates = response.data.filter(value => !value.extension);
         $scope.search.applyFilter();
     });
-    $http.get('/services/v8/ide/workspaces').then(function (response) {
+    $http.get('/services/ide/workspaces').then(function (response) {
         $scope.workspaces = response.data;
     });
 
@@ -132,7 +132,7 @@ app.controller('welcomeCtrl', ['$scope', '$http', 'messageHub', function ($scope
             return ret;
         }, {});
 
-        let url = `/services/v8/ide/generate/file/${workspace}/${projectName}/${fileName}`;
+        let url = `/services/ide/generate/file/${workspace}/${projectName}/${fileName}`;
 
         return new Promise((resolve, reject) => {
             $http.post(url, { template: $scope.selectedTemplate.id, parameters })

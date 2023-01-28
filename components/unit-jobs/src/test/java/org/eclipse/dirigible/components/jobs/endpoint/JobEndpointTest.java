@@ -117,7 +117,7 @@ public class JobEndpointTest {
     /** Finds all extension points and checks the location of the first one */
     @Test
     public void findAllExtensionPoints() throws Exception {
-        mockMvc.perform(get("/services/v8/unit/jobs"))
+        mockMvc.perform(get("/services/unit/jobs"))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.content[0].location").value("/a/b/c/j1.job"));
@@ -126,7 +126,7 @@ public class JobEndpointTest {
     /** Gets all extension points */
     @Test
     public void getAllExtensionPoints() throws Exception {
-        mockMvc.perform(get("/services/v8/unit/jobs/all"))
+        mockMvc.perform(get("/services/unit/jobs/all"))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
@@ -135,7 +135,7 @@ public class JobEndpointTest {
     @Test
     public void enableJob() throws Exception {
         //TODO
-        mockMvc.perform(put("/services/v8/unit/jobs/enable/{name}", testJob.getName()))
+        mockMvc.perform(put("/services/unit/jobs/enable/{name}", testJob.getName()))
                 .andDo(print());
 
     }
@@ -144,7 +144,7 @@ public class JobEndpointTest {
     @Test
     public void disableJob() throws Exception {
         //TODO
-        mockMvc.perform(put("/services/v8/unit/jobs/disable/{name}", testJob.getName()))
+        mockMvc.perform(put("/services/unit/jobs/disable/{name}", testJob.getName()))
                 .andDo(print());
 
     }

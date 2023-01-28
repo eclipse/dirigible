@@ -64,7 +64,7 @@ public class WorkspaceFindEndpointTest {
 	
 	@Test
 	public void findAll() throws Exception {
-		mockMvc.perform(post("/services/v8/ide/workspace-find")
+		mockMvc.perform(post("/services/ide/workspace-find")
 				.content("test")
 				.with(csrf()))
 			.andDo(print())
@@ -73,7 +73,7 @@ public class WorkspaceFindEndpointTest {
 	
 	@Test
 	public void findInWorkspace() throws Exception {
-		mockMvc.perform(post("/services/v8/ide/workspace-find/workspace1")
+		mockMvc.perform(post("/services/ide/workspace-find/workspace1")
 				.content("test")
 				.with(csrf()))
 			.andDo(print())

@@ -19,7 +19,7 @@ databasesView.config(["messageHubProvider", function (messageHubProvider) {
 databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
 
     $scope.listDatabases = function () {
-        $http.get('/services/v8/data/sources/').then(function (response) {
+        $http.get('/services/data/sources/').then(function (response) {
             $scope.list = response.data;
         });
     }
@@ -113,7 +113,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
                     ret[item.id] = item.value;
                     return ret;
                 }, {});
-                $http.post('/services/v8/ide/database', JSON.stringify(database))
+                $http.post('/services/ide/database', JSON.stringify(database))
                     .then(function (response) {
                         messageHub.hideFormDialog('createDatabaseDialog');
                         $scope.listDatabases();
@@ -166,7 +166,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
                     ret[item.id] = item.value;
                     return ret;
                 }, {});
-                $http.put('/services/v8/ide/database/' + $scope.database.id, JSON.stringify({ name: $scope.database.name, ...database }))
+                $http.put('/services/ide/database/' + $scope.database.id, JSON.stringify({ name: $scope.database.name, ...database }))
                     .then(function (response) {
                         messageHub.hideFormDialog('editDatabaseDialog');
                         $scope.listDatabases();
@@ -211,7 +211,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
         'ide-databases.database.delete',
         function (msg) {
             if (msg.data === 'btnOK' && $scope.database.id) {
-                $http.delete('/services/v8/ide/database/' + $scope.database.id)
+                $http.delete('/services/ide/database/' + $scope.database.id)
                     .then(function (response) {
                         $scope.listDatabases();
                     }, function (response) {

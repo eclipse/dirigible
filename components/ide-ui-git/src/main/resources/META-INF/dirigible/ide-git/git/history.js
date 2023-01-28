@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('git.config', []).constant('GIT_SVC_URL', '/services/v8/ide/git');
+angular.module('git.config', []).constant('GIT_SVC_URL', '/services/ide/git');
 
 /**
  * Git Service API delegate

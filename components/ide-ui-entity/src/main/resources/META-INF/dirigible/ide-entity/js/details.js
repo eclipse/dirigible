@@ -93,7 +93,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
         $scope.loadIcons = function () {
             $http({
                 method: 'GET',
-                url: '/services/v8/web/resources/unicons/list.json',
+                url: '/services/web/resources/unicons/list.json',
                 headers: {
                     'Dirigible-Editor': 'EntityDataModeler'
                 },

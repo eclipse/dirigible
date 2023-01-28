@@ -1042,7 +1042,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }
                 };
             }],
-            templateUrl: '/services/v8/web/resources-core/ui/templates/layout.html'
+            templateUrl: '/services/web/resources-core/ui/templates/layout.html'
         };
     }])
     .directive('explorerToolbar', ['perspective', function (perspective) {
@@ -1076,7 +1076,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     // TODO
                 };
             },
-            templateUrl: '/services/v8/web/resources-core/ui/templates/toolbar.html',
+            templateUrl: '/services/web/resources-core/ui/templates/toolbar.html',
         };
     }])
     .directive('accordion', ['$window', function ($window) {
@@ -1204,7 +1204,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     accordionCtrl.removeView(scope.view);
                 });
             },
-            templateUrl: '/services/v8/web/resources-core/ui/templates/accordionPane.html'
+            templateUrl: '/services/web/resources-core/ui/templates/accordionPane.html'
         };
     }])
     .directive('tabs', function () {
@@ -1393,7 +1393,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     ro.unobserve(tabsListEl[0]);
                 });
             }],
-            templateUrl: '/services/v8/web/resources-core/ui/templates/tabs.html'
+            templateUrl: '/services/web/resources-core/ui/templates/tabs.html'
         };
     })
     .directive('tabPane', ['perspective', function (perspective) {
@@ -1477,6 +1477,6 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     return pane === scope.focusedPane;
                 }
             },
-            templateUrl: '/services/v8/web/resources-core/ui/templates/splittedTabs.html'
+            templateUrl: '/services/web/resources-core/ui/templates/splittedTabs.html'
         };
     });

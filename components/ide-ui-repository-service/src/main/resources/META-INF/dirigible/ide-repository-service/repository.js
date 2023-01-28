@@ -11,7 +11,7 @@
  */
 angular.module('ideRepository', [])
     .provider('repositoryApi', function RepositoryApiProvider() {
-        this.repositoryServiceUrl = '/services/v8/core/repository';
+        this.repositoryServiceUrl = '/services/core/repository';
         this.$get = ['$http', function repositoryApiFactory($http) {
             let getMetadata = function (resourceUrl) {
                 return $http.get(resourceUrl, { headers: { 'describe': 'application/json' } })

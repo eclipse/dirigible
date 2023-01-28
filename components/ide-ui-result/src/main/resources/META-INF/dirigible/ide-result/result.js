@@ -40,7 +40,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
     }, "database.datasource.selection.changed");
 
     messageHub.subscribe(function (command) {
-        let url = "/services/v8/data/" + $scope.datasource;
+        let url = "/services/data/" + $scope.datasource;
         let sql = command.data.trim().toLowerCase();
         if (sql.startsWith('select')) {
             $http({
@@ -143,25 +143,25 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
 
     messageHub.subscribe(function (command) {
         let artifact = command.data.split('.');
-        let url = "/services/v8/data/export/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
+        let url = "/services/data/export/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
         window.open(url);
     }, "database.data.export.artifact");
 
     messageHub.subscribe(function (command) {
         let schema = command.data;
-        let url = "/services/v8/data/export/" + $scope.datasource + "/" + schema;
+        let url = "/services/data/export/" + $scope.datasource + "/" + schema;
         window.open(url);
     }, "database.data.export.schema");
 
     messageHub.subscribe(function (command) {
         let artifact = command.data.split('.');
-        let url = "/services/v8/data/definition/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
+        let url = "/services/data/definition/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
         window.open(url);
     }, "database.metadata.export.artifact");
 
     messageHub.subscribe(function (command) {
         let schema = command.data;
-        let url = "/services/v8/data/definition/" + $scope.datasource + "/" + schema;
+        let url = "/services/data/definition/" + $scope.datasource + "/" + schema;
         window.open(url);
     }, "database.metadata.export.schema");
 

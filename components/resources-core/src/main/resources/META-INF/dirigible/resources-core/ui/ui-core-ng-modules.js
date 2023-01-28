@@ -45,7 +45,7 @@ angular.module('ideUiCore', ['ngResource'])
 		}];
 	})
 	.factory('Theme', ['$resource', function ($resource) {
-		let themeswitcher = $resource('/services/v8/js/theme/resources.js?name=:themeName', { themeName: 'default' });
+		let themeswitcher = $resource('/services/js/theme/resources.js?name=:themeName', { themeName: 'default' });
 		return {
 			changeTheme: function (themeName) {
 				return themeswitcher.get({ 'themeName': themeName });
@@ -56,17 +56,17 @@ angular.module('ideUiCore', ['ngResource'])
 		}
 	}])
 	.service('Perspectives', ['$resource', function ($resource) {
-		return $resource('/services/v8/js/resources-core/services/perspectives.js');
+		return $resource('/services/js/resources-core/services/perspectives.js');
 	}])
 	.service('Menu', ['$resource', function ($resource) {
-		return $resource('/services/v8/js/resources-core/services/menu.js');
+		return $resource('/services/js/resources-core/services/menu.js');
 	}])
 	.service('User', ['$http', function ($http) {
 		return {
 			get: function () {
 				let user = {};
 				$http({
-					url: '/services/v8/js/resources-core/services/user-name.js',
+					url: '/services/js/resources-core/services/user-name.js',
 					method: 'GET'
 				}).then(function (data) {
 					user.name = data.data;
@@ -78,7 +78,7 @@ angular.module('ideUiCore', ['ngResource'])
 	.provider('Editors', function () {
 		function getEditors(resourcePath) {
 			let xhr = new XMLHttpRequest();
-			xhr.open('GET', '/services/v8/js/resources-core/services/editors.js', false);
+			xhr.open('GET', '/services/js/resources-core/services/editors.js', false);
 			xhr.send();
 			if (xhr.status === 200) {
 				return JSON.parse(xhr.responseText);
@@ -177,7 +177,7 @@ angular.module('ideUiCore', ['ngResource'])
 						}
 					} else {
 						container.setTitle("Welcome");
-						src = '/services/v8/web/ide-welcome/welcome.html'; // Hardcoded for now
+						src = '/services/web/ide-welcome/welcome.html'; // Hardcoded for now
 					}
 					$('<iframe>').attr('src', src).appendTo(container.getElement().empty());
 				})(componentState, this);
@@ -200,7 +200,7 @@ angular.module('ideUiCore', ['ngResource'])
 			ViewRegistrySvc.factory(factoryName, ViewFactories[factoryName]);
 		});
 		let get = function () {
-			return $resource('/services/v8/js/resources-core/services/views.js').query().$promise
+			return $resource('/services/js/resources-core/services/views.js').query().$promise
 				.then(function (data) {
 					data = data.map(function (v) {
 						v.id = v.id || v.name.toLowerCase();
@@ -242,7 +242,7 @@ angular.module('ideUiCore', ['ngResource'])
 			link: function (scope, el, attrs) {
 				getBrandingInfo(scope);
 			},
-			templateUrl: '/services/v8/web/resources-core/ui/tmpl/brandTitle.html'
+			templateUrl: '/services/web/resources-core/ui/tmpl/brandTitle.html'
 		};
 	}])
 	.directive('brandicon', [function () {
@@ -253,7 +253,7 @@ angular.module('ideUiCore', ['ngResource'])
 			link: function (scope, el, attrs) {
 				getBrandingInfo(scope);
 			},
-			templateUrl: '/services/v8/web/resources-core/ui/tmpl/brandIcon.html'
+			templateUrl: '/services/web/resources-core/ui/tmpl/brandIcon.html'
 		};
 	}])
 	.directive('menu', ['$resource', 'Theme', 'User', 'Layouts', 'messageHub', function ($resource, Theme, User, Layouts, messageHub) {
@@ -375,7 +375,7 @@ angular.module('ideUiCore', ['ngResource'])
 
 				scope.user = User.get();
 			},
-			templateUrl: '/services/v8/web/resources-core/ui/tmpl/menu.html'
+			templateUrl: '/services/web/resources-core/ui/tmpl/menu.html'
 		}
 	}])
 	.directive('sidebar', ['Perspectives', function (Perspectives) {
@@ -389,7 +389,7 @@ angular.module('ideUiCore', ['ngResource'])
 			link: function (scope, el, attrs) {
 				scope.perspectives = Perspectives.query();
 			},
-			templateUrl: '/services/v8/web/resources-core/ui/tmpl/sidebar.html'
+			templateUrl: '/services/web/resources-core/ui/tmpl/sidebar.html'
 		}
 	}])
 	.directive('alert', ['messageHub', function (messageHub) {
@@ -441,7 +441,7 @@ angular.module('ideUiCore', ['ngResource'])
 					scope.$apply();
 				});
 			},
-			templateUrl: '/services/v8/web/resources-core/ui/tmpl/alert.html'
+			templateUrl: '/services/web/resources-core/ui/tmpl/alert.html'
 		}
 	}])
 	.directive('statusBar', ['messageHub', function (messageHub) {
@@ -479,7 +479,7 @@ angular.module('ideUiCore', ['ngResource'])
 					scope.$apply();
 				};
 			},
-			templateUrl: '/services/v8/web/resources-core/ui/tmpl/statusbar.html'
+			templateUrl: '/services/web/resources-core/ui/tmpl/statusbar.html'
 		}
 	}])
 	.directive('viewsLayout', ['viewRegistry', 'Layouts', function (viewRegistry, Layouts) {
@@ -521,7 +521,7 @@ function getBrandingInfo(scope) {
 	scope.branding = JSON.parse(localStorage.getItem('DIRIGIBLE.branding'));
 	if (scope.branding === null) {
 		let xhr = new XMLHttpRequest();
-		xhr.open('GET', '/services/v8/js/ide-branding/api/branding.js', false);
+		xhr.open('GET', '/services/js/ide-branding/api/branding.js', false);
 		xhr.send();
 		if (xhr.status === 200) {
 			let data = JSON.parse(xhr.responseText);
@@ -533,7 +533,7 @@ function getBrandingInfo(scope) {
 
 function getThemes(scope) {
 	let xhr = new XMLHttpRequest();
-	xhr.open('GET', '/services/v8/js/theme/resources.js/themes', false);
+	xhr.open('GET', '/services/js/theme/resources.js/themes', false);
 	xhr.send();
 	if (xhr.status === 200) {
 		let data = JSON.parse(xhr.responseText);

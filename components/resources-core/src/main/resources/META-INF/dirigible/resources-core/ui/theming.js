@@ -29,7 +29,7 @@ angular.module('ideTheming', ['ngResource', 'ideMessageHub'])
                 }, function (response) {
                     console.error("ide-theming: could not get themes", response);
                     if (response.status === 404) {
-                        $http.get('/services/v8/js/theme/resources.js/themes?legacy=false')
+                        $http.get('/services/js/theme/resources.js/themes?legacy=false')
                             .then(function (response) {
                                 processThemeResponse(response);
                             }, function (response) {

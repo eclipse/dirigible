@@ -12,4 +12,4 @@
 var request = require('http/request');
 var assertEquals = require('test/assert').assertEquals;
 
-assertEquals(request.getPathInfo(), '/services/v8/js/http-tests/request-get-path-info.js');
+assertEquals(request.getPathInfo(), '/services/js/http-tests/request-get-path-info.js');

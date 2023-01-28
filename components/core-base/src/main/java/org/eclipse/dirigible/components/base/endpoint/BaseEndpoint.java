@@ -20,22 +20,22 @@ public abstract class BaseEndpoint {
 	public static final int DEFAULT_PAGE_SIZE = 100;
 	
 	/** The Constant PREFIX_ENDPOINT_SECURED. */
-	public static final String PREFIX_ENDPOINT_SECURED = "services/v8/";
+	public static final String PREFIX_ENDPOINT_SECURED = "services/";
 	
 	/** The Constant PREFIX_ENDPOINT_CORE. */
-	public static final String PREFIX_ENDPOINT_CORE = "services/v8/core/";
+	public static final String PREFIX_ENDPOINT_CORE = "services/core/";
 	
 	/** The Constant PREFIX_ENDPOINT_DATA. */
-	public static final String PREFIX_ENDPOINT_DATA = "services/v8/data/";
+	public static final String PREFIX_ENDPOINT_DATA = "services/data/";
 	
 	/** The Constant PREFIX_ENDPOINT_CORE. */
-	public static final String PREFIX_ENDPOINT_UNIT = "services/v8/unit/";
+	public static final String PREFIX_ENDPOINT_UNIT = "services/unit/";
 	
 	/** The Constant PREFIX_ENDPOINT_CORE. */
-	public static final String PREFIX_ENDPOINT_ENGINE = "services/v8/engine/";
+	public static final String PREFIX_ENDPOINT_ENGINE = "services/engine/";
 	
 	/** The Constant PREFIX_ENDPOINT_CORE. */
-	public static final String PREFIX_ENDPOINT_IDE = "services/v8/ide/";
+	public static final String PREFIX_ENDPOINT_IDE = "services/ide/";
 	
 	/** The Constant PREFIX_ENDPOINT_PUBLIC. */
 	public static final String PREFIX_ENDPOINT_PUBLIC = "public/v8/";

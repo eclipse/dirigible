@@ -52,7 +52,7 @@ public class VersionEndpointTest {
     @Test
     public void testGetVersion() throws Exception {
         //TODO: Update expected value when engines added.
-        mockMvc.perform(get("/services/v8/core/version"))
+        mockMvc.perform(get("/services/core/version"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("{\"productName\":\"dirigible\",\"productVersion\":\"0.0" +
                         ".1\",\"productCommitId\":\"test\",\"productRepository\":\"https://github" +

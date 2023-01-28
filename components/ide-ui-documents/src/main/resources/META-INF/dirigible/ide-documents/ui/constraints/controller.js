@@ -161,7 +161,7 @@ angular.module('page')
 		}
 
 		function loadContents() {
-			return getResource('/services/v8/js/ide-documents/api/constraints.js');
+			return getResource('/services/js/ide-documents/api/constraints.js');
 		}
 
 		function load() {
@@ -184,7 +184,7 @@ angular.module('page')
 
 		function saveContents(text) {
 			let xhr = new XMLHttpRequest();
-			xhr.open('PUT', '/services/v8/js/ide-documents/api/constraints');
+			xhr.open('PUT', '/services/js/ide-documents/api/constraints');
 			xhr.setRequestHeader('X-Requested-With', 'Fetch');
 			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
 			xhr.send(text);

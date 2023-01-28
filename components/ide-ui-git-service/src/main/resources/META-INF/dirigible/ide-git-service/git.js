@@ -11,7 +11,7 @@
  */
 angular.module('ideGit', [])
     .provider('gitApi', function GitApiProvider() {
-        this.gitServiceUrl = '/services/v8/ide/git';
+        this.gitServiceUrl = '/services/ide/git';
         this.$get = ['$http', function gitApiFactory($http) {
             function getErrorMessage(error) {
                 if (error)

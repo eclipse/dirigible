@@ -11,7 +11,7 @@
  */
 angular.module('ideRegistry', [])
     .provider('registryApi', function registryApiProvider() {
-        this.registryServiceUrl = '/services/v8/core/registry';
+        this.registryServiceUrl = '/services/core/registry';
         this.$get = ['$http', function registryApiFactory($http) {
             let loadRegistry = function (resourcePath = '/') {
                 let url = new UriBuilder().path(this.registryServiceUrl.split('/')).path(resourcePath.split('/')).build();

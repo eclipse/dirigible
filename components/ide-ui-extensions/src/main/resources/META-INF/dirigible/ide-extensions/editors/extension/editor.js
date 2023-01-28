@@ -41,7 +41,7 @@ angular.module('page', ["ideUI", "ideView"])
 
 		$scope.load = function () {
 			if (!$scope.state.error) {
-				contents = getResource('/services/v8/ide/workspaces' + $scope.dataParameters.file);
+				contents = getResource('/services/ide/workspaces' + $scope.dataParameters.file);
 				if (contents === '') $scope.extension = {};
 				else {
 					$scope.extension = JSON.parse(contents);
@@ -53,7 +53,7 @@ angular.module('page', ["ideUI", "ideView"])
 
 		function saveContents(text) {
 			let xhr = new XMLHttpRequest();
-			xhr.open('PUT', '/services/v8/ide/workspaces' + $scope.dataParameters.file);
+			xhr.open('PUT', '/services/ide/workspaces' + $scope.dataParameters.file);
 			xhr.setRequestHeader('X-Requested-With', 'Fetch');
 			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
 			xhr.onreadystatechange = function () {
@@ -133,7 +133,7 @@ angular.module('page', ["ideUI", "ideView"])
 			$scope.state.error = true;
 			$scope.errorMessage = "The 'contentType' data parameter is missing.";
 		} else {
-			$http.get("/services/v8/js/ide-extensions/services/extensionPoints.mjs")
+			$http.get("/services/js/ide-extensions/services/extensionPoints.mjs")
 				.then(function (response) {
 					$scope.optionsExtensionPoints = response.data.map(e => {
 						return {

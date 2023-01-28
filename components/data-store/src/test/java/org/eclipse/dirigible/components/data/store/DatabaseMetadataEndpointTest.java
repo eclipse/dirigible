@@ -53,7 +53,7 @@ public class DatabaseMetadataEndpointTest {
 //	@Test
 //	public void getDataSourceByName() throws Exception {
 //
-//		mockMvc.perform(get("/services/v8/data/metadata/{name}/{schema}/{structure}", 
+//		mockMvc.perform(get("/services/data/metadata/{name}/{schema}/{structure}", 
 //				"TestDB", "INFORMATION_SCHEMA", "INDEXES"))
 //				.andDo(print())
 //				.andExpect(status().is2xxSuccessful())

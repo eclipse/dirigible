@@ -17,7 +17,7 @@ dataStructureView.config(["messageHubProvider", function (messageHubProvider) {
 
 dataStructureView.controller('DataStructuresController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('/services/v8/ops/data-structures').then(function (response) {
+	$http.get('/services/ops/data-structures').then(function (response) {
 		$scope.list = response.data;
 	});
 
