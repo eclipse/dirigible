@@ -108,6 +108,21 @@ public class JobLogService implements ArtefactService<JobLog> {
     }
     
     /**
+     * Find by name.
+     *
+     * @param name the name
+     * @return the job log
+     */
+    @Transactional(readOnly = true)
+    public List<JobLog> findByJob(String name) {
+        JobLog filter = new JobLog();
+        filter.setName(name);
+        Example<JobLog> example = Example.of(filter);
+        List<JobLog> jobLog = jobLogRepository.findAll(example);
+        return jobLog;
+    }
+    
+    /**
      * Find by key.
      *
      * @param key the key

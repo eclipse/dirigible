@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  * The Home Redirect.
  */
 @RestController
-@WebServlet(name = "HomeRedirectServlet", urlPatterns = { "/home" })
+@WebServlet(name = "HomeRedirectEndpoint", urlPatterns = { "/home" })
 public class HomeRedirectEndpoint {
 
 	/** The Constant DIRIGIBLE_HOME_URL. */

@@ -25,12 +25,14 @@ import java.util.EnumSet;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
  * The Class SynchronizationWalker.
  */
 @Component
+@Scope("singleton")
 public class SynchronizationWalker {
 	
 	/** The Constant logger. */

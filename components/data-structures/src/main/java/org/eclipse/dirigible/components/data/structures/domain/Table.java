@@ -77,7 +77,7 @@ public class Table extends Artefact {
 	private List<TableIndex> indexes = new ArrayList<TableIndex>();
 
 	/** The constraints. */
-	@OneToOne(mappedBy = "table", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
+	@OneToOne(mappedBy = "table", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
 	@Nullable
 	@Expose
 	private TableConstraints constraints;

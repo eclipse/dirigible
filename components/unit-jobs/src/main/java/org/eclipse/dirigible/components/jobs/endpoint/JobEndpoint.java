@@ -11,12 +11,20 @@
  */
 package org.eclipse.dirigible.components.jobs.endpoint;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import io.swagger.annotations.ApiParam;
-import io.swagger.v3.oas.annotations.Parameter;
+import javax.validation.Valid;
+
+import org.eclipse.dirigible.commons.api.helpers.NameValuePair;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.jobs.domain.Job;
+import org.eclipse.dirigible.components.jobs.domain.JobEmail;
+import org.eclipse.dirigible.components.jobs.domain.JobLog;
+import org.eclipse.dirigible.components.jobs.domain.JobParameter;
+import org.eclipse.dirigible.components.jobs.service.JobEmailService;
+import org.eclipse.dirigible.components.jobs.service.JobLogService;
 import org.eclipse.dirigible.components.jobs.service.JobService;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +32,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
 
 /**
  * Front facing REST service serving the Jobs.
@@ -35,7 +52,17 @@ public class JobEndpoint extends BaseEndpoint {
 
     /** The job service. */
     @Autowired
-    private JobService jobService ;
+    private JobService jobService;
+    
+    /** The job log service. */
+    @Autowired
+    private JobLogService jobLogService;
+    
+    /** The job email service. */
+    @Autowired
+    private JobEmailService jobEmailService;
+    
+    
 
     /**
      * Find all.
@@ -108,4 +135,104 @@ public class JobEndpoint extends BaseEndpoint {
     {
         return ResponseEntity.ok(jobService.disable(IRepository.SEPARATOR + name));
     }
+    
+    /**
+     * List job logs.
+     *
+     * @param job the job
+     * @return the response entity
+     */
+    @GetMapping(value = "/logs/{*job}", produces = "application/json")
+    public ResponseEntity<List<JobLog>> listJobLogs(@PathVariable("job") String job){
+        return ResponseEntity.ok(jobLogService.findByJob(job));
+    }
+    
+    /**
+     * Clear job logs.
+     *
+     * @param job the job
+     * @return the response entity
+     */
+    @GetMapping(value = "/clear/{*job}", produces = "application/json")
+    public ResponseEntity<?> clearJobLogs(@PathVariable("job") String job){
+    	jobLogService.deleteAllByJobName(job);
+        return ResponseEntity.noContent().build();
+    }
+    
+    /**
+     * List job parameters.
+     *
+     * @param job the job
+     * @return the response entity
+     */
+    @GetMapping(value = "/parameters/{*job}", produces = "application/json")
+    public ResponseEntity<List<JobParameter>> getJobParameters(@PathVariable("job") String job){
+        return ResponseEntity.ok(jobService.findByName(job).getParameters());
+    }
+    
+    /**
+     * Trigger job.
+     *
+     * @param job the job
+     * @param parameters the parameters
+     * @return the response entity
+     * @throws Exception in case of an error 
+     */
+    @PostMapping(value = "/trigger/{*job}", produces = "application/json")
+    public ResponseEntity<?> triggerJob(@PathVariable("job") String job, @Valid @RequestBody List<NameValuePair> parameters) throws Exception {
+    	Map<String, String> parametersMap = new HashMap<String, String>();
+		
+		for (NameValuePair pair : parameters) {
+			parametersMap.put(pair.getName(), pair.getValue());
+		}
+        return ResponseEntity.ok(jobService.trigger(job, parametersMap));
+    }
+    
+    /**
+     * List job emails.
+     *
+     * @param job the job
+     * @return the response entity
+     */
+    @GetMapping(value = "/emails/{*job}", produces = "application/json")
+    public ResponseEntity<List<JobEmail>> getJobEmails(@PathVariable("job") String job){
+        return ResponseEntity.ok(jobEmailService.findAllByJobName(job));
+    }
+    
+    /**
+     * Add job email.
+     *
+     * @param job the job
+     * @param email the email
+     * @return the response entity
+     */
+    @PostMapping(value = "/emailadd/{*job}", produces = "application/json")
+    public ResponseEntity<?> addJobEmails(@PathVariable("job") String job, @Valid @RequestBody String email){
+    	
+    	if (email != null && email.indexOf(',') > -1) {
+			String[] emails = email.split(",");
+			for (String e : emails) {
+				jobEmailService.addEmail(job, e);
+			}
+		} else {
+			jobEmailService.addEmail(job, email);
+		}
+		
+        return ResponseEntity.ok().build();
+    }
+    
+    /**
+     * Remove job email.
+     *
+     * @param id the id
+     * @return the response entity
+     */
+    @PostMapping(value = "/emailremove/{id}", produces = "application/json")
+    public ResponseEntity<?> removeJobEmail(@PathVariable("job") Long id){
+    	
+		jobEmailService.removeEmail(id);
+		
+        return ResponseEntity.ok().build();
+    }
+
 }

@@ -179,4 +179,28 @@ public class JobEmailService implements ArtefactService<JobEmail> {
         List<JobEmail> jobLogs = jobEmailRepository.findAll(example);
         jobEmailRepository.deleteAll(jobLogs);
 	}
+	
+	/**
+	 * Adds the email.
+	 *
+	 * @param job the job
+	 * @param email the email
+	 */
+	public void addEmail(String job, String email) {
+		JobEmail jobEmail = new JobEmail(job, email, null, null, job, email);
+		jobEmail.updateKey();
+		save(jobEmail);
+	}
+	
+	/**
+	 * Removes the email.
+	 *
+	 * @param id the id
+	 */
+	public void removeEmail(Long id) {
+		JobEmail jobEmail = findById(id);
+		if (jobEmail != null) {
+			delete(jobEmail);
+		}
+	}
 }

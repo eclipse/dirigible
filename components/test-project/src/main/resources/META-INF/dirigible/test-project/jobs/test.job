@@ -1,7 +1,7 @@
 {
    "expression":"0/10 * * * * ?",
    "group":"dirigible-defined",
-   "handler":"sample-job/myhandler.js",
+   "handler":"test-project/jobs/test-handler.js",
    "description":"My Job with Parameters",
    "parameters":[
       {

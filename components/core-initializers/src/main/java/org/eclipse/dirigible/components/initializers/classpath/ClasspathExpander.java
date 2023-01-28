@@ -59,7 +59,7 @@ public class ClasspathExpander {
 							JarEntry entry = entries.nextElement();
 							if (entry.getName().startsWith(ROOT)) {
 								if (!entry.isDirectory()) {
-									if (logger.isDebugEnabled()) {logger.debug("resource found: " + entry);}
+									//if (logger.isDebugEnabled()) {logger.debug("resource found: " + entry);}
 									byte[] content = IOUtils.toByteArray(jar.getInputStream(entry));
 									String registryPath = entry.getName().substring(ROOT.length());
 									repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepository.SEPARATOR + registryPath, content);

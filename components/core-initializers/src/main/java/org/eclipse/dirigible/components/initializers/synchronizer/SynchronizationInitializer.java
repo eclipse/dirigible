@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.initializers.synchronizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
  * The Class SynchronizersInitializer.
  */
 @Component
+@Scope("singleton")
 public class SynchronizationInitializer {
 
 	/** The synchronization processor. */

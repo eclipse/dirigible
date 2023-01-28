@@ -17,9 +17,11 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
+@Scope("singleton")
 public class SynchronizationJob implements Job {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationJob.class);

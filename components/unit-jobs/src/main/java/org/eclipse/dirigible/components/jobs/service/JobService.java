@@ -11,13 +11,21 @@
  */
 package org.eclipse.dirigible.components.jobs.service;
 
+import static java.text.MessageFormat.format;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.eclipse.dirigible.commons.api.helpers.NameValuePair;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
+import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.email.JobEmailProcessor;
 import org.eclipse.dirigible.components.jobs.repository.JobRepository;
+import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -36,9 +44,13 @@ public class JobService implements ArtefactService<Job>  {
     @Autowired
     private JobRepository jobRepository;
     
-    /** The job email processor. */
+    /** The job email service. */
     @Autowired
     private JobEmailProcessor jobEmailProcessor;
+    
+    /** The javascript service. */
+    @Autowired
+    private JavascriptService javascriptService;
 
     /**
      * Gets the all.
@@ -90,6 +102,9 @@ public class JobService implements ArtefactService<Job>  {
     @Transactional(readOnly = true)
     public Job findByName(String name) {
         Job filter = new Job();
+        if (name != null && name.startsWith("/")) {
+        	name = name.substring(1);
+        }
         filter.setName(name);
         Example<Job> example = Example.of(filter);
         Optional<Job> job = jobRepository.findOne(example);
@@ -178,4 +193,47 @@ public class JobService implements ArtefactService<Job>  {
         job.setEnabled(false);
         return jobRepository.saveAndFlush(job);
     }
+    
+    /**
+	 * Trigger.
+	 *
+	 * @param name the name
+	 * @param parameters the parameters
+	 * @return true, if successful
+     * @throws Exception 
+	 */
+	public boolean trigger(String name, Map<String, String> parametersMap) throws Exception {
+			Job job = findByName(name);
+			if (job != null) {
+				Map<String, String> memento = new HashMap<String, String>();
+				try {
+					for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
+						memento.put(entry.getKey(), Configuration.get(entry.getKey()));
+						Configuration.set(entry.getKey(), entry.getValue());
+					}
+					
+					// String engine = job.getEngine();
+					String handler = job.getHandler();
+					try {
+						Map<Object, Object> context = new HashMap<>();
+				    	context.put("handler", handler);
+				    	RepositoryPath path = new RepositoryPath(handler);
+				    	
+						javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+					} catch (Exception e) {
+						throw new Exception(e);
+					}
+				} finally {
+					for (Map.Entry<String, String> entry : memento.entrySet()) {
+						Configuration.set(entry.getKey(), entry.getValue());
+					}
+				}
+			} else {
+				String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
+				throw new Exception(error);
+			}
+			
+	        return true;
+	}
+	
 }

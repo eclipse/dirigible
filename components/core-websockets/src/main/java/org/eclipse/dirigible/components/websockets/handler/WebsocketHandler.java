@@ -81,7 +81,7 @@ public class WebsocketHandler {
 //			}
 			context.put("handler", module);
 			RepositoryPath path = new RepositoryPath(wrapper);
-	    	getJavascriptService().handleRequest(path.getSegments()[1], path.constructPathFrom(1), null, context, false);
+	    	getJavascriptService().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
 		} catch (ScriptingException e) {
 			throw new Exception(e);
 		}

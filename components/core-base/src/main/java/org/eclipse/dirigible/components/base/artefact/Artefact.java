@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.components.base.artefact;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Lob;
@@ -206,8 +207,12 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 		if (this.type != null
 				&& this.location != null 
 				&& this.name != null) {
-			this.key =  this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
+			this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
 		}
+//		else {
+//			this.key = UUID.randomUUID().toString();
+//		}
+		
 	}
 
 	/**

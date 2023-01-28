@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -41,22 +42,24 @@ import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
  * The Class SynchronizationProcessor.
  */
 @Component
+@Scope("singleton")
 public class SynchronizationProcessor implements SynchronizationWalkerCallback, SynchronizerCallback {
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationProcessor.class);
 	
 	/** The definitions. */
-	private Map<Synchronizer<Artefact>, Map<String, Definition>> definitions = new HashMap<>();
+	private Map<Synchronizer<Artefact>, Map<String, Definition>> definitions = Collections.synchronizedMap(new HashMap<>());
 	
 	/** The artefacts. */
-	private List<? extends Artefact> artefacts = new ArrayList<>();
+	private List<? extends Artefact> artefacts = Collections.synchronizedList(new ArrayList<>());
 	
 	/** The repository. */
 	private IRepository repository;
@@ -65,7 +68,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	private final List<Synchronizer<Artefact>> synchronizers;
 	
 	/** The errors. */
-	private List<String> errors = new ArrayList<>();
+	private List<String> errors = Collections.synchronizedList(new ArrayList<>());
 	
 	/** The definition service. */
 	private DefinitionService definitionService;
@@ -80,7 +83,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	@Autowired
 	public SynchronizationProcessor(IRepository repository, List<Synchronizer<Artefact>> synchronizers, DefinitionService definitionService) {
 		this.repository = repository;
-		this.synchronizers = synchronizers;
+		this.synchronizers = Collections.synchronizedList(synchronizers);
 		this.definitionService = definitionService;
 		this.synchronizers.forEach(s -> s.setCallback(this));
 	}
@@ -102,7 +105,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		collectFiles();
 		
 		if (logger.isDebugEnabled()) {logger.debug("Collecting files done. {} known types of definitions collected - {}.", synchronizers.size(),
-				synchronizers.stream().map(Synchronizer::getArtefactType).collect(Collectors.toList()));}
+				synchronizers.stream().map(Synchronizer::getArtefactType).collect(Collectors.toUnmodifiableList()));}
 		
 		if (logger.isDebugEnabled()) {logger.debug("Loading definitions...");}
 		// parse definitions to artefacts
@@ -125,7 +128,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		// preparing and depleting
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
 			List<TopologyWrapper<? extends Artefact>> locals = 
-					wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toList());
+					wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toUnmodifiableList());
 			synchronizer.prepare(locals, depleter);
 		}
 		if (logger.isDebugEnabled()) {logger.debug("Preparing for processing done.");}
@@ -137,7 +140,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		// processing and depleting
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
 			List<TopologyWrapper<? extends Artefact>> locals = 
-					wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toList());
+					wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toUnmodifiableList());
 			synchronizer.process(locals, depleter);
 		}
 		if (logger.isDebugEnabled()) {logger.debug("Processing of artefacts done.");}
@@ -195,7 +198,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 */
 	private void loadDefinitions() {
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
-			for (Definition definition : definitions.get(synchronizer).values()) {
+			Collection<Definition> immutableDefinitions = Collections.synchronizedCollection(definitions.get(synchronizer).values());
+			for (Definition definition : immutableDefinitions) {
 				try {
 					if (definition.getContent() == null) {
 						String error = String.format("Content of %s has not been loaded correctly", definition.getLocation());
