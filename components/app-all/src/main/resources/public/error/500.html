@@ -15,7 +15,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="/services/web/resources/images/favicon.ico" />
-        <title>Page Not Found</title>
+        <title>Internal Server Error</title>
         <theme></theme>
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=application-view-js">
         </script>
@@ -27,11 +27,9 @@
 
         <div style="height: 600px; width: 100%;">
             <fd-message-page glyph="sap-icon--documents">
-                <fd-message-page-title>Page Not Found</fd-message-page-title>
+                <fd-message-page-title>Internal Server Error</fd-message-page-title>
                 <fd-message-page-subtitle>
-                    <b>It looks like you've reached a URL that doesn't exist</b>.
-                    <br>
-                    The page you are looking for is no longer here, or never existed in the first place.
+                    <b>Oh no! Internal server error has occured!</b>.
                     <br>
                     <br>
                     <i>You can go to the <b>previous page</b>, or start over from the <b>home page</b>.</i>
@@ -50,7 +48,7 @@
             let errorPage = angular.module('errorPage', ['ideUI', 'ideView']);
 
 			errorPage.controller('ErrorPageController', ['$scope', 'theming', function ($scope, theming) {
-				
+
 				$scope.goBack = function() {
 					history.back();
 				};

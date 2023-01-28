@@ -45,7 +45,7 @@
                 <tbody fd-table-body>
                     <tr fd-table-row ng-repeat-start="next in list" hoverable="true">
                         <td fd-table-group-cell nesting-level="1" expanded="true">
-                            <b>{{next.extensionPoint.name}}</b>: {{next.extensionPoint.location}}
+                            <b>{{next.name}}</b>: {{next.location}}
                         </td>
                     </tr>
                     <tr fd-table-row ng-repeat-end ng-repeat="extension in next.extensions">

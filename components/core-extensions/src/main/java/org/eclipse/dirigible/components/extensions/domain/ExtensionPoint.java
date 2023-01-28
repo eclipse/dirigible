@@ -11,22 +11,18 @@
  */
 package org.eclipse.dirigible.components.extensions.domain;
 
-import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.Valid;
+import javax.persistence.Transient;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
-import org.eclipse.dirigible.components.base.artefact.Auditable;
 
 /**
  * The Class ExtensionPoint.
@@ -43,6 +39,9 @@ public class ExtensionPoint extends Artefact {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EXTENSIONPOINT_ID", nullable = false)
 	private Long id;
+	
+	@Transient
+	private transient Set<Extension> extensions = new HashSet<Extension>();
 	
 	/**
 	 * Instantiates a new extension point.
@@ -80,23 +79,23 @@ public class ExtensionPoint extends Artefact {
 		this.id = id;
 	}
 
-//	/**
-//	 * Gets the extensions.
-//	 *
-//	 * @return the extensions
-//	 */
-//	public Set<Extension> getExtensions() {
-//		return extensions;
-//	}
-//
-//	/**
-//	 * Sets the extensions.
-//	 *
-//	 * @param extensions the extensions to set
-//	 */
-//	public void setExtensions(Set<Extension> extensions) {
-//		this.extensions = extensions;
-//	}
+	/**
+	 * Gets the extensions.
+	 *
+	 * @return the extensions
+	 */
+	public Set<Extension> getExtensions() {
+		return extensions;
+	}
+
+	/**
+	 * Sets the extensions.
+	 *
+	 * @param extensions the extensions to set
+	 */
+	public void setExtensions(Set<Extension> extensions) {
+		this.extensions = extensions;
+	}
 
 	/**
 	 * To string.

@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
 import org.eclipse.dirigible.components.extensions.service.ExtensionPointService;
+import org.eclipse.dirigible.components.extensions.service.ExtensionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,10 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 
 /**
@@ -42,6 +40,9 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 
 	/** The extension point service. */
 	private final ExtensionPointService extensionPointService;
+	
+	/** The extension service. */
+	private final ExtensionService extensionService;
 
 	/**
 	 * Instantiates a new extension point endpoint.
@@ -49,8 +50,9 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 	 * @param extensionPointService the extension point service
 	 */
 	@Autowired
-	public ExtensionPointEndpoint(ExtensionPointService extensionPointService) {
+	public ExtensionPointEndpoint(ExtensionPointService extensionPointService, ExtensionService extensionService) {
 		this.extensionPointService = extensionPointService;
+		this.extensionService = extensionService;
 	}
 
 	/**
@@ -114,6 +116,19 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 	public ResponseEntity<List<ExtensionPoint>> getAll() {
 
 		return ResponseEntity.ok(extensionPointService.getAll());
+
+	}
+	
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
+	@GetMapping("/tree")
+	public ResponseEntity<List<ExtensionPoint>> getTree() {
+		List<ExtensionPoint> list = extensionPointService.getAll();
+		list.forEach(ep -> ep.getExtensions().addAll(extensionService.findByExtensionPoint(ep.getName())));
+		return ResponseEntity.ok(list);
 
 	}
 

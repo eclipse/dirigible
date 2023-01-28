@@ -89,7 +89,7 @@
                 .controller('JobAssignController', ['$scope', '$http', function ($scope, $http) {
 
                     function getEmails (job) {
-                        $http.get(`/services/ops/jobs/emails/${job.name}`)
+                        $http.get(`/services/unit/jobs/emails/${job.name}`)
                             .then(function (response) {
                                 $scope.emails = response.data;
                             }, function (response) {
@@ -113,7 +113,7 @@
                     }
 
                     $scope.addEmail = function () {
-                        $http.post(`/services/ops/jobs/emailadd/${$scope.job.name}`, $scope.job.email)
+                        $http.post(`/services/unit/jobs/emailadd/${$scope.job.name}`, $scope.job.email)
                             .then(function (response) {
                                 $scope.job.email= '';
                                 getEmails($scope.job);
@@ -123,7 +123,7 @@
                     }
 
                     $scope.removeEmail = function (id) {
-                        $http.delete(`/services/ops/jobs/emailremove/${id}`)
+                        $http.delete(`/services/unit/jobs/emailremove/${id}`)
                             .then(function (response) {
                                 getEmails($scope.job);
                             }, function (response) {
