@@ -174,7 +174,7 @@
 	</build>
 
 	<properties>
-		<picocli.version>4.7.0</picocli.version>
+		<picocli.version>4.7.1</picocli.version>
 		<webjars-locator>0.46</webjars-locator>
 		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
