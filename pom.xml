@@ -712,7 +712,7 @@
 		<activemq.version>5.17.3</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.48.v20220622</jetty.version>
-		<lucene.version>9.4.2</lucene.version>
+		<lucene.version>9.5.0</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.8.0</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
