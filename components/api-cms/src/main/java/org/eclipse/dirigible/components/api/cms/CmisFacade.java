@@ -16,16 +16,14 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.cms.api.ICmsProvider;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.core.security.api.AccessException;
-import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
-import org.eclipse.dirigible.core.security.definition.AccessDefinition;
-import org.eclipse.dirigible.core.security.service.SecurityCoreService;
-import org.eclipse.dirigible.core.security.verifier.AccessVerifier;
+import org.eclipse.dirigible.components.api.http.HttpRequestFacade;
+import org.eclipse.dirigible.components.security.domain.Access;
+import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -35,7 +33,7 @@ import org.springframework.stereotype.Component;
  * The Class CmisFacade.
  */
 @Component
-public class CmisFacade implements ApplicationContextAware {
+public class CmisFacade implements ApplicationContextAware, InitializingBean {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CmisFacade.class);
@@ -61,15 +59,48 @@ public class CmisFacade implements ApplicationContextAware {
 	/** The Constant DIRIGIBLE_CMS_ROLES_ENABLED. */
 	public static final String DIRIGIBLE_CMS_ROLES_ENABLED = "DIRIGIBLE_CMS_ROLES_ENABLED";
 
+	/** The application context. */
 	private static ApplicationContext applicationContext;
-
+	
+	/** The security access verifier. */
+    private AccessVerifier securityAccessVerifier;
+    
 	/** The cms provider. */
-	private ICmsProvider cmsProvider = null;
+	private ICmsProvider cmsProvider;
+	
+	/** The instance. */
+	private static CmisFacade INSTANCE;
 
+	/**
+	 * Instantiates a new cmis facade.
+	 *
+	 * @param cmsProvider the cms provider
+	 * @param securityAccessVerifier the security access verifier
+	 */
 	@Autowired
-	public CmisFacade(ICmsProvider cmsProvider) {
+	public CmisFacade(ICmsProvider cmsProvider, AccessVerifier securityAccessVerifier) {
 		this.cmsProvider = cmsProvider;
+		this.securityAccessVerifier = securityAccessVerifier;
 	}
+	
+	/**
+	 * After properties set.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		INSTANCE = this;		
+	}
+	
+	/**
+	 * Gets the instance.
+	 *
+	 * @return the cmis facade
+	 */
+	public static CmisFacade get() {
+        return INSTANCE;
+    }
 
 	/**
 	 * Gets the cms provider.
@@ -79,7 +110,21 @@ public class CmisFacade implements ApplicationContextAware {
 	protected ICmsProvider getCmsProvider() {
 		return cmsProvider;
 	}
-
+	
+	/**
+	 * Gets the security access verifier.
+	 *
+	 * @return the security access verifier
+	 */
+	public AccessVerifier getSecurityAccessVerifier() {
+		return securityAccessVerifier;
+	}
+	
+	/**
+	 * Sets the application context.
+	 *
+	 * @param ac the new application context
+	 */
 	@Override
 	public void setApplicationContext(ApplicationContext ac) {
 		CmisFacade.applicationContext = ac;
@@ -124,9 +169,6 @@ public class CmisFacade implements ApplicationContextAware {
 		return org.apache.chemistry.opencmis.commons.enums.UnfileObject.DELETE;
 	}
 
-	/** The security core service. */
-	private static ISecurityCoreService securityCoreService = new SecurityCoreService();
-
 	/**
 	 * Checks if the user can access the given path with the given method.
 	 *
@@ -144,7 +186,7 @@ public class CmisFacade implements ApplicationContextAware {
 		}
 		try {
 			String user = HttpRequestFacade.getRemoteUser();
-			Set<AccessDefinition> readDefinitions = getAccessDefinitions(path, CMIS_METHOD_READ);
+			Set<Access> readDefinitions = getAccessDefinitions(path, CMIS_METHOD_READ);
 			boolean isReadOnly = false;
 			boolean isReadable = true;
 			if (!readDefinitions.isEmpty()) {
@@ -157,7 +199,7 @@ public class CmisFacade implements ApplicationContextAware {
 				}
 			}
 
-			for (AccessDefinition readDefinition : readDefinitions) {
+			for (Access readDefinition : readDefinitions) {
 				if (HttpRequestFacade.isUserInRole(readDefinition.getRole())) {
 					isReadOnly = true;
 					isReadable = true;
@@ -166,7 +208,7 @@ public class CmisFacade implements ApplicationContextAware {
 			}
 
 			if (method.equals(CMIS_METHOD_WRITE)) {
-				Set<AccessDefinition> writeDefinitions = getAccessDefinitions(path, CMIS_METHOD_WRITE);
+				Set<Access> writeDefinitions = getAccessDefinitions(path, CMIS_METHOD_WRITE);
 				if (!writeDefinitions.isEmpty()) {
 					isReadOnly = true;
 					if (user == null) {
@@ -176,7 +218,7 @@ public class CmisFacade implements ApplicationContextAware {
 						return false;
 					}
 				}
-				for (AccessDefinition writeDefinition : writeDefinitions) {
+				for (Access writeDefinition : writeDefinitions) {
 					if (HttpRequestFacade.isUserInRole(writeDefinition.getRole())) {
 						isReadOnly = false;
 						break;
@@ -202,11 +244,10 @@ public class CmisFacade implements ApplicationContextAware {
 	 * @param method the method
 	 * @return the access definitions
 	 * @throws ServletException the servlet exception
-	 * @throws AccessException  the access exception
 	 */
-	public static Set<AccessDefinition> getAccessDefinitions(String path, String method)
-			throws ServletException, AccessException {
-		Set<AccessDefinition> accessDefinitions = new HashSet<AccessDefinition>();
+	public static Set<Access> getAccessDefinitions(String path, String method)
+			throws ServletException {
+		Set<Access> accessDefinitions = new HashSet<Access>();
 		int indexOf = 0;
 		do {
 			String accessPath = path;
@@ -214,8 +255,7 @@ public class CmisFacade implements ApplicationContextAware {
 			if (indexOf > 0) {
 				accessPath = path.substring(0, indexOf);
 			}
-			accessDefinitions.addAll(AccessVerifier.getMatchingAccessDefinitions(securityCoreService,
-					ISecurityCoreService.CONSTRAINT_SCOPE_CMIS, accessPath, method));
+			accessDefinitions.addAll(CmisFacade.get().getSecurityAccessVerifier().getMatchingSecurityAccesses("CMIS", accessPath, method));
 		} while (indexOf > 0);
 		return accessDefinitions;
 	}

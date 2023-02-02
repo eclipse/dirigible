@@ -26,9 +26,7 @@ exports.uploadDocument = function (folder, document) {
 	let mimetype = document.getContentType();
 	let size = document.getSize();
 	let inputStream = document.getInputStream();
-
 	let newDocument = createDocument(folder, fileName, size, mimetype, inputStream);
-
 	return new DocumentSerializer(newDocument);
 };
 
@@ -65,7 +63,6 @@ function createDocument(folder, fileName, size, mimetype, inputStream) {
 	let properties = {};
 	properties[cmis.OBJECT_TYPE_ID] = cmis.OBJECT_TYPE_DOCUMENT;
 	properties[cmis.NAME] = fileName;
-
 	let newDocument = folder.createDocument(properties, contentStream, cmis.VERSIONING_STATE_MAJOR);
 	return newDocument;
 }

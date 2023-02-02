@@ -41,7 +41,6 @@ rs.service()
 		let path = unescapePath(ctx.queryParameters.path || "/");
 		let overwrite = ctx.queryParameters.overwrite || false;
 		let documents = upload.parseRequest();
-
 		let result = documentsProcessor.create(path, documents, overwrite);
 		response.setContentType("application/json");
 		response.println(JSON.stringify(result));

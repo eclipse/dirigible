@@ -22,7 +22,8 @@ exports.isMultipartContent = function() {
 
 exports.parseRequest = function() {
 	const fileItems = new FileItems();
-	fileItems.native = org.eclipse.dirigible.components.api.http.HttpUploadFacade.parseRequest();
+	//fileItems.native = org.eclipse.dirigible.components.api.http.HttpUploadFacade.parseRequest();
+	fileItems.native = __context.get("files");
 	return fileItems;
 };
 
@@ -58,7 +59,7 @@ function FileItem() {
 	};
 
 	this.getName = function() {
-		return this.native.getName();
+		return this.native.getOriginalFilename();
 	};
 
 	this.getSize = function() {
