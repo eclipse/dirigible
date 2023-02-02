@@ -195,13 +195,13 @@ public class JobService implements ArtefactService<Job>  {
     }
     
     /**
-	 * Trigger.
-	 *
-	 * @param name the name
-	 * @param parameters the parameters
-	 * @return true, if successful
-     * @throws Exception 
-	 */
+     * Trigger.
+     *
+     * @param name the name
+     * @param parametersMap the parameters map
+     * @return true, if successful
+     * @throws Exception the exception
+     */
 	public boolean trigger(String name, Map<String, String> parametersMap) throws Exception {
 			Job job = findByName(name);
 			if (job != null) {
