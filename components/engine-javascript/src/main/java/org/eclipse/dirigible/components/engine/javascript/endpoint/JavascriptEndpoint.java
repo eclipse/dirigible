@@ -80,7 +80,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 *
 	 * @param projectName the project name
 	 * @param projectFilePath the project file path
-	 * @param debug the debug
+	 * @param params the params
 	 * @return the response
 	 */
 	@GetMapping(HTTP_PATH_MATCHER)
@@ -97,7 +97,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 *
 	 * @param projectName the project name
 	 * @param projectFilePath the project file path
-	 * @param debug the debug
+	 * @param params the params
 	 * @return the response
 	 */
 	@PostMapping(HTTP_PATH_MATCHER)
@@ -114,7 +114,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 *
 	 * @param projectName the project name
 	 * @param projectFilePath the project file path
-	 * @param debug the debug
+	 * @param params the params
+	 * @param file the file
 	 * @return the response
 	 */
 	@PostMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
@@ -132,7 +133,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 *
 	 * @param projectName the project name
 	 * @param projectFilePath the project file path
-	 * @param debug the debug
+	 * @param params the params
 	 * @return the response
 	 */
 	@PutMapping(HTTP_PATH_MATCHER)
@@ -149,7 +150,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 *
 	 * @param projectName the project name
 	 * @param projectFilePath the project file path
-	 * @param debug the debug
+	 * @param params the params
+	 * @param file the file
 	 * @return the response
 	 */
 	@PutMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
@@ -167,7 +169,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 *
 	 * @param projectName the project name
 	 * @param projectFilePath the project file path
-	 * @param debug the debug
+	 * @param params the params
 	 * @return the response
 	 */
 	@PatchMapping(HTTP_PATH_MATCHER)
@@ -184,7 +186,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 *
 	 * @param projectName the project name
 	 * @param projectFilePath the project file path
-	 * @param debug the debug
+	 * @param params the params
 	 * @return the response
 	 */
 	@DeleteMapping(HTTP_PATH_MATCHER)
@@ -201,7 +203,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 *
 	 * @param projectName the project name
 	 * @param projectFilePath the project file path
-	 * @param debug the debug
+	 * @param params the params
+	 * @param files the files
 	 * @return the response
 	 */
 	private ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, 
@@ -262,7 +265,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param projectName the project name
 	 * @param projectFilePath the project file path
 	 * @param projectFilePathParam the project file path param
-	 * @param debug the debug
+	 * @param params the params
+	 * @param files the files
 	 * @return the response
 	 */
 	private ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam, 
@@ -329,6 +333,12 @@ public class JavascriptEndpoint extends BaseEndpoint {
 		}
 	}
 	
+	/**
+	 * Normalize path.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	private String normalizePath(String path) {
 		if (path != null) {
 			if (path.startsWith(IRepository.SEPARATOR)) {
