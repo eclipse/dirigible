@@ -218,7 +218,6 @@ public class JobService implements ArtefactService<Job>  {
 						Map<Object, Object> context = new HashMap<>();
 				    	context.put("handler", handler);
 				    	RepositoryPath path = new RepositoryPath(handler);
-				    	
 						javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
 					} catch (Exception e) {
 						throw new Exception(e);

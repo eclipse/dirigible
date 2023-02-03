@@ -136,6 +136,7 @@
 		<module>api-indexing</module>
 		<module>api-net</module>
 		<module>api-git</module>
+		<module>api-messaging</module>
 		
 		<!-- Resources -->
 		<module>resources-core</module>

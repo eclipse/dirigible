@@ -32,6 +32,11 @@
 				</exclusion>
 			</exclusions>
     	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-unit-listeners</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+    	</dependency>
     	
     	<!-- spring's support for quartz -->
         <dependency>

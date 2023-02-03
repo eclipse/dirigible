@@ -37,7 +37,11 @@ public class Listener extends Artefact {
     @Column(name = "LISTENER_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
     @Expose
     private String handler;
-
+    
+    /** The handler. */
+    @Column(name = "LISTENER_KIND", columnDefinition = "CHAR", nullable = false, length = 1)
+    @Expose
+    private char kind;
 
     /**
      * Instantiates a new listener.
@@ -46,10 +50,12 @@ public class Listener extends Artefact {
      * @param name the name
      * @param description the description
      * @param handler the handler
+     * @param kind the kind
      */
-    public Listener(String location, String name, String description, String handler) {
+    public Listener(String location, String name, String description, String handler, char kind) {
         super(location, name, ARTEFACT_TYPE, description, null);
         this.handler = handler;
+        this.kind = kind;
     }
 
     /**
@@ -93,6 +99,24 @@ public class Listener extends Artefact {
     public void setHandler(String handler) {
         this.handler = handler;
     }
+    
+    /**
+     * Gets the kind.
+     *
+     * @return the kind
+     */
+    public char getKind() {
+		return kind;
+	}
+    
+    /**
+     * Sets the kind.
+     *
+     * @param kind the new kind
+     */
+    public void setKind(char kind) {
+		this.kind = kind;
+	}
 
     /**
      * To string.
@@ -104,6 +128,7 @@ public class Listener extends Artefact {
         return "Listener{" +
                 "id=" + id +
                 ", handler='" + handler + '\'' +
+                ", kind='" + kind + '\'' +
                 ", location='" + location + '\'' +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
