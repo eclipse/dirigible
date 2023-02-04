@@ -11,7 +11,7 @@
  */
 
 const registry = require("platform/registry");
-const templateEngines = require("platform/template-engines");
+const templateEngines = require("template/engines");
 
 exports.generateFiles = function (model, parameters, templateSources) {
     let generatedFiles = [];
