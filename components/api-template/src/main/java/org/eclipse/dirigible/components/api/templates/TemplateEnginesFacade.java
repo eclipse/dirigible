@@ -37,13 +37,13 @@ public class TemplateEnginesFacade implements InitializingBean {
 	private final TemplateEngine ENGINE_JAVASCRIPT;
 
 	/** The template engine mustache. */
-	private final TemplateEngine TEMPLATE_ENGINE_MUSTACHE;
+	private final TemplateEngineFacade TEMPLATE_ENGINE_MUSTACHE;
 	
 	/** The template engine velocity. */
-	private final TemplateEngine TEMPLATE_ENGINE_VELOCITY;
+	private final TemplateEngineFacade TEMPLATE_ENGINE_VELOCITY;
 	
 	/** The template engine javascript. */
-	private final TemplateEngine TEMPLATE_ENGINE_JAVASCRIPT;
+	private final TemplateEngineFacade TEMPLATE_ENGINE_JAVASCRIPT;
 	
 	/** The generation engines manager. */
 	private final TemplateEnginesManager generationEnginesManager;
@@ -62,9 +62,9 @@ public class TemplateEnginesFacade implements InitializingBean {
 		this.ENGINE_MUSTACHE = generationEnginesManager.getTemplateEngine("mustache");
 		this.ENGINE_VELOCITY = generationEnginesManager.getTemplateEngine("velocity");
 		this.ENGINE_JAVASCRIPT = generationEnginesManager.getTemplateEngine("javascript");
-		this.TEMPLATE_ENGINE_MUSTACHE = new TemplateEngine(ENGINE_MUSTACHE);
-		this.TEMPLATE_ENGINE_VELOCITY = new TemplateEngine(ENGINE_VELOCITY);
-		this.TEMPLATE_ENGINE_JAVASCRIPT = new TemplateEngine(ENGINE_JAVASCRIPT);
+		this.TEMPLATE_ENGINE_MUSTACHE = new TemplateEngineFacade(ENGINE_MUSTACHE);
+		this.TEMPLATE_ENGINE_VELOCITY = new TemplateEngineFacade(ENGINE_VELOCITY);
+		this.TEMPLATE_ENGINE_JAVASCRIPT = new TemplateEngineFacade(ENGINE_JAVASCRIPT);
 	}
 	
 	/**
@@ -100,7 +100,7 @@ public class TemplateEnginesFacade implements InitializingBean {
 	 *
 	 * @return the default engine
 	 */
-	public static TemplateEngine getDefaultEngine() {
+	public static TemplateEngineFacade getDefaultEngine() {
 		return TemplateEnginesFacade.get().TEMPLATE_ENGINE_VELOCITY;
 	}
 
@@ -109,7 +109,7 @@ public class TemplateEnginesFacade implements InitializingBean {
 	 *
 	 * @return the mustache engine
 	 */
-	public static TemplateEngine getMustacheEngine() {
+	public static TemplateEngineFacade getMustacheEngine() {
 		return TemplateEnginesFacade.get().TEMPLATE_ENGINE_MUSTACHE;
 	}
 
@@ -118,7 +118,7 @@ public class TemplateEnginesFacade implements InitializingBean {
 	 *
 	 * @return the velocity engine
 	 */
-	public static TemplateEngine getVelocityEngine() {
+	public static TemplateEngineFacade getVelocityEngine() {
 		return TemplateEnginesFacade.get().TEMPLATE_ENGINE_VELOCITY;
 	}
 	
@@ -127,14 +127,14 @@ public class TemplateEnginesFacade implements InitializingBean {
 	 *
 	 * @return the javascript engine
 	 */
-	public static TemplateEngine getJavascriptEngine() {
+	public static TemplateEngineFacade getJavascriptEngine() {
 		return TemplateEnginesFacade.get().TEMPLATE_ENGINE_JAVASCRIPT;
 	}
 
 	/**
 	 * The Class TemplateEngine.
 	 */
-	public static class TemplateEngine {
+	public static class TemplateEngineFacade {
 
 		/** The Constant LOCATION_API_FACADE. */
 		private static final String LOCATION_API_FACADE = "api-facade";
@@ -147,7 +147,7 @@ public class TemplateEnginesFacade implements InitializingBean {
 		 *
 		 * @param engine the engine
 		 */
-		public TemplateEngine(TemplateEngine engine) {
+		public TemplateEngineFacade(TemplateEngine engine) {
 			this.engine = engine;
 		}
 
