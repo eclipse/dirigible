@@ -1,0 +1,26 @@
+[
+	{
+		"name": "@dirigible/test",
+		"description": "Dirigible Test Module",
+		"isPackageDescription": true,
+		"dtsPath": "test/extensions/test.d.ts"
+	},
+	{
+		"name": "test/assert",
+		"description": "Assert API",
+		"api": "assert",
+		"versionedPaths": [
+			"test/assert"
+		],
+		"pathDefault": "test/assert"
+	},
+	{
+		"name": "test/runner",
+		"description": "Test Runner API",
+		"api": "runner",
+		"versionedPaths": [
+			"test/runner"
+		],
+		"pathDefault": "test/runner"
+	}
+]

@@ -1,0 +1,26 @@
+[
+	{
+		"name": "@dirigible/security",
+		"description": "Dirigible Security module",
+		"isPackageDescription": true,
+		"dtsPath": "security/extensions/security.d.ts"
+	},
+	{
+		"name": "security/user",
+		"description": "User API",
+		"api": "user",
+		"versionedPaths": [
+			"security/user"
+		],
+		"pathDefault": "security/user"
+	},
+	{
+		"name": "security/oauth",
+		"description": "OAuth API",
+		"api": "oauth",
+		"versionedPaths": [
+			"security/oauth"
+		],
+		"pathDefault": "security/oauth"
+	}
+]

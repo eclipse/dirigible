@@ -25,6 +25,6 @@ exports.getContent = function () {
 	      "git/client"
 	    ],
 	    "pathDefault": "git/client"
-	  }]
-	;
+	  }
+    ];
 };

@@ -10,7 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getContent = function() {
-
 	return [
 		{
 			"name": "@dirigible/utils",
@@ -108,7 +107,6 @@ exports.getContent = function() {
 			],
 			"pathDefault": "utils/qrcode"
 		}
-	]
-		;
+	];
 };
 
