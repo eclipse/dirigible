@@ -10,9 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 /**
- * API v4 Context
- * 
- * Note: This module is supported only with the Mozilla Rhino engine
+ * API Context
  */
 
 exports.get = function(name) {

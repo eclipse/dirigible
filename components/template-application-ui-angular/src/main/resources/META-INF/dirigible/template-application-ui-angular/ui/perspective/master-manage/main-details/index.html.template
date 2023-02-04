@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="page" ng-controller="PageController">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
+        <title dg-brand-title></title>
+        <theme></theme>
+        <script type="text/javascript"
+            src="//services/js/resources-core/services/loader.js?id=application-view-js"></script>
+        <link type="text/css" rel="stylesheet"
+            href="//services/js/resources-core/services/loader.js?id=application-view-css" />
+
+        <script type="text/javascript" src="controller.js"></script>
+    </head>
+
+    <body class="dg-vbox" dg-contextmenu="contextMenuContent">
+
+        <fd-scrollbar class="dg-full-height">
+            <fd-fieldset class="fd-margin--md" ng-form="formFieldset">
+                <fd-form-group dg-header="{{formHeaders[action]}}" name="entityForm">
+#foreach ($property in $properties)
+#if(!$property.dataAutoIncrement)
+#if($property.widgetType == "DROPDOWN")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-combobox-input id="id${property.name}"
+                            name="${property.name}"
+                            state="{{ formErrors.${property.name} ? 'error' : '' }}"
+                            ng-required="true"
+                            ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                            ng-model="entity.${property.name}"
+                            dg-disabled="action === 'select'"
+                            dropdown-items="options${property.name}"
+                            dg-placeholder="Search ${property.widgetLabel} ...">
+                        </fd-combobox-input>
+                    </fd-form-item>
+#elseif($property.widgetType == "CHECKBOX")
+                    <fd-form-item>
+                        <fd-checkbox id="id${property.name}" compact="false" ng-required="${property.dataNotNull}" ng-model="entity.${property.name}">
+                        </fd-checkbox>
+                        <fd-checkbox-label for="id${property.name}" dg-required="${property.dataNotNull}">${property.widgetLabel}</fd-checkbox-label>
+                    </fd-form-item>
+#elseif($property.widgetType == "COLOR")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                type="color"
+                                placeholder="Enter ${property.widgetLabel}">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#elseif($property.widgetType == "NUMBER")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                type="number"
+                                placeholder="Enter ${property.widgetLabel}">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#elseif($property.widgetType == "MONTH")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                type="month">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#elseif($property.widgetType == "WEEK")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                type="week">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#elseif($property.widgetType == "TIME")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                type="time">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#elseif($property.widgetType == "DATETIME-LOCAL")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                type="datetime-local">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#elseif($property.widgetType == "DATE")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                type="date">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#elseif($property.widgetType == "TEXTAREA")
+					<fd-form-item horizontal="false">
+						<fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+						<fd-textarea id="id${property.name}"
+							name="${property.name}"
+							state="{{ formErrors.${property.name} ? 'error' : '' }}"
+							ng-required="${property.dataNotNull}"
+							ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+							ng-model="entity.${property.name}"
+							ng-readonly="action === 'select'"
+							ng-minlength="${property.minLength} || 0"
+							ng-maxlength="${property.maxLength} || -1"
+							dg-input-rules="{ patterns: ['${property.inputRule}'] }"
+							placeholder="Enter ${property.widgetLabel}">
+						</fd-textarea>
+						<fd-form-message dg-type="error" ng-show="formErrors.${property.name}">Incorrect Input</fd-form-message>
+					</fd-form-item horizontal="false">
+#elseif($property.widgetType == "TEL")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                ng-minlength="${property.minLength} || 0"
+                                ng-maxlength="${property.maxLength} || -1"
+                                dg-input-rules="{ patterns:#if($property.inputRule == "")['^[0-9]{0,14}$']#else ['${property.inputRule}']#end }"
+                                type="tel"
+                                placeholder="Enter ${property.widgetLabel}">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#elseif($property.widgetType == "URL")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                ng-minlength="${property.minLength} || 0"
+                                ng-maxlength="${property.maxLength} || -1"
+                                dg-input-rules="{ patterns: ['${property.inputRule}'] }"
+                                type="url"
+                                placeholder="Enter ${property.widgetLabel}">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#elseif($property.widgetType == "EMAIL")
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                ng-minlength="${property.minLength} || 0"
+                                ng-maxlength="${property.maxLength} || -1"
+                                dg-input-rules="{ patterns: ['${property.inputRule}'] }"
+                                type="email"
+                                placeholder="Enter ${property.widgetLabel}">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#else
+                    <fd-form-item horizontal="false">
+                        <fd-form-label for="id${property.name}" dg-required="${property.dataNotNull}" dg-colon="true">${property.widgetLabel}</fd-form-label>
+                        <fd-form-input-message-group dg-inactive="{{ formErrors.${property.name} ? false : true }}">
+                            <fd-input id="id${property.name}"
+                                name="${property.name}"
+                                state="{{ formErrors.${property.name} ? 'error' : '' }}"
+								ng-required="${property.dataNotNull}"
+                                ng-change="isValid(formFieldset['${property.name}'].$valid, '${property.name}')"
+                                ng-model="entity.${property.name}"
+                                ng-readonly="action === 'select'"
+                                ng-minlength="${property.minLength} || 0"
+                                ng-maxlength="${property.maxLength} || -1"
+                                dg-input-rules="{ patterns: ['${property.inputRule}'] }"
+                                type="text"
+                                placeholder="Enter ${property.widgetLabel}">
+                            </fd-input>
+                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+                        </fd-form-input-message-group>
+                    </fd-form-item>
+#end
+#end
+#end
+
+                </fd-form-group>
+            </fd-fieldset>
+        </fd-scrollbar>
+
+        <footer class="fd-dialog__footer fd-bar fd-bar--footer" ng-show="action !== 'select'">
+            <div class="fd-bar__right">
+                <fd-button class="fd-margin-end--tiny fd-dialog__decisive-button" compact="true" dg-type="emphasized"
+                    dg-label="{{action === 'create' ? 'Create' : 'Update'}}"
+                    ng-click="action === 'create' ? create() : update()" state="{{ !isFormValid ? 'disabled' : '' }}">
+                </fd-button>
+                <fd-button class="fd-dialog__decisive-button" compact="true" dg-type="transparent" dg-label="Cancel"
+                    ng-click="cancel()"></fd-button>
+            </div>
+        </footer>
+    </body>
+
+</html>

@@ -1,0 +1,3 @@
+<div class="sidebar list-group">
+	<a class="list-group-item" ng-repeat="perspective in perspectives" ng-class="{active: activePerspective && activePerspective === perspective.name}" title="{{perspective.name}}" href="{{perspective.link}}" target="_self" ng-click="setActivePerspective(perspective.name)"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
+</div>

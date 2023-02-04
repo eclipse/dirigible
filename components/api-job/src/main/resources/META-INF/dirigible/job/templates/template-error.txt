@@ -6,7 +6,7 @@ The execution of the job [{{job.name}}] failed with an error:
 
 You can investigate further at:
 
-{{job.scheme}}://{{job.host}}:{{job.port}}/services/v4/web/ide-jobs/view/jobs.html
+{{job.scheme}}://{{job.host}}:{{job.port}}/services/web/ide-jobs/view/jobs.html
 
 Regards,
 Your Job Engine

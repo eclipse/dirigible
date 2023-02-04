@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.dirigible.components.api.security.UserFacade;
+import org.eclipse.dirigible.components.base.project.ProjectMetadataDependency;
 import org.eclipse.dirigible.components.ide.git.domain.GitConnectorException;
 import org.eclipse.dirigible.components.ide.git.domain.GitConnectorFactory;
 import org.eclipse.dirigible.components.ide.git.model.GitCloneModel;
 import org.eclipse.dirigible.components.ide.git.utils.GitFileUtils;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
-import org.eclipse.dirigible.components.ide.workspace.project.ProjectMetadataDependency;
 import org.eclipse.dirigible.components.ide.workspace.project.ProjectMetadataManager;
 import org.eclipse.dirigible.components.ide.workspace.service.PublisherService;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;

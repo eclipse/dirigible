@@ -24,12 +24,12 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.dirigible.api.v3.mail.MailFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.engine.template.TemplateEngine;
+import org.eclipse.dirigible.components.engine.template.TemplateEnginesManager;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobEmail;
 import org.eclipse.dirigible.components.jobs.service.JobEmailService;
 import org.eclipse.dirigible.components.registry.accessor.RegistryAccessor;
-import org.eclipse.dirigible.core.generation.api.GenerationEnginesManager;
-import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,11 @@ public class JobEmailProcessor {
     
     /** The job service. */
     @Autowired
-    private JobEmailService jobEmailService ;
+    private JobEmailService jobEmailService;
+    
+    /** The generation engines manager. */
+    @Autowired
+    private TemplateEnginesManager generationEnginesManager;
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(JobEmailProcessor.class);
@@ -210,7 +214,7 @@ public class JobEmailProcessor {
 
         byte[] template = registryAccessor.getRegistryContent(templateLocation, defaultLocation);
 
-        IGenerationEngine generationEngine = GenerationEnginesManager.getGenerationEngine("mustache");
+        TemplateEngine generationEngine = generationEnginesManager.getTemplateEngine("mustache");
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("job.name", job.getName());
         parameters.put("job.message", job.getMessage());

@@ -1,0 +1,5 @@
+{
+	"module": "ide/services/menu/help",
+	"extensionPoint": "ide-{{fileName}}-menu",
+	"description": "Help Menu"
+}

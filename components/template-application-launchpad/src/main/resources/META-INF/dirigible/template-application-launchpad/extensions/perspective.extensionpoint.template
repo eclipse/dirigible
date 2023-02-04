@@ -1,0 +1,4 @@
+{
+	'description': 'Extension Point for the {{extensionName}} Perspective Providers',
+	'name': 'launchpad-{{extensionName}}-perspective'
+}

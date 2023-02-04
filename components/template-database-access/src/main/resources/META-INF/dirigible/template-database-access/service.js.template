@@ -1,0 +1,12 @@
+var query = require('db/query');
+var response = require('http/response');
+
+
+var sql = 'select * from DIRIGIBLE_EXTENSIONS where EXTENSION_EXTENSIONPOINT_NAME = ?';
+
+var resultset = query.execute(sql, ['ide-template']);
+
+response.println(JSON.stringify(resultset));
+
+response.flush();
+response.close();

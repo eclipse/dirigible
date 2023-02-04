@@ -17,7 +17,7 @@ exports.getContent = function () {
 	    "isPackageDescription": true,
 	    "dtsPath": "template/extensions/template.d.ts"
 	  },{
-	  "name": "template/v4/template-engines",
+	  "name": "template/engines",
 	  "description": "Template Engines API",
 	  "api": "engines",
 	  "versionedPaths": [

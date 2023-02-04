@@ -124,6 +124,27 @@
 			<artifactId>dirigible-components-engine-web</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-template</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-template-velocity</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-template-mustache</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-template-javascript</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		
 		
 		<!-- IDE -->
 		<dependency>
@@ -139,6 +160,11 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-ide-console</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-ide-template</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		
@@ -629,7 +655,119 @@
 			<artifactId>dirigible-components-resources-unicons</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
-
+		
+		<!-- Templates -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-application-angular</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-application-dao</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-application-data</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-application-feed</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-application-launchpad</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-application-odata</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-application-rest</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-application-schema</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-application-ui-angular</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-bookstore</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-database-access</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-database-table</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-database-view</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-extension-perspective</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-extension-view</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-form-builder-angularjs</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-hello-world</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-html</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-http-client</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-job</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-listener</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-websocket</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		
 		<!-- Test Project -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>

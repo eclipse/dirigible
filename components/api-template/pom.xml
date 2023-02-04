@@ -31,19 +31,10 @@
 			<artifactId>dirigible-components-engine-javascript</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
-		
-		<!-- Modules -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-templating-core</artifactId>
+			<artifactId>dirigible-components-engine-template</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-commons-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 	</dependencies>

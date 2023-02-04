@@ -1,0 +1,5 @@
+{
+	"module": "{{projectName}}/perspective/{{fileName}}.js",
+	"extensionPoint": "ide-perspective",
+	"description": "{{fileName}} Perspective"
+}

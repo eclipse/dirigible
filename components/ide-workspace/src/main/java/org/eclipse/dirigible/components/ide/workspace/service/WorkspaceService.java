@@ -46,6 +46,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Class WorkspaceService.
+ */
 @Service
 public class WorkspaceService {
 	
@@ -70,17 +73,20 @@ public class WorkspaceService {
     /** The Constant WORKSPACES_SERVICE_PREFIX. */
     private static final String WORKSPACES_SERVICE_PREFIX = "ide/workspaces";
 	
-	
-//	private final WorkspacesService workspacesService;
-	
 	/** The repository. */
 	private final IRepository repository;
 	
+	/** The javascript service. */
 	private final JavascriptService javascriptService;
 	
+	/**
+	 * Instantiates a new workspace service.
+	 *
+	 * @param repository the repository
+	 * @param javascriptService the javascript service
+	 */
 	@Autowired
 	public WorkspaceService(IRepository repository, JavascriptService javascriptService) {
-//		this.workspacesService = workspacesCoreService;
 		this.repository = repository;
 		this.javascriptService = javascriptService;
 	}
@@ -92,6 +98,15 @@ public class WorkspaceService {
 	 */
 	protected IRepository getRepository() {
 		return repository;
+	}
+	
+	/**
+	 * Gets the javascript service.
+	 *
+	 * @return the javascript service
+	 */
+	public JavascriptService getJavascriptService() {
+		return javascriptService;
 	}
 	
 	// Workspace
@@ -444,6 +459,7 @@ public class WorkspaceService {
     /**
      * Render project tree.
      *
+     * @param workspace the workspace
      * @param project the project
      * @return the project descriptor
      */
@@ -455,6 +471,7 @@ public class WorkspaceService {
     /**
      * Render folder tree.
      *
+     * @param workspace the workspace
      * @param folder the folder
      * @return the folder descriptor
      */
@@ -466,6 +483,7 @@ public class WorkspaceService {
     /**
      * Render file description.
      *
+     * @param workspace the workspace
      * @param file the file
      * @return the file descriptor
      */

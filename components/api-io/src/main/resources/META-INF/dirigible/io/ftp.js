@@ -10,9 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 /**
- * API v4 FTP
- *
- * Note: This module is supported only with the Mozilla Rhino engine
+ * API FTP
  */
 const bytes = require("io/bytes");
 const streams = require("io/streams");

@@ -10,9 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 /**
- * API v4 Bytes
- *
- * Bytes module is supported only with the Mozilla Rhino engine
+ * API Bytes
  */
 
 /**

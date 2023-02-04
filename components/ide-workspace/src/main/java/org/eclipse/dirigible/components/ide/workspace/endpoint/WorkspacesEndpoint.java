@@ -37,6 +37,7 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -62,14 +63,11 @@ public class WorkspacesEndpoint {
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WorkspacesEndpoint.class);
 	
-	/** The websocket service. */
+	/** The workspace service. */
     @Autowired
     private WorkspaceService workspaceService;
     
-//    /** The publisher service. */
-//    @Autowired
-//    private PublisherService publisherService;
-    
+
     // Workspace
     
     /**

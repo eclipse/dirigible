@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="page">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link type="text/css" rel="stylesheet" href="//services/core/theme/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css">
+
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+  </head>
+
+  <body ng-controller="PageController">
+    <div class="form-group">
+      <label>Explore:</label>
+      <select class="form-control" ng-model="explore">
+        <option value="customers">Customers</option>
+        <option value="employees">Employees</option>
+        <option value="products">Products</option>
+      </select>
+    </div>
+
+    <div ng-show="explore === 'customers'">
+      <div class="page-header">
+        <h1>Customers</h1>
+      </div>
+      <div class="container">
+        <table class="table table-hover">
+          <thead>
+            <th>Company</th>
+            <th>City</th>
+            <th>Address</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="customer in customers">
+              <td>{{customer.CompanyName}}</td>
+              <td>{{customer.City}}</td>
+              <td>{{customer.Address}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div ng-show="explore === 'employees'">
+      <div class="page-header">
+        <h1>Employees</h1>
+      </div>
+      <div class="container">
+        <table class="table table-hover">
+          <thead>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Country</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="employee in employees">
+              <td>{{employee.FirstName}} {{employee.LastName}}</td>
+              <td>{{employee.Title}}</td>
+              <td>{{employee.Country}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+      <div ng-show="explore === 'products'">
+      <div class="page-header">
+        <h1>Products</h1>
+      </div>
+      <div class="container">
+        <table class="table table-hover">
+          <thead>
+            <th>Name</th>
+            <th>Unit Price</th>
+            <th>Quantity Per Unit</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="product in products">
+              <td>{{product.ProductName}}</td>
+              <td>${{product.UnitPrice}}</td>
+              <td>{{product.QuantityPerUnit}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      angular.module('page', []);
+      angular.module('page').controller('PageController', function ($scope, $http) {
+
+        $scope.explore = 'customers';
+
+        $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Customers')
+        .then(function(data) {
+        	$scope.customers = data.data.value;
+        });
+
+        $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Employees')
+        .then(function(data) {
+        	$scope.employees = data.data.value;
+        });
+
+        $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Products')
+        .then(function(data) {
+        	$scope.products = data.data.value;
+        });
+  	  });
+    </script>
+  </body>
+</html>

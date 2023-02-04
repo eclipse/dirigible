@@ -1,0 +1,13 @@
+{
+	"name": "{{tableName}}",
+	"type": "TABLE",
+	"columns": [{
+		"name": "ID",
+		"type": "INTEGER",
+		"primaryKey": "true"
+	}, {
+		"name": "NAME",
+		"type": "VARCHAR",
+		"length": "50"
+	}]
+}

@@ -1,0 +1,132 @@
+#set($dollar = '$')
+angular.module('page', ["ideUI", "ideView", "entityApi"])
+	.config(["messageHubProvider", function (messageHubProvider) {
+		messageHubProvider.eventIdPrefix = '${projectName}.${perspectiveName}.${name}';
+	}])
+	.config(["entityApiProvider", function (entityApiProvider) {
+		entityApiProvider.baseUrl = "//services/js/${projectName}/gen/api/${perspectiveName}/${name}.js";
+	}])
+	.controller('PageController', ['$scope', 'messageHub', 'entityApi', function ($scope, messageHub, entityApi) {
+
+		$scope.entity = {};
+		$scope.formHeaders = {
+			select: "${name} Details",
+			create: "Create ${name}",
+			update: "Update ${name}"
+		};
+		$scope.formErrors = {};
+		$scope.action = 'select';
+
+		//-----------------Events-------------------//
+		messageHub.onDidReceiveMessage("clearDetails", function (msg) {
+			$scope.$apply(function () {
+				$scope.entity = {};
+				$scope.formErrors = {};
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+				$scope.options${property.name} = [];
+#end
+#end
+				$scope.action = 'select';
+			});
+		});
+
+		messageHub.onDidReceiveMessage("entitySelected", function (msg) {
+			$scope.$apply(function () {
+#foreach ($property in $properties)
+#if($property.isDateType)
+				if (msg.data.entity.${property.name}) {
+					msg.data.entity.${property.name} = new Date(msg.data.entity.${property.name});
+				}
+#end
+#end
+				$scope.entity = msg.data.entity;
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+				$scope.options${property.name} = msg.data.options${property.name};
+#end
+#end
+				$scope.action = 'select';
+			});
+		});
+
+		messageHub.onDidReceiveMessage("createEntity", function (msg) {
+			$scope.$apply(function () {
+				$scope.entity = {};
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+				$scope.options${property.name} = msg.data.options${property.name};
+#end
+#end
+				$scope.action = 'create';
+				// Set Errors for required fields only
+				$scope.formErrors = {
+#foreach ($property in $properties)
+#if(!$property.dataAutoIncrement && $property.dataNotNull)
+					${property.name}: true,
+#end
+#end
+				};
+			});
+		});
+
+		messageHub.onDidReceiveMessage("updateEntity", function (msg) {
+			$scope.$apply(function () {
+#foreach ($property in $properties)
+#if($property.isDateType)
+				if (msg.data.entity.${property.name}) {
+					msg.data.entity.${property.name} = new Date(msg.data.entity.${property.name});
+				}
+#end
+#end
+				$scope.entity = msg.data.entity;
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+				$scope.options${property.name} = msg.data.options${property.name};
+#end
+#end
+				$scope.action = 'update';
+			});
+		});
+		//-----------------Events-------------------//
+
+		${dollar}scope.isValid = function (isValid, property) {
+			${dollar}scope.formErrors[property] = !isValid ? true : undefined;
+			for (let next in ${dollar}scope.formErrors) {
+				if (${dollar}scope.formErrors[next] === true) {
+					${dollar}scope.isFormValid = false;
+					return;
+				}
+			}
+			${dollar}scope.isFormValid = true;
+		};
+
+		$scope.create = function () {
+			entityApi.create($scope.entity).then(function (response) {
+				if (response.status != 201) {
+					messageHub.showAlertError("${name}", `Unable to create ${name}: '${response.message}'`);
+					return;
+				}
+				messageHub.postMessage("entityCreated", response.data);
+				messageHub.postMessage("clearDetails", response.data);
+				messageHub.showAlertSuccess("${name}", "${name} successfully created");
+			});
+		};
+
+		$scope.update = function () {
+			entityApi.update($scope.entity.${primaryKeysString}, $scope.entity).then(function (response) {
+				if (response.status != 200) {
+					messageHub.showAlertError("${name}", `Unable to update ${name}: '${response.message}'`);
+					return;
+				}
+				messageHub.postMessage("entityUpdated", response.data);
+				messageHub.postMessage("clearDetails", response.data);
+				messageHub.showAlertSuccess("${name}", "${name} successfully updated");
+			});
+		};
+
+		$scope.cancel = function () {
+			messageHub.postMessage("clearDetails");
+		};
+
+	}]);

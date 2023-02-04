@@ -41,11 +41,16 @@
 		<!-- Engines -->
 		<module>engine-javascript</module>
 		<module>engine-web</module>
+		<module>engine-template</module>
+		<module>engine-template-velocity</module>
+		<module>engine-template-mustache</module>
+		<module>engine-template-javascript</module>
 		
 		<!-- IDE -->
 		<module>ide-workspace</module>
 		<module>ide-git</module>
 		<module>ide-console</module>
+		<module>ide-template</module>
 		
 		<!-- IDE UI -->
 		<module>ide-ui-about</module>
@@ -150,6 +155,30 @@
 		<module>resources-theme-quartz-light</module>
 		<module>resources-themes</module>
 		<module>resources-unicons</module>
+		
+		<!-- Templates -->
+		<module>template-application-angular</module>
+		<module>template-application-dao</module>
+		<module>template-application-data</module>
+		<module>template-application-feed</module>
+		<module>template-application-launchpad</module>
+		<module>template-application-odata</module>
+		<module>template-application-rest</module>
+		<module>template-application-schema</module>
+		<module>template-application-ui-angular</module>
+		<module>template-bookstore</module>
+		<module>template-database-access</module>
+		<module>template-database-table</module>
+		<module>template-database-view</module>
+		<module>template-extension-perspective</module>
+		<module>template-extension-view</module>
+		<module>template-form-builder-angularjs</module>
+		<module>template-hello-world</module>
+		<module>template-html</module>
+		<module>template-http-client</module>
+		<module>template-job</module>
+		<module>template-listener</module>
+		<module>template-websocket</module>
 
 		<!-- Applications -->
 		<module>app-all</module>

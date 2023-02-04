@@ -15,33 +15,85 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.core.generation.api.GenerationEnginesManager;
-import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
+import org.eclipse.dirigible.components.engine.template.TemplateEngine;
+import org.eclipse.dirigible.components.engine.template.TemplateEnginesManager;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * The Class TemplateEnginesFacade.
  */
 @Component
-public class TemplateEnginesFacade {
+public class TemplateEnginesFacade implements InitializingBean {
 
-	/** The Constant ENGINE_MUSTACHE. */
-	private static final IGenerationEngine ENGINE_MUSTACHE = GenerationEnginesManager.getGenerationEngine("mustache");
+	/** The engine mustache. */
+	private final TemplateEngine ENGINE_MUSTACHE;
 	
-	/** The Constant ENGINE_VELOCITY. */
-	private static final IGenerationEngine ENGINE_VELOCITY = GenerationEnginesManager.getGenerationEngine("velocity");
+	/** The engine velocity. */
+	private final TemplateEngine ENGINE_VELOCITY;
 	
-	/** The Constant ENGINE_JAVASCRIPT. */
-	private static final IGenerationEngine ENGINE_JAVASCRIPT = GenerationEnginesManager.getGenerationEngine("javascript");
+	/** The engine javascript. */
+	private final TemplateEngine ENGINE_JAVASCRIPT;
 
-	/** The Constant TEMPLATE_ENGINE_MUSTACHE. */
-	private static final TemplateEngine TEMPLATE_ENGINE_MUSTACHE = new TemplateEngine(ENGINE_MUSTACHE);
+	/** The template engine mustache. */
+	private final TemplateEngine TEMPLATE_ENGINE_MUSTACHE;
 	
-	/** The Constant TEMPLATE_ENGINE_VELOCITY. */
-	private static final TemplateEngine TEMPLATE_ENGINE_VELOCITY = new TemplateEngine(ENGINE_VELOCITY);
+	/** The template engine velocity. */
+	private final TemplateEngine TEMPLATE_ENGINE_VELOCITY;
 	
-	/** The Constant TEMPLATE_ENGINE_JAVASCRIPT. */
-	private static final TemplateEngine TEMPLATE_ENGINE_JAVASCRIPT = new TemplateEngine(ENGINE_JAVASCRIPT);
+	/** The template engine javascript. */
+	private final TemplateEngine TEMPLATE_ENGINE_JAVASCRIPT;
+	
+	/** The generation engines manager. */
+	private final TemplateEnginesManager generationEnginesManager;
+	
+	/** The instance. */
+	private static TemplateEnginesFacade INSTANCE;
+	
+	/**
+	 * Instantiates a new template engines facade.
+	 *
+	 * @param generationEnginesManager the generation engines manager
+	 */
+	@Autowired
+	private TemplateEnginesFacade(TemplateEnginesManager generationEnginesManager) {
+		this.generationEnginesManager = generationEnginesManager;
+		this.ENGINE_MUSTACHE = generationEnginesManager.getTemplateEngine("mustache");
+		this.ENGINE_VELOCITY = generationEnginesManager.getTemplateEngine("velocity");
+		this.ENGINE_JAVASCRIPT = generationEnginesManager.getTemplateEngine("javascript");
+		this.TEMPLATE_ENGINE_MUSTACHE = new TemplateEngine(ENGINE_MUSTACHE);
+		this.TEMPLATE_ENGINE_VELOCITY = new TemplateEngine(ENGINE_VELOCITY);
+		this.TEMPLATE_ENGINE_JAVASCRIPT = new TemplateEngine(ENGINE_JAVASCRIPT);
+	}
+	
+	/**
+	 * After properties set.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		INSTANCE = this;		
+	}
+	
+	/**
+	 * Gets the instance.
+	 *
+	 * @return the database facade
+	 */
+	public static TemplateEnginesFacade get() {
+        return INSTANCE;
+    }
+	
+	/**
+	 * Gets the generation engines manager.
+	 *
+	 * @return the generation engines manager
+	 */
+	public TemplateEnginesManager getGenerationEnginesManager() {
+		return generationEnginesManager;
+	}
 
 	/**
 	 * Gets the default engine.
@@ -49,7 +101,7 @@ public class TemplateEnginesFacade {
 	 * @return the default engine
 	 */
 	public static TemplateEngine getDefaultEngine() {
-		return TEMPLATE_ENGINE_VELOCITY;
+		return TemplateEnginesFacade.get().TEMPLATE_ENGINE_VELOCITY;
 	}
 
 	/**
@@ -58,7 +110,7 @@ public class TemplateEnginesFacade {
 	 * @return the mustache engine
 	 */
 	public static TemplateEngine getMustacheEngine() {
-		return TEMPLATE_ENGINE_MUSTACHE;
+		return TemplateEnginesFacade.get().TEMPLATE_ENGINE_MUSTACHE;
 	}
 
 	/**
@@ -67,7 +119,7 @@ public class TemplateEnginesFacade {
 	 * @return the velocity engine
 	 */
 	public static TemplateEngine getVelocityEngine() {
-		return TEMPLATE_ENGINE_VELOCITY;
+		return TemplateEnginesFacade.get().TEMPLATE_ENGINE_VELOCITY;
 	}
 	
 	/**
@@ -76,7 +128,7 @@ public class TemplateEnginesFacade {
 	 * @return the javascript engine
 	 */
 	public static TemplateEngine getJavascriptEngine() {
-		return TEMPLATE_ENGINE_JAVASCRIPT;
+		return TemplateEnginesFacade.get().TEMPLATE_ENGINE_JAVASCRIPT;
 	}
 
 	/**
@@ -88,14 +140,14 @@ public class TemplateEnginesFacade {
 		private static final String LOCATION_API_FACADE = "api-facade";
 
 		/** The engine. */
-		private IGenerationEngine engine;
+		private TemplateEngine engine;
 
 		/**
 		 * Instantiates a new template engine.
 		 *
 		 * @param engine the engine
 		 */
-		public TemplateEngine(IGenerationEngine engine) {
+		public TemplateEngine(TemplateEngine engine) {
 			this.engine = engine;
 		}
 

@@ -29,34 +29,17 @@
         </dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-templating-core</artifactId>
+			<artifactId>dirigible-components-engine-template</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-commons-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
+		
+		<!-- Libraries -->
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
             <version>1.7</version>
             <scope>compile</scope>
         </dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-facade-mail</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-commons-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-registry</artifactId>
@@ -70,11 +53,25 @@
 			</exclusions>
 		</dependency>
 		
-		<!-- Engine -->
+		<!-- Engines -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-javascript</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		<!-- TODO -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-api-facade-mail</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-commons-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 	</dependencies>

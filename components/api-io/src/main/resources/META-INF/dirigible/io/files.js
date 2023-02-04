@@ -10,9 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 /**
- * API v4 Files
- *
- * Note: This module is supported only with the Mozilla Rhino engine
+ * API Files
  */
 const streams = require("io/streams");
 const bytes = require("io/bytes");
