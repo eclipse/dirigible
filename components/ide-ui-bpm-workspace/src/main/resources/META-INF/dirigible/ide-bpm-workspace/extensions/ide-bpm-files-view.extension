@@ -1,5 +1,5 @@
 {
     "module": "ide-bpm-workspace/services/ide-bpm-files-view.js",
     "extensionPoint": "ide-view",
-    "description": "BPM Files"
+    "description": "Business Process Files"
 }
