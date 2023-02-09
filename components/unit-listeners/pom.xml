@@ -3,7 +3,7 @@
     <parent>
         <artifactId>dirigible-components-parent</artifactId>
         <groupId>org.eclipse.dirigible</groupId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>7.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dirigible-components-unit-listeners</artifactId>
@@ -15,17 +15,17 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-base</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-database</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-repository</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.2</version>
             <exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-javascript</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.2</version>
 		</dependency>
         
         <!-- Libraries -->
