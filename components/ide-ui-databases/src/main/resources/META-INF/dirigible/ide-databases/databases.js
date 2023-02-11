@@ -78,11 +78,22 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
                 label: 'Parameters',
                 required: false,
                 placeholder: 'Enter parameters...',
-                value: values['parameters'] || ''
+                value: $scope.joinParameters(values['properties']) || ''
             }
         );
         return ret;
     }
+    
+    $scope.joinParameters = function(parameters) {
+		var result = '';
+		if (parameters) {
+			parameters.forEach(function(current){
+				result += current.name + '=' + current.value + ',';
+			});
+			return result.slice(0, -1);
+		}
+		return result;
+	}
 
     $scope.newDatabase = function () {
         messageHub.showFormDialog(

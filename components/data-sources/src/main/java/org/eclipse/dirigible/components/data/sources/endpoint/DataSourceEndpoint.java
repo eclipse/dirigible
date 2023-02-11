@@ -14,11 +14,13 @@ package org.eclipse.dirigible.components.data.sources.endpoint;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.validation.Valid;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
+import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.ctc.wstx.shaded.msv_core.verifier.regexp.StringToken;
 
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -128,6 +132,22 @@ public class DataSourceEndpoint extends BaseEndpoint {
 				"_", datasourceParameter.getName(), "", "",
 				datasourceParameter.getDriver(), datasourceParameter.getUrl(),
 				datasourceParameter.getUsername(), datasourceParameter.getPassword());
+		
+		if (datasourceParameter.getParameters() != null && !datasourceParameter.getParameters().isEmpty()) {
+			StringTokenizer tokenizer = new StringTokenizer(datasourceParameter.getParameters(), ",");
+			while (tokenizer.hasMoreTokens()) {
+				String token = tokenizer.nextToken().trim();
+				if (!token.isEmpty()) {
+					int index = token.indexOf('=');
+					if (index >0) {
+						String name = token.substring(0, index).trim();
+						String value = token.substring(index+1).trim();
+						datasource.addProperty(name, value);
+					}
+				}
+			}
+		}
+		
 		datasource.updateKey();
 		datasource = datasourceService.save(datasource);
 		return ResponseEntity.created(new URI(BaseEndpoint.PREFIX_ENDPOINT_DATA + "sources/" + datasource.getId())).build();
