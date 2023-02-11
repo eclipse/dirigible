@@ -29,6 +29,7 @@
             <div class="fd-row">
                 <div class="fd-col fd-col-lg--12 fd-col--wrap">
                     <div class="fd-row">
+                    
                         <div class="fd-col fd-col--12 fd-col-md--12 fd-col-lg--12">
                             <div class="fd-row">
                                 <div class="fd-col fd-col--6">
@@ -41,9 +42,11 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="fd-col fd-col--12 fd-col-md--12 fd-col-lg--12">
+                        
                             <div class="fd-row">
-                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
+                                <div class="fd-col fd-col--3 fd-col-md--3 fd-col-lg--3 fd-col-xl--3">
                                     <fd-select class="dg-full-width" ng-model="definition.selectedSourceDatabase"
                                         ng-change="databaseSourceChanged()" dropdown-fixed="true">
                                         <fd-option text="{{ database.text }}" value="database.value"
@@ -51,7 +54,8 @@
                                         </fd-option>
                                     </fd-select>
                                 </div>
-                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
+                                
+                                <div class="fd-col fd-col--3 fd-col-md--3 fd-col-lg--3 fd-col-xl--3">
                                     <fd-select class="dg-full-width" ng-model="definition.selectedSourceDatasource"
                                         ng-change="datasourceSourceChanged()">
                                         <fd-option text="{{ datasource.text }}" value="datasource.value"
@@ -59,15 +63,9 @@
                                         </fd-option>
                                     </fd-select>
                                 </div>
-                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
-                                    <fd-select class="dg-full-width" ng-model="definition.selectedSourceScheme">
-                                        <fd-option text="{{ schema.name }}" value="schema.value"
-                                            ng-repeat="schema in sourceSchemes">
-                                        </fd-option>
-                                    </fd-select>
-                                </div>
+                                
 
-                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
+                                <div class="fd-col fd-col--3 fd-col-md--3 fd-col-lg--3 fd-col-xl--3">
                                     <fd-select class="dg-full-width" ng-model="definition.selectedTargetDatabase"
                                         ng-change="databaseTargetChanged()" dropdown-fixed="true">
                                         <fd-option text="{{ database.text }}" value="database.value"
@@ -75,7 +73,8 @@
                                         </fd-option>
                                     </fd-select>
                                 </div>
-                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
+                                
+                                <div class="fd-col fd-col--3 fd-col-md--3 fd-col-lg--3 fd-col-xl--3">
                                     <fd-select class="dg-full-width" ng-model="definition.selectedTargetDatasource"
                                         ng-change="datasourceTargetChanged()">
                                         <fd-option text="{{ datasource.text }}" value="datasource.value"
@@ -83,13 +82,7 @@
                                         </fd-option>
                                     </fd-select>
                                 </div>
-                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
-                                    <fd-select class="dg-full-width" ng-model="definition.selectedTargetScheme">
-                                        <fd-option text="{{ schema.name }}" value="schema.value"
-                                            ng-repeat="schema in targetSchemes">
-                                        </fd-option>
-                                    </fd-select>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>

@@ -11,18 +11,16 @@
  */
 package org.eclipse.dirigible.components.data.transfer.domain;
 
-import org.eclipse.dirigible.database.api.DatabaseDefinition;
-
 /**
  * The Class DataTransfer.
  */
 public class DataTransfer {
 	
 	/** The source. */
-	private DatabaseDefinition source;
+	private String source;
 	
 	/** The target. */
-	private DatabaseDefinition target;
+	private String target;
 	
 	/** The configuration. */
 	private DataTransferConfiguration configuration;
@@ -32,7 +30,7 @@ public class DataTransfer {
 	 *
 	 * @return the source
 	 */
-	public DatabaseDefinition getSource() {
+	public String getSource() {
 		return source;
 	}
 
@@ -41,7 +39,7 @@ public class DataTransfer {
 	 *
 	 * @param source the source to set
 	 */
-	public void setSource(DatabaseDefinition source) {
+	public void setSource(String source) {
 		this.source = source;
 	}
 
@@ -50,7 +48,7 @@ public class DataTransfer {
 	 *
 	 * @return the target
 	 */
-	public DatabaseDefinition getTarget() {
+	public String getTarget() {
 		return target;
 	}
 
@@ -59,7 +57,7 @@ public class DataTransfer {
 	 *
 	 * @param target the target to set
 	 */
-	public void setTarget(DatabaseDefinition target) {
+	public void setTarget(String target) {
 		this.target = target;
 	}
 

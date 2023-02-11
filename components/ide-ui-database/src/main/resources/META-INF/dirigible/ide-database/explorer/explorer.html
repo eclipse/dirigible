@@ -35,7 +35,8 @@
 			<fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
 				aria-label="Refresh" ng-click="refreshDatabase()"></fd-button>
 			<fd-toolbar-separator></fd-toolbar-separator>
-			<fd-popover compact="true" dg-align="right">
+			
+			<fd-popover compact="true" dg-align="right" class="ng-hide">
 				<fd-popover-control>
 					<fd-button compact="true" dg-type="transparent" is-menu="true" dg-label="{{ selectedDatabase }}"
 						title="Database select">
@@ -49,6 +50,7 @@
 					</fd-menu>
 				</fd-popover-body>
 			</fd-popover>
+			
 			<fd-popover compact="true" dg-align="right">
 				<fd-popover-control>
 					<fd-button compact="true" dg-type="transparent" is-menu="true" dg-label="{{ selectedDatasource }}"

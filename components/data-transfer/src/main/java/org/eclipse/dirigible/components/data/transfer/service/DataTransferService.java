@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.data.transfer.manager;
+package org.eclipse.dirigible.components.data.transfer.service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,28 +23,30 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.commons.api.topology.TopologicalSorter;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.artefact.topology.TopologicalSorter;
+import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.transfer.callback.DataTransferCallbackHandler;
 import org.eclipse.dirigible.components.data.transfer.callback.DummyDataTransferCallbackHandler;
 import org.eclipse.dirigible.components.data.transfer.domain.DataTransfer;
 import org.eclipse.dirigible.components.data.transfer.domain.DataTransferConfiguration;
-import org.eclipse.dirigible.database.api.DatabaseException;
-import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceCreateTableProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * The Class DataTransferManager.
  */
-public class DataTransferManager {
+@Component
+public class DataTransferService {
 	
 	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(DataTransferManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(DataTransferService.class);
 	
 	/** The Constant DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE. */
 	private static final String DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE = "DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE";
@@ -55,15 +57,29 @@ public class DataTransferManager {
 	/** The batch size. */
 	private static int BATCH_SIZE = 1000; 
 	
+	
+	private final DataSourcesManager dataSourcesManager;
+	
+	@Autowired
+	public DataTransferService(DataSourcesManager dataSourcesManager) {
+		this.dataSourcesManager = dataSourcesManager;
+		
+	}
+	
+	public DataSourcesManager getDataSourcesManager() {
+		return dataSourcesManager;
+	}
+	
 	/**
 	 * Transfer.
 	 *
 	 * @param definition the definition
 	 * @param handler the handler
+	 * @throws Exception 
 	 */
-	public static final void transfer(DataTransfer definition, DataTransferCallbackHandler handler) {
-		DataSource source = DatabaseModule.getDataSource(definition.getSource().getType(), definition.getSource().getName());
-		DataSource target = DatabaseModule.getDataSource(definition.getTarget().getType(), definition.getTarget().getName());
+	public final void transfer(DataTransfer definition, DataTransferCallbackHandler handler) throws Exception {
+		DataSource source = getDataSourcesManager().getDataSource(definition.getSource());
+		DataSource target = getDataSourcesManager().getDataSource(definition.getTarget());
 		transfer(source,  target, definition.getConfiguration(), handler);
 	}
 	
@@ -74,8 +90,9 @@ public class DataTransferManager {
 	 * @param target the target
 	 * @param configuration the configuration
 	 * @param handler the handler
+	 * @throws Exception 
 	 */
-	public static final void transfer(DataSource source, DataSource target, DataTransferConfiguration configuration, DataTransferCallbackHandler handler) {
+	public final void transfer(DataSource source, DataSource target, DataTransferConfiguration configuration, DataTransferCallbackHandler handler) throws Exception {
 		
 		if (handler == null) {
 			handler = new DummyDataTransferCallbackHandler();
@@ -100,7 +117,7 @@ public class DataTransferManager {
 				tables = sortTables(tables, handler);
 				sourceConnection.setSchema(configuration.getSourceSchema());
 				targetConnection.setSchema(configuration.getTargetSchema());
-				transferData(tables, sourceConnection, targetConnection, handler);
+				transferDataTables(tables, sourceConnection, targetConnection, handler);
 				
 				handler.transferFinished(tables.size());
 				
@@ -108,14 +125,14 @@ public class DataTransferManager {
 				String error = "Error occured when trying to connect to the target database";
 				if (logger.isErrorEnabled()) {logger.error(error, e);}
 				handler.transferFailed(error);
-				throw new DatabaseException(e);
+				throw new Exception(e);
 			}	
 			
 		} catch (SQLException e) {
 			String error = "Error occured when trying to connect to the source database";
 			if (logger.isErrorEnabled()) {logger.error(error, e);}
 			handler.transferFailed(error);
-			throw new DatabaseException(e);
+			throw new Exception(e);
 		}
 		
 	}
@@ -127,7 +144,7 @@ public class DataTransferManager {
 	 * @param handler the handler
 	 * @return the list
 	 */
-	private static List<PersistenceTableModel> sortTables(List<PersistenceTableModel> tables, DataTransferCallbackHandler handler) {
+	private List<PersistenceTableModel> sortTables(List<PersistenceTableModel> tables, DataTransferCallbackHandler handler) {
 		
 		handler.sortingStarted(tables);
 		
@@ -163,7 +180,7 @@ public class DataTransferManager {
 	 * @param targetConnection the target connection
 	 * @param handler the handler
 	 */
-	private static void transferData(List<PersistenceTableModel> tables, Connection sourceConnection, Connection targetConnection, DataTransferCallbackHandler handler) {
+	private void transferDataTables(List<PersistenceTableModel> tables, Connection sourceConnection, Connection targetConnection, DataTransferCallbackHandler handler) {
 		
 		handler.dataTransferStarted();
 		

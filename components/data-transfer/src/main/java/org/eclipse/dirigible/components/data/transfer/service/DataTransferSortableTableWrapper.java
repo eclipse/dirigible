@@ -9,13 +9,13 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.data.transfer.manager;
+package org.eclipse.dirigible.components.data.transfer.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.dirigible.commons.api.topology.ITopologicallySortable;
+import org.eclipse.dirigible.components.base.artefact.topology.TopologicallySortable;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class DataTransferSortableTableWrapper.
  */
-public class DataTransferSortableTableWrapper implements ITopologicallySortable {
+public class DataTransferSortableTableWrapper implements TopologicallySortable {
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataTransferSortableTableWrapper.class);
@@ -63,8 +63,8 @@ public class DataTransferSortableTableWrapper implements ITopologicallySortable 
 	 * @return the dependencies
 	 */
 	@Override
-	public List<ITopologicallySortable> getDependencies() {
-		List<ITopologicallySortable> dependencies = new ArrayList<ITopologicallySortable>();
+	public List<TopologicallySortable> getDependencies() {
+		List<TopologicallySortable> dependencies = new ArrayList<TopologicallySortable>();
 		for (PersistenceTableRelationModel dependency: this.tableModel.getRelations()) {
 			String dependencyName = dependency.getToTableName();
 			if (!wrappers.containsKey(dependencyName)) {
