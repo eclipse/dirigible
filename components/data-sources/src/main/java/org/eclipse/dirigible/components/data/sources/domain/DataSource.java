@@ -67,7 +67,7 @@ public class DataSource extends Artefact {
 	@Expose
 	private String password;
 	
-	/** The columns. */
+	/** The properties. */
 	@OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Expose

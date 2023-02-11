@@ -176,8 +176,10 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 	@Override
 	public void cleanup(DataSource datasource) {
 		try {
-			getService().delete(datasource);
-			callback.registerState(this, datasource, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+			if (!"_".equals(datasource.getLocation())) {
+				getService().delete(datasource);
+				callback.registerState(this, datasource, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+			}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());

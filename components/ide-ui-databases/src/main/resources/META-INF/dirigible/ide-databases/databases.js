@@ -113,7 +113,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
                     ret[item.id] = item.value;
                     return ret;
                 }, {});
-                $http.post('/services/ide/database', JSON.stringify(database))
+                $http.post('/services/data/sources', JSON.stringify(database))
                     .then(function (response) {
                         messageHub.hideFormDialog('createDatabaseDialog');
                         $scope.listDatabases();
@@ -166,7 +166,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
                     ret[item.id] = item.value;
                     return ret;
                 }, {});
-                $http.put('/services/ide/database/' + $scope.database.id, JSON.stringify({ name: $scope.database.name, ...database }))
+                $http.put('/services/data/sources/' + $scope.database.id, JSON.stringify({ name: $scope.database.name, ...database }))
                     .then(function (response) {
                         messageHub.hideFormDialog('editDatabaseDialog');
                         $scope.listDatabases();
@@ -211,7 +211,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
         'ide-databases.database.delete',
         function (msg) {
             if (msg.data === 'btnOK' && $scope.database.id) {
-                $http.delete('/services/ide/database/' + $scope.database.id)
+                $http.delete('/services/data/sources/' + $scope.database.id)
                     .then(function (response) {
                         $scope.listDatabases();
                     }, function (response) {
