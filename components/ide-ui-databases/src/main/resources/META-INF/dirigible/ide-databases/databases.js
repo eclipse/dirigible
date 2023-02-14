@@ -33,7 +33,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
             type: 'input',
             label: 'Name',
             required: true,
-            placeholder: 'Enter name...',
+            placeholder: 'Enter Name...',
             value: values['name'] || ''
         });
 
@@ -43,7 +43,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
                 type: 'dropdown',
                 label: 'Driver',
                 required: true,
-                placeholder: 'Select driver...',
+                placeholder: 'Select Driver...',
                 value: values['driver'],
                 items: $scope.drivers.map(x => ({ label: x.text, value: x.value }))
             },
@@ -52,15 +52,15 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
                 type: 'input',
                 label: 'URL',
                 required: true,
-                placeholder: 'Enter url...',
+                placeholder: 'Enter URL...',
                 value: values['url'] || ''
             },
             {
                 id: 'username',
                 type: 'input',
                 label: 'Username',
-                required: true,
-                placeholder: 'Enter username...',
+                required: false,
+                placeholder: 'Enter Username...',
                 value: values['username'] || ''
             },
             {
@@ -68,8 +68,8 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
                 type: 'input',
                 inputType: 'password',
                 label: 'Password',
-                required: true,
-                placeholder: 'Enter password...',
+                required: false,
+                placeholder: 'Enter Password...',
                 value: values['password'] || ''
             },
             {
@@ -77,7 +77,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
                 type: 'input',
                 label: 'Parameters',
                 required: false,
-                placeholder: 'Enter parameters...',
+                placeholder: 'Enter Parameters, e.g. name1=value1,name2=value2 ...',
                 value: $scope.joinParameters(values['properties']) || ''
             }
         );

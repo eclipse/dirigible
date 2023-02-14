@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.websockets.handler;
+package org.eclipse.dirigible.components.websockets.endpoint;
 
 import java.util.Map;
 
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  * The Class WebsocketHandler.
  */
 @Component
-public class WebsocketHandler {
+public class WebsocketProcessor {
 	
 	/** The websocket service. */
 	private final WebsocketService websocketService;
@@ -40,7 +40,7 @@ public class WebsocketHandler {
 	 * @param javascriptService the javascript service
 	 */
 	@Autowired
-	public WebsocketHandler(WebsocketService websocketService, JavascriptService javascriptService) {
+	public WebsocketProcessor(WebsocketService websocketService, JavascriptService javascriptService) {
 		this.websocketService = websocketService;
 		this.javascriptService = javascriptService;
 	}
@@ -71,7 +71,7 @@ public class WebsocketHandler {
 	 * @param context the context
 	 * @throws Exception the exception
 	 */
-	public void processEvent(String endpoint, String wrapper, Map<Object, Object> context) throws Exception {
+	public Object processEvent(String endpoint, String wrapper, Map<Object, Object> context) throws Exception {
 		Websocket websocket = websocketService.findByEndpoint(endpoint);
 		String module = websocket.getHandler();
 //		String engine = websocket.getEngine();
@@ -81,7 +81,7 @@ public class WebsocketHandler {
 //			}
 			context.put("handler", module);
 			RepositoryPath path = new RepositoryPath(wrapper);
-	    	getJavascriptService().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+	    	return getJavascriptService().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
 		} catch (ScriptingException e) {
 			throw new Exception(e);
 		}
