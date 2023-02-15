@@ -26,10 +26,17 @@
 
 	            	setConnected(true);
 	                console.log('Connected: ' + frame);
-	                stompClient.subscribe('/topic/messages/test-websocket', function(messageOutput) {
 
-	                    showMessageOutput(JSON.parse(messageOutput.body));
+	                stompClient.subscribe('/user/queue/reply/test-websocket', function(messageOutput) {
+	                    showMessage(JSON.parse(messageOutput.body));
 	                });
+
+	                stompClient.subscribe('/user/queue/errors/test-websocket', function(error) {
+	                	showError(error);
+	                });
+
+	            }, function(error) {
+	            	showError(error);
 	            });
 	        }
 
@@ -44,18 +51,24 @@
 	        }
 
 	        function sendMessage() {
-
 	        	var from = document.getElementById('from').value;
 	            var text = document.getElementById('text').value;
 	            stompClient.send("/ws/js/test-websocket", {}, JSON.stringify({'from':from, 'text':text}));
 	        }
 
-	        function showMessageOutput(messageOutput) {
-
+	        function showMessage(messageOutput) {
 	            var response = document.getElementById('response');
 	            var p = document.createElement('p');
 	            p.style.wordWrap = 'break-word';
 	            p.appendChild(document.createTextNode(messageOutput.from + ": " + messageOutput.text + " (" + messageOutput.time + ")"));
+	            response.appendChild(p);
+	        }
+	        
+	        function showError(error) {
+	            var response = document.getElementById('response');
+	            var p = document.createElement('p');
+	            p.style.wordWrap = 'break-word';
+	            p.appendChild(document.createTextNode(error));
 	            response.appendChild(p);
 	        }
 
