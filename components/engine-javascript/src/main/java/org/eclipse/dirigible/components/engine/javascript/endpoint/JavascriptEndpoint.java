@@ -289,7 +289,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 			
 			Object result = getJavascriptHandler().handleRequest(projectName,
 					normalizePath(projectFilePath), normalizePath(projectFilePathParam),
-					context, context.get("debug") != null);
+					context, ((MultiValueMap<String,String>) context.get("params")).get("debug") != null);
 			return ResponseEntity.ok(result);
 		} catch (RepositoryNotFoundException e) {
 			String message = e.getMessage() + ". Try to publish the service before execution.";
