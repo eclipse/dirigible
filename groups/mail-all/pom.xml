@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-groups-parent</artifactId>
-        <version>7.1.4</version>
+        <version>8.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-mail-env-config</artifactId>
-            <version>7.1.4</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
