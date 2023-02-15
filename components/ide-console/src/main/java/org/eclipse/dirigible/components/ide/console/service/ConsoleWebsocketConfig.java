@@ -20,7 +20,7 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 /**
- * The Class DataTransferWebsocketConfig.
+ * The Class ConsoleWebsocketConfig.
  */
 @Configuration
 @EnableWebSocket

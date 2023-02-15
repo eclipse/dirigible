@@ -51,6 +51,7 @@
 		<module>ide-git</module>
 		<module>ide-console</module>
 		<module>ide-template</module>
+		<module>ide-terminal</module>
 		
 		<!-- IDE UI -->
 		<module>ide-ui-about</module>
