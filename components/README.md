@@ -18,3 +18,17 @@ This is stil an experimental feature to replace older frameworks to recent Sprin
 #### REST API
 
 	http://localhost:8080/swagger-ui/index.html
+	
+#### Terminal
+
+**macOS:**
+
+```
+brew install ttyd
+```
+
+**Linux:**
+
+Linux support is built-in
+
+More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd)
