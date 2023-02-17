@@ -107,16 +107,18 @@ consoleView.controller('ConsoleController', ['$scope', 'messageHub', function ($
         }
         if (logSocket) {
             logSocket.onmessage = function (message) {
-                let record = JSON.parse(message.data);
-                record.date = new Date(record.timestamp).toISOString();
-
-                consoleLogMessage(record);
-
-                scrollToBottom();
-
-                if (record.level === 'ERROR' || record.level === 'WARN') {
-                    messageHub.setStatusError(record.message);
-                }
+				if (message.data instanceof String) {
+					let record = JSON.parse(message.data);
+	                record.date = new Date(record.timestamp).toISOString();
+	
+	                consoleLogMessage(record);
+	
+	                scrollToBottom();
+	
+	                if (record.level === 'ERROR' || record.level === 'WARN') {
+	                    messageHub.setStatusError(record.message);
+	                }
+				}
             };
 
             logSocket.onerror = function (error) {
