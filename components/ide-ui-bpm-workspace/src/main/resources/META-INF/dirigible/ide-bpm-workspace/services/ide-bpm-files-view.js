@@ -11,7 +11,7 @@
  */
 const viewData = {
 	id: "ide-bpm-files-view",
-	label: "BPM Files",
+	label: "Process Files",
 	factory: "frame",
 	region: "left",
 	link: "../ide-bpm-workspace/ide-bpm-files.html",

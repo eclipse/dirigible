@@ -11,7 +11,7 @@
  */
 const viewData = {
 	id: "ide-bpm-image-viewer",
-	label: "BPM Image Viewer",
+	label: "Process Inspector",
 	factory: "frame",
 	region: "center",
 	link: "../ide-bpm-workspace/bpm-image-viewer.html",

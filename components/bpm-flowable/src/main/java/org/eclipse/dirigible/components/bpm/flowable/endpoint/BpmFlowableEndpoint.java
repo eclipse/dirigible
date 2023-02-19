@@ -14,11 +14,10 @@ package org.eclipse.dirigible.components.bpm.flowable.endpoint;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.bpm.flowable.provider.BpmProviderFlowable;
@@ -32,6 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,10 +42,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Front facing REST service serving the BPM related resources and operations.
  */
+@CrossOrigin
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "bpm")
 public class BpmFlowableEndpoint extends BaseEndpoint {
@@ -102,7 +106,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 	 * @throws JsonProcessingException exception
 	 */
 	@GetMapping(value = "/models/{workspace}/{project}/{*path}", produces = "application/json")
-	public Response getModel(
+	public ResponseEntity<ObjectNode> getModel(
 			@PathVariable("workspace") String workspace, 
 			@PathVariable("project") String project, 
 			@PathVariable("path") String path) throws JsonProcessingException {
@@ -114,13 +118,13 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 			path = path.substring(0, path.indexOf("&"));
 		}
 
-		String model = getBpmService().getModel(workspace, project, path);
+		ObjectNode model = getBpmService().getModel(workspace, project, path);
 		
 		if (model == null) {
 			String error = format("Model in workspace: {0} and project {1} with path {2} does not exist.", workspace, project, path);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
 		}
-		return Response.ok().entity(model).build();
+		return ResponseEntity.ok(model);
 	}
 	
 	/**
@@ -135,7 +139,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 	 * @throws IOException exception
 	 */
 	@PostMapping(value = "/models/{workspace}/{project}/{*path}", produces = "application/json")
-	public Response saveModel(
+	public ResponseEntity<URI> saveModel(
 			@PathVariable("workspace") String workspace, 
 			@PathVariable("project") String project, 
 			@PathVariable("path") String path, 
@@ -143,7 +147,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 		
 		getBpmService().saveModel(workspace, project, path, payload);
 		
-		return Response.ok().location(getWorkspaceService().getURI(workspace, project, path)).build();
+		return ResponseEntity.ok(getWorkspaceService().getURI(workspace, project, path));
 	}
 
 	
@@ -154,15 +158,15 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@GetMapping(value = "/stencil-sets", produces = "application/json")
-	public Response getStencilSet() throws IOException {
+	public ResponseEntity<JsonNode> getStencilSet() throws IOException {
 
-		String stencilSets = getBpmService().getStencilSet();
+		JsonNode stencilSets = getBpmService().getStencilSet();
 		
 		if (stencilSets == null) {
 			String error = "Stencil Sets definition does not exist.";
 			throw new RepositoryNotFoundException(error);
 		}
-		return Response.ok().entity(stencilSets).build();
+		return ResponseEntity.ok(stencilSets);
 	}
 
 	/**
@@ -171,7 +175,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 	 * @return the processes keys
 	 */
 	@GetMapping(value = "/bpm-processes/keys")
-	public Response getProcessesKeys() {
+	public ResponseEntity<List<String>> getProcessesKeys() {
 		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
 
 		List<String> keys = processEngine
@@ -182,7 +186,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 				.map(ProcessDefinition::getKey)
 				.collect(Collectors.toList());
 
-		return Response.ok(keys).build();
+		return ResponseEntity.ok(keys);
 	}
 
 	/**
@@ -192,8 +196,8 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 	 * @return the process image
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	@GetMapping(value = "/bpm-processes/{processDefinitionKey}/image")
-	public Response getProcessImage(
+	@GetMapping(value = "/bpm-processes/{processDefinitionKey}/image", produces = "image/png")
+	public ResponseEntity<byte[]> getProcessImage(
 			@PathVariable("processDefinitionKey") String processDefinitionKey
 	) throws IOException {
 		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
@@ -212,7 +216,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 				.getResourceAsStream(deploymentId, diagramResourceName)
 				.readAllBytes();
 
-		return Response.ok(imageBytes, "image/png").build();
+		return ResponseEntity.ok(imageBytes);
 	}
 
 }

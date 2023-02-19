@@ -47,7 +47,7 @@
 
         <script type="text/javascript">
             angular.module('taskDetails', ['ideUI', 'ideView'])
-                .controller('TaskDetailsController', ['$scope', 'ViewParameters' function ($scope, ViewParameters) {
+                .controller('TaskDetailsController', ['$scope', 'ViewParameters', function ($scope, ViewParameters) {
                     $scope.errorMessage = 'Аn unknown error was encountered. Please see console for more information.';
                     $scope.state = {
                         isBusy: true,

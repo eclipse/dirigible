@@ -13,8 +13,8 @@ const viewData = {
     id: "ide-user-tasks",
     factory: "frame",
     region: "bottom",
-    label: "BPM User Tasks",
-    link: "../ide-bpm-workspace/Tasks.html"
+    label: "Process User Tasks",
+    link: "../ide-bpm-workspace/tasks.html"
 };
 
 if (typeof exports !== 'undefined') {

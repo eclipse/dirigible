@@ -11,7 +11,7 @@
  */
 const viewData = {
     id: "ide-user-task-details",
-    label: "Task Details",
+    label: "Process Task Details",
     link: "../ide-bpm-workspace/task-details.html"
 };
 if (typeof exports !== 'undefined') {

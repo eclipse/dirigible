@@ -11,7 +11,7 @@
  */
 const perspectiveData = {
 	id: "ide-bpm-workspace",
-	name: "BPM Workspace",
+	name: "Processes Workspace",
 	link: "../ide-bpm-workspace/perspective.html",
 	order: "820",
 	icon: "../ide-bpm-workspace/images/process.svg",

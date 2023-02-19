@@ -13,7 +13,8 @@ package org.eclipse.dirigible;
 
 import java.util.Arrays;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.catalina.filters.CorsFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,7 +32,8 @@ public class DirigibleBasicAuthWebSecurityConfiguration {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
-			.cors().disable()
+			.cors()
+			.and()
 		    .csrf().disable()
 		    .httpBasic()
 		    .and()
@@ -44,7 +46,7 @@ public class DirigibleBasicAuthWebSecurityConfiguration {
 		    .and()
 	        .logout().deleteCookies("JSESSIONID")
 	        .and()
-	        .headers().frameOptions().sameOrigin();
+	        .headers().frameOptions().disable();
 		
 		return http.build();
 	}
@@ -63,12 +65,33 @@ public class DirigibleBasicAuthWebSecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method", "Access-Control-Request-Headers","Origin","Cache-Control", "Content-Type", "Authorization"));
-        configuration.setAllowedMethods(Arrays.asList("DELETE", "GET", "POST", "PATCH", "PUT"));
+//        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowCredentials(false);
+        configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
+        configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "DELETE", "GET", "POST", "PATCH", "PUT"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+	
+//	/**
+//	 * Cors filter.
+//	 *
+//	 * @return the filter registration bean
+//	 */
+//	@Bean
+//	public FilterRegistrationBean<CorsFilter> corsFilter() {
+//		FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
+//
+//		registrationBean.setFilter(new CorsFilter());
+//		registrationBean.addInitParameter("cors.allowed.origins", "*");
+//		registrationBean.addInitParameter("cors.allowed.headers", "*");
+//		registrationBean.addInitParameter("cors.allowed.methods", "GET,PUT,PATCH,POST,DELETE,HEAD,OPTIONS,CONNECT,TRACE");
+//		registrationBean.addInitParameter("cors.support.credentials", "true");
+//		registrationBean.addUrlPatterns("/*");
+//
+//		return registrationBean;
+//	}
 	
 }
