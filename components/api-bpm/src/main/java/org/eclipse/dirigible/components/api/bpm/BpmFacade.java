@@ -11,14 +11,55 @@
  */
 package org.eclipse.dirigible.components.api.bpm;
 
-import org.eclipse.dirigible.bpm.api.BpmModule;
+import org.eclipse.dirigible.components.bpm.flowable.provider.BpmProviderFlowable;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * The Class BpmFacade.
  */
 @Component
-public class BpmFacade {
+public class BpmFacade implements InitializingBean {
+	
+	/** The bpm facade. */
+	private static BpmFacade INSTANCE;
+	
+	private final BpmProviderFlowable bpmProviderFlowable;
+	
+	/**
+	 * Instantiates a new database facade.
+	 *
+	 * @param databaseDefinitionService the database definition service
+	 * @param dataSourcesManager the data sources manager
+	 */
+	@Autowired
+	private BpmFacade(BpmProviderFlowable bpmProviderFlowable) {
+		this.bpmProviderFlowable = bpmProviderFlowable;
+	}
+	
+	/**
+	 * After properties set.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		INSTANCE = this;		
+	}
+	
+	/**
+	 * Gets the instance.
+	 *
+	 * @return the database facade
+	 */
+	public static BpmFacade get() {
+        return INSTANCE;
+    }
+	
+	public BpmProviderFlowable getBpmProviderFlowable() {
+		return bpmProviderFlowable;
+	}
 	
 	/**
 	 * BPM Engine.
@@ -26,7 +67,7 @@ public class BpmFacade {
 	 * @return the BPM engine object
 	 */
 	public static final Object getEngine() {
-		return BpmModule.getProcessEngine();
+		return BpmFacade.get().getBpmProviderFlowable();
 	}
 	
 	/**
@@ -36,7 +77,7 @@ public class BpmFacade {
 	 * @return the deployment id
 	 */
 	public static String deployProcess(String location) {
-		return BpmModule.getProcessEngineProvider().deployProcess(location);
+		return BpmFacade.get().getBpmProviderFlowable().deployProcess(location);
 	}
 	
 	/**
@@ -45,7 +86,7 @@ public class BpmFacade {
 	 * @param deploymentId the BPMN process definition deployment id
 	 */
 	public static void undeployProcess(String deploymentId) {
-		BpmModule.getProcessEngineProvider().undeployProcess(deploymentId);
+		BpmFacade.get().getBpmProviderFlowable().undeployProcess(deploymentId);
 	}
 	
 	/**
@@ -56,7 +97,7 @@ public class BpmFacade {
 	 * @return the process instance id
 	 */
 	public static String startProcess(String key, String parameters) {
-		return BpmModule.getProcessEngineProvider().startProcess(key, parameters);
+		return BpmFacade.get().getBpmProviderFlowable().startProcess(key, parameters);
 	}
 	
 	/**
@@ -67,7 +108,7 @@ public class BpmFacade {
 	 * @return the value
 	 */
 	public static Object getVariable(String processInstanceId, String variableName) {
-		return BpmModule.getProcessEngineProvider().getVariable(processInstanceId, variableName);
+		return BpmFacade.get().getBpmProviderFlowable().getVariable(processInstanceId, variableName);
 	}
 	
 	/**
@@ -78,7 +119,7 @@ public class BpmFacade {
 	 * @param value the value object
 	 */
 	public static void setVariable(String processInstanceId, String variableName, Object value) {
-		BpmModule.getProcessEngineProvider().setVariable(processInstanceId, variableName, value);
+		BpmFacade.get().getBpmProviderFlowable().setVariable(processInstanceId, variableName, value);
 	}
 	
 	/**
@@ -88,7 +129,7 @@ public class BpmFacade {
 	 * @param variableName the variable name
 	 */
 	public static void removeVariable(String processInstanceId, String variableName) {
-		BpmModule.getProcessEngineProvider().removeVariable(processInstanceId, variableName);
+		BpmFacade.get().getBpmProviderFlowable().removeVariable(processInstanceId, variableName);
 	}
 	
 	/**
@@ -97,7 +138,7 @@ public class BpmFacade {
 	 * @return the list of tasks
 	 */
 	public static String getTasks() {
-		return BpmModule.getProcessEngineProvider().getTasks();
+		return BpmFacade.get().getBpmProviderFlowable().getTasks();
 	}
 	
 	/**
@@ -107,7 +148,7 @@ public class BpmFacade {
 	 * @return the task's variables
 	 */
 	public static String getTaskVariables(String taskId) {
-		return BpmModule.getProcessEngineProvider().getTaskVariables(taskId);
+		return BpmFacade.get().getBpmProviderFlowable().getTaskVariables(taskId);
 	}
 	
 	/**
@@ -117,7 +158,7 @@ public class BpmFacade {
 	 * @param variables serialized as JSON string
 	 */
 	public static void getTaskVariables(String taskId, String variables) {
-		BpmModule.getProcessEngineProvider().setTaskVariables(taskId, variables);
+		BpmFacade.get().getBpmProviderFlowable().setTaskVariables(taskId, variables);
 	}
 	
 	/**
@@ -127,7 +168,7 @@ public class BpmFacade {
 	 * @param variables serialized as JSON string
 	 */
 	public static void completeTask(String taskId, String variables) {
-		BpmModule.getProcessEngineProvider().completeTask(taskId, variables);
+		BpmFacade.get().getBpmProviderFlowable().completeTask(taskId, variables);
 	}
 
 }

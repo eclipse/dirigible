@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>dirigible-components-parent</artifactId>
+		<version>8.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<name>Components - BPM - Flowable</name>
+	<artifactId>dirigible-components-bpm-flowable</artifactId>
+    <packaging>jar</packaging>
+
+
+    <dependencies>
+    	
+    	<!-- Core -->
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-base</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-repository</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-commons-api</artifactId>
+				</exclusion>
+			</exclusions>
+    	</dependency>
+    	
+    	<!-- Engines -->
+    	<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-javascript</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		<!-- IDE -->
+    	<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-ide-workspace</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		<!-- Libraries -->
+		<dependency>
+		    <groupId>org.flowable</groupId>
+		    <artifactId>flowable-engine</artifactId>
+		    <version>${flowable.version}</version>
+		    <exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<!--
+				<exclusion>
+					<groupId>org.liquibase</groupId>
+					<artifactId>liquibase-core</artifactId>
+				</exclusion>
+				-->
+		    </exclusions>
+		</dependency>
+		<dependency>
+		    <groupId>org.flowable</groupId>
+		    <artifactId>flowable-json-converter</artifactId>
+		    <version>${flowable.version}</version>
+		</dependency>
+    	
+    </dependencies>
+
+	<properties>
+		<license.header.location>../../licensing-header.txt</license.header.location>
+	</properties>
+
+</project>

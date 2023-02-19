@@ -22,19 +22,42 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 /**
  * The Class JavascriptHandler.
  */
 @Service
-public class JavascriptService {
+public class JavascriptService implements InitializingBean {
 	
 	/** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(JavascriptService.class);
 
     /** The dirigible source provider. */
     private final DirigibleSourceProvider dirigibleSourceProvider = new DirigibleSourceProvider();
+    
+    /** The instance. */
+    private static JavascriptService INSTANCE;
+    
+    /**
+     * After properties set.
+     *
+     * @throws Exception the exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        INSTANCE = this;
+    }
+
+    /**
+     * Gets the.
+     *
+     * @return the javascript service
+     */
+    public static JavascriptService get() {
+        return INSTANCE;
+    }
 
     /**
      * Handle request.
@@ -72,6 +95,13 @@ public class JavascriptService {
         }
     }
     
+    /**
+     * Handle callback.
+     *
+     * @param filePath the file path
+     * @param parameters the parameters
+     * @return the object
+     */
     public Object handleCallback(String filePath, Map<Object, Object> parameters) {
     	if (filePath == null) {
     		throw new RuntimeException("Path to the file to be executed cannot be null");

@@ -14,19 +14,19 @@
  */
 
 exports.list = function() {
-	var tasks = org.eclipse.dirigible.api.v3.bpm.BpmFacade.getTasks();
+	var tasks = org.eclipse.dirigible.components.api.bpm.BpmFacade.getTasks();
 	return JSON.parse(tasks);
 };
 
 exports.getTaskVariables = function(taskId) {
-	var variables = org.eclipse.dirigible.api.v3.bpm.BpmFacade.getTaskVariables(taskId);
+	var variables = org.eclipse.dirigible.components.api.bpm.BpmFacade.getTaskVariables(taskId);
 	return JSON.parse(variables);
 };
 
 exports.setTaskVariables = function(taskId, variables) {
-	org.eclipse.dirigible.api.v3.bpm.BpmFacade.setTaskVariables(taskId, JSON.stringify(variables));
+	org.eclipse.dirigible.components.api.bpm.BpmFacade.setTaskVariables(taskId, JSON.stringify(variables));
 };
 
 exports.completeTask = function(taskId, variables) {
-	org.eclipse.dirigible.api.v3.bpm.BpmFacade.completeTask(taskId, JSON.stringify(variables));
+	org.eclipse.dirigible.components.api.bpm.BpmFacade.completeTask(taskId, JSON.stringify(variables));
 };

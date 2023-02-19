@@ -15,7 +15,7 @@
 
 exports.getProcessEngine = function() {
 	var processEngine = new ProcessEngine();
-	var native = org.eclipse.dirigible.api.v3.bpm.BpmFacade.getProcessEngine();
+	var native = org.eclipse.dirigible.components.api.bpm.BpmFacade.getProcessEngine();
 	processEngine.native = native;
 	return processEngine;
 };
@@ -29,7 +29,7 @@ function ProcessEngine() {
 
 exports.start = function(key, parameters) {
 	var processParameters = parameters ? parameters : {};
-	var processInstanceId = org.eclipse.dirigible.api.v3.bpm.BpmFacade.startProcess(key, JSON.stringify(processParameters));
+	var processInstanceId = org.eclipse.dirigible.components.api.bpm.BpmFacade.startProcess(key, JSON.stringify(processParameters));
 	return processInstanceId;
 };
 
@@ -129,14 +129,14 @@ function ExecutionContext(data) {
 }
 
 exports.getVariable = function(processInstanceId, variableName) {
-	var variableValue = org.eclipse.dirigible.api.v3.bpm.BpmFacade.getVariable(processInstanceId, variableName);
+	var variableValue = org.eclipse.dirigible.components.api.bpm.BpmFacade.getVariable(processInstanceId, variableName);
 	return variableValue;
 };
 
 exports.setVariable = function(processInstanceId, variableName, variableValue) {
-	org.eclipse.dirigible.api.v3.bpm.BpmFacade.setVariable(processInstanceId, variableName, variableValue);
+	org.eclipse.dirigible.components.api.bpm.BpmFacade.setVariable(processInstanceId, variableName, variableValue);
 };
 
 exports.removeVariable = function(processInstanceId, variableName) {
-	org.eclipse.dirigible.api.v3.bpm.BpmFacade.removeVariable(processInstanceId, variableName);
+	org.eclipse.dirigible.components.api.bpm.BpmFacade.removeVariable(processInstanceId, variableName);
 };

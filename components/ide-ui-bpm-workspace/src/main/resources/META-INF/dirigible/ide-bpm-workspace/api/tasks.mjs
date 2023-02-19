@@ -1,6 +1,5 @@
 import { rs } from "@dirigible/http";
-import { tasks as tasksService, process } from "@dirigible/bpm";
-const BpmModule = Java.type("org.eclipse.dirigible.bpm.api.BpmModule");
+import { tasks as tasksService} from "@dirigible/bpm";
 
 rs.service()
     .resource("tasks")
@@ -8,9 +7,7 @@ rs.service()
     .execute();
 
 function getUserTasks(ctx, request, response) {
-    const tasksJson = BpmModule.getProcessEngineProvider().getTasks();
-
-    const tasks = JSON.parse(tasksJson).map(t => {
+    const tasks = tasksService.getTasks().map(t => {
         return {
             taskId: t.id,
             operationType: t.name,

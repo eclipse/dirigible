@@ -122,6 +122,9 @@
 		<module>ide-ui-workspace-menu</module>
 		<module>ide-ui-workspace-service</module>
 		
+		<!-- BPM -->
+		<module>bpm-flowable</module>
+		
 		<!-- CMS -->
 		<module>cms-internal</module>
 		

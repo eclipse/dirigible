@@ -509,6 +509,13 @@
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		
+		<!-- BPM -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-bpm-flowable</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		
 		<!-- CMS -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
