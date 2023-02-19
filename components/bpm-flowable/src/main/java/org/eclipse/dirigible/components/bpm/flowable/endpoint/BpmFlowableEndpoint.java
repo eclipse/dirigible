@@ -111,12 +111,7 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 			@PathVariable("project") String project, 
 			@PathVariable("path") String path) throws JsonProcessingException {
 
-		// Sanitize path
-		if (path.indexOf("?") > 0) {
-			path = path.substring(0, path.indexOf("?"));
-		} else if (path.indexOf("&") > 0) {
-			path = path.substring(0, path.indexOf("&"));
-		}
+		path = sanitizePath(path);
 
 		ObjectNode model = getBpmService().getModel(workspace, project, path);
 		
@@ -125,6 +120,17 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
 		}
 		return ResponseEntity.ok(model);
+	}
+
+	private String sanitizePath(String path) {
+		if (path.indexOf("?") > 0) {
+			path = path.substring(0, path.indexOf("?"));
+		} else if (path.indexOf("&") > 0) {
+			path = path.substring(0, path.indexOf("&"));
+		} else if (path.indexOf("/") == 0) {
+			path = path.substring(1);
+		}
+		return path;
 	}
 	
 	/**
@@ -144,6 +150,8 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 			@PathVariable("project") String project, 
 			@PathVariable("path") String path, 
 			@RequestParam("json_xml") String payload) throws URISyntaxException, IOException {
+		
+		path = sanitizePath(path);
 		
 		getBpmService().saveModel(workspace, project, path, payload);
 		
