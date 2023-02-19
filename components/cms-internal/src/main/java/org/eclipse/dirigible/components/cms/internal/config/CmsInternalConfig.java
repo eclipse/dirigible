@@ -9,18 +9,26 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.cms.internal;
+package org.eclipse.dirigible.components.cms.internal.config;
 
-import org.eclipse.dirigible.cms.api.ICmsProvider;
-import org.eclipse.dirigible.cms.internal.CmsProviderInternal;
+import org.eclipse.dirigible.components.base.cms.CmsProvider;
+import org.eclipse.dirigible.components.cms.internal.provider.CmsProviderInternal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class CmsInternalConfig.
+ */
 @Configuration
 public class CmsInternalConfig {
 	
+	/**
+	 * Gets the cms provider.
+	 *
+	 * @return the cms provider
+	 */
 	@Bean("CMS_PROVIDER")
-	public ICmsProvider getCmsProvider() {
+	public CmsProvider getCmsProvider() {
 		return new CmsProviderInternal();
 	}
 

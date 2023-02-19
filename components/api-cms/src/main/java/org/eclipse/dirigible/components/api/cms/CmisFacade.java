@@ -16,9 +16,9 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.eclipse.dirigible.cms.api.ICmsProvider;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.http.HttpRequestFacade;
+import org.eclipse.dirigible.components.base.cms.CmsProvider;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
 import org.slf4j.Logger;
@@ -66,7 +66,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
     private AccessVerifier securityAccessVerifier;
     
 	/** The cms provider. */
-	private ICmsProvider cmsProvider;
+	private CmsProvider cmsProvider;
 	
 	/** The instance. */
 	private static CmisFacade INSTANCE;
@@ -78,7 +78,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 	 * @param securityAccessVerifier the security access verifier
 	 */
 	@Autowired
-	public CmisFacade(ICmsProvider cmsProvider, AccessVerifier securityAccessVerifier) {
+	public CmisFacade(CmsProvider cmsProvider, AccessVerifier securityAccessVerifier) {
 		this.cmsProvider = cmsProvider;
 		this.securityAccessVerifier = securityAccessVerifier;
 	}
@@ -107,7 +107,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 	 *
 	 * @return the cms provider
 	 */
-	protected ICmsProvider getCmsProvider() {
+	protected CmsProvider getCmsProvider() {
 		return cmsProvider;
 	}
 	
@@ -136,7 +136,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 	 * @return the CMIS session object
 	 */
 	public static final Object getSession() {
-		Object session = ((ICmsProvider) applicationContext.getBean("CMS_PROVIDER")).getSession();
+		Object session = ((CmsProvider) applicationContext.getBean("CMS_PROVIDER")).getSession();
 		return session;
 	}
 
