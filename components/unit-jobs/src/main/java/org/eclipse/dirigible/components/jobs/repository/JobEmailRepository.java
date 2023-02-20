@@ -19,4 +19,6 @@ import org.springframework.stereotype.Repository;
  * The Interface JobEmailRepository.
  */
 @Repository("jobEmailDefinitionRepository")
-public interface JobEmailRepository extends JpaRepository<JobEmail, Long> {}
+public interface JobEmailRepository extends JpaRepository<JobEmail, Long> {
+
+}

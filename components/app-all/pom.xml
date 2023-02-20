@@ -166,9 +166,15 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-ide-template</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
-		</dependency><dependency>
+		</dependency>
+		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-ide-terminal</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-ide-problems</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		

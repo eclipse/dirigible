@@ -19,4 +19,6 @@ import org.springframework.stereotype.Repository;
  * The Interface JobLogRepository.
  */
 @Repository("jobsLogsRepository")
-public interface JobLogRepository extends JpaRepository<JobLog, Long> {}
+public interface JobLogRepository extends JpaRepository<JobLog, Long> {
+
+}

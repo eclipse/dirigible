@@ -34,3 +34,8 @@ exports.getEngines = function() {
 	return engines;
 };
 
+exports.getProblems = function() {
+	const problems = require("platform/problems");
+	return problems;
+};
+

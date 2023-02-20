@@ -46,7 +46,7 @@ exports.getContent = function () {
 		  },
 		  {
 		    "name": "platform/workspace",
-		    "description": "Repository API",
+		    "description": "Workspace API",
 		    "api": "workspace",
 		    "versionedPaths": [
 		      "platform/workspace"
@@ -55,12 +55,21 @@ exports.getContent = function () {
 		  },
 		  {
 		    "name": "platform/engines",
-		    "description": "Repository API",
+		    "description": "Engines API",
 		    "api": "engines",
 		    "versionedPaths": [
 		      "platform/engines"
 		    ],
 		    "pathDefault": "platform/engines"
+		  },
+		  {
+		    "name": "platform/problems",
+		    "description": "Problems API",
+		    "api": "problems",
+		    "versionedPaths": [
+		      "platform/problems"
+		    ],
+		    "pathDefault": "platform/problems"
 		  }
 		];
 };

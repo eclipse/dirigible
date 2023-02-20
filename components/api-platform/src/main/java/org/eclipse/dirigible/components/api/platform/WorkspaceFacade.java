@@ -58,7 +58,7 @@ public class WorkspaceFacade implements InitializingBean {
 	/**
 	 * Gets the instance.
 	 *
-	 * @return the database facade
+	 * @return the workspace facade
 	 */
 	public static WorkspaceFacade get() {
         return INSTANCE;

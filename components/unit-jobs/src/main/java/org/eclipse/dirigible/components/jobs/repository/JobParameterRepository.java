@@ -19,4 +19,6 @@ import org.springframework.stereotype.Repository;
  * The Interface JobParameterRepository.
  */
 @Repository("jobsParameterRepository")
-public interface JobParameterRepository extends JpaRepository<JobParameter, Long> {}
+public interface JobParameterRepository extends JpaRepository<JobParameter, Long> {
+
+}

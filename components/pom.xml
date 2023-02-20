@@ -52,6 +52,7 @@
 		<module>ide-console</module>
 		<module>ide-template</module>
 		<module>ide-terminal</module>
+		<module>ide-problems</module>
 		
 		<!-- IDE UI -->
 		<module>ide-ui-about</module>

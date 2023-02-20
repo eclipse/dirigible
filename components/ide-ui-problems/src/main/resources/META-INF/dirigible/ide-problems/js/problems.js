@@ -33,7 +33,7 @@ problemsView.controller('ProblemsController', ['$http', '$timeout', 'messageHub'
             return;
         }
 
-        $http.get('/services/ops/problems/search', { params: { 'condition': this.filterBy, 'limit': limit } })
+        $http.get('/services/ide/problems/search', { params: { 'condition': this.filterBy, 'limit': limit } })
             .then((response) => {
                 const { result, totalRows } = response.data;
                 const pageItems = result.slice(startIndex);// to be removed when the pagination is fixed
@@ -138,7 +138,7 @@ problemsView.controller('ProblemsController', ['$http', '$timeout', 'messageHub'
         }, []);
 
         if (selectedIds.length > 0) {
-            $http.post('/services/ops/problems/delete/selected', selectedIds).then(() => {
+            $http.post('/services/ide/problems/delete/selected', selectedIds).then(() => {
                 fetchData();
             });
         }
