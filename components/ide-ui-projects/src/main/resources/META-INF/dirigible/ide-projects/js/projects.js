@@ -611,7 +611,7 @@ projectsView.controller('ProjectsViewController', [
             messageHub.showStatusBusy("Publishing projects...");
             publisherApi.publish(`/${$scope.selectedWorkspace.name}/*`).then(function (response) {
                 messageHub.hideStatusBusy();
-                if (response.status !== 201)
+                if (response.status !== 200)
                     messageHub.setStatusError(`Unable to publish projects in '${$scope.selectedWorkspace.name}'`);
                 else messageHub.setStatusMessage(`Published all projects in '${$scope.selectedWorkspace.name}'`);
             });
@@ -621,7 +621,7 @@ projectsView.controller('ProjectsViewController', [
             messageHub.showStatusBusy("Unpublishing projects...");
             publisherApi.unpublish(`/${$scope.selectedWorkspace.name}/*`).then(function (response) {
                 messageHub.hideStatusBusy();
-                if (response.status !== 201)
+                if (response.status !== 200)
                     messageHub.setStatusError(`Unable to unpublish projects in '${$scope.selectedWorkspace.name}'`);
                 else messageHub.setStatusMessage(`Unpublished all projects in '${$scope.selectedWorkspace.name}'`);
             });
@@ -631,7 +631,7 @@ projectsView.controller('ProjectsViewController', [
             messageHub.showStatusBusy(`Publishing '${path}'...`);
             publisherApi.publish(path, workspace).then(function (response) {
                 messageHub.hideStatusBusy();
-                if (response.status !== 201) {
+                if (response.status !== 200) {
                     messageHub.setStatusError(`Unable to publish '${path}'`);
                 } else {
                     messageHub.setStatusMessage(`Published '${path}'`);
@@ -644,7 +644,7 @@ projectsView.controller('ProjectsViewController', [
             messageHub.showStatusBusy(`Unpublishing '${path}'...`);
             publisherApi.unpublish(path, workspace).then(function (response) {
                 messageHub.hideStatusBusy();
-                if (response.status !== 201) {
+                if (response.status !== 200) {
                     messageHub.setStatusError(`Unable to unpublish '${path}'`);
                 } else {
                     messageHub.setStatusMessage(`Unpublished '${path}'`);
@@ -1087,7 +1087,7 @@ projectsView.controller('ProjectsViewController', [
         messageHub.onFileSaved(function (data) {
             const { topic, ...fileDescriptor } = data;
             publisherApi.publish(`/${fileDescriptor.workspace}${fileDescriptor.path}`).then(function (response) {
-                if (response.status !== 201)
+                if (response.status !== 200)
                     messageHub.setStatusError(`Unable to publish '${fileDescriptor.path}'`);
                 else
                     messageHub.announcePublish(fileDescriptor);
@@ -1667,14 +1667,14 @@ projectsView.controller('ProjectsViewController', [
                     $scope.publishAll();
                 } else if (msg.data.itemId === 'publish') {
                     publisherApi.publish(msg.data.data).then(function (response) {
-                        if (response.status !== 201)
+                        if (response.status !== 200)
                             messageHub.setStatusError(`Unable to publish '${msg.data.data}'`);
                         else
                             messageHub.announcePublish();
                     });
                 } else if (msg.data.itemId === 'unpublish') {
                     publisherApi.unpublish(msg.data.data).then(function (response) {
-                        if (response.status !== 201)
+                        if (response.status !== 200)
                             messageHub.setStatusError(`Unable to unpublish '${msg.data.data}'`);
                         else
                             messageHub.announceUnpublish();
