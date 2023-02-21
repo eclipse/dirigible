@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-releng-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>7.1.5</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -153,14 +153,14 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 		</dependency>
 
 		<!-- API -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -173,19 +173,19 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-local</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 		</dependency>
 
 		<!-- Database -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -196,19 +196,19 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-h2</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-custom</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 		</dependency>
 
 		<!-- Core Services -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-core</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -220,13 +220,13 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ide-service-console</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -239,7 +239,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-mail</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.5</version>
 		</dependency>
 
 		<!-- External -->
