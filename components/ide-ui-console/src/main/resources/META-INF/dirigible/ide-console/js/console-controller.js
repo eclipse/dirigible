@@ -30,8 +30,8 @@ consoleView.controller('ConsoleController', ['$scope', 'messageHub', function ($
         'INFO': { name: 'Info', enabled: true },
         'WARN': { name: 'Warning', enabled: true },
         'ERROR': { name: 'Error', enabled: true },
-        'DEBUG': { name: 'Debug', enabled: true },
-        'TRACE': { name: 'Trace', enabled: true }
+        'DEBUG': { name: 'Debug', enabled: false },
+        'TRACE': { name: 'Trace', enabled: false }
     };
 
     $scope.logLevelStatuses = {
@@ -107,7 +107,7 @@ consoleView.controller('ConsoleController', ['$scope', 'messageHub', function ($
         }
         if (logSocket) {
             logSocket.onmessage = function (message) {
-				if (message.data instanceof String) {
+				if (message.data.constructor.name === 'String') {
 					let record = JSON.parse(message.data);
 	                record.date = new Date(record.timestamp).toISOString();
 	

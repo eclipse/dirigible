@@ -41,7 +41,6 @@ public class ConsoleWebsocketConfig implements WebSocketConfigurer {
      *
      * @return the data transfer websocket handler
      */
-    @Bean
     public WebSocketHandler getConsoleWebsocketHandler() {
         return new ConsoleWebsocketHandler();
     }
