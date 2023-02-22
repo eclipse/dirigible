@@ -46,10 +46,9 @@ public class RegistryEndpoint extends BaseEndpoint {
 	}
 	
 	@GetMapping("/{*path}")
-	public ResponseEntity<?> get(
-			@ApiParam(value = "Location of the Resource", required = true) @PathVariable("path") String path) {
+	public ResponseEntity<?> get(@PathVariable("path") String path) {
 		
-		final HttpHeaders httpHeaders= new HttpHeaders();
+		final HttpHeaders httpHeaders = new HttpHeaders();
 		
 		IResource resource = registryService.getResource(path);
 		if (!resource.exists()) {
