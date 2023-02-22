@@ -78,7 +78,7 @@ public class JavascriptService implements InitializingBean {
             String sourceFilePath = Path.of(projectName, projectFilePath).toString();
 			String maybeJSCode = dirigibleSourceProvider.getSource(sourceFilePath);
             if (maybeJSCode == null) {
-                throw new IOException("JavaScript source code for project name '" + projectName + "' and file name '" + projectFilePath + "' could not be found");
+                throw new IOException("JavaScript source code for project name '" + projectName + "' and file name '" + projectFilePath + "' could not be found, hence consider publish it.");
             }
 
             Path absoluteSourcePath = dirigibleSourceProvider.getAbsoluteSourcePath(projectName, projectFilePath);
@@ -90,9 +90,17 @@ public class JavascriptService implements InitializingBean {
             	return transformValue(value);
             }
         } catch (Exception e) {
-        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            throw new RuntimeException(e);
+        	if (logger.isErrorEnabled()) {
+        		if (e.getMessage().contains("consider publish")) {
+        			logger.error(e.getMessage());
+        			return e.getMessage();
+        		} else {
+        			logger.error(e.getMessage(), e);
+        			throw new RuntimeException(e);
+        		}
+        	}
         }
+        return "";
     }
     
     /**
