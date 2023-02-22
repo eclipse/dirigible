@@ -137,7 +137,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.4.1</version>
+						<version>3.5.0</version>
 						<configuration>
 							<source>${java.version}</source>
 						</configuration>
@@ -420,7 +420,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.4.1</version>
+						<version>3.5.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -723,12 +723,12 @@
 		<jgit.version>6.4.0.202211300538-r</jgit.version>
 		<javax.mail.api.version>1.6.4</javax.mail.api.version>
 		<olingo.version>2.0.12</olingo.version>
-		<kafka.version>3.3.1</kafka.version>
+		<kafka.version>3.4.0</kafka.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
-		<mongodb.version>3.12.11</mongodb.version>
-		<caffeine.version>3.1.2</caffeine.version>
+		<mongodb.version>3.12.12</mongodb.version>
+		<caffeine.version>3.1.4</caffeine.version>
 		<liquibase-core.version>4.16.1</liquibase-core.version>
-		<commons-csv.version>1.9.0</commons-csv.version>
+		<commons-csv.version>1.10.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<sap-theming__theming-base-content.version>11.1.42</sap-theming__theming-base-content.version>
 		<fundamental-styles.version>0.24.4</fundamental-styles.version>
@@ -751,12 +751,12 @@
 		<testcontainers.version>1.17.6</testcontainers.version>
 		<testcontainers.rabbitmq.version>1.17.6</testcontainers.rabbitmq.version>
 		<amqp.client.version>5.16.0</amqp.client.version>
-		<elasticsearch.client.version>7.7.1</elasticsearch.client.version>
+		<elasticsearch.client.version>7.17.9</elasticsearch.client.version>
 		<jetcd.core.version>0.7.5</jetcd.core.version>
 		<jetcd.test.version>0.5.4</jetcd.test.version>
-		<logcaptor.version>2.7.10</logcaptor.version>
+		<logcaptor.version>2.8.0</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
-		<jackson.databind.version>2.14.1</jackson.databind.version>
+		<jackson.databind.version>2.14.2</jackson.databind.version>
 
 		<spring.boot.version>2.7.5</spring.boot.version>
 		<spring.boot.slf4j.version>1.7.36</spring.boot.slf4j.version>
@@ -765,7 +765,7 @@
 		<spring-security.version>5.8.0</spring-security.version>
 		<webjars-locator>0.46</webjars-locator>
 
-		<keycloak-adapter-bom.version>20.0.4</keycloak-adapter-bom.version>
+		<keycloak-adapter-bom.version>20.0.5</keycloak-adapter-bom.version>
 		<hikaricp.version>5.0.1</hikaricp.version>
 		<validator.version>1.7</validator.version>
 		<quartz.version>2.3.2</quartz.version>
@@ -776,21 +776,21 @@
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<velocity.version>2.3</velocity.version>
-		<wikitext.version>3.0.45.202211090110</wikitext.version>
+		<wikitext.version>3.0.46.202301111837</wikitext.version>
 		<flexmark.version>0.64.0</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
 		<qldb.sdk.version>1.12.386</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>4.3.1</jedis.version>
-		<spark.version>3.3.1</spark.version>
+		<spark.version>3.3.2</spark.version>
 		<path-to-regexp.version>6.2.1</path-to-regexp.version>
 		<javax.websocket-api.version>1.1</javax.websocket-api.version>
 
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<org.springdoc.openapi.ui.version>1.6.14</org.springdoc.openapi.ui.version>
 		<swagger-annotations.version>1.6.9</swagger-annotations.version>
-		<junit4.version>4.12</junit4.version>
+		<junit4.version>4.13.2</junit4.version>
 
 		<sonar.organization>eclipse</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
