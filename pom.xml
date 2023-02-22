@@ -756,7 +756,7 @@
 		<jetcd.test.version>0.5.4</jetcd.test.version>
 		<logcaptor.version>2.7.10</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
-		<jackson.databind.version>2.14.1</jackson.databind.version>
+		<jackson.databind.version>2.14.2</jackson.databind.version>
 
 		<spring.boot.version>2.7.5</spring.boot.version>
 		<spring.boot.slf4j.version>1.7.36</spring.boot.slf4j.version>
