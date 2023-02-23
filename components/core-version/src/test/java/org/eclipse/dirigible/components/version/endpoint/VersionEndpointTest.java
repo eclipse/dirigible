@@ -57,7 +57,7 @@ public class VersionEndpointTest {
                 .andExpect(content().string(containsString("{\"productName\":\"dirigible\",\"productVersion\":\"0.0" +
                         ".1\",\"productCommitId\":\"test\",\"productRepository\":\"https://github" +
                         ".com/eclipse/dirigible\",\"productType\":\"all\",\"instanceName\":\"server-spring-boot\"," +
-                        "\"repositoryProvider\":null,\"databaseProvider\":\"local\",\"modules\":[],\"engines\":[]}")));
+                        "\"repositoryProvider\":\"local\",\"databaseProvider\":\"local\",\"units\":[],\"engines\":[]}")));
     }
 
     @SpringBootApplication
