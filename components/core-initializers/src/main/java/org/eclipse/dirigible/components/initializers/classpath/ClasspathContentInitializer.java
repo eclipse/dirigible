@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.components.initializers.classpath;
 
+import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatus;
+import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatus.Jobs.JobStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -33,7 +35,13 @@ public class ClasspathContentInitializer {
 	 */
 	@EventListener(ApplicationReadyEvent.class)
 	public void handleContextStart(final ApplicationReadyEvent are) {
-        classpathExpander.expandContent();
+        HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Running);
+		try {
+			classpathExpander.expandContent();
+		} catch (Exception e) {
+			HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Failed);
+		}
+		HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Succeeded);
 	}
 	
 }

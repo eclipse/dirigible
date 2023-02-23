@@ -11,6 +11,10 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
+import java.util.concurrent.TimeUnit;
+
+import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatus;
+import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatus.Jobs.JobStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Scope;
@@ -44,7 +48,13 @@ public class SynchronizationInitializer {
 	 */
 	@EventListener(ApplicationReadyEvent.class)
 	public void handleContextStart(final ApplicationReadyEvent are) {
-		synchronizationProcessor.processSynchronizers();
+		HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Running);
+		try {
+			synchronizationProcessor.processSynchronizers();
+		} catch (Exception e) {
+			HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Failed);
+		}
+		HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Succeeded);
 	}
 
 }

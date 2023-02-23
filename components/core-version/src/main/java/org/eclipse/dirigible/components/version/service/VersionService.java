@@ -12,9 +12,13 @@
 package org.eclipse.dirigible.components.version.service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.artefact.Engine;
+import org.eclipse.dirigible.components.base.artefact.Unit;
 import org.eclipse.dirigible.components.version.domain.Version;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.springframework.stereotype.Service;
@@ -45,6 +49,15 @@ public class VersionService {
 
     /** The Constant DIRIGIBLE_INSTANCE_NAME. */
     private static final String DIRIGIBLE_INSTANCE_NAME = "DIRIGIBLE_INSTANCE_NAME";
+    
+    private List<Engine> engines;
+    
+    private List<Unit> units;
+    
+    public VersionService(List<Engine> engines, List<Unit> units) {
+    	this.engines = engines;
+    	this.units = units;
+    }
 
     /**
      * Gets the version.
@@ -62,11 +75,12 @@ public class VersionService {
         version.setProductCommitId(properties.getProperty(DIRIGIBLE_PRODUCT_COMMIT_ID));
         version.setProductType(properties.getProperty(DIRIGIBLE_PRODUCT_TYPE));
         version.setInstanceName(properties.getProperty(DIRIGIBLE_INSTANCE_NAME));
-        version.setRepositoryProvider(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER));
+        version.setRepositoryProvider(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER, "local"));
 //        version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
-//        version.getModules().addAll(DirigibleModulesInstallerModule.getModules());
-        // TODO: Fix commented line below. Missing a dependency.
-        // version.getEngines().addAll(EngineExecutorFactory.getEnginesNames());
+        
+        version.getEngines().addAll(engines.stream().map(Engine::getName).collect(Collectors.toList()));
+        version.getUnits().addAll(units.stream().map(Unit::getName).collect(Collectors.toList()));
+        
         return version;
     }
 }

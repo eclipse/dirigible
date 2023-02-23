@@ -63,6 +63,11 @@
 			<artifactId>dirigible-components-core-websockets</artifactId>
 			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-healthcheck</artifactId>
+			<version>8.0.0-SNAPSHOT</version>
+		</dependency>
 		
 		<!-- Units -->
 		<dependency>

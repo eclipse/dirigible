@@ -60,9 +60,9 @@ public class Version {
     private String databaseProvider = "local";
 
     /**
-     * The modules.
+     * The units.
      */
-    private Set<String> modules = new HashSet<String>();
+    private Set<String> units = new HashSet<String>();
 
     /**
      * The engines.
@@ -214,24 +214,6 @@ public class Version {
     }
 
     /**
-     * Gets the modules.
-     *
-     * @return the modules
-     */
-    public Set<String> getModules() {
-        return modules;
-    }
-
-    /**
-     * Sets the modules.
-     *
-     * @param modules the modules to set
-     */
-    public void setModules(Set<String> modules) {
-        this.modules = modules;
-    }
-
-    /**
      * Gets the engines.
      *
      * @return the engines
@@ -248,5 +230,24 @@ public class Version {
     public void setEngines(Set<String> engines) {
         this.engines = engines;
     }
+    
+    /**
+     * Gets the units.
+     *
+     * @return the units
+     */
+    public Set<String> getUnits() {
+        return units;
+    }
+
+    /**
+     * Sets the units.
+     *
+     * @param units the units to set
+     */
+    public void setUnits(Set<String> units) {
+        this.units = units;
+    }
+
 
 }

@@ -23,6 +23,7 @@
 		<module>core-registry</module>
 		<module>core-version</module>
 		<module>core-websockets</module>
+		<module>core-healthcheck</module>
 		
 		<!-- Units -->
 		<module>unit-jobs</module>

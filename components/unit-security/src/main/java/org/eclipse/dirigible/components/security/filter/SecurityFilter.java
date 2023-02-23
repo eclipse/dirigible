@@ -11,25 +11,32 @@
  */
 package org.eclipse.dirigible.components.security.filter;
 
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
-import org.eclipse.dirigible.components.security.domain.Access;
-import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
+import org.eclipse.dirigible.components.security.domain.Access;
+import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.google.common.html.HtmlEscapers;
 
 /**
  * The Security Filter.
@@ -118,8 +125,7 @@ public class SecurityFilter implements Filter {
      * javax.servlet.FilterChain)
      */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException
-            , IOException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -190,8 +196,8 @@ public class SecurityFilter implements Filter {
     /**
      * Forbidden.
      *
-     * @param uri      the uri
-     * @param message  the message
+     * @param uri the uri
+     * @param message the message
      * @param response the response
      * @throws IOException Signals that an I/O exception has occurred.
      */
@@ -200,10 +206,7 @@ public class SecurityFilter implements Filter {
         if (logger.isWarnEnabled()) {
             logger.warn(error);
         }
-        // TODO: Fix these lines using the EscapeFacade
-        // error = EscapeFacade.escapeHtml4(error);
-        // error = EscapeFacade.escapeJavascript(error);
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, error);
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, HtmlEscapers.htmlEscaper().escape(error));
     }
 
     /**

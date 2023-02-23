@@ -32,6 +32,8 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDeplet
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalSorter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyFactory;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
+import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatus;
+import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatus.Jobs.JobStatus;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.initializers.definition.Definition;
@@ -139,9 +141,16 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		if (logger.isDebugEnabled()) {logger.debug("Processing of artefacts...");}
 		// processing and depleting
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
+			HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Running);
 			List<TopologyWrapper<? extends Artefact>> locals = 
 					wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toUnmodifiableList());
-			synchronizer.process(locals, depleter);
+			try {
+				synchronizer.process(locals, depleter);
+			} catch (Exception e) {
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+				HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Failed);
+			}
+			HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Succeeded);
 		}
 		if (logger.isDebugEnabled()) {logger.debug("Processing of artefacts done.");}
 		
