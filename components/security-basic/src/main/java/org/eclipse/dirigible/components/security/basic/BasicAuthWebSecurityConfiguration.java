@@ -9,12 +9,10 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible;
+package org.eclipse.dirigible.components.security.basic;
 
 import java.util.Arrays;
 
-import org.apache.catalina.filters.CorsFilter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,7 +25,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-public class DirigibleBasicAuthWebSecurityConfiguration {
+public class BasicAuthWebSecurityConfiguration {
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -67,7 +65,6 @@ public class DirigibleBasicAuthWebSecurityConfiguration {
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers","Access-Control-Allow-Origin","Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
@@ -77,23 +74,5 @@ public class DirigibleBasicAuthWebSecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-	
-//	/**
-//	 * Cors filter.
-//	 *
-//	 * @return the filter registration bean
-//	 */
-//	@Bean
-//	public FilterRegistrationBean<CorsFilter> corsFilter() {
-//		FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
-//
-//		registrationBean.setFilter(new CorsFilter());
-//		registrationBean.addInitParameter("cors.allowed.origins", "*");
-//		registrationBean.addInitParameter("cors.allowed.headers", "*");
-//		registrationBean.addInitParameter("cors.allowed.methods", "GET,PUT,PATCH,POST,DELETE,HEAD,OPTIONS,CONNECT,TRACE");
-//		registrationBean.addUrlPatterns("/*");
-//
-//		return registrationBean;
-//	}
 	
 }

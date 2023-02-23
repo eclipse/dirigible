@@ -31,6 +31,9 @@
 		<module>unit-websockets</module>
 		<module>unit-security</module>
 		<module>unit-listeners</module>
+		
+		<!-- Security -->
+		<module>security-basic</module>
 
 		<!-- Data -->
 		<module>data-structures</module>
