@@ -22,13 +22,13 @@ logsView.controller('LogsController', ['$scope', '$http', 'messageHub', function
 		logsList: []
 	};
 
-	$http.get('/services/ops/logs').then(function (response) {
+	$http.get('/services/ide/logs/').then(function (response) {
 		$scope.log.logsList = response.data.map(x => ({ text: x, value: x }));
 	});
 
 	$scope.logChanged = function () {
 		if ($scope.log.selectedLog) {
-			$http.get('/services/ops/logs/' + $scope.log.selectedLog).then(function (response) {
+			$http.get('/services/ide/logs/' + $scope.log.selectedLog).then(function (response) {
 				$scope.logContent = response.data;
 			});
 		} else {

@@ -57,6 +57,7 @@
 		<module>ide-template</module>
 		<module>ide-terminal</module>
 		<module>ide-problems</module>
+		<module>ide-logs</module>
 		
 		<!-- IDE UI -->
 		<module>ide-ui-about</module>

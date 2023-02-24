@@ -21,7 +21,7 @@ logconfigurationsView.controller('LogConfigurationsController', ['$scope', '$htt
         name: ''
     }
 
-    let logConfigurationsApi = '/services/ops/logconfig';
+    let logConfigurationsApi = '/services/ide/logconfig/';
 
     function loadLogConfigurations() {
         $http.get(logConfigurationsApi)
@@ -31,7 +31,14 @@ logconfigurationsView.controller('LogConfigurationsController', ['$scope', '$htt
     }
 
     $scope.setSeverity = function (loggerName, loggerLevel) {
-        $http.post(logConfigurationsApi + "/severity/" + loggerName, loggerLevel)
+        $http({
+				method: "POST",
+				url: logConfigurationsApi + "severity/" + loggerName,
+				data: loggerLevel,
+				headers: {
+			        "Content-Type": "text/plain"
+			    }
+			})			
             .then(function (data) {
                 let logger = (element) => element.name === loggerName;
                 let i = $scope.logConfigurations.findIndex(logger);
