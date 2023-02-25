@@ -10,12 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-	id: "logconfig",
-	name: "LogConfig",
+	id: "loggers",
+	name: "Loggers",
 	factory: "frame",
 	region: "bottom",
-	label: "Log Config",
-	link: "../ide-logs/log-config.html"
+	label: "Loggers",
+	link: "../ide-logs/loggers.html"
 };
 
 if (typeof exports !== 'undefined') {

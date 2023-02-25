@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "logconfig")
-public class LogConfigEndpoint {
+@RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "loggers")
+public class LoggersEndpoint {
 	
 	/** The logs service. */
 	@Autowired
