@@ -123,7 +123,7 @@ public class DBMetadataUtilTest {
     /**
      * Test get table metadata column conversion not supported type.
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testGetTableMetadata_columnConversionNotSupportedType(){
         testGetTableMetadata_columnTypeConversion("NotSupportedSQLType", null);
     }
