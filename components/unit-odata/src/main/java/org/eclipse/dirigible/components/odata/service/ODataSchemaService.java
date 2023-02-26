@@ -45,6 +45,11 @@ public class ODataSchemaService implements ArtefactService<ODataSchema>, Initial
 		INSTANCE = this;		
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @return the o data schema service
+	 */
 	public static ODataSchemaService get() {
         return INSTANCE;
     }

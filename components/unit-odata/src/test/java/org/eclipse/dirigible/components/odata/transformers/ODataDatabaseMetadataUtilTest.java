@@ -108,6 +108,7 @@ public class ODataDatabaseMetadataUtilTest {
     @Mock
     private DatabaseMetaData databaseMetaData;
     
+    /** The datasources manager. */
     @Mock
     private DataSourcesManager datasourcesManager;
 

@@ -48,6 +48,11 @@ public class ODataContainerService implements ArtefactService<ODataContainer>, I
 		INSTANCE = this;		
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @return the o data container service
+	 */
 	public static ODataContainerService get() {
         return INSTANCE;
     }

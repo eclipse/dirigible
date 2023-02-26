@@ -113,6 +113,11 @@ public class ODataAssociation {
 		this.annotationsAssociationSet = annotationsAssociationSet;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "ODataAssociation [name=" + name + ", from=" + from + ", to=" + to + ", annotationsAssociationSet="

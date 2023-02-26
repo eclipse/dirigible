@@ -84,6 +84,11 @@ public class ODataHandler {
 		this.handler = handler;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "ODataHandler [method=" + method + ", type=" + type + ", handler=" + handler + "]";

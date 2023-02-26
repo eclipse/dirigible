@@ -45,6 +45,11 @@ public class ODataHandlerService implements ArtefactService<ODataHandler>, Initi
 		INSTANCE = this;		
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @return the o data handler service
+	 */
 	public static ODataHandlerService get() {
         return INSTANCE;
     }
@@ -161,6 +166,15 @@ public class ODataHandlerService implements ArtefactService<ODataHandler>, Initi
         odataHandlerRepository.deleteAll(odataHandlerRepository.findAll(example));
     }
 
+	/**
+	 * Gets the by namespace name method and kind.
+	 *
+	 * @param namespace the namespace
+	 * @param name the name
+	 * @param method the method
+	 * @param kind the kind
+	 * @return the by namespace name method and kind
+	 */
 	public List<ODataHandler> getByNamespaceNameMethodAndKind(String namespace, String name, String method, String kind) {
 		ODataHandler filter = new ODataHandler();
         filter.setNamespace(namespace);

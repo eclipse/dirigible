@@ -68,7 +68,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 	 * Gets the edm table mapping provider.
 	 *
 	 * @return the edm table mapping provider
-	 * @throws ODataException 
+	 * @throws ODataException the o data exception
 	 */
 	public ODataEdmTableMappingProvider getEdmTableMappingProvider() throws ODataException {
 		return new ODataEdmTableMappingProvider();

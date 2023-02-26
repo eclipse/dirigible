@@ -52,7 +52,6 @@ public class ODataMapping extends Artefact {
 	 * @param name the name
 	 * @param description the description
 	 * @param dependencies the dependencies
-	 * @param id the id
 	 * @param content the content
 	 */
 	public ODataMapping(String location, String name, String description, String dependencies,

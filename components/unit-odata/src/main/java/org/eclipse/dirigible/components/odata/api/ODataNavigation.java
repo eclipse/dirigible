@@ -91,6 +91,11 @@ public class ODataNavigation {
 		this.annotationsNavigationProperty = annotationsNavigationProperty;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "ODataNavigation [name=" + name + ", association=" + association + ", annotationsNavigationProperty="

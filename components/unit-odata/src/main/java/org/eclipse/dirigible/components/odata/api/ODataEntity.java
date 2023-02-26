@@ -299,6 +299,11 @@ public class ODataEntity {
 		this.aggregationsTypeAndColumn = aggregationsTypeAndColumn;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "ODataEntity [name=" + name + ", alias=" + alias + ", table=" + table + ", keyGenerated=" + keyGenerated

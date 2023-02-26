@@ -41,14 +41,29 @@ public class ODataMetadataService implements InitializingBean {
 		INSTANCE = this;		
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @return the o data metadata service
+	 */
 	public static ODataMetadataService get() {
         return INSTANCE;
     }
 	
+	/**
+	 * Gets the o data container service.
+	 *
+	 * @return the o data container service
+	 */
 	public ODataContainerService getODataContainerService() {
 		return ODataContainerService.get();
 	}
 	
+	/**
+	 * Gets the o data schema service.
+	 *
+	 * @return the o data schema service
+	 */
 	public ODataSchemaService getODataSchemaService() {
 		return ODataSchemaService.get();
 	}

@@ -67,7 +67,6 @@ public class OData extends Artefact {
 	 * @param name the name
 	 * @param description the description
 	 * @param dependencies the dependencies
-	 * @param id the id
 	 * @param namespace the namespace
 	 * @param entities the entities
 	 * @param associations the associations
@@ -152,6 +151,11 @@ public class OData extends Artefact {
 		return associations;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "OData [id=" + id + ", namespace=" + namespace + ", entities=" + entities + ", associations="

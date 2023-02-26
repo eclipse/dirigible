@@ -65,7 +65,6 @@ public class ODataHandler extends Artefact {
 	 * @param name the name
 	 * @param description the description
 	 * @param dependencies the dependencies
-	 * @param id the id
 	 * @param namespace the namespace
 	 * @param method the method
 	 * @param kind the kind

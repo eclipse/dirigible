@@ -47,6 +47,11 @@ public class ODataMappingService implements ArtefactService<ODataMapping>, Initi
 		INSTANCE = this;		
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @return the o data mapping service
+	 */
 	public static ODataMappingService get() {
         return INSTANCE;
     }

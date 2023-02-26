@@ -47,20 +47,42 @@ public class ODataSchema extends Artefact {
 	@Expose
 	private byte[] content;
 	
+	/**
+	 * Instantiates a new o data schema.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param description the description
+	 * @param dependencies the dependencies
+	 * @param content the content
+	 */
 	public ODataSchema(String location, String name, String description, String dependencies,
 			byte[] content) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.content = content;
 	}
 
+	/**
+	 * Instantiates a new o data schema.
+	 */
 	public ODataSchema() {
 		super();
 	}
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	public Long getId() {
 		return id;
 	}
 	
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the new id
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -84,6 +106,11 @@ public class ODataSchema extends Artefact {
 		this.content = content;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "ODataSchema [id=" + id + ", content=" + Arrays.toString(content) + ", location=" + location + ", name="

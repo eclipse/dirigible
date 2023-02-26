@@ -143,6 +143,11 @@ public class ODataProperty {
 		this.annotationsProperty = annotationsProperty;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "ODataProperty [name=" + name + ", column=" + column + ", nullable=" + nullable + ", type=" + type

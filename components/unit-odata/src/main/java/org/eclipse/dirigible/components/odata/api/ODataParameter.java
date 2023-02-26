@@ -90,6 +90,11 @@ public class ODataParameter {
 		return this;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "ODataParameter [name=" + name + ", nullable=" + nullable + ", type=" + type + "]";

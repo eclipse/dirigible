@@ -25,6 +25,11 @@ import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingPro
  */
 public class ODataEdmTableMappingProvider extends DefaultEdmTableMappingProvider {
 	
+	/**
+	 * Instantiates a new o data edm table mapping provider.
+	 *
+	 * @throws ODataException the o data exception
+	 */
 	public ODataEdmTableMappingProvider() throws ODataException {
 		super();
 	}

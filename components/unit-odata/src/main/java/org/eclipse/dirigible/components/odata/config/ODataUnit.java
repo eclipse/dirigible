@@ -14,14 +14,27 @@ package org.eclipse.dirigible.components.odata.config;
 import org.eclipse.dirigible.components.base.artefact.Unit;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class ODataUnit.
+ */
 @Component
 public class ODataUnit implements Unit {
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	@Override
 	public String getName() {
 		return "OData";
 	}
 
+	/**
+	 * Gets the provider.
+	 *
+	 * @return the provider
+	 */
 	@Override
 	public String getProvider() {
 		return "Eclipse Dirigible";

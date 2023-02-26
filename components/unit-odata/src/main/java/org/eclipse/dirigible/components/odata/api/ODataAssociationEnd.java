@@ -147,12 +147,17 @@ public class ODataAssociationEnd {
 	/**
 	 * Sets the mapping table definition.
 	 *
-	 * @param mappingTableDefinition the new mapping table definition
+	 * @param mappingTable the new mapping table
 	 */
 	public void setMappingTable(ODataManyToManyMappingTable mappingTable) {
 		this.mappingTable = mappingTable;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "ODataAssociationEnd [entity=" + entity + ", property=" + property + ", properties=" + properties

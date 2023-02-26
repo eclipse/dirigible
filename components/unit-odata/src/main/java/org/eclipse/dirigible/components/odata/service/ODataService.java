@@ -45,6 +45,11 @@ public class ODataService implements ArtefactService<OData>, InitializingBean {
 		INSTANCE = this;		
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @return the o data service
+	 */
 	public static ODataService get() {
         return INSTANCE;
     }

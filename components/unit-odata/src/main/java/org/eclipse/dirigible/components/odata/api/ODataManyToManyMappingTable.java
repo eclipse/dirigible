@@ -62,6 +62,11 @@ public class ODataManyToManyMappingTable {
         this.mappingTableJoinColumn = mappingTableJoinColumn;
     }
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "ODataManyToManyMappingTable [mappingTableName=" + mappingTableName + ", mappingTableJoinColumn="

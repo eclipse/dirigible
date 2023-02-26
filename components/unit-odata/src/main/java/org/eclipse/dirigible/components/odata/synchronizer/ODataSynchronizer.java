@@ -133,6 +133,13 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
         return List.of(odata);
     }
 
+	/**
+	 * Parses the O data.
+	 *
+	 * @param location the location
+	 * @param content the content
+	 * @return the o data
+	 */
 	public static OData parseOData(String location, byte[] content) {
 		OData odata = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), OData.class);
         Configuration.configureObject(odata);

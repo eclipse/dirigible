@@ -15,6 +15,9 @@ import org.eclipse.dirigible.components.odata.domain.ODataMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Interface ODataMappingRepository.
+ */
 @Repository("odataMappingRepository")
 public interface ODataMappingRepository extends JpaRepository<ODataMapping, Long> {
 
