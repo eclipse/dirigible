@@ -59,6 +59,7 @@ public class TableConstraintCheck extends TableConstraint {
 			String expression) {
 		super(name, modifiers, columns, constraints);
 		this.expression = expression;
+		this.constraints.getChecks().add(this);
 	}
 
 	/**

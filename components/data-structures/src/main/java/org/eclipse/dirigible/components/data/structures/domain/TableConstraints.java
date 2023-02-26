@@ -84,10 +84,22 @@ public class TableConstraints {
 
 	/**
 	 * Instantiates a new table constraints.
+	 *
+	 * @param table the table
+	 */
+	public TableConstraints(Table table) {
+		this();
+		this.table = table;
+	}
+	
+	/**
+	 * Instantiates a new table constraints.
 	 */
 	public TableConstraints() {
 		super();
 	}
+	
+	
 
 	/**
 	 * Gets the id.

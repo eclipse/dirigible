@@ -27,6 +27,7 @@ import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,10 +38,13 @@ import com.zaxxer.hikari.HikariDataSource;
  * The Class DataSourcesManager.
  */
 @Component
-public class DataSourcesManager {
+public class DataSourcesManager implements InitializingBean {
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataSourcesManager.class);
+	
+	/** The instance. */
+	private static DataSourcesManager INSTANCE;
 	
 	/** The Constant DATASOURCES. */
 	private static final Map<String, javax.sql.DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
@@ -57,6 +61,25 @@ public class DataSourcesManager {
 	public DataSourcesManager(DataSourceService datasourceService) {
 		this.datasourceService = datasourceService;
 	}
+	
+	/**
+	 * After properties set.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		INSTANCE = this;		
+	}
+	
+	/**
+	 * Gets the.
+	 *
+	 * @return the dirigible O data service factory
+	 */
+	public static DataSourcesManager get() {
+        return INSTANCE;
+    }
 	
 	/**
 	 * Gets the data source.
@@ -99,7 +122,8 @@ public class DataSourcesManager {
 	 */
 	private javax.sql.DataSource initializeDataSource(String name) {
 		if (logger.isInfoEnabled()) {logger.info("Initializing a datasource with name: " + name);}
-		DataSource datasource = datasourceService.findByName(name);
+		DataSource datasource;
+		datasource = getDataSourceDefinition(name);
 		try {
 			prepareRootFolder(name);
 		} catch (IOException e) {
@@ -123,6 +147,23 @@ public class DataSourcesManager {
 		DATASOURCES.put(name, wrappedDataSource);
 		if (logger.isInfoEnabled()) {logger.info("Initialized a datasource with name: " + name);}
 		return wrappedDataSource;	
+	}
+
+	/**
+	 * Gets the data source definition.
+	 *
+	 * @param name the name
+	 * @return the data source definition
+	 */
+	public DataSource getDataSourceDefinition(String name) {
+		try {
+			return datasourceService.findByName(name);
+		} catch (Exception e) {
+			if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) {
+				return new DataSource(name, name, name, null, "org.h2.Driver", "jdbc:h2:~/DefaultDBFailOver", "sa", "");
+			}
+			throw e;
+		}
 	}
 	
 	/**
@@ -166,6 +207,12 @@ public class DataSourcesManager {
 		return h2Root;
 	}
 	
+	/**
+	 * Adds the data source.
+	 *
+	 * @param name the name
+	 * @param datasource the datasource
+	 */
 	public void addDataSource(String name, javax.sql.DataSource datasource) {
 		DATASOURCES.put(name, datasource);
 	}

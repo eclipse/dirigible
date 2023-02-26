@@ -14,7 +14,11 @@ package org.eclipse.dirigible.engine.odata2.synchronizer;
 import org.eclipse.dirigible.core.publisher.api.handlers.MetadataPublisherHandler;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
-import org.eclipse.dirigible.engine.odata2.definition.*;
+import org.eclipse.dirigible.engine.odata2.definition.ODataContainerDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
 
 /**
  * The Class ODataSynchronizerPublisherHandler.

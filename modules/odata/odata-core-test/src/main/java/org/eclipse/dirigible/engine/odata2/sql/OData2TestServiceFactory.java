@@ -11,6 +11,15 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
+import static org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor.DEFAULT_DATA_SOURCE_CONTEXT_KEY;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import javax.sql.DataSource;
+
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.ODataService;
 import org.apache.olingo.odata2.api.exception.ODataException;
@@ -19,14 +28,6 @@ import org.eclipse.dirigible.engine.odata2.sql.api.SQLInterceptor;
 import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor;
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
-
-import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor.DEFAULT_DATA_SOURCE_CONTEXT_KEY;
 
 /**
  * OData2TestServiceFactory.
@@ -104,7 +105,7 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
             DefaultSQLProcessor processor = new DefaultSQLProcessor(edmTableMappingProvider);
             processor.addInterceptors(interceptorList);
             return super.createODataSingleProcessorService(createAnnotationEdmProvider(), processor);
-        } catch (org.eclipse.dirigible.engine.odata2.api.ODataException e) {
+        } catch (ODataException e) {
             throw new RuntimeException(e);
         }
     }

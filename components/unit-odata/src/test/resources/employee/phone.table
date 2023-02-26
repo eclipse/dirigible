@@ -1,0 +1,31 @@
+{
+	"name": "phone",
+	"type": "TABLE",
+	"columns":
+		[
+			{
+				"name":"ID",
+				"type":"INTEGER",
+				"length":"0",
+				"nullable":"false",
+				"primaryKey":"true",
+				"defaultValue":""
+			},
+            {
+				"name":"FK_COMPANY_ID",
+				"type":"INTEGER",
+				"length":"0",
+				"nullable":"false",
+				"primaryKey":"false",
+				"defaultValue":""
+			},
+			 {
+				"name":"FK_EMPLOYEE_NUMBER",
+				"type":"INTEGER",
+				"length":"0",
+				"nullable":"false",
+				"primaryKey":"false",
+				"defaultValue":""
+			}
+		]
+}

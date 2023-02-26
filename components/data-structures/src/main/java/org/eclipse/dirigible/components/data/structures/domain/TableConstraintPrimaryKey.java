@@ -40,6 +40,7 @@ public class TableConstraintPrimaryKey extends TableConstraint {
 	 */
 	public TableConstraintPrimaryKey(String name, String[] modifiers, String[] columns, TableConstraints constraints) {
 		super(name, modifiers, columns, constraints);
+		this.getConstraints().setPrimaryKey(this);
 	}
 
 	/**

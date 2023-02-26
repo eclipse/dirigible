@@ -64,7 +64,23 @@ public class TableConstraintForeignKey extends TableConstraint {
 		super(name, modifiers, columns, constraints);
 		this.referencedTable = referencedTable;
 		this.referencedColumns = referencedColumns;
+		this.constraints.getForeignKeys().add(this);
 	}
+	
+	/**
+	 * Instantiates a new table constraint foreign key.
+	 *
+	 * @param referencedTable the referenced table
+	 * @param columnName the column name
+	 * @param referencedColumnName the referenced column name
+	 * @param constraints the constraints
+	 */
+	public TableConstraintForeignKey(String referencedTable, String columnName, String referencedColumnName, TableConstraints constraints) {
+		this(constraints.getTable().getTableName() + "_" + referencedTable, null,
+				new String[] {columnName}, referencedTable, new String[] {referencedColumnName}, constraints);
+	}
+	
+	
 
 	/**
 	 * Instantiates a new table constraint foreign key.

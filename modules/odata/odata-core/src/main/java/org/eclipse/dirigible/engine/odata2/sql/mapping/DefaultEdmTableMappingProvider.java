@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
-import org.eclipse.dirigible.engine.odata2.api.ODataException;
+import org.apache.olingo.odata2.api.exception.ODataException;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingFactory;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;

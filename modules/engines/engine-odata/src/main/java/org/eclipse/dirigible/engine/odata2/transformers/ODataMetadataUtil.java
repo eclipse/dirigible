@@ -11,13 +11,18 @@
  */
 package org.eclipse.dirigible.engine.odata2.transformers;
 
-import org.apache.olingo.odata2.api.edm.EdmMultiplicity;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
-import org.eclipse.dirigible.engine.odata2.definition.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.olingo.odata2.api.edm.EdmMultiplicity;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
+import org.eclipse.dirigible.engine.odata2.definition.ODataAssociationDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerMethods;
+import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerTypes;
+import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 
 /**
  * The Class ODataMetadataUtil.

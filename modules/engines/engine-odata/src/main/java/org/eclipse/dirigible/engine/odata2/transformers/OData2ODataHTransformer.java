@@ -11,11 +11,13 @@
  */
 package org.eclipse.dirigible.engine.odata2.transformers;
 
-import org.eclipse.dirigible.engine.odata2.definition.*;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerDefinition;
 
 /**
  * The Class OData2ODataHTransformer.

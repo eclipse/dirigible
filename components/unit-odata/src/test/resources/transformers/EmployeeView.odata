@@ -1,0 +1,10 @@
+{
+	"namespace": "np",
+	"entities": [
+		{
+			"name": "employee",
+			"alias": "Employees",
+			"table": "EMPLOYEES"
+		}
+	]
+}

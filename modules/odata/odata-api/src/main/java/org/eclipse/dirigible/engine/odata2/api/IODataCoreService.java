@@ -14,6 +14,7 @@ package org.eclipse.dirigible.engine.odata2.api;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.olingo.odata2.api.exception.ODataException;
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.engine.odata2.definition.ODataContainerDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;

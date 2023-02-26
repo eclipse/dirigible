@@ -11,10 +11,10 @@
  */
 package org.eclipse.dirigible.engine.odata2.api;
 
+import java.sql.SQLException;
+
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
-
-import java.sql.SQLException;
 
 /**
  * The Interface ITableMetadataProvider.

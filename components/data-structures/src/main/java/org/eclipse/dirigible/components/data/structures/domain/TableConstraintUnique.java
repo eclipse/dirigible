@@ -60,6 +60,7 @@ public class TableConstraintUnique extends TableConstraint {
 		super(name, modifiers, columns, constraints);
 		this.indexType = indexType;
 		this.order = order;
+		this.constraints.getUniqueIndexes().add(this);
 	}
 
 	/**

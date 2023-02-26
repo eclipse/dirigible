@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.olingo.odata2.api.exception.ODataException;
 import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
 import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
@@ -36,7 +37,6 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.Artefa
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
-import org.eclipse.dirigible.engine.odata2.api.ODataException;
 import org.eclipse.dirigible.engine.odata2.artefacts.ODataSynchronizationArtefactType;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerDefinition;

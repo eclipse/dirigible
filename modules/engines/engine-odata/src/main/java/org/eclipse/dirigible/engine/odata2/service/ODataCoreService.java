@@ -11,22 +11,27 @@
  */
 package org.eclipse.dirigible.engine.odata2.service;
 
-import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.commons.config.StaticObjects;
-import org.eclipse.dirigible.database.persistence.PersistenceManager;
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
-import org.eclipse.dirigible.engine.odata2.api.ODataException;
-import org.eclipse.dirigible.engine.odata2.definition.*;
-import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
-
-import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.apache.olingo.odata2.api.exception.ODataException;
+import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.database.persistence.PersistenceManager;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
+import org.eclipse.dirigible.engine.odata2.definition.ODataContainerDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
 
 /**
  * The Class ODataCoreService.

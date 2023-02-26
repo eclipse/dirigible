@@ -91,6 +91,7 @@ public class TableIndex {
 		this.unique = unique;
 		this.columns = columns;
 		this.table = table;
+		this.table.getIndexes().add(this);
 	}
 
 	/**

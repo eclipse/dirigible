@@ -71,7 +71,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
             DefaultSQLProcessor singleProcessor = new DefaultSQLProcessor(tableMappingProvider, getEventHandler());
 
             return createODataSingleProcessorService(edmProvider, singleProcessor);
-        } catch (org.eclipse.dirigible.engine.odata2.api.ODataException e) {
+        } catch (ODataException e) {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             throw new ODataException(e);
         }

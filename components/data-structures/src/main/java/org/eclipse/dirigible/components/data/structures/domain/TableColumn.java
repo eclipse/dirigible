@@ -112,6 +112,32 @@ public class TableColumn {
 		this.scale = scale;
 		this.unique = unique;
 		this.table = table;
+		this.table.getColumns().add(this);
+	}
+	
+	/**
+	 * Instantiates a new table column.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param length the length
+	 * @param table the table
+	 */
+	public TableColumn(String name, String type, String length, Table table) {
+		this(name, type, length, true, false, null, "0", false, table);
+	}
+	
+	/**
+	 * Instantiates a new table column.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param length the length
+	 * @param primaryKey the primary key
+	 * @param table the table
+	 */
+	public TableColumn(String name, String type, String length, boolean nullable, boolean primaryKey, Table table) {
+		this(name, type, length, nullable, primaryKey, null, "0", false, table);
 	}
 	
 	/**

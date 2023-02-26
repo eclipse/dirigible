@@ -24,11 +24,11 @@ import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 public class ODataDefinitionFactory {
 	
 	/**
-	 * Parses the O data.
+	 * Parses the OData.
 	 *
 	 * @param contentPath the content path
 	 * @param data the data
-	 * @return the o data definition
+	 * @return the odata definition
 	 */
 	public static ODataDefinition parseOData(String contentPath, String data) {
 		ODataDefinition odataDefinition = GsonHelper.fromJson(data, ODataDefinition.class);

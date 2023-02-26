@@ -15,11 +15,11 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
+import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.api.uri.info.DeleteUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
-import org.eclipse.dirigible.engine.odata2.api.ODataException;
 
 /**
  * The Interface OData2EventHandler.

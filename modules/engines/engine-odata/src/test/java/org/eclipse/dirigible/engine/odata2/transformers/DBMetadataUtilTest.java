@@ -11,7 +11,15 @@
  */
 package org.eclipse.dirigible.engine.odata2.transformers;
 
-import com.google.common.base.Verify;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.junit.Assert;
@@ -22,14 +30,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The Class DBMetadataUtilTest.
@@ -123,7 +123,7 @@ public class DBMetadataUtilTest {
     /**
      * Test get table metadata column conversion not supported type.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetTableMetadata_columnConversionNotSupportedType(){
         testGetTableMetadata_columnTypeConversion("NotSupportedSQLType", null);
     }

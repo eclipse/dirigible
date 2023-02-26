@@ -1,0 +1,15 @@
+{
+  "namespace": "org.apache.olingo.odata2.ODataCars",
+  "entities":
+  [
+    {
+      "name": "Car",
+      "alias": "Cars",
+      "table": "CAR"
+    }, {
+      "name": "Manufacturer",
+      "alias": "Manufacturers",
+      "table": "MANUFACTURER"
+    }
+  ]
+}

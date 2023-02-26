@@ -11,18 +11,22 @@
  */
 package org.eclipse.dirigible.engine.odata2.transformers;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.api.ITableMetadataProvider;
-import org.eclipse.dirigible.engine.odata2.definition.*;
+import org.eclipse.dirigible.engine.odata2.definition.ODataAssociationDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataParameter;
+import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.SQLException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The Class OData2ODataXTransformer.

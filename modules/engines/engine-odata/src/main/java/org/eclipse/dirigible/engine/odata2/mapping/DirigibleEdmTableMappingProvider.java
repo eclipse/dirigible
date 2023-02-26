@@ -13,8 +13,8 @@ package org.eclipse.dirigible.engine.odata2.mapping;
 
 import java.util.List;
 
+import org.apache.olingo.odata2.api.exception.ODataException;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
-import org.eclipse.dirigible.engine.odata2.api.ODataException;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
 import org.eclipse.dirigible.engine.odata2.service.ODataCoreService;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;

@@ -104,11 +104,12 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
     	}
     	Table tableMetadata = new Table();
     	tableMetadata.setName(tableName);
+    	tableMetadata.setSchemaName(schemaName);
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             try (ResultSet rs = databaseMetadata.getTables(null, schemaName, tableName, null)) {
             	if (rs.next()) {
-		            addFields(databaseMetadata, connection, tableMetadata, schemaName);
+		            addColumns(databaseMetadata, connection, tableMetadata, schemaName);
 		            addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
 		            addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
 		            addIndices(databaseMetadata, connection, tableMetadata, schemaName);
@@ -117,7 +118,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
             		return null;
             	}
             }
-            tableMetadata.setSchemaName(schemaName);
         } catch (SQLException e) {
             throw e;
         }
@@ -134,17 +134,17 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @param schemaPattern the schema pattern
      * @throws SQLException the SQL exception
      */
-    public static void addFields(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaPattern) throws SQLException {
+    public static void addColumns(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaPattern) throws SQLException {
         ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
         if (columns.next()) {
-            iterateFields(tableMetadata, columns);
+            iterateColumns(tableMetadata, columns);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
             columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
             if (!columns.next()) {
                 throw new SQLException("Error in getting the information about the columns.");
             } else {
-                iterateFields(tableMetadata, columns);
+                iterateColumns(tableMetadata, columns);
             }
         }
     }
@@ -156,20 +156,19 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @param columns the columns
      * @throws SQLException the SQL exception
      */
-    private static void iterateFields(Table tableMetadata, ResultSet columns) throws SQLException {
+    private static void iterateColumns(Table tableMetadata, ResultSet columns) throws SQLException {
         do {
-            tableMetadata.getColumns().add(
-                    new TableColumn(
-                            columns.getString(JDBC_COLUMN_NAME_PROPERTY),
-                            columns.getString(JDBC_COLUMN_TYPE_PROPERTY),
-                            columns.getInt(JDBC_COLUMN_SIZE_PROPERTY) + "",
-                            columns.getBoolean(JDBC_COLUMN_NULLABLE_PROPERTY),
-                            false,
-                            null,
-                            columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY) + "",
-                            false,
-                            tableMetadata
-                            ));
+            new TableColumn(
+                    columns.getString(JDBC_COLUMN_NAME_PROPERTY),
+                    columns.getString(JDBC_COLUMN_TYPE_PROPERTY),
+                    columns.getInt(JDBC_COLUMN_SIZE_PROPERTY) + "",
+                    columns.getBoolean(JDBC_COLUMN_NULLABLE_PROPERTY),
+                    false,
+                    null,
+                    columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY) + "",
+                    false,
+                    tableMetadata
+                    );
         } while (columns.next());
     }
     
@@ -259,16 +258,14 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
     private static void iterateForeignKeys(Table tableMetadata, ResultSet foreignKeys)
             throws SQLException {
         do {
-            TableConstraintForeignKey foreignKeyMetadata = 
-            		new TableConstraintForeignKey(
-            				foreignKeys.getString(JDBC_FK_NAME_PROPERTY),
-            				new String[] {},
-            				new String[] {foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY)},
-            				foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
-            				new String[] {foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY)},
-		                    tableMetadata.getConstraints()
-		            );
-            tableMetadata.getConstraints().getForeignKeys().add(foreignKeyMetadata);
+    		new TableConstraintForeignKey(
+    				foreignKeys.getString(JDBC_FK_NAME_PROPERTY),
+    				new String[] {},
+    				new String[] {foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY)},
+    				foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
+    				new String[] {foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY)},
+                    tableMetadata.getConstraints()
+            );
         } while (foreignKeys.next());
     }
 
@@ -312,7 +309,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
 	            				indexes.getShort("TYPE") + "",
 	            				indexes.getString("ASC_OR_DESC")
 	            				);
-	            		tableMetadata.getConstraints().getUniqueIndexes().add((TableConstraintUnique) index);
 	            	} else {
 	            		index = new TableConstraintCheck(
 	            				indexName,
@@ -320,7 +316,6 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
 	            				new String[]{},
 	            				tableMetadata.getConstraints(),
 	            				indexes.getShort(JDBC_FILTER_CONDITION_PROPERTY) + "");
-	            		tableMetadata.getConstraints().getChecks().add((TableConstraintCheck) index);
 	            	}
 	                
 	                lastIndexName = indexName;

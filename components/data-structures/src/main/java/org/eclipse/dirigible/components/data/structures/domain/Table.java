@@ -95,10 +95,19 @@ public class Table extends Artefact {
 	 */
 	public Table(String location, String name, String description, String dependencies, String tableName, String tableType, String schemaName) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
-		this.constraints = new TableConstraints();
+		this.constraints = new TableConstraints(this);
 		this.tableName = tableName;
 		this.tableType = tableType;
 		this.schemaName = schemaName;
+	}
+	
+	/**
+	 * Instantiates a new table.
+	 *
+	 * @param tableName the table name
+	 */
+	public Table(String tableName) {
+		this(tableName, tableName, null, null, tableName, "TABLE", "");
 	}
 	
 	/**
