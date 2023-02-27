@@ -32,17 +32,8 @@ public class RegistryAccessor {
      */
     private static final Logger logger = LoggerFactory.getLogger(RegistryAccessor.class);
     
-//    /** The predelivered. */
-//	private static Map<String, byte[]> PREDELIVERED = Collections.synchronizedMap(new HashMap<String, byte[]>());
-//	
-//	/** The Constant LOCATION_META_INF_DIRIGIBLE. */
-//	private static final String LOCATION_META_INF_DIRIGIBLE = "/META-INF/dirigible";
-//	
-//	/** The Constant LOCATION_META_INF_WEBJARS. */
-//	private static final String LOCATION_META_INF_WEBJARS = "/META-INF/resources/webjars";
-
 	/** The repository. */
-private IRepository repository;
+    private IRepository repository;
 	
 	/**
 	 * Instantiates a new registry accessor.
@@ -52,6 +43,15 @@ private IRepository repository;
 	@Autowired
 	public RegistryAccessor(IRepository repository) {
 		this.repository = repository;
+	}
+	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
+	public IRepository getRepository() {
+		return repository;
 	}
 	
 	

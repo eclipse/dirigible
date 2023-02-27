@@ -37,12 +37,6 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 @RequestScope
 public class WikiService {
 	
-	/** The Constant ENGINE_TYPE. */
-	public static final String ENGINE_TYPE = "wiki";
-	
-	/** The Constant ENGINE_NAME. */
-	public static final String ENGINE_NAME = "Default Wiki Content Engine";
-	
 	/** The Constant FILE_EXTENSION_MD. */
 	public static final String FILE_EXTENSION_MD = ".md";
 	
