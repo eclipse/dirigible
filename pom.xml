@@ -343,7 +343,7 @@
 					<plugin>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs-maven-plugin</artifactId>
-						<version>4.7.3.1</version>
+						<version>4.7.3.2</version>
 						<dependencies>
 							<!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
 							<dependency>
@@ -681,7 +681,7 @@
 		<maven.resource.plugin.version>3.3.0</maven.resource.plugin.version>
 		<maven.clean.plugin.version>3.2.0</maven.clean.plugin.version>
 		<maven.clean.plugin.directory>src/main/resources/META-INF/dirigible</maven.clean.plugin.directory>
-		<maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
+		<maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -709,7 +709,7 @@
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.1.214</h2database.version>
 		<postgresql.version>42.5.4</postgresql.version>
-		<activemq.version>5.17.3</activemq.version>
+		<activemq.version>5.17.4</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.48.v20220622</jetty.version>
 		<lucene.version>9.4.2</lucene.version>
