@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * The Class JavascriptEndpoint.
+ * The Class WebEndpoint.
  */
 @RestController
 @RequestMapping({BaseEndpoint.PREFIX_ENDPOINT_SECURED + "web", BaseEndpoint.PREFIX_ENDPOINT_PUBLIC + "web"})
