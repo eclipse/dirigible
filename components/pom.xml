@@ -50,6 +50,8 @@
 		<module>engine-template-velocity</module>
 		<module>engine-template-mustache</module>
 		<module>engine-template-javascript</module>
+		<module>engine-wiki</module>
+		<module>engine-command</module>
 		
 		<!-- IDE -->
 		<module>ide-workspace</module>
@@ -190,6 +192,16 @@
 		<module>template-job</module>
 		<module>template-listener</module>
 		<module>template-websocket</module>
+		
+		<!-- Groups -->
+		<module>group-api</module>
+		<module>group-core</module>
+		<module>group-database</module>
+		<module>group-engines</module>
+		<module>group-ide</module>
+		<module>group-resources</module>
+		<module>group-templates</module>
+		<module>group-units</module>
 
 		<!-- Applications -->
 		<module>app-all</module>
