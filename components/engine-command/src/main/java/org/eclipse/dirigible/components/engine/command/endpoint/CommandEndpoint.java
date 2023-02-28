@@ -56,8 +56,9 @@ public class CommandEndpoint extends BaseEndpoint {
 	 * Gets the page.
 	 *
 	 * @param path the file path
+	 * @param params the params
 	 * @return the response
-	 * @throws Exception 
+	 * @throws Exception the exception
 	 */
 	@GetMapping("/{*path}")
 	public ResponseEntity<?> get(

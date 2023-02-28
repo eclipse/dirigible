@@ -91,10 +91,10 @@ public class CommandService {
 	/**
 	 * Execute service.
 	 *
-	 * @param modulethe module
-	 * @param executionContext the execution context
+	 * @param module the module
+	 * @param params the params
 	 * @return the result
-	 * @throws Exception 
+	 * @throws Exception the exception
 	 */
 	public String executeCommand(String module, Map<String, String> params) throws Exception {
 		
@@ -143,6 +143,7 @@ public class CommandService {
 	 * @param commandLine the command line
 	 * @param forAdding the for adding
 	 * @param forRemoving the for removing
+	 * @param params the params
 	 * @return the string
 	 * @throws Exception the exception
 	 */
