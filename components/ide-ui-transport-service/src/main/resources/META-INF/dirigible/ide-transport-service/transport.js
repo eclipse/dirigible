@@ -11,7 +11,7 @@
  */
 angular.module('ideTransport', [])
     .provider('transportApi', function TransportApiProvider() {
-        this.transportServiceUrl = '/services/transport';
+        this.transportServiceUrl = '/services/ide/transport';
         this.$get = ['$http', '$window', function transportApiFactory($http, $window) {
 
             let exportProject = function (workspace, projectName) {

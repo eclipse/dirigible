@@ -821,7 +821,7 @@ angular.module('workspace.config', [])
     .constant('WS_SVC_URL', '/services/ide/workspaces')
     .constant('WS_SVC_MANAGER_URL', '/services/ide/workspace')
     .constant('PUBLISH_SVC_URL', '/services/ide/publisher/request')
-    .constant('EXPORT_SVC_URL', '/services/transport/project')
+    .constant('EXPORT_SVC_URL', '/services/ide/transport/project')
     .constant('TEMPLATES_SVC_URL', '/services/js/resources-core/services/templates.js')
     .constant('GENERATION_SVC_URL', '/services/ide/generate');
 
@@ -1442,8 +1442,8 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         $scope.projectName = '';
         $scope.pathToImportIn = '';
 
-        $scope.TRANSPORT_PROJECT_URL = "/services/transport/project";
-        $scope.TRANSPORT_ZIPTOFOLDER_URL = "/services/transport/zipimport";
+        $scope.TRANSPORT_PROJECT_URL = "/services/ide/transport/project";
+        $scope.TRANSPORT_ZIPTOFOLDER_URL = "/services/ide/transport/zipimport";
 
         // FILE UPLOADER
         $scope.uploader = uploader = new FileUploader({
