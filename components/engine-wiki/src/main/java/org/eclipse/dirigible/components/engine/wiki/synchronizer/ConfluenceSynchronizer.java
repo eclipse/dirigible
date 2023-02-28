@@ -65,6 +65,7 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 	 * Instantiates a new confluence synchronizer.
 	 *
 	 * @param confluenceService the confluence service
+	 * @param wikiService the wiki service
 	 */
 	@Autowired
 	public ConfluenceSynchronizer(ConfluenceService confluenceService, WikiService wikiService) {
@@ -82,6 +83,11 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 		return confluenceService;
 	}
 	
+	/**
+	 * Gets the wiki service.
+	 *
+	 * @return the wiki service
+	 */
 	public WikiService getWikiService() {
 		return wikiService;
 	}
@@ -191,7 +197,7 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 	/**
 	 * Cleanup.
 	 *
-	 * @param confluence the confluence
+	 * @param wiki the wiki
 	 */
 	@Override
 	public void cleanup(Confluence wiki) {

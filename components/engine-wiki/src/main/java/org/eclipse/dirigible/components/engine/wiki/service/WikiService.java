@@ -157,11 +157,23 @@ public class WikiService {
 		return htmlContent;
 	}
 	
+	/**
+	 * Store generated.
+	 *
+	 * @param path the path
+	 * @param html the html
+	 */
 	private void storeGenerated(String path, String html) {
 		String target = generatePath(path);
 		registryAccessor.getRepository().createResource(target, html.getBytes());
 	}
 
+	/**
+	 * Generate path.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	private String generatePath(String path) {
 		String target = path;
 		if (target.endsWith(FILE_EXTENSION_MD)) {
@@ -177,6 +189,11 @@ public class WikiService {
 		return IRepositoryStructure.PATH_REGISTRY_PUBLIC + target;
 	}
 	
+	/**
+	 * Removes the generated.
+	 *
+	 * @param path the path
+	 */
 	public void removeGenerated(String path) {
 		String target = generatePath(path);
 		IResource resource = registryAccessor.getRepository().getResource(target);

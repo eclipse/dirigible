@@ -65,6 +65,7 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 	 * Instantiates a new markdown synchronizer.
 	 *
 	 * @param markdownService the markdown service
+	 * @param wikiService the wiki service
 	 */
 	@Autowired
 	public MarkdownSynchronizer(MarkdownService markdownService, WikiService wikiService) {
@@ -82,6 +83,11 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 		return markdownService;
 	}
 	
+	/**
+	 * Gets the wiki service.
+	 *
+	 * @return the wiki service
+	 */
 	public WikiService getWikiService() {
 		return wikiService;
 	}
@@ -191,7 +197,7 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 	/**
 	 * Cleanup.
 	 *
-	 * @param markdown the markdown
+	 * @param wiki the wiki
 	 */
 	@Override
 	public void cleanup(Markdown wiki) {
