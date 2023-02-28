@@ -108,7 +108,6 @@ public class WikiService {
 	 *
 	 * @param path the path
 	 * @param content the content
-	 * @return the string
 	 */
 	public void generateContent(String path, String content) {
 		String html = renderContent(path, content);
