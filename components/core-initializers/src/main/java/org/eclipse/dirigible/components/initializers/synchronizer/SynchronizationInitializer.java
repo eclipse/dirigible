@@ -48,13 +48,7 @@ public class SynchronizationInitializer {
 	 */
 	@EventListener(ApplicationReadyEvent.class)
 	public void handleContextStart(final ApplicationReadyEvent are) {
-		HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Running);
-		try {
-			synchronizationProcessor.processSynchronizers();
-		} catch (Exception e) {
-			HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Failed);
-		}
-		HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Succeeded);
+		synchronizationProcessor.processSynchronizers();
 	}
 
 }

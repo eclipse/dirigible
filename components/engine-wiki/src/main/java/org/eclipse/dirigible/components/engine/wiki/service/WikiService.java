@@ -12,9 +12,11 @@
 package org.eclipse.dirigible.components.engine.wiki.service;
 
 import java.io.StringWriter;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.eclipse.dirigible.components.registry.accessor.RegistryAccessor;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
@@ -34,7 +36,6 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
  * The Class WebService.
  */
 @Service
-@RequestScope
 public class WikiService {
 	
 	/** The Constant FILE_EXTENSION_MD. */
@@ -45,6 +46,9 @@ public class WikiService {
 	
 	/** The Constant FILE_EXTENSION_CONFLUENCE. */
 	public static final String FILE_EXTENSION_CONFLUENCE = ".confluence";
+	
+	/** The Constant FILE_EXTENSION_HTML. */
+	public static final String FILE_EXTENSION_HTML = ".html";
 	
 	/** The registry accessor. */
 	@Autowired
@@ -100,6 +104,18 @@ public class WikiService {
 	}
 	
 	/**
+	 * Render and store content.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 * @return the string
+	 */
+	public void generateContent(String path, String content) {
+		String html = renderContent(path, content);
+		storeGenerated(path, html);
+	}
+	
+	/**
 	 * Render markdown.
 	 *
 	 * @param content the content
@@ -139,6 +155,34 @@ public class WikiService {
 		markupParser.parse(content);
 		String htmlContent = writer.toString();
 		return htmlContent;
+	}
+	
+	private void storeGenerated(String path, String html) {
+		String target = generatePath(path);
+		registryAccessor.getRepository().createResource(target, html.getBytes());
+	}
+
+	private String generatePath(String path) {
+		String target = path;
+		if (target.endsWith(FILE_EXTENSION_MD)) {
+			target = target.substring(0, target.length() - FILE_EXTENSION_MD.length());
+			target += FILE_EXTENSION_HTML;
+		} else if (target.endsWith(FILE_EXTENSION_MARKDOWN)) {
+			target = target.substring(0, target.length() - FILE_EXTENSION_MARKDOWN.length());
+			target += FILE_EXTENSION_HTML;
+		} else if (target.endsWith(FILE_EXTENSION_CONFLUENCE)) {
+			target = target.substring(0, target.length() - FILE_EXTENSION_CONFLUENCE.length());
+			target += FILE_EXTENSION_HTML;
+		}
+		return IRepositoryStructure.PATH_REGISTRY_PUBLIC + target;
+	}
+	
+	public void removeGenerated(String path) {
+		String target = generatePath(path);
+		IResource resource = registryAccessor.getRepository().getResource(target);
+		if (resource.exists()) {
+			resource.delete();
+		}
 	}
 
 }

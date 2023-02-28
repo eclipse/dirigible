@@ -35,13 +35,7 @@ public class ClasspathContentInitializer {
 	 */
 	@EventListener(ApplicationReadyEvent.class)
 	public void handleContextStart(final ApplicationReadyEvent are) {
-        HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Running);
-		try {
-			classpathExpander.expandContent();
-		} catch (Exception e) {
-			HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Failed);
-		}
-		HealthCheckStatus.getInstance().getJobs().setStatus(this.getClass().getSimpleName(), JobStatus.Succeeded);
+		classpathExpander.expandContent();
 	}
 	
 }
