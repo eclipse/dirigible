@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.problems.service;
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.dirigible.components.ide.problems.domain.Problem;
+import org.eclipse.dirigible.components.ide.problems.domain.Problems;
 import org.eclipse.dirigible.components.ide.problems.repository.ProblemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -171,8 +172,9 @@ public class ProblemService {
 	 * @param limit the limit
 	 * @return the list
 	 */
-	public List<Problem> fetchProblemsBatch(String condition, int limit) {
-		return problemRepository.findProblemsByConditionAndLimit(condition, limit);
+	public Problems fetchProblemsBatch(String condition, int limit) {
+		List<Problem> result = problemRepository.findProblemsByConditionAndLimit(condition, limit);
+		return new Problems(result, result.size(), (int) problemRepository.count());
 	}
 
 }
