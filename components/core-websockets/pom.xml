@@ -8,7 +8,7 @@
     <parent>
         <artifactId>dirigible-components-parent</artifactId>
         <groupId>org.eclipse.dirigible</groupId>
-        <version>7.1.6</version>
+        <version>8.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -22,21 +22,21 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-base</artifactId>
-            <version>7.1.6</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         
         <!-- API -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-net</artifactId>
-            <version>7.1.6</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         
         <!-- Units -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-unit-websockets</artifactId>
-            <version>7.1.6</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         
         <!-- Libs -->

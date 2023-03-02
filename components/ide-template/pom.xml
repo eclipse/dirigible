@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-components-parent</artifactId>
-        <version>7.1.6</version>
+        <version>8.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -19,12 +19,12 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-base</artifactId>
-            <version>7.1.6</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-repository</artifactId>
-            <version>7.1.6</version>
+            <version>8.0.0-SNAPSHOT</version>
             <exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -35,43 +35,43 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-ide-workspace</artifactId>
-            <version>7.1.6</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         
         <!-- Engine -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-javascript</artifactId>
-			<version>7.1.6</version>
+			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-template</artifactId>
-			<version>7.1.6</version>
+			<version>8.0.0-SNAPSHOT</version>
 		</dependency>
         
         <!-- API -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-security</artifactId>
-            <version>7.1.6</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-utils</artifactId>
-            <version>7.1.6</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-extensions</artifactId>
-            <version>7.1.6</version>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         
         <!-- Test -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-unit-security</artifactId>
-            <version>7.1.6</version>
+            <version>8.0.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         
