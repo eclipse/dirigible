@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-components-parent</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>7.1.6</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-core</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 			<type>pom</type>
 		</dependency>
 		
@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-units</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 			<type>pom</type>
 		</dependency>
 		
@@ -37,14 +37,14 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-security-basic</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 		</dependency>
 		
 		<!-- Data -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-database</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 			<type>pom</type>
 		</dependency>
 		
@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-engines</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 			<type>pom</type>
 		</dependency>
 		
@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-ide</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 			<type>pom</type>
 		</dependency>
 		
@@ -68,21 +68,21 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-bpm-flowable</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 		</dependency>
 		
 		<!-- CMS -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-cms-internal</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 		</dependency>
 		
 		<!-- API -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-api</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 			<type>pom</type>
 		</dependency>
 		
@@ -90,7 +90,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-resources</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 			<type>pom</type>
 		</dependency>
 		
@@ -98,7 +98,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-group-templates</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 			<type>pom</type>
 		</dependency>
 		
@@ -106,7 +106,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-test-project</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<version>7.1.6</version>
 		</dependency>
 
 	</dependencies>

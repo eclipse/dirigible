@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-groups-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>7.1.6</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -23,82 +23,82 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-core</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-database</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-documents</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-http</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-indexing</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-io</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-log</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-mail</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-messaging</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-security</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-test</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-utils</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-net</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-platform</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-git</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-job</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>7.1.6</version>
         </dependency>
     </dependencies>
 </project>
