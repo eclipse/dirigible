@@ -35,7 +35,7 @@
 		
 		<!-- Security -->
 		<module>security-basic</module>
-		<module>security-oauth2</module>
+		<module>security-keycloak</module>
 
 		<!-- Data -->
 		<module>data-structures</module>

@@ -12,8 +12,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Components - Security - OAuth2</name>
-    <artifactId>dirigible-components-security-oauth2</artifactId>
+    <name>Components - Security - Keycloak</name>
+    <artifactId>dirigible-components-security-keycloak</artifactId>
     <packaging>jar</packaging>
 
     <dependencyManagement>
