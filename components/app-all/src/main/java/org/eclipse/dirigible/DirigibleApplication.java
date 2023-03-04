@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible;
 
+import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -35,4 +36,8 @@ public class DirigibleApplication {
         return builder.build();
     }
 
+    @Bean
+    public KeycloakSpringBootConfigResolver keycloakSpringBootConfigResolver(){
+        return new KeycloakSpringBootConfigResolver();
+    }
 }
