@@ -33,34 +33,35 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         http.authorizeRequests()
             .antMatchers("/").permitAll()
             .antMatchers("/home").permitAll()
+            .antMatchers("/logout").permitAll()
             .antMatchers("/index-busy.html").permitAll()
 
-            .antMatchers("/error/*").permitAll()
+            .antMatchers("/error/**").permitAll()
             .antMatchers("/error.html").permitAll()
 
             // Public
-            .antMatchers("/public/*").permitAll()
-            .antMatchers("/webjars/*").permitAll()
-            .antMatchers("/services/core/theme/*").permitAll()
-            .antMatchers("/services/web/resources/*").permitAll()
-            .antMatchers("/services/web/resources-core/*").permitAll()
-            .antMatchers("/services/js/resources-core/*").permitAll()
+            .antMatchers("/public/**").permitAll()
+            .antMatchers("/webjars/**").permitAll()
+            .antMatchers("/services/core/theme/**").permitAll()
+            .antMatchers("/services/web/resources/**").permitAll()
+            .antMatchers("/services/web/resources-core/**").permitAll()
+            .antMatchers("/services/js/resources-core/**").permitAll()
 
             // Authenticated
-            .antMatchers("/services/web/*").authenticated()
-            .antMatchers("/services/js/*").authenticated()
-            .antMatchers("/services/wiki/*").authenticated()
-            .antMatchers("/services/command/*").authenticated()
-            .antMatchers("/odata/*").authenticated()
+            .antMatchers("/services/web/**").authenticated()
+            .antMatchers("/services/js/**").authenticated()
+            .antMatchers("/services/wiki/**").authenticated()
+            .antMatchers("/services/command/**").authenticated()
+            .antMatchers("/odata/**").authenticated()
 
             // "Developer" role required
-            .antMatchers("/services/ide/*").hasRole("Developer")
-            .antMatchers("/websockets/ide/*").hasRole("Developer")
+            .antMatchers("/services/ide/**").hasRole("Developer")
+            .antMatchers("/websockets/ide/**").hasRole("Developer")
 
             // "Operator" role required
-            .antMatchers("/services/ops/*").hasRole("Operator")
-            .antMatchers("/services/transport/*").hasRole("Operator")
-            .antMatchers("/websockets/ops/*").hasRole("Operator")
+            .antMatchers("/services/ops/**").hasRole("Operator")
+            .antMatchers("/services/transport/**").hasRole("Operator")
+            .antMatchers("/websockets/ops/**").hasRole("Operator")
 
             // Deny all other requests
             .anyRequest().denyAll();
