@@ -16,6 +16,11 @@ resultView.config(["messageHubProvider", function (messageHubProvider) {
 }]);
 
 resultView.controller('DatabaseResultController', ['$scope', '$http', function ($scope, $http) {
+    $scope.state = {
+        isBusy: false,
+        error: false,
+        busyText: "Loading...",
+    };
 
     let messageHub = new FramesMessageHub();
 
@@ -24,7 +29,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
     $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).then(function (response) {
         csrfToken = response.headers()["x-csrf-token"];
     }, function (response) {
-        console.error("Error getting token.");
+        console.error("Error getting token.", response);
     });
 
     // $scope.database = "metadata";
@@ -39,6 +44,8 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
     }, "database.datasource.selection.changed");
 
     messageHub.subscribe(function (command) {
+        $scope.state.error = false;
+        $scope.state.isBusy = true;
         let url = "/services/data/" + $scope.datasource;
         let sql = command.data.trim().toLowerCase();
         if (sql.startsWith('select')) {
@@ -63,10 +70,12 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
                         break;
                     }
                 } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
-                    $scope.result = result.data.errorMessage;
+                    $scope.state.error = true;
+                    $scope.errorMessage = result.data.errorMessage;
                 } else {
                     $scope.result = 'Empty result';
                 }
+                $scope.state.isBusy = false;
             });
         } else if (sql.startsWith('call')) {
             $http({
@@ -110,10 +119,12 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
                         }
                     }
                 } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
-                    $scope.result = result.data.errorMessage;
+                    $scope.state.error = true;
+                    $scope.errorMessage = result.data.errorMessage;
                 } else {
                     $scope.result = 'Empty result';
                 }
+                $scope.state.isBusy = false;
             });
         } else {
             $http({
@@ -135,6 +146,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
                     $scope.result = 'Empty result';
                 }
                 $scope.result = result.data;
+                $scope.state.isBusy = false;
             });
         }
     }, "database.sql.execute");

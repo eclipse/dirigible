@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ Copyright (c) 2010-2023 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -15,51 +15,66 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-
-        <!-- Title directive -->
         <title dg-view-title></title>
 
-        <!-- Font Awesome -->
-        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-
-        <!-- jQuery -->
+        <!-- Old stuff -->
         <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-
-        <!-- Twitter Bootstrap with Theme Support -->
         <link rel="stylesheet" href="/services/js/theme/resources.js/bootstrap.min.css">
         <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-
         <!-- View data -->
         <script type="text/javascript" src="services/result-view.js"></script>
-
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
-
         <script type="text/javascript" src="result.js"></script>
-
         <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
-
     </head>
 
-    <body>
-        <div>
-            <div>
-                <fd-scrollbar>
-                    <p class="fd-text" ng-hide="columns">
-                        {{result}}
-                    </p>
+    <body fd-scrollbar>
+        <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
+            {{state.busyText}}
+        </fd-busy-indicator-extended>
 
-                    <table fd-table display-mode="compact" ng-hide="hasMultipleProcedureResults" ng-show="columns">
-                        <thead fd-table-header sticky="true">
-                            <tr fd-table-row>
-                                <th fd-table-header-cell ng-repeat="column in columns">{{column}}</th>
-                            </tr>
+        <fd-message-page glyph="sap-icon--information" ng-hide="columns || state.error">
+            <fd-message-page-title>{{result || "No results"}}</fd-message-page-title>
+        </fd-message-page>
+
+        <table fd-table display-mode="compact" ng-hide="hasMultipleProcedureResults || state.error" ng-show="columns">
+            <thead fd-table-header sticky="true">
+                <tr fd-table-row>
+                    <th fd-table-header-cell ng-repeat="column in columns">{{column}}</th>
+                </tr>
+            </thead>
+            <tbody fd-table-body>
+                <tr fd-table-row ng-repeat="row in rows">
+                    <td fd-table-cell ng-repeat="cell in row">
+                        <div class="tdSingleLine">
+                            {{cell}}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div ng-show="hasMultipleProcedureResults">
+            <ul class="nav nav-tabs">
+                <li ng-class="{active: $index === 0}" ng-repeat="next in procedureResults">
+                    <a data-toggle="pill" href="#{{$index + 1}}">Result {{$index + 1}}</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div ng-repeat="next in procedureResults" id="{{$index + 1}}" class="tab-pane fade in"
+                    ng-class="{active: $index === 0}">
+                    <table class="table table-striped"">
+                        <thead fd-table-header sticky=" true">
+                        <tr fd-table-row>
+                            <th ng-repeat="column in procedureResults[$index].columns">{{column}}</th>
+                        </tr>
                         </thead>
                         <tbody fd-table-body>
-                            <tr fd-table-row ng-repeat="row in rows">
+                            <tr fd-table-row ng-repeat="row in procedureResults[$index].rows">
                                 <td fd-table-cell ng-repeat="cell in row">
                                     <div class="tdSingleLine">
                                         {{cell}}
@@ -68,38 +83,14 @@
                             </tr>
                         </tbody>
                     </table>
-
-                    <div ng-show="hasMultipleProcedureResults">
-                        <ul class="nav nav-tabs">
-                            <li ng-class="{active: $index === 0}" ng-repeat="next in procedureResults"><a
-                                    data-toggle="pill" href="#{{$index + 1}}">Result {{$index + 1}}</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                            <div ng-repeat="next in procedureResults" id="{{$index + 1}}" class="tab-pane fade in"
-                                ng-class="{active: $index === 0}">
-                                <table class="table table-striped"">
-						<thead fd-table-header sticky=" true">
-                                    <tr fd-table-row>
-                                        <th ng-repeat=" column in procedureResults[$index].columns">{{column}}</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody fd-table-body>
-                                        <tr fd-table-row ng-repeat="row in procedureResults[$index].rows">
-                                            <td fd-table-cell ng-repeat="cell in row">
-                                                <div class="tdSingleLine">
-                                                    {{cell}}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                </fd-scrollbar>
+                </div>
             </div>
         </div>
 
+        <fd-message-page glyph="sap-icon--error" ng-if="state.error">
+            <fd-message-page-title>Something went wrong</fd-message-page-title>
+            <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
+        </fd-message-page>
     </body>
+
+</html>
