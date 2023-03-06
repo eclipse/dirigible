@@ -117,9 +117,10 @@ public class JobEndpoint extends BaseEndpoint {
      *
      * @param name the name
      * @return the response entity
+     * @throws Exception the exception
      */
     @PostMapping("enable/{name}")
-    public ResponseEntity<Job> enableJob(@PathVariable("name") String name)
+    public ResponseEntity<Job> enableJob(@PathVariable("name") String name) throws Exception
     {
         return ResponseEntity.ok(jobService.enable(IRepository.SEPARATOR + name));
     }
@@ -129,9 +130,10 @@ public class JobEndpoint extends BaseEndpoint {
      *
      * @param name the name
      * @return the response entity
+     * @throws Exception the exception
      */
     @PostMapping("disable/{name}")
-    public ResponseEntity<Job> disableJob(@PathVariable("name") String name)
+    public ResponseEntity<Job> disableJob(@PathVariable("name") String name) throws Exception
     {
         return ResponseEntity.ok(jobService.disable(IRepository.SEPARATOR + name));
     }

@@ -13,7 +13,7 @@ package org.eclipse.dirigible.components.initializers.messaging;
 
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.components.listeners.service.SchedulerManager;
+import org.eclipse.dirigible.components.listeners.service.ListenersManager;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,8 +34,8 @@ public class MessagingConfig {
 
 	@Bean
 	@Scope("singleton")
-    public SchedulerManager createSchedulerManager() throws Exception {
-		SchedulerManager schedulerManager = new SchedulerManager(dataSource, repository);
+    public ListenersManager createSchedulerManager() throws Exception {
+		ListenersManager schedulerManager = new ListenersManager(dataSource, repository);
 		schedulerManager.initialize();
 		return schedulerManager;
     }

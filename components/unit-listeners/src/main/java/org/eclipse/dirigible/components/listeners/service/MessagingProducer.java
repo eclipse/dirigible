@@ -58,7 +58,7 @@ public class MessagingProducer implements Runnable {
 	@Override
 	public void run() {
 		try {
-			ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(SchedulerManager.CONNECTOR_URL_ATTACH);
+			ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ListenersManager.CONNECTOR_URL_ATTACH);
 
 			Connection connection = connectionFactory.createConnection();
 			connection.start();

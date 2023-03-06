@@ -56,7 +56,7 @@ public class JobLog extends Artefact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "JOBLOG_ID", nullable = false)
-    private long id;
+    private Long id;
     
     /** The job name. */
     @Column(name = "JOBLOG_JOB_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -76,7 +76,7 @@ public class JobLog extends Artefact {
     /** The triggered id. */
     @Column(name = "JOBLOG_TRIGGERED_ID", columnDefinition = "BIGINT", nullable = true)
     @Expose
-    private long triggeredId;
+    private Long triggeredId;
 
     /** The finished at. */
     @Column(name = "JOBLOG_FINISHED_AT", columnDefinition = "TIMESTAMP", nullable = true)
@@ -86,7 +86,7 @@ public class JobLog extends Artefact {
     /**  The status. */
     @Column(name = "JOBLOG_STATUS", columnDefinition = "SMALLINT", nullable = false)
     @Expose
-    private short status;
+    private Short status;
 
     /** The message. */
     @Column(name = "JOBLOG_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
@@ -98,6 +98,7 @@ public class JobLog extends Artefact {
      */
     public JobLog() {
         super();
+        this.type = ARTEFACT_TYPE;
     }
 
     /**
@@ -116,7 +117,7 @@ public class JobLog extends Artefact {
      * @param message the message
      */
     public JobLog(String location, String name, String description, String dependencies, String jobName, String handler, 
-    		Timestamp triggeredAt, long triggeredId, Timestamp finishedAt, short status, String message) {
+    		Timestamp triggeredAt, Long triggeredId, Timestamp finishedAt, Short status, String message) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.jobName = jobName;
         this.handler = handler;
@@ -132,7 +133,7 @@ public class JobLog extends Artefact {
      *
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -141,7 +142,7 @@ public class JobLog extends Artefact {
      *
      * @param id the new id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     
@@ -204,7 +205,7 @@ public class JobLog extends Artefact {
      *
      * @return the triggered id
      */
-    public long getTriggeredId() {
+    public Long getTriggeredId() {
         return triggeredId;
     }
 
@@ -213,7 +214,7 @@ public class JobLog extends Artefact {
      *
      * @param triggeredId the new triggered id
      */
-    public void setTriggeredId(long triggeredId) {
+    public void setTriggeredId(Long triggeredId) {
         this.triggeredId = triggeredId;
     }
 
@@ -240,7 +241,7 @@ public class JobLog extends Artefact {
      *
      * @return the status
      */
-    public short getStatus() {
+    public Short getStatus() {
         return status;
     }
 
@@ -249,7 +250,7 @@ public class JobLog extends Artefact {
      *
      * @param status the new status
      */
-    public void setStatus(short status) {
+    public void setStatus(Short status) {
         this.status = status;
     }
 

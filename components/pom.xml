@@ -144,6 +144,7 @@
 		<module>api-qunit</module>
 		<module>api-utils</module>
 		<module>api-io</module>
+		<module>api-job</module>
 		<module>api-bpm</module>
 		<module>api-cms</module>
 		<module>api-http</module>

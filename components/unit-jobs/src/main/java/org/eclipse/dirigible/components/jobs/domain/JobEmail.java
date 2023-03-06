@@ -48,6 +48,7 @@ public class JobEmail extends Artefact {
      */
     public JobEmail() {
         super();
+        this.type = ARTEFACT_TYPE;
     }
 
     /**

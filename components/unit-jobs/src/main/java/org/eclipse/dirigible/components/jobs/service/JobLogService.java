@@ -25,8 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.ibm.icu.text.SimpleDateFormat;
 
 /**
  * The Class JobLogService.
@@ -116,7 +119,11 @@ public class JobLogService implements ArtefactService<JobLog> {
     @Transactional(readOnly = true)
     public List<JobLog> findByJob(String name) {
         JobLog filter = new JobLog();
-        filter.setName(name);
+        if (name != null && name.startsWith("/")) {
+        	name = name.substring(1);
+        }
+        filter.setJobName(name);
+        filter.setStatus(null);
         Example<JobLog> example = Example.of(filter);
         List<JobLog> jobLog = jobLogRepository.findAll(example);
         return jobLog;
@@ -161,6 +168,8 @@ public class JobLogService implements ArtefactService<JobLog> {
     public void delete(JobLog jobLog) {
         jobLogRepository.delete(jobLog);
     }
+    
+    private String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     /**
      * Job triggered.
@@ -172,9 +181,12 @@ public class JobLogService implements ArtefactService<JobLog> {
     public JobLog jobTriggered(String name, String handler) {
         JobLog jobLog = new JobLog();
         jobLog.setName(name);
+        jobLog.setJobName(name);
         jobLog.setHandler(handler);
         jobLog.setStatus(JobLog.JOB_LOG_STATUS_TRIGGRED);
         jobLog.setTriggeredAt(new Timestamp(new Date().getTime()));
+        jobLog.setLocation(new SimpleDateFormat(DATE_FORMAT).format(new Date()));
+        jobLog.updateKey();
         save(jobLog);
         return jobLog;
     }
@@ -191,10 +203,13 @@ public class JobLogService implements ArtefactService<JobLog> {
     private JobLog jobLogged(String name, String handler, String message, short severity){
         JobLog jobLog = new JobLog();
         jobLog.setName(name);
+        jobLog.setJobName(name);
         jobLog.setHandler(handler);
         jobLog.setMessage(message);
         jobLog.setStatus(severity);
         jobLog.setTriggeredAt(new Timestamp(new Date().getTime()));
+        jobLog.setLocation(new SimpleDateFormat(DATE_FORMAT).format(new Date()));
+        jobLog.updateKey();
         save(jobLog);
         return jobLog;
     }
@@ -259,11 +274,14 @@ public class JobLogService implements ArtefactService<JobLog> {
     public JobLog jobFinished(String name, String handler, long triggeredId, Date triggeredAt) {
         JobLog jobLog = new JobLog();
         jobLog.setName(name);
+        jobLog.setJobName(name);
         jobLog.setHandler(handler);
         jobLog.setStatus(JobLog.JOB_LOG_STATUS_FINISHED);
         jobLog.setTriggeredId(triggeredId);
         jobLog.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
         jobLog.setFinishedAt(new Timestamp(new Date().getTime()));
+        jobLog.setLocation(new SimpleDateFormat(DATE_FORMAT).format(new Date()));
+        jobLog.updateKey();
         save(jobLog);
         Job job = jobService.findByName(name);
 		boolean statusChanged = job.getStatus() != JobLog.JOB_LOG_STATUS_FINISHED;
@@ -290,12 +308,15 @@ public class JobLogService implements ArtefactService<JobLog> {
     public JobLog jobFailed(String name, String handler, long triggeredId, Date triggeredAt, String message) {
         JobLog jobLog = new JobLog();
         jobLog.setName(name);
+        jobLog.setJobName(name);
         jobLog.setHandler(handler);
         jobLog.setStatus(JobLog.JOB_LOG_STATUS_FAILED);
         jobLog.setTriggeredId(triggeredId);
         jobLog.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
         jobLog.setFinishedAt(new Timestamp(new Date().getTime()));
         jobLog.setMessage(message);
+        jobLog.setLocation(new SimpleDateFormat(DATE_FORMAT).format(new Date()));
+        jobLog.updateKey();
         save(jobLog);
         Job job = jobService.findByName(name);
 		boolean statusChanged = job.getStatus() != JobLog.JOB_LOG_STATUS_FAILED;
@@ -316,6 +337,9 @@ public class JobLogService implements ArtefactService<JobLog> {
 	 */
 	public void deleteAllByJobName(String jobName) {
 		JobLog filter = new JobLog();
+		if (jobName != null && jobName.startsWith("/")) {
+			jobName = jobName.substring(1);
+        }
         filter.setJobName(jobName);
         Example<JobLog> example = Example.of(filter);
         List<JobLog> jobLogs = jobLogRepository.findAll(example);

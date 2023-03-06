@@ -121,6 +121,9 @@ public class JobEmailService implements ArtefactService<JobEmail> {
     @Transactional(readOnly = true)
     public List<JobEmail> findAllByJobName(String jobName) {
         JobEmail filter = new JobEmail();
+        if (jobName != null && jobName.startsWith("/")) {
+        	jobName = jobName.substring(1);
+        }
         filter.setJobName(jobName);
         Example<JobEmail> example = Example.of(filter);
         List<JobEmail> jobEmail = jobEmailRepository.findAll(example);
@@ -187,6 +190,9 @@ public class JobEmailService implements ArtefactService<JobEmail> {
 	 * @param email the email
 	 */
 	public void addEmail(String job, String email) {
+		if (job != null && job.startsWith("/")) {
+			job = job.substring(1);
+        }
 		JobEmail jobEmail = new JobEmail(job, email, null, null, job, email);
 		jobEmail.updateKey();
 		save(jobEmail);

@@ -72,6 +72,7 @@ public class JobParameter {
      */
     public JobParameter() {
         super();
+        this.type = ARTEFACT_TYPE;
     }
 
     /**

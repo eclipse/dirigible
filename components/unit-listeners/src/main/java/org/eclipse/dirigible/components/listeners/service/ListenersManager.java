@@ -42,9 +42,9 @@ import org.springframework.stereotype.Component;
  * The Class MessagingManager.
  */
 @Component
-public class SchedulerManager {
+public class ListenersManager {
 
-	private static final Logger logger = LoggerFactory.getLogger(SchedulerManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(ListenersManager.class);
 
 	/** The Constant CONNECTOR_URL_ATTACH. */
 	static final String CONNECTOR_URL_ATTACH = "vm://localhost?create=false";
@@ -65,7 +65,7 @@ public class SchedulerManager {
 	/** The repository. */
 	private final IRepository repository;
 	
-	public SchedulerManager(DataSource dataSource, IRepository repository) {
+	public ListenersManager(DataSource dataSource, IRepository repository) {
 		this.dataSource = dataSource;
 		this.repository = repository;
 	}
@@ -86,7 +86,7 @@ public class SchedulerManager {
 	 *             the exception
 	 */
 	public void initialize() throws Exception {
-		synchronized (SchedulerManager.class) {
+		synchronized (ListenersManager.class) {
 			if (broker == null) {
 				broker = new BrokerService();
 				if (Boolean.parseBoolean(Configuration.get("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", "true"))) {

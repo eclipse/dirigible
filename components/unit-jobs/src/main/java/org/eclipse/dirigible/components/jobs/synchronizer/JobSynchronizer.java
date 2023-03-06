@@ -28,6 +28,7 @@ import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.jobs.domain.Job;
+import org.eclipse.dirigible.components.jobs.manager.JobsManager;
 import org.eclipse.dirigible.components.jobs.service.JobEmailService;
 import org.eclipse.dirigible.components.jobs.service.JobLogService;
 import org.eclipse.dirigible.components.jobs.service.JobService;
@@ -72,6 +73,10 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      */
     @Autowired
     private JobLogService jobLogService;
+    
+    /** The Scheduler manager. */
+    @Autowired
+    private JobsManager schedulerManager;
 
     /**
      * The synchronization callback.
@@ -187,10 +192,23 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
             ArtefactLifecycle flag = ArtefactLifecycle.valueOf(flow);
             switch (flag){
                 case CREATED:
-                	// TODO start the job
+					try {
+						schedulerManager.scheduleJob(job);
+					} catch (Exception e) {
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			            callback.addError(e.getMessage());
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE);
+					}
                     break;
                 case UPDATED:
-                	// TODO re-start the job
+                	try {
+                		schedulerManager.unscheduleJob(job.getName(), job.getGroup());
+						schedulerManager.scheduleJob(job);
+					} catch (Exception e) {
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			            callback.addError(e.getMessage());
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_UPDATE);
+					}
                     break;
             }
         }
@@ -210,7 +228,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
     @Override
     public void cleanup(Job job) {
         try {
-        	// TODO stop the job
+        	schedulerManager.unscheduleJob(job.getName(), job.getGroup());
         	jobLogService.deleteAllByJobName(job.getName());
             jobEmailService.deleteAllByJobName(job.getName());
             getService().delete(job);

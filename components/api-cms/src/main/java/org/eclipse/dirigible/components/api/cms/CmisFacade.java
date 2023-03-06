@@ -184,6 +184,11 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 		if (!Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_ROLES_ENABLED, Boolean.TRUE.toString()))) {
 			return true;
 		}
+		
+		if (!HttpRequestFacade.isValid()) {
+			return true;
+		}
+		
 		try {
 			String user = HttpRequestFacade.getRemoteUser();
 			Set<Access> readDefinitions = getAccessDefinitions(path, CMIS_METHOD_READ);

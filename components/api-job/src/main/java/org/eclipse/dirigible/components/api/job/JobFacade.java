@@ -116,8 +116,9 @@ public class JobFacade implements InitializingBean {
 	 *
 	 * @param name the name
 	 * @return the string
+	 * @throws Exception the exception
 	 */
-	public static String enable(String name) {
+	public static String enable(String name) throws Exception {
 		return GsonHelper.toJson(JobFacade.get().getJobService().enable(name));
 	}
 	
@@ -126,8 +127,9 @@ public class JobFacade implements InitializingBean {
 	 *
 	 * @param name the name
 	 * @return the string
+	 * @throws Exception the exception
 	 */
-	public static String disable(String name) {
+	public static String disable(String name) throws Exception {
 		return GsonHelper.toJson(JobFacade.get().getJobService().disable(name));
 	}
 	

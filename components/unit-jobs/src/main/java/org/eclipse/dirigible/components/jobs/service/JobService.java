@@ -23,6 +23,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.email.JobEmailProcessor;
+import org.eclipse.dirigible.components.jobs.manager.JobsManager;
 import org.eclipse.dirigible.components.jobs.repository.JobRepository;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,9 @@ public class JobService implements ArtefactService<Job>  {
     /** The javascript service. */
     @Autowired
     private JavascriptService javascriptService;
+    
+    @Autowired
+    private JobsManager jobsManager;
 
     /**
      * Gets the all.
@@ -105,6 +109,8 @@ public class JobService implements ArtefactService<Job>  {
         	name = name.substring(1);
         }
         filter.setName(name);
+        filter.setEnabled(null);
+        filter.setStatus(null);
         Example<Job> example = Example.of(filter);
         Optional<Job> job = jobRepository.findOne(example);
         if (job.isPresent()) {
@@ -174,10 +180,12 @@ public class JobService implements ArtefactService<Job>  {
      *
      * @param name the name
      * @return the job
+     * @throws Exception 
      */
-    public Job enable(String name) {
+    public Job enable(String name) throws Exception {
         Job job = findByName(name);
         job.setEnabled(true);
+        jobsManager.scheduleJob(job);
         return jobRepository.saveAndFlush(job);
     }
 
@@ -186,10 +194,12 @@ public class JobService implements ArtefactService<Job>  {
      *
      * @param name the name
      * @return the job
+     * @throws Exception 
      */
-    public Job disable(String name) {
+    public Job disable(String name) throws Exception {
         Job job = findByName(name);
         job.setEnabled(false);
+        jobsManager.unscheduleJob(job.getName(), job.getGroup());
         return jobRepository.saveAndFlush(job);
     }
     

@@ -79,14 +79,14 @@ public class Job extends Artefact {
      */
     @Column(name = "JOB_SINGLETON", columnDefinition = "BOOLEAN", nullable = false)
     @Expose
-    private boolean singleton = false;
+    private Boolean singleton = false;
 
     /**
      * The enabled.
      */
     @Column(name = "JOB_ENABLED", columnDefinition = "BOOLEAN", nullable = false)
     @Expose
-    private boolean enabled = true;
+    private Boolean enabled = true;
 
     /**
      * The parameters.
@@ -99,7 +99,7 @@ public class Job extends Artefact {
     /** The status. */
     @Column(name = "JOB_STATUS", columnDefinition = "SMALLINT", nullable = true)
     @Expose
-    private short status = 99;
+    private Short status = 99;
 
     /**
      * The message.
@@ -134,7 +134,7 @@ public class Job extends Artefact {
      * @param executedAt the executed at
      */
     public Job(String location, String name, String description, String dependencies, String group, String clazz, 
-    		String expression, String handler, String engine, boolean singleton, boolean enabled, short status, String message, Timestamp executedAt) {
+    		String expression, String handler, String engine, Boolean singleton, Boolean enabled, Short status, String message, Timestamp executedAt) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.group = group;
         this.clazz = clazz;
@@ -164,7 +164,7 @@ public class Job extends Artefact {
      * @param dependencies the dependencies
      */
     public Job(String name, String group, String clazz, String handler, String engine, String description, String expression,
-               boolean singleton, List<JobParameter> parameters, String location, String dependencies) {
+               Boolean singleton, List<JobParameter> parameters, String location, String dependencies) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.group = group;
         this.clazz = clazz;
@@ -180,6 +180,7 @@ public class Job extends Artefact {
      */
     public Job() {
         super();
+        this.type = ARTEFACT_TYPE;
     }
 
     /**
@@ -295,7 +296,7 @@ public class Job extends Artefact {
      *
      * @return true, if is singleton
      */
-    public boolean isSingleton() {
+    public Boolean isSingleton() {
         return singleton;
     }
 
@@ -304,7 +305,7 @@ public class Job extends Artefact {
      *
      * @param singleton the new singleton
      */
-    public void setSingleton(boolean singleton) {
+    public void setSingleton(Boolean singleton) {
         this.singleton = singleton;
     }
 
@@ -313,7 +314,7 @@ public class Job extends Artefact {
      *
      * @return true, if is enabled
      */
-    public boolean isEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 
@@ -322,7 +323,7 @@ public class Job extends Artefact {
      *
      * @param enabled the new enabled
      */
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
@@ -331,7 +332,7 @@ public class Job extends Artefact {
      *
      * @return the status
      */
-    public short getStatus() {
+    public Short getStatus() {
         return status;
     }
 
@@ -340,7 +341,7 @@ public class Job extends Artefact {
      *
      * @param status the new status
      */
-    public void setStatus(short status) {
+    public void setStatus(Short status) {
         this.status = status;
     }
 
