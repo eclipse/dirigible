@@ -127,7 +127,10 @@ public class GraalJSFileSystem implements FileSystem {
     @Override
     public Path toRealPath(Path path, LinkOption... linkOptions) throws IOException {
         String pathString = path.toString();
-        if (!pathString.endsWith(".js") && !pathString.endsWith(".mjs")) {
+        if (!pathString.endsWith(".js")
+                && !pathString.endsWith(".mjs")
+                && !pathString.endsWith(".json")
+        ) {
             // handle cases like `import { Data } from "./data"` where `./data` does not have an extension
             // mainly found when dealing with TS imports
             path = Path.of(pathString + ".js");
