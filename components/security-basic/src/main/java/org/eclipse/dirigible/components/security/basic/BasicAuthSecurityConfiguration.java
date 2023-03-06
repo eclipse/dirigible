@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.security.basic;
 
 import java.util.Arrays;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,7 +26,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-public class BasicAuthWebSecurityConfiguration {
+@ConditionalOnProperty(name="basic.enabled", havingValue="true")
+public class BasicAuthSecurityConfiguration {
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
