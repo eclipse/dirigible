@@ -30,18 +30,6 @@
         </plugins>
     </build>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.keycloak.bom</groupId>
-				<artifactId>keycloak-adapter-bom</artifactId>
-				<version>${keycloak-adapter-bom.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
     <dependencies>
     	
     	<!-- Commons -->
@@ -133,6 +121,7 @@
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-spring-boot-starter</artifactId>
+			<version>${keycloak.keycloak-spring-boot-starter}</version>
 		</dependency>
 
 		<dependency>
