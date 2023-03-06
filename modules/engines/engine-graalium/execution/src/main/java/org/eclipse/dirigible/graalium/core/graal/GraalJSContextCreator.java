@@ -54,6 +54,9 @@ public class GraalJSContextCreator {
     /** The Constant DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IMPORT_ASSERTIONS. */
     public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IMPORT_ASSERTIONS = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IMPORT_ASSERTIONS";
 
+    /** The Constant DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_OPERATOR_OVERLOADING. */
+    public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_OPERATOR_OVERLOADING = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_OPERATOR_OVERLOADING";
+
     /** The graal host access. */
     private static HostAccess graalHostAccess;
 
@@ -130,6 +133,9 @@ public class GraalJSContextCreator {
         }
         if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_JSON_MODULES, "true"))) {
             contextBuilder.option("js.json-modules", "true");
+        }
+        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_OPERATOR_OVERLOADING, "true"))) {
+            contextBuilder.option("js.operator-overloading", "true");
         }
 
         Context context = contextBuilder.build();
