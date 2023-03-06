@@ -31,6 +31,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
 				<configuration>
 					<failOnMissingWebXml>true</failOnMissingWebXml>
 					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
