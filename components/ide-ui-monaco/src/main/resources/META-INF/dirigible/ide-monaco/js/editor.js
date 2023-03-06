@@ -952,8 +952,9 @@ function isDirty(model) {
                 7034, // Variable 'ctx' implicitly has type 'any' in some locations where its type cannot be determined.(7034)
             ]
         });
+
         monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-            target: monaco.languages.typescript.ScriptTarget.ES2020,
+            target: monaco.languages.typescript.ScriptTarget.ESNext,
             strict: true,
             strictNullChecks: true,
             strictPropertyInitialization: true,
@@ -964,7 +965,8 @@ function isDirty(model) {
             noUnusedParameters: true,
             noUnusedLocals: true,
             checkJs: true,
-            noFallthroughCasesInSwitch: true
+            noFallthroughCasesInSwitch: true,
+            module: (fileName?.endsWith(".mjs") === true) ? monaco.languages.typescript.ModuleKind.ESNext : monaco.languages.typescript.ModuleKind.CommonJS
         });
         monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
         monaco.languages.html.htmlDefaults.setOptions({
