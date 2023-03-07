@@ -790,8 +790,8 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }
                 });
 
-                messageHub.onDidReceiveMessage('editor.focus.gained', function (msg) {
-                    const file = msg.data.file;
+                messageHub.onDidReceiveMessage('ide-core.setFocusedEditor', function (msg) {
+                    const file = msg.resourcePath;
                     const result = findCenterSplittedTabView(file);
                     if (result) {
                         $scope.$apply(() => {
@@ -1299,7 +1299,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 }
 
                 const requestFocus = function () {
-                    messageHub.postMessage('editor.focus.gain', { file: $scope.selectedPane }, true);
+                    messageHub.setEditorFocusGain($scope.selectedPane);
                 }
 
                 const updateTabsVisibility = (containerWidth = -1) => {

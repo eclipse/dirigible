@@ -32,14 +32,13 @@ loggersView.controller('LoggersController', ['$scope', '$http', '$route', 'messa
 
     $scope.setSeverity = function (loggerName, loggerLevel) {
         $http({
-				method: "POST",
-				url: loggersApi + "severity/" + loggerName,
-				data: loggerLevel,
-				headers: {
-			        "Content-Type": "text/plain"
-			    }
-			})			
-            .then(function (data) {
+            method: "POST",
+            url: loggersApi + "severity/" + loggerName,
+            data: loggerLevel,
+            headers: {
+                "Content-Type": "text/plain"
+            }
+        }).then(function (data) {
                 let logger = (element) => element.name === loggerName;
                 let i = $scope.loggers.findIndex(logger);
                 $scope.loggers[i].severity = data.data;
@@ -50,6 +49,6 @@ loggersView.controller('LoggersController', ['$scope', '$http', '$route', 'messa
                 $scope.loggers[i].severity = data.data;
                 $route.reload()
             }
-    }
+    };
     loadLoggers();
 }]);

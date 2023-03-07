@@ -40,7 +40,7 @@
             <fd-message-page-title>{{result || "No results"}}</fd-message-page-title>
         </fd-message-page>
 
-        <table fd-table display-mode="compact" ng-hide="hasMultipleProcedureResults || state.error" ng-show="columns">
+        <table fd-table display-mode="compact" ng-hide="hasMultipleProcedureResults || state.error" ng-show="columns" outer-borders="none" class="dg-list-border-bottom">
             <thead fd-table-header sticky="true">
                 <tr fd-table-row>
                     <th fd-table-header-cell ng-repeat="column in columns">{{column}}</th>

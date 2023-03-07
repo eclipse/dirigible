@@ -14,13 +14,9 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-
         <script type="text/javascript" src="/services/web/ide-jobs/services/job-logs-window.js"></script>
-
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
-
         <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
 
@@ -105,7 +101,6 @@
         <script type="text/javascript">
             angular.module('jobLogs', ['ideUI', 'ideView'])
                 .controller('JobLogsController', ['$scope', '$http', function ($scope, $http) {
-
                     function getLogs(name){
                         $scope.loading = true;
                         $scope.loadingError = false;
@@ -125,13 +120,12 @@
                     if (window.frameElement.hasAttribute("data-parameters")) {
                         let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
                         $scope.jobName = params.job.name;
-                        
                         getLogs($scope.jobName);
                     }
 
                     $scope.shouldShowMessageRow = function(){
                         return $scope.loading || $scope.loadingError || $scope.logs.length === 0;
-                    }
+                    };
 
                     $scope.getMessageRow = function(){
                         if($scope.loading) return 'Loading, please wait...';
@@ -149,7 +143,7 @@
                                 console.error(response.data);
                                 $scope.clearingLogs = false;
                             });
-                    }
+                    };
                 }]);
         </script>
     </body>

@@ -1,8 +1,3 @@
 {
-	"guid": "ide-template-service",
-	"repository": {
-		"type": "git",
-		"branch": "master",
-		"url": "https://github.com/dirigiblelabs/ide-template-service.git"
-	}
+    "guid": "ide-template-service"
 }

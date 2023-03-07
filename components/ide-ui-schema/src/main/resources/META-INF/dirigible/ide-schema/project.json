@@ -1,1 +1,3 @@
-{"guid":"ide-schema","repository":{"type":"git","branch":"master","url":"https://github.com/dirigiblelabs/ide-schema.git"}}
+{
+    "guid": "ide-schema"
+}

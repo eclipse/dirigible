@@ -1,8 +1,3 @@
 {
-    "guid": "ide-csv",
-    "repository": {
-        "type": "git",
-        "branch": "main",
-        "url": "https://github.com/dirigiblelabs/ide-csv.git"
-    }
+    "guid": "ide-csv"
 }

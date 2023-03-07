@@ -1,1 +1,3 @@
-{"guid":"ide-terminal","repository":{"type":"git","branch":"master","url":"https://github.com/dirigiblelabs/ide-terminal.git"}}
+{
+    "guid": "ide-terminal"
+}

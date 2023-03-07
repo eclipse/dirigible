@@ -1,8 +1,3 @@
 {
-    "guid": "ide-staging",
-    "repository": {
-        "type": "git",
-        "branch": "master",
-        "url": "https://github.com/dirigiblelabs/ide-staging.git"
-    }
+    "guid": "ide-staging"
 }

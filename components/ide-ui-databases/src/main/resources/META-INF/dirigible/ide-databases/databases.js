@@ -84,7 +84,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
     }
     
     $scope.joinParameters = function(parameters) {
-		var result = '';
+		let result = '';
 		if (parameters) {
 			parameters.forEach(function(current){
 				result += current.name + '=' + current.value + ',';

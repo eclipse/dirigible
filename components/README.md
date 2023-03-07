@@ -6,7 +6,11 @@ This is stil an experimental feature to replace older frameworks to recent Sprin
 
 	cd components
 	mvn clean install
-	
+
+If you want to do a fast build (for testing purposes):
+
+	mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true
+
 #### Run
 
 	java -jar app-all/target/dirigible-application-all-8.0.0-SNAPSHOT.jar

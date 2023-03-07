@@ -129,7 +129,6 @@
 		<module>ide-ui-websockets-menu</module>
 		<module>ide-ui-welcome</module>
 		<module>ide-ui-workbench</module>
-		<module>ide-ui-workspace</module>
 		<module>ide-ui-workspace-menu</module>
 		<module>ide-ui-workspace-service</module>
 		
