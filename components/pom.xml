@@ -53,6 +53,10 @@
 		<module>engine-template-javascript</module>
 		<module>engine-wiki</module>
 		<module>engine-command</module>
+		<module>engine-bpm</module>
+		<module>engine-bpm-flowable</module>
+		<module>engine-cms</module>
+		<module>engine-cms-internal</module>
 		
 		<!-- IDE -->
 		<module>ide-workspace</module>
@@ -131,12 +135,6 @@
 		<module>ide-ui-workspace</module>
 		<module>ide-ui-workspace-menu</module>
 		<module>ide-ui-workspace-service</module>
-		
-		<!-- BPM -->
-		<module>bpm-flowable</module>
-		
-		<!-- CMS -->
-		<module>cms-internal</module>
 		
 		<!-- API -->
 		<module>api-core</module>

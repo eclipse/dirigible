@@ -18,7 +18,7 @@ import javax.servlet.ServletException;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.http.HttpRequestFacade;
-import org.eclipse.dirigible.components.base.cms.CmsProvider;
+import org.eclipse.dirigible.components.engine.cms.CmsProvider;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.verifier.AccessVerifier;
 import org.slf4j.Logger;

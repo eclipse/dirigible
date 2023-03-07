@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.api.bpm;
 
-import org.eclipse.dirigible.components.bpm.flowable.provider.BpmProviderFlowable;
+import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
