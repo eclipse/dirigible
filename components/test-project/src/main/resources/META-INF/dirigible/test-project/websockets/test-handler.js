@@ -13,8 +13,8 @@ exports.onOpen = function()  {
   console.log("Connection openned.");
 }
 
-exports.onMessage = function(message) {
-  console.log("Message received: " + message);
+exports.onMessage = function(message, from) {
+  console.log("Message received: " + message + ", from: " + from);
   return "Hello from WebSocket!";
 }
 

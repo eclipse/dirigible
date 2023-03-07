@@ -10,4 +10,4 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var handler = require(__context.get("handler"));
-handler.onMessage(__context.get("message"));
+handler.onMessage(__context.get("message"), __context.get("from"));
