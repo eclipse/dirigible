@@ -275,9 +275,6 @@ function CmisObject() {
 function ObjectFactory() {
 
 	this.createContentStream = function(filename, length, mimetype, inputStream) {
-		console.info("File name: " + filename);
-		console.info("Length: " + length);
-		console.info("Mime Type: " + mimetype);
 		var contentStream = new ContentStream();
 		var native = this.native.createContentStream(filename, length, mimetype, inputStream.native);
 		contentStream.native = native;

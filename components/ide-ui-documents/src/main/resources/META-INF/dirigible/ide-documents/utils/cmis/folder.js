@@ -118,6 +118,10 @@ exports.getFolder = function (path) {
 	return objectUtils.getObject(path);
 };
 
+exports.existFolder = function (path) {
+	return objectUtils.existObject(path);
+};
+
 exports.deleteTree = function (folder) {
 	folder.deleteTree();
 };

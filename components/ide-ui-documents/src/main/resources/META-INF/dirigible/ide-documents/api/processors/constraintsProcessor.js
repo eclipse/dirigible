@@ -22,12 +22,12 @@ const ACCESS_CONSTRAINTS_FILE = "roles-access.json";
 const ACCESS_CONSTRAINTS_FILE_LOCATION = INTERNAL_FOLDER + "/" + ACCESS_CONSTRAINTS_FILE;
 
 function updateAccessDefinitionsInCMS(data) {
-    let folder = folderUtils.getFolder(INTERNAL_FOLDER_LOCATION);
-    if (!folder) {
+	
+    if (!folderUtils.existFolder(INTERNAL_FOLDER_LOCATION)) {
         let rootFolder = folderUtils.getFolderOrRoot("/");
         folderUtils.createFolder(rootFolder, INTERNAL_FOLDER);
-        folder = folderUtils.getFolder(INTERNAL_FOLDER_LOCATION);
     }
+    var folder = folderUtils.getFolder(INTERNAL_FOLDER_LOCATION);
     let document = {
         getName: function () {
             return ACCESS_CONSTRAINTS_FILE;
@@ -44,25 +44,29 @@ function updateAccessDefinitionsInCMS(data) {
         }
     }
 
-    let object = objectUtils.getObject(ACCESS_CONSTRAINTS_FILE_LOCATION);
-    if (object) {
+		
+	if (objectUtils.existObject(ACCESS_CONSTRAINTS_FILE_LOCATION)) {
+		let object = objectUtils.getObject(ACCESS_CONSTRAINTS_FILE_LOCATION);
         objectUtils.deleteObject(object);
     }
+    
     documentsUtils.uploadDocument(folder, document);
 }
 
 exports.getAccessDefinitions = function () {
-    let document = documentsUtils.getDocument(ACCESS_CONSTRAINTS_FILE_LOCATION);
-    let content = {
+	let content = {
         constraints: []
     };
-
-    try {
-        let inputStream = documentsUtils.getDocumentStream(document);
-        let data = inputStream.getStream().readBytes();
-        content = JSON.parse(bytes.byteArrayToText(data));
-    } catch (e) {
-        // Do nothing
+	if (documentsUtils.existDocument(ACCESS_CONSTRAINTS_FILE_LOCATION)) {
+	    let document = documentsUtils.getDocument(ACCESS_CONSTRAINTS_FILE_LOCATION);
+	    
+	    try {
+	        let inputStream = documentsUtils.getDocumentStream(document);
+	        let data = inputStream.getStream().readBytes();
+	        content = JSON.parse(bytes.byteArrayToText(data));
+	    } catch (e) {
+	        // Do nothing
+	    }
     }
     return content;
 };

@@ -24,6 +24,17 @@ exports.getObject = function (path) {
 	return null;
 };
 
+exports.existObject = function (path) {
+	try {
+		if (path === null || path === undefined) {
+			return null;
+		}
+		return cmisSession.getObjectByPath(path) != null;
+	} catch (e) {
+		return false
+	}
+};
+
 exports.getById = function (id) {
 	return cmisSession.getObject(id);
 };

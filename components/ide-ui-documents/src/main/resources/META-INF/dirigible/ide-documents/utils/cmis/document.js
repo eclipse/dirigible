@@ -82,6 +82,10 @@ exports.getDocument = function (path) {
 	return objectUtils.getObject(path);
 }
 
+exports.existDocument = function (path) {
+	return objectUtils.existObject(path);
+}
+
 exports.createFromBytes = function (folder, fileName, bytes) {
 	let inputStream = streams.createByteArrayInputStream(bytes);
 	let mimeType = "application/octet-stream";
