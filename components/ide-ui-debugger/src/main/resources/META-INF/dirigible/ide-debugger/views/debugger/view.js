@@ -13,7 +13,7 @@ const viewData = {
 	id: "debugger",
 	name: "Debugger",
 	factory: "frame",
-	region: "center-top",
+	region: "center",
 	label: "Debugger",
 	link: "../ide-debugger/views/debugger/index.html"
 };

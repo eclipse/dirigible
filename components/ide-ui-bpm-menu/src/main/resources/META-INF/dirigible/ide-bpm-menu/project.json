@@ -1,1 +1,3 @@
-{"guid":"ide-bpm-menu","repository":{"type":"git","branch":"master","url":"https://github.com/dirigiblelabs/ide-bpm-menu.git"}}
+{
+    "guid": "ide-bpm-menu"
+}

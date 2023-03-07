@@ -1,8 +1,3 @@
 {
-   "guid":"ide-documents-ext-content-type-ms",
-   "repository":{
-      "type":"git",
-      "branch":"master",
-      "url":"https://github.com/dirigiblelabs/ide-documents-ext-content-type-ms.git"
-   }
+    "guid": "ide-documents-ext-content-type-ms"
 }

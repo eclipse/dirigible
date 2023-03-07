@@ -1,8 +1,3 @@
 {
-    "guid": "ide-csvim",
-    "repository": {
-        "type": "git",
-        "branch": "main",
-        "url": "https://github.com/dirigiblelabs/ide-csvim.git"
-    }
+    "guid": "ide-csvim"
 }

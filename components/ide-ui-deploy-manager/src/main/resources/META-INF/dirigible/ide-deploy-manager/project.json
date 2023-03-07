@@ -1,8 +1,3 @@
 {
-    "guid": "ide-deploy-manager",
-    "repository": {
-        "type": "git",
-        "branch": "master",
-        "url": "https://github.com/dirigiblelabs/ide-deploy-manager.git"
-    }
+    "guid": "ide-deploy-manager"
 }

@@ -10,16 +10,16 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-	id: "loggers",
-	name: "Loggers",
-	factory: "frame",
-	region: "bottom",
-	label: "Loggers",
-	link: "../ide-logs/loggers.html"
+    id: "loggers",
+    name: "Loggers",
+    factory: "frame",
+    region: "bottom",
+    label: "Loggers",
+    link: "../ide-logs/loggers.html"
 };
 
 if (typeof exports !== 'undefined') {
-	exports.getView = function () {
-		return viewData;
-	}
+    exports.getView = function () {
+        return viewData;
+    }
 }

@@ -725,15 +725,14 @@ function isDirty(model) {
                             }, "editor.file.save.all");
 
                             messageHub.subscribe(function (msg) {
-                                let file = msg.data.file;
+                                let file = msg.resourcePath;
                                 if (file !== fileName)
                                     return;
-
                                 _editor.focus();
-                            }, "editor.focus.gain");
+                            }, "ide-core.setEditorFocusGain");
 
                             _editor.onDidFocusEditorText(function () {
-                                messageHub.post({ data: { file: fileName } }, 'editor.focus.gained');
+                                messageHub.post({ resourcePath: fileName }, 'ide-core.setFocusedEditor');
                             });
 
                             _editor.onDidChangeModel(function () {

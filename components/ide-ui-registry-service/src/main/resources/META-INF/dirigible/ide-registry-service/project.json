@@ -1,8 +1,3 @@
 {
-	"guid": "ide-registry-service",
-	"repository": {
-		"type": "git",
-		"branch": "master",
-		"url": "https://github.com/dirigiblelabs/ide-registry-service.git"
-	}
+    "guid": "ide-registry-service"
 }

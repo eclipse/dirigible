@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ Copyright (c) 2010-2023 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -18,8 +18,7 @@
         <title dg-view-title></title>
         <script type="text/javascript" src="services/transfer-view.js"></script>
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
-        <link type="text/css" rel="stylesheet"
-            href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
         <script type="text/javascript" src="transfer.js"></script>
     </head>
@@ -29,7 +28,6 @@
             <div class="fd-row">
                 <div class="fd-col fd-col-lg--12 fd-col--wrap">
                     <div class="fd-row">
-                    
                         <div class="fd-col fd-col--12 fd-col-md--12 fd-col-lg--12">
                             <div class="fd-row">
                                 <div class="fd-col fd-col--6">
@@ -42,9 +40,7 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="fd-col fd-col--12 fd-col-md--12 fd-col-lg--12">
-                        
                             <div class="fd-row">
                                 <div class="fd-col fd-col--3 fd-col-md--3 fd-col-lg--3 fd-col-xl--3">
                                     <fd-select class="dg-full-width" ng-model="definition.selectedSourceDatabase"
@@ -54,7 +50,6 @@
                                         </fd-option>
                                     </fd-select>
                                 </div>
-                                
                                 <div class="fd-col fd-col--3 fd-col-md--3 fd-col-lg--3 fd-col-xl--3">
                                     <fd-select class="dg-full-width" ng-model="definition.selectedSourceDatasource"
                                         ng-change="datasourceSourceChanged()">
@@ -63,8 +58,6 @@
                                         </fd-option>
                                     </fd-select>
                                 </div>
-                                
-
                                 <div class="fd-col fd-col--3 fd-col-md--3 fd-col-lg--3 fd-col-xl--3">
                                     <fd-select class="dg-full-width" ng-model="definition.selectedTargetDatabase"
                                         ng-change="databaseTargetChanged()" dropdown-fixed="true">
@@ -73,7 +66,6 @@
                                         </fd-option>
                                     </fd-select>
                                 </div>
-                                
                                 <div class="fd-col fd-col--3 fd-col-md--3 fd-col-lg--3 fd-col-xl--3">
                                     <fd-select class="dg-full-width" ng-model="definition.selectedTargetDatasource"
                                         ng-change="datasourceTargetChanged()">
@@ -82,7 +74,6 @@
                                         </fd-option>
                                     </fd-select>
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
@@ -102,7 +93,6 @@
                 aria-label="Clear Log" ng-click="clearLog()">
             </fd-button>
         </fd-toolbar>
-
         <fd-scrollbar class="dg-stretch">
             <div id="logContent">
                 <fd-list compact="true" no-border="true">

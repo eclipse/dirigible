@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2010-2022 SAP and others.
+  ~ Copyright (c) 2010-2023 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -14,16 +14,11 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-
         <script type="text/javascript" src="/services/web/ide-jobs/services/job-trigger-window.js"></script>
-
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
-
         <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
-
     </head>
 
     <body class="dg-vbox">
@@ -35,9 +30,7 @@
                 <fd-form-input-message-group>
                     <fd-input compact="true" type="text" placeholder="Enter email..." ng-model="job.email">
                     </fd-input>
-                    <fd-form-message ng-if="job.email && !isEmailValid()" dg-type="error">Please, enter a valid email
-                        address
-                    </fd-form-message>
+                    <fd-form-message ng-if="job.email && !isEmailValid()" dg-type="error">Please, enter a valid email address</fd-form-message>
                 </fd-form-input-message-group>
             </fd-form-item>
             <fd-button compact="true" dg-type="transparent" dg-label="Add" ng-click="addEmail()"
@@ -87,7 +80,6 @@
         <script type="text/javascript">
             angular.module('jobAssign', ['ideUI', 'ideView'])
                 .controller('JobAssignController', ['$scope', '$http', function ($scope, $http) {
-
                     function getEmails (job) {
                         $http.get(`/services/jobs/emails/${job.name}`)
                             .then(function (response) {
@@ -100,17 +92,16 @@
                     if (window.frameElement.hasAttribute("data-parameters")) {
                         let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
                         $scope.job = params.job;
-                        
                         getEmails($scope.job);
-                    }         
+                    }
 
                     $scope.isEmailValid = function(){
                         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test($scope.job.email);
-                    }
+                    };
 
                     $scope.getAddButtonState = function(){
                         return $scope.job.email && $scope.isEmailValid() ? undefined : 'disabled';
-                    }
+                    };
 
                     $scope.addEmail = function () {
                         $http.post(`/services/jobs/emailadd/${$scope.job.name}`, $scope.job.email)
@@ -120,7 +111,7 @@
                             }, function (response) {
                                 console.error(response.data);
                             });
-                    }
+                    };
 
                     $scope.removeEmail = function (id) {
                         $http.delete(`/services/jobs/emailremove/${id}`)
@@ -129,7 +120,7 @@
                             }, function (response) {
                                 console.error(response.data);
                             });
-                    }
+                    };
                 }]);
         </script>
     </body>

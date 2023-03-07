@@ -1,8 +1,3 @@
 {
-    "guid": "ide-sql",
-    "repository": {
-        "type": "git",
-        "branch": "master",
-        "url": "https://github.com/dirigiblelabs/ide-sql.git"
-    }
+    "guid": "ide-sql"
 }

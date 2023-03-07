@@ -1,1 +1,3 @@
-{"guid":"ide-form-builder","repository":{"type":"git","branch":"master","url":"https://github.com/dirigiblelabs/ide-form-builder.git"}}
+{
+    "guid": "ide-form-builder"
+}

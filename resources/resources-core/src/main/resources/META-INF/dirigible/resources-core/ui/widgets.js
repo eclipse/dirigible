@@ -576,7 +576,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         /**
          * dgInline: Boolean - Form items are displayed horizontally.
          * dgHeader: String - Text for the group header.
-         * compact: Boolean - Heaader size.
+         * compact: Boolean - Header size.
          */
         return {
             restrict: 'E',
