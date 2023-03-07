@@ -35,7 +35,7 @@
         <!-- Units -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-unit-websockets</artifactId>
+            <artifactId>dirigible-components-engine-websockets</artifactId>
             <version>8.0.0-SNAPSHOT</version>
         </dependency>
         

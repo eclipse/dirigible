@@ -17,7 +17,7 @@ listenersView.config(["messageHubProvider", function (messageHubProvider) {
 
 listenersView.controller('ListenersController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('/services/unit/listeners').then(function (response) {
+	$http.get('/services/listeners').then(function (response) {
 		$scope.list = response.data;
 	});
 

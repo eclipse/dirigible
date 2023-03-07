@@ -11,8 +11,8 @@
  */
 package org.eclipse.dirigible.components.version.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Version properties.
@@ -60,14 +60,9 @@ public class Version {
     private String databaseProvider = "local";
 
     /**
-     * The units.
-     */
-    private Set<String> units = new HashSet<String>();
-
-    /**
      * The engines.
      */
-    private Set<String> engines = new HashSet<String>();
+    private List<String> engines = new ArrayList<String>();
 
     /**
      * Gets the product name.
@@ -218,7 +213,7 @@ public class Version {
      *
      * @return the engines
      */
-    public Set<String> getEngines() {
+    public List<String> getEngines() {
         return engines;
     }
 
@@ -227,27 +222,8 @@ public class Version {
      *
      * @param engines the engines to set
      */
-    public void setEngines(Set<String> engines) {
+    public void setEngines(List<String> engines) {
         this.engines = engines;
     }
-    
-    /**
-     * Gets the units.
-     *
-     * @return the units
-     */
-    public Set<String> getUnits() {
-        return units;
-    }
-
-    /**
-     * Sets the units.
-     *
-     * @param units the units to set
-     */
-    public void setUnits(Set<String> units) {
-        this.units = units;
-    }
-
 
 }

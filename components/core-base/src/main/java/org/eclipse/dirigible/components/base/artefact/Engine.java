@@ -11,10 +11,23 @@
  */
 package org.eclipse.dirigible.components.base.artefact;
 
+/**
+ * The Interface Engine.
+ */
 public interface Engine {
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName();
 	
+	/**
+	 * Gets the provider.
+	 *
+	 * @return the provider
+	 */
 	public String getProvider();
 
 }

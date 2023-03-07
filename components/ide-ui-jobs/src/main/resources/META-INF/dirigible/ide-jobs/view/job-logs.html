@@ -109,7 +109,7 @@
                     function getLogs(name){
                         $scope.loading = true;
                         $scope.loadingError = false;
-                        $http.get(`/services/unit/jobs/logs/${name}`)
+                        $http.get(`/services/jobs/logs/${name}`)
                             .then(function (response) {
                                 $scope.logs = response.data;
                                 $scope.loading = false;                                
@@ -141,7 +141,7 @@
 
                     $scope.clearLogs = function () {
                         $scope.clearingLogs = true;
-                        $http.post('/services/unit/jobs/clear/' + $scope.jobName)
+                        $http.post('/services/jobs/clear/' + $scope.jobName)
                             .then(function (response) {
                                 $scope.clearingLogs = false;
                                 getLogs($scope.jobName);

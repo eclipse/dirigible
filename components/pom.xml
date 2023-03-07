@@ -22,16 +22,7 @@
 		<module>core-repository</module>
 		<module>core-registry</module>
 		<module>core-version</module>
-		<module>core-websockets</module>
 		<module>core-healthcheck</module>
-		
-		<!-- Units -->
-		<module>unit-jobs</module>
-		<module>unit-openapi</module>
-		<module>unit-websockets</module>
-		<module>unit-security</module>
-		<module>unit-listeners</module>
-		<module>unit-odata</module>
 		
 		<!-- Security -->
 		<module>security-basic</module>
@@ -57,6 +48,12 @@
 		<module>engine-bpm-flowable</module>
 		<module>engine-cms</module>
 		<module>engine-cms-internal</module>
+		<module>engine-jobs</module>
+		<module>engine-openapi</module>
+		<module>engine-websockets</module>
+		<module>engine-security</module>
+		<module>engine-listeners</module>
+		<module>engine-odata</module>
 		
 		<!-- IDE -->
 		<module>ide-workspace</module>
@@ -201,7 +198,6 @@
 		<module>group-ide</module>
 		<module>group-resources</module>
 		<module>group-templates</module>
-		<module>group-units</module>
 
 		<!-- Applications -->
 		<module>app-all</module>

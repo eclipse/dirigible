@@ -12,13 +12,14 @@
 package org.eclipse.dirigible.components.version.service;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Engine;
-import org.eclipse.dirigible.components.base.artefact.Unit;
 import org.eclipse.dirigible.components.version.domain.Version;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.springframework.stereotype.Service;
@@ -52,11 +53,8 @@ public class VersionService {
     
     private List<Engine> engines;
     
-    private List<Unit> units;
-    
-    public VersionService(List<Engine> engines, List<Unit> units) {
+    public VersionService(List<Engine> engines) {
     	this.engines = engines;
-    	this.units = units;
     }
 
     /**
@@ -78,8 +76,9 @@ public class VersionService {
         version.setRepositoryProvider(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER, "local"));
 //        version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
         
-        version.getEngines().addAll(engines.stream().map(Engine::getName).collect(Collectors.toList()));
-        version.getUnits().addAll(units.stream().map(Unit::getName).collect(Collectors.toList()));
+        List<String> enginesNames = engines.stream().map(Engine::getName).collect(Collectors.toList());
+        Collections.sort(enginesNames);
+		version.getEngines().addAll(enginesNames);
         
         return version;
     }

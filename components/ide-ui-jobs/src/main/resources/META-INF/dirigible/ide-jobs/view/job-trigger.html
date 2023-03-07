@@ -112,7 +112,7 @@
                         $scope.loading = true;
                         $scope.loadingError = false;
                         $scope.map = [];
-                        $http.get('/services/unit/jobs/parameters/' + jobName)
+                        $http.get('/services/jobs/parameters/' + jobName)
                             .then(function (response) {
                                 $scope.loading = false;
                                 $scope.parameters = response.data.map(p => {
@@ -175,7 +175,7 @@
                             expanded: false
                         };
                         $scope.triggerResults.push(trigger);
-                        $http.post('/services/unit/jobs/trigger/' + $scope.jobName, trigger.parameters)
+                        $http.post('/services/jobs/trigger/' + $scope.jobName, trigger.parameters)
                             .then(function (response) {
                                 trigger.result = `Job '${$scope.jobName}' has been triggered successfully`;
                             }, function (response) {

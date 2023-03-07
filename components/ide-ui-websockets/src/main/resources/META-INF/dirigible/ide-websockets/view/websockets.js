@@ -17,7 +17,7 @@ websocketsView.config(["messageHubProvider", function (messageHubProvider) {
 
 websocketsView.controller('WebsocketsController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('/services/unit/websockets').then(function (response) {
+	$http.get('/services/websockets').then(function (response) {
 		$scope.list = response.data;
 	});
 
