@@ -3,9 +3,9 @@
 
  FROM tomcat:9.0.56-jre11-openjdk
 
- COPY target/ROOT.war $CATALINA_HOME/webapps/
-RUN unzip $CATALINA_HOME/webapps/ROOT.war -d $CATALINA_HOME/webapps/ROOT
-RUN rm $CATALINA_HOME/webapps/ROOT.war
+ COPY target/ROOT-war.war $CATALINA_HOME/webapps/
+RUN unzip $CATALINA_HOME/webapps/ROOT-war.war -d $CATALINA_HOME/webapps/ROOT
+RUN rm $CATALINA_HOME/webapps/ROOT-war.war
 
 RUN rm /usr/local/tomcat/conf/tomcat-users.xml
 RUN wget http://www.dirigible.io/help/conf/tomcat-users.xml -P /usr/local/tomcat/conf/ --no-check-certificate

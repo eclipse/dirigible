@@ -68,87 +68,6 @@ jobs:
 
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
-    - name: Push Anonymous
-      run: |
-        cd releng/anonymous-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-anonymous -f Dockerfile-base .
-        docker tag dirigible-base-platform-anonymous dirigiblelabs/dirigible-base-platform-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-anonymous .
-        docker tag dirigible-anonymous dirigiblelabs/dirigible-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-
-    - name: Push Anonymous - Runtime
-      run: |
-        cd releng/anonymous-runtime
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-runtime-anonymous -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime-anonymous dirigiblelabs/dirigible-base-platform-runtime-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-runtime-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-runtime-anonymous .
-        docker tag dirigible-runtime-anonymous dirigiblelabs/dirigible-runtime-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-runtime-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-
-    - name: Push OpenShift
-      run: |
-        cd releng/openshift-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-openshift -f Dockerfile-base .
-        docker tag dirigible-base-platform-openshift dirigiblelabs/dirigible-base-platform-openshift:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-openshift:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-openshift .
-        docker tag dirigible-openshift dirigiblelabs/dirigible-openshift:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-openshift:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-
-    - name: Push SAP Cloud Foundry
-      run: |
-        cd releng/sap-cf-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-cf -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-cf dirigiblelabs/dirigible-base-platform-sap-cf:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-sap-cf:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-cf .
-        docker tag dirigible-sap-cf dirigiblelabs/dirigible-sap-cf:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-sap-cf:${{ github.event.inputs.releaseVersion }}
-        cd ../../
-
-    - name: Push SAP Cloud Foundry - Runtime
-      run: |
-        cd releng/sap-cf-runtime
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-cf-runtime -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-cf-runtime dirigiblelabs/dirigible-base-platform-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-cf-runtime .
-        docker tag dirigible-sap-cf-runtime dirigiblelabs/dirigible-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-
-    - name: Push SAP Kyma
-      run: |
-        cd releng/sap-kyma-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-kyma -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-kyma dirigiblelabs/dirigible-base-platform-sap-kyma:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-sap-kyma:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-kyma .
-        docker tag dirigible-sap-kyma dirigiblelabs/dirigible-sap-kyma:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-sap-kyma:${{ github.event.inputs.releaseVersion }}
-        cd ../../
-
-    - name: Push SAP Kyma - Runtime
-      run: |
-        cd releng/sap-kyma-runtime
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-kyma-runtime -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-kyma-runtime dirigiblelabs/dirigible-base-platform-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-kyma-runtime .
-        docker tag dirigible-sap-kyma-runtime dirigiblelabs/dirigible-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
 
     - name: Push Dirigible
       run: |
@@ -159,30 +78,6 @@ jobs:
         docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-all .
         docker tag dirigible-all dirigiblelabs/dirigible-all:${{ github.event.inputs.releaseVersion }}
         docker push dirigiblelabs/dirigible-all:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-
-    - name: Push Dirigible - Runtime
-      run: |
-        cd releng/server-runtime
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-runtime -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime dirigiblelabs/dirigible-base-platform-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-runtime:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-runtime .
-        docker tag dirigible-runtime dirigiblelabs/dirigible-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-runtime:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-
-    - name: Push Dirigible - Trial
-      run: |
-        cd releng/trial-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-trial -f Dockerfile-base .
-        docker tag dirigible-base-platform-trial dirigiblelabs/dirigible-base-platform-trial:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-trial:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-trial .
-        docker tag dirigible-trial dirigiblelabs/dirigible-trial:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-trial:${{ github.event.inputs.releaseVersion }}
         docker image prune -a -f
         cd ../../
 
@@ -209,73 +104,6 @@ jobs:
         docker push dirigiblelabs/dirigible-runtime-keycloak:${{ github.event.inputs.releaseVersion }}
         docker image prune -a -f
         cd ../../
-
-    - uses: buildpacks/github-actions/setup-pack@v4.1.0
-    - name: Eclipse Dirigible Buildpack
-      run: |
-        cd releng/buildpacks/server/
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigiblelabs/buildpacks-stack-base-dirigible . --target base
-        docker tag dirigiblelabs/buildpacks-stack-base-dirigible dirigiblelabs/buildpacks-stack-base-dirigible:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-stack-base-dirigible:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigiblelabs/buildpacks-stack-run-dirigible . --target run
-        docker tag dirigiblelabs/buildpacks-stack-run-dirigible dirigiblelabs/buildpacks-stack-run-dirigible:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-stack-run-dirigible:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigiblelabs/buildpacks-stack-build-dirigible . --target build
-        docker tag dirigiblelabs/buildpacks-stack-build-dirigible dirigiblelabs/buildpacks-stack-build-dirigible:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-stack-build-dirigible:${{ github.event.inputs.releaseVersion }}
-        cd buildpack/
-        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ github.event.inputs.releaseVersion }}/g'' {} \;
-        pack buildpack package dirigiblelabs/buildpacks-dirigible --config ./package.toml
-        docker tag dirigiblelabs/buildpacks-dirigible dirigiblelabs/buildpacks-dirigible:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-dirigible:${{ github.event.inputs.releaseVersion }}
-        pack builder create dirigiblelabs/buildpacks-builder-dirigible --config ./builder.toml
-        docker tag dirigiblelabs/buildpacks-builder-dirigible dirigiblelabs/buildpacks-builder-dirigible:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-builder-dirigible:${{ github.event.inputs.releaseVersion }}
-        cd ../../../../
-
-    - name: Eclipse Dirigible Kyma Buildpack
-      run: |
-        cd releng/buildpacks/sap-kyma/
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigiblelabs/buildpacks-stack-base-dirigible-kyma . --target base
-        docker tag dirigiblelabs/buildpacks-stack-base-dirigible-kyma dirigiblelabs/buildpacks-stack-base-dirigible-kyma:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-stack-base-dirigible-kyma:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigiblelabs/buildpacks-stack-run-dirigible-kyma . --target run
-        docker tag dirigiblelabs/buildpacks-stack-run-dirigible-kyma dirigiblelabs/buildpacks-stack-run-dirigible-kyma:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-stack-run-dirigible-kyma:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigiblelabs/buildpacks-stack-build-dirigible-kyma . --target build
-        docker tag dirigiblelabs/buildpacks-stack-build-dirigible-kyma dirigiblelabs/buildpacks-stack-build-dirigible-kyma:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-stack-build-dirigible-kyma:${{ github.event.inputs.releaseVersion }}
-        cd buildpack/
-        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ github.event.inputs.releaseVersion }}/g'' {} \;
-        pack buildpack package dirigiblelabs/buildpacks-dirigible-kyma --config ./package.toml
-        docker tag dirigiblelabs/buildpacks-dirigible-kyma dirigiblelabs/buildpacks-dirigible-kyma:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-dirigible-kyma:${{ github.event.inputs.releaseVersion }}
-        pack builder create dirigiblelabs/buildpacks-builder-dirigible-kyma --config ./builder.toml
-        docker tag dirigiblelabs/buildpacks-builder-dirigible-kyma dirigiblelabs/buildpacks-builder-dirigible-kyma:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-builder-dirigible-kyma:${{ github.event.inputs.releaseVersion }}
-        cd ../../../../
-
-    - name: Eclipse Dirigible Cloud Foundry Buildpack
-      run: |
-        cd releng/buildpacks/sap-cf/
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigiblelabs/buildpacks-stack-base-dirigible-cf . --target base
-        docker tag dirigiblelabs/buildpacks-stack-base-dirigible-cf dirigiblelabs/buildpacks-stack-base-dirigible-cf:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-stack-base-dirigible-cf:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigiblelabs/buildpacks-stack-run-dirigible-cf . --target run
-        docker tag dirigiblelabs/buildpacks-stack-run-dirigible-cf dirigiblelabs/buildpacks-stack-run-dirigible-cf:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-stack-run-dirigible-cf:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigiblelabs/buildpacks-stack-build-dirigible-cf . --target build
-        docker tag dirigiblelabs/buildpacks-stack-build-dirigible-cf dirigiblelabs/buildpacks-stack-build-dirigible-cf:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-stack-build-dirigible-cf:${{ github.event.inputs.releaseVersion }}
-        cd buildpack/
-        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ github.event.inputs.releaseVersion }}/g'' {} \;
-        pack buildpack package dirigiblelabs/buildpacks-dirigible-cf --config ./package.toml
-        docker tag dirigiblelabs/buildpacks-dirigible-cf dirigiblelabs/buildpacks-dirigible-cf:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-dirigible-cf:${{ github.event.inputs.releaseVersion }}
-        pack builder create dirigiblelabs/buildpacks-builder-dirigible-cf --config ./builder.toml
-        docker tag dirigiblelabs/buildpacks-builder-dirigible-cf dirigiblelabs/buildpacks-builder-dirigible-cf:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/buildpacks-builder-dirigible-cf:${{ github.event.inputs.releaseVersion }}
-        cd ../../../../
 
 #-----------------Publish to DockerHub-------------------#
 
@@ -311,16 +139,16 @@ jobs:
 
     - name: Package WAR files
       run: |
-        zip --junk-paths anonymous-all releng/anonymous-all/target/ROOT.war
-        zip --junk-paths anonymous-runtime releng/anonymous-runtime/target/ROOT.war
-        zip --junk-paths desktop-all releng/desktop-all/target/ROOT.war
-        zip --junk-paths sap-cf-all releng/sap-cf-all/target/ROOT.war
-        zip --junk-paths sap-cf-runtime releng/sap-cf-runtime/target/ROOT.war
-        zip --junk-paths server-all releng/server-all/target/ROOT.war
-        zip --junk-paths server-minimal releng/server-minimal/target/ROOT.war
-        zip --junk-paths server-oauth releng/server-oauth/target/ROOT.war
-        zip --junk-paths server-runtime releng/server-runtime/target/ROOT.war
-        zip --junk-paths trial-all releng/trial-all/target/ROOT.war
+        zip --junk-paths anonymous-all releng/anonymous-all/target/ROOT-war.war
+        zip --junk-paths anonymous-runtime releng/anonymous-runtime/target/ROOT-war.war
+        zip --junk-paths desktop-all releng/desktop-all/target/ROOT-war.war
+        zip --junk-paths sap-cf-all releng/sap-cf-all/target/ROOT-war.war
+        zip --junk-paths sap-cf-runtime releng/sap-cf-runtime/target/ROOT-war.war
+        zip --junk-paths server-all releng/server-all/target/ROOT-war.war
+        zip --junk-paths server-minimal releng/server-minimal/target/ROOT-war.war
+        zip --junk-paths server-oauth releng/server-oauth/target/ROOT-war.war
+        zip --junk-paths server-runtime releng/server-runtime/target/ROOT-war.war
+        zip --junk-paths trial-all releng/trial-all/target/ROOT-war.war
 
     - name: Create Release
       id: create_release
@@ -372,18 +200,6 @@ jobs:
           helm repo update
           helm install dirigible dirigible/dirigible --version ${{ github.event.inputs.releaseVersion }}
           ```
-
-          #### Cloud Native Buildpacks:
-
-          - [dirigiblelabs/buildpacks-builder-dirigible](https://hub.docker.com/r/dirigiblelabs/buildpacks-builder-dirigible) - builder for local deployments.
-          - [dirigiblelabs/buildpacks-builder-dirigible-kyma](https://hub.docker.com/r/dirigiblelabs/buildpacks-builder-dirigible-kyma) - builder for Kyma ready deployments.
-          - [dirigiblelabs/buildpacks-builder-dirigible-cf](https://hub.docker.com/r/dirigiblelabs/buildpacks-builder-dirigible-cf) - builder for Cloud Foundry ready deployments
-
-          Building Docker Image with **pack**:
-          ```
-          pack build --builder dirigiblelabs/buildpacks-builder-dirigible:${{ github.event.inputs.releaseVersion }} <my-org>/<my-repository>
-          ```
-          > _**Note:** The command will package all sub-folders (`project1`, `project2`, etc.) into a Dirigible docker image with the application sources._
 
           #### Docker images:
             - [dirigiblelabs/dirigible-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-anonymous/tags?page=1&ordering=last_updated) - Anonymous access.
