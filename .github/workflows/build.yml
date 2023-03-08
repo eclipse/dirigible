@@ -64,15 +64,4 @@ jobs:
         docker push dirigiblelabs/dirigible-keycloak
         docker image prune -a -f
         cd ../../
-    - name: Push Dirigible - Keycloak - Runtime
-      run: |
-        cd releng/server-runtime-keycloak
-        docker build --load -t dirigible-base-platform-runtime-keycloak -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime-keycloak dirigiblelabs/dirigible-base-platform-runtime-keycloak
-        docker push dirigiblelabs/dirigible-base-platform-runtime-keycloak
-        docker build --load -t dirigible-runtime-keycloak .
-        docker tag dirigible-runtime-keycloak dirigiblelabs/dirigible-runtime-keycloak
-        docker push dirigiblelabs/dirigible-runtime-keycloak
-        docker image prune -a -f
-        cd ../../
 

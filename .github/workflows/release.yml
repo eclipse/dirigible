@@ -102,18 +102,6 @@ jobs:
         docker image prune -a -f
         cd ../../
 
-    - name: Push Dirigible - Keycloak - Runtime
-      run: |
-        cd releng/server-runtime-keycloak
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-runtime-keycloak -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime-keycloak dirigiblelabs/dirigible-base-platform-runtime-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-runtime-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-runtime-keycloak .
-        docker tag dirigible-runtime-keycloak dirigiblelabs/dirigible-runtime-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-runtime-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-
 #-----------------Publish to DockerHub-------------------#
 
 #---------------Publish to Maven Central-----------------#
@@ -214,12 +202,10 @@ jobs:
             - [dirigiblelabs/dirigible](https://hub.docker.com/r/dirigiblelabs/dirigible/tags?page=1&ordering=last_updated) - (Spring) Basic docker image - recommended for local test & development.
             - [dirigiblelabs/dirigible-all](https://hub.docker.com/r/dirigiblelabs/dirigible-all/tags?page=1&ordering=last_updated) - Basic docker image - recommended for local test & development.
             - [dirigiblelabs/dirigible-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-keycloak/tags?page=1&ordering=last_updated) - Keycloak integration.
-            - [dirigiblelabs/dirigible-runtime-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime-keycloak/tags?page=1&ordering=last_updated) - Keycloak integration _(runtime only)_
 
           #### Base Docker images:
             - [dirigiblelabs/dirigible-base-platform](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform/tags?page=1&ordering=last_updated)
             - [dirigiblelabs/dirigible-base-platform-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-keycloak/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-runtime-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-runtime-keycloak/tags?page=1&ordering=last_updated)
           
           > _**Note:** All Docker images are availalbe [here](https://hub.docker.com/u/dirigiblelabs)_
 
