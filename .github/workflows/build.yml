@@ -34,6 +34,14 @@ jobs:
       run: mvn clean install -Dmaven.javadoc.skip=false
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
+    - name: Push Dirigible (Spring)
+      run: |
+        cd components/app-all
+        docker build --load -t dirigible .
+        docker tag dirigible dirigiblelabs/dirigible
+        docker push dirigiblelabs/dirigible
+        docker image prune -a -f
+        cd ../../
     - name: Push Dirigible
       run: |
         cd releng/server-all

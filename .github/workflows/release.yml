@@ -69,6 +69,15 @@ jobs:
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
 
+    - name: Push Dirigible (Spring)
+      run: |
+        cd components/app-all
+        docker build --load -t dirigible .
+        docker tag dirigible dirigiblelabs/dirigible
+        docker push dirigiblelabs/dirigible
+        docker image prune -a -f
+        cd ../../
+
     - name: Push Dirigible
       run: |
         cd releng/server-all
@@ -202,30 +211,13 @@ jobs:
           ```
 
           #### Docker images:
-            - [dirigiblelabs/dirigible-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-anonymous/tags?page=1&ordering=last_updated) - Anonymous access.
-            - [dirigiblelabs/dirigible-runtime-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime-anonymous/tags?page=1&ordering=last_updated) - Anonymous access _(runtime only)_.
-            - [dirigiblelabs/dirigible-openshift](https://hub.docker.com/r/dirigiblelabs/dirigible-openshift/tags?page=1&ordering=last_updated) - OpenShift.
-            - [dirigiblelabs/dirigible-sap-cf](https://hub.docker.com/r/dirigiblelabs/dirigible-sap-cf/tags?page=1&ordering=last_updated) - SAP Cloud Platform - Cloud Foundry environment.
-            - [dirigiblelabs/dirigible-sap-cf-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-sap-cf-runtime/tags?page=1&ordering=last_updated) - SAP Cloud Platform - Cloud Foundry environment _(runtime only)_.
-            - [dirigiblelabs/dirigible-sap-kyma](https://hub.docker.com/r/dirigiblelabs/dirigible-sap-kyma/tags?page=1&ordering=last_updated) - SAP Cloud Platform - Kyma environment.
-            - [dirigiblelabs/dirigible-sap-kyma-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-sap-kyma-runtime/tags?page=1&ordering=last_updated) - SAP Cloud Platform - Kyma environment _(runtime only)_.
+            - [dirigiblelabs/dirigible](https://hub.docker.com/r/dirigiblelabs/dirigible/tags?page=1&ordering=last_updated) - (Spring) Basic docker image - recommended for local test & development.
             - [dirigiblelabs/dirigible-all](https://hub.docker.com/r/dirigiblelabs/dirigible-all/tags?page=1&ordering=last_updated) - Basic docker image - recommended for local test & development.
-            - [dirigiblelabs/dirigible-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime/tags?page=1&ordering=last_updated) - Basic docker image - recommended for local test & development _(runtime only)_.
-            - [dirigiblelabs/dirigible-trial](https://hub.docker.com/r/dirigiblelabs/dirigible-trial/tags?page=1&ordering=last_updated) - Trial _(guest/nickname access)_.
             - [dirigiblelabs/dirigible-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-keycloak/tags?page=1&ordering=last_updated) - Keycloak integration.
             - [dirigiblelabs/dirigible-runtime-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime-keycloak/tags?page=1&ordering=last_updated) - Keycloak integration _(runtime only)_
 
           #### Base Docker images:
-            - [dirigiblelabs/dirigible-base-platform-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-anonymous/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-runtime-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-runtime-anonymous/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-openshift](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-openshift/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-sap-cf](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-sap-cf/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-sap-cf-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-sap-cf-runtime/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-sap-kyma](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-sap-kyma/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-sap-kyma-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-sap-kyma-runtime/tags?page=1&ordering=last_updated)
             - [dirigiblelabs/dirigible-base-platform](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-runtime/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-trial](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-trial/tags?page=1&ordering=last_updated)
             - [dirigiblelabs/dirigible-base-platform-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-keycloak/tags?page=1&ordering=last_updated)
             - [dirigiblelabs/dirigible-base-platform-runtime-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-runtime-keycloak/tags?page=1&ordering=last_updated)
           
