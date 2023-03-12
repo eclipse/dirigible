@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.components.odata.domain;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 
 import javax.persistence.Column;
@@ -21,7 +20,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 import com.google.gson.annotations.Expose;

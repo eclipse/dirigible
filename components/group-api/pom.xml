@@ -110,6 +110,11 @@
 			<artifactId>dirigible-components-api-template</artifactId>
 			<version>8.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-api-mail</artifactId>
+			<version>8.0.0</version>
+		</dependency>
     	
     </dependencies>
     

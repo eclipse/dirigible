@@ -18,7 +18,6 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 
-import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -51,7 +50,6 @@ public class RepositoryGenericModifiedTest {
 
 			ThreadContextFacade.setUp();
 
-			UserFacade.setName("guest1");
 			IResource resource = repository1.createResource("/testCollection/toBeModified.txt", //$NON-NLS-1$
 					"Some content".getBytes()); //$NON-NLS-1$
 			assertNotNull(resource);
@@ -63,7 +61,6 @@ public class RepositoryGenericModifiedTest {
 
 			Date firstModified = resource.getInformation().getModifiedAt();
 
-			UserFacade.setName("guest2");
 			resource = repository2.getResource("/testCollection/toBeModified.txt"); //$NON-NLS-1$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
@@ -88,7 +85,6 @@ public class RepositoryGenericModifiedTest {
 			fail(e.getMessage());
 		} finally {
 			try {
-				UserFacade.setName("guest3");
 				repository3.removeResource("/testCollection/toBeModified.txt");
 			} catch (Exception e) {
 				e.printStackTrace();

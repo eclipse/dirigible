@@ -1,7 +1,0 @@
-org.eclipse.dirigible.database.ds.artefacts.SchemaSynchronizationArtefactType    # Schema
-org.eclipse.dirigible.database.ds.artefacts.TableSynchronizationArtefactType    # Database Table
-org.eclipse.dirigible.database.ds.artefacts.ViewSynchronizationArtefactType	   # Database View
-org.eclipse.dirigible.database.ds.artefacts.ReplaceSynchronizationArtefactType	   # Data Replace
-org.eclipse.dirigible.database.ds.artefacts.AppendSynchronizationArtefactType	   # Data Append
-org.eclipse.dirigible.database.ds.artefacts.DeleteSynchronizationArtefactType	   # Data Delete
-org.eclipse.dirigible.database.ds.artefacts.UpdateSynchronizationArtefactType	   # Data Update

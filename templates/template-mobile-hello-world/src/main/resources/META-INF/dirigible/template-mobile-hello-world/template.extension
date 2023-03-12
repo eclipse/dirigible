@@ -1,5 +1,0 @@
-{
-    "extensionPoint": "ide-template",
-    "module": "template-mobile-hello-world/template.js",
-    "description": "Hello World Mobile Application Template"
-}

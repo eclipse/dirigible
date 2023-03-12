@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.eclipse.dirigible.components.jobs.service.JobLogService;
@@ -71,7 +70,7 @@ public class JobHandler implements Job {
 		    	context.put("handler", handler);
 		    	RepositoryPath path = new RepositoryPath(handler);
 				javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, internal, false);
-			} catch (ScriptingException e) {
+			} catch (Exception e) {
 				registeredFailed(name, handler, triggered, e);
 				
 				throw new JobExecutionException(e);

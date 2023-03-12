@@ -1,1 +1,0 @@
-export const l12 = 'l12'

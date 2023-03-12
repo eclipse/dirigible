@@ -1,5 +1,0 @@
-{
-	"description": "{{name}} menu",
-	"extensionPoint": "shell-{{projectName}}-menu",
-	"module": "{{projectName}}/views/{{name}}/menu/item.js"
-}

@@ -1,8 +1,0 @@
-org.eclipse.dirigible.runtime.operations.service.LogsService	# Logs Service
-org.eclipse.dirigible.runtime.operations.service.LogConfigService	# Log Configuration Service
-org.eclipse.dirigible.runtime.operations.service.JobsService	# Jobs Service
-org.eclipse.dirigible.runtime.operations.service.SecurityService	# Security Service
-org.eclipse.dirigible.runtime.operations.service.ListenersService	# Listeners Service
-org.eclipse.dirigible.runtime.operations.service.DataStructuresService	# Data Structures Service
-org.eclipse.dirigible.runtime.operations.service.WebsocketsService	# Websockets Service
-org.eclipse.dirigible.runtime.operations.service.ProblemsService	# Problems Service

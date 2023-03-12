@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>8.0.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -15,22 +15,12 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<module>bpm</module>
-		<module>cms</module>
 		<module>commons</module>
-		<module>core</module>
 		<module>database</module>
 		<module>engines</module>
-		<module>git</module>
 		<module>mail</module>
-		<module>migrations</module>
 		<module>odata</module>
 		<module>repository</module>
-		<module>security</module>
-		<module>services</module>
-		<module>spring</module>
-		<module>templating</module>
-		<module>workspace</module>
 	</modules>
 	
 	<dependencies>

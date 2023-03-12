@@ -24,10 +24,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.components.engine.template.GenerationException;
 import org.eclipse.dirigible.components.engine.template.TemplateEngine;
 import org.eclipse.dirigible.components.engine.template.TemplateEnginesManager;
-import org.eclipse.dirigible.components.engine.template.GenerationException;
 import org.eclipse.dirigible.components.ide.template.domain.GenerationTemplateMetadata;
 import org.eclipse.dirigible.components.ide.template.domain.GenerationTemplateMetadataSource;
 import org.eclipse.dirigible.components.ide.template.domain.GenerationTemplateParameters;
@@ -114,10 +113,9 @@ public class GenerationService {
 	 * @param path the path
 	 * @param parameters the parameters
 	 * @return the list
-	 * @throws ScriptingException the scripting exception
 	 * @throws IOException Signals that an I/O exception has occurred
 	 */
-	public List<File> generateFile(String workspace, String project, String path, GenerationTemplateParameters parameters) throws ScriptingException, IOException {
+	public List<File> generateFile(String workspace, String project, String path, GenerationTemplateParameters parameters) throws IOException {
 		Workspace workspaceObject = getWorkspaceService().getWorkspace(workspace);
 		Project projectObject = workspaceObject.getProject(project);
 		List<File> generatedFiles = new ArrayList<File>();
@@ -150,7 +148,7 @@ public class GenerationService {
 							if (logger.isTraceEnabled()) {logger.trace("Generating using built-in template: " + source.getLocation());}
 							generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
 						} else {
-							throw new ScriptingException(
+							throw new IOException(
 									format("Invalid source location of [{0}] in template definition file: [{1}] or the resource does not exist",
 											source.getLocation(), parameters.getTemplate()));
 						} 
@@ -165,7 +163,7 @@ public class GenerationService {
 			
 		}
 		
-		throw new ScriptingException(format("Invalid template definition file: [{0}]", parameters.getTemplate()));
+		throw new IOException(format("Invalid template definition file: [{0}]", parameters.getTemplate()));
 	}
 
 	/**
@@ -176,16 +174,15 @@ public class GenerationService {
 	 * @param generatedFiles the generated files
 	 * @param source the source
 	 * @param input the input
-	 * @throws ScriptingException the scripting exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void generateWithTemplateIterable(GenerationTemplateParameters parameters, Project projectObject,
 			List<File> generatedFiles, GenerationTemplateMetadataSource source, byte[] input)
-			throws ScriptingException, IOException {
+			throws IOException {
 		if (source.getCollection() != null) {
 			List<Map<String, Object>> elements = (List<Map<String, Object>>) parameters.getParameters().get(0).get(source.getCollection());
 			if (elements == null) {
-				throw new ScriptingException(format("Invalid template definition file: [{0}]. Multiplicity element is set, but no actual parameter provided.", parameters.getTemplate()));
+				throw new IOException(format("Invalid template definition file: [{0}]. Multiplicity element is set, but no actual parameter provided.", parameters.getTemplate()));
 			}
 			//addStandardParameters(workspace, project, path, elements);
 			for (Map<String, Object> elementParameters : elements) {
@@ -205,10 +202,9 @@ public class GenerationService {
 	 * @param source the source
 	 * @param input the input
 	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ScriptingException the scripting exception
 	 */
 	private void generateWithTemplate(Map<String, Object> parameters, Project projectObject,
-			List<File> generatedFiles, GenerationTemplateMetadataSource source, byte[] input) throws IOException, ScriptingException {
+			List<File> generatedFiles, GenerationTemplateMetadataSource source, byte[] input) throws IOException {
 		byte[] output = null;
 		String action = source.getAction();
 		parameters.put(GenerationParameters.PARAMETER_ENGINE, source.getEngine());
@@ -229,7 +225,7 @@ public class GenerationService {
 			} else if (ACTION_COPY.equals(action)) {
 				output = input;
 			} else {
-				throw new ScriptingException(format("Invalid action in template definition: [{0}]", action));
+				throw new IOException(format("Invalid action in template definition: [{0}]", action));
 			}
 		} else {
 			output = input;

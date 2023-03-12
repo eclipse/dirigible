@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.process.Piper;
 import org.eclipse.dirigible.commons.process.ProcessUtils;
@@ -118,7 +117,7 @@ public class CommandService {
 			commandDefinition = GsonHelper.fromJson(commandSource, Command.class);
 		} catch (Exception e2) {
 			if (logger.isErrorEnabled()) {logger.error(e2.getMessage(), e2);}
-			throw new ScriptingException(e2);
+			throw new Exception(e2);
 		}
 
 		commandDefinition.validate();
@@ -202,7 +201,7 @@ public class CommandService {
 			}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			throw new ScriptingException(e);
+			throw new Exception(e);
 		}
 		result = out.toString(StandardCharsets.UTF_8);
 		return result;

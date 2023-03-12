@@ -152,6 +152,7 @@
 		<module>api-git</module>
 		<module>api-messaging</module>
 		<module>api-template</module>
+		<module>api-mail</module>
 		
 		<!-- Resources -->
 		<module>resources-core</module>

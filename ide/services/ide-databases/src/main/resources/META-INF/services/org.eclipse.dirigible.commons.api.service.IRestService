@@ -1,5 +1,0 @@
-org.eclipse.dirigible.runtime.databases.service.DatabasesRestService		# Databases Service
-org.eclipse.dirigible.runtime.databases.service.DatabaseRestService			# Database Service
-org.eclipse.dirigible.runtime.databases.service.DataRestService				# Data Service
-org.eclipse.dirigible.runtime.databases.service.DataTransferRestService 	# Data Transfer Service
-org.eclipse.dirigible.runtime.databases.service.DatabaseMetadataRestService	# Database Metadata Service

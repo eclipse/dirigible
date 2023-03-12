@@ -1,2 +1,0 @@
-org.eclipse.dirigible.engine.job.executor.JobEngineExecutor	# Job Engine Executor
-org.eclipse.dirigible.engine.job.executor.QuartzEngineExecutor	# Quartz Engine Executor

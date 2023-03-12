@@ -11,15 +11,15 @@
  */
 package org.eclipse.dirigible.mail.env;
 
-import org.eclipse.dirigible.api.v3.mail.api.IMailConfigurationProvider;
-import org.eclipse.dirigible.commons.config.Configuration;
-
 import java.util.Properties;
+
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.api.mail.MailConfigurationProvider;
 
 /**
  * The Class EnvMailConfigProvider.
  */
-public class EnvMailConfigProvider implements IMailConfigurationProvider {
+public class EnvMailConfigProvider implements MailConfigurationProvider {
 
     /** The Constant MAIL_USER. */
     // Mail properties
@@ -92,7 +92,6 @@ public class EnvMailConfigProvider implements IMailConfigurationProvider {
      *
      * @return the name
      */
-    @Override
     public String getName() {
         return PROVIDER_NAME;
     }
@@ -102,7 +101,6 @@ public class EnvMailConfigProvider implements IMailConfigurationProvider {
      *
      * @return the properties
      */
-    @Override
     public Properties getProperties() {
         Properties properties = new Properties();
 

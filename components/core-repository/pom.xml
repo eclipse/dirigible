@@ -27,23 +27,11 @@
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-api</artifactId>
 			<version>8.0.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-commons-api</artifactId>
-				</exclusion>
-			</exclusions>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-local</artifactId>
 			<version>8.0.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-commons-api</artifactId>
-				</exclusion>
-			</exclusions>
     	</dependency>
     	
     	<!-- Helpers -->

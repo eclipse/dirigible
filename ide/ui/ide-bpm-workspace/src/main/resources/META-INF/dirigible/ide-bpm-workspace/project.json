@@ -1,8 +1,0 @@
-{
-    "guid": "ide-bpm-workspace",
-    "repository": {
-        "type": "git",
-        "branch": "main",
-        "url": "https://github.com/dirigiblelabs/ide-bpm.git"
-    }
-}

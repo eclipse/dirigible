@@ -1,2 +1,0 @@
-org.eclipse.dirigible.core.scheduler.synchronizer.OrderedSynchronizerJobDefinitionProvider	# Ordered Synchronizer Job Definition Provider
-org.eclipse.dirigible.core.scheduler.synchronizer.CleanupSynchronizerJobDefinitionProvider	# Cleanup Synchronizer Job Definition Provider

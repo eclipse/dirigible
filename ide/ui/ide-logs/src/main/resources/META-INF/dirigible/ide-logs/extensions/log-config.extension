@@ -1,5 +1,0 @@
-{
-    "module": "ide-logs/services/log-config-view.js",
-    "extensionPoint": "ide-view",
-    "description": "Log Configurations View"
-}

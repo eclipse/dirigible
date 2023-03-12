@@ -21,7 +21,6 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
@@ -78,7 +77,7 @@ public class WebsocketClient {
      * @throws ScriptingException the scripting exception
      */
     @OnOpen
-    public void onOpen(Session session) throws ScriptingException {
+    public void onOpen(Session session) throws Exception {
     	this.session = session;
     	WebsocketsFacade.CLIENTS.add(this);
     	Map<Object, Object> context = new HashMap<>();
@@ -95,7 +94,7 @@ public class WebsocketClient {
      * @throws ScriptingException the scripting exception
      */
     @OnMessage
-    public void processMessage(String message) throws ScriptingException {
+    public void processMessage(String message) throws Exception {
     	Map<Object, Object> context = new HashMap<>();
     	context.put("message", message);
     	context.put("method", "onmessage");
@@ -111,7 +110,7 @@ public class WebsocketClient {
      * @throws ScriptingException the scripting exception
      */
     @OnError
-    public void processError(Throwable t) throws ScriptingException {
+    public void processError(Throwable t) throws Exception {
     	if (logger.isErrorEnabled()) {logger.error(t.getMessage(), t);}
     	Map<Object, Object> context = new HashMap<>();
     	context.put("error", t.getMessage());
@@ -128,7 +127,7 @@ public class WebsocketClient {
      * @throws ScriptingException the scripting exception
      */
     @OnClose
-    public void onClose(Session session) throws ScriptingException {
+    public void onClose(Session session) throws Exception {
     	WebsocketsFacade.CLIENTS.remove(this);
     	Map<Object, Object> context = new HashMap<>();
     	context.put("method", "onclose");

@@ -1,4 +1,0 @@
-org.eclipse.dirigible.runtime.ide.workspaces.service.WorkspaceRestService	# Workspaces Service
-org.eclipse.dirigible.runtime.ide.workspaces.service.WorkspaceManagerService	# Workspace Management Service
-org.eclipse.dirigible.runtime.ide.workspaces.service.WorkspaceSearchService	# Workspace Search Service
-org.eclipse.dirigible.runtime.ide.workspaces.service.WorkspaceFindService	# Workspace Find Service

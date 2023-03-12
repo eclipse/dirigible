@@ -1,5 +1,0 @@
-IconScout Simple License
-
-Copyright © 2022 Design Barn Inc.
-
-https://github.com/Iconscout/unicons/blob/master/LICENSE

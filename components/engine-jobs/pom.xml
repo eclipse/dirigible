@@ -45,12 +45,6 @@
 			<artifactId>dirigible-components-core-registry</artifactId>
 			<version>8.0.0</version>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-commons-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<!-- Engines -->
@@ -63,15 +57,9 @@
 		<!-- TODO -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-facade-mail</artifactId>
-			<version>8.0.0-SNAPSHOT</version>
+			<artifactId>dirigible-components-api-mail</artifactId>
+			<version>8.0.0</version>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-commons-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<!-- spring's support for quartz -->

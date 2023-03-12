@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -182,7 +181,7 @@ public class RepositoryFacade implements InitializingBean {
 	 * @throws IOException in case of an error
 	 * @throws ScriptingException in case of an error
 	 */
-	public static String find(String path, String pattern) throws IOException, ScriptingException {
+	public static String find(String path, String pattern) throws IOException {
 		return GsonHelper.toJson(RepositoryFacade.get().getRepository().find(path, pattern));
 	}
 }
