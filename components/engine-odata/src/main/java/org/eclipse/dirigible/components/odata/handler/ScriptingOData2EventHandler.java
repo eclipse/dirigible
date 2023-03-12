@@ -23,7 +23,6 @@ import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.apache.olingo.odata2.api.uri.info.DeleteUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.components.odata.api.ODataHandlerMethods;
@@ -82,7 +81,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             executeHandlers(handlers, context);
         } catch (ODataException e) {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-        } catch (ScriptingException e) {
+        } catch (Exception e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
@@ -115,7 +114,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             executeHandlers(handlers, context);
         } catch (ODataException e) {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-        } catch (ScriptingException e) {
+        } catch (Exception e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
@@ -178,7 +177,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             return response;
         } catch (ODataException e) {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-        } catch (ScriptingException e) {
+        } catch (Exception e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
@@ -237,7 +236,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             executeHandlers(handlers, context);
         } catch (ODataException e) {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-        } catch (ScriptingException e) {
+        } catch (Exception e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
@@ -272,7 +271,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             executeHandlers(handlers, context);
         } catch (ODataException e) {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-        } catch (ScriptingException e) {
+        } catch (Exception e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
@@ -324,7 +323,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             return response;
         } catch (ODataException e) {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-        } catch (ScriptingException e) {
+        } catch (Exception e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
@@ -377,7 +376,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             executeHandlers(handlers, context);
         } catch (ODataException e) {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-        } catch (ScriptingException e) {
+        } catch (Exception e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
@@ -405,7 +404,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             executeHandlers(handlers, context);
         } catch (ODataException e) {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-        } catch (ScriptingException e) {
+        } catch (Exception e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
@@ -457,7 +456,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
             return response;
         } catch (ODataException e) {
         	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-        } catch (ScriptingException e) {
+        } catch (Exception e) {
             throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
@@ -504,7 +503,11 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
     private void executeHandlers(List<ODataHandler> handlers, Map<Object, Object> context) {
         handlers.forEach(handler -> {
             setHandlerParametersInContext(context, handler);
-            executeHandlerByExecutor(context);
+            try {
+				executeHandlerByExecutor(context);
+			} catch (Exception e) {
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			}
         });
     }
 
@@ -514,15 +517,15 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
      * @param handlers the handlers
      * @param context the context
      * @return the string
+     * @throws Exception 
      */
-    private String executeHandler(List<ODataHandler> handlers, Map<Object, Object> context) {
+    private String executeHandler(List<ODataHandler> handlers, Map<Object, Object> context) throws Exception {
         if (handlers.size() > 0) {
             ODataHandler handler = handlers.get(0);
             setHandlerParametersInContext(context, handler);
             Object response = executeHandlerByExecutor(context);
             return response != null ? response.toString() : "Empty response.";
         }
-        ;
         return "No response.";
     }
 
@@ -531,9 +534,9 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
      *
      * @param context the context
      * @return the object
-     * @throws ScriptingException the scripting exception
+     * @throws Exception the scripting exception
      */
-    private Object executeHandlerByExecutor(Map<Object, Object> context) throws ScriptingException {
+    private Object executeHandlerByExecutor(Map<Object, Object> context) throws Exception {
         String odataHandlerExecutorType = Configuration.get(DIRIGIBLE_ODATA_HANDLER_EXECUTOR_TYPE);
         String odataHandlerExecutorOnEvent = Configuration.get(DIRIGIBLE_ODATA_HANDLER_EXECUTOR_ON_EVENT);
         

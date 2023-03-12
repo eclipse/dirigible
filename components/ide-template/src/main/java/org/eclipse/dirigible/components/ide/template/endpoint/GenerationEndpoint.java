@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.ide.template.domain.GenerationTemplateParameters;
 import org.eclipse.dirigible.components.ide.template.service.GenerationService;
@@ -65,7 +64,6 @@ public class GenerationEndpoint {
 	 * @param parameters the parameters
 	 * @return the response entity
 	 * @throws URISyntaxException the URI syntax exception
-	 * @throws ScriptingException the scripting exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@PostMapping("/file/{workspace}/{project}/{*path}")
@@ -73,7 +71,7 @@ public class GenerationEndpoint {
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,
 			@PathVariable("path") String path,
-			@Valid @RequestBody GenerationTemplateParameters parameters) throws URISyntaxException, ScriptingException, IOException {
+			@Valid @RequestBody GenerationTemplateParameters parameters) throws URISyntaxException, IOException {
 
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);

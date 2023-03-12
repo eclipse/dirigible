@@ -30,7 +30,6 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.components.api.http.client.HttpClientRequestOptions;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.slf4j.Logger;
@@ -358,7 +357,7 @@ public final class HttpClientAsyncFacade {
 				private void executeCallback(String completeCallback, Map<Object, Object> executionContext) {
 					try {
 						getDefaultEngineExecutor().handleCallback(completeCallback, executionContext);
-					} catch (ScriptingException e) {
+					} catch (Exception e) {
 						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 					}
 				}

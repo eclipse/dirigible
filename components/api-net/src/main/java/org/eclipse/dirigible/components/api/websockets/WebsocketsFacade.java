@@ -24,7 +24,6 @@ import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class WebsocketsFacade.
  */
-public class WebsocketsFacade implements IScriptingFacade {
+public class WebsocketsFacade {
 	
 	/** The Constant DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_OPEN. */
 	public static final String DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_OPEN = "net/wrappers/onOpen.js";

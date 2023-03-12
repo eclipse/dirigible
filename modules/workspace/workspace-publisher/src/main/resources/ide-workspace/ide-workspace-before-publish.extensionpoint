@@ -1,6 +1,0 @@
-{
-  "location":"/ide-workspace/ide-workspace-before-publish.extensionpoint",
-  "name":"ide-workspace-before-publish",
-  "description":"Before Publish Extension Point",
-  "createdBy":"system","createdAt":"2022-01-13T20:09:01+0000"
-}

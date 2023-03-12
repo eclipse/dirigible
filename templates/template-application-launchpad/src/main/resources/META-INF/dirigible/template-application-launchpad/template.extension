@@ -1,5 +1,0 @@
-{
-    "extensionPoint": "ide-template",
-    "module": "template-application-launchpad/template.js",
-    "description": "Application Launchpad (with Angular UI)"
-}

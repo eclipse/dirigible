@@ -13,10 +13,9 @@ package org.eclipse.dirigible.database.h2;
 
 import static java.text.MessageFormat.format;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,15 +23,16 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.database.api.AbstractDatabase;
-import org.eclipse.dirigible.database.api.IDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * H2 Database adapter.
  */
-public class H2Database extends AbstractDatabase {
+public class H2Database {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(H2Database.class);
@@ -55,10 +55,10 @@ public class H2Database extends AbstractDatabase {
 	/**
 	 * Constructor with default root folder - user.dir
 	 *
-	 * @throws H2DatabaseException
+	 * @throws SQLException
 	 *             in case the database cannot be created
 	 */
-	public H2Database() throws H2DatabaseException {
+	public H2Database() throws SQLException {
 		this(null);
 	}
 
@@ -67,10 +67,10 @@ public class H2Database extends AbstractDatabase {
 	 *
 	 * @param rootFolder
 	 *            the root folder
-	 * @throws H2DatabaseException
+	 * @throws SQLException
 	 *             in case the database cannot be created
 	 */
-	public H2Database(String rootFolder) throws H2DatabaseException {
+	public H2Database(String rootFolder) throws SQLException {
 		if (logger.isDebugEnabled()) {logger.debug("Initializing the embedded H2 datasource...");}
 
 		initialize();
@@ -81,11 +81,6 @@ public class H2Database extends AbstractDatabase {
 	/**
 	 * Initialize.
 	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#initialize()
-	 */
-	@Override
 	public void initialize() {
 		Configuration.loadModuleConfig("/dirigible-database-h2.properties");
 		if (logger.isDebugEnabled()) {logger.debug(this.getClass().getCanonicalName() + " module initialized.");}
@@ -96,13 +91,9 @@ public class H2Database extends AbstractDatabase {
 	 *
 	 * @param name the name
 	 * @return the data source
+	 * @throws SQLException 
 	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
-	 */
-	@Override
-	public DataSource getDataSource(String name) {
+	public DataSource getDataSource(String name) throws SQLException {
 		DataSource dataSource = DATASOURCES.get(name);
 		if (dataSource != null) {
 			return dataSource;
@@ -116,11 +107,6 @@ public class H2Database extends AbstractDatabase {
 	 *
 	 * @return the name
 	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#getName()
-	 */
-	@Override
 	public String getName() {
 		return NAME;
 	}
@@ -130,11 +116,6 @@ public class H2Database extends AbstractDatabase {
 	 *
 	 * @return the type
 	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#getType()
-	 */
-	@Override
 	public String getType() {
 		return TYPE;
 	}
@@ -145,8 +126,9 @@ public class H2Database extends AbstractDatabase {
 	 * @param name
 	 *            the name
 	 * @return the data source
+	 * @throws SQLException 
 	 */
-	protected DataSource createDataSource(String name) {
+	protected DataSource createDataSource(String name) throws SQLException {
 		if (logger.isDebugEnabled()) {logger.debug("Creating an embedded H2 datasource...");}
 		synchronized (H2Database.class) {
 			try {
@@ -188,10 +170,10 @@ public class H2Database extends AbstractDatabase {
 					DATASOURCES.put(name, ds);
 					return ds;
 				} else {
-					throw new H2DatabaseException("Invalid datasource parameters provided for H2 database");
+					throw new SQLException("Invalid datasource parameters provided for H2 database");
 				}
 			} catch (IOException e) {
-				throw new H2DatabaseException(e);
+				throw new SQLException(e);
 			}
 		}
 	}
@@ -209,7 +191,7 @@ public class H2Database extends AbstractDatabase {
 		// TODO validate name parameter
 		// TODO get by name from Configuration
 
-		String rootFolder = (IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+		String rootFolder = ("DefaultDB".equals(name)) ? DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
 				: DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
 		String h2Root = Configuration.get(rootFolder, name);
 		File rootFile = new File(h2Root);
@@ -227,11 +209,6 @@ public class H2Database extends AbstractDatabase {
 	 *
 	 * @return the data sources
 	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSources()
-	 */
-	@Override
 	public Map<String, DataSource> getDataSources() {
 		Map<String, DataSource> datasources = new HashMap<>();
 		datasources.putAll(DATASOURCES);

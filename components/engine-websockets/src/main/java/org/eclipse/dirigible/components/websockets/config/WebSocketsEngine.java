@@ -19,7 +19,7 @@ public class WebSocketsEngine implements Engine {
 
 	@Override
 	public String getName() {
-		return "WebSockets";
+		return "WebSocket";
 	}
 
 	@Override

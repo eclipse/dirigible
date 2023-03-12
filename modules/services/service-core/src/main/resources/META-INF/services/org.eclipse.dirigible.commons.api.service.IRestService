@@ -1,3 +1,0 @@
-org.eclipse.dirigible.runtime.core.services.VersionRestService	# Version REST Service
-org.eclipse.dirigible.runtime.core.services.HealthCheckRestService	# HealthCheck REST Service
-org.eclipse.dirigible.runtime.core.services.ConfigurationsRestService	# Configurations REST Service

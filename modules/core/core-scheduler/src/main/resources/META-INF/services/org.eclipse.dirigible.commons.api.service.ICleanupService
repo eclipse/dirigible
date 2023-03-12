@@ -1,2 +1,0 @@
-org.eclipse.dirigible.core.scheduler.service.SynchronizerCoreService # Delete old synchronizer state logs
-org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService # Delete old job logs

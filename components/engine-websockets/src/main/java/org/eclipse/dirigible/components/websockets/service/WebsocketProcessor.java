@@ -13,7 +13,6 @@ package org.eclipse.dirigible.components.websockets.service;
 
 import java.util.Map;
 
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.components.websockets.domain.Websocket;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
@@ -81,7 +80,7 @@ public class WebsocketProcessor {
 			context.put("handler", module);
 			RepositoryPath path = new RepositoryPath(wrapper);
 	    	return getJavascriptService().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-		} catch (ScriptingException e) {
+		} catch (Exception e) {
 			throw new Exception(e);
 		}
 	}

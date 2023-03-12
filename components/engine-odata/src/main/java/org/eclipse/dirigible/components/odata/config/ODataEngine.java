@@ -27,7 +27,7 @@ public class ODataEngine implements Engine {
 	 */
 	@Override
 	public String getName() {
-		return "OData";
+		return "OData (Olingo)";
 	}
 
 	/**

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-repository-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>8.0.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -31,15 +31,10 @@
     </build>
     
     <dependencies>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-api</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-config</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
+            <version>8.0.0</version>
         </dependency>
     </dependencies>
 

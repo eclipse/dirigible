@@ -19,7 +19,7 @@ public class JavaScriptEngine implements Engine {
 
 	@Override
 	public String getName() {
-		return "JavaScript";
+		return "JavaScript (GraalJS)";
 	}
 
 	@Override

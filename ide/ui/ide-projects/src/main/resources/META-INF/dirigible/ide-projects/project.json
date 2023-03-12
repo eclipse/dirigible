@@ -1,8 +1,0 @@
-{
-    "guid": "ide-projects",
-    "repository": {
-        "type": "git",
-        "branch": "master",
-        "url": "https://github.com/dirigiblelabs/ide-projects.git"
-    }
-}

@@ -21,9 +21,9 @@ import java.util.Map;
 import javax.mail.MessagingException;
 
 import org.apache.commons.validator.routines.EmailValidator;
-import org.eclipse.dirigible.api.v3.mail.MailFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.api.mail.MailFacade;
 import org.eclipse.dirigible.components.engine.template.TemplateEngine;
 import org.eclipse.dirigible.components.engine.template.TemplateEnginesManager;
 import org.eclipse.dirigible.components.jobs.domain.Job;

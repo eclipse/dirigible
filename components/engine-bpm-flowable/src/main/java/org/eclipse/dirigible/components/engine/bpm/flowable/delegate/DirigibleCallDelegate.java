@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ExecutionData;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
@@ -94,7 +93,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
 
             executeJSHandler(context);
 
-        } catch (ScriptingException e) {
+        } catch (Exception e) {
             throw new BpmnError(e.getMessage());
         }
     }

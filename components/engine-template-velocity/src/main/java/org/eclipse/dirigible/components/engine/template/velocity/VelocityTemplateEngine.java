@@ -27,7 +27,7 @@ public class VelocityTemplateEngine implements Engine {
 	 */
 	@Override
 	public String getName() {
-		return "Template Velocity";
+		return "Template (Velocity)";
 	}
 
 	/**

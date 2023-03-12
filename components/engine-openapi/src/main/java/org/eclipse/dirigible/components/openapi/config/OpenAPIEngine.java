@@ -19,7 +19,7 @@ public class OpenAPIEngine implements Engine {
 
 	@Override
 	public String getName() {
-		return "OpenAPI";
+		return "OpenAPI (Swagger)";
 	}
 
 	@Override

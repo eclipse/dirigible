@@ -1,9 +1,0 @@
-{
-    "scripts": [],
-    "modules": [
-      "../third_party/wasmparser/WasmDis.js",
-      "../third_party/wasmparser/WasmParser.js",
-      "wasmparser_worker.js",
-      "WasmParserWorker.js"
-    ]
-}

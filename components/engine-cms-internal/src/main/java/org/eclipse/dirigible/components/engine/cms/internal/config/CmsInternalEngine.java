@@ -27,7 +27,7 @@ public class CmsInternalEngine implements Engine {
 	 */
 	@Override
 	public String getName() {
-		return "CMS Internal";
+		return "Content (Chemistry)";
 	}
 
 	/**

@@ -38,7 +38,6 @@ import java.util.Set;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -564,9 +563,8 @@ public class FilesFacade {
 	 * @param pattern the glob pattern
 	 * @return the list of file names
 	 * @throws IOException in case of an error
-	 * @throws ScriptingException in case of an error
 	 */
-	public static String find(String path, String pattern) throws IOException, ScriptingException {
+	public static String find(String path, String pattern) throws IOException {
 			return GsonHelper.toJson(FileSystemUtils.find(path, pattern));
 	}
 

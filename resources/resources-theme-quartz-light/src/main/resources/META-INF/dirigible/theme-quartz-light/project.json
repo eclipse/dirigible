@@ -1,8 +1,0 @@
-{
-    "guid": "theme-quartz-light",
-    "repository": {
-        "type": "git",
-        "branch": "master",
-        "url": "https://github.com/dirigiblelabs/resources-theme-quartz-light.git"
-    }
-}

@@ -1,9 +1,0 @@
-{
-	"description": "${perspectiveName} perspective",
-#if($includeLaunchpad)
-	"extensionPoint": "launchpad-${extensionName}-perspective",
-#else
-	"extensionPoint": "launchpad-${launchpadName}-perspective",
-#end
-	"module": "${projectName}/gen/ui/${perspectiveName}/extensions/perspective/perspective.js"
-}

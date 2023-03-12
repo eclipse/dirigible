@@ -1,8 +1,0 @@
-{
-    "guid": "ide-websockets-menu",
-    "repository": {
-        "type": "git",
-        "branch": "master",
-        "url": "https://github.com/dirigiblelabs/ide-websockets.git"
-    }
-}

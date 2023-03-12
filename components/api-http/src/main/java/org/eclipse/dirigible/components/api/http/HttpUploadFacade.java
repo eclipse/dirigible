@@ -22,7 +22,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.eclipse.dirigible.commons.api.context.InvalidStateException;
-import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -31,7 +30,7 @@ import org.springframework.stereotype.Component;
  * Java facade for working uploading files.
  */
 @Component
-public class HttpUploadFacade implements IScriptingFacade {
+public class HttpUploadFacade {
 
 	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Upload Facade without a valid Request";

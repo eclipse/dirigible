@@ -1,5 +1,0 @@
-{
-	"name": "ORDERS_VIEW",
-	"type": "VIEW",
-	"query": "SELECT * FROM ORDERS"
-}

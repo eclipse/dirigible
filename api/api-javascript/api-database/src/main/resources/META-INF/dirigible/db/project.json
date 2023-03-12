@@ -1,8 +1,0 @@
-{
-	"guid": "db",
-	"repository": {
-		"type": "git",
-		"branch": "master",
-		"url": "https://github.com/dirigiblelabs/api-db.git"
-	}
-}

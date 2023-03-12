@@ -14,7 +14,6 @@ package org.eclipse.dirigible.engine.odata2.sql.builder;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
-import org.eclipse.dirigible.commons.api.context.InvalidStateException;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
@@ -144,7 +143,7 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 			}
 		}
 
-		throw new InvalidStateException("Unknown odata table name");
+		throw new RuntimeException("Unknown odata table name");
 	}
 
 	/**

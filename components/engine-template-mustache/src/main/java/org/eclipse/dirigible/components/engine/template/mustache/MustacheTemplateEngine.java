@@ -27,7 +27,7 @@ public class MustacheTemplateEngine implements Engine {
 	 */
 	@Override
 	public String getName() {
-		return "Template Mustache";
+		return "Template (Mustache)";
 	}
 
 	/**

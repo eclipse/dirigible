@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -47,9 +46,8 @@ public class RegistryFacade {
 	 * @param path the path
 	 * @return the content
 	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ScriptingException the scripting exception
 	 */
-	public static byte[] getContent(String path) throws IOException, ScriptingException {
+	public static byte[] getContent(String path) throws IOException {
 		// Check in the repository first
 		IResource resource = RepositoryFacade.getResource(toRepositoryPath(path));
 		if (resource.exists()) {
@@ -97,9 +95,8 @@ public class RegistryFacade {
 	 * @param path the path
 	 * @return the text
 	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ScriptingException the scripting exception
 	 */
-	public static String getText(String path) throws IOException, ScriptingException {
+	public static String getText(String path) throws IOException {
 		byte[] content = getContent(path);
 		if (content == null) {
 			return null;
@@ -113,9 +110,8 @@ public class RegistryFacade {
 	 * @param path the path
 	 * @return the boolean
 	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ScriptingException the scripting exception
 	 */
-	public static Boolean exists(String path) throws IOException, ScriptingException {
+	public static Boolean exists(String path) throws IOException {
 		return getContent(path) == null;
 	}
 
@@ -149,9 +145,8 @@ public class RegistryFacade {
 	 * @param pattern the glob pattern
 	 * @return the list of file names
 	 * @throws IOException in case of an error
-	 * @throws ScriptingException in case of an error
 	 */
-	public static String find(String path, String pattern) throws IOException, ScriptingException {
+	public static String find(String path, String pattern) throws IOException {
 		ICollection collection = RepositoryFacade.getCollection(toRepositoryPath(path));
 		if (collection.exists() && collection instanceof LocalCollection) {
 			List<String> list = FileSystemUtils.find(((LocalCollection) collection).getFolder().getPath(), pattern);
