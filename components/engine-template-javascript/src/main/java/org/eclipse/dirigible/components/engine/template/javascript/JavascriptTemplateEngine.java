@@ -27,7 +27,7 @@ public class JavascriptTemplateEngine implements Engine {
 	 */
 	@Override
 	public String getName() {
-		return "Template JavaScript";
+		return "Template (JavaScript)";
 	}
 
 	/**

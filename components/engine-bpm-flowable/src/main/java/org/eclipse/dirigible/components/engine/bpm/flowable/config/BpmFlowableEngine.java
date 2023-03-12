@@ -27,7 +27,7 @@ public class BpmFlowableEngine implements Engine {
 	 */
 	@Override
 	public String getName() {
-		return "BPM Flowable";
+		return "Process (Flowable)";
 	}
 
 	/**

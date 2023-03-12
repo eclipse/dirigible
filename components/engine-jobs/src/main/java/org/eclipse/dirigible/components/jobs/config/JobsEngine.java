@@ -19,7 +19,7 @@ public class JobsEngine implements Engine {
 
 	@Override
 	public String getName() {
-		return "Jobs";
+		return "Job (Quartz)";
 	}
 
 	@Override

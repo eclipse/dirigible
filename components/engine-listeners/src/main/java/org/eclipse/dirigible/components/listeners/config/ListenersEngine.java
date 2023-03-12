@@ -19,7 +19,7 @@ public class ListenersEngine implements Engine {
 
 	@Override
 	public String getName() {
-		return "Listeners";
+		return "Listener (ActiveMQ)";
 	}
 
 	@Override

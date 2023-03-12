@@ -27,7 +27,7 @@ public class WikiEngine implements Engine {
 	 */
 	@Override
 	public String getName() {
-		return "Wiki";
+		return "Wiki (Markdown & Confluence)";
 	}
 
 	/**
