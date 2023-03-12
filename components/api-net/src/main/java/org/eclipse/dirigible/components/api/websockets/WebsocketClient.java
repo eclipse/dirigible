@@ -74,7 +74,7 @@ public class WebsocketClient {
      * On open.
      *
      * @param session the session
-     * @throws ScriptingException the scripting exception
+     * @throws Exception the scripting exception
      */
     @OnOpen
     public void onOpen(Session session) throws Exception {
@@ -91,7 +91,7 @@ public class WebsocketClient {
      * Process message.
      *
      * @param message the message
-     * @throws ScriptingException the scripting exception
+     * @throws Exception the scripting exception
      */
     @OnMessage
     public void processMessage(String message) throws Exception {
@@ -107,7 +107,7 @@ public class WebsocketClient {
      * Process error.
      *
      * @param t the t
-     * @throws ScriptingException the scripting exception
+     * @throws Exception the scripting exception
      */
     @OnError
     public void processError(Throwable t) throws Exception {
@@ -124,7 +124,7 @@ public class WebsocketClient {
      * On close.
      *
      * @param session the session
-     * @throws ScriptingException the scripting exception
+     * @throws Exception the scripting exception
      */
     @OnClose
     public void onClose(Session session) throws Exception {

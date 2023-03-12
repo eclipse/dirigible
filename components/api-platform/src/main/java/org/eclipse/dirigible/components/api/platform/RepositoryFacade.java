@@ -179,7 +179,6 @@ public class RepositoryFacade implements InitializingBean {
 	 * @param pattern the glob pattern
 	 * @return the list of file names
 	 * @throws IOException in case of an error
-	 * @throws ScriptingException in case of an error
 	 */
 	public static String find(String path, String pattern) throws IOException {
 		return GsonHelper.toJson(RepositoryFacade.get().getRepository().find(path, pattern));

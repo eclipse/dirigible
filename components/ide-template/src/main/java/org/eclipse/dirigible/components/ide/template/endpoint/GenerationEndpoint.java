@@ -64,7 +64,6 @@ public class GenerationEndpoint {
 	 * @param parameters the parameters
 	 * @return the response entity
 	 * @throws URISyntaxException the URI syntax exception
-	 * @throws ScriptingException the scripting exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@PostMapping("/file/{workspace}/{project}/{*path}")
