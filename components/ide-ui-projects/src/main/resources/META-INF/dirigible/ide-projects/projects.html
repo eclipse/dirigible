@@ -27,13 +27,15 @@
         <script type="text/javascript" src="/webjars/jstree/3.3.12/jstree.min.js"></script>
         <script type="text/javascript" src="/services/web/resources-core/ui/widgets/indicator.plugin.js"></script>
         <link type="text/css" rel="stylesheet" href="/services/web/resources/styles/jstree.css" />
-        <link type="text/css" rel="stylesheet"
-            href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <script type="text/javascript" src="js/projects.js"></script>
     </head>
 
     <body class="dg-vbox">
-        <fd-toolbar>
+        <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
+            {{state.busyText}}
+        </fd-busy-indicator-extended>
+        <fd-toolbar ng-show="!state.error && !state.isBusy">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button compact="true" dg-type="transparent" glyph="sap-icon--save" title="Save all"
                 aria-label="Save all" ng-click="saveAll()"></fd-button>
@@ -84,13 +86,18 @@
                 </fd-button>
             </fd-toolbar-overflow>
         </fd-toolbar>
-
-        <fd-toolbar dg-size="cozy" ng-show="searchVisible">
+        <fd-toolbar dg-size="cozy" ng-show="searchVisible && !state.error && !state.isBusy">
             <fd-input type="search" placeholder="Search" ng-keyup="search()" ng-model="searchField.text"></fd-input>
         </fd-toolbar>
-
         <div id="dgProjects" class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar"
-            dg-contextmenu="contextMenuContent"></div>
+            dg-contextmenu="contextMenuContent" ng-show="!state.error && !state.isBusy"></div>
+        <fd-message-page glyph="sap-icon--error" ng-if="state.error">
+            <fd-message-page-title>Something went wrong!</fd-message-page-title>
+            <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
+            <fd-message-page-actions>
+                <fd-button compact="true" dg-label="Reload panel" ng-click="init()"></fd-button>
+            </fd-message-page-actions>
+        </fd-message-page>
     </body>
 
 </html>

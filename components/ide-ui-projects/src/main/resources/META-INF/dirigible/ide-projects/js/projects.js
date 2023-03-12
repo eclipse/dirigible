@@ -30,6 +30,11 @@ projectsView.controller('ProjectsViewController', [
         generateApi,
         transportApi,
     ) {
+        $scope.state = {
+            isBusy: true,
+            error: false,
+            busyText: "Loading...",
+        };
         $scope.searchVisible = false;
         $scope.searchField = { text: '' };
         $scope.workspaceNames = [];
@@ -537,14 +542,20 @@ projectsView.controller('ProjectsViewController', [
 
         $scope.reloadWorkspaceList = function () {
             workspaceApi.listWorkspaceNames().then(function (response) {
-                if (response.status === 200)
+                if (response.status === 200) {
                     $scope.workspaceNames = response.data;
-                else messageHub.setStatusError('Unable to load workspace list');
+                    $scope.state.error = false;
+                } else {
+                    $scope.state.error = true;
+                    $scope.errorMessage = "Unable to load workspace list.";
+                    messageHub.setStatusError('Unable to load workspace list');
+                }
             });
         };
 
         $scope.reloadWorkspace = function (setConfig = false) {
             $scope.projects.length = 0;
+            $scope.state.isBusy = true;
             workspaceApi.load($scope.selectedWorkspace.name).then(function (response) {
                 if (response.status === 200) {
                     for (let i = 0; i < response.data.projects.length; i++) {
@@ -568,9 +579,13 @@ projectsView.controller('ProjectsViewController', [
                         }
                         $scope.projects.push(project);
                     }
+                    $scope.state.isBusy = false;
                     if (setConfig) $scope.jstreeWidget.jstree($scope.jstreeConfig);
                     else $scope.jstreeWidget.jstree(true).refresh();
                 } else {
+                    $scope.state.isBusy = false;
+                    $scope.state.error = true;
+                    $scope.errorMessage = "Unable to load workspace data.";
                     messageHub.setStatusError('Unable to load workspace data');
                 }
             });
@@ -1887,7 +1902,12 @@ projectsView.controller('ProjectsViewController', [
         );
 
         // Initialization
-        $scope.reloadWorkspace(true);
-        $scope.reloadWorkspaceList();
-        $scope.loadTemplates();
+        $scope.init = function () {
+            $scope.state.error = false;
+            $scope.state.isBusy = true;
+            $scope.reloadWorkspaceList();
+            $scope.reloadWorkspace(true);
+            $scope.loadTemplates();
+        };
+        $scope.init();
     }]);
