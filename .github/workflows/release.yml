@@ -78,30 +78,6 @@ jobs:
         docker image prune -a -f
         cd ../../
 
-    - name: Push Dirigible
-      run: |
-        cd releng/server-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform -f Dockerfile-base .
-        docker tag dirigible-base-platform dirigiblelabs/dirigible-base-platform:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-all .
-        docker tag dirigible-all dirigiblelabs/dirigible-all:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-all:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-
-    - name: Push Dirigible - Keycloak
-      run: |
-        cd releng/server-keycloak-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-keycloak -f Dockerfile-base .
-        docker tag dirigible-base-platform-keycloak dirigiblelabs/dirigible-base-platform-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-keycloak .
-        docker tag dirigible-keycloak dirigiblelabs/dirigible-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-
 #-----------------Publish to DockerHub-------------------#
 
 #---------------Publish to Maven Central-----------------#
@@ -136,16 +112,7 @@ jobs:
 
     - name: Package WAR files
       run: |
-        zip --junk-paths anonymous-all releng/anonymous-all/target/ROOT-war.war
-        zip --junk-paths anonymous-runtime releng/anonymous-runtime/target/ROOT-war.war
-        zip --junk-paths desktop-all releng/desktop-all/target/ROOT-war.war
-        zip --junk-paths sap-cf-all releng/sap-cf-all/target/ROOT-war.war
-        zip --junk-paths sap-cf-runtime releng/sap-cf-runtime/target/ROOT-war.war
-        zip --junk-paths server-all releng/server-all/target/ROOT-war.war
-        zip --junk-paths server-minimal releng/server-minimal/target/ROOT-war.war
-        zip --junk-paths server-oauth releng/server-oauth/target/ROOT-war.war
-        zip --junk-paths server-runtime releng/server-runtime/target/ROOT-war.war
-        zip --junk-paths trial-all releng/trial-all/target/ROOT-war.war
+        zip --junk-paths application-all components/app-all/target/dirigible-application-all-${{ github.event.inputs.releaseVersion }}.jar
 
     - name: Create Release
       id: create_release
@@ -157,16 +124,7 @@ jobs:
         draft: false
         prerelease: false
         files: |
-          ./anonymous-all.zip
-          ./anonymous-runtime.zip
-          ./desktop-all.zip
-          ./sap-cf-all.zip
-          ./sap-cf-runtime.zip
-          ./server-all.zip
-          ./server-minimal.zip
-          ./server-oauth.zip
-          ./server-runtime.zip
-          ./trial-all.zip
+          ./application-all.zip
         body: |
           ## Eclipse Dirigible - ${{ github.event.inputs.releaseVersion }}
 
@@ -182,7 +140,7 @@ jobs:
           ```xml
           <dependency>
               <groupId>org.eclipse.dirigible</groupId>
-              <artifactId>dirigible-server-all</artifactId>
+              <artifactId>dirigible-components-group-core</artifactId>
               <version>${{ github.event.inputs.releaseVersion }}</version>
           </dependency>
           ```
@@ -199,29 +157,14 @@ jobs:
           ```
 
           #### Docker images:
-            - [dirigiblelabs/dirigible](https://hub.docker.com/r/dirigiblelabs/dirigible/tags?page=1&ordering=last_updated) - (Spring) Basic docker image - recommended for local test & development.
-            - [dirigiblelabs/dirigible-all](https://hub.docker.com/r/dirigiblelabs/dirigible-all/tags?page=1&ordering=last_updated) - Basic docker image - recommended for local test & development.
-            - [dirigiblelabs/dirigible-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-keycloak/tags?page=1&ordering=last_updated) - Keycloak integration.
+            - [dirigiblelabs/dirigible](https://hub.docker.com/r/dirigiblelabs/dirigible/tags?page=1&ordering=last_updated) - All-in-one docker image - recommended for local test & development.
 
-          #### Base Docker images:
-            - [dirigiblelabs/dirigible-base-platform](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-keycloak/tags?page=1&ordering=last_updated)
-          
           > _**Note:** All Docker images are availalbe [here](https://hub.docker.com/u/dirigiblelabs)_
 
           #### Available for download `*.war` packages:
-            - _**[server-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-all.zip) - Basic package - recommended for local test & development.**_
-            - [server-minimal](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-minimal.zip) - Minimal package still containing the WebIDE.
-            - [anonymous-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/anonymous-all.zip) - Anonymous access.
-            - [anonymous-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/anonymous-runtime.zip) - Anonymous access _(runtime only)_.
-            - [sap-cf-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-cf-all.zip) - SAP Cloud Platform - Cloud Foundry environment.
-            - [sap-cf-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-cf-runtime.zip) - SAP Cloud Platform - Cloud Foundry environment _(runtime only)_.
-            - [desktop-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/desktop-all.zip) - Desktop package.
-            - [server-oauth](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-oauth.zip) - Basic package - recommended for local test & development, _**requires additional OAuth configurations.**_
-            - [server-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-runtime.zip) - Basic package - recommended for local test & development _(runtime only)_.
-            - [trial-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/trial-all.zip) - Trial package _(guest/nickname)_.
+            - _**[application-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/application-all.zip) - All-in-one package - recommended for local test & development.**_
             
-          > _**Note:** Unzip the downloaded file to extract the `ROOT.war` binary._
+          > _**Note:** Unzip the downloaded file to extract the `application-all-XXX.jar` binary._
           
           For more information go to [https://www.dirigible.io/help/setup/](https://www.dirigible.io/help/setup/).
     
@@ -245,14 +188,8 @@ jobs:
         git add .github/
         git add .reuse/
         git add LICENSES/
-        git add api/
-        git add ext/
-        git add ide/
         git add logo/
-        git add modules/
-        git add releng/
-        git add resources/
-        git add templates/
+        git add components/
         git reset --hard
         ####
 
