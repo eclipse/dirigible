@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-commons-parent</artifactId>
-		<version>8.0.0</version>
+		<version>7.7.7</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,7 +34,7 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
-			<version>8.0.0</version>
+			<version>7.7.7</version>
     	</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
