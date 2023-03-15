@@ -14,7 +14,7 @@
 
 
 <modules>
-    <module>app-all</module>
+    <module>application</module>
     
 </modules>
 
