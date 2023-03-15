@@ -111,7 +111,7 @@ jobs:
 
     - name: Package WAR files
       run: |
-        zip --junk-paths application-all build/app-all/target/dirigible-application-all-${{ github.event.inputs.releaseVersion }}.jar
+        zip --junk-paths application-all build/application/target/dirigible-application-${{ github.event.inputs.releaseVersion }}.jar
 
     - name: Create Release
       id: create_release
