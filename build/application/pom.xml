@@ -10,8 +10,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-	<name>Application - All</name>
-	<artifactId>dirigible-application-all</artifactId>
+	<name>Build - Application</name>
+	<artifactId>dirigible-application</artifactId>
 	<packaging>jar</packaging>
 
 

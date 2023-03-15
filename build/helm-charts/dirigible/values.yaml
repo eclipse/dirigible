@@ -1,0 +1,195 @@
+# Default values for dirigible.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#Set replica count
+replicaCount: 1
+
+
+image:
+  # Repository for basic deployment
+  repository: dirigiblelabs/dirigible
+  # Pull policy for the repositories
+  pullPolicy: IfNotPresent
+
+# Image pull secrets if you have 
+imagePullSecrets: []
+# Name override the Dirigible deployment
+nameOverride: ""
+# Full name override Dirigible deployment
+fullNameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: dirigible-sa
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  # Allow privileged escalation required to effectively enforce MustRunAsNonRoot.
+  allowPrivilegeEscalation: false
+  seccompProfile:
+    # Enable seccomp profile
+    type: RuntimeDefault
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # Type of service when you expose
+  type: ClusterIP
+  # Port dor the Dirigible instance
+  port: 8080
+
+ingress:
+  # Enable ingress configuration
+  enabled: false
+  # Annotation for ingress
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  # Host where can access Dirigible 
+  host: ""
+  # TLS for ingress configuration
+  tls: false
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+#The nodeSelector property  
+nodeSelector: {}
+
+#The toleration property
+tolerations: []
+
+#The affinity property
+affinity: {}
+
+dirigible:
+  # Image for custom Dirigible installation
+  image: ""
+  # Disable terminal in web
+  terminalEnabled: false
+  # Change deployment strategy type
+  strategyType: Recreate
+  # Default user and password for dirigible
+  username: dirigible
+  password: dirigible
+
+volume:
+  # Enable volume for Dirigible
+  enabled: true
+  storage: 2Gi
+
+database:
+  # Enable Postgre installation
+  enabled: false
+  # Image for Postgre
+  image: postgres:14
+  # Driver for Postgre 
+  driver: org.postgresql.Driver
+  # Username for database
+  username: dirigible
+  # Password for database username
+  password: dirigible
+  # Storage for Postgre database
+  storage: 2Gi
+  
+gke:
+  # Enable GCP Cloud SQL
+  cloudSQL: false
+  # Project Id where is installed Cloud SQL
+  projectId:
+  # Region for Cloud SQL
+  region:
+  # Instance name for Dirigible Cloud SQL
+  dirigibleSqlInstanceName: dirigible
+  # Instance name for Keycloak Cloud SQL
+  keycloakSqlInstanceName: keycloak
+  # Secret name for login credential for Dirigible Cloud SQL
+  secretNameDirigible: dirigible-db
+  # Secret name for login credential for Keycloak Cloud SQL
+  secretNameKeycloak: keycloak-db
+  # Dirigible GCP Service account
+  dirigibleServiceAccountName: dirigible-gcp-sa
+  # Dirigible GCP Service account
+  keycloakServiceAccountName: keycloak-gcp-sa
+
+keycloak:
+  # Enable keycloak configuration
+  enabled: false
+  # Install keycloak
+  install: false
+  # Specifies whether a service account should be created
+  serviceAccountCreate: true
+  # Service Account for Keycloak deployment
+  serviceAccountName: keycloak-sa
+  # Name for the instance
+  name: keycloak
+  # Image for Keycloak installation
+  image: jboss/keycloak:16.1.1
+  # Username for Keycloak administrator
+  username: admin
+  # Password for Keycloak administrator
+  password: admin
+  # Replica count for Keycloak
+  replicaCount: 1
+  # Realm is property which realm to use
+  realm: master
+  # ClientId is property for client 
+  clientId: dirigible
+  # Database for the Keycloak
+  database:
+    # Enabled property to install Postgre  
+    enabled: false
+    # Image for Postgre database  
+    image: postgres:13
+    # Storage for Postgre database
+    storage: 2Gi
+    # Username for Postgre database
+    username: keycloak
+    # Password for Posgre username
+    password: keycloak
+
+# Enable Istio configuration
+istio:
+  enabled: false
+  # Istio servers port number
+  serversPortNumber: 80
+  # Istio servers port name
+  serversPortName: http
+  # Istio servers port protocol
+  serversPortProtocol: HTTP
+  # Istio servers host
+  dirigibleServerHost: "dirigible"
+  keycloakServerHost: "keycloak"
+  # Istio https redirect
+  httpsRedirect: false
+  # Https configuration
+  enableHttps: false
+  # Istio virtual service hosts
+  virtualserviceHosts: "*"
+  # Istio virtual service gateways
+  virtualserviceGateways: gateway
+  # Istio virtual service destination
+  virtualserviceDestination: dirigible
+  # Istio virtual service port
+  virtualservicePort: 8080

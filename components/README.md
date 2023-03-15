@@ -13,11 +13,11 @@ If you want to do a fast build (for testing purposes):
 
 #### Run
 
-	java -jar app-all/target/dirigible-application-all-8.0.0-SNAPSHOT.jar
+	java -jar build/application/target/dirigible-application-8.0.0-SNAPSHOT.jar
 
 #### Debug
 
-	java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar app-all/target/dirigible-application-all-8.0.0-SNAPSHOT.jar
+	java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar build/application/target/dirigible-application-8.0.0-SNAPSHOT.jar
 	
 #### REST API
 

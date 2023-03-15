@@ -71,13 +71,12 @@ jobs:
 
     - name: Push Dirigible (Spring)
       run: |
-        cd components/app-all
-        docker build --load -t dirigible .
-        docker tag dirigible dirigiblelabs/dirigible
-        docker push dirigiblelabs/dirigible
+        cd build/application
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible .
+        docker tag dirigible dirigiblelabs/dirigible:${{ github.event.inputs.releaseVersion }}
+        docker push dirigiblelabs/dirigible:${{ github.event.inputs.releaseVersion }}
         docker image prune -a -f
         cd ../../
-
 #-----------------Publish to DockerHub-------------------#
 
 #---------------Publish to Maven Central-----------------#
@@ -112,7 +111,7 @@ jobs:
 
     - name: Package WAR files
       run: |
-        zip --junk-paths application-all components/app-all/target/dirigible-application-all-${{ github.event.inputs.releaseVersion }}.jar
+        zip --junk-paths application-all build/application/target/dirigible-application-${{ github.event.inputs.releaseVersion }}.jar
 
     - name: Create Release
       id: create_release
@@ -182,7 +181,7 @@ jobs:
     - name: Helm Charts Release - Checkout gh-pages
       run: |
         mkdir charts-temp
-        cp -r releng/helm-charts/ charts-temp/
+        cp -r build/helm-charts/ charts-temp/
 
         #### Git Checkout Workaround
         git add .github/
