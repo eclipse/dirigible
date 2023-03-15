@@ -42,40 +42,14 @@ jobs:
 
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
-    - name: Push Dirigible
+    - name: Push Dirigible (Spring)
       run: |
-        cd releng/server-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform -f Dockerfile-base .
-        docker tag dirigible-base-platform dirigiblelabs/dirigible-base-platform:$DIRIGIBLE_VERSION
-        docker push dirigiblelabs/dirigible-base-platform:$DIRIGIBLE_VERSION
-        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-all .
-        docker tag dirigible-all dirigiblelabs/dirigible-all:$DIRIGIBLE_VERSION
-        docker push dirigiblelabs/dirigible-all:$DIRIGIBLE_VERSION
+        cd build/application
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible .
+        docker tag dirigible dirigiblelabs/dirigible:$DIRIGIBLE_VERSION
+        docker push dirigiblelabs/dirigible:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
-    - name: Push Dirigible - Keycloak
-      run: |
-        cd releng/server-keycloak-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-keycloak -f Dockerfile-base .
-        docker tag dirigible-base-platform-keycloak dirigiblelabs/dirigible-base-platform-keycloak:$DIRIGIBLE_VERSION
-        docker push dirigiblelabs/dirigible-base-platform-keycloak:$DIRIGIBLE_VERSION
-        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-keycloak .
-        docker tag dirigible-keycloak dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
-        docker push dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible - Keycloak - Runtime
-      run: |
-        cd releng/server-runtime-keycloak
-        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-runtime-keycloak -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime-keycloak dirigiblelabs/dirigible-base-platform-runtime-keycloak:$DIRIGIBLE_VERSION
-        docker push dirigiblelabs/dirigible-base-platform-runtime-keycloak:$DIRIGIBLE_VERSION
-        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-runtime-keycloak .
-        docker tag dirigible-runtime-keycloak dirigiblelabs/dirigible-runtime-keycloak:$DIRIGIBLE_VERSION
-        docker push dirigiblelabs/dirigible-runtime-keycloak:$DIRIGIBLE_VERSION
-        docker image prune -a -f
-        cd ../../
-
 #-----------------Publish to DockerHub-------------------#
 
 #----------------Publish Helm Release------------------#
@@ -85,7 +59,7 @@ jobs:
     - name: Helm Charts Release - Checkout gh-pages
       run: |
         mkdir charts-temp
-        cp -r releng/helm-charts/ charts-temp/
+        cp -r build/helm-charts/ charts-temp/
 
         #### Git Checkout Workaround
         git add .github/

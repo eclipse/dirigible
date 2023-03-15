@@ -1,0 +1,440 @@
+{{- if .Values.serviceAccount.create }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ required "Missing service account name" .Values.serviceAccount.name }}
+  namespace: {{ .Release.Namespace }}
+  {{- if .Values.gke.cloudSQL }}
+  annotations:
+    iam.gke.io/gcp-service-account: {{ .Values.gke.dirigibleServiceAccountName }}@{{ .Values.gke.projectId }}.iam.gserviceaccount.com
+  {{- end }}
+{{- end }}
+---  
+{{- if .Values.volume.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "dirigible.fullname" . }}-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ required "Missing volume storage" .Values.volume.storage }}
+{{- end }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dirigible.fullname" . }}
+  labels:
+    {{- include "dirigible.labels" . | nindent 4 }}
+spec:
+  replicas: {{ required "Missing replica count" .Values.replicaCount }}
+  strategy:
+    type: {{ required "Missing deployment strategy type" .Values.dirigible.strategyType }}
+  selector:
+    matchLabels:
+      {{- include "dirigible.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "dirigible.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "dirigible.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- if .Values.database.enabled }}
+        - name: wait-db-ready
+          image: busybox:1.28
+          command:
+            - sh
+            - -c
+            - for i in {1..15}; do echo "Waiting for database creation ..."; sleep 2; done;
+        - name: check-db-ready
+          image: postgres:9.6.5
+          command:
+            - sh
+            - -c
+            - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database; sleep 2; done;
+        {{- else if .Values.volume.enabled }}
+        - name: wait-volume-ready
+          image: busybox:1.28
+          command:
+            - sh
+            - -c
+            - for i in {1..15}; do echo "Waiting for volume creation ..."; sleep 2; done;
+        {{- end }}
+      containers:
+        - name: {{ required "Missing chart name" .Chart.Name }}
+          {{- if eq .Values.keycloak.enabled false }}
+          lifecycle:
+            postStart:
+              exec:
+                command: 
+                - "/bin/sh"
+                - "-c"
+                - >
+                  sed -i 's/username="dirigible"/username="{{required "Missing chart name" .Values.dirigible.username }}"/g' /usr/local/tomcat/conf/tomcat-users.xml &&
+                  sed -i 's/password="dirigible"/password="{{required "Missing chart name" .Values.dirigible.password }}"/g' /usr/local/tomcat/conf/tomcat-users.xml
+          {{- end }}
+          volumeMounts:
+          - name: dirigible-temp-data
+            mountPath: /usr/local/tomcat/target
+          {{- if .Values.volume.enabled }}
+          - name: {{ include "dirigible.fullname" . }}-volume
+            mountPath: /usr/local/tomcat/target/dirigible/repository
+          {{- end }}
+          env:
+            {{- if eq .Values.dirigible.terminalEnabled false }}
+            - name: DIRIGIBLE_TERMINAL_ENABLED
+              value: "false"
+            {{- end }}
+            {{- if .Values.istio.enabled }}
+            - name: DIRIGIBLE_HOST
+              value: https://{{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+            {{- end}}
+            {{- if .Values.database.enabled }}
+            - name: DIRIGIBLE_DATABASE_PROVIDER
+              value: custom
+            - name: DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES
+              value: POSTGRE
+            - name: DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT
+              value: POSTGRE
+            - name: POSTGRE_URL
+              value: jdbc:postgresql://{{ include "dirigible.fullname" . }}-database:5432/{{ required "Missing database username" .Values.database.username }}
+            - name: POSTGRE_DRIVER
+              value: org.postgresql.Driver
+            - name: POSTGRE_USERNAME
+              value: {{ required "Missing database username" .Values.database.username }}
+            - name: POSTGRE_PASSWORD
+              value: {{ required "Missing database password" .Values.database.password }}
+            - name: DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE
+              value: "false"
+            - name: DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE
+              value: "true"
+            - name: DIRIGIBLE_SCHEDULER_MEMORY_STORE
+              value: "true"
+            {{- end }}
+            {{- if .Values.gke.cloudSQL }}
+            - name: DIRIGIBLE_DATABASE_PROVIDER
+              value: custom
+            - name: DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES
+              value: POSTGRE
+            - name: DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT
+              value: POSTGRE
+            - name: POSTGRE_DRIVER
+              value: org.postgresql.Driver
+            - name: POSTGRE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Missing GKE secret" .Values.gke.secretNameDirigible }}
+                  key: postgre_url
+            - name: POSTGRE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Missing GKE secret"  .Values.gke.secretNameDirigible }}
+                  key: username
+            - name: POSTGRE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Missing GKE secret"  .Values.gke.secretNameDirigible  }}
+                  key: password
+            - name: DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE
+              value: "false"
+            - name: DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE
+              value: "true"
+            - name: DIRIGIBLE_SCHEDULER_MEMORY_STORE
+              value: "true"
+            {{- end }}
+            {{- if .Values.keycloak.enabled }}
+            - name: DIRIGIBLE_KEYCLOAK_ENABLED
+              value: "true"
+            - name: DIRIGIBLE_BASIC_ENABLED
+              value: "false"
+            - name: DIRIGIBLE_KEYCLOAK_CONFIDENTIAL_PORT
+              value: "443"
+            - name: DIRIGIBLE_KEYCLOAK_SSL_REQUIRED
+              value: "none"
+            - name: DIRIGIBLE_KEYCLOAK_REALM
+              value: {{ required "Missing Keycloak realm" .Values.keycloak.realm }}
+            - name: DIRIGIBLE_KEYCLOAK_CLIENT_ID
+              value: {{ required "Missing Keycloak client id" .Values.keycloak.clientId }}
+            {{- if .Values.ingress.enabled }}
+            - name: DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL
+              value: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}/auth/
+            {{- else if .Values.istio.enabled }}
+            - name: DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL
+              value: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}/auth/
+            {{- else }}
+            - name: DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL
+              value: https://{{ required "Missing Keycloak name" .Values.keycloak.name }}/auth/
+            {{- end }}
+            {{- end }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- if .Values.dirigible.image }}
+          image: "{{ required "Missing Dirigible image" .Values.dirigible.image }}"
+          {{- else if .Values.keycloak.enabled }}
+          image: "{{ required "Missing Keycloak image" .Values.image.repositoryKeycloak }}:{{ required "Missing chart app version" .Chart.AppVersion }}"
+          {{- else }}
+          image: "{{ required "Missing image" .Values.image.repository }}:{{ required "Missing chart app version" .Chart.AppVersion }}"
+          {{- end }}
+          imagePullPolicy: {{ required "Missing image pull policy" .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 10
+            periodSeconds: 10
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            failureThreshold: 10
+            periodSeconds: 10
+            httpGet:
+              path: /services/v4/healthcheck
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        {{- if .Values.gke.cloudSQL }}
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.28.0 # make sure the use the latest version
+          command:
+            - "/cloud_sql_proxy"
+            - "-ip_address_types=PRIVATE"
+            - "-log_debug_stdout"
+            - "-instances={{ required "Missing GCP project id" .Values.gke.projectId }}:{{ required "Missing GCP region" .Values.gke.region }}:{{ required "Missing GCP Cloud SQL Keycloak instance name" .Values.gke.dirigibleSqlInstanceName }}=tcp:5432"
+          securityContext:
+            runAsNonRoot: true
+          resources:
+            requests:
+               memory: "128Mi"
+               cpu: "100m"
+        {{- end}}
+      volumes:
+        - name: dirigible-temp-data
+          emptyDir: {}
+      {{- if .Values.volume.enabled }}
+        - name: {{ include "dirigible.fullname" . }}-volume
+          persistentVolumeClaim:
+            claimName: {{ include "dirigible.fullname" . }}-claim
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dirigible.fullname" . }}
+  labels:
+    {{- include "dirigible.labels" . | nindent 4 }}
+spec:
+  type: {{ required "Missing service type" .Values.service.type }}
+  ports:
+    - port: {{ required "Missing service port" .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "dirigible.selectorLabels" . | nindent 4 }}
+
+---
+
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ required "Missing release name" .Release.Name }}
+  labels:
+    {{- include "dirigible.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: nginx
+{{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+      - {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+      secretName: {{ required "Missing release name" .Release.Name }}-tls
+{{- end }}
+  rules:
+    - host: {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "dirigible.fullname" . }}
+                port:
+                  number: {{ required "Missing service port" .Values.service.port }}
+{{- end }}
+
+---
+
+{{- if .Values.database.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "dirigible.fullname" . }}-database-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ required "Missing database storage" .Values.database.storage }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dirigible.fullname" . }}-database
+  labels:
+    app: {{ include "dirigible.fullname" . }}-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "dirigible.fullname" . }}-database
+  template:
+    metadata:
+      labels:
+        app: {{ include "dirigible.fullname" . }}-database
+    spec:
+      containers:
+        - name: {{ include "dirigible.fullname" . }}-database
+          image: {{ required "Missing database image" .Values.database.image }}
+          imagePullPolicy: Always
+          volumeMounts:
+          - name: {{ include "dirigible.fullname" . }}-database-volume
+            mountPath: /var/lib/postgresql/data
+          env:
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
+            - name: POSTGRES_USER
+              value: {{ required "Missing database username" .Values.database.username }}
+            - name: POSTGRES_PASSWORD
+              value: {{ required "Missing database password" .Values.database.password }}
+          ports:
+            - name: jdbc
+              containerPort: 5432
+              protocol: TCP
+      volumes:
+        - name: {{ include "dirigible.fullname" . }}-database-volume
+          persistentVolumeClaim:
+            claimName: {{ include "dirigible.fullname" . }}-database-claim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dirigible.fullname" . }}-database
+  labels:
+    app: {{ include "dirigible.fullname" . }}-database
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: jdbc
+      protocol: TCP
+      name: jdbc
+  selector:
+    app: {{ include "dirigible.fullname" . }}-database
+{{- end }}
+
+---
+
+{{- if .Values.istio.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ required "Missing release name" .Release.Name }}-gateway
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+  - port:
+      number: {{ required "Missing Istio server port number" .Values.istio.serversPortNumber }}
+      name: {{ required "Missing Istio server port name" .Values.istio.serversPortName }}
+      protocol: {{ required "Missing Istio server port protocol" .Values.istio.serversPortProtocol }}
+    hosts:
+    - {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+    {{- if .Values.istio.httpsRedirect }}
+    tls:
+      httpsRedirect: true
+    {{- end}}
+  {{- if .Values.istio.enableHttps }}
+  - port:
+      number: 443
+      name: https-443
+      protocol: HTTPS
+    hosts:
+    - {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+    tls:
+      mode: SIMPLE 
+      credentialName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+  {{- end }}
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ required "Missing release name" .Release.Name }}
+spec:
+  hosts:
+  - {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+  - {{ include "dirigible.fullname" . }}.{{ required "Missing release namespace" .Release.Namespace }}.svc.cluster.local
+  gateways:
+  - {{ required "Missing release name" .Release.Name }}-gateway
+  http:
+  - match:
+    - uri:
+        regex: /.*
+    route:
+    - destination:
+        host: {{ include "dirigible.fullname" . }}.{{ required "Missing release namespace" .Release.Namespace }}.svc.cluster.local
+        port:
+          number: 8080
+{{- if .Values.istio.enableHttps }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ required "Missing release name" .Release.Name }}
+  namespace: istio-ingress
+spec:
+  secretName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+  issuerRef: 
+    name: letsencrypt
+    kind: ClusterIssuer
+  commonName: {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+  dnsNames: 
+  - {{ required "Missing release name" .Release.Name }}.{{ required "Missing ingress host" .Values.ingress.host }}
+{{- end }}
+{{- end }}

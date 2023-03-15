@@ -36,32 +36,10 @@ jobs:
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
     - name: Push Dirigible (Spring)
       run: |
-        cd components/app-all
+        cd build/application
         docker build --load -t dirigible .
         docker tag dirigible dirigiblelabs/dirigible
         docker push dirigiblelabs/dirigible
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible
-      run: |
-        cd releng/server-all
-        docker build --load -t dirigible-base-platform -f Dockerfile-base .
-        docker tag dirigible-base-platform dirigiblelabs/dirigible-base-platform
-        docker push dirigiblelabs/dirigible-base-platform
-        docker build --load -t dirigible-all .
-        docker tag dirigible-all dirigiblelabs/dirigible-all
-        docker push dirigiblelabs/dirigible-all
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible - Keycloak
-      run: |
-        cd releng/server-keycloak-all
-        docker build --load -t dirigible-base-platform-keycloak -f Dockerfile-base .
-        docker tag dirigible-base-platform-keycloak dirigiblelabs/dirigible-base-platform-keycloak
-        docker push dirigiblelabs/dirigible-base-platform-keycloak
-        docker build --load -t dirigible-keycloak .
-        docker tag dirigible-keycloak dirigiblelabs/dirigible-keycloak
-        docker push dirigiblelabs/dirigible-keycloak
         docker image prune -a -f
         cd ../../
 

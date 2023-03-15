@@ -1,0 +1,38 @@
+apiVersion: v2
+name: dirigible
+description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
+
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+version: #{DirigibleVersion}#
+
+# Eclipse Dirigible version
+appVersion: #{DirigibleVersion}#
+
+#Require kubernetes version
+kubeVersion: "> 1.18.20-0"
+
+keywords:
+  - dirigible
+  - platform
+  - eclipse
+  - development
+  - applications
+  - in-system
+  - low-code
+  - no-code
+  - lcnc
+
+home: https://www.dirigible.io
+
+maintainers:
+  - email: yordan.pavlov@sap.com
+    name: Yordan Pavlov
+    url: https://github.com/ThuF
+
+sources:
+  - https://github.com/eclipse/dirigible/
+
+icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
