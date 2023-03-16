@@ -135,6 +135,9 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
         http://localhost:8080
 
 4. Login with dirigible/dirigible.
+5. REST API description in an OpenAPI format can be found at:
+
+	http://localhost:8080/swagger-ui/index.html
 
 
 #### Docker
