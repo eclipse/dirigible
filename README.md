@@ -11,7 +11,7 @@
 [![REUSE status](https://api.reuse.software/badge/github.com/eclipse/dirigible)](https://api.reuse.software/info/github.com/eclipse/dirigible)
 
 
-**Eclipse Dirigible** is a High-Productivity Application Platform as a Service (hpaPaaS). It provides an application server consisting of pre-selected execution engines and built-in development tools as WebIDE. It is suitable for rapid development of business applications by also leveraging the Low Code / No Code techniques.
+**Eclipse Dirigible** is a High-Productivity Application Platform as a Service (hpaPaaS). It provides an application server consisting of pre-selected execution engines and built-in web development tools. It is suitable for rapid development of business applications by also leveraging the Low Code / No Code techniques.
 
 <p align="center">
   <img src="https://github.com/eclipse/dirigible/blob/master/logo/dirigible-logo-2Kx2K.png" width="40%" alt="dirigible logo"/>
@@ -21,11 +21,11 @@
 
 From the end user's perspective (developer), Dirigible runs directly in the browser, therefore does not require any downloads or installations.
 
-From the service provider's perspective (PaaS/SaaS), Dirigible packs all required components in a self-contained software bundle that can be deployed in any Java-based web server, such as Tomcat, Jetty, JBoss.
+From the service provider's perspective (PaaS/SaaS), Dirigible packs all required components in a self-contained software bundle that can be deployed on a VM or Docker capable environment such as Kubernetes.
 
-Dirigible supports access to RDBMS via JDBC. Currently supported versions for RDBMS are HANA, MaxDB, Sybase ASE, PostgreSQL, MySQL, H2, and Derby.
+Dirigible supports access to RDBMS via JDBC. Currently supported versions for RDBMS are PostgreSQL, HANA, Sybase ASE, MySQL, H2, and Derby.
 
-Dirigible promotes the In-System Programming development model, where you make dynamic alteration of the live system. To provide the self-contained bundle serving all the needed features for a business application, Dirigible packs various engines such as ActiveMQ, Quartz, Lucene, Flowable, Mylyn, Rhino, V8 and others.
+Dirigible promotes the In-System Programming development model, where you make dynamic alteration of the live system. To provide the self-contained bundle serving all the needed features for a business application, Dirigible packs various engines such as ActiveMQ, Quartz, Lucene, Flowable, Mylyn, GraalJS and others.
 
 The project started as an internal SAP initiative to address the extension and adoption use-cases related to SOA and Enterprise Services.
 
@@ -100,13 +100,9 @@ git config --system core.longpaths true
 
         mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true -Dlicense.skip=true
 
-> The main groups of modules can be built separately: `api`, `ext`, `ide`, `modules`, `releng`, `resources` and `templates`:
+> The build should pass successfully.
 
-        cd api
-        mvn clean install
-
-The build should pass successfully. The produced `ROOT.war` files are in `releng/<artifact-name>/target/` and are ready to be deployed. There are separate deployable artifacts (WAR files) depending on the usage type. If you are running it locally, then you need `releng/desktop-all/target/ROOT.war`. There is also an executable JAR file under the `releng/<artifact-name>/target` folder with a name like `ROOT.jar`.
-
+The produced `dirigible-application-XXX.jar` file is in `build/application/target/` and is ready to be deployed. It is Spring Boot application, so it can be executed locally right away.
 
 ### Run
 
@@ -114,17 +110,9 @@ The build should pass successfully. The produced `ROOT.war` files are in `releng
 
 ##### Prerequisites
 
-- [Tomcat 8.5.72](https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.72/bin/)
-
-The Java Web Application Archive (WAR) files can be deployed on [Apache Tomcat](http://tomcat.apache.org/) web container. In this case the built-in H2 database is used.
-
-More information about how to deploy on Apache Tomcat can be found [here](http://tomcat.apache.org/tomcat-8.0-doc/appdev/deployment.html).
-
 **macOS:**
 
-```
-brew install ttyd
-```
+        brew install ttyd
 
 **Linux:**
 
@@ -134,37 +122,19 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 ##### Steps
 
-1. Go to Tomcats home directory.
+1. From the project root directory run command:
 
-- If you installed tomcat using brew, you can see the path assigned to `CATALINA_HOME` by executing:
+        java -jar build/application/target/dirigible-application-XXX.jar
 
-        catalina home
+2. In case you want to debug the application run:
 
-2. Go to the `webapps` directory and delete its content.
-3. Copy the `ROOT.war` file and paste it in `webapps`.
-4. Go to the `conf` directory, open `tomcat-users.xml` and configure the users store:
+        java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar build/application/target/dirigible-application-XXX.jar
 
-        <tomcat-users>
-                <role rolename="Developer"/>
-                <role rolename="Operator"/>
-                <role rolename="Everyone"/>
-                <user username="dirigible" password="dirigible" roles="Developer,Operator,Everyone"/>
-        </tomcat-users>
-
-5. Run Tomcat.
-- If you have installed tomcat using brew:
-
-        catalina run
-
-- If you downloaded Tomcat manually, return to the base directory and run:
-
-        sh bin/catalina.sh run
-
-6. Open a web browser and go to:
+3. Open a web browser and go to:
 
         http://localhost:8080
 
-7. Login with dirigible/dirigible.
+4. Login with dirigible/dirigible.
 
 
 #### Docker
@@ -179,26 +149,47 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 - Pull the official image from Docker Hub:
 
-        docker pull dirigiblelabs/dirigible-trial
+        docker pull dirigiblelabs/dirigible-application
 
 - Build it locally
 
-        cd releng
-        docker build -t dirigible-trail -f Dockerfile-tomcat .
+        cd build
+        docker build -t dirigible-application -f Dockerfile .
 
 2. Start the container
 
-        docker run -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible-trial <&- &
+        docker run -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible-application <&- &
 
 3. Open a web browser and go to:
 
         http://localhost:8080/
 
-4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/docker/)
+4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/build/application/)
 
-### Experimental - Spring Boot
+#### PostgreSQL
 
-https://github.com/eclipse/dirigible/tree/master/components#readme
+##### Steps
+
+1. Install PostgreSQL e.g. for MacOS:
+
+        brew install postgresql
+    
+2. The run it:
+
+        brew services start postgresql
+    
+3. Create a default user:
+
+        createuser -s postgres
+    
+4. And expose the following environment variables:
+
+        export DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER=org.postgresql.Driver
+        export DIRIGIBLE_DATASOURCE_DEFAULT_URL=jdbc:postgresql://localhost:5432/postgres
+        export DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME=postgres
+        export DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD=postgres
+
+5. Then you can run Dirigible with PostgreSQL default database (DefaultDB).
 
 ## Additional Information
 
