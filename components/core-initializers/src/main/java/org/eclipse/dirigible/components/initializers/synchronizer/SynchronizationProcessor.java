@@ -294,6 +294,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		Definition definition = new Definition(location, FilenameUtils.getBaseName(file.getFileName().toString()), type, content);
 		// check whether this artefact has been processed in the past already
 		Definition maybe = definitionService.findByKey(definition.getKey());
+		Map<String, Definition> map = definitions.get(synchronizer);
+		if (map == null) {
+			map = new HashMap<>();
+			definitions.put(synchronizer, map);
+		}
 		if (maybe != null) {
 			// artefact has been processed in the past
 			if (!maybe.getChecksum().equals(definition.getChecksum())) {
@@ -303,12 +308,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 				// update the artefact with the new checksum and status
 				definitionService.save(maybe);
 				// added to artefacts for processing
-				definitions.get(synchronizer).put(definition.getKey(), definition);
+				map.put(definition.getKey(), definition);
 			} else if (maybe.getState().equals(ArtefactLifecycle.CREATED.toString())
 					|| maybe.getState().equals(ArtefactLifecycle.MODIFIED.toString())) {
 				// pending from a previous run, add again for processing
-				if (definitions.get(synchronizer).get(definition.getKey()) == null) {
-					definitions.get(synchronizer).put(definition.getKey(), definition);
+				if (map.get(definition.getKey()) == null) {
+					map.put(definition.getKey(), definition);
 				}
 			} else if (maybe.getState().equals(ArtefactLifecycle.FAILED.toString())) {
 				// report the erronous state
@@ -318,7 +323,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			// artefact is new, hence stored for processing
 			definition.setState(ArtefactLifecycle.CREATED.toString());
 			definitionService.save(definition);
-			definitions.get(synchronizer).put(definition.getKey(), definition);
+			map.put(definition.getKey(), definition);
 		}
 	}
 	
