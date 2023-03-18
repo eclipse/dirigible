@@ -54,9 +54,11 @@ public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurer
             .antMatchers("/error.html").permitAll()
 
             // Public
+            .antMatchers("/favicon.ico").permitAll()
             .antMatchers("/public/**").permitAll()
             .antMatchers("/webjars/**").permitAll()
             .antMatchers("/services/core/theme/**").permitAll()
+            .antMatchers("/services/core/healthcheck/**").permitAll()
             .antMatchers("/services/web/resources/**").permitAll()
             .antMatchers("/services/web/resources-core/**").permitAll()
             .antMatchers("/services/js/resources-core/**").permitAll()
