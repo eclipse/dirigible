@@ -14,7 +14,7 @@
 const database = require("db/database");
 var globals = require("core/globals");
 
-var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
+var DAO = exports.DAO = function(orm, logCtxName, dataSourceName){
 	if(orm === undefined)
 		throw Error('Illegal argument: orm['+ orm + ']');
 
@@ -23,13 +23,13 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 	const sequences = require("db/sequence");
 	this.sequenceName = this.orm.table+'_'+this.orm.getPrimaryKey().name.toUpperCase();
 	this.dropIdGenerator = function(){
-		return sequences.drop(this.sequenceName, databaseType, dataSourceName);
+		return sequences.drop(this.sequenceName, dataSourceName);
 	};
 	this.generateId = function(){
-		return sequences.nextval(this.sequenceName, databaseType, dataSourceName, this.orm.table);
+		return sequences.nextval(this.sequenceName, dataSourceName, this.orm.table);
 	};
 
-	const conn = database.getConnection(databaseType, dataSourceName);
+	const conn = database.getConnection(dataSourceName);
 	try{
 		this.ormstatements = require('db/ormstatements').create(this.orm, conn);
 	} finally {
@@ -82,9 +82,9 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 		let result;
 
 		if(sql.toLowerCase().startsWith('select')){
-	 		result = execQuery.execute(sql, _parameterBindings, databaseType, dataSourceName);
+	 		result = execQuery.execute(sql, _parameterBindings, dataSourceName);
 	 	} else {
-	 		result = execUpdate.execute(sql, _parameterBindings, databaseType, dataSourceName);
+	 		result = execUpdate.execute(sql, _parameterBindings, dataSourceName);
 	 	}
 
 	 	return result !== null ? result : [];
@@ -820,14 +820,14 @@ DAO.prototype.dropTable = function(dropIdSequence) {
  * oDefinition can be table definition or standard orm definition object. Or it can be a valid path to
  * a .table file, or any other text file contianing a standard dao orm definition.
  */
-exports.create = exports.dao = function(oDefinition, logCtxName, dataSourceName, databaseType){
+exports.create = exports.dao = function(oDefinition, logCtxName, dataSourceName){
 	let orm;
 		orm = oDefinition;
 
-	let productName = globals.get(databaseType + "_" + dataSourceName);
+	let productName = globals.get(dataSourceName);
 	if (!productName) {
-			productName = database.getProductName(databaseType, dataSourceName);
-			globals.set(databaseType + "_" + dataSourceName, productName);
+			productName = database.getProductName(dataSourceName);
+			globals.set(dataSourceName, productName);
 		}
 
 		let isCaseSensitive = require("core/configurations").get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
@@ -837,5 +837,5 @@ exports.create = exports.dao = function(oDefinition, logCtxName, dataSourceName,
 			});
 		}
 //	}
-	return new DAO(orm, logCtxName, dataSourceName, databaseType);
+	return new DAO(orm, logCtxName, dataSourceName);
 };

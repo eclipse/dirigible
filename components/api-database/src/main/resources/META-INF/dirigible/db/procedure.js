@@ -16,12 +16,12 @@
 const update = require("db/update");
 const database = require("db/database");
 
-exports.create = function(sql, databaseType, datasourceName) {
+exports.create = function(sql, datasourceName) {
     let parameters = [];
-	update.execute(sql, parameters, databaseType, datasourceName);
+	update.execute(sql, parameters, datasourceName);
 };
 
-exports.execute = function(sql, parameters, databaseType, datasourceName) {
+exports.execute = function(sql, parameters, datasourceName) {
     let result = [];
 
     let connection = null;
@@ -34,7 +34,7 @@ exports.execute = function(sql, parameters, databaseType, datasourceName) {
     try {
         let hasMoreResults = false;
 
-        connection = database.getConnection(databaseType, datasourceName);
+        connection = database.getConnection(datasourceName);
         callableStatement = connection.prepareCall(sql);
         let mappedParameters = parameters.map((parameter) => {
             let mappedParameter = {

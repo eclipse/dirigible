@@ -20,6 +20,7 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 /**
  * The ResultSet JSON Writer.
@@ -104,7 +105,7 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 						value = "[BINARY]";
 					}
 				}
-				record.add(name, GsonHelper.toJsonTree(value));
+				record.add(name, value == null ? null : new JsonPrimitive(value.toString()));
 			}
 
 			records.add(record);

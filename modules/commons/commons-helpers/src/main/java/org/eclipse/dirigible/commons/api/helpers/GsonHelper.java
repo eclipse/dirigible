@@ -25,7 +25,10 @@ import com.google.gson.JsonParser;
 public class GsonHelper {
 
 	/** The GSON instance. */
-	private static final transient Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").setPrettyPrinting().create();
+	private static final transient Gson GSON =new GsonBuilder()
+			.setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+			.setPrettyPrinting()
+			.create();
 	
 	/**
 	 * To json.
