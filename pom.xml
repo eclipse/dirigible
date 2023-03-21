@@ -783,7 +783,7 @@
 
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<org.springdoc.openapi.ui.version>1.6.15</org.springdoc.openapi.ui.version>
-		<swagger-annotations.version>1.6.9</swagger-annotations.version>
+		<swagger-annotations.version>1.6.10</swagger-annotations.version>
 		<junit4.version>4.13.2</junit4.version>
 
 		<sonar.organization>eclipse</sonar.organization>
