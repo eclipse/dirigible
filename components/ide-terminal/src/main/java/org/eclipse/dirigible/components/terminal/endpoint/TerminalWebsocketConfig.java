@@ -29,12 +29,14 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 /**
  * The Class TerminalWebsocketConfig.
  */
 @Configuration
 @EnableWebSocket
+@ConditionalOnProperty(name="terminal.enabled", havingValue="true")
 public class TerminalWebsocketConfig implements WebSocketConfigurer {
 	
 	/** The Constant TERMINAL_PREFIX. */
