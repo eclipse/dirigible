@@ -37,6 +37,9 @@ public class MetadataODataNorthwindTest extends AbstractODataNorthwindTest {
 				.segments("$metadata") //
 				.executeRequest(GET);
 		String content = IOUtils.toString((InputStream) response.getEntity());
-		assertEquals(loadExpectedMetadata(), content);
+		content = content.replaceAll("\\n|\\r\\n", System.getProperty("line.separator"));
+		String expected = loadExpectedMetadata();
+		expected = expected.replaceAll("\\n|\\r\\n", System.getProperty("line.separator"));
+		assertEquals(expected, content);
 	}
 }
