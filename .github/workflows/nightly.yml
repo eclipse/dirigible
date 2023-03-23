@@ -2,13 +2,13 @@ name: Nightly Build
 
 on:
   schedule:
-  - cron: "*/10 * * * *"
+  - cron: "0 22 * * *"
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest ]
+        os: [ ubuntu-latest, windows-latest ]
     steps:
     - uses: actions/checkout@v3
       with:
