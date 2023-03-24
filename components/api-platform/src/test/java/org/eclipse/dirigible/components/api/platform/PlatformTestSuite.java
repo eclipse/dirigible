@@ -49,6 +49,7 @@ public class PlatformTestSuite {
 		javascriptService.handleRequest("platform-tests", "lifecycle-publish-project.js", null, null, false);
 		javascriptService.handleRequest("platform-tests", "repository-create-file.js", null, null, false);
 		javascriptService.handleRequest("platform-tests", "workspace-create-workspace.js", null, null, false);
+		javascriptService.handleRequest("platform-tests", "command-execute.js", null, null, false);
 	}
 	
 	@SpringBootApplication
