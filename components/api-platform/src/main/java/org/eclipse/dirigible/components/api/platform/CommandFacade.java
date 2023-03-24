@@ -9,10 +9,12 @@ import java.util.concurrent.Future;
 import org.eclipse.dirigible.commons.process.execution.ProcessExecutor;
 import org.eclipse.dirigible.commons.process.execution.output.OutputsPair;
 import org.eclipse.dirigible.commons.process.execution.output.ProcessResult;
+import org.springframework.stereotype.Component;
 
 /**
  * The Class CommandFacade.
  */
+@Component
 public class CommandFacade {
 	
 	/**
