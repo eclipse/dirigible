@@ -287,7 +287,12 @@ DAO.prototype.find = function(id, expand, select) {
 		params["_id"] = id;
 
 		var collection = db.getCollection(this.orm.table);
-		var entity = collection.findOneById(params, select);
+		if (select !== undefined) {
+			var entity = collection.find(params, select);
+		} else {
+			var entity = collection.findOneById(id);
+		}
+		
 
 		if(entity) {
 			this.$log.info('{}[{}] entity found', this.orm.table, id);
