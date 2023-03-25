@@ -25,7 +25,7 @@ exports.toAlphanumeric = function(string){
  * Generates a random alphanumeric sequence with the specified length
  * @param length {Integer} Defaults to 4
  */
-exports.randomstring = function(length, charset){
+exports.randomString = function(length, charset){
   let text = "";
   if(length<1)
 	length = 4;

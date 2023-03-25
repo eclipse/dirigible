@@ -39,7 +39,7 @@ declare module "@dirigible/utils" {
     module alphanumeric {
         function toAlphanumeric(string: string);
 
-        function randomstring(length: number, charset: string): string;
+        function randomString(length: number, charset: string): string;
 
         function alphanumeric(length: number, lowercase: boolean): string;
 
@@ -261,7 +261,7 @@ declare module "@dirigible/utils" {
 
         function escape(input: string): string;
 
-        function byteToString(bytes: string, offset: number, length: number): string;
+        function bytesToString(bytes: string, offset: number, length: number): string;
     }
     
     module uuid {
