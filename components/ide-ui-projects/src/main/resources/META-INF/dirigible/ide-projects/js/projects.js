@@ -629,7 +629,9 @@ projectsView.controller('ProjectsViewController', [
                 if (response.status !== 200)
                     messageHub.setStatusError(`Unable to publish projects in '${$scope.selectedWorkspace.name}'`);
                 else messageHub.setStatusMessage(`Published all projects in '${$scope.selectedWorkspace.name}'`);
+                messageHub.announcePublish();
             });
+            
         };
 
         $scope.unpublishAll = function () {
@@ -639,6 +641,7 @@ projectsView.controller('ProjectsViewController', [
                 if (response.status !== 200)
                     messageHub.setStatusError(`Unable to unpublish projects in '${$scope.selectedWorkspace.name}'`);
                 else messageHub.setStatusMessage(`Unpublished all projects in '${$scope.selectedWorkspace.name}'`);
+                messageHub.announceUnpublish();
             });
         };
 
