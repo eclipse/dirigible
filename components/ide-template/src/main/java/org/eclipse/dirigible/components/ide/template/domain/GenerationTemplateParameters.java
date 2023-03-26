@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.ide.template.domain;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -23,7 +23,7 @@ public class GenerationTemplateParameters {
 	private String template;
 	
 	/** The parameters. */
-	private List<Map<String, Object>> parameters;
+	private Map<String, Object> parameters = new HashMap<String, Object>();
 
 	/**
 	 * Gets the template.
@@ -48,7 +48,7 @@ public class GenerationTemplateParameters {
 	 *
 	 * @return the parameters
 	 */
-	public List<Map<String, Object>> getParameters() {
+	public Map<String, Object> getParameters() {
 		return parameters;
 	}
 
@@ -57,7 +57,7 @@ public class GenerationTemplateParameters {
 	 *
 	 * @param parameters the parameters
 	 */
-	public void setParameters(List<Map<String, Object>> parameters) {
+	public void setParameters(Map<String, Object> parameters) {
 		this.parameters = parameters;
 	}
 	

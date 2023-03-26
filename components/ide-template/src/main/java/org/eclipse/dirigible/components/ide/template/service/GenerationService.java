@@ -16,7 +16,6 @@ import static java.text.MessageFormat.format;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -120,9 +119,9 @@ public class GenerationService {
 		Project projectObject = workspaceObject.getProject(project);
 		List<File> generatedFiles = new ArrayList<File>();
 		if (parameters.getParameters().size() == 0) {
-			parameters.getParameters().add(new HashMap<String, Object>());
+			parameters.getParameters();
 		}
-		addStandardParameters(workspace, project, path, parameters.getParameters().get(0));
+		addStandardParameters(workspace, project, path, parameters.getParameters());
 		
 		String wrapper = generateWrapper(parameters);
 		projectObject.createFile(TEMPLATE_WRAPPER, wrapper.getBytes());
@@ -180,7 +179,7 @@ public class GenerationService {
 			List<File> generatedFiles, GenerationTemplateMetadataSource source, byte[] input)
 			throws IOException {
 		if (source.getCollection() != null) {
-			List<Map<String, Object>> elements = (List<Map<String, Object>>) parameters.getParameters().get(0).get(source.getCollection());
+			List<Map<String, Object>> elements = (List<Map<String, Object>>) parameters.getParameters().get(source.getCollection());
 			if (elements == null) {
 				throw new IOException(format("Invalid template definition file: [{0}]. Multiplicity element is set, but no actual parameter provided.", parameters.getTemplate()));
 			}
@@ -189,7 +188,7 @@ public class GenerationService {
 				generateWithTemplate(elementParameters, projectObject, generatedFiles, source, input);
 			}
 		} else {
-			generateWithTemplate(parameters.getParameters().get(0), projectObject, generatedFiles, source, input);
+			generateWithTemplate(parameters.getParameters(), projectObject, generatedFiles, source, input);
 		}
 	}
 

@@ -10,12 +10,12 @@ class HttpError extends Error {
     }
 }
 
-class ForbiddenError extends HttpError {
-
-    constructor(message) {
-        super(message, response.FORBIDDEN);
-    }
-}
+//class ForbiddenError extends HttpError {
+//
+//    constructor(message) {
+//        super(message, response.FORBIDDEN);
+//    }
+//}
 
 class BadRequestError extends HttpError {
 
@@ -29,9 +29,10 @@ rs.service()
     .resource("model/{workspace}/{project}")
     .post(onGenerateModel)
     .before((context) => {
-        if (!user.isInRole("Developer")) {
-            throw new ForbiddenError("Forbidden");
-        } else if (!context.queryParameters.path) {
+        //if (!user.isInRole("Developer")) {
+        //    throw new ForbiddenError("Forbidden");
+        //} else 
+        if (!context.queryParameters.path) {
             throw new BadRequestError("Missing 'path' query parameter");
         }
     })
@@ -77,7 +78,7 @@ function onGenerateModel(context, request, response) {
 
     createFile(workspace, project, gen + ".gen", JSON.stringify(parameters, null, 2));
 
-    lifecycle.publish(user.getName(), workspace, project);
+    lifecycle.publish(workspace, project);
 
     response.setStatus(response.CREATED);
 
@@ -108,7 +109,7 @@ function cleanGenFolder(workspaceName, projectName) {
     if (project.existsFolder("gen")) {
         project.deleteFolder("gen");
     }
-    lifecycle.unpublish(user.getName(), workspaceName, projectName);
+    lifecycle.unpublish(projectName);
 }
 
 function createFile(workspaceName, projectName, path, content) {

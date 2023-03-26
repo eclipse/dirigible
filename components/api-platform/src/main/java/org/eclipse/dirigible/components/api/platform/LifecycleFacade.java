@@ -92,7 +92,7 @@ public class LifecycleFacade implements InitializingBean {
 	 * @param project the project
 	 * @return true, if successful
 	 */
-	public static boolean unpublish(String workspace, String project) {
+	public static boolean unpublish(String project) {
 		boolean isSuccessfulUnpublishRequest = false;
 		try {
 			LifecycleFacade.get().getPublisherService().unpublish(project);

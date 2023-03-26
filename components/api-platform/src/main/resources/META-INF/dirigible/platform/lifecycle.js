@@ -16,9 +16,9 @@ exports.publish = function(user, workspace, project) {
     return org.eclipse.dirigible.components.api.platform.LifecycleFacade.publish(user, workspace, project);
 };
 
-exports.unpublish = function(user, workspace, project) {
+exports.unpublish = function(project) {
     if (!project) {
         project = "*";
     }
-    return org.eclipse.dirigible.components.api.platform.unpublish(user, workspace, project);
+    return org.eclipse.dirigible.components.api.platform.LifecycleFacade.unpublish(project);
 };
