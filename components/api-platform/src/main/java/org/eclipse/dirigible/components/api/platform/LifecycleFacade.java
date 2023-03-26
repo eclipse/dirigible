@@ -88,7 +88,6 @@ public class LifecycleFacade implements InitializingBean {
 	/**
 	 * Unpublish.
 	 *
-	 * @param workspace the workspace
 	 * @param project the project
 	 * @return true, if successful
 	 */
