@@ -43,7 +43,11 @@ The project started as an internal SAP initiative to address the extension and a
 
 ## Instant Trial
 
-You can try the sandbox instance to have a quick look on the functionality you are interested [http://trial.dirigible.io](http://trial.dirigible.io).
+You can try the sandbox instance to have a quick look on the functionality you are interested [https://trial.dirigible.io](https://trial.dirigible.io).
+
+## Contact Us
+
+Join the Eclipse Dirigible Slack Workspace to chat with the community: [https://slack.dirigible.io](https://slack.dirigible.io)
 
 ## Get Started
 
@@ -216,6 +220,8 @@ If you like to contribute to Dirigible, please read the [Contributor's guide](CO
 - Samples: [https://samples.dirigible.io](https://samples.dirigible.io)
 
 - Trial Instance: [https://trial.dirigible.io](https://trial.dirigible.io)
+
+- Slack: [https://slack.dirigible.io](https://slack.dirigible.io)
 
 - Mailing List: [https://dev.eclipse.org/mailman/listinfo/dirigible-dev](https://dev.eclipse.org/mailman/listinfo/dirigible-dev)
 
