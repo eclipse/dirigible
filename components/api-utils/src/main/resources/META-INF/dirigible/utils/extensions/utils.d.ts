@@ -12,7 +12,7 @@ declare module "@dirigible/utils" {
         function encode(text: string): string;
 
         /**
-         * Encode an byte[] to Base64
+         * Encode a byte[] to Base64
          * @param input
          */
         function encodeAsBytes(input: string): string;
@@ -257,9 +257,9 @@ declare module "@dirigible/utils" {
     }
     
     module utf8 {
-        function encode(input: string, charset: string): string;
+        function encode(input: string): string;
 
-        function escape(input: string): string;
+        function decode(input: string): string;
 
         function bytesToString(bytes: string, offset: number, length: number): string;
     }
@@ -279,20 +279,24 @@ declare module "@dirigible/utils" {
     
     module xml {
         /**
-         * Converts a JSON to a XML string
+         * Converts a JSON to an XML string
          * @param input
          */
-        function fromJson(input: JSON): string;
+        function fromJson(input: string): string;
 
         /**
-         * Converts a XML to JSON string
+         * Converts an XML to JSON string
          * @param input
          */
         function toJson(input: string): string
     }
     
     module qrcode{
-        function generateQRCode(input:string):byte[];
+        /**
+         * Generates a QR code object from a given string
+         * @param input
+         */
+        function generateQRCode(input: string): object;
     }
     
 }
