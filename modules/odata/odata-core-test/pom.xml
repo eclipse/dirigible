@@ -121,6 +121,14 @@
 			<artifactId>olingo-odata2-annotation-processor-api</artifactId>
 			<version>${olingo.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.sap.cloud.db.jdbc</groupId>
+			<artifactId>ngdbc</artifactId>
+			<version>${ngdbc.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<properties>

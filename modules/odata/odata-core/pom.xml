@@ -67,12 +67,14 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
+			<version>${spring.boot.slf4j.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.sap.cloud.db.jdbc</groupId>
 			<artifactId>ngdbc</artifactId>
-			<version>2.16.11</version>
+			<version>${ngdbc.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

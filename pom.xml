@@ -31,10 +31,6 @@
 	Do a fast build:
 		mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true
 
-	Synchronize WebJars like content:
-		mvn clean install -DskipTests -P content
-		mvn clean install -DskipTests
-
 	Update the years in the license header:
 		mvn license:format -P license
 
@@ -90,12 +86,6 @@
 		<name>Eclipse Foundation</name>
 		<url>http://www.eclipse.org</url>
 	</organization>
-
-	<scm>
-		<url>${content.scm.url}</url>
-		<connection>${content.scm.connection}</connection>
-		<developerConnection>${content.scm.developerConnection}</developerConnection>
-	</scm>
 
 	<profiles>
 		<profile>
@@ -165,85 +155,6 @@
 		</profile>
 
 		<profile>
-			<id>content</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<finalName>${project.artifactId}</finalName>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-clean-plugin</artifactId>
-						<version>${maven.clean.plugin.version}</version>
-						<configuration>
-							<filesets>
-								<fileset>
-									<directory>${maven.clean.plugin.directory}</directory>
-								</fileset>
-							</filesets>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-scm-plugin</artifactId>
-						<version>${maven.scm.plugin.version}</version>
-						<configuration>
-							<goals>checkout</goals>
-							<checkoutDirectory>${content.scm.checkoutDirectory}</checkoutDirectory>
-							<connectionUrl>${content.scm.connection}</connectionUrl>
-							<developerConnectionUrl>${content.scm.developerConnection}</developerConnectionUrl>
-							<server>${content.scm.server}</server>
-							<scmVersion>${content.repository.branch}</scmVersion>
-							<scmVersionType>branch</scmVersionType>
-						</configuration>
-						<executions>
-							<execution>
-								<id>generated-sources</id>
-								<phase>${profile.content.phase}</phase>
-								<goals>
-									<goal>checkout</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-resources-plugin</artifactId>
-						<version>${maven.resource.plugin.version}</version>
-						<executions>
-							<execution>
-								<id>copy-content-resources</id>
-								<phase>compile</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${content.output.directory}</outputDirectory>
-									<resources>
-										<resource>
-											<directory>${content.source.directory}</directory>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- <plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>${maven.compiler.plugin.version}</version>
-						<configuration>
-							<source>${maven.compiler.source}</source>
-							<target>${maven.compiler.target}</target>
-							<debug>true</debug>
-							<debuglevel>lines,vars,source</debuglevel>
-						</configuration>
-					</plugin> -->
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
 			<id>license</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -273,19 +184,14 @@
 								<exclude>**/src/test/resources/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/font-awesome-4.7.0/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/font-dirigible/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/resources/goldenlayout/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/ide-ace/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/ide-bpm/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/ide-monaco/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/ide-orion/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/ide-swagger/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/ide-database/sql/lib/ace/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/ide-discussions/ui/js/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/resources-core/ui/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/ide-terminal/js/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/dev-tools/**</exclude>
 								<exclude>**/src/main/resources/META-INF/dirigible/template-mobile-hello-world/node_modules/**</exclude>
-								<exclude>**/src/main/resources/META-INF/dirigible/utils/v4/jsonpath.js</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/utils/jsonpath.js</exclude>
 							</excludes>
 						</configuration>
 						<dependencies>
@@ -521,23 +427,23 @@
 			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
+			<version>${spring.boot.slf4j.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>${logback.version}</version>
+			<version>${spring.boot.logback.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
+			<version>${spring.boot.logback.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -653,12 +559,10 @@
 		<hamcrest.all.version>1.3</hamcrest.all.version>
 		<retrofit.version>1.8.0</retrofit.version>
 		<okhttp3.version>4.10.0</okhttp3.version>
-		<slf4j.version>2.0.6</slf4j.version>
-		<slf4j.simple.version>1.7.12</slf4j.simple.version>
-		<logback.version>1.4.6</logback.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.1.214</h2database.version>
 		<postgresql.version>42.6.0</postgresql.version>
+		<ngdbc.version>2.16.11</ngdbc.version>
 		<activemq.version>5.17.4</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<lucene.version>9.4.2</lucene.version>
