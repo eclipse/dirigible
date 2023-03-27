@@ -36,7 +36,7 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-parser</artifactId>
-            <version>1.0.64</version>
+            <version>1.0.65</version>
             <exclusions>
             	<exclusion>
             		<groupId>javax.validation</groupId>
