@@ -74,7 +74,6 @@
 			<groupId>com.sap.cloud.db.jdbc</groupId>
 			<artifactId>ngdbc</artifactId>
 			<version>${ngdbc.version}</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
