@@ -182,7 +182,7 @@ declare module "@dirigible/net" {
          * @param message
          * @param uri
          */
-        function call(message: string, uri: string): Message;
+        function call(message: Message, uri: string): Message;
 
     }
 
