@@ -214,17 +214,10 @@ If you like to contribute to Dirigible, please read the [Contributor's guide](CO
 ### References
 
 - Project Home: [https://www.dirigible.io](https://www.dirigible.io)
-
 - Help Portal: [https://help.dirigible.io](https://www.dirigible.io/help)
-
 - Samples: [https://samples.dirigible.io](https://samples.dirigible.io)
-
 - Trial Instance: [https://trial.dirigible.io](https://trial.dirigible.io)
-
 - Slack: [https://slack.dirigible.io](https://slack.dirigible.io)
-
 - Mailing List: [https://dev.eclipse.org/mailman/listinfo/dirigible-dev](https://dev.eclipse.org/mailman/listinfo/dirigible-dev)
-
 - Issues: [https://github.com/eclipse/dirigible/issues](https://github.com/eclipse/dirigible/issues)
-
 - Eclipse Foundation Help Desk: https://gitlab.eclipse.org/eclipsefdn/helpdesk
