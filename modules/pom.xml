@@ -25,28 +25,6 @@
 	
 	<dependencies>
 		<dependency>
-		    <groupId>io.swagger</groupId>
-    		<artifactId>swagger-annotations</artifactId>
-		    <version>${swagger-annotations.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>
-				cxf-rt-rs-service-description-swagger
-			</artifactId>
-			<version>${cxf.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-databind</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.jboss.spec.javax.rmi</groupId>
-					<artifactId>jboss-rmi-api_1.0_spec</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit4.version}</version>

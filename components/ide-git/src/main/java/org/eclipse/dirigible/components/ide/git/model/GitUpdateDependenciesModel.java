@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.components.ide.git.model;
 
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * The Git Update Dependencies Model.
@@ -19,7 +18,6 @@ import io.swagger.annotations.ApiModelProperty;
 public class GitUpdateDependenciesModel extends BaseGitProjectModel {
 
 	/** The publish. */
-	@ApiModelProperty(value = "Whether to publish the project(s) after update of dependencies", example = "true")
 	private boolean publish;
 
 	/**

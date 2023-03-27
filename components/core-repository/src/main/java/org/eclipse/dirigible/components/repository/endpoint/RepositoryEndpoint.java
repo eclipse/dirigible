@@ -16,8 +16,6 @@ import static java.text.MessageFormat.format;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.ws.rs.core.Response;
-
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.repository.service.RepositoryService;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -136,11 +134,11 @@ private final RepositoryService repositoryService;
 	 * @return the response
 	 */
 	@DeleteMapping("/{*path}")
-	public Response deleteResource(@PathVariable("path") String path) {
+	public ResponseEntity<?> deleteResource(@PathVariable("path") String path) {
 
 		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
 			repositoryService.deleteCollection(path);
-			Response.noContent().build();
+			ResponseEntity.noContent().build();
 		}
 
 		IResource resource = repositoryService.getResource(path);
@@ -148,13 +146,13 @@ private final RepositoryService repositoryService;
 			ICollection collection = repositoryService.getCollection(path);
 			if (collection.exists()) {
 				repositoryService.deleteCollection(path);
-				return Response.noContent().build();
+				return ResponseEntity.noContent().build();
 			}
 			String message = format("Collection or Resource at location {0} does not exist", path);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, message);
 		}
 		repositoryService.deleteResource(path);
-		return Response.noContent().build();
+		return ResponseEntity.noContent().build();
 	}
 
 }

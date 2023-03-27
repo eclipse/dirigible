@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.components.ide.git.model;
 
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * The Git Push Model.
@@ -19,15 +18,12 @@ import io.swagger.annotations.ApiModelProperty;
 public class GitPushModel extends BaseGitProjectModel {
 
 	/** The commit message. */
-	@ApiModelProperty(value = "The Commit Message", required = true, example = "Updates README.md")
 	private String commitMessage;
 	
 	/** The auto add. */
-	@ApiModelProperty(value = "Add all unstaged files", required = true, example = "Updates README.md")
 	private boolean autoAdd;
 	
 	/** The auto commit. */
-	@ApiModelProperty(value = "Commit all staged files", required = true, example = "Updates README.md")
 	private boolean autoCommit;
 	
 	

@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.components.ide.git.model;
 
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * The Git Checkout Model.
@@ -19,11 +18,9 @@ import io.swagger.annotations.ApiModelProperty;
 public class GitCheckoutModel extends BaseGitModel {
 
 	/** The project. */
-	@ApiModelProperty(hidden = true)
 	private String project;
 	
 	/** The publish. */
-	@ApiModelProperty(value = "Whether to publish the project(s) after checkout", example = "true")
 	private boolean publish;
 
 	/**

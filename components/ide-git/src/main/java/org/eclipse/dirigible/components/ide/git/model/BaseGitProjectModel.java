@@ -13,7 +13,6 @@ package org.eclipse.dirigible.components.ide.git.model;
 
 import java.util.List;
 
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * The Base Git Project Model.
@@ -21,7 +20,6 @@ import io.swagger.annotations.ApiModelProperty;
 public class BaseGitProjectModel extends BaseGitModel {
 
 	/** The projects. */
-	@ApiModelProperty(value = "List of projects, on which a Git Operation will be performed", required = true, example = "[core_api]")
 	private List<String> projects;
 
 	/**

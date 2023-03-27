@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 
 /**
@@ -95,8 +94,7 @@ public class JobEndpoint extends BaseEndpoint {
      * @return the response entity
      */
     @GetMapping("/search")
-    public ResponseEntity<Job> findByName(
-            @ApiParam(value = "Name of the Extension", required = true) @RequestParam("name") String name) {
+    public ResponseEntity<Job> findByName(@RequestParam("name") String name) {
 
         return ResponseEntity.ok(jobService.findByName(name));
 

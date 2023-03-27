@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import javax.validation.Valid;
-import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.ide.logs.service.LogsService;

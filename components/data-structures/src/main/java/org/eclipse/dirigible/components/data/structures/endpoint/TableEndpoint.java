@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 
 /**
@@ -79,8 +78,7 @@ public class TableEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Table> get(
-			@ApiParam(value = "Id of the Table", required = true) @PathVariable("id") Long id) {
+	public ResponseEntity<Table> get(@PathVariable("id") Long id) {
 		return ResponseEntity.ok(tableService.findById(id));
 	}
 	
@@ -91,8 +89,7 @@ public class TableEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/search")
-	public ResponseEntity<Table> findByName(
-			@ApiParam(value = "Name of the Table", required = true) @RequestParam("name") String name) {
+	public ResponseEntity<Table> findByName(@RequestParam("name") String name) {
 		return ResponseEntity.ok(tableService.findByName(name));
 	}
 	

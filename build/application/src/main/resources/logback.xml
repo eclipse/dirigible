@@ -56,13 +56,6 @@
 		<appender-ref ref="FILE_CORE" />
 		<appender-ref ref="ConsoleLoggingAppender" />
 	</logger>
-	
-
-	<logger name="org.eclipse.dirigible.api.v3.core.Console" level="ALL" additivity="false">
-		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE_CORE" />
-		<appender-ref ref="ConsoleLoggingAppender" />
-	</logger>
 
 	<logger name="app" level="ALL" additivity="false">
 		<appender-ref ref="STDOUT" />

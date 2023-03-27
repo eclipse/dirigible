@@ -20,7 +20,6 @@ import javax.validation.Valid;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
-import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,9 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ctc.wstx.shaded.msv_core.verifier.regexp.StringToken;
-
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 
 /**
@@ -91,8 +87,7 @@ public class DataSourceEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<DataSource> get(
-			@ApiParam(value = "Id of the DataSource", required = true) @PathVariable("id") Long id) {
+	public ResponseEntity<DataSource> get(@PathVariable("id") Long id) {
 		return ResponseEntity.ok(datasourceService.findById(id));
 	}
 	
@@ -103,8 +98,7 @@ public class DataSourceEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/search")
-	public ResponseEntity<DataSource> findByName(
-			@ApiParam(value = "Name of the DataSource", required = true) @RequestParam("name") String name) {
+	public ResponseEntity<DataSource> findByName(@RequestParam("name") String name) {
 		return ResponseEntity.ok(datasourceService.findByName(name));
 	}
 	

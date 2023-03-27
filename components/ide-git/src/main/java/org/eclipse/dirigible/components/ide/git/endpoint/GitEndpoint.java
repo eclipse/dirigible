@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.ws.rs.QueryParam;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.api.security.UserFacade;
@@ -55,6 +54,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -227,7 +227,7 @@ public class GitEndpoint {
 	public ResponseEntity<?> deleteGitRepository(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("repositoryName") String repositoryName,
-			@QueryParam("unpublish") boolean unpublish) throws GitConnectorException {
+			@RequestParam("unpublish") boolean unpublish) throws GitConnectorException {
 		gitService.delete(workspace, repositoryName, unpublish);
 		return ResponseEntity.ok().build();
 	}
@@ -677,7 +677,7 @@ public class GitEndpoint {
 	public ResponseEntity<?> getFileDiff(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("repositoryName") String repositoryName,
-			@QueryParam("path") String path)
+			@RequestParam("path") String path)
 			throws GitConnectorException {
 		if (path == null || "".equals(path)) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -703,7 +703,7 @@ public class GitEndpoint {
 	public ResponseEntity<?> getHistory(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,
-			@QueryParam("path") String path)
+			@RequestParam("path") String path)
 			throws GitConnectorException {
 		List<GitCommitInfo> history = gitService.getHistory(workspace, project, path);
 		if (history != null) {

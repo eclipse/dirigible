@@ -542,29 +542,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
-			<version>${cxf.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.jboss.spec.javax.rmi</groupId>
-					<artifactId>jboss-rmi-api_1.0_spec</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.geronimo.specs</groupId>
-					<artifactId>geronimo-javamail_1.4_spec</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>wsdl4j</artifactId>
-					<groupId>wsdl4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jaxb-impl</artifactId>
-					<groupId>com.sun.xml.bind</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>
@@ -650,20 +627,6 @@
 			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4</artifactId>
-			<version>${powermock-module-junit4.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito2</artifactId>
-			<version>${powermock-api-mockito2.version}</version>
-			<scope>test</scope>
-		</dependency>
-		-->
 		<!-- End Test Dependencies -->
 	</dependencies>
 
@@ -673,8 +636,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
 		<maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
-		<maven.clean.plugin.version>3.2.0</maven.clean.plugin.version>
-		<maven.clean.plugin.directory>src/main/resources/META-INF/dirigible</maven.clean.plugin.directory>
 		<maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
 		<maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -686,13 +647,8 @@
 		<commons.lang3>3.12.0</commons.lang3>
 		<commons.exec>1.3</commons.exec>
 		<commons.text>1.10.0</commons.text>
-		<cxf.version>3.5.5</cxf.version>
 		<gson.version>2.10.1</gson.version>
 		<mockito.version>5.2.0</mockito.version>
-		<!--
-		<powermock-api-mockito2.version>2.0.9</powermock-api-mockito2.version>
-		<powermock-module-junit4.version>2.0.9</powermock-module-junit4.version>
-		-->
 		<junit.version>4.13.2</junit.version>
 		<hamcrest.all.version>1.3</hamcrest.all.version>
 		<retrofit.version>1.8.0</retrofit.version>
@@ -705,7 +661,6 @@
 		<postgresql.version>42.6.0</postgresql.version>
 		<activemq.version>5.17.4</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
-		<jetty.version>9.4.48.v20220622</jetty.version>
 		<lucene.version>9.4.2</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.8.0</flowable.version>
@@ -781,7 +736,6 @@
 		<path-to-regexp.version>6.2.1</path-to-regexp.version>
 		<javax.websocket-api.version>1.1</javax.websocket-api.version>
 
-		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<org.springdoc.openapi.ui.version>1.6.15</org.springdoc.openapi.ui.version>
 		<swagger-annotations.version>1.6.10</swagger-annotations.version>
 		<junit4.version>4.13.2</junit4.version>

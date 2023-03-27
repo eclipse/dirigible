@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 
 /**
@@ -86,8 +85,7 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<ExtensionPoint> get(
-			@ApiParam(value = "Id of the ExtensionPoint", required = true) @PathVariable("id") Long id) {
+	public ResponseEntity<ExtensionPoint> get(@PathVariable("id") Long id) {
 
 		return ResponseEntity.ok(extensionPointService.findById(id));
 
@@ -100,8 +98,7 @@ public class ExtensionPointEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/search")
-	public ResponseEntity<ExtensionPoint> findByName(
-			@ApiParam(value = "Name of the ExtensionPoint", required = true) @RequestParam("name") String name) {
+	public ResponseEntity<ExtensionPoint> findByName(@RequestParam("name") String name) {
 
 		return ResponseEntity.ok(extensionPointService.findByName(name));
 

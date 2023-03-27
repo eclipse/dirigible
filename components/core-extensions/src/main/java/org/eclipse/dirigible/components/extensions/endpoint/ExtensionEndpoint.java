@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 
 /**
@@ -81,8 +80,7 @@ public class ExtensionEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Extension> get(
-			@ApiParam(value = "Id of the Extension", required = true) @PathVariable("id") Long id) {
+	public ResponseEntity<Extension> get(@PathVariable("id") Long id) {
 
 		return ResponseEntity.ok(extensionService.findById(id));
 
@@ -95,8 +93,7 @@ public class ExtensionEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/search/{name}")
-	public ResponseEntity<Extension> findByName(
-			@ApiParam(value = "Name of the Extension", required = true) @RequestParam("name") String name) {
+	public ResponseEntity<Extension> findByName(@RequestParam("name") String name) {
 
 		return ResponseEntity.ok(extensionService.findByName(name));
 
@@ -109,8 +106,7 @@ public class ExtensionEndpoint extends BaseEndpoint {
 	 * @return the response entity
 	 */
 	@GetMapping("/group/{name}")
-	public ResponseEntity<List<Extension>> findByExtensionPoint(
-			@ApiParam(value = "Name of the Extension Point", required = true) @RequestParam("name") String name) {
+	public ResponseEntity<List<Extension>> findByExtensionPoint(@RequestParam("name") String name) {
 
 		return ResponseEntity.ok(extensionService.findByExtensionPoint(name));
 

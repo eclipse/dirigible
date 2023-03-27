@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 
 
@@ -72,8 +71,7 @@ public class WebsocketEndpoint extends BaseEndpoint{
 	 * @return the response entity
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Websocket> get(
-			@ApiParam(value = "Id of the Table", required = true) @PathVariable("id") Long id) {
+	public ResponseEntity<Websocket> get(@PathVariable("id") Long id) {
 		return ResponseEntity.ok(websocketService.findById(id));
 	}
 	
@@ -84,8 +82,7 @@ public class WebsocketEndpoint extends BaseEndpoint{
 	 * @return the response entity
 	 */
 	@GetMapping("/search")
-	public ResponseEntity<Websocket> findByName(
-			@ApiParam(value = "Name of the Table", required = true) @RequestParam("name") String name) {
+	public ResponseEntity<Websocket> findByName(@RequestParam("name") String name) {
 		return ResponseEntity.ok(websocketService.findByName(name));
 	}
 	

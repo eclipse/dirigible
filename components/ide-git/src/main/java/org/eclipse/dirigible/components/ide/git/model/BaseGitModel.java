@@ -16,7 +16,6 @@ import java.util.Base64;
 
 import org.eclipse.dirigible.components.ide.workspace.project.ProjectMetadataManager;
 
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * The Base Git Model.
@@ -24,19 +23,15 @@ import io.swagger.annotations.ApiModelProperty;
 public class BaseGitModel {
 
 	/** The username. */
-	@ApiModelProperty(value = "The User Name", required = true, example = "dirigible")
 	private String username;
 
 	/** The password. */
-	@ApiModelProperty(value = "Base64 Encoded Password", required = true, example = "ZGlyaWdpYmxl")
 	private String password;
 
 	/** The email. */
-	@ApiModelProperty(value = "The E-mail Address", example = "dirigible@gmail.com")
 	private String email;
 	
 	/** The branch. */
-	@ApiModelProperty(value = "The selected branch", required = false, example = "master")
 	private String branch = ProjectMetadataManager.BRANCH_MASTER;
 
 	/**

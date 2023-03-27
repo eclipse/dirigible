@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "registry")

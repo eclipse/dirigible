@@ -11,27 +11,21 @@
  */
 package org.eclipse.dirigible.components.ide.git.model;
 
-import io.swagger.annotations.ApiModelProperty;
-
 /**
  * The Git Share Model.
  */
 public class GitShareModel extends BaseGitModel {
 
 	/** The project. */
-	@ApiModelProperty(hidden = true)
 	private String project;
 
 	/** The repository. */
-	@ApiModelProperty(value = "The Git Repository URL", example = "https://github.com/dirigiblelabs/sample_git_test.git", required = true)
 	private String repository;
 
 	/** The commit message. */
-	@ApiModelProperty(value = "The Commit Message", example = "Initial Commit", required = true)
 	private String commitMessage;
 
 	/** The share in root folder. */
-	@ApiModelProperty(value = "Whether to Share the Project in the Root Folder", example = "true", required = true)
 	private boolean shareInRootFolder;
 
 	/**
