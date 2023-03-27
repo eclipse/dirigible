@@ -1,18 +1,12 @@
 declare module "@dirigible/http" {
+
     module clientAsync {
-    /**
-     * Returns HttpAsyncClient instance
-     */
-    function getInstance(): HttpAsyncClient;
+        /**
+         * Returns HttpAsyncClient instance
+         */
+        function getInstance(): HttpAsyncClient;
+    }
 
-    //need to be deleted
-    /**
-     * Returns HttpAsyncClient instance
-     */
-    function getInstnace(): HttpAsyncClient;
-
-
-}
     module request {
         interface HttpCookie {
             /**
