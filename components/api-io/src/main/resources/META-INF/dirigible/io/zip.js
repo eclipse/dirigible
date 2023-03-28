@@ -76,15 +76,15 @@ exports.createZipOutputStream = function (outputStream) {
 
         this.write = function (data) {
             const native = bytes.toJavaBytes(data);
-            org.eclipse.dirigible.api.v3.io.ZipFacade.writeNative(this.native, native);
+            org.eclipse.dirigible.components.api.io.ZipFacade.writeNative(this.native, native);
         };
 
         this.writeNative = function (data) {
-            org.eclipse.dirigible.api.v3.io.ZipFacade.writeNative(this.native, data);
+            org.eclipse.dirigible.components.api.io.ZipFacade.writeNative(this.native, data);
         };
 
         this.writeText = function (text) {
-            org.eclipse.dirigible.api.v3.io.ZipFacade.writeText(this.native, text);
+            org.eclipse.dirigible.components.api.io.ZipFacade.writeText(this.native, text);
         };
 
         this.closeEntry = function () {
