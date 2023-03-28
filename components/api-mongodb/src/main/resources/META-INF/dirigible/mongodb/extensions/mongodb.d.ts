@@ -37,26 +37,26 @@ declare module "@dirigible/mongodb" {
 
             /**
              * Returns a DBCursor based on the optional DBObjects parameters
-             * @param _query
-             * @param _projection
+             * @param query
+             * @param projection
              */
-            find(_query, _projection): DBCursor;
+            find(query?, projection?): DBCursor;
 
             /**
              * Returns a single DBObject based on the optional DBObjects parameters and sort
-             * @param _query
-             * @param _projection
-             * @param _sort
+             * @param query
+             * @param projection
+             * @param sort
              */
-            findOne(_query, _projection, _sort): DBObject;
+            findOne(query?, projection?, sort?): DBObject;
 
             /**
              * Returns a single DBObject by id and the optional DBObject projection parameter
              * @param id
-             * @param _projection
+             * @param projection
              */
 
-            findOneByID(id, _projection): DBObject;
+            findOneByID(id, projection?): DBObject;
 
             /**
              * Returns the count of matching DBObjects by the optional DBObject query parameter
