@@ -79,6 +79,11 @@ declare module "@dirigible/job" {
         getCreatedAt(): string
 
         /**
+         * Returns the value of the parameter of the Job
+         */
+        getParameter(name: string): string
+
+        /**
          * Returns the parameters of the job
          */
         getParameters(): JobParameters

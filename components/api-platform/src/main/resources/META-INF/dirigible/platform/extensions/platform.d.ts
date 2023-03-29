@@ -27,7 +27,17 @@ declare module "@dirigible/platform" {
          */
         function getTypes(): string[];
     }
-    
+
+    module command {
+        /**
+         * Execute shell command
+         * @param command the command to be execute
+         * @param add the add
+         * @param remove the remove
+         */
+        function execute(command: string, add?: string, remove?: string): string;
+    }
+
     module lifecycle {
         /**
          * Publish project from the workspace, the project parameter is optional

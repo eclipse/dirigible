@@ -3,12 +3,12 @@ declare module "@dirigible/mail" {
         /**
          * Send mail to MailRecipients
          * @param from
-         * @param recepients
+         * @param recipients
          * @param subject
          * @param text
          * @param sybType
          */
-        send(from: string, recepients: string [], subject: string, text: string, sybType);
+        send(from: string, recipients: string [], subject: string, text: string, sybType);
 
         toJavaProperties(properties);
 
@@ -25,12 +25,12 @@ declare module "@dirigible/mail" {
         /**
          * Send mail using the default mail client configuration to MailRecipients
          * @param from
-         * @param recepients
+         * @param recipients
          * @param subject
          * @param text
          * @param sybType
          */
-        function send(from: string, recepients: string [], subject: string, text: string, sybType);
+        function send(from: string, recipients: string [], subject: string, text: string, sybType);
     }
 
 }

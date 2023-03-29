@@ -9,7 +9,7 @@ declare module "@dirigible/bpm" {
     module process {
         function getVariable(processInstanceId: string, variableName: string): string
 
-        function start(key: string, parameters: string): string
+        function start(key: string, parameters: object): string
 
         function getProcessEngine(): ProcessEngine
 

@@ -3,7 +3,7 @@ class byte {
 }
 
 declare module "@dirigible/utils" {
-	
+
     module base64 {
         /**
          * Encode an input string to Base64
@@ -12,10 +12,10 @@ declare module "@dirigible/utils" {
         function encode(text: string): string;
 
         /**
-         * Encode an byte[] to Base64
+         * Encode a byte[] to Base64
          * @param input
          */
-        function encodeAsBytes(input: string): string;
+        function encodeAsBytes(input: byte[]): string;
 
         /**
          * Decode an input string from Base64
@@ -24,7 +24,7 @@ declare module "@dirigible/utils" {
         function decode(text: string): string;
 
         /**
-         * Encode a NativeBytes  to Base64
+         * Encode a NativeBytes to Base64
          * @param text
          */
         function encodeAsNativeBytes(text: string): string;
@@ -35,7 +35,7 @@ declare module "@dirigible/utils" {
          */
         function decodeAsNativeBytes(text: string): string;
     }
-    
+
     module alphanumeric {
         function toAlphanumeric(string: string);
 
@@ -51,7 +51,7 @@ declare module "@dirigible/utils" {
 
         function isAlphanumeric(str: string): boolean;
     }
-    
+
     module assert {
         function assertTrue(condition: boolean, message: string);
 
@@ -59,7 +59,7 @@ declare module "@dirigible/utils" {
 
         function assertEquals(condition: boolean, message: string);
     }
-    
+
     module digest {
         /**
          * Calculates the MD5 digest and returns the value as a 16 element byte array
@@ -111,7 +111,7 @@ declare module "@dirigible/utils" {
          */
         function sha1Hex(input: any): string;
     }
-    
+
     module escape {
         /**
          * Escapes an input CSV string
@@ -197,7 +197,7 @@ declare module "@dirigible/utils" {
          */
         function unescapeXml(input: string): string;
     }
-    
+
     module hex {
         /**
          * Encode an input string to HEX
@@ -229,7 +229,7 @@ declare module "@dirigible/utils" {
          */
         function decodeAsNativeBytes(text: string): byte[];
     }
-    
+
     module url {
         /**
          * Encode an input string to application/x-www-form-urlencoded format
@@ -255,15 +255,15 @@ declare module "@dirigible/utils" {
 
         function escapeForm(text: string): string;
     }
-    
-    module utf8 {
-        function encode(input: string, charset: string): string;
 
-        function escape(input: string): string;
+    module utf8 {
+        function encode(input: string): string;
+
+        function decode(input: string): string;
 
         function bytesToString(bytes: string, offset: number, length: number): string;
     }
-    
+
     module uuid {
         /**
          * Returns a random UUID string
@@ -276,23 +276,27 @@ declare module "@dirigible/utils" {
          */
         function validate(input: string): boolean;
     }
-    
+
     module xml {
         /**
-         * Converts a JSON to a XML string
+         * Converts a JSON to an XML string
          * @param input
          */
-        function fromJson(input: JSON): string;
+        function fromJson(input: string): string;
 
         /**
-         * Converts a XML to JSON string
+         * Converts an XML to JSON string
          * @param input
          */
         function toJson(input: string): string
     }
-    
-    module qrcode{
-        function generateQRCode(input:string):byte[];
+
+    module qrcode {
+        /**
+         * Generates a QR code object from a given string
+         * @param input
+         */
+        function generateQRCode(input: string): object;
     }
-    
+
 }

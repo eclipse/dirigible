@@ -194,6 +194,6 @@ function HttpAsyncClient() {
 	};
 }
 
-exports.getInstnace = function() {
+exports.getInstance = function() {
 	return new HttpAsyncClient();
 };

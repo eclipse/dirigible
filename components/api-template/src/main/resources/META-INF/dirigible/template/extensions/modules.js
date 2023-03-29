@@ -23,8 +23,7 @@ exports.getContent = function () {
 	  "versionedPaths": [
 	    "template/engines"
 	  ],
-	  "pathDefault": "template/engines",
-	  "shouldBeUnexposedToESM": true
+	  "pathDefault": "template/engines"
 	}
 	];
 };

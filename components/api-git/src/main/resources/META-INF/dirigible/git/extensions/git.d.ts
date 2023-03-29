@@ -20,13 +20,13 @@ declare module "@dirigible/git" {
          * @param commitMessage
          * @param add
          */
-        function commit(user: string, userEmail: string, workspaceName: string, repositoryName: string, commitMessage: string, add: string);
+        function commit(user: string, userEmail: string, workspaceName: string, repositoryName: string, commitMessage: string, add: boolean);
 
         /**
          * Returns list of repositories in workspace
          * @param workspaceName
          */
-        function getGitRepositories(workspaceName: string):string[];
+        function getGitRepositories(workspaceName: string): string[];
 
         /**
          * Return hystory for the repository
@@ -61,7 +61,7 @@ declare module "@dirigible/git" {
          * @param username
          * @param password
          */
-        function pull(workspaceName:string, repositoryName:string, username:string, password:string)
+        function pull(workspaceName: string, repositoryName: string, username: string, password: string)
 
         /**
          * Push to repository
@@ -70,7 +70,7 @@ declare module "@dirigible/git" {
          * @param username
          * @param password
          */
-        function push(workspaceName:string, repositoryName:string, username:string, password:string)
+        function push(workspaceName: string, repositoryName: string, username: string, password: string)
 
         /**
          * Checkout
@@ -78,7 +78,7 @@ declare module "@dirigible/git" {
          * @param repositoryName
          * @param branchName
          */
-        function checkout(workspaceName:string, repositoryName:string, branchName:string)
+        function checkout(workspaceName: string, repositoryName: string, branchName: string)
 
         /**
          *
@@ -87,14 +87,14 @@ declare module "@dirigible/git" {
          * @param branchName
          * @param startingPoint
          */
-        function createBranch(workspaceName:string, repositoryName:string, branchName:string, startingPoint:string)
+        function createBranch(workspaceName: string, repositoryName: string, branchName: string, startingPoint: string)
 
         /**
          * Hard reset.
          * @param workspaceName
          * @param repositoryName
          */
-        function hardReset(workspaceName:string, repositoryName:string)
+        function hardReset(workspaceName: string, repositoryName: string)
 
         /**
          * Rebase
@@ -102,49 +102,49 @@ declare module "@dirigible/git" {
          * @param repositoryName
          * @param branchName
          */
-        function rebase(workspaceName:string, repositoryName:string, branchName:string)
+        function rebase(workspaceName: string, repositoryName: string, branchName: string)
 
         /**
          * Status
          * @param workspaceName
          * @param repositoryName
          */
-        function status(workspaceName:string, repositoryName:string)
+        function status(workspaceName: string, repositoryName: string)
 
         /**
          * Get Branch
          * @param workspaceName
          * @param repositoryName
          */
-        function getBranch(workspaceName:string, repositoryName:string)
+        function getBranch(workspaceName: string, repositoryName: string)
 
         /**
          * Get local branches
          * @param workspaceName
          * @param repositoryName
          */
-        function getLocalBranches(workspaceName:string, repositoryName:string)
+        function getLocalBranches(workspaceName: string, repositoryName: string)
 
         /**
          * Get remote branches
          * @param workspaceName
          * @param repositoryName
          */
-        function getRemoteBranches(workspaceName:string, repositoryName:string)
+        function getRemoteBranches(workspaceName: string, repositoryName: string)
 
         /**
          * Get unstaged changes
          * @param workspaceName
          * @param repositoryName
          */
-        function getUnstagedChanges(workspaceName:string, repositoryName:string)
+        function getUnstagedChanges(workspaceName: string, repositoryName: string)
 
         /**
          * Get staged changes
          * @param workspaceName
          * @param repositoryName
          */
-        function getStagedChanges(workspaceName:string, repositoryName:string)
+        function getStagedChanges(workspaceName: string, repositoryName: string)
 
         /**
          * get
@@ -153,9 +153,7 @@ declare module "@dirigible/git" {
          * @param filePath
          * @param revStr
          */
-        function  getFileContent(workspaceName:string, repositoryName:string, filePath:string, revStr:string):string
-
-
+        function getFileContent(workspaceName: string, repositoryName: string, filePath: string, revStr: string): string
 
     }
 }

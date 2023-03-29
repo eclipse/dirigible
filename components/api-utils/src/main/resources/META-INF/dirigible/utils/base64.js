@@ -49,9 +49,8 @@ exports.encodeAsNativeBytes = function(input) {
  */
 exports.decode = function(input) {
 	const output = exports.decodeAsNativeBytes(input);
-	if (output && output !== null) {
-		var result = bytes.toJavaScriptBytes(output);
-		return result;
+	if (output) {
+		return bytes.toJavaScriptBytes(output);
 	}
 	return output;
 };
@@ -69,7 +68,6 @@ exports.decodeAsNativeBytes = function(input) {
 	} else if (Array.isArray(data)) {
 		native = bytes.toJavaBytes(data);
 	}
-	const output = org.eclipse.dirigible.components.api.utils.Base64Facade.decodeNative(native);
-	return output;
+	return org.eclipse.dirigible.components.api.utils.Base64Facade.decodeNative(native);
 };
 

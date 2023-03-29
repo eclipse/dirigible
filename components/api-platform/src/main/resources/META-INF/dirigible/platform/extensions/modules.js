@@ -18,6 +18,15 @@ exports.getContent = function () {
 		    "dtsPath": "platform/extensions/platform.d.ts"
 		  },
 		  {
+			"name": "platform/command",
+			"description": "Command API",
+			"api": "command",
+			"versionedPaths": [
+				"platform/command"
+			],
+			"pathDefault": "platform/command"
+		  },
+		  {
 		    "name": "platform/lifecycle",
 		    "description": "Lifecycle API",
 		    "api": "lifecycle",
