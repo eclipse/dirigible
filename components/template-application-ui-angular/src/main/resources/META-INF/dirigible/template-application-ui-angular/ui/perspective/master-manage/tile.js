@@ -10,7 +10,7 @@ exports.getTile = function () {
         caption: "{{caption}}",
         tooltip: "{{tooltip}}",
         // icon: "file-o",
-        location: "//services/web/{{projectName}}/gen/ui/{{perspectiveName}}/index.html",
+        location: "/services/web/{{projectName}}/gen/ui/{{perspectiveName}}/index.html",
         order: "{{menuIndex}}",
         groupOrder: "{{perspectiveOrder}}"
     };

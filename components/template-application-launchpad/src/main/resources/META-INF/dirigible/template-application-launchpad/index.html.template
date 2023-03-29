@@ -26,15 +26,15 @@
     <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- Twitter Bootstrap with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="//services/js/theme/resources.js/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/services/js/theme/resources.js/bootstrap.min.css">
     <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js">
     </script>
 
     <!-- GoldenLayout with Theme Support -->
     <link type="text/css" rel="stylesheet"
-            href="//services/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
-    <link type="text/css" rel="stylesheet" href="//services/js/theme/resources.js/goldenlayout-theme.css" />
-    <script type="text/javascript" src="//services/web/resources/goldenlayout/1.5.9/goldenlayout.min.js">
+            href="/services/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet" href="/services/js/theme/resources.js/goldenlayout-theme.css" />
+    <script type="text/javascript" src="/services/web/resources/goldenlayout/1.5.9/goldenlayout.min.js">
     </script>
 
     <!-- AngularJS -->
@@ -43,7 +43,7 @@
     </script>
 
     <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="//services/js/theme/resources.js/ide.css" />
+    <link type="text/css" rel="stylesheet" href="/services/js/theme/resources.js/ide.css" />
 </head>
  
 <body ng-app="operations" ng-controller="Controller as c">
@@ -85,9 +85,9 @@
                 </div>
                 <div class="statusbar" status-bar></div>
  
-                <script type="text/javascript" src="//services/web/{{projectName}}/gen/ui/resources/js/message-hub.js"></script>	
-                <script type="text/javascript" src="//services/web/{{projectName}}/gen/ui/resources/js/ui-layout.js"></script>
-                <script type="text/javascript" src="//services/web/{{projectName}}/gen/ui/resources/js/ui-core-ng-modules.js"></script>
+                <script type="text/javascript" src="/services/web/{{projectName}}/gen/ui/resources/js/message-hub.js"></script>	
+                <script type="text/javascript" src="/services/web/{{projectName}}/gen/ui/resources/js/ui-layout.js"></script>
+                <script type="text/javascript" src="/services/web/{{projectName}}/gen/ui/resources/js/ui-core-ng-modules.js"></script>
                
                 <script type="text/javascript">
                                 angular.module('operations', ['ngResource', 'ideUiCore'])

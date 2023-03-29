@@ -80,7 +80,7 @@ rs.service()
 			validateEntity(entity);
 #end
 			entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end = dao.create(entity);
-			response.setHeader("Content-Location", "//services/js/${projectName}/gen/api/${name}.js/" + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
+			response.setHeader("Content-Location", "/services/js/${projectName}/gen/api/${name}.js/" + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
 			http.sendResponseCreated(entity);
 		})
 		.produces(["application/json"])

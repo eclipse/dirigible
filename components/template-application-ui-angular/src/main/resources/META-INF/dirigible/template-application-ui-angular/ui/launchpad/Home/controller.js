@@ -8,7 +8,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		messageHubProvider.eventIdPrefix = '{{projectName}}.launchpad.Home';
 	}])
 	.config(["entityApiProvider", function (entityApiProvider) {
-		entityApiProvider.baseUrl = "//services/js/{{projectName}}/gen/ui/launchpad/Home/tiles.js";
+		entityApiProvider.baseUrl = "/services/js/{{projectName}}/gen/ui/launchpad/Home/tiles.js";
 	}])
 	.controller('PageController', ['$scope', 'messageHub', 'entityApi', function ($scope, messageHub, entityApi) {
 
