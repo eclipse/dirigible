@@ -6,9 +6,9 @@
 const perspectiveData = {
 	id: "home",
 	name: "Home",
-	link: "//services/web/${projectName}/gen/index.html",
+	link: "/services/web/${projectName}/gen/index.html",
 	order: "1",
-	icon: "//services/web/resources/unicons/estate.svg",
+	icon: "/services/web/resources/unicons/estate.svg",
 };
 
 if (typeof exports !== 'undefined') {

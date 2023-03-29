@@ -9,9 +9,9 @@
         <title dg-brand-title></title>
         <theme></theme>
         <script type="text/javascript"
-            src="//services/js/resources-core/services/loader.js?id=application-view-js"></script>
+            src="/services/js/resources-core/services/loader.js?id=application-view-js"></script>
         <link type="text/css" rel="stylesheet"
-            href="//services/js/resources-core/services/loader.js?id=application-view-css" />
+            href="/services/js/resources-core/services/loader.js?id=application-view-css" />
 
         <script type="text/javascript" src="controller.js"></script>
     </head>

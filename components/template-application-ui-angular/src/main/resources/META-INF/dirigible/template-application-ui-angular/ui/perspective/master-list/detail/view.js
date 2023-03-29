@@ -8,7 +8,7 @@ const viewData = {
     label: "{{name}}",
     factory: "frame",
     region: "bottom",
-    link: "//services/web/{{projectName}}/gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/index.html",
+    link: "/services/web/{{projectName}}/gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/index.html",
 };
 
 if (typeof exports !== 'undefined') {

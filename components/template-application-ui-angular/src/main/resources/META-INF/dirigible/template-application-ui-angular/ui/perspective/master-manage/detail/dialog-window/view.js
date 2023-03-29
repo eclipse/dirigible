@@ -6,7 +6,7 @@
 const viewData = {
     id: "{{name}}-details",
     label: "{{name}}",
-    link: "//services/web/{{projectName}}/gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-window/index.html"
+    link: "/services/web/{{projectName}}/gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-window/index.html"
 };
 
 if (typeof exports !== 'undefined') {
