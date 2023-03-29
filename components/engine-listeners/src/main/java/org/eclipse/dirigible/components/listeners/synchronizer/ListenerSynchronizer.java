@@ -29,6 +29,7 @@ import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.service.ListenerService;
+import org.eclipse.dirigible.components.listeners.service.ListenersManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,10 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
     /** The listener service. */
     @Autowired
     private ListenerService listenerService;
+    
+    /** The Scheduler manager. */
+    @Autowired
+    private ListenersManager listenersManager;
 
     /**
      * Checks if is accepted.
@@ -93,7 +98,6 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
         Configuration.configureObject(listener);
         listener.setLocation(location);
         listener.setType(Listener.ARTEFACT_TYPE);
-        listener.setName(FilenameUtils.getBaseName(location));
         listener.updateKey();
         try {
         	Listener maybe = getService().findByKey(listener.getKey());
@@ -156,6 +160,36 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
      */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+    	Listener listener = null;
+        if (wrapper.getArtefact() instanceof Listener){
+            listener = (Listener) wrapper.getArtefact();
+            ArtefactLifecycle flag = ArtefactLifecycle.valueOf(flow);
+            switch (flag){
+                case CREATED:
+					try {
+						listenersManager.startListener(listener);
+					} catch (Exception e) {
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			            callback.addError(e.getMessage());
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE);
+					}
+                    break;
+                case UPDATED:
+                	try {
+                		listenersManager.stopListener(listener);
+						listenersManager.startListener(listener);
+					} catch (Exception e) {
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			            callback.addError(e.getMessage());
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_UPDATE);
+					}
+                    break;
+            }
+        }
+        else {
+            throw new UnsupportedOperationException(String.format("Trying to process %s as Job", wrapper.getArtefact().getClass()));
+        }
+        
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
         return true;
     }
@@ -168,6 +202,7 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
     @Override
     public void cleanup(Listener listener) {
         try {
+        	listenersManager.stopListener(listener);
             getService().delete(listener);
             callback.registerState(this, listener, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
         } catch (Exception e) {

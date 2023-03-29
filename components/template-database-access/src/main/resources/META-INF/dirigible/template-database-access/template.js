@@ -8,9 +8,9 @@ exports.getTemplate = function() {
 		"name": "Database Access",
 		"description": "Database Access Template",
 		"sources": [{
-			"location": "/template-database-access/service.js.template", 
+			"location": "/template-database-access/service.mjs.template", 
 			"action": "generate",
-			"rename": "{{fileName}}.js"
+			"rename": "{{fileName}}.mjs"
 		}],
 		"parameters": []
 	};

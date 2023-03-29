@@ -1,8 +1,0 @@
-var httpClient = require("http/client");
-var response = require("http/response");
-
-var httpResponse = httpClient.get("https://services.odata.org/V4/Northwind/Northwind.svc/");
-
-response.println(httpResponse.text);
-response.flush();
-response.close();

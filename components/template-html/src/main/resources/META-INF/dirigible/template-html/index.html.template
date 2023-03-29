@@ -7,11 +7,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link type="text/css" rel="stylesheet" href="//services/core/theme/bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
+    <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
 
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+    <theme></theme>
+  
   </head>
 
   <body ng-controller="PageController">

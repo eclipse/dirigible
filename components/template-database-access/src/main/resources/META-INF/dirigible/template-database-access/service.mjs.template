@@ -1,10 +1,10 @@
-var query = require('db/query');
-var response = require('http/response');
+import { query } from "@dirigible/db";
+import { response } from "@dirigible/http";
 
 
 var sql = 'select * from DIRIGIBLE_EXTENSIONS where EXTENSION_EXTENSIONPOINT_NAME = ?';
 
-var resultset = query.execute(sql, ['ide-template']);
+var resultset = query.execute(sql, ['ide-template'], "SystemDB");
 
 response.println(JSON.stringify(resultset));
 

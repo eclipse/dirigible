@@ -8,9 +8,9 @@ exports.getTemplate = function() {
 		"name": "HTTP Client",
 		"description": "HTTP Client Template",
 		"sources": [{
-			"location": "/template-http-client/service.js.template", 
+			"location": "/template-http-client/service.mjs.template", 
 			"action": "generate",
-			"rename": "{{fileName}}.js"
+			"rename": "{{fileName}}.mjs"
 		}],
 		"parameters": [],
 		"order": 20

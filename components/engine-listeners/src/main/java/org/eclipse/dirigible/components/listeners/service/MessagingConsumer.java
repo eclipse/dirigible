@@ -40,8 +40,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(MessagingConsumer.class);
 
-	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage";
-	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError";
+	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage.js";
+	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError.js";
 
 	private String name;
 	private char type;
@@ -149,7 +149,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 							Map<Object, Object> context = createMessagingContext();
 							context.put("message", escapeCodeString(((TextMessage) message).getText()));
 							RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE);
-							javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+							JavascriptService.get().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
 						} else {
 							throw new Exception(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
 						}

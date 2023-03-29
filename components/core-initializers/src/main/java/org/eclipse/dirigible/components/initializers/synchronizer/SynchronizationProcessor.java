@@ -207,7 +207,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 */
 	private void loadDefinitions() {
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
-			Collection<Definition> immutableDefinitions = Collections.synchronizedCollection(definitions.get(synchronizer).values());
+			Map<String, Definition> map = checkSynchronizerMap(synchronizer);
+			Collection<Definition> immutableDefinitions = Collections.synchronizedCollection(map.values());
 			for (Definition definition : immutableDefinitions) {
 				try {
 					if (definition.getContent() == null) {
@@ -294,11 +295,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		Definition definition = new Definition(location, FilenameUtils.getBaseName(file.getFileName().toString()), type, content);
 		// check whether this artefact has been processed in the past already
 		Definition maybe = definitionService.findByKey(definition.getKey());
-		Map<String, Definition> map = definitions.get(synchronizer);
-		if (map == null) {
-			map = new HashMap<>();
-			definitions.put(synchronizer, map);
-		}
+		Map<String, Definition> map = checkSynchronizerMap(synchronizer);
 		if (maybe != null) {
 			// artefact has been processed in the past
 			if (!maybe.getChecksum().equals(definition.getChecksum())) {
@@ -325,6 +322,15 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			definitionService.save(definition);
 			map.put(definition.getKey(), definition);
 		}
+	}
+
+	public Map<String, Definition> checkSynchronizerMap(Synchronizer synchronizer) {
+		Map<String, Definition> map = definitions.get(synchronizer);
+		if (map == null) {
+			map = new HashMap<>();
+			definitions.put(synchronizer, map);
+		}
+		return map;
 	}
 	
 	/**
