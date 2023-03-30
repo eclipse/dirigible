@@ -49,6 +49,8 @@ public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurer
             .antMatchers("/home").permitAll()
             .antMatchers("/logout").permitAll()
             .antMatchers("/index-busy.html").permitAll()
+            
+            .antMatchers("/stomp").permitAll()
 
             .antMatchers("/error/**").permitAll()
             .antMatchers("/error.html").permitAll()

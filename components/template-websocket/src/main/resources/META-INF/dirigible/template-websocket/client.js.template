@@ -1,7 +1,7 @@
 var websockets = require("net/websockets");
 var response = require("http/response");
 
-var uri = "ws://localhost:8080/websockets/service/{{fileName}}";
+var uri = "http://localhost:8080/stomp/{{fileName}}";
 var handler = "{{projectName}}/{{fileName}}-client-handler"
 
 function initialize() {

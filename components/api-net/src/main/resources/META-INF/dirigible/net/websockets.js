@@ -9,10 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.createWebsocket = function(uri, handler, engine) {
-	engine = !engine ? "javascript" : engine;
-	const session = org.eclipse.dirigible.components.api.websockets.WebsocketsFacade.createWebsocket(uri, handler, engine);
-	return new WebsocketClient(session, uri, handler, engine);
+exports.createWebsocket = function(uri, handler) {
+	const session = org.eclipse.dirigible.components.api.websockets.WebsocketsFacade.createWebsocket(uri, handler);
+	return new WebsocketClient(session, uri, handler);
 };
 
 exports.getClients = function() {
@@ -25,7 +24,7 @@ exports.getClient = function(id) {
 	if (native === null) {
 		return null;
 	}
-	return new WebsocketClient(native.getSession(), native.getSession().getRequestURI(), native.getHandler(), native.getEngine());
+	return new WebsocketClient(native.getSession(), native.getSession().getRequestURI(), native.getHandler());
 };
 
 exports.getClientByHandler = function(handler) {
@@ -33,7 +32,7 @@ exports.getClientByHandler = function(handler) {
 	if (native === null) {
 		return null;
 	}
-	return new WebsocketClient(native.getSession(), native.getSession().getRequestURI(), native.getHandler(), native.getEngine());
+	return new WebsocketClient(native.getSession(), native.getSession().getRequestURI(), native.getHandler());
 };
 
 exports.getMessage = function() {
@@ -67,17 +66,16 @@ exports.isOnClose = function() {
 /**
  * WebsocketClient
  */
-function WebsocketClient(session, uri, handler, engine) {
+function WebsocketClient(session, uri, handler) {
     this.session = session;
 	this.uri = uri;
 	this.handler = handler;
-	this.engine = engine;
 
 	this.send = function(text) {
 		if (!this.session || this.session === null) {
 			console.error("Websocket Session is null");
 		}
-		this.session.getBasicRemote().sendText(text);
+		this.session.send(uri, text);
 	};
 
     this.close = function() {

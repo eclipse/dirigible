@@ -19,7 +19,7 @@
 
 	        function connect() {
 
-	            var socket = new SockJS('/js');
+	            var socket = new SockJS('/stomp');
 	            stompClient = Stomp.over(socket);
 
 	            stompClient.connect({}, function(frame) {
@@ -53,7 +53,7 @@
 	        function sendMessage() {
 	        	var from = document.getElementById('from').value;
 	            var text = document.getElementById('text').value;
-	            stompClient.send("/ws/js/test-websocket", {}, JSON.stringify({'from':from, 'text':text}));
+	            stompClient.send("/ws/stomp/test-websocket", {}, JSON.stringify({'from':from, 'text':text}));
 	        }
 
 	        function showMessage(messageOutput) {

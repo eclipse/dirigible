@@ -42,6 +42,7 @@ public class BasicAuthSecurityConfiguration {
 		        .antMatchers("/error/**").permitAll()
 		        .antMatchers("/error.html").permitAll()
 		        .antMatchers("/index-busy.html").permitAll()
+		        .antMatchers("/stomp").permitAll()
 //		        .antMatchers("/*").fullyAuthenticated()
 		        .anyRequest().authenticated()
 		    .and()

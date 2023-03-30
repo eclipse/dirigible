@@ -11,8 +11,11 @@
  */
 package org.eclipse.dirigible.components.api.websockets;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.websocket.ClientEndpoint;
 import javax.websocket.OnClose;
@@ -25,6 +28,16 @@ import org.eclipse.dirigible.components.engine.javascript.service.JavascriptServ
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.stomp.StompSessionHandler;
+import org.springframework.web.socket.client.WebSocketClient;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
+import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport;
+import org.springframework.web.socket.sockjs.client.SockJsClient;
+import org.springframework.web.socket.sockjs.client.Transport;
+import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
 /**
  * The Class WebsocketClient.
@@ -35,19 +48,63 @@ public class WebsocketClient {
 	/** The logger. */
 	private static Logger logger = LoggerFactory.getLogger(WebsocketClient.class);
 	
+	/** The uri. */
+	private String uri;
+	
 	/** The handler. */
 	private String handler;
 	
 	/** The session. */
-	private Session session;
+	private StompSession session;
 	
+	/** The javascript service. */
 	private final JavascriptService javascriptService;
 	
-	public WebsocketClient(JavascriptService javascriptService, String handler) {
+	/**
+	 * Instantiates a new websocket client.
+	 *
+	 * @param uri the uri
+	 * @param javascriptService the javascript service
+	 * @param handler the handler
+	 */
+	public WebsocketClient(String uri, JavascriptService javascriptService, String handler) {
+		this.uri = uri;
 		this.javascriptService = javascriptService;
 		this.handler = handler;
 	}
 	
+	/**
+	 * Connect.
+	 *
+	 * @return the stomp session
+	 * @throws InterruptedException the interrupted exception
+	 * @throws ExecutionException the execution exception
+	 */
+	public StompSession connect() throws InterruptedException, ExecutionException {
+		List<Transport> transports = new ArrayList<>();
+	    transports.add(new WebSocketTransport(new StandardWebSocketClient()));
+	    transports.add(new RestTemplateXhrTransport());
+		WebSocketStompClient stompClient = new WebSocketStompClient(new SockJsClient(transports));
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+		StompSessionHandler sessionHandler = new ClientStompSessionHandler();
+		session = stompClient.connect(uri, sessionHandler).get();
+		return session;
+	}
+	
+	/**
+	 * Gets the uri.
+	 *
+	 * @return the uri
+	 */
+	public String getUri() {
+		return uri;
+	}
+	
+	/**
+	 * Gets the javascript service.
+	 *
+	 * @return the javascript service
+	 */
 	public JavascriptService getJavascriptService() {
 		return javascriptService;
 	}
@@ -66,7 +123,7 @@ public class WebsocketClient {
 	 *
 	 * @return the session
 	 */
-	public Session getSession() {
+	public StompSession getSession() {
 		return session;
 	}
 	
@@ -77,7 +134,7 @@ public class WebsocketClient {
      * @throws Exception the scripting exception
      */
     @OnOpen
-    public void onOpen(Session session) throws Exception {
+    public void onOpen(StompSession session) throws Exception {
     	this.session = session;
     	WebsocketsFacade.CLIENTS.add(this);
     	Map<Object, Object> context = new HashMap<>();

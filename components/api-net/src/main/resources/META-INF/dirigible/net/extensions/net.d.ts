@@ -188,12 +188,11 @@ declare module "@dirigible/net" {
 
     module websockets {
         /**
-         * Creates a WebsocketClient by URI, handler and engine type
+         * Creates a WebsocketClient by URI and handler
          * @param uri
          * @param handler
-         * @param engine
          */
-        function createWebsocket(uri: string, handler, engine): WebsocketClient;
+        function createWebsocket(uri: string, handler: string): WebsocketClient;
 
         /**
          * Returns the list of the created WebsocketClients
@@ -204,13 +203,13 @@ declare module "@dirigible/net" {
          * Returns the client by its id, if exists or null otherwise
          * @param id
          */
-        function getClient(id): WebsocketClient;
+        function getClient(id: string): WebsocketClient;
 
         /**
          * Returns the client by its handler, if exists or null otherwise
          * @param handler
          */
-        function getClientByHandler(handler): WebsocketClient;
+        function getClientByHandler(handler: string): WebsocketClient;
 
         /**
          * Returns the message in context of OnMessage handler

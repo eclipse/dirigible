@@ -15,7 +15,7 @@ exports.onOpen = function()  {
 
 exports.onMessage = function(message, from) {
   console.log("Message received: " + message + ", from: " + from);
-  return "Hello from WebSocket!";
+  return "Hello from WebSocket! [" + message + "]";
 }
 
 exports.onError = function(error) {

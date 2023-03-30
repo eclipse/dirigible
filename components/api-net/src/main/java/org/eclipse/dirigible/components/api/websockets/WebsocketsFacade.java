@@ -12,21 +12,19 @@
 package org.eclipse.dirigible.components.api.websockets;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
-import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.simp.stomp.StompSession;
 
 
 /**
@@ -60,13 +58,13 @@ public class WebsocketsFacade {
 	 * @return the Websocket Session object
 	 * @throws DeploymentException in case of an error
 	 * @throws IOException  in case of an error
+	 * @throws InterruptedException the interrupted exception
+	 * @throws ExecutionException the execution exception
 	 */
-	public static final Session createWebsocket(String uri, String handler) throws DeploymentException, IOException {
-		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+	public static final StompSession createWebsocket(String uri, String handler) throws DeploymentException, IOException, InterruptedException, ExecutionException {
 		if (logger.isDebugEnabled()) {logger.debug("Connecting to " + uri);}
-		JavascriptService javascriptService = new JavascriptService();
-        WebsocketClient client = new WebsocketClient(javascriptService, handler);
-		Session session = container.connectToServer(client, URI.create(uri));
+        WebsocketClient client = new WebsocketClient(uri, JavascriptService.get(), handler);
+        StompSession session = client.connect();
         return session;
 	}
 	
@@ -95,7 +93,7 @@ public class WebsocketsFacade {
 	 * @return the client
 	 */
 	public static final WebsocketClient getClient(String id) {
-		Optional<WebsocketClient> result = CLIENTS.stream().parallel().filter(client -> client.getSession().getId().equals(id)).findFirst();
+		Optional<WebsocketClient> result = CLIENTS.stream().parallel().filter(client -> client.getSession().getSessionId().equals(id)).findFirst();
 		
 		return result.isPresent() ? result.get() : null;
 	}

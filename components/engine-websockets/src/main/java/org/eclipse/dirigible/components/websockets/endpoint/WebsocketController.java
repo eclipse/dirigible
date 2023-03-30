@@ -75,7 +75,7 @@ public class WebsocketController {
 	 * @return the output message
 	 * @throws Exception the exception
 	 */
-	@MessageMapping("/js/{endpoint}")
+	@MessageMapping("/stomp/{endpoint}")
 	@SendToUser("/queue/reply/{endpoint}")
     public OutputMessage onMessage(@DestinationVariable String endpoint, final InputMessage message) throws Exception {
         final String time = new SimpleDateFormat("HH:mm").format(new Date());
