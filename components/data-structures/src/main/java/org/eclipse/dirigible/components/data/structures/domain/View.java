@@ -71,6 +71,7 @@ public class View extends Artefact {
 	 * @param name the name
 	 * @param description the description
 	 * @param dependencies the dependencies
+	 * @param kind the kind
 	 * @param schema the schema name
 	 * @param query the query
 	 */

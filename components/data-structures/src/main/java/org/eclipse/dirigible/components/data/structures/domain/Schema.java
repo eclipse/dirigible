@@ -72,7 +72,7 @@ public class Schema extends Artefact {
 	/**
 	 * Instantiates a new schema.
 	 *
-	 * @param tableName the schema name
+	 * @param schemaName the schema name
 	 */
 	public Schema(String schemaName) {
 		this(schemaName, schemaName, null, null);
@@ -104,6 +104,8 @@ public class Schema extends Artefact {
 	}
 
 	/**
+	 * Gets the tables.
+	 *
 	 * @return the tables
 	 */
 	public List<Table> getTables() {
@@ -111,6 +113,8 @@ public class Schema extends Artefact {
 	}
 
 	/**
+	 * Sets the tables.
+	 *
 	 * @param tables the tables to set
 	 */
 	public void setTables(List<Table> tables) {
@@ -118,6 +122,8 @@ public class Schema extends Artefact {
 	}
 
 	/**
+	 * Gets the views.
+	 *
 	 * @return the views
 	 */
 	public List<View> getViews() {
@@ -125,12 +131,19 @@ public class Schema extends Artefact {
 	}
 
 	/**
+	 * Sets the views.
+	 *
 	 * @param views the views to set
 	 */
 	public void setViews(List<View> views) {
 		this.views = views;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "Schema [id=" + id + ", tables=" + tables + ", views=" + views + ", location=" + location + ", name="
