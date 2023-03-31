@@ -72,7 +72,9 @@ angular.module('ideWorkspace', [])
                     let url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('rename').build();
                     return $http.post(url, {
                         source: new UriBuilder().path(pathSegments).path(oldName).build(),
-                        target: new UriBuilder().path(pathSegments).path(newName).build()
+                        target: new UriBuilder().path(pathSegments).path(newName).build(),
+                        sourceWorkspace: workspaceName,
+                        targetWorkspace: workspaceName
                     }).then(function successCallback(response) {
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
@@ -114,6 +116,8 @@ angular.module('ideWorkspace', [])
                 return $http.post(url, {
                     source: sourcePath,
                     target: targetPath,
+                    sourceWorkspace: sourceWorkspace,
+                    targetWorkspace: targetWorkspace
                 }).then(function successCallback(response) {
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
