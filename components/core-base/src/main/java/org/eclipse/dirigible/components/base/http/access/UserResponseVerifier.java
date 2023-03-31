@@ -18,6 +18,9 @@ import org.eclipse.dirigible.components.base.context.ThreadContextFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class UserResponseVerifier.
+ */
 public class UserResponseVerifier {
 	
 	/** The Constant logger. */

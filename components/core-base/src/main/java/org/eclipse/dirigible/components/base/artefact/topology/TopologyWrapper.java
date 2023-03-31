@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class TopologyWrapper.
  *
- * @param A the generic type
+ * @param <A> the generic type
  */
 public class TopologyWrapper<A extends Artefact> implements TopologicallySortable, TopologicallyDepletable {
 	

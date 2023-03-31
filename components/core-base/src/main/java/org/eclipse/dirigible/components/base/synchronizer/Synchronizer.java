@@ -23,7 +23,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 /**
  * The Interface Synchronizer.
  *
- * @param A the generic type
+ * @param <A> the generic type
  */
 public interface Synchronizer<A extends Artefact> {
 
@@ -93,21 +93,22 @@ public interface Synchronizer<A extends Artefact> {
 	boolean complete(TopologyWrapper<Artefact> wrapper, String flow);
 	
 	/**
-	 * Set the callback
-	 * 
-	 * @param callback
+	 * Set the callback.
+	 *
+	 * @param callback the new callback
 	 */
 	void setCallback(SynchronizerCallback callback);
 	
 	/**
-	 * Gets the file extension
-	 * 
+	 * Gets the file extension.
+	 *
 	 * @return the file extension
 	 */
 	String getFileExtension();
 	
 	/**
-	 * Gets the artefact type
+	 * Gets the artefact type.
+	 *
 	 * @return the artefact type
 	 */
 	String getArtefactType();
