@@ -200,6 +200,29 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	}
 	
 	/**
+	 * Adds the dependency.
+	 *
+	 * @return the dependencies
+	 */
+	public void addDependency(String dependency) {
+		if (dependencies == null) {
+			dependencies = dependency;
+		} else {
+			dependencies += ",";
+			dependencies += dependency;
+		}
+	}
+	
+	/**
+	 * Adds the dependency.
+	 *
+	 * @return the dependencies
+	 */
+	public void addDependency(String location, String name, String type) {
+		addDependency(type + KEY_SEPARATOR + location + KEY_SEPARATOR + name);
+	}
+	
+	/**
 	 * Update key.
 	 *
 	 */

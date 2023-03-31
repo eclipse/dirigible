@@ -18,8 +18,10 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -34,6 +36,8 @@ import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.Schema;
 import org.eclipse.dirigible.components.data.structures.domain.SchemaLifecycle;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
 import org.eclipse.dirigible.components.data.structures.domain.View;
 import org.eclipse.dirigible.components.data.structures.service.SchemaService;
 import org.eclipse.dirigible.components.data.structures.synchronizer.schema.SchemaCreateProcessor;
@@ -44,6 +48,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * The Class SchemasSynchronizer.
@@ -123,25 +131,14 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 */
 	@Override
 	public List<Schema> load(String location, byte[] content) {
-		Schema schema = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Schema.class);
+		Schema schema = parseSchema(location, new String(content, StandardCharsets.UTF_8));
 		Configuration.configureObject(schema);
 		schema.setLocation(location);
+		if (schema.getName() == null) {
+			schema.setName("");
+		}
 		schema.setType(Schema.ARTEFACT_TYPE);
 		schema.updateKey();
-		
-		for (Table table : schema.getTables()) {
-			if (table.getKind() == null) {
-				table.setKind(table.getType());
-			}
-			table.setType(Table.ARTEFACT_TYPE);
-		}
-		
-		for (View view : schema.getViews()) {
-			if (view.getKind() == null) {
-				view.setKind(view.getType());
-			}
-			view.setType(View.ARTEFACT_TYPE);
-		}
 		
 		try {
 			Schema maybe = getService().findByKey(schema.getKey());
@@ -220,30 +217,16 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 				executeSchemaUpdate(connection, schema);
 				break;
 			case CREATE:
-				if (!SqlFactory.getNative(connection).exists(connection, schema.getName())) {
-					try {
-						executeSchemaCreate(connection, schema);
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE);
-					} catch (Exception e) {
-						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE);
-					}
-				} else {
-					if (logger.isWarnEnabled()) {logger.warn(format("Schema [{0}] already exists during the update process", schema.getName()));}
-					executeSchemaUpdate(connection, schema);
-					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE);
+				try {
+					executeSchemaCreate(connection, schema);
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE);
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE);
 				}
 				break;
 			case DROP:
-				if (SqlFactory.getNative(connection).exists(connection, schema.getName())) {
-					if (SqlFactory.getNative(connection).count(connection, schema.getName()) == 0) {
-						executeSchemaDrop(connection, schema);
-					} else {
-						String message = format("Schema [{1}] cannot be deleted during the update process, because it is not empty", schema.getName());
-						if (logger.isWarnEnabled()) {logger.warn(message);}
-						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
-					}
-				}
+				executeSchemaDrop(connection, schema);
 				break;
 			default:
 				throw new UnsupportedOperationException(flow);
@@ -349,6 +332,139 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	@Override
 	public String getArtefactType() {
 		return Schema.ARTEFACT_TYPE;
+	}
+	
+	/**
+	 * Parses the schema.
+	 *
+	 * @param location the location
+	 * @param content the content
+	 * @return the schema
+	 */
+	public static Schema parseSchema(String location, String content) {
+		Schema result = new Schema();
+		
+			JsonElement root = GsonHelper.parseJson(content);
+			JsonArray structures = root.getAsJsonObject().get("schema").getAsJsonObject().get("structures").getAsJsonArray();
+			for (int i=0; i<structures.size(); i++) {
+				JsonObject structure = structures.get(i).getAsJsonObject();
+				String type = structure.get("type").getAsString();
+				if ("table".equalsIgnoreCase(type)) {
+					Table table = new Table();
+					setTableAttributes(location, result, structure, type, table);
+					result.getTables().add(table);
+				} else if ("view".equalsIgnoreCase(type)) {
+					View view = new View();
+					setViewAttributes(location, result, structure, type, view);
+					result.getViews().add(view);
+				} else if ("foreignKey".equalsIgnoreCase(type)) {
+					// skip for now
+				} else {
+					throw new IllegalArgumentException(format("Unknown data structure type [{0}] loaded from schema [{1}]", type, location));
+				}
+			}
+			for (int i=0; i<structures.size(); i++) {
+				JsonObject structure = structures.get(i).getAsJsonObject();
+				String type = structure.get("type").getAsString();
+				if ("foreignKey".equals(type)) {
+					TableConstraintForeignKey foreignKey = new TableConstraintForeignKey();
+					foreignKey.setName(structure.get("name").getAsString());
+					foreignKey.setColumns(structure.get("columns").getAsString().split(","));
+					foreignKey.setReferencedTable(structure.get("referencedTable").getAsString());
+					foreignKey.setReferencedColumns(structure.get("referencedColumns").getAsString().split(","));
+					String tableName = structure.get("table").getAsString();
+					for (Table table : result.getTables()) {
+						if (table.getName().equals(tableName)) {
+							// add the foreign key
+							List<TableConstraintForeignKey> list = new ArrayList<TableConstraintForeignKey>(); 
+							if (table.getConstraints().getForeignKeys() != null ) { 
+								list.addAll(table.getConstraints().getForeignKeys());
+							}
+							list.add(foreignKey);
+							table.getConstraints().getForeignKeys().addAll(list);
+							// add the dependency for the topological sorting later
+							table.addDependency(location, foreignKey.getReferencedTable(), "TABLE");
+							break;
+						}
+					}
+				}
+			}
+		
+		
+		return result;
+	}
+	
+	/**
+	 * Sets the table attributes.
+	 *
+	 * @param location the location
+	 * @param result the result
+	 * @param structure the structure
+	 * @param type the type
+	 * @param table the table
+	 */
+	private static void setTableAttributes(String location, Schema result, JsonObject structure,
+			String type, Table table) {
+		table.setLocation(location);
+		table.setName(structure.get("name").getAsString());
+		table.setKind(type);
+		table.setType(Table.ARTEFACT_TYPE);
+		table.updateKey();
+		JsonElement columnElement = structure.get("columns");
+		if (columnElement.isJsonObject()) {
+			JsonObject column = columnElement.getAsJsonObject();
+			TableColumn columnModel = new TableColumn();
+			setColumnAttributes(column, columnModel);
+			columnModel.setTable(table);
+			table.getColumns().add(columnModel);
+		} else if (columnElement.isJsonArray()) {
+			JsonArray columns = columnElement.getAsJsonArray();
+			for (int j=0; j<columns.size(); j++) {
+				JsonObject column = columns.get(j).getAsJsonObject();
+				TableColumn columnModel = new TableColumn();
+				setColumnAttributes(column, columnModel);
+				columnModel.setTable(table);
+				table.getColumns().add(columnModel);
+			}
+		} else {
+			throw new IllegalArgumentException(format("Error in parsing columns of table [{0}] in schema [{1}]", table.getName(), location));
+		}
+	}
+
+	/**
+	 * Sets the column attributes.
+	 *
+	 * @param column the column
+	 * @param columnModel the column model
+	 */
+	private static void setColumnAttributes(JsonObject column, TableColumn columnModel) {
+		columnModel.setName(column.get("name") != null && !column.get("name").isJsonNull() ? column.get("name").getAsString() : "unknown");
+		columnModel.setType(column.get("type") != null && !column.get("type").isJsonNull()  ? column.get("type").getAsString() : "unknown");
+		columnModel.setLength(column.get("length") != null && !column.get("length").isJsonNull()  ? column.get("length").getAsString() : null);
+		columnModel.setPrimaryKey(column.get("primaryKey") != null && !column.get("primaryKey").isJsonNull()  ? column.get("primaryKey").getAsBoolean() : false);
+		columnModel.setUnique(column.get("unique") != null && !column.get("unique").isJsonNull()  ? column.get("unique").getAsBoolean() : false);
+		columnModel.setNullable(column.get("nullable") != null && !column.get("nullable").isJsonNull()  ? column.get("nullable").getAsBoolean() : false);
+		columnModel.setDefaultValue(column.get("defaultValue") != null && !column.get("defaultValue").isJsonNull()  ? column.get("defaultValue").getAsString() : null);
+		columnModel.setScale(column.get("scale") != null && !column.get("scale").isJsonNull() ? column.get("scale").getAsString() : null);
+	}
+	
+	/**
+	 * Sets the view attributes.
+	 *
+	 * @param location the location
+	 * @param result the result
+	 * @param structure the structure
+	 * @param type the type
+	 * @param view the view
+	 */
+	private static void setViewAttributes(String location, Schema result, JsonObject structure,
+			String type, View view) {
+		view.setLocation(location);
+		view.setName(structure.get("name").getAsString());
+		view.setKind(type);
+		view.setType(View.ARTEFACT_TYPE);
+		view.setQuery(structure.get("columns").getAsJsonArray().get(0).getAsJsonObject().get("query").getAsString());
+		view.updateKey();
 	}
 
 }

@@ -58,8 +58,8 @@ public class BasicAuthSecurityConfiguration {
 	@Bean
 	public InMemoryUserDetailsManager userDetailsService() {
 		UserDetails user = User
-				.withUsername("dirigible")
-				.password("{noop}dirigible")
+				.withUsername("admin")
+				.password("{noop}admin")
 				.roles("DEVELOPER", "OPERATOR")
 				.build();
 		return new InMemoryUserDetailsManager(user);
