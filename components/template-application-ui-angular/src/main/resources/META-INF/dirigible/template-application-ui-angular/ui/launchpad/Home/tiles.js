@@ -4,7 +4,7 @@
  * Do not modify the content as it may be re-generated again.
  */
 const response = require("http/response");
-const extensions = require("core/extensions");
+const extensions = require("extensions/extensions");
 
 let tiles = {};
 

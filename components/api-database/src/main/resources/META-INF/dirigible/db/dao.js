@@ -823,6 +823,10 @@ DAO.prototype.dropTable = function(dropIdSequence) {
 exports.create = exports.dao = function(oDefinition, logCtxName, dataSourceName){
 	let orm;
 		orm = oDefinition;
+		
+	if (!dataSourceName || dataSourceName === null) {
+		dataSourceName = require("core/configurations").get("DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT", "DefaultDB");
+	}
 
 	let productName = globals.get(dataSourceName);
 	if (!productName) {

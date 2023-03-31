@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-var extensions = require('core/extensions');
+var extensions = require('extensions/extensions');
 var request = require('http/request');
 var response = require('http/response');
 
