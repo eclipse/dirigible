@@ -220,7 +220,6 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 * @param location the location
 	 * @param name the name
 	 * @param type the type
-	 * @return the dependencies
 	 */
 	public void addDependency(String location, String name, String type) {
 		addDependency(type + KEY_SEPARATOR + location + KEY_SEPARATOR + name);
