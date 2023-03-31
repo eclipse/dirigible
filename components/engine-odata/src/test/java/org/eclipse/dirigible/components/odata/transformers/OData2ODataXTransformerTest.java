@@ -64,7 +64,7 @@ public class OData2ODataXTransformerTest {
 			TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
 			TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
 			
-			model.setTableType(ISqlKeywords.METADATA_TABLE);
+			model.setKind(ISqlKeywords.METADATA_TABLE);
 			when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
 			new OData2ODataXTransformer(defaultTableMetadataProvider).transform(definition);
@@ -90,7 +90,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
         TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
         
-        model.setTableType(ISqlKeywords.METADATA_TABLE);
+        model.setKind(ISqlKeywords.METADATA_TABLE);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         model = new Table("PHONES");
@@ -98,7 +98,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column6 = new TableColumn("FK_COMPANY_ID", "Edm.Int32", "0", model);
         TableColumn column7 = new TableColumn("FK_EMPLOYEE_NUMBER", "Edm.Int32", "0", model);
         
-        model.setTableType(ISqlKeywords.METADATA_TABLE);
+        model.setKind(ISqlKeywords.METADATA_TABLE);
         when(odataDatabaseMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
@@ -144,7 +144,7 @@ public class OData2ODataXTransformerTest {
 			TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
 			TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
 			
-			model.setTableType(ISqlKeywords.METADATA_TABLE);
+			model.setKind(ISqlKeywords.METADATA_TABLE);
 			when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
 			new OData2ODataXTransformer(defaultTableMetadataProvider).transform(definition);
@@ -178,7 +178,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
         TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
        
-        model.setTableType(ISqlKeywords.METADATA_TABLE);
+        model.setKind(ISqlKeywords.METADATA_TABLE);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         model = new Table("PHONES");
@@ -186,7 +186,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column6 = new TableColumn("FK_COMPANY_ID", "Edm.Int32", "0", model);
         TableColumn column7 = new TableColumn("FK_EMPLOYEE_NUMBER", "Edm.Int32", "0", model);
         
-        model.setTableType(ISqlKeywords.METADATA_TABLE);
+        model.setKind(ISqlKeywords.METADATA_TABLE);
         when(odataDatabaseMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
@@ -242,7 +242,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
         TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
         
-        model.setTableType(ISqlKeywords.METADATA_VIEW);
+        model.setKind(ISqlKeywords.METADATA_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
@@ -283,7 +283,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
         TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
         
-        model.setTableType(ISqlKeywords.METADATA_VIEW);
+        model.setKind(ISqlKeywords.METADATA_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
@@ -328,7 +328,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
         TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
         
-        model.setTableType(ISqlKeywords.METADATA_VIEW);
+        model.setKind(ISqlKeywords.METADATA_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
@@ -368,7 +368,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
         TableColumn column5 = new TableColumn("ID", "Edm.Int32", "0", model);
         
-        model.setTableType(ISqlKeywords.METADATA_VIEW);
+        model.setKind(ISqlKeywords.METADATA_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
@@ -411,7 +411,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
         TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
         
-        model.setTableType(ISqlKeywords.METADATA_VIEW);
+        model.setKind(ISqlKeywords.METADATA_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
@@ -452,7 +452,7 @@ public class OData2ODataXTransformerTest {
 			TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
 			TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
 			
-			model.setTableType(ISqlKeywords.METADATA_VIEW);
+			model.setKind(ISqlKeywords.METADATA_VIEW);
 			when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
 			new OData2ODataXTransformer(defaultTableMetadataProvider).transform(definition);
@@ -486,7 +486,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
         TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
 
-        model.setTableType(ISqlKeywords.METADATA_CALC_VIEW);
+        model.setKind(ISqlKeywords.METADATA_CALC_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
@@ -526,7 +526,7 @@ public class OData2ODataXTransformerTest {
         TableColumn column3 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
         TableColumn column4 = new TableColumn("ADDRESS_ID", "Edm.Int32", "0", model);
         
-        model.setTableType(ISqlKeywords.METADATA_SYSTEM_TABLE);
+        model.setKind(ISqlKeywords.METADATA_SYSTEM_TABLE);
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +

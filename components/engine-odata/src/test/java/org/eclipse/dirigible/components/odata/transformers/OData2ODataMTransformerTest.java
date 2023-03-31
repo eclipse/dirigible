@@ -234,7 +234,7 @@ public class OData2ODataMTransformerTest {
         TableColumn column1 = new TableColumn("COMPANY_ID", "Edm.Int32", "0", true, true, model);
         TableColumn column2 = new TableColumn("EMPLOYEE_NUMBER", "Edm.Int32", "0", true, true, model);
         
-        model.setTableType("CALC VIEW");
+        model.setKind("CALC VIEW");
         when(odataDatabaseMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entityEmployee = "{\n" +
@@ -388,7 +388,7 @@ public class OData2ODataMTransformerTest {
         TableColumn column1 = new TableColumn("ZUSR_ROLE", "Edm.String", "20", model);
         TableColumn column2 = new TableColumn("ZROLE_NAME", "Edm.String", "20", model);
         
-        model.setTableType(ISqlKeywords.KEYWORD_VIEW);
+        model.setKind(ISqlKeywords.KEYWORD_VIEW);
         when(odataDatabaseMetadataUtil.getTableMetadata("UserRole", null)).thenReturn(model);
 
         String entityView = "{\n" +

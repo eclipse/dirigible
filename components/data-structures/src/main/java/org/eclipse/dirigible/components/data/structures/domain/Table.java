@@ -48,20 +48,15 @@ public class Table extends Artefact {
 	@Column(name = "TABLE_ID", nullable = false)
 	private Long id;
 	
-	/** The name. */
-	@Column(name = "TABLE_NAME", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	/** The kind. */
+	@Column(name = "TABLE_KIND", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
-	protected String tableName;
+	protected String kind;
 	
-	/** The key. */
-	@Column(name = "TABLE_TYPE", columnDefinition = "VARCHAR", nullable = true, length = 255)
-	@Expose
-	protected String tableType;
-	
-	/** The name. */
+	/** The schema name. */
 	@Column(name = "TABLE_SCHEMA", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
-	protected String schemaName;
+	protected String schema;
 	
 	/** The columns. */
 	@OneToMany(mappedBy = "table", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -89,16 +84,14 @@ public class Table extends Artefact {
 	 * @param name the name
 	 * @param description the description
 	 * @param dependencies the dependencies
-	 * @param tableName the table name
-	 * @param tableType the table type
-	 * @param schemaName the schema name
+	 * @param kind the kind
+	 * @param schema the schema name
 	 */
-	public Table(String location, String name, String description, String dependencies, String tableName, String tableType, String schemaName) {
+	public Table(String location, String name, String description, String dependencies, String kind, String schema) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.constraints = new TableConstraints(this);
-		this.tableName = tableName;
-		this.tableType = tableType;
-		this.schemaName = schemaName;
+		this.kind = kind;
+		this.schema = schema;
 	}
 	
 	/**
@@ -107,7 +100,7 @@ public class Table extends Artefact {
 	 * @param tableName the table name
 	 */
 	public Table(String tableName) {
-		this(tableName, tableName, null, null, tableName, "TABLE", "");
+		this(tableName, tableName, null, null, "TABLE", "");
 	}
 	
 	/**
@@ -135,65 +128,41 @@ public class Table extends Artefact {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	/**
-	 * Gets the table name.
-	 *
-	 * @return the tableName
-	 */
-	public String getTableName() {
-		if (tableName == null) {
-			return name;
-		}
-		return tableName;
-	}
-
-	/**
-	 * Sets the table name.
-	 *
-	 * @param tableName the tableName to set
-	 */
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
-
-	/**
-	 * Gets the table type.
-	 *
-	 * @return the tableType
-	 */
-	public String getTableType() {
-		if (tableType == null) {
-			return type;
-		}
-		return tableType;
-	}
-
-	/**
-	 * Sets the table type.
-	 *
-	 * @param tableType the tableType to set
-	 */
-	public void setTableType(String tableType) {
-		this.tableType = tableType;
-	}
 	
+	/**
+	 * Gets the kind.
+	 *
+	 * @return the kind
+	 */
+	public String getKind() {
+		return kind;
+	}
+
+	/**
+	 * Sets the kind.
+	 *
+	 * @param kind the kind to set
+	 */
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+
 	/**
 	 * Gets the schema name.
 	 *
-	 * @return the schemaName
+	 * @return the schema name
 	 */
-	public String getSchemaName() {
-		return schemaName;
+	public String getSchema() {
+		return schema;
 	}
 
 	/**
 	 * Sets the schema name.
 	 *
-	 * @param schemaName the schemaName to set
+	 * @param schema the schema name to set
 	 */
-	public void setSchemaName(String schemaName) {
-		this.schemaName = schemaName;
+	public void setSchema(String schema) {
+		this.schema = schema;
 	}
 
 	/**
@@ -257,9 +226,10 @@ public class Table extends Artefact {
 	 */
 	@Override
 	public String toString() {
-		return "Table [id=" + id + ", columns=" + (columns != null ? Objects.toString(columns) : "null") 
-				+ ", indexes=" + (indexes != null ? Objects.toString(indexes) : "null")
-				+ ", constraints=" + constraints
+		return "Table [id=" + id + ", schemaName=" + schema + ", columns=" + columns + ", indexes=" + indexes
+				+ ", constraints=" + constraints + ", location=" + location + ", name=" + name + ", type=" + type
+				+ ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy="
+				+ createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt
 				+ "]";
 	}
 

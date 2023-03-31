@@ -84,17 +84,17 @@ public class OData2ODataMTransformer {
                     .append("\t\"edmType\": \"").append(entity.getName()).append("Type").append("\",\n")
                     .append("\t\"edmTypeFqn\": \"").append(model.getNamespace()).append(".").append(entity.getName()).append("Type").append("\",\n")
                     .append("\t\"sqlTable\": \"").append(entity.getTable()).append("\",\n")
-                    .append("\t\"dataStructureType\": \"").append(tableMetadata.getTableType()).append("\",\n");
+                    .append("\t\"dataStructureType\": \"").append(tableMetadata.getKind()).append("\",\n");
 
             boolean isPretty = Boolean.parseBoolean(Configuration.get(ODataDatabaseMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
 
-            if (tableMetadata.getTableType() == null) {
+            if (tableMetadata.getKind() == null) {
             	if (logger.isErrorEnabled()) {logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());}
                 continue;
             }
 
             List<TableColumn> idColumns = tableMetadata.getColumns().stream().filter(TableColumn::isPrimaryKey).collect(Collectors.toList());
-            if (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType())) {
+            if (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getKind())) {
             	if (logger.isErrorEnabled()) {logger.error("Table {} doesn't have primary keys {}, so it will be skipped.", entity.getTable(), entity.getName());}
                 continue;
             }

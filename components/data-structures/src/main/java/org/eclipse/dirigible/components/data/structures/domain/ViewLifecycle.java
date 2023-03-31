@@ -12,21 +12,15 @@
 package org.eclipse.dirigible.components.data.structures.domain;
 
 /**
- * The Enum TableLifecycle.
+ * The Enum ViewLifecycle.
  */
-public enum TableLifecycle {
+public enum ViewLifecycle {
 	
-	/** The execute table create. */
+	/** The execute view create. */
 	CREATE,
-	/** The execute table update. */
+	/** The execute view update. */
 	UPDATE,
-	/** The execute table foreign keys create. */
-	FOREIGN_KEYS_CREATE,
-	/** The execute table foreign keys drop. */
-	FOREIGN_KEYS_DROP,
-	/** The execute table alter. */
-	ALTER,
-	/** The execute table drop. */
+	/** The execute view drop. */
 	DROP
 
 }

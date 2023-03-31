@@ -76,7 +76,7 @@ public class TableConstraintForeignKey extends TableConstraint {
 	 * @param constraints the constraints
 	 */
 	public TableConstraintForeignKey(String referencedTable, String columnName, String referencedColumnName, TableConstraints constraints) {
-		this(constraints.getTable().getTableName() + "_" + referencedTable, null,
+		this(constraints.getTable().getName() + "_" + referencedTable, null,
 				new String[] {columnName}, referencedTable, new String[] {referencedColumnName}, constraints);
 	}
 	

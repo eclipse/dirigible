@@ -104,7 +104,7 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
     	}
     	Table tableMetadata = new Table();
     	tableMetadata.setName(tableName);
-    	tableMetadata.setSchemaName(schemaName);
+    	tableMetadata.setSchema(schemaName);
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             try (ResultSet rs = databaseMetadata.getTables(null, schemaName, tableName, null)) {
@@ -135,12 +135,12 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @throws SQLException the SQL exception
      */
     public static void addColumns(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaPattern) throws SQLException {
-        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
+        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
         if (columns.next()) {
             iterateColumns(tableMetadata, columns);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
+            columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName().toLowerCase()), null);
             if (!columns.next()) {
                 throw new SQLException("Error in getting the information about the columns.");
             } else {
@@ -182,12 +182,12 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @throws SQLException the SQL exception
      */
     public static void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schema) throws SQLException {
-        ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
+        ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()));
         if (primaryKeys.next()) {
             iteratePrimaryKeys(tableMetadata, primaryKeys);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
+            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName().toLowerCase()));
             if (!primaryKeys.next()) {
                 return;
             } else {
@@ -234,12 +234,12 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @throws SQLException the SQL exception
      */
     public static void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schema) throws SQLException {
-        ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
+        ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()));
         if (foreignKeys.next()) {
             iterateForeignKeys(tableMetadata, foreignKeys);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
+            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName().toLowerCase()));
             if (!foreignKeys.next()) {
                 return;
             } else {
@@ -287,7 +287,7 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
     public static void addIndices(DatabaseMetaData databaseMetadata, Connection connection,
 			Table tableMetadata, String schema) throws SQLException {
 		
-    	try (ResultSet indexes = databaseMetadata.getIndexInfo(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()), false, true)) {
+    	try (ResultSet indexes = databaseMetadata.getIndexInfo(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getName()), false, true)) {
 	        String lastIndexName = "";
 	
 	        while (indexes.next()) {
@@ -364,12 +364,12 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      * @throws SQLException the SQL exception
      */
     public static void addTableType(DatabaseMetaData databaseMetadata, Connection connection, Table tableMetadata, String schemaPattern) throws SQLException {
-        ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
+        ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName()), null);
         if (tables.next()) {
             iterateTables(tableMetadata, tables);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
+            tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getName().toLowerCase()), null);
             if (!tables.next()) {
                 throw new SQLException("Error in getting the information about the tables.");
             } else {
@@ -387,7 +387,7 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      */
     private static void iterateTables(Table tableMetadata, ResultSet tables) throws SQLException {
         do {
-            tableMetadata.setTableType(tables.getString(JDBC_TABLE_TYPE_PROPERTY));
+            tableMetadata.setKind(tables.getString(JDBC_TABLE_TYPE_PROPERTY));
         } while (tables.next());
     }
 

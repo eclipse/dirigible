@@ -135,7 +135,7 @@ public class TablesSynchronizerTest {
 	 * @return the table
 	 */
 	public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location, String name, String description, String dependencies) {
-		Table table = new Table(location, name, description, dependencies, name, null, null);
+		Table table = new Table(location, name, description, dependencies, "TABLE", null);
 		table.addColumn(name + "_1", "VARCHAR", "20", true, false, "", "0", false);
 		table.addColumn(name + "_2", "VARCHAR", "20", true, false, "", "0", false);
 		table.addIndex(name + "_1", "", true, new String[] { name + "_1"});

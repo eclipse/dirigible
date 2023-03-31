@@ -133,6 +133,7 @@ public class TableColumn {
 	 * @param name the name
 	 * @param type the type
 	 * @param length the length
+	 * @param nullable the nullable
 	 * @param primaryKey the primary key
 	 * @param table the table
 	 */

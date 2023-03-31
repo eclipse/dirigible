@@ -47,7 +47,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * The Class TableSynchronizer.
+ * The Class TablesSynchronizer.
  *
  * @param <A> the generic type
  */
@@ -127,6 +127,9 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 		Table table = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Table.class);
 		Configuration.configureObject(table);
 		table.setLocation(location);
+		if (table.getKind() == null) {
+			table.setKind(table.getType());
+		}
 		table.setType(Table.ARTEFACT_TYPE);
 		table.updateKey();
 		table.getColumns().forEach(c -> c.setTable(table));

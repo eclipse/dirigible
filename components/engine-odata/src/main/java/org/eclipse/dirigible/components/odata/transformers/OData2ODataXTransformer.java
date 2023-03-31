@@ -93,12 +93,12 @@ public class OData2ODataXTransformer {
 
             List<TableColumn> idColumns = tableMetadata.getColumns().stream().filter(TableColumn::isPrimaryKey).collect(Collectors.toList());
 
-            if (tableMetadata.getTableType() == null || (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType()))) {
+            if (tableMetadata.getKind() == null || (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getKind()))) {
             	if (logger.isErrorEnabled()) {logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());}
                 continue;
             }
-            if (!VIEW_TYPES.contains(tableMetadata.getTableType()) && !TABLE_TYPES.contains(tableMetadata.getTableType())) {
-            	if (logger.isErrorEnabled()) {logger.error("Unsupported database type {} for entity object {}", tableMetadata.getTableType(), entity.getTable());}
+            if (!VIEW_TYPES.contains(tableMetadata.getKind()) && !TABLE_TYPES.contains(tableMetadata.getKind())) {
+            	if (logger.isErrorEnabled()) {logger.error("Unsupported database type {} for entity object {}", tableMetadata.getKind(), entity.getTable());}
                 continue;
             }
 
@@ -107,7 +107,7 @@ public class OData2ODataXTransformer {
             List<ODataParameter> entityParameters = entity.getParameters();
             List<ODataProperty> entityProperties = entity.getProperties();
 
-            if (tableMetadata.getTableType().equals(ISqlKeywords.METADATA_TABLE)) {
+            if (tableMetadata.getKind().equals(ISqlKeywords.METADATA_TABLE)) {
                 ODataMetadataUtil.validateODataPropertyName(tableMetadata.getColumns(), entityProperties, entity.getName());
             }
 
@@ -119,7 +119,7 @@ public class OData2ODataXTransformer {
             buff.append("\t\t<Key>\n");
 
             // Keys are explicit defined only on VIEW artifact
-            if (VIEW_TYPES.contains(tableMetadata.getTableType())) {
+            if (VIEW_TYPES.contains(tableMetadata.getKind())) {
                 entityParameters.forEach(parameter -> buff.append("\t\t\t<PropertyRef Name=\"").append(propertyNameEscaper.escape(parameter.getName())).append("\" />\n"));
 
                 if (entityOrigKeys.size() > 0) {
@@ -140,7 +140,7 @@ public class OData2ODataXTransformer {
             buff.append("\t\t</Key>\n");
 
             // Add keys and parameters as property
-            if (VIEW_TYPES.contains(tableMetadata.getTableType())) {
+            if (VIEW_TYPES.contains(tableMetadata.getKind())) {
                 if (entityOrigKeys.size() == 0) {
                     // Local key was generated
                     entity.getKeys().forEach(key -> buff.append("\t\t<Property Name=\"").append(key).append("\"").append(" Type=\"").append("Edm.String").append("\"").append(" Nullable=\"").append("false").append("\" MaxLength=\"2147483647\"").append(" sap:filterable=\"false\"").append("/>\n"));

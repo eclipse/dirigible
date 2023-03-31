@@ -149,7 +149,7 @@ public class ODataDatabaseMetadataUtil {
     	}
         Table tableMetadata = new Table();
     	tableMetadata.setName(tableName);
-    	tableMetadata.setSchemaName(schemaName);
+    	tableMetadata.setSchema(schemaName);
         try (Connection connection = getDataSource().getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             String artifactType = getArtifactType(databaseMetadata, connection, tableName, schemaName);
@@ -158,7 +158,7 @@ public class ODataDatabaseMetadataUtil {
             }
             getColumns(databaseMetadata, connection, tableMetadata, schemaName);
             getForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
-            tableMetadata.setTableType(artifactType);
+            tableMetadata.setKind(artifactType);
         }
 
         return tableMetadata;
