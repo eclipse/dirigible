@@ -186,6 +186,7 @@
 		<module>template-form-builder-angularjs</module>
 		<module>template-hello-world</module>
 		<module>template-html</module>
+		<module>template-html-widgets</module>
 		<module>template-http-client</module>
 		<module>template-job</module>
 		<module>template-listener</module>

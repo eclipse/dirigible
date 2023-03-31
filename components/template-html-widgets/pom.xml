@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - Template - Application (Angular)</name>
-	<artifactId>dirigible-components-template-application-angular</artifactId>
+	<name>Components - Template - HTML - Widgets</name>
+	<artifactId>dirigible-components-template-html-widgets</artifactId>
     <packaging>jar</packaging>
 
 	<properties>

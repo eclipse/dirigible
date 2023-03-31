@@ -1,6 +1,6 @@
 {
 	"name": "{{tableName}}",
-	"type": "TABLE",
+	"kind": "TABLE",
 	"columns": [{
 		"name": "ID",
 		"type": "INTEGER",
