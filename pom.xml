@@ -640,7 +640,7 @@
 		<path-to-regexp.version>6.2.1</path-to-regexp.version>
 		<javax.websocket-api.version>1.1</javax.websocket-api.version>
 
-		<org.springdoc.openapi.ui.version>1.6.15</org.springdoc.openapi.ui.version>
+		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
 		<swagger-annotations.version>1.6.10</swagger-annotations.version>
 		<junit4.version>4.13.2</junit4.version>
 
