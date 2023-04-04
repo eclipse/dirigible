@@ -19,6 +19,8 @@ import org.eclipse.dirigible.components.ide.problems.domain.Problems;
 import org.eclipse.dirigible.components.ide.problems.service.ProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,7 +69,9 @@ public class ProblemEndpoint extends BaseEndpoint {
      * @throws Exception the scheduler exception
      */
     @GetMapping(value = "/search", produces = "application/json")
-    public ResponseEntity<Problems>  fetchProblemsBatch(@RequestParam("condition") String condition, @RequestParam("limit") int limit) throws Exception {
+    public ResponseEntity<Problems>  fetchProblemsBatch(
+    		@Validated @RequestParam("condition") String condition,
+    		@Validated @RequestParam("limit") int limit) throws Exception {
         return ResponseEntity.ok(problemService.fetchProblemsBatch(condition, limit));
     }
 
@@ -80,7 +84,9 @@ public class ProblemEndpoint extends BaseEndpoint {
      * @throws Exception the scheduler exception
      */
     @PostMapping(value = "/update/{status}", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<?> updateStatus(@PathVariable("status") String status, List<Long> selectedIds) throws Exception {
+    public ResponseEntity<?> updateStatus(
+    		@Validated @PathVariable("status") String status, 
+    		@Nullable List<Long> selectedIds) throws Exception {
     	problemService.updateStatusByIds(selectedIds, status);
         return ResponseEntity.noContent().build();
     }
@@ -93,7 +99,8 @@ public class ProblemEndpoint extends BaseEndpoint {
      * @throws Exception the scheduler exception
      */
     @DeleteMapping(value = "/delete/{status}", produces = "application/json")
-    public ResponseEntity<?> deleteProblemsByStatus(@PathVariable("status") String status) throws Exception {
+    public ResponseEntity<?> deleteProblemsByStatus(
+    		@Validated @PathVariable("status") String status) throws Exception {
     	problemService.deleteAllByStatus(status);
         return ResponseEntity.noContent().build();
     }
@@ -118,7 +125,8 @@ public class ProblemEndpoint extends BaseEndpoint {
      * @throws Exception the scheduler exception
      */
     @PostMapping(value = "/delete/selected", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<?> deleteMultipleProblems(List<Long> selectedIds) throws Exception {
+    public ResponseEntity<?> deleteMultipleProblems(
+    		@Nullable List<Long> selectedIds) throws Exception {
     	problemService.deleteAllByIds(selectedIds);
         return ResponseEntity.noContent().build();
     }

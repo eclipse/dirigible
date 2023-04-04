@@ -67,7 +67,7 @@ public class TransportEndpoint {
 	 */
 	@PostMapping(value = "/project", consumes = "multipart/form-data", produces = "application/json")
 	public ResponseEntity<?> importProjectInPath(
-			@RequestParam("path") String path,
+			@Validated @RequestParam("path") String path,
 			@Validated @RequestParam("file") MultipartFile file) {
 		path = URLDecoder.decode(path, StandardCharsets.UTF_8);
 		try {
@@ -89,7 +89,7 @@ public class TransportEndpoint {
 	 */
 	@PostMapping(value = "/project/{workspace}", consumes = "multipart/form-data", produces = "application/json")
 	public ResponseEntity<?> importProjectInWorkspace(
-			@PathVariable("workspace") String workspace,
+			@Validated @PathVariable("workspace") String workspace,
 			@Validated @RequestParam("file") MultipartFile file) throws RepositoryImportException {
 
 		try {

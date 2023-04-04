@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -227,7 +228,7 @@ public class GitEndpoint {
 	public ResponseEntity<?> deleteGitRepository(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("repositoryName") String repositoryName,
-			@RequestParam("unpublish") boolean unpublish) throws GitConnectorException {
+			@Nullable @RequestParam("unpublish") boolean unpublish) throws GitConnectorException {
 		gitService.delete(workspace, repositoryName, unpublish);
 		return ResponseEntity.ok().build();
 	}
@@ -677,7 +678,7 @@ public class GitEndpoint {
 	public ResponseEntity<?> getFileDiff(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("repositoryName") String repositoryName,
-			@RequestParam("path") String path)
+			@Nullable @RequestParam("path") String path)
 			throws GitConnectorException {
 		if (path == null || "".equals(path)) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -703,7 +704,7 @@ public class GitEndpoint {
 	public ResponseEntity<?> getHistory(
 			@PathVariable("workspace") String workspace,
 			@PathVariable("project") String project,
-			@RequestParam("path") String path)
+			@Nullable @RequestParam("path") String path)
 			throws GitConnectorException {
 		List<GitCommitInfo> history = gitService.getHistory(workspace, project, path);
 		if (history != null) {
