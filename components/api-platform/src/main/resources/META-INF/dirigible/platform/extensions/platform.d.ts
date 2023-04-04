@@ -1,7 +1,10 @@
 declare module "@dirigible/platform" {
-    class byte{}
-    class JavaBytes{}
-    
+    class byte {
+    }
+
+    class JavaBytes {
+    }
+
     module engines {
         interface Engine {
             /**
@@ -12,7 +15,7 @@ declare module "@dirigible/platform" {
              * @param parameters
              * @param debug
              */
-            execute(projectName, projectFilePath, projectFilePathParam, parameters, debug):object;
+            execute(projectName, projectFilePath, projectFilePathParam, parameters, debug): object;
 
         }
 
@@ -45,42 +48,42 @@ declare module "@dirigible/platform" {
          * @param workspace
          * @param project
          */
-        function publish(user, workspace, project):boolean;
+        function publish(user, workspace, project): boolean;
 
         /**
          * Unpublish project from the workspace, the project parameter is optional
          * @param project
          */
-        function unpublish(project):boolean;
+        function unpublish(project): boolean;
     }
-    
+
     module registry {
         /**
          * Gets the content of resource by path, as byte array
          * @param path
          */
-        function getContent(path:string): byte[];
+        function getContent(path: string): byte[];
 
         /**
          * Gets the content of resource by path, as array of Java bytes
          * @param path
          */
-        function getContentNative(path:string): JavaBytes[];
+        function getContentNative(path: string): JavaBytes[];
 
         /**
          * Gets the content of resource by path, as text
          * @param path
          */
-        function getText(path:string): string;
+        function getText(path: string): string;
 
         /**
          * Find resources under certain path (e.g. /) by pattern (e.g. *.js)
          * @param path
          * @param pattern
          */
-        function find(path:string, pattern): string[];
+        function find(path: string, pattern): string[];
     }
-    
+
     module repository {
         interface Resource {
             /**
@@ -117,19 +120,19 @@ declare module "@dirigible/platform" {
              * Rename the Resource
              * @param name
              */
-            renameTo(name:string);
+            renameTo(name: string);
 
             /**
              * Moves the Resource to a new location
              * @param path
              */
-            moveTo(path:string);
+            moveTo(path: string);
 
             /**
              * Copy the Resource to a new location
              * @param path
              */
-            copyTo(path:string);
+            copyTo(path: string);
 
             /**
              * Returns true if the Resource exists.
@@ -154,13 +157,13 @@ declare module "@dirigible/platform" {
             /**
              *Returns the content of the Resource
              */
-            getContentNative():JavaBytes[];
+            getContentNative(): JavaBytes[];
 
             /**
              * Sets the Resource content as text
              * @param text
              */
-            setText(text:string);
+            setText(text: string);
 
             /**
              * Sets the Resource content
@@ -172,7 +175,7 @@ declare module "@dirigible/platform" {
              * Sets the Resource content as array of Java bytes
              * @param content
              */
-            setContentNative(content:JavaBytes);
+            setContentNative(content: JavaBytes);
 
             /**
              * Returns true if the Resource content is binary
@@ -182,7 +185,7 @@ declare module "@dirigible/platform" {
             /**
              * Returns the content type of the Resource
              */
-            getContentType():string;
+            getContentType(): string;
         }
 
         interface EntityInformation {
@@ -262,19 +265,19 @@ declare module "@dirigible/platform" {
              * Rename the Collection
              * @param name
              */
-            renameTo(name:string);
+            renameTo(name: string);
 
             /**
              * Moves the Collection to a new location
              * @param path
              */
-            moveTo(path:string);
+            moveTo(path: string);
 
             /**
              * Copy the Collection to a new location
              * @param path
              */
-            copyTo(path:string);
+            copyTo(path: string);
 
             /**
              * Returns true if the Collection exists
@@ -295,36 +298,36 @@ declare module "@dirigible/platform" {
              * Create new Collection
              * @param name
              */
-            createCollection(name:string): Collection;
+            createCollection(name: string): Collection;
 
             /**
              * Get Collection by name
              * @param name
              */
-            getCollection(name:string): Collection;
+            getCollection(name: string): Collection;
 
             /**
              * Remove Collection by name
              * @param name
              */
-            removeCollection(name:string);
+            removeCollection(name: string);
 
             /**
              * Gets the names of the Resources in this Collection
              */
-            getResourcesNames():string[];
+            getResourcesNames(): string[];
 
             /**
              * Get Resource by name
              * @param name
              */
-            getResource(name:string): Resource;
+            getResource(name: string): Resource;
 
             /**
              * Remove Resource by name
              * @param name
              */
-            removeResource(name:string);
+            removeResource(name: string);
 
             /**
              * Create new Resource
@@ -338,7 +341,7 @@ declare module "@dirigible/platform" {
          * Get Resource by path
          * @param path
          */
-        function getResource(path:string): Resource;
+        function getResource(path: string): Resource;
 
         /**
          * Creates Resource programmatically
@@ -366,34 +369,101 @@ declare module "@dirigible/platform" {
          * Delete Resource by path
          * @param path
          */
-        function deleteResource(path:string);
+        function deleteResource(path: string);
 
         /**
          * Get Collection by path
          * @param path
          */
-        function getCollection(path:string): Collection;
+        function getCollection(path: string): Collection;
 
         /**
          * Creates Collection programmatically
          * @param path
          */
-        function createCollection(path:string): Collection;
+        function createCollection(path: string): Collection;
 
         /**
          * Delete Collection by path
          * @param path
          */
-        function deleteCollection(path:string);
+        function deleteCollection(path: string);
 
         /**
          * Find resources under certain path (e.g. /) by pattern (e.g. *.js)
          * @param path
          * @param pattern
          */
-        function find(path:string, pattern): string[];
+        function find(path: string, pattern): string[];
     }
-    
+
+    module problems {
+        /**
+         * Save a problem
+         *  @param location the location
+         *  @param type the type
+         *  @param line the line
+         *  @param column the column
+         *  @param cause the cause
+         *  @param expected the expected
+         *  @param category the category
+         *  @param module the module
+         *  @param source the source
+         *  @param program the program
+         */
+        function save(location: string, type: string, line: string, column: string, cause: string,
+            expected: string, category: string, module: string, source: string, program: string): void
+
+        /**
+         * Find a problems by given id
+         * @param id the problem id
+         */
+        function findProblem(id: number): string
+
+        /**
+         * Fetch all problems
+         */
+        function fetchAllProblems(): string
+
+        /**
+         * Fetch problems by batch
+         * @param condition the condition
+         * @param limit the limit
+         */
+        function fetchProblemsBatch(condition: string, limit: number): string
+
+        /**
+         * Delete problems by given id
+         * @param id the problem id
+         */
+        function deleteProblem(id: number): void
+
+        /**
+         * Delete multiple problems by given list of ids
+         * @param ids list of problems ids
+         */
+        function deleteMultipleProblemsById(ids: number[]): void
+
+        /**
+         * Clear all problems
+         */
+        function clearAllProblems(): void
+
+        /**
+         * Update status of a problem
+         * @param id the problem id
+         * @param status new status(ACTIVE, SOLVED, IGNORED)
+         */
+        function updateStatus(id: number, status: string): void
+
+        /**
+         * Update status of multiple problems
+         * @param ids list of problem ids
+         * @param status new status(ACTIVE, SOLVED, IGNORED)
+         */
+        function updateStatusMultiple(ids: number[], status: string): void
+    }
+
     module workspace {
         interface Folder {
             /**
@@ -410,7 +480,7 @@ declare module "@dirigible/platform" {
              * Creates a new Folder by name programmatically
              * @param path
              */
-            createFolder(path:string): Folder;
+            createFolder(path: string): Folder;
 
             /**
              * Check whether this Folder object does exist programmatically
@@ -421,38 +491,38 @@ declare module "@dirigible/platform" {
              * Check whether a Folder by given path exists in this Folder programmatically
              * @param path
              */
-            existsFolder(path:string): boolean;
+            existsFolder(path: string): boolean;
 
             /**
              * Gets a Folder by path programmatically
              * @param path
              */
-            getFolder(path:string): Folder;
+            getFolder(path: string): Folder;
 
             /**
              * Gets all the Folders under the path programmatically
              * @param path
              */
-            getFolders(path:string): Folders;
+            getFolders(path: string): Folders;
 
             /**
              * Deletes a Folder by path programmatically
              * @param path
              */
-            deleteFolder(path:string): boolean;
+            deleteFolder(path: string): boolean;
 
             /**
              * Creates a new File by name programmatically
              * @param path
              * @param input
              */
-            createFile(path:string, input:string): File;
+            createFile(path: string, input: string): File;
 
             /**
              * Check whether a File by given path exists in this Folder programmatically
              * @param path
              */
-            existsFile(path:string): boolean;
+            existsFile(path: string): boolean;
 
             /**
              * Gets a File by path programmatically
@@ -508,7 +578,7 @@ declare module "@dirigible/platform" {
              * Sets the Content of the File programmatically by the given bytes input
              * @param input
              */
-            setContent(input:string);
+            setContent(input: string);
 
             setText(input);
 
@@ -528,7 +598,7 @@ declare module "@dirigible/platform" {
              * Gets a File by index programmatically
              * @param index
              */
-            get(index:number): File;
+            get(index: number): File;
         }
 
         interface Folders {
@@ -541,7 +611,7 @@ declare module "@dirigible/platform" {
              * Gets a Folder by index programmatically
              * @param index
              */
-            get(index:number): Folder;
+            get(index: number): Folder;
         }
 
         interface Project {
@@ -559,7 +629,7 @@ declare module "@dirigible/platform" {
              * Creates a new Folder by name programmatically
              * @param path
              */
-            createFolder(path:string): Folder;
+            createFolder(path: string): Folder;
 
             /**
              * Check whether this Project object does exist programmatically
@@ -570,19 +640,19 @@ declare module "@dirigible/platform" {
              * Check whether a Folder by given path exists in this Project programmatically
              * @param path
              */
-            existsFolder(path:string): boolean;
+            existsFolder(path: string): boolean;
 
             /**
              * Gets a Folder by path programmatically
              * @param path
              */
-            getFolder(path:string): Folder;
+            getFolder(path: string): Folder;
 
             /**
              * Gets all the Folders under the path programmatically
              * @param path
              */
-            getFolders(path:string): Folders;
+            getFolders(path: string): Folders;
 
             /**
              * Deletes a Folder by path programmatically
@@ -595,7 +665,7 @@ declare module "@dirigible/platform" {
              * @param path
              * @param input
              */
-            createFile(path:string, input?:string): File;
+            createFile(path: string, input?: string): File;
 
             /**
              * Check whether a File by given path exists in this Project programmatically
@@ -646,19 +716,19 @@ declare module "@dirigible/platform" {
              * Creates a new Project programmatically
              * @param name
              */
-            createProject(name:string): Project;
+            createProject(name: string): Project;
 
             /**
              * Gets the Project by name programmatically
              * @param name
              */
-            getProject(name:string): Projects;
+            getProject(name: string): Projects;
 
             /**
              * Deletes the Project by name programmatically
              * @param name
              */
-            deleteProject(name:string);
+            deleteProject(name: string);
 
             /**
              * Check whether this Workspace object does exist programmatically
@@ -669,27 +739,27 @@ declare module "@dirigible/platform" {
              * Check whether a Folder by given path exists in this Workspace programmatically
              * @param path
              */
-            existsFolder(path:string): boolean;
+            existsFolder(path: string): boolean;
 
             /**
              * Check whether a File by given path exists in this Workspace programmatically
              * @param path
              */
-            existsFile(path:string): boolean;
+            existsFile(path: string): boolean;
 
             /**
              * Copies a given Project programmatically
              * @param source
              * @param target
              */
-            copyProject(source, target:string);
+            copyProject(source, target: string);
 
             /**
              * Moves a given Project programmatically
              * @param source
              * @param target
              */
-            moveProject(source:string, target:string);
+            moveProject(source: string, target: string);
 
         }
 
@@ -697,13 +767,13 @@ declare module "@dirigible/platform" {
          * Creates a new Workspace programmatically
          * @param name
          */
-        function createWorkspace(name:string): Workspace;
+        function createWorkspace(name: string): Workspace;
 
         /**
          * Gets the Workspace by name programmatically
          * @param name
          */
-        function getWorkspace(name:string): Workspace;
+        function getWorkspace(name: string): Workspace;
 
         /**
          * List the names of the available workspaces programmatically
@@ -714,6 +784,6 @@ declare module "@dirigible/platform" {
          * Deletes the Workspace by name programmatically
          * @param name
          */
-        function deleteWorkspace(name:string);
+        function deleteWorkspace(name: string);
     }
 }
