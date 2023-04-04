@@ -100,7 +100,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		prepare();
 		
 		// prepare map
-		synchronizers.forEach(s -> definitions.put(s, new HashMap<>()));
+		synchronizers.forEach(s -> definitions.put(s, Collections.synchronizedMap(new HashMap<>())));
 		
 		if (logger.isDebugEnabled()) {logger.debug("Collecting files...");}
 		// collect definitions for processing
@@ -327,7 +327,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	public Map<String, Definition> checkSynchronizerMap(Synchronizer synchronizer) {
 		Map<String, Definition> map = definitions.get(synchronizer);
 		if (map == null) {
-			map = new HashMap<>();
+			map = Collections.synchronizedMap(new HashMap<>());;
 			definitions.put(synchronizer, map);
 		}
 		return map;
