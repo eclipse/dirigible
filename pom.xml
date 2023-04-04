@@ -618,7 +618,7 @@
 		<spring-security.version>5.8.0</spring-security.version>
 		<webjars-locator>0.46</webjars-locator>
 
-		<keycloak.keycloak-spring-boot-starter>21.0.1</keycloak.keycloak-spring-boot-starter>
+		<keycloak.keycloak-spring-boot-starter>21.0.2</keycloak.keycloak-spring-boot-starter>
 		<hikaricp.version>5.0.1</hikaricp.version>
 		<validator.version>1.7</validator.version>
 		<quartz.version>2.3.2</quartz.version>
