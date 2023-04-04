@@ -270,7 +270,15 @@ declare module "@dirigible/io" {
         function getClient(host, port, userName, password): FTPClient;
     }
     module image {
-        function resize(original, type, width, height);
+        /**
+         * Resize an image to the given boundaries.
+         *
+         * @param original original image
+         * @param type type of the image
+         * @param width width of the new image
+         * @param height height of the new image
+         */
+        function resize(original: InputStream, type: string, width: number, height: number): InputStream;
     }
     module streams {
         /**
@@ -305,17 +313,17 @@ declare module "@dirigible/io" {
     }
     module zip {
         /**
-        * Creates zip archive from sourcePath in zipTargetPath path
-        * @param sourcePath
-          * @param zipTargetPath
-        */
+         * Creates zip archive from sourcePath in zipTargetPath path
+         * @param sourcePath
+         * @param zipTargetPath
+         */
         function zip(sourcePath: string, zipTargetPath: string);
 
         /**
-            * Unzips zip archive in zipPath to targetPath path
-            * @param zipPath
-             * @param targetPath
-                 */
+         * Unzips zip archive in zipPath to targetPath path
+         * @param zipPath
+         * @param targetPath
+         */
         function unzip(zipPath: string, targetPath: string);
 
         /**
@@ -332,6 +340,7 @@ declare module "@dirigible/io" {
 
         interface ZipInputStream {
             isValid(): boolean;
+
             /**
              * Returns the next entry from the archive or null if no more entries found
              */
@@ -818,6 +827,5 @@ declare module "@dirigible/io" {
          * Closes the FPT client
          */
         close();
-
     }
 }
