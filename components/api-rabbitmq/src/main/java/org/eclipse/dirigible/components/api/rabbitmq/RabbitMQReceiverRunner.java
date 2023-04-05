@@ -4,12 +4,11 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
- * http:www.eclipse.org/legal/epl-v20.html
+ * http://www.eclipse.org/legal/epl-v20.html
  *
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-
 package org.eclipse.dirigible.components.api.rabbitmq;
 
 import java.io.IOException;
@@ -30,12 +29,10 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * The Class RabbitMQReceiverRunner.
  */
-@Component
 public class RabbitMQReceiverRunner implements Runnable {
 
     /**
@@ -46,12 +43,12 @@ public class RabbitMQReceiverRunner implements Runnable {
     /**
      * The Constant DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE.
      */
-    private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage";
+    private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage.js";
 
     /**
      * The Constant DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR.
      */
-    private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError";
+    private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError.js";
 
     /**
      * The connection.
@@ -89,6 +86,7 @@ public class RabbitMQReceiverRunner implements Runnable {
      * @param queue      the queue
      * @param handler    the handler
      */
+
     public RabbitMQReceiverRunner(Connection connection, Channel channel, String queue, String handler) {
         this.connection = connection;
         this.channel = channel;
