@@ -430,7 +430,7 @@ angular.module('ideGit', [])
                     .path(project)
                     .path('add')
                     .build();
-                return $http.post(url, JSON.stringify(files.join(',')))
+                return $http.post(url, files.join(','))
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
@@ -446,7 +446,7 @@ angular.module('ideGit', [])
                     .path(project)
                     .path('revert')
                     .build();
-                return $http.post(url, JSON.stringify(files.join(',')))
+                return $http.post(url, files.join(','))
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
@@ -462,7 +462,7 @@ angular.module('ideGit', [])
                     .path(project)
                     .path('remove')
                     .build();
-                return $http.post(url, JSON.stringify(files.join(',')))
+                return $http.post(url, files.join(','))
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
                     }, function errorCallback(response) {
