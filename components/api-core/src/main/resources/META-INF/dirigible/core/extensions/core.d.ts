@@ -1,5 +1,5 @@
 declare module "@dirigible/core" {
-	
+
     module configurations {
         /**
          * Returns the value for the specified key, or the default value
@@ -43,7 +43,7 @@ declare module "@dirigible/core" {
 
         function isOSSolaris(): boolean;
     }
-    
+
     module context {
         /**
          * Returns the value per key from the context parameters
@@ -58,7 +58,7 @@ declare module "@dirigible/core" {
          */
         function set(name, value);
     }
-    
+
     module env {
         /**
          * Returns the value per key from the environments variables
@@ -71,7 +71,7 @@ declare module "@dirigible/core" {
          */
         function list(): string[];
     }
-    
+
     module globals {
         /**
          * Returns the value per key from the global parameters
@@ -91,5 +91,19 @@ declare module "@dirigible/core" {
          */
         function list(): string[];
     }
-    
+
+    module destinations {
+        /**
+         * Returns an object representing the destination
+         * @param name
+         */
+        function get(name: string): string;
+
+        /**
+         * Sets the destination object under the given name
+         * @param name
+         * @param destination
+         */
+        function set(name: string, destination: string);
+    }
 }

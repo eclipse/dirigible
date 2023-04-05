@@ -26,5 +26,8 @@ QUnit.test("globals", function (assert) {
     assert.ok(require('core-tests/globals-get-test'), "get - ok");
     assert.ok(require('core-tests/globals-list-test'), "list - ok");
 });
+QUnit.test("destinations", function (assert) {
+    assert.ok(require('core-tests/destinations-get-test'), "get - ok");
+});
 
 require("qunit/runner").run();
