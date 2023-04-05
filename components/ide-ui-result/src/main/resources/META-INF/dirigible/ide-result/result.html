@@ -17,13 +17,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
         <title dg-view-title></title>
-
-        <!-- Old stuff -->
-        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-        <link rel="stylesheet" href="/services/js/theme/resources.js/bootstrap.min.css">
-        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-        <!-- View data -->
         <script type="text/javascript" src="services/result-view.js"></script>
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
         <script type="text/javascript" src="result.js"></script>
@@ -31,66 +24,69 @@
         <theme></theme>
     </head>
 
-    <body fd-scrollbar>
-        <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
-            {{state.busyText}}
-        </fd-busy-indicator-extended>
-
-        <fd-message-page glyph="sap-icon--information" ng-hide="columns || state.error">
-            <fd-message-page-title>{{result || "No results"}}</fd-message-page-title>
-        </fd-message-page>
-
-        <table fd-table display-mode="compact" ng-hide="hasMultipleProcedureResults || state.error" ng-show="columns" outer-borders="none" class="dg-list-border-bottom">
-            <thead fd-table-header sticky="true">
-                <tr fd-table-row>
-                    <th fd-table-header-cell ng-repeat="column in columns">{{column}}</th>
-                </tr>
-            </thead>
-            <tbody fd-table-body>
-                <tr fd-table-row ng-repeat="row in rows">
-                    <td fd-table-cell ng-repeat="cell in row">
-                        <div class="tdSingleLine">
-                            {{cell}}
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div ng-show="hasMultipleProcedureResults">
-            <ul class="nav nav-tabs">
-                <li ng-class="{active: $index === 0}" ng-repeat="next in procedureResults">
-                    <a data-toggle="pill" href="#{{$index + 1}}">Result {{$index + 1}}</a>
+    <body class="dg-vbox">
+        <fd-scrollbar class="dg-full-height" ng-hide="hasMultipleProcedureResults">
+            <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
+                {{state.busyText}}
+            </fd-busy-indicator-extended>
+            <fd-message-page glyph="sap-icon--information" ng-hide="columns || procedureResults.length || state.error">
+                <fd-message-page-title>{{result || "No results"}}</fd-message-page-title>
+            </fd-message-page>
+            <table fd-table display-mode="compact" ng-hide="hasMultipleProcedureResults || state.error"
+                ng-show="columns" outer-borders="none" class="dg-list-border-bottom">
+                <thead fd-table-header sticky="true">
+                    <tr fd-table-row>
+                        <th fd-table-header-cell ng-repeat="column in columns">{{column}}</th>
+                    </tr>
+                </thead>
+                <tbody fd-table-body>
+                    <tr fd-table-row ng-repeat="row in rows">
+                        <td fd-table-cell ng-repeat="cell in row">
+                            <div class="tdSingleLine">
+                                {{cell}}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <fd-message-page glyph="sap-icon--error" ng-if="state.error">
+                <fd-message-page-title>Something went wrong</fd-message-page-title>
+                <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
+            </fd-message-page>
+        </fd-scrollbar>
+        <div class="fd-icon-tab-bar fd-icon-tab-bar--sm" ng-show="hasMultipleProcedureResults">
+            <ul role="tablist" class="fd-icon-tab-bar__header">
+                <li role="presentation" class="fd-icon-tab-bar__item"
+                    ng-repeat="tab in procedureResults track by $index">
+                    <a role="tab" class="fd-icon-tab-bar__tab" href="#result{{$index}}" ng-click="tabClicked($index)"
+                        ng-attr-aria-selected="{{ tabNumber === $index ? true : undefined }}" id="tab{{$index}}">
+                        <span class="fd-icon-tab-bar__tag">Result {{$index + 1}}</span>
+                    </a>
                 </li>
             </ul>
-
-            <div class="tab-content">
-                <div ng-repeat="next in procedureResults" id="{{$index + 1}}" class="tab-pane fade in"
-                    ng-class="{active: $index === 0}">
-                    <table class="table table-striped"">
-                        <thead fd-table-header sticky=" true">
-                        <tr fd-table-row>
-                            <th ng-repeat="column in procedureResults[$index].columns">{{column}}</th>
-                        </tr>
-                        </thead>
-                        <tbody fd-table-body>
-                            <tr fd-table-row ng-repeat="row in procedureResults[$index].rows">
-                                <td fd-table-cell ng-repeat="cell in row">
-                                    <div class="tdSingleLine">
-                                        {{cell}}
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
-
-        <fd-message-page glyph="sap-icon--error" ng-if="state.error">
-            <fd-message-page-title>Something went wrong</fd-message-page-title>
-            <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
-        </fd-message-page>
+        <fd-scrollbar class="dg-full-height" ng-show="hasMultipleProcedureResults">
+            <section role="tabpanel" class="fd-icon-tab-bar__panel" id="result{{$index}}"
+                aria-labelledby="tab{{$index}}" ng-show="tabNumber === $index"
+                ng-repeat="columns in procedureResults track by $index">
+                <table fd-table display-mode="compact" outer-borders="none" class="dg-list-border-bottom">
+                    <thead fd-table-header sticky="true">
+                        <tr fd-table-row>
+                            <th fd-table-header-cell ng-repeat="column in columns.columns track by $index">
+                                {{column}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody fd-table-body>
+                        <tr fd-table-row ng-repeat="row in columns.rows track by $index">
+                            <td fd-table-cell ng-repeat="cell in row track by $index">
+                                {{cell}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </fd-scrollbar>
     </body>
 
 </html>
