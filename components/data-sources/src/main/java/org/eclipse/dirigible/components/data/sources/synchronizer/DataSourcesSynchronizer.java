@@ -164,7 +164,7 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 	 */
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
+		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
 		return true;
 	}
 
@@ -178,12 +178,12 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 		try {
 			if (!"_".equals(datasource.getLocation())) {
 				getService().delete(datasource);
-				callback.registerState(this, datasource, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+				callback.registerState(this, datasource, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 			}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, datasource, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+			callback.registerState(this, datasource, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
 		}
 	}
 	

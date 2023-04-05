@@ -174,23 +174,23 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 */
 	@Override
 	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-		// drop tables' foreign keys in a reverse order
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.FOREIGN_KEYS_DROP.toString());
-			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_DROP.toString(), ArtefactState.FAILED_DELETE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
-		
-		// drop tables in a reverse order
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.DROP.toString());
-			callback.registerErrors(this, results, TableLifecycle.DROP.toString(), ArtefactState.FAILED_DELETE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
+//		// drop tables' foreign keys in a reverse order
+//		try {
+//			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.FOREIGN_KEYS_DROP.toString());
+//			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_DROP.toString(), ArtefactState.FAILED_DELETE);
+//		} catch (Exception e) {
+//			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+//			callback.addError(e.getMessage());
+//		}
+//		
+//		// drop tables in a reverse order
+//		try {
+//			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.DROP.toString());
+//			callback.registerErrors(this, results, TableLifecycle.DROP.toString(), ArtefactState.FAILED_DELETE);
+//		} catch (Exception e) {
+//			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+//			callback.addError(e.getMessage());
+//		}
 	}
 	
 	/**
@@ -245,53 +245,60 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 			switch (flag) {
 			case UPDATE:
 				executeTableUpdate(connection, table);
+				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
 				break;
 			case CREATE:
 				if (!SqlFactory.getNative(connection).exists(connection, table.getName())) {
 					try {
 						executeTableCreate(connection, table);
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE);
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
 					} catch (Exception e) {
 						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE);
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, e.getMessage());
 					}
 				} else {
 					if (logger.isWarnEnabled()) {logger.warn(format("Table [{0}] already exists during the update process", table.getName()));}
 					if (SqlFactory.getNative(connection).count(connection, table.getName()) != 0) {
 						executeTableAlter(connection, table);
-						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE);
+						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
 					}
 				}
 				break;
 			case FOREIGN_KEYS_CREATE:
 				executeTableForeignKeysCreate(connection, table);
+				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
 				break;
 			case ALTER:
 				executeTableAlter(connection, table);
+				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
 				break;
 			case DROP:
 				if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
 					if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
 						executeTableDrop(connection, table);
+						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 					} else {
 						String message = format("Table [{1}] cannot be deleted during the update process, because it is not empty", table.getName());
 						if (logger.isWarnEnabled()) {logger.warn(message);}
-						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, message);
 					}
 				}
 				break;
 			case FOREIGN_KEYS_DROP:
 				if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
 					executeTableForeignKeysDrop(connection, table);
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
 				}
 				break;
 			default:
+				callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, "Unknown flow: " + flow);
 				throw new UnsupportedOperationException(flow);
 			}
 			return true;
 		} catch (SQLException e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
+			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, e.getMessage());
 			return false;
 		}
 	}
@@ -305,11 +312,11 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	public void cleanup(Table table) {
 		try {
 			getService().delete(table);
-			callback.registerState(this, table, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+			callback.registerState(this, table, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, table, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+			callback.registerState(this, table, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
 		}
 	}
 	

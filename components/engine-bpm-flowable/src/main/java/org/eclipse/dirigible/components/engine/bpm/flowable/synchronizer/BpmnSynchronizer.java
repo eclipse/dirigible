@@ -191,7 +191,7 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 		
 		deployOnProcessEngine(bpmn);
 		
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
+		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
 		return true;
 	}
 
@@ -207,11 +207,11 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 			
 			removeFromProcessEngine(bpmn);
 			
-			callback.registerState(this, bpmn, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+			callback.registerState(this, bpmn, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, bpmn, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+			callback.registerState(this, bpmn, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
 		}
 	}
 	

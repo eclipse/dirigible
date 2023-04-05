@@ -17,8 +17,7 @@ package org.eclipse.dirigible.components.base.artefact;
 public enum ArtefactState {
 	
 		/** The initial. */
-		INITIAL("Initial"), //
-
+		INITIAL("Initial"),
 		/** The successful. */
 		SUCCESSFUL("Successful"),
 		/** The successful create. */
@@ -28,8 +27,7 @@ public enum ArtefactState {
 		/** The successful create update. */
 		SUCCESSFUL_CREATE_UPDATE("Successfully created or updated"),
 		/** The successful delete. */
-		SUCCESSFUL_DELETE("Successfully deleted"), //
-
+		SUCCESSFUL_DELETE("Successfully deleted"),
 		/** The failed. */
 		FAILED("Failed"),
 		/** The failed create. */
@@ -39,14 +37,13 @@ public enum ArtefactState {
 		/** The failed create update. */
 		FAILED_CREATE_UPDATE("Failed to create or update"),
 		/** The failed delete. */
-		FAILED_DELETE("Failed to delete"), //
-
+		FAILED_DELETE("Failed to delete"),
 		/** The in progress. */
-		IN_PROGRESS("Processing..."), //
-
+		IN_PROGRESS("Processing..."),
 		/** The fatal. */
 		FATAL("Erroneous"),
-
+		/** The unknown. */
+		MODIFIED("Modified"),
 		/** The unknown. */
 		UNKNOWN("Unknown");
 

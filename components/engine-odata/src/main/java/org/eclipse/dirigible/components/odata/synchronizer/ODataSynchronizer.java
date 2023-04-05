@@ -232,7 +232,7 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 				odataContainerService.removeContainer(odata.getLocation());
 				odataMappingService.removeMappings(odata.getLocation());
 				odataHandlerService.removeHandlers(odata.getLocation());
-				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 				break;
 			case CREATED:
 				// METADATA AND MAPPINGS GENERATION LOGIC
@@ -257,15 +257,17 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 							odatah.getNamespace(), odatah.getMethod(), odatah.getKind(), odatah.getHandler());
 					odataHandlerService.save(odataHandler);
 				}
-				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
+				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
 				break;
 			default:
+				callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, "Unknown flow: " + flow);
 				throw new UnsupportedOperationException(flow);
 			}
 			return true;
 		} catch (SQLException e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
+			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, e.getMessage());
 			return false;
 		}
     }
@@ -283,11 +285,11 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 			odataContainerService.removeContainer(odata.getLocation());
 			odataMappingService.removeMappings(odata.getLocation());
 			odataHandlerService.removeHandlers(odata.getLocation());
-            callback.registerState(this, odata, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+            callback.registerState(this, odata, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, odata, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+            callback.registerState(this, odata, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, "");
         }
     }
 
