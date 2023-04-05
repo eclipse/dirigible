@@ -19,12 +19,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Class SynchronizationJobService.
+ */
 @Service
 @Scope("singleton")
 public class SynchronizationJobService {
 
+    /** The logger. */
     private Logger logger = LoggerFactory.getLogger(SynchronizationJobService.class);
 
+    /** The count. */
     private AtomicInteger count = new AtomicInteger();
     
     /** The synchronization processor. */
@@ -40,6 +45,9 @@ public class SynchronizationJobService {
 		this.synchronizationProcessor = synchronizationProcessor;
 	}
 
+    /**
+     * Execute synchronization job.
+     */
     public void executeSynchronizationJob() {
 
         logger.debug("The synchronization job has begun...");
@@ -51,6 +59,11 @@ public class SynchronizationJobService {
         }
     }
 
+    /**
+     * Gets the number of invocations.
+     *
+     * @return the number of invocations
+     */
     public int getNumberOfInvocations() {
         return count.get();
     }

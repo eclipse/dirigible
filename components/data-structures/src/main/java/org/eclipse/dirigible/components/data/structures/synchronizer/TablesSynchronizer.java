@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -202,18 +203,59 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	@Override
 	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
 		
-		// process tables
+		List<TopologyWrapper<? extends Artefact>> wrappersCreate = new ArrayList<TopologyWrapper<? extends Artefact>>();
+		for (TopologyWrapper<? extends Artefact> t : wrappers) {
+			if (t.getArtefact().getLifecycle().equals(ArtefactLifecycle.INITIAL)) {
+				wrappersCreate.add(t);
+			}
+		}
+		
+		// process create tables
 		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.CREATE.toString());
+			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappersCreate, TableLifecycle.CREATE.toString());
 			callback.registerErrors(this, results, TableLifecycle.CREATE.toString(), ArtefactState.FAILED_CREATE);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
 		}
 		
-		// process tables foreign keys
+		// process create tables foreign keys
 		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.FOREIGN_KEYS_CREATE.toString());
+			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappersCreate, TableLifecycle.FOREIGN_KEYS_CREATE.toString());
+			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_CREATE.toString(), ArtefactState.FAILED_CREATE);
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			callback.addError(e.getMessage());
+		}
+		
+		List<TopologyWrapper<? extends Artefact>> wrappersUpdate = new ArrayList<TopologyWrapper<? extends Artefact>>();
+		for (TopologyWrapper<? extends Artefact> t : wrappers) {
+			if (t.getArtefact().getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				wrappersUpdate.add(t);
+			}
+		}
+		
+		// process drop tables foreign keys
+		try {
+			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappersUpdate, TableLifecycle.FOREIGN_KEYS_DROP.toString());
+			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_DROP.toString(), ArtefactState.FAILED_DELETE);
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			callback.addError(e.getMessage());
+		}
+		
+		// process alter tables
+		try {
+			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappersUpdate, TableLifecycle.UPDATE.toString());
+			callback.registerErrors(this, results, TableLifecycle.UPDATE.toString(), ArtefactState.FAILED_UPDATE);
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			callback.addError(e.getMessage());
+		}
+		
+		// process create tables foreign keys
+		try {
+			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappersUpdate, TableLifecycle.FOREIGN_KEYS_CREATE.toString());
 			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_CREATE.toString(), ArtefactState.FAILED_CREATE);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}

@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
+import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalSorter;
@@ -181,6 +182,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		}
 	}
 
+	/**
+	 * Prepare.
+	 */
 	private void prepare() {
 		errors.clear();
 		definitions.clear();
@@ -189,8 +193,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 
 	/**
 	 * Collect files.
-	 *
-	 * @param errorCallback the error callback
 	 */
 	private void collectFiles() {
 		String registryFolder = getRegistryFolder();
@@ -205,8 +207,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	
 	/**
 	 * Load definitions.
-	 *
-	 * @param errorCallback the error callback
 	 */
 	private void loadDefinitions() {
 		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
@@ -221,6 +221,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 						continue;
 					}
 					List loaded = synchronizer.load(definition.getLocation(), definition.getContent());
+					for (Object a : loaded) {
+						if (a instanceof Artefact) {
+							((Artefact) a).setLifecycle(ArtefactLifecycle.valueOf(definition.getState()));
+						}
+					}
 					artefacts.addAll(loaded);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
@@ -305,10 +310,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 				// the content has been modified since the last processing
 				maybe.setChecksum(definition.getChecksum());
 				maybe.setState(ArtefactState.MODIFIED.toString());
+				maybe.setContent(definition.getContent());
 				// update the artefact with the new checksum and status
 				definitionService.save(maybe);
 				// added to artefacts for processing
-				map.put(definition.getKey(), definition);
+				map.put(maybe.getKey(), maybe);
 			} else if (maybe.getState().startsWith(ArtefactState.SUCCESSFUL.toString())) {
 //				// pending from a previous run, add again for processing
 //				if (map.get(definition.getKey()) == null) {
@@ -326,6 +332,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		}
 	}
 
+	/**
+	 * Check synchronizer map.
+	 *
+	 * @param synchronizer the synchronizer
+	 * @return the map
+	 */
 	public Map<String, Definition> checkSynchronizerMap(Synchronizer synchronizer) {
 		Map<String, Definition> map = definitions.get(synchronizer);
 		if (map == null) {
@@ -402,6 +414,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 * @param wrapper the wrapper
 	 * @param lifecycle the lifecycle
 	 * @param state the state
+	 * @param message the message
 	 */
 	@Override
 	public void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper, String lifecycle,
@@ -417,6 +430,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 * @param artefact the artefact
 	 * @param lifecycle the lifecycle
 	 * @param state the state
+	 * @param message the message
 	 */
 	@Override
 	public void registerState(Synchronizer<? extends Artefact> synchronizer, Artefact artefact, String lifecycle, ArtefactState state, String message) {

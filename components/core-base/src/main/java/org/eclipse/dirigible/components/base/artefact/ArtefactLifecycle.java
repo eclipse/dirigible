@@ -16,6 +16,8 @@ package org.eclipse.dirigible.components.base.artefact;
  */
 public enum ArtefactLifecycle {
 	
+	/** The initial. */
+	INITIAL,
 	/** The created. */
 	CREATED, 
 	/** The updated. */
