@@ -398,6 +398,10 @@ declare module "@dirigible/platform" {
     }
 
     module problems {
+        export const ACTIVE = "ACTIVE";
+        export const SOLVED = "SOLVED";
+        export const IGNORED = "IGNORED";
+
         /**
          * Save a problem
          *  @param location the location
