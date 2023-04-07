@@ -131,14 +131,14 @@ public class RabbitMQReceiverRunner implements Runnable {
                 channel.basicConsume(queue, true, consumer);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             try {
                 channel.queueDelete(queue);
                 channel.close();
                 connection.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
     }
