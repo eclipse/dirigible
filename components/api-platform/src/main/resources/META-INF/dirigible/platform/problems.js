@@ -19,15 +19,15 @@ exports.save = function(location, type, line, column, cause, expected, category,
 };
 
 exports.findProblem = function(id) {
-    returnorg.eclipse.dirigible.components.api.platform.ProblemsFacade.findProblem(id);
+    return org.eclipse.dirigible.components.api.platform.ProblemsFacade.findProblem(id);
 };
 
 exports.fetchAllProblems = function() {
-    returnorg.eclipse.dirigible.components.api.platform.ProblemsFacade.fetchAllProblems();
+    return org.eclipse.dirigible.components.api.platform.ProblemsFacade.fetchAllProblems();
 };
 
 exports.fetchProblemsBatch = function(condition, limit) {
-    returnorg.eclipse.dirigible.components.api.platform.ProblemsFacade.fetchProblemsBatch(condition, limit);
+    return org.eclipse.dirigible.components.api.platform.ProblemsFacade.fetchProblemsBatch(condition, limit);
 };
 
 exports.deleteProblem = function(id) {
