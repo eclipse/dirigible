@@ -85,7 +85,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension()) && file.toString().indexOf("template-") == -1;
+		return file.toString().endsWith(getFileExtension());
 	}
 	
 	/**
