@@ -2,34 +2,19 @@
     "guid": "template-application-angular",
     "dependencies": [
         {
-            "guid": "template-application-schema",
-            "url": "https://github.com/dirigiblelabs/template-application-schema.git",
-            "type": "git",
-            "branch": "master"
+            "guid": "template-application-schema"
         },
         {
-            "guid": "template-application-rest",
-            "url": "https://github.com/dirigiblelabs/template-application-rest.git",
-            "type": "git",
-            "branch": "master"
+            "guid": "template-application-rest"
         },
         {
-            "guid": "template-application-feed",
-            "url": "https://github.com/dirigiblelabs/template-application-feed.git",
-            "type": "git",
-            "branch": "master"
+            "guid": "template-application-feed"
         },
         {
-            "guid": "template-application-ui-angular",
-            "url": "https://github.com/dirigiblelabs/template-application-ui-angular.git",
-            "type": "git",
-            "branch": "master"
+            "guid": "template-application-ui-angular"
         },
         {
-            "guid": "template-application-odata",
-            "url": "https://github.com/dirigiblelabs/template-application-odata.git",
-            "type": "git",
-            "branch": "master"
+            "guid": "template-application-odata"
         }
     ]
 }

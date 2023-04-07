@@ -15,16 +15,22 @@ resultView.config(["messageHubProvider", function (messageHubProvider) {
     messageHubProvider.eventIdPrefix = 'result-view';
 }]);
 
-resultView.controller('DatabaseResultController', ['$scope', '$http', function ($scope, $http) {
+resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
     $scope.state = {
         isBusy: false,
         error: false,
         busyText: "Loading...",
     };
+    $scope.tabNumber = 0;
 
-    let messageHub = new FramesMessageHub();
+    $scope.tabClicked = function (tab) {
+        $scope.tabNumber = tab;
+    };
 
     let csrfToken = null;
+
+    $scope.procedureResults = [];
+    $scope.hasMultipleProcedureResults = false;
 
     $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).then(function (response) {
         csrfToken = response.headers()["x-csrf-token"];
@@ -35,15 +41,15 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
     // $scope.database = "metadata";
     $scope.datasource = "DefaultDB";
 
-    messageHub.subscribe(function (evt) {
+    messageHub.onDidReceiveMessage("database.database.selection.changed", function (evt) {
         $scope.database = evt.data;
-    }, "database.database.selection.changed");
+    }, true);
 
-    messageHub.subscribe(function (evt) {
+    messageHub.onDidReceiveMessage("database.datasource.selection.changed", function (evt) {
         $scope.datasource = evt.data;
-    }, "database.datasource.selection.changed");
+    }, true);
 
-    messageHub.subscribe(function (command) {
+    messageHub.onDidReceiveMessage("database.sql.execute", function (command) {
         $scope.state.error = false;
         $scope.state.isBusy = true;
         let url = "/services/data/" + $scope.datasource;
@@ -92,7 +98,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
                 if (result.data != null && result.data.length > 0) {
                     $scope.hasMultipleProcedureResults = result.data.length > 1;
                     if ($scope.hasMultipleProcedureResults) {
-                        $scope.procedureResults = [];
+                        $scope.procedureResults.length = 0;
                         for (let resultIndex = 0; resultIndex < result.data.length; resultIndex++) {
                             let procedureResult = JSON.parse(result.data[resultIndex]);
                             let data = {
@@ -149,39 +155,39 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
                 $scope.state.isBusy = false;
             });
         }
-    }, "database.sql.execute");
+    }, true);
 
 
-    messageHub.subscribe(function (command) {
+    messageHub.onDidReceiveMessage("database.data.export.artifact", function (command) {
         let artifact = command.data.split('.');
         let url = "/services/data/export/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
         window.open(url);
-    }, "database.data.export.artifact");
+    }, true);
 
-    messageHub.subscribe(function (command) {
+    messageHub.onDidReceiveMessage("database.data.export.schema", function (command) {
         let schema = command.data;
         let url = "/services/data/export/" + $scope.datasource + "/" + schema;
         window.open(url);
-    }, "database.data.export.schema");
+    }, true);
 
-    messageHub.subscribe(function (command) {
+    messageHub.onDidReceiveMessage("database.metadata.export.artifact", function (command) {
         let artifact = command.data.split('.');
         let url = "/services/data/definition/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
         window.open(url);
-    }, "database.metadata.export.artifact");
+    }, true);
 
-    messageHub.subscribe(function (command) {
+    messageHub.onDidReceiveMessage("database.metadata.export.schema", function (command) {
         let schema = command.data;
         let url = "/services/data/definition/" + $scope.datasource + "/" + schema;
         window.open(url);
-    }, "database.metadata.export.schema");
+    }, true);
 
     function cleanScope() {
         $scope.result = null;
         $scope.columns = null;
         $scope.rows = null;
         $scope.hasMultipleProcedureResults = false;
-        $scope.procedureResults = null;
+        $scope.procedureResults.length = 0;
     }
 
 }]);

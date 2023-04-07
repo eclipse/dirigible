@@ -20,15 +20,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class SynchronizationJob.
+ */
 @Component
 @Scope("singleton")
 public class SynchronizationJob implements Job {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationJob.class);
 	
+	/** The job service. */
 	@Autowired
     private SynchronizationJobService jobService;
 
+    /**
+     * Execute.
+     *
+     * @param context the context
+     * @throws JobExecutionException the job execution exception
+     */
     public void execute(JobExecutionContext context) throws JobExecutionException {
 
         logger.debug("Job {} fired @ {}", context.getJobDetail().getKey().getName(), context.getFireTime());

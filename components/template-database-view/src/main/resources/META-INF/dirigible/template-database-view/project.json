@@ -1,8 +1,3 @@
 {
-	"guid": "template-database-view",
-	"repository": {
-		"type": "git",
-		"branch": "master",
-		"url": "https://github.com/dirigiblelabs/template-v3-database-view.git"
-	}
+	"guid": "template-database-view"
 }

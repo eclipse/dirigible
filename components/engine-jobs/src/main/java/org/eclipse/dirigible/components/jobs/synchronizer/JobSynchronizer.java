@@ -194,29 +194,34 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
                 case CREATED:
 					try {
 						schedulerManager.scheduleJob(job);
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
 					} catch (Exception e) {
 						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			            callback.addError(e.getMessage());
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE);
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, "");
 					}
                     break;
                 case UPDATED:
                 	try {
                 		schedulerManager.unscheduleJob(job.getName(), job.getGroup());
 						schedulerManager.scheduleJob(job);
+						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
 					} catch (Exception e) {
 						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			            callback.addError(e.getMessage());
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_UPDATE);
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_UPDATE, e.getMessage());
 					}
                     break;
+                default:
+    				callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, "Unknown flow: " + flow);
+    				throw new UnsupportedOperationException(flow);
             }
-        }
-        else {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Job", wrapper.getArtefact().getClass()));
+        } else {
+            String message = String.format("Trying to process %s as Job", wrapper.getArtefact().getClass());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, message);
+			throw new UnsupportedOperationException(message);
         }
 
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
         return true;
     }
     
@@ -232,11 +237,11 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
         	jobLogService.deleteAllByJobName(job.getName());
             jobEmailService.deleteAllByJobName(job.getName());
             getService().delete(job);
-            callback.registerState(this, job, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+            callback.registerState(this, job, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, job, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+            callback.registerState(this, job, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
         }
     }
 

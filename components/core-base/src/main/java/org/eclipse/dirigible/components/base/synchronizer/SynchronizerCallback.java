@@ -14,7 +14,6 @@ package org.eclipse.dirigible.components.base.synchronizer;
 import java.util.List;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
-import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 
@@ -56,9 +55,10 @@ public interface SynchronizerCallback {
 	 * @param wrapper the wrapper
 	 * @param lifecycle the lifecycle
 	 * @param state the state
+	 * @param message the message
 	 */
 	void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
-			String lifecycle, ArtefactState state);
+			String lifecycle, ArtefactState state, String message);
 	
 	/**
 	 * Register errors.
@@ -67,8 +67,9 @@ public interface SynchronizerCallback {
 	 * @param artefact the artefact
 	 * @param lifecycle the lifecycle
 	 * @param state the state
+	 * @param message the message
 	 */
 	void registerState(Synchronizer<? extends Artefact> synchronizer, Artefact artefact,
-			String lifecycle, ArtefactState state);
+			String lifecycle, ArtefactState state, String message);
 
 }

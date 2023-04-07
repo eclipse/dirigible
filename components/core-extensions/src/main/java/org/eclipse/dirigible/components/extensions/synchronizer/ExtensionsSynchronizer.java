@@ -85,7 +85,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(getFileExtension());
+		return file.toString().endsWith(getFileExtension()) && file.toString().indexOf("template-") == -1;
 	}
 	
 	/**
@@ -164,7 +164,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 */
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
+		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
 		return true;
 	}
 
@@ -177,11 +177,11 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	public void cleanup(Extension extension) {
 		try {
 			getService().delete(extension);
-			callback.registerState(this, extension, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+			callback.registerState(this, extension, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, extension, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+			callback.registerState(this, extension, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
 		}
 	}
 	

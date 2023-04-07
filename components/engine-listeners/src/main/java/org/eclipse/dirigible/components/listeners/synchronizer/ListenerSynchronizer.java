@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -168,29 +167,34 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
                 case CREATED:
 					try {
 						listenersManager.startListener(listener);
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
 					} catch (Exception e) {
 						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			            callback.addError(e.getMessage());
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE);
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, e.getMessage());
 					}
                     break;
                 case UPDATED:
                 	try {
                 		listenersManager.stopListener(listener);
 						listenersManager.startListener(listener);
+						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
 					} catch (Exception e) {
 						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			            callback.addError(e.getMessage());
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_UPDATE);
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_UPDATE, e.getMessage());
 					}
                     break;
+                default:
+    				callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, "Unknown flow: " + flow);
+    				throw new UnsupportedOperationException(flow);
             }
-        }
-        else {
-            throw new UnsupportedOperationException(String.format("Trying to process %s as Job", wrapper.getArtefact().getClass()));
+        } else {
+            String message = String.format("Trying to process %s as Listener", wrapper.getArtefact().getClass());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, message);
+			throw new UnsupportedOperationException(message);
         }
         
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
         return true;
     }
     
@@ -204,11 +208,11 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
         try {
         	listenersManager.stopListener(listener);
             getService().delete(listener);
-            callback.registerState(this, listener, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+            callback.registerState(this, listener, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, listener, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+            callback.registerState(this, listener, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
         }
     }
 

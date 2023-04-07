@@ -29,7 +29,6 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -59,7 +58,7 @@ import com.google.gson.JsonObject;
  * @param <A> the generic type
  */
 @Component
-@Order(210)
+@Order(230)
 public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Schema> {
 	
 	/** The Constant logger. */
@@ -162,14 +161,14 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 */
 	@Override
 	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-		// drop schemas in a reverse order
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, SchemaLifecycle.DROP.toString());
-			callback.registerErrors(this, results, SchemaLifecycle.DROP.toString(), ArtefactState.FAILED_DELETE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
+//		// drop schemas in a reverse order
+//		try {
+//			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, SchemaLifecycle.DROP.toString());
+//			callback.registerErrors(this, results, SchemaLifecycle.DROP.toString(), ArtefactState.FAILED_DELETE);
+//		} catch (Exception e) {
+//			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+//			callback.addError(e.getMessage());
+//		}
 	}
 	
 	/**
@@ -215,26 +214,30 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 			switch (flag) {
 			case UPDATE:
 				executeSchemaUpdate(connection, schema);
+				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
 				break;
 			case CREATE:
 				try {
 					executeSchemaCreate(connection, schema);
-					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE);
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
 				} catch (Exception e) {
 					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE);
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, e.getMessage());
 				}
 				break;
 			case DROP:
 				executeSchemaDrop(connection, schema);
+				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 				break;
 			default:
+				callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, "Unknown flow: " + flow);
 				throw new UnsupportedOperationException(flow);
 			}
 			return true;
 		} catch (SQLException e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
+			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, e.getMessage());
 			return false;
 		}
 	}
@@ -248,11 +251,11 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	public void cleanup(Schema schema) {
 		try {
 			getService().delete(schema);
-			callback.registerState(this, schema, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+			callback.registerState(this, schema, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, schema, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+			callback.registerState(this, schema, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
 		}
 	}
 	

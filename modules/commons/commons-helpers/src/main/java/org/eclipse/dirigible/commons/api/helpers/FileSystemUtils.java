@@ -48,19 +48,19 @@ import org.slf4j.LoggerFactory;
 public class FileSystemUtils {
 
 	/** The Constant FOLDER_TARGET. */
-	private static final String FOLDER_TARGET = "target";
+	public static final String FOLDER_TARGET = "target";
 	
 	/** The Constant PREFIX_DOT. */
-	private static final String PREFIX_DOT = ".";
+	public static final String PREFIX_DOT = ".";
 	
 	/** The Constant PROJECT_JSON. */
-	private static final String PROJECT_JSON = "project.json";
+	public static final String PROJECT_JSON = "project.json";
 	
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FileSystemUtils.class);
 	
 	/** The Constant SEPARATOR. */
-	private static final String SEPARATOR = "/";
+	public static final String SEPARATOR = "/";
 	
 	/** The Constant DOT_GIT. */
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$

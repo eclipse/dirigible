@@ -1,8 +1,3 @@
 {
-	"guid": "template-extension-perspective",
-	"repository": {
-		"type": "git",
-		"branch": "master",
-		"url": "https://github.com/dirigiblelabs/template-v3-extension-perspective.git"
-	}
+	"guid": "template-extension-perspective"
 }

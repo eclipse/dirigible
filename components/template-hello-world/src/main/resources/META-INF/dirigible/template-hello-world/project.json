@@ -1,8 +1,3 @@
 {
-	"guid": "template-hello-world",
-	"repository": {
-		"type": "git",
-		"branch": "master",
-		"url": "https://github.com/dirigiblelabs/template-v3-hello-world"
-	}
+	"guid": "template-hello-world"
 }

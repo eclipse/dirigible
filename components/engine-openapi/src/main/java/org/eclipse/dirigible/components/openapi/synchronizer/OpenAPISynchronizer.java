@@ -174,11 +174,11 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     public void cleanup(OpenAPI openAPI) {
         try {
             getService().delete(openAPI);
-            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
         }
     }
 
@@ -191,7 +191,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
+        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
         return true;
     }
 

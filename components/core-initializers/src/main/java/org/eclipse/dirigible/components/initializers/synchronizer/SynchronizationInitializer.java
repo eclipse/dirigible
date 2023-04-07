@@ -11,10 +11,6 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
-import java.util.concurrent.TimeUnit;
-
-import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatus;
-import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatus.Jobs.JobStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Scope;

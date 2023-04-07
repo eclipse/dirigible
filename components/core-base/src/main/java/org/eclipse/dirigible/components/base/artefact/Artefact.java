@@ -17,6 +17,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 import com.google.gson.annotations.Expose;
 
@@ -62,6 +63,9 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	@Lob()
 	@Expose
 	protected String dependencies;
+	
+	@Transient
+	protected transient ArtefactLifecycle lifecycle;
 	
 	
 	/**
@@ -222,6 +226,14 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 */
 	public void addDependency(String location, String name, String type) {
 		addDependency(type + KEY_SEPARATOR + location + KEY_SEPARATOR + name);
+	}
+	
+	public ArtefactLifecycle getLifecycle() {
+		return lifecycle;
+	}
+	
+	public void setLifecycle(ArtefactLifecycle lifecycle) {
+		this.lifecycle = lifecycle;
 	}
 	
 	/**

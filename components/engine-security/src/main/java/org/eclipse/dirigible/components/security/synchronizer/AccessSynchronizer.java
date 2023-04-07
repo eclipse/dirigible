@@ -185,7 +185,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE);
+        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
         return true;
     }
 
@@ -198,11 +198,11 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     public void cleanup(Access access) {
         try {
             getService().delete(access);
-            callback.registerState(this, access, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+            callback.registerState(this, access, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, access, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+            callback.registerState(this, access, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
         }
     }
 

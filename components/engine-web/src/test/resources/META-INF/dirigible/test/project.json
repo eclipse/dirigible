@@ -1,10 +1,5 @@
 {
     "guid":"test",
-    "repository":{
-        "type":"git",
-        "branch":"master",
-        "url":"https://github.com/dirigiblelabs/test.git"
-    },
     "exposes": [
         "ui",
         "samples"

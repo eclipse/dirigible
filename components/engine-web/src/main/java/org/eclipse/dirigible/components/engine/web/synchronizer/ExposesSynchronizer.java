@@ -23,7 +23,6 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.project.ProjectMetadata;
 import org.eclipse.dirigible.components.base.project.ProjectMetadataUtils;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
@@ -181,13 +180,13 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 			try {
 				if (expose.getExposes() != null) {
 					ExposeManager.registerExposableProject(expose.getName(), expose.getExposes());
-					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE);
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
 				} else {
 					if (logger.isTraceEnabled()) {logger.trace(expose.getName() + " skipped due to lack of exposures");}
 				}
 			} catch (Exception e) {
 				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE);
+				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, e.getMessage());
 			}
 		}
 		return true;
@@ -203,11 +202,11 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 		try {
 			ExposeManager.unregisterProject(expose.getName());
 			getService().delete(expose);
-			callback.registerState(this, expose, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE);
+			callback.registerState(this, expose, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, expose, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
+			callback.registerState(this, expose, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
 		}
 	}
 	

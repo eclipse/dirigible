@@ -151,7 +151,7 @@ public class ExposesSynchronizerTest {
 		Files.writeString(Paths.get(registyrFolder, "sync", "project.json"), content, StandardOpenOption.CREATE);
 		try {
 			synchronizationProcessor.processSynchronizers();
-			assertEquals(1, ExposeManager.listRegisteredProjects().size());
+			assertEquals(2, ExposeManager.listRegisteredProjects().size());
 			assertTrue(ExposeManager.isPathExposed("sync/ui"));
 		} finally {
 			Files.deleteIfExists(Paths.get(registyrFolder, "sync", "project.json"));
