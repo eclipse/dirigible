@@ -153,6 +153,7 @@
 		<module>api-messaging</module>
 		<module>api-template</module>
 		<module>api-mail</module>
+		<module>api-kafka</module>
 		<module>api-mongodb</module>
 		
 		<!-- Resources -->
