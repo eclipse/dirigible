@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-components-parent</artifactId>
-		<version>9.0.0-SNAPSHOT</version>
+		<version>8.0.2</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -18,117 +18,117 @@
     	<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-core</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-test</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-qunit</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-utils</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-io</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-job</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-bpm</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-cms</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-http</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-log</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-database</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-extensions</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-security</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-platform</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-indexing</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-net</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-git</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-messaging</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-template</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-mail</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-kafka</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-mongodb</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.0.2</version>
 		</dependency>
 	    <dependency>
 	        <groupId>org.eclipse.dirigible</groupId>
 	        <artifactId>dirigible-components-api-rabbitmq</artifactId>
-	        <version>9.0.0-SNAPSHOT</version>
+	        <version>8.0.2</version>
         </dependency>
 
     </dependencies>
