@@ -9,25 +9,13 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getConfigurations = function() {
-	return require('core/configurations');
-};
-exports.getConsole = function() {
-	return require('core/console');
-};
 
-exports.getContext = function() {
-	return require('core/context');
-};
+var destinations = require('core/destinations');
+var assertTrue = require('test/assert').assertTrue;
 
-exports.getEnv = function() {
-	return require('core/env');
-};
+var destination = {};
+destination.name1 = 'value1';
+destinations.set('destination1', destination);
+var result = destinations.get('destination1');
 
-exports.getGlobals = function() {
-	return require('core/globals');
-};
-
-exports.getDestinations = function() {
-	return require('core/destinations');
-};
+assertTrue(result.name1 === 'value1');
