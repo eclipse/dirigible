@@ -155,6 +155,7 @@
 		<module>api-mail</module>
 		<module>api-kafka</module>
 		<module>api-mongodb</module>
+		<module>api-rabbitmq</module>
 		
 		<!-- Resources -->
 		<module>resources-core</module>

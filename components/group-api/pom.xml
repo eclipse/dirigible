@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <dependencies>
-    	
+
     	<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-core</artifactId>
@@ -125,9 +125,14 @@
 			<artifactId>dirigible-components-api-mongodb</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
-    	
+	    <dependency>
+	        <groupId>org.eclipse.dirigible</groupId>
+	        <artifactId>dirigible-components-api-rabbitmq</artifactId>
+	        <version>9.0.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
-    
+
     <properties>
 		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
