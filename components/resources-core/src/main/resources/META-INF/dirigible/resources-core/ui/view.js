@@ -48,11 +48,13 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
         let csrfToken = null;
         return {
             request: function (config) {
+                if (config.disableInterceptors) return config;
                 config.headers['X-Requested-With'] = 'Fetch';
                 config.headers['X-CSRF-Token'] = csrfToken ? csrfToken : 'Fetch';
                 return config;
             },
             response: function (response) {
+                if (response.config.disableInterceptors) return response;
                 let token = response.headers()['x-csrf-token'];
                 if (token) {
                     csrfToken = token;
