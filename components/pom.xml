@@ -151,6 +151,7 @@
 		<module>api-net</module>
 		<module>api-git</module>
 		<module>api-messaging</module>
+		<module>api-etcd</module>
 		<module>api-template</module>
 		<module>api-mail</module>
 		<module>api-mongodb</module>
