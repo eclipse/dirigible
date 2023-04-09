@@ -156,6 +156,7 @@
 		<module>api-kafka</module>
 		<module>api-mongodb</module>
 		<module>api-rabbitmq</module>
+		<module>api-redis</module>
 		
 		<!-- Resources -->
 		<module>resources-core</module>

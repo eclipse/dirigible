@@ -1,0 +1,1 @@
+{"module":"redis/extensions/modules.js","extensionPoint":"api-modules","description":"Redis API Module"}
