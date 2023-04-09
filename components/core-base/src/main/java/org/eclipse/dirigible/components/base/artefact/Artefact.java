@@ -64,6 +64,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	@Expose
 	protected String dependencies;
 	
+	/** The lifecycle. */
 	@Transient
 	protected transient ArtefactLifecycle lifecycle;
 	
@@ -228,10 +229,20 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 		addDependency(type + KEY_SEPARATOR + location + KEY_SEPARATOR + name);
 	}
 	
+	/**
+	 * Gets the lifecycle.
+	 *
+	 * @return the lifecycle
+	 */
 	public ArtefactLifecycle getLifecycle() {
 		return lifecycle;
 	}
 	
+	/**
+	 * Sets the lifecycle.
+	 *
+	 * @param lifecycle the new lifecycle
+	 */
 	public void setLifecycle(ArtefactLifecycle lifecycle) {
 		this.lifecycle = lifecycle;
 	}

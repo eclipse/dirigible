@@ -102,6 +102,7 @@ public class ListenerService implements ArtefactService<Listener> {
     public Listener findByKey(String key) {
     	Listener filter = new Listener();
         filter.setKey(key);
+        filter.setKind(null);
         Example<Listener> example = Example.of(filter);
         Optional<Listener> listener = listenerRepository.findOne(example);
         if (listener.isPresent()) {

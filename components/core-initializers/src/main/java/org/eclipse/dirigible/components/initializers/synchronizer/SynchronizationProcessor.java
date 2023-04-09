@@ -91,6 +91,16 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	}
 	
 	/**
+	 * Prepare synchronizers.
+	 */
+	public synchronized void prepareSynchronizers() {
+		this.definitionService.getAll().forEach(d -> {
+				d.setState(ArtefactState.INITIAL_RESTART.toString());
+				this.definitionService.save(d);
+			});
+	}
+	
+	/**
 	 * Process synchronizers.
 	 */
 	public synchronized void processSynchronizers() {
@@ -223,7 +233,35 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 					List loaded = synchronizer.load(definition.getLocation(), definition.getContent());
 					for (Object a : loaded) {
 						if (a instanceof Artefact) {
-							((Artefact) a).setLifecycle(ArtefactLifecycle.valueOf(definition.getState()));
+							switch (ArtefactState.valueOf(definition.getState())) {
+							case SUCCESSFUL:
+							case SUCCESSFUL_CREATE:
+								((Artefact) a).setLifecycle(ArtefactLifecycle.CREATED);
+								break;
+							case SUCCESSFUL_UPDATE:
+							case SUCCESSFUL_CREATE_UPDATE:
+								((Artefact) a).setLifecycle(ArtefactLifecycle.UPDATED);
+								break;
+							case SUCCESSFUL_DELETE:
+								((Artefact) a).setLifecycle(ArtefactLifecycle.DELETED);
+								break;
+							case FAILED:
+							case FAILED_CREATE:
+							case FAILED_UPDATE:
+							case FAILED_CREATE_UPDATE:
+							case FAILED_DELETE:
+								((Artefact) a).setLifecycle(ArtefactLifecycle.FAILED);
+								break;
+							case INITIAL:
+								((Artefact) a).setLifecycle(ArtefactLifecycle.INITIAL);
+								break;
+							case INITIAL_RESTART:
+							case INITIAL_MODIFIED:
+								((Artefact) a).setLifecycle(ArtefactLifecycle.MODIFIED);
+								break;
+							}
+							
+							
 						}
 					}
 					artefacts.addAll(loaded);
@@ -289,11 +327,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	private void checkAndCollect(Path file, String location, Synchronizer<Artefact> synchronizer)
 			throws IOException, FileNotFoundException {
 		
-		String type = "definition";
-		if (location.indexOf('.') > 0) {
-			// generate the type by the file extension
-			type = location.substring(location.lastIndexOf('.') + 1);
-		}
+		String type = synchronizer.getArtefactType();
+		
 		// load the content to calculate the checksum
 		byte[] content = Files.readAllBytes(file);
 		if (content == null) {
@@ -309,21 +344,24 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			if (!maybe.getChecksum().equals(definition.getChecksum())) {
 				// the content has been modified since the last processing
 				maybe.setChecksum(definition.getChecksum());
-				maybe.setState(ArtefactState.MODIFIED.toString());
+				maybe.setState(ArtefactState.INITIAL_MODIFIED.toString());
 				maybe.setContent(definition.getContent());
 				// update the artefact with the new checksum and status
 				definitionService.save(maybe);
 				// added to artefacts for processing
 				map.put(maybe.getKey(), maybe);
-			} else if (maybe.getState().startsWith(ArtefactState.SUCCESSFUL.toString())) {
-//				// pending from a previous run, add again for processing
-//				if (map.get(definition.getKey()) == null) {
-//					map.put(definition.getKey(), definition);
-//				}
-			} else if (maybe.getState().startsWith(ArtefactState.FAILED.toString())) {
+			} else if (maybe.getState().startsWith(ArtefactState.SUCCESSFUL.toString())
+					|| maybe.getState().startsWith(ArtefactState.INITIAL.toString())) {
+				// pending from a previous run, add again for processing
+				if (map.get(maybe.getKey()) == null) {
+//					maybe.setState(ArtefactLifecycle.CREATED.toString());
+					maybe.setContent(definition.getContent());
+					map.put(maybe.getKey(), maybe);
+				}
+			} else if (maybe.getState().startsWith(ArtefactLifecycle.FAILED.toString())) {
 				// report the erronous state
 				logger.warn("Definition with key: {} has been failed with reason {}", maybe.getKey(), maybe.getMessage());
-			}
+			} 
 		} else {
 			// artefact is new, hence stored for processing
 			definition.setState(ArtefactState.INITIAL.toString());

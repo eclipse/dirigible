@@ -40,13 +40,25 @@ public class SchemaDropProcessor {
 	 */
 	public static void execute(Connection connection, Schema schemaModel) throws SQLException {
 		for (View viewModel : schemaModel.getViews()) {
-			ViewDropProcessor.execute(connection, viewModel);
+			try {
+				ViewDropProcessor.execute(connection, viewModel);
+			} catch (SQLException e) {
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			}
 		}
 		for (Table tableModel : schemaModel.getTables()) {
-			TableForeignKeysDropProcessor.execute(connection, tableModel);
+			try {
+				TableForeignKeysDropProcessor.execute(connection, tableModel);
+			} catch (SQLException e) {
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			}
 		}
 		for (Table tableModel : schemaModel.getTables()) {
-			TableDropProcessor.execute(connection, tableModel);
+			try {
+				TableDropProcessor.execute(connection, tableModel);
+			} catch (SQLException e) {
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			}
 		}
 	}
 

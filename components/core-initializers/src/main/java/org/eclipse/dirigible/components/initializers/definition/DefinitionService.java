@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.components.initializers.definition;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,12 @@ public class DefinitionService {
 	private DefinitionRepository definitionRepository;
 
 	@Transactional(readOnly = true)
-	public Page<Definition> findAll(Pageable pageable) {
+	public List<Definition> getAll() {
+		return definitionRepository.findAll();
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<Definition> getPages(Pageable pageable) {
 		return definitionRepository.findAll(pageable);
 	}
 	

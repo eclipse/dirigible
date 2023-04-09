@@ -180,10 +180,10 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 			try {
 				if (expose.getExposes() != null) {
 					ExposeManager.registerExposableProject(expose.getName(), expose.getExposes());
-					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
 				} else {
 					if (logger.isTraceEnabled()) {logger.trace(expose.getName() + " skipped due to lack of exposures");}
 				}
+				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
 			} catch (Exception e) {
 				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, e.getMessage());

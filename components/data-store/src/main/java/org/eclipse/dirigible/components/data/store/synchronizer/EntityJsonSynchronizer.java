@@ -19,6 +19,7 @@ import org.eclipse.dirigible.commons.utils.xml2json.Xml2Json;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.data.store.DataStore;
 import org.eclipse.dirigible.components.data.store.domain.Entity;
+import org.eclipse.dirigible.components.data.store.domain.EntityJson;
 import org.eclipse.dirigible.components.data.store.service.EntityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +71,7 @@ public class EntityJsonSynchronizer<A extends Artefact> extends EntitySynchroniz
 	 */
 	@Override
 	public boolean isAccepted(String type) {
-		return Entity.ARTEFACT_TYPE.equals(type);
+		return EntityJson.ARTEFACT_TYPE.equals(type);
 	}
 
 	/**

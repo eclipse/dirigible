@@ -131,6 +131,8 @@ public class JobService implements ArtefactService<Job>  {
     public Job findByKey(String key) {
     	Job filter = new Job();
         filter.setKey(key);
+        filter.setEnabled(null);
+        filter.setStatus(null);
         Example<Job> example = Example.of(filter);
         Optional<Job> job = jobRepository.findOne(example);
         if (job.isPresent()) {

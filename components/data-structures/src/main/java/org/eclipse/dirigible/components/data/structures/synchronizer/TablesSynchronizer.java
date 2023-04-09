@@ -157,6 +157,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 			Table maybe = getService().findByKey(table.getKey());
 			if (maybe != null) {
 				table.setId(maybe.getId());
+				table.getConstraints().setId(maybe.getConstraints().getId());
 			}
 			getService().save(table);
 		} catch (Exception e) {

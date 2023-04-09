@@ -40,13 +40,25 @@ public class SchemaCreateProcessor {
 	 */
 	public static void execute(Connection connection, Schema schemaModel) throws SQLException {
 		for (Table tableModel : schemaModel.getTables()) {
-			TableCreateProcessor.execute(connection, tableModel, true);
+			try {
+				TableCreateProcessor.execute(connection, tableModel, true);
+			} catch (SQLException e) {
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			}
 		}
 		for (Table tableModel : schemaModel.getTables()) {
-			TableForeignKeysCreateProcessor.execute(connection, tableModel);
+			try {
+				TableForeignKeysCreateProcessor.execute(connection, tableModel);
+			} catch (SQLException e) {
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			}
 		}
 		for (View viewModel : schemaModel.getViews()) {
-			ViewCreateProcessor.execute(connection, viewModel);
+			try {
+				ViewCreateProcessor.execute(connection, viewModel);
+			} catch (SQLException e) {
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			}
 		}
 	}
 
