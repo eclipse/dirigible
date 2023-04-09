@@ -52,6 +52,15 @@ exports.getContent = function() {
 				"core/globals"
 			],
 			"pathDefault": "core/globals"
+		},
+		{
+			"name": "core/destinations",
+			"description": "Globals API",
+			"api": "destinations",
+			"versionedPaths": [
+				"core/destinations"
+			],
+			"pathDefault": "core/destinations"
 		}
 	];
 };

@@ -154,7 +154,10 @@
 		<module>api-etcd</module>
 		<module>api-template</module>
 		<module>api-mail</module>
+		<module>api-kafka</module>
 		<module>api-mongodb</module>
+		<module>api-rabbitmq</module>
+		<module>api-redis</module>
 		
 		<!-- Resources -->
 		<module>resources-core</module>
@@ -194,11 +197,15 @@
 		<module>template-websocket</module>
 		
 		<!-- Groups -->
+		<module>group-api-core</module>
+		<module>group-api-platform</module>
 		<module>group-api</module>
 		<module>group-core</module>
 		<module>group-database</module>
+		<module>group-engines-core</module>
 		<module>group-engines</module>
 		<module>group-ide</module>
+		<module>group-resources-core</module>
 		<module>group-resources</module>
 		<module>group-templates</module>		
 

@@ -5,7 +5,7 @@ let extensionPoints = [];
 
 let connection = null;
 try {
-    connection = database.getConnection("local", "SystemDB");
+    connection = database.getConnection("SystemDB");
     let statement = connection.prepareStatement("SELECT EXTENSIONPOINT_NAME FROM DIRIGIBLE_EXTENSION_POINTS");
     let resultSet = statement.executeQuery();
     while (resultSet.next()) {

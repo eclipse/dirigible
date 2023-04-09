@@ -10,25 +10,24 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getConfigurations = function() {
-	const configurations = require('core/configurations');
-	return configurations;
+	return require('core/configurations');
 };
 exports.getConsole = function() {
-	const console = require('core/console');
-	return console;
+	return require('core/console');
 };
 
 exports.getContext = function() {
-	var context = require('core/context');
-	return context;
+	return require('core/context');
 };
 
 exports.getEnv = function() {
-	var env = require('core/env');
-	return env;
+	return require('core/env');
 };
 
 exports.getGlobals = function() {
-	var globals = require('core/globals');
-	return globals;
+	return require('core/globals');
+};
+
+exports.getDestinations = function() {
+	return require('core/destinations');
 };

@@ -66,7 +66,7 @@ exports.getSources = function (parameters) {
 			engine: "velocity"
 		},
 		{
-			location: "/template-application-ui-angular/ui/launchpad/perspective.extension",
+			location: "/template-application-ui-angular/ui/launchpad/perspective.extension.template",
 			action: "generate",
 			rename: "gen/ui/launchpad/perspective.extension",
 			engine: "velocity"

@@ -87,6 +87,13 @@ public class CoreTestSuite {
 			.andExpect(status().is2xxSuccessful());
 	}
 
+	@Test
+	public void executeDestinationsGetTest() throws Exception {
+		mockMvc.perform(get("/services/js/core-tests/destinations-get-test.js"))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
+	}
+
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

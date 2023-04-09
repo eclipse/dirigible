@@ -249,7 +249,7 @@
 					<plugin>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs-maven-plugin</artifactId>
-						<version>4.7.3.3</version>
+						<version>4.7.3.4</version>
 						<dependencies>
 							<!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
 							<dependency>
@@ -601,13 +601,13 @@
 		<classgraph.version>4.8.157</classgraph.version>
 		<commons-compress.version>1.22</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.6</testcontainers.elasticsearch.version>
-		<testcontainers.version>1.17.6</testcontainers.version>
+		<testcontainers.version>1.18.0</testcontainers.version>
 		<testcontainers.rabbitmq.version>1.17.6</testcontainers.rabbitmq.version>
-		<amqp.client.version>5.16.0</amqp.client.version>
+		<amqp.client.version>5.17.0</amqp.client.version>
 		<elasticsearch.client.version>7.7.1</elasticsearch.client.version>
 		<jetcd.core.version>0.7.5</jetcd.core.version>
 		<jetcd.test.version>0.5.4</jetcd.test.version>
-		<logcaptor.version>2.8.0</logcaptor.version>
+		<logcaptor.version>2.9.0</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.14.2</jackson.databind.version>
 
