@@ -199,6 +199,7 @@
 		<module>group-core</module>
 		<module>group-database</module>
 		<module>group-engines</module>
+		<module>group-engines-core</module>
 		<module>group-ide</module>
 		<module>group-resources</module>
 		<module>group-templates</module>		
