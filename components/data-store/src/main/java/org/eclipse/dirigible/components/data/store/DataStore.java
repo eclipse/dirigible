@@ -43,11 +43,11 @@ public class DataStore {
 	/** The session factory. */
 	private SessionFactory sessionFactory;
 	
+	/** The datasources manager. */
 	private DataSourcesManager datasourcesManager;
 	
 	/** The data source. */
 	private DataSource dataSource;
-	
 	
 	
 	/** The mappings. */
@@ -56,15 +56,20 @@ public class DataStore {
 	/**
 	 * Instantiates a new object store.
 	 *
-	 * @param dataSource the data source
+	 * @param datasourcesManager the datasources manager
 	 */
 	@Autowired
-	public DataStore(DataSourcesManager datasourcesManager, DataSource dataSource) {
+	public DataStore(DataSourcesManager datasourcesManager) {
 		this.datasourcesManager = datasourcesManager;
-		this.dataSource = dataSource;
+		this.dataSource = datasourcesManager.getDefaultDataSource();
 		initialize();
 	}
 	
+	/**
+	 * Gets the datasources manager.
+	 *
+	 * @return the datasources manager
+	 */
 	public DataSourcesManager getDatasourcesManager() {
 		return datasourcesManager;
 	}
@@ -75,9 +80,6 @@ public class DataStore {
 	 * @return the data source
 	 */
 	public DataSource getDataSource() {
-		if (dataSource == null) {
-			dataSource = datasourcesManager.getDefaultDataSource();
-		}
 		return dataSource;
 	}
 	
@@ -98,6 +100,15 @@ public class DataStore {
 	 */
 	public void addMapping(String name, String content) {
 		mappings.put(name, content);
+	}
+	
+	/**
+	 * Removes the mapping.
+	 *
+	 * @param name the name
+	 */
+	public void removeMapping(String name) {
+		mappings.remove(name);
 	}
 	
 	/**
@@ -171,10 +182,23 @@ public class DataStore {
 		}
 	}
 	
+	/**
+	 * Delete.
+	 *
+	 * @param type the type
+	 * @param id the id
+	 */
 	public void delete(String type, Serializable id) {
 		delete(type, id, getDataSource());
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @param type the type
+	 * @param id the id
+	 * @param datasource the datasource
+	 */
 	public void delete(String type, Serializable id, DataSource datasource) {
 		try (Session session = sessionFactory.openSession()) {
 			Transaction transaction = session.beginTransaction();
@@ -184,20 +208,50 @@ public class DataStore {
 		}
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @param type the type
+	 * @param id the id
+	 * @return the map
+	 */
 	public Map get(String type, Serializable id) {
 		return get(type, id, getDataSource());
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @param type the type
+	 * @param id the id
+	 * @param datasource the datasource
+	 * @return the map
+	 */
 	public Map get(String type, Serializable id, DataSource datasource) {
 		try (Session session = sessionFactory.openSession()) {
 			return (Map) session.get(type, id);
 		}
 	}
 	
+	/**
+	 * Contains.
+	 *
+	 * @param type the type
+	 * @param json the json
+	 * @return true, if successful
+	 */
 	public boolean contains(String type, String json) {
 		return contains(type, json, getDataSource());
 	}
 	
+	/**
+	 * Contains.
+	 *
+	 * @param type the type
+	 * @param json the json
+	 * @param datasource the datasource
+	 * @return true, if successful
+	 */
 	public boolean contains(String type, String json, DataSource datasource) {
 		try (Session session = sessionFactory.openSession()) {
 			Map object = JsonHelper.fromJson(json, Map.class);
@@ -205,20 +259,50 @@ public class DataStore {
 		}
 	}
 	
+	/**
+	 * List.
+	 *
+	 * @param type the type
+	 * @return the list
+	 */
 	public List<Map> list(String type) {
 		return list(type, getDataSource());
 	}
 	
+	/**
+	 * List.
+	 *
+	 * @param type the type
+	 * @param datasource the datasource
+	 * @return the list
+	 */
 	public List<Map> list(String type, DataSource datasource) {
 		try (Session session = sessionFactory.openSession()) {
 			return session.createCriteria(type).list();
 		}
 	}
 	
+	/**
+	 * Criteria.
+	 *
+	 * @param type the type
+	 * @param restrictions the restrictions
+	 * @param aliases the aliases
+	 * @return the list
+	 */
 	public List<Map> criteria(String type, Map<String, String> restrictions, Map<String, String> aliases) {
 		return criteria(type, restrictions, aliases, getDataSource());
 	}
 	
+	/**
+	 * Criteria.
+	 *
+	 * @param type the type
+	 * @param restrictions the restrictions
+	 * @param aliases the aliases
+	 * @param datasource the datasource
+	 * @return the list
+	 */
 	public List<Map> criteria(String type, Map<String, String> restrictions, Map<String, String> aliases, DataSource datasource) {
 		try (Session session = sessionFactory.openSession()) {
 			Criteria criteria = session.createCriteria(type);
@@ -232,10 +316,23 @@ public class DataStore {
 		}
 	}
 	
+	/**
+	 * Query.
+	 *
+	 * @param query the query
+	 * @return the list
+	 */
 	public List<Map> query(String query) {
 		return query(query, getDataSource());
 	}
 	
+	/**
+	 * Query.
+	 *
+	 * @param query the query
+	 * @param datasource the datasource
+	 * @return the list
+	 */
 	public List<Map> query(String query, DataSource datasource) {
 		try (Session session = sessionFactory.openSession()) {
 			return session.createNativeQuery(query).list();
