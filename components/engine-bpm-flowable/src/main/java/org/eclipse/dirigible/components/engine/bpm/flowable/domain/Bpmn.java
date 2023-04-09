@@ -79,4 +79,17 @@ public class Bpmn extends Artefact {
 		this.content = content;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
+	@Override
+	public String toString() {
+		return "Bpmn [id=" + id + ", location=" + location + ", name=" + name + ", type=" + type + ", description="
+				+ description + ", key=" + key + ", dependencies=" + dependencies + ", lifecycle=" + lifecycle
+				+ ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt="
+				+ updatedAt + "]";
+	}
+
 }
