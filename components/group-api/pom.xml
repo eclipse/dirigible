@@ -17,14 +17,9 @@
 
     	<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-group-api-core</artifactId>
+			<artifactId>dirigible-components-group-api-platform</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
 			<type>pom</type>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-api-job</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
@@ -34,21 +29,6 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-cms</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-api-messaging</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-api-template</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-api-mail</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>

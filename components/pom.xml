@@ -196,6 +196,7 @@
 		
 		<!-- Groups -->
 		<module>group-api-core</module>
+		<module>group-api-platform</module>
 		<module>group-api</module>
 		<module>group-core</module>
 		<module>group-database</module>
