@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.components.data.store.synchronizer;
 
-import static java.text.MessageFormat.format;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,7 +40,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(300)
+@Order(290)
 public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Entity> {
 	
 	/** The Constant logger. */
@@ -186,7 +184,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 		Entity entity = null;
 		if (wrapper.getArtefact() instanceof Entity) {
 			entity = (Entity) wrapper.getArtefact();
-			dataStore.addMapping(entity.getKey(), new String(entity.getContent(), StandardCharsets.UTF_8));
+			dataStore.addMapping(entity.getLocation(), new String(entity.getContent(), StandardCharsets.UTF_8));
 			callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
 			return true;
 		}
@@ -202,7 +200,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 	public void cleanup(Entity entity) {
 		try {
 			getService().delete(entity);
-			dataStore.removeMapping(entity.getKey());
+			dataStore.removeMapping(entity.getLocation());
 			dataStore.initialize();
 			callback.registerState(this, entity, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {

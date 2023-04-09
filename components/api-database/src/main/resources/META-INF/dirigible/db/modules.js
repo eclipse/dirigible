@@ -38,3 +38,8 @@ exports.getSql = function() {
 	const sql = require('db/sql');
 	return sql;
 };
+
+exports.getStore = function() {
+	const store = require('db/store');
+	return store;
+};

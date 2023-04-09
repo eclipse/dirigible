@@ -91,7 +91,10 @@ public class JavascriptService implements InitializingBean {
             }
         } catch (Exception e) {
         	if (logger.isErrorEnabled()) {
-        		if (e.getMessage().contains("consider publish")) {
+        		if (e.getMessage() == null) {
+        			logger.error("Null object has been found");
+        			return e.getMessage();
+        		} else if (e.getMessage().contains("consider publish")) {
         			logger.error(e.getMessage());
         			return e.getMessage();
         		} else {

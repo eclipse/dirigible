@@ -1556,4 +1556,30 @@ declare module "@dirigible/db" {
          */
         build():string;
     }
+    module store {
+        /**
+         * Save entry in the data store
+         * @param name
+         * @param entry
+         */
+        function save(name: string, entry: object);
+        /**
+         * List all entries from the data store by name
+         * @param name
+         */
+        function list(name: string): [];
+        /**
+         * Get entry from the data store by name and id
+         * @param name
+         * @param id
+         */
+        function get(name: string, id: number): object;
+        /**
+         * Delete entry from the data store by name and id
+         * @param name
+         * @param id
+         */
+        function delete(name: string, id: number);
+        
+    }
 }

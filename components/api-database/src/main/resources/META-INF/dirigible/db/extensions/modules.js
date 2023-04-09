@@ -97,6 +97,15 @@ exports.getContent = function () {
 	      "db/update"
 	    ],
 	    "pathDefault": "db/update"
+	  },
+	  {
+	    "name": "db/store",
+	    "description": "Data Store API",
+	    "api": "store",
+	    "versionedPaths": [
+	      "db/store"
+	    ],
+	    "pathDefault": "db/store"
 	  }
 	];
 
