@@ -184,11 +184,21 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 		Entity entity = null;
 		if (wrapper.getArtefact() instanceof Entity) {
 			entity = (Entity) wrapper.getArtefact();
-			dataStore.addMapping(entity.getLocation(), new String(entity.getContent(), StandardCharsets.UTF_8));
+			dataStore.addMapping(entity.getKey(), prepareContent(entity));
 			callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
 			return true;
 		}
 		throw new UnsupportedOperationException(String.format("Trying to process %s as Entity", wrapper.getArtefact().getClass()));
+	}
+
+	/**
+	 * Prepare content.
+	 *
+	 * @param entity the entity
+	 * @return the string
+	 */
+	public String prepareContent(Entity entity) {
+		return new String(entity.getContent(), StandardCharsets.UTF_8);
 	}
 
 	/**
@@ -200,7 +210,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 	public void cleanup(Entity entity) {
 		try {
 			getService().delete(entity);
-			dataStore.removeMapping(entity.getLocation());
+			dataStore.removeMapping(entity.getKey());
 			dataStore.initialize();
 			callback.registerState(this, entity, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {
