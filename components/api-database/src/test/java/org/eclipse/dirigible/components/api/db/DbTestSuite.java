@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.componenets.api.db;
+package org.eclipse.dirigible.components.api.db;
 
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.repository.DataSourceRepository;
