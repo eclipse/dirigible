@@ -31,9 +31,6 @@ public abstract class BaseEndpoint {
 	/** The Constant PREFIX_ENDPOINT_IDE. */
 	public static final String PREFIX_ENDPOINT_IDE = "services/ide/";
 	
-	/** The Constant PREFIX_ENDPOINT_OPS. */
-	public static final String PREFIX_ENDPOINT_OPS = "services/ops/";
-	
 	/** The Constant PREFIX_ENDPOINT_PUBLIC. */
 	public static final String PREFIX_ENDPOINT_PUBLIC = "public/";
 	

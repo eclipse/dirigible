@@ -59,17 +59,17 @@ public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurer
             .antMatchers("/favicon.ico").permitAll()
             .antMatchers("/public/**").permitAll()
             .antMatchers("/webjars/**").permitAll()
+            
             .antMatchers("/services/core/theme/**").permitAll()
+            .antMatchers("/services/core/version/**").permitAll()
             .antMatchers("/services/core/healthcheck/**").permitAll()
             .antMatchers("/services/web/resources/**").permitAll()
             .antMatchers("/services/web/resources-core/**").permitAll()
             .antMatchers("/services/js/resources-core/**").permitAll()
 
             // Authenticated
-            .antMatchers("/services/web/**").authenticated()
-            .antMatchers("/services/js/**").authenticated()
-            .antMatchers("/services/wiki/**").authenticated()
-            .antMatchers("/services/command/**").authenticated()
+            .antMatchers("/services/**").authenticated()
+            .antMatchers("/websockets/**").authenticated()
             .antMatchers("/odata/**").authenticated()
 
             // "Developer" role required
@@ -77,9 +77,9 @@ public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurer
             .antMatchers("/websockets/ide/**").hasRole("Developer")
 
             // "Operator" role required
-            .antMatchers("/services/ops/**").hasRole("Operator")
-            .antMatchers("/services/transport/**").hasRole("Operator")
-            .antMatchers("/websockets/ops/**").hasRole("Operator")
+//            .antMatchers("/services/ops/**").hasRole("Operator")
+//            .antMatchers("/services/transport/**").hasRole("Operator")
+//            .antMatchers("/websockets/ops/**").hasRole("Operator")
 
             // Deny all other requests
             .anyRequest().denyAll();
