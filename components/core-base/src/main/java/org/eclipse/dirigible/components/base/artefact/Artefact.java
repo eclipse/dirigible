@@ -12,7 +12,6 @@
 package org.eclipse.dirigible.components.base.artefact;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Lob;
