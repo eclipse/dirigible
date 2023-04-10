@@ -230,6 +230,16 @@ declare module "@dirigible/utils" {
         function decodeAsNativeBytes(text: string): byte[];
     }
 
+    /**
+     * Evaluate a JSONPath and return the result
+     * @param expr - Object that consists of "path" and "json". Example
+     * jsonpath({
+     *     "path": "$.your.json.path",
+     *     "json": json
+     * })
+     */
+    function jsonpath(expr: object)
+
     module url {
         /**
          * Encode an input string to application/x-www-form-urlencoded format
