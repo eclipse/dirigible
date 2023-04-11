@@ -39,7 +39,7 @@ import com.google.gson.annotations.Expose;
  * The Class TableConstraints.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_TABLE_CONSTRAINTS")
+@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_CONSTRAINTS")
 public class TableConstraints {
 	
 	/** The id. */
@@ -154,6 +154,23 @@ public class TableConstraints {
 	public void setForeignKeys(List<TableConstraintForeignKey> foreignKeys) {
 		this.foreignKeys = foreignKeys;
 	}
+	
+	/**
+	 * Get the foreignKey by name.
+	 *
+	 * @return the foreignKey
+	 */
+	public TableConstraintForeignKey getForeignKey(String name) {
+		final List<TableConstraintForeignKey> foreignKeysList = foreignKeys;
+		if (foreignKeysList != null) {
+			for (TableConstraintForeignKey fk : foreignKeysList) {
+				if (fk.getName().equals(name)) {
+					return fk;
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Gets the unique indexes.
@@ -172,6 +189,23 @@ public class TableConstraints {
 	public void setUniqueIndexes(List<TableConstraintUnique> uniqueIndexes) {
 		this.uniqueIndexes = uniqueIndexes;
 	}
+	
+	/**
+	 * Get the uniqueIndex by name.
+	 *
+	 * @return the uniqueIndex
+	 */
+	public TableConstraintUnique getUniqueIndex(String name) {
+		final List<TableConstraintUnique> uniqueIndexesList = uniqueIndexes;
+		if (uniqueIndexesList != null) {
+			for (TableConstraintUnique ui : uniqueIndexesList) {
+				if (ui.getName().equals(name)) {
+					return ui;
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Gets the checks.
@@ -189,6 +223,23 @@ public class TableConstraints {
 	 */
 	public void setChecks(List<TableConstraintCheck> checks) {
 		this.checks = checks;
+	}
+	
+	/**
+	 * Get the checks by name.
+	 *
+	 * @return the checks
+	 */
+	public TableConstraintCheck getCheck(String name) {
+		final List<TableConstraintCheck> checksList = checks;
+		if (checksList != null) {
+			for (TableConstraintCheck ck : checksList) {
+				if (ck.getName().equals(name)) {
+					return ck;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

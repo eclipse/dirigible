@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
+
 /**
  * The Class TopologicalDepleter.
  *
@@ -29,7 +31,7 @@ public class TopologicalDepleter<T extends TopologicallyDepletable> {
 	 * @param flow the flow
 	 * @return the list
 	 */
-	public List<T> deplete(List<T> list, String flow) {
+	public List<T> deplete(List<T> list, ArtefactPhase flow) {
 		List<T> depletables = new ArrayList<>();
 		depletables.addAll(list);
 		int count = depletables.size();

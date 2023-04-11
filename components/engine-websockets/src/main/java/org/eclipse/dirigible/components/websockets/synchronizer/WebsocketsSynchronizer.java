@@ -20,8 +20,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
@@ -88,7 +88,7 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
      * @return the list
      */
     @Override
-    public List<Websocket> load(String location, byte[] content) {
+    public List<Websocket> parse(String location, byte[] content) {
         Websocket websocket = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Websocket.class);
         Configuration.configureObject(websocket);
         websocket.setLocation(location);
@@ -100,7 +100,7 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
 			if (maybe != null) {
 				websocket.setId(maybe.getId());
 			}
-            getService().save(websocket);
+			websocket = getService().save(websocket);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage(), e);
@@ -110,45 +110,43 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
         }
         return List.of(websocket);
     }
+    
+    /**
+	 * Retrieve.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	public List<Websocket> retrieve(String location) {
+		return getService().getAll();
+	}
+	
+	/**
+	 * Sets the status.
+	 *
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
+	 */
+	@Override
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((Websocket) artefact);
+	}
 
     /**
-     * Prepare.
+     * Complete.
      *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
      */
     @Override
-    public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-
-    }
-
-    /**
-     * Process.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-        try {
-            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-            callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-            callback.addError(e.getMessage());
-        }
-    }
-
-    /**
-     * Gets the service.
-     *
-     * @return the service
-     */
-    @Override
-    public ArtefactService<Websocket> getService() {
-        return websocketService;
+    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+        return true;
     }
 
     /**
@@ -160,25 +158,21 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
     public void cleanup(Websocket websocket) {
         try {
             getService().delete(websocket);
-            callback.registerState(this, websocket, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, websocket, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+            callback.registerState(this, websocket, ArtefactLifecycle.DELETED, e.getMessage());
         }
     }
-
+    
     /**
-     * Complete.
+     * Gets the service.
      *
-     * @param wrapper the wrapper
-     * @param flow the flow
-     * @return true, if successful
+     * @return the service
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
-        return true;
+    public ArtefactService<Websocket> getService() {
+        return websocketService;
     }
 
     /**

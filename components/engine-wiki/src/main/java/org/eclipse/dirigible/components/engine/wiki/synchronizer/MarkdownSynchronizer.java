@@ -20,8 +20,8 @@ import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
@@ -123,7 +123,7 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 	 * @return the list
 	 */
 	@Override
-	public List<Markdown> load(String location, byte[] content) {
+	public List<Markdown> parse(String location, byte[] content) {
 		Markdown wiki = new Markdown();
 		Configuration.configureObject(wiki);
 		wiki.setLocation(location);
@@ -136,7 +136,7 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 			if (maybe != null) {
 				wiki.setId(maybe.getId());
 			}
-			getService().save(wiki);
+			wiki = getService().save(wiki);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("wiki: {}", wiki);}
@@ -146,30 +146,28 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 	}
 	
 	/**
-	 * Prepare.
+	 * Retrieve.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param location the location
+	 * @return the list
 	 */
 	@Override
-	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
+	public List<Markdown> retrieve(String location) {
+		return getService().getAll();
 	}
 	
 	/**
-	 * Process.
+	 * Sets the status.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
 	 */
 	@Override
-	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-			callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((Markdown) artefact);
 	}
 	
 	/**
@@ -180,17 +178,32 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 		Markdown wiki = null;
 		if (wrapper.getArtefact() instanceof Markdown) {
 			wiki = (Markdown) wrapper.getArtefact();
 		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as BPMN", wrapper.getArtefact().getClass()));
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Markdown", wrapper.getArtefact().getClass()));
 		}
 		
-		wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
+		switch (flow) {
+		case CREATE:
+			if (wiki.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+				wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
+				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+			}
+			break;
+		case UPDATE:
+			if (wiki.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
+				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+			}
+			break;
+		case DELETE:
+		case START:
+		case STOP:
+		}
 		
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
 		return true;
 	}
 
@@ -202,15 +215,12 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 	@Override
 	public void cleanup(Markdown wiki) {
 		try {
-			getService().delete(wiki);
-			
 			wikiService.removeGenerated(wiki.getLocation());
-			
-			callback.registerState(this, wiki, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
+			getService().delete(wiki);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, wiki, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+			callback.registerState(this, wiki, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
 	

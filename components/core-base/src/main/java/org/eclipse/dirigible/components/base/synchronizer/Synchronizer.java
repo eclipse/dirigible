@@ -16,6 +16,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
+import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
@@ -26,6 +28,13 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
  * @param <A> the generic type
  */
 public interface Synchronizer<A extends Artefact> {
+	
+	/**
+	 * Gets the service.
+	 *
+	 * @return the service
+	 */
+	ArtefactService<A> getService();
 
 	/**
 	 * Checks if is accepted.
@@ -45,36 +54,40 @@ public interface Synchronizer<A extends Artefact> {
 	boolean isAccepted(String type);
 	
 	/**
-	 * Load.
+	 * Parse the definition and produce artefacts.
 	 *
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
 	 */
-	List<A> load(String location, byte[] content);
+	List<A> parse(String location, byte[] content);
 	
 	/**
-	 * Prepare.
+	 * Retrieve all the processed artefacts by the definition location.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param location the location
+	 * @return the list
 	 */
-	void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter);
+	List<A> retrieve(String location);
 	
 	/**
-	 * Process.
+	 * Retrieve all the processed artefacts by the definition location.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param key the key
+	 * @param lifecycle the lifecycle
+	 * @param message the message
+	 * @return the list
 	 */
-	void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter);
+	void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String message);
 	
 	/**
-	 * Gets the service.
+	 * Complete.
 	 *
-	 * @return the service
+	 * @param wrapper the topology wrapper
+	 * @param flow the flow
+	 * @return true, if successful
 	 */
-	ArtefactService<A> getService();
+	boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow);
 	
 	/**
 	 * Cleanup.
@@ -83,15 +96,6 @@ public interface Synchronizer<A extends Artefact> {
 	 */
 	void cleanup(A artefact);
 
-	/**
-	 * Complete.
-	 *
-	 * @param wrapper the topology wrapper
-	 * @param flow the flow
-	 * @return true, if successful
-	 */
-	boolean complete(TopologyWrapper<Artefact> wrapper, String flow);
-	
 	/**
 	 * Set the callback.
 	 *

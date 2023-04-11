@@ -100,7 +100,6 @@ public class TableCreateProcessor {
 				} else {
 					args += " DEFAULT " + defaultValue + " ";
 				}
-
 			}
 			createTableBuilder.column(name, type, isPrimaryKey, isNullable, isUnique, args);
 		}

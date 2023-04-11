@@ -20,8 +20,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
@@ -106,7 +106,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      * @return the list
      */
     @Override
-    public List<OpenAPI> load(String location, byte[] content) {
+    public List<OpenAPI> parse(String location, byte[] content) {
         OpenAPI openAPI = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), OpenAPI.class);
         Configuration.configureObject(openAPI);
         openAPI.setLocation(location);
@@ -118,7 +118,7 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
 			if (maybe != null) {
 				openAPI.setId(maybe.getId());
 			}
-            getService().save(openAPI);
+			openAPI = getService().save(openAPI);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             if (logger.isErrorEnabled()) {logger.error("openAPI: {}", openAPI);}
@@ -126,34 +126,31 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
         }
         return List.of(openAPI);
     }
-
+    
     /**
-     * Prepare.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-
-    }
-
-    /**
-     * Process.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-        try {
-            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-            callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            callback.addError(e.getMessage());
-        }
-    }
+	 * Retrieve.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	public List<OpenAPI> retrieve(String location) {
+		return getService().getAll();
+	}
+	
+	/**
+	 * Sets the status.
+	 *
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
+	 */
+	@Override
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((OpenAPI) artefact);
+	}
 
     /**
      * Gets the service.
@@ -174,11 +171,10 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
     public void cleanup(OpenAPI openAPI) {
         try {
             getService().delete(openAPI);
-            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+            callback.registerState(this, openAPI, ArtefactLifecycle.DELETED, e.getMessage());
         }
     }
 
@@ -190,8 +186,8 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
+    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
         return true;
     }
 

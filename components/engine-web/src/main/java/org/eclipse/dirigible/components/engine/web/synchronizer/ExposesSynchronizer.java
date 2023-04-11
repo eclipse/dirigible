@@ -19,8 +19,8 @@ import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.project.ProjectMetadata;
@@ -109,7 +109,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	 * @return the list
 	 */
 	@Override
-	public List<Expose> load(String location, byte[] content) {
+	public List<Expose> parse(String location, byte[] content) {
 		ProjectMetadata projectMetadata = ProjectMetadataUtils.fromJson(new String(content, StandardCharsets.UTF_8));
 		Expose expose = new Expose();
 		expose.setExposes(projectMetadata.getExposes());
@@ -124,7 +124,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 			if (maybe != null) {
 				expose.setId(maybe.getId());
 			}
-			getService().save(expose);
+			expose = getService().save(expose);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("expose: {}", expose);}
@@ -134,30 +134,28 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	}
 	
 	/**
-	 * Prepare.
+	 * Retrieve.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param location the location
+	 * @return the list
 	 */
 	@Override
-	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
+	public List<Expose> retrieve(String location) {
+		return getService().getAll();
 	}
 	
 	/**
-	 * Process.
+	 * Sets the status.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
 	 */
 	@Override
-	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-			callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((Expose) artefact);
 	}
 	
 	/**
@@ -168,7 +166,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 		Expose expose = null;
 		if (wrapper.getArtefact() instanceof Expose) {
 			expose = (Expose) wrapper.getArtefact();
@@ -176,19 +174,33 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 			throw new UnsupportedOperationException(String.format("Trying to process %s as Expose", wrapper.getArtefact().getClass()));
 		}
 		
-		if (!ExposeManager.existExposableProject(expose.getName())) {
-			try {
+		switch (flow) {
+		case CREATE:
+			if (expose.getLifecycle().equals(ArtefactLifecycle.NEW)) {
 				if (expose.getExposes() != null) {
 					ExposeManager.registerExposableProject(expose.getName(), expose.getExposes());
 				} else {
 					if (logger.isTraceEnabled()) {logger.trace(expose.getName() + " skipped due to lack of exposures");}
 				}
-				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
-			} catch (Exception e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, e.getMessage());
+				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 			}
+			break;
+		case UPDATE:
+			if (expose.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				ExposeManager.unregisterProject(expose.getName());
+				if (expose.getExposes() != null) {
+					ExposeManager.registerExposableProject(expose.getName(), expose.getExposes());
+				} else {
+					if (logger.isTraceEnabled()) {logger.trace(expose.getName() + " skipped due to lack of exposures");}
+				}
+				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+			}
+			break;
+		case DELETE:
+		case START:
+		case STOP:
 		}
+		
 		return true;
 	}
 
@@ -202,11 +214,10 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 		try {
 			ExposeManager.unregisterProject(expose.getName());
 			getService().delete(expose);
-			callback.registerState(this, expose, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, expose, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+			callback.registerState(this, expose, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
 	

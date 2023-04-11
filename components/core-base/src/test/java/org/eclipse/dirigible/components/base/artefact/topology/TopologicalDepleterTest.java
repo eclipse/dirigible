@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.junit.jupiter.api.Test;
 
 public class TopologicalDepleterTest {
@@ -56,7 +57,7 @@ public class TopologicalDepleterTest {
 //		G
 		
 		TopologicalDepleter<DepletableNode> depleter = new TopologicalDepleter<>();
-		List<DepletableNode> results = depleter.deplete(list, "");
+		List<DepletableNode> results = depleter.deplete(list, ArtefactPhase.CREATE);
 		for (TopologicallyDepletable depletable : results) {
 			System.out.println(depletable.getId());
 		}
@@ -101,7 +102,7 @@ public class TopologicalDepleterTest {
 //		D
 		
 		TopologicalDepleter<DepletableNode> depleter = new TopologicalDepleter<>();
-		List<DepletableNode> results = depleter.deplete(list, "");
+		List<DepletableNode> results = depleter.deplete(list, ArtefactPhase.CREATE);
 		for (TopologicallyDepletable depletable : results) {
 			System.out.println(depletable.getId() + " remained");
 		}
@@ -127,7 +128,7 @@ public class TopologicalDepleterTest {
 		}
 
 		@Override
-		public boolean complete(String flow) {
+		public boolean complete(ArtefactPhase flow) {
 			if (completable == 0) {
 				System.out.println(this.id);
 				return true;

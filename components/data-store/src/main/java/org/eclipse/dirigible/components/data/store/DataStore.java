@@ -61,8 +61,6 @@ public class DataStore {
 	@Autowired
 	public DataStore(DataSourcesManager datasourcesManager) {
 		this.datasourcesManager = datasourcesManager;
-		this.dataSource = datasourcesManager.getDefaultDataSource();
-		initialize();
 	}
 	
 	/**
@@ -115,6 +113,9 @@ public class DataStore {
 	 * Initialize.
 	 */
 	public void initialize() {
+		if (this.dataSource == null) {
+			this.dataSource = datasourcesManager.getDefaultDataSource();
+		}
 		
 		Configuration configuration = new Configuration()
 				.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")

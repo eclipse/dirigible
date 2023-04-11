@@ -14,10 +14,12 @@ package org.eclipse.dirigible.components.base.artefact;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
 
 /**
@@ -28,7 +30,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	
 	/** The Constant KEY_SEPARATOR. */
 	public static final String KEY_SEPARATOR = ":";
-
+	
 	/** The location. */
 	@Column(name = "ARTEFACT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
@@ -64,8 +66,26 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	protected String dependencies;
 	
 	/** The lifecycle. */
-	@Transient
-	protected transient ArtefactLifecycle lifecycle;
+	@Column(name = "ARTEFACT_STATUS", columnDefinition = "VARCHAR", nullable = true, length = 32)
+	@Enumerated(EnumType.STRING)
+	@JsonIgnore
+	protected ArtefactLifecycle lifecycle;
+	
+	/** The phase. */
+	@Column(name = "ARTEFACT_PHASE", columnDefinition = "VARCHAR", nullable = true, length = 32)
+	@Enumerated(EnumType.STRING)
+	@JsonIgnore
+	protected ArtefactPhase phase;
+	
+	/** The description. */
+	@Column(name = "ARTEFACT_ERROR", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+	@Expose
+	protected String error;
+	
+	@Column(name = "ARTEFACT_RUNNING", columnDefinition = "BOOLEAN")
+	@JsonIgnore
+	private Boolean running;
+	
 	
 	
 	/**
@@ -109,7 +129,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 */
 	public void setLocation(String location) {
 		this.location = location;
-		updateKey();
+		//updateKey();
 	}
 	
 	/**
@@ -128,7 +148,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 */
 	public void setName(String name) {
 		this.name = name;
-		updateKey();
+		//updateKey();
 	}
 	
 	/**
@@ -247,6 +267,56 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	}
 	
 	/**
+	 * Gets the phase.
+	 *
+	 * @return the phase
+	 */
+	public ArtefactPhase getPhase() {
+		return phase;
+	}
+	
+	/**
+	 * Sets the phase.
+	 *
+	 * @param phase the new phase
+	 */
+	public void setPhase(ArtefactPhase phase) {
+		this.phase = phase;
+	}
+	
+	/**
+	 * Gets the error.
+	 *
+	 * @return the error
+	 */
+	public String getError() {
+		return error;
+	}
+	
+	/**
+	 * Sets the error.
+	 *
+	 * @param error the new error
+	 */
+	public void setError(String error) {
+		this.error = error;
+	}
+	
+	/**
+	 * @return the running
+	 */
+	public Boolean getRunning() {
+		return running;
+	}
+
+	/**
+	 * @param running the running to set
+	 */
+	public void setRunning(Boolean running) {
+		this.running = running;
+	}
+
+	/**
 	 * Update key.
 	 *
 	 */
@@ -255,11 +325,9 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 				&& this.location != null 
 				&& this.name != null) {
 			this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
+		} else {
+			throw new IllegalArgumentException(String.format("Attempt to generate an artefact key by type=[%s], location=[%s], name=[%s]", type, location, name));
 		}
-//		else {
-//			this.key = UUID.randomUUID().toString();
-//		}
-		
 	}
 
 	/**
@@ -269,10 +337,10 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 */
 	@Override
 	public String toString() {
-		return "Artefact [location=" + location + ", name=" + name + ", description=" + description + ", type=" + type
-				+ ", key=" + key + ", dependencies=" + dependencies
-				+ ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt="
-				+ updatedAt + "]";
+		return "Artefact [location=" + location + ", name=" + name + ", type=" + type + ", description=" + description
+				+ ", key=" + key + ", dependencies=" + dependencies + ", lifecycle=" + lifecycle
+				+ ", phase=" + phase + ", error=" + error + ", createdBy=" + createdBy + ", createdAt="
+				+ createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
 	
 }

@@ -26,7 +26,7 @@ import com.google.gson.annotations.Expose;
  * The Class TableConstraintForeignKey.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_TABLE_FOREIGNKEYS")
+@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_FOREIGNKEYS")
 public class TableConstraintForeignKey extends TableConstraint {
 	
 	/** The id. */

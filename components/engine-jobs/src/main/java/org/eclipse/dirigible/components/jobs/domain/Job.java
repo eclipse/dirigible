@@ -11,17 +11,26 @@
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.annotation.Transient;
 
 import com.google.gson.annotations.Expose;
-
-import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The Class Job.
@@ -353,6 +362,20 @@ public class Job extends Artefact {
     public List<JobParameter> getParameters() {
         return parameters;
     }
+    
+    /**
+	 * Get the parameter by name.
+	 *
+	 * @return the parameter
+	 */
+	public JobParameter getParameter(String name) {
+		for (JobParameter p : parameters) {
+			if (p.getName().equals(name)) {
+				return p;
+			}
+		}
+		return null;
+	}
 
     /**
      * Sets the parameters list.

@@ -14,6 +14,8 @@ package org.eclipse.dirigible.components.data.sources.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -207,14 +209,19 @@ public class DataSource extends Artefact {
 	public List<DataSourceProperty> getProperties() {
 		return properties;
 	}
-
+	
 	/**
-	 * Sets the properties.
+	 * Get the property by name.
 	 *
-	 * @param properties the properties to set
+	 * @return the property
 	 */
-	public void setColumns(List<DataSourceProperty> properties) {
-		this.properties = properties;
+	public DataSourceProperty getProperty(String name) {
+		for (DataSourceProperty p : properties) {
+			if (p.getName().equals(name)) {
+				return p;
+			}
+		}
+		return null;
 	}
 
 	/**

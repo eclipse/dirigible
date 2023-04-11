@@ -31,7 +31,7 @@ import com.google.gson.annotations.Expose;
  * The Class TableConstraintCheck.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_TABLE_CHECKS")
+@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_CHECKS")
 public class TableConstraintCheck extends TableConstraint {
 	
 	/** The id. */

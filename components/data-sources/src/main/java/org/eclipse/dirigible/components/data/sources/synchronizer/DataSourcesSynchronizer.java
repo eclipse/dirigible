@@ -19,14 +19,14 @@ import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
+import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +107,7 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 	 * @return the list
 	 */
 	@Override
-	public List<DataSource> load(String location, byte[] content) {
+	public List<DataSource> parse(String location, byte[] content) {
 		DataSource datasource = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), DataSource.class);
 		Configuration.configureObject(datasource);
 		datasource.setLocation(location);
@@ -117,42 +117,47 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 			DataSource maybe = getService().findByKey(datasource.getKey());
 			if (maybe != null) {
 				datasource.setId(maybe.getId());
+				datasource.getProperties().forEach(p -> {
+					DataSourceProperty m = maybe.getProperty(p.getName());
+					if (m != null) {
+						p.setId(m.getId());
+					}
+				});
 			}
 			datasource.getProperties().forEach(p -> p.setDatasource(datasource));
-			getService().save(datasource);
+			DataSource result = getService().save(datasource);
+			return List.of(result);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("datasource: {}", datasource);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
 		}
-		return List.of(datasource);
+		return null;
 	}
 	
 	/**
-	 * Prepare.
+	 * Retrieve.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param location the location
+	 * @return the list
 	 */
 	@Override
-	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
+	public List<DataSource> retrieve(String location) {
+		return getService().getAll();
 	}
 	
 	/**
-	 * Process.
+	 * Sets the status.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
 	 */
 	@Override
-	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-			callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((DataSource) artefact);
 	}
 	
 	/**
@@ -163,8 +168,8 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
+	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 		return true;
 	}
 
@@ -178,12 +183,11 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 		try {
 			if (!"_".equals(datasource.getLocation())) {
 				getService().delete(datasource);
-				callback.registerState(this, datasource, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 			}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, datasource, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+			callback.registerState(this, datasource, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
 	

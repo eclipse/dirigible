@@ -13,7 +13,6 @@ package org.eclipse.dirigible.components.data.structures.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.annotation.Nullable;
 import javax.persistence.CascadeType;
@@ -182,6 +181,20 @@ public class Table extends Artefact {
 	public void setColumns(List<TableColumn> columns) {
 		this.columns = columns;
 	}
+	
+	/**
+	 * Get the column by name.
+	 *
+	 * @return the column
+	 */
+	public TableColumn getColumn(String name) {
+		for (TableColumn c : columns) {
+			if (c.getName().equals(name)) {
+				return c;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Gets the indexes.
@@ -199,6 +212,23 @@ public class Table extends Artefact {
 	 */
 	public void setIndexes(List<TableIndex> indexes) {
 		this.indexes = indexes;
+	}
+	
+	/**
+	 * Get the index by name.
+	 *
+	 * @return the index
+	 */
+	public TableIndex getIndex(String name) {
+		final List<TableIndex> indexesList = indexes;
+		if (indexesList != null) {
+			for (TableIndex i : indexesList) {
+				if (i.getName().equals(name)) {
+					return i;
+				}
+			}
+		}
+		return null;
 	}
 	
 	/**

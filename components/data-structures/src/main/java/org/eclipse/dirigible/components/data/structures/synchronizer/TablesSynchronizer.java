@@ -11,29 +11,29 @@
  */
 package org.eclipse.dirigible.components.data.structures.synchronizer;
 
-import static java.text.MessageFormat.format;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
-import org.eclipse.dirigible.components.data.structures.domain.TableLifecycle;
+import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintCheck;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraintUnique;
+import org.eclipse.dirigible.components.data.structures.domain.TableIndex;
 import org.eclipse.dirigible.components.data.structures.service.TableService;
 import org.eclipse.dirigible.components.data.structures.synchronizer.table.TableAlterProcessor;
 import org.eclipse.dirigible.components.data.structures.synchronizer.table.TableCreateProcessor;
@@ -124,7 +124,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 * @return the list
 	 */
 	@Override
-	public List<Table> load(String location, byte[] content) {
+	public List<Table> parse(String location, byte[] content) {
 		Table table = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Table.class);
 		Configuration.configureObject(table);
 		table.setLocation(location);
@@ -157,112 +157,88 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 			Table maybe = getService().findByKey(table.getKey());
 			if (maybe != null) {
 				table.setId(maybe.getId());
-				table.getConstraints().setId(maybe.getConstraints().getId());
+				table.getColumns().forEach(c -> {
+					TableColumn m = maybe.getColumn(c.getName());
+					if (m != null) {
+						c.setId(m.getId());
+					}
+				});
+				if (table.getIndexes() != null) {
+					table.getIndexes().forEach(i -> {
+						TableIndex m = maybe.getIndex(i.getName());
+						if (m != null) {
+							i.setId(m.getId());
+						}
+					});
+				}
+				if (table.getConstraints() != null) {
+					table.getConstraints().setId(maybe.getConstraints().getId());
+					if (table.getConstraints().getPrimaryKey() != null
+							&& maybe.getConstraints().getPrimaryKey() != null) {
+						table.getConstraints().getPrimaryKey().setId(maybe.getConstraints().getPrimaryKey().getId());
+					}
+					if (table.getConstraints().getForeignKeys() != null
+							&& maybe.getConstraints().getForeignKeys() != null) {
+						table.getConstraints().getForeignKeys().forEach(fk -> {
+							TableConstraintForeignKey m = maybe.getConstraints().getForeignKey(fk.getName());
+							if (m != null) {
+								fk.setId(m.getId());
+							}
+						});
+					}
+					if (table.getConstraints().getUniqueIndexes() != null
+							&& maybe.getConstraints().getUniqueIndexes() != null) {
+						table.getConstraints().getUniqueIndexes().forEach(ui -> {
+							TableConstraintUnique m = maybe.getConstraints().getUniqueIndex(ui.getName());
+							if (m != null) {
+								ui.setId(m.getId());
+							}
+						});
+					}
+					if (table.getConstraints().getChecks() != null
+							&& maybe.getConstraints().getChecks() != null) {
+						table.getConstraints().getChecks().forEach(ck -> {
+							TableConstraintCheck m = maybe.getConstraints().getCheck(ck.getName());
+							if (m != null) {
+								ck.setId(m.getId());
+							}
+						});
+					}
+				}
 			}
-			getService().save(table);
+			Table result = getService().save(table);
+			return List.of(result);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("table: {}", table);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
 		}
-		return List.of(table);
-	}
-
-	/**
-	 * Prepare.
-	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
-	 */
-	@Override
-	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-//		// drop tables' foreign keys in a reverse order
-//		try {
-//			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.FOREIGN_KEYS_DROP.toString());
-//			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_DROP.toString(), ArtefactState.FAILED_DELETE);
-//		} catch (Exception e) {
-//			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-//			callback.addError(e.getMessage());
-//		}
-//		
-//		// drop tables in a reverse order
-//		try {
-//			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, TableLifecycle.DROP.toString());
-//			callback.registerErrors(this, results, TableLifecycle.DROP.toString(), ArtefactState.FAILED_DELETE);
-//		} catch (Exception e) {
-//			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-//			callback.addError(e.getMessage());
-//		}
+		return null;
 	}
 	
 	/**
-	 * Process.
+	 * Retrieve.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param location the location
+	 * @return the list
 	 */
 	@Override
-	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-		
-		List<TopologyWrapper<? extends Artefact>> wrappersCreate = new ArrayList<TopologyWrapper<? extends Artefact>>();
-		for (TopologyWrapper<? extends Artefact> t : wrappers) {
-			if (t.getArtefact().getLifecycle().equals(ArtefactLifecycle.INITIAL)) {
-				wrappersCreate.add(t);
-			}
-		}
-		
-		// process create tables
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappersCreate, TableLifecycle.CREATE.toString());
-			callback.registerErrors(this, results, TableLifecycle.CREATE.toString(), ArtefactState.FAILED_CREATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
-		
-		// process create tables foreign keys
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappersCreate, TableLifecycle.FOREIGN_KEYS_CREATE.toString());
-			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_CREATE.toString(), ArtefactState.FAILED_CREATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
-		
-		List<TopologyWrapper<? extends Artefact>> wrappersUpdate = new ArrayList<TopologyWrapper<? extends Artefact>>();
-		for (TopologyWrapper<? extends Artefact> t : wrappers) {
-			if (t.getArtefact().getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
-				wrappersUpdate.add(t);
-			}
-		}
-		
-		// process drop tables foreign keys
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappersUpdate, TableLifecycle.FOREIGN_KEYS_DROP.toString());
-			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_DROP.toString(), ArtefactState.FAILED_DELETE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
-		
-		// process alter tables
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappersUpdate, TableLifecycle.UPDATE.toString());
-			callback.registerErrors(this, results, TableLifecycle.UPDATE.toString(), ArtefactState.FAILED_UPDATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
-		
-		// process create tables foreign keys
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappersUpdate, TableLifecycle.FOREIGN_KEYS_CREATE.toString());
-			callback.registerErrors(this, results, TableLifecycle.FOREIGN_KEYS_CREATE.toString(), ArtefactState.FAILED_CREATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
-		
+	public List<Table> retrieve(String location) {
+		return getService().getAll();
+	}
+	
+	/**
+	 * Sets the status.
+	 *
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
+	 */
+	@Override
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((Table) artefact);
 	}
 
 	/**
@@ -273,7 +249,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 		
 		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
 		
@@ -284,64 +260,68 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 				throw new UnsupportedOperationException(String.format("Trying to process %s as Table", wrapper.getArtefact().getClass()));
 			}
 			
-			TableLifecycle flag = TableLifecycle.valueOf(flow);
-			switch (flag) {
-			case UPDATE:
-				executeTableUpdate(connection, table);
-				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
-				break;
+			switch (flow) {
 			case CREATE:
-				if (!SqlFactory.getNative(connection).exists(connection, table.getName())) {
-					try {
-						executeTableCreate(connection, table);
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
-					} catch (Exception e) {
-						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, e.getMessage());
-					}
-				} else {
-					if (logger.isWarnEnabled()) {logger.warn(format("Table [{0}] already exists during the update process", table.getName()));}
-					if (SqlFactory.getNative(connection).count(connection, table.getName()) != 0) {
-						executeTableAlter(connection, table);
-						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
-					}
-				}
-				break;
-			case FOREIGN_KEYS_CREATE:
-				executeTableForeignKeysCreate(connection, table);
-				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
-				break;
-			case ALTER:
-				executeTableAlter(connection, table);
-				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
-				break;
-			case DROP:
-				if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
-					if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
-						executeTableDrop(connection, table);
-						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
+				if (table.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+					if (!SqlFactory.getNative(connection).exists(connection, table.getName())) {
+						try {
+							executeTableCreate(connection, table);
+						} catch (Exception e) {
+							if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+							callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
+						}
 					} else {
-						String message = format("Table [{1}] cannot be deleted during the update process, because it is not empty", table.getName());
-						if (logger.isWarnEnabled()) {logger.warn(message);}
-						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, message);
+						if (logger.isWarnEnabled()) {logger.warn(String.format("Table [%s] already exists during the update process", table.getName()));}
+						if (SqlFactory.getNative(connection).count(connection, table.getName()) != 0) {
+							executeTableAlter(connection, table);
+							callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+						}
+					}
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				}
+				break;
+//			case POST_CREATE:
+//				if (table.getLifecycle().equals(ArtefactLifecycle.CREATED)) {
+//					executeTableForeignKeysCreate(connection, table);
+//					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+//				}
+//				break;
+			case UPDATE:
+				if (table.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+					executeTableUpdate(connection, table);
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+				}
+				break;
+			case DELETE:
+				if (table.getLifecycle().equals(ArtefactLifecycle.CREATED)) { 
+					if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
+						if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
+							executeTableDrop(connection, table);
+							callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+						} else {
+							String message = String.format("Table [%s] cannot be deleted during the update process, because it is not empty", table.getName());
+							if (logger.isWarnEnabled()) {logger.warn(message);}
+							callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, message);
+						}
 					}
 				}
 				break;
-			case FOREIGN_KEYS_DROP:
-				if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
-					executeTableForeignKeysDrop(connection, table);
-					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
-				}
-				break;
-			default:
-				callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, "Unknown flow: " + flow);
-				throw new UnsupportedOperationException(flow);
+//			case POST_DELETE:
+//				if (table.getLifecycle().equals(ArtefactLifecycle.DELETED)) {
+//					if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
+//						executeTableForeignKeysDrop(connection, table);
+//						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+//					}
+//				}
+			case START:
+			case STOP:
 			}
+			
 			return true;
 		} catch (SQLException e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, e.getMessage());
+			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
 			return false;
 		}
 	}
@@ -353,13 +333,20 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 */
 	@Override
 	public void cleanup(Table table) {
-		try {
-			getService().delete(table);
-			callback.registerState(this, table, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
+		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()){
+			if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
+				if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
+					executeTableDrop(connection, table);
+					getService().delete(table);
+				} else {
+					String message = String.format("Table [%s] cannot be deleted during the update process, because it is not empty", table.getName());
+					if (logger.isWarnEnabled()) {logger.warn(message);}
+				}
+			}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, table, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+			callback.registerState(this, table, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
 	

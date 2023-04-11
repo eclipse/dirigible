@@ -134,7 +134,7 @@ public class ExposesSynchronizerTest {
 	 */
 	@Test
     public void load() {
-		List<Expose> list = exposesSynchronizer.load("/load/project.json", content.getBytes());
+		List<Expose> list = exposesSynchronizer.parse("/load/project.json", content.getBytes());
 		assertNotNull(list);
 		assertEquals("/load/project.json", list.get(0).getLocation());
 		assertEquals(2, list.get(0).getExposes().length);

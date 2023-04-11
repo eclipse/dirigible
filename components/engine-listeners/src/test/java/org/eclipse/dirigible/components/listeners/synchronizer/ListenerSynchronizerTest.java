@@ -56,7 +56,7 @@ public class ListenerSynchronizerTest {
     @Test
     public void load() {
         String content = "{\"location\":\"/control/control.listener\",\"name\":\"/control/control\",\"kind\":\"Q\",\"handler\":\"control/handler.js\",\"description\":\"Control Listener\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
-        List<Listener> list = listenerSynchronizer.load("/test/test.listener", content.getBytes());
+        List<Listener> list = listenerSynchronizer.parse("/test/test.listener", content.getBytes());
         assertNotNull(list);
         assertEquals("/test/test.listener", list.get(0).getLocation());
     }

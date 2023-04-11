@@ -21,8 +21,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
@@ -117,14 +117,14 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
      * @return the list
      */
     @Override
-    public List<OData> load(String location, byte[] content) {
+    public List<OData> parse(String location, byte[] content) {
     	OData odata = parseOData(location, content);
         try {
         	OData maybe = getService().findByKey(odata.getKey());
 			if (maybe != null) {
 				odata.setId(maybe.getId());
 			}
-            getService().save(odata);
+			odata = getService().save(odata);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             if (logger.isErrorEnabled()) {logger.error("odata: {}", odata);}
@@ -132,6 +132,31 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
         }
         return List.of(odata);
     }
+    
+    /**
+	 * Retrieve.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	public List<OData> retrieve(String location) {
+		return getService().getAll();
+	}
+	
+	/**
+	 * Sets the status.
+	 *
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
+	 */
+	@Override
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((OData) artefact);
+	}
 
 	/**
 	 * Parses the O data.
@@ -159,43 +184,6 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 	}
 
     /**
-     * Prepare.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-    	
-    	// drop odata metadata in a reverse order
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.DELETED.toString());
-			callback.registerErrors(this, results, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
-
-    }
-
-    /**
-     * Process.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-        try {
-            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-            callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            callback.addError(e.getMessage());
-        }
-    }
-
-    /**
      * Gets the service.
      *
      * @return the service
@@ -213,10 +201,9 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         
         try {
-    		
 			OData odata = null;
 			if (wrapper.getArtefact() instanceof OData) {
 				odata = (OData) wrapper.getArtefact();
@@ -224,53 +211,79 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 				throw new UnsupportedOperationException(String.format("Trying to process %s as OData", wrapper.getArtefact().getClass()));
 			}
 			
-			ArtefactLifecycle flag = ArtefactLifecycle.valueOf(flow);
-			switch (flag) {
-			case DELETED:
-				// CLEAN UP LOGIC
-				odataSchemaService.removeSchema(odata.getLocation());
-				odataContainerService.removeContainer(odata.getLocation());
-				odataMappingService.removeMappings(odata.getLocation());
-				odataHandlerService.removeHandlers(odata.getLocation());
-				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
-				break;
-			case CREATED:
-				// METADATA AND MAPPINGS GENERATION LOGIC
-				String[] odataxc = generateODataSchema(odata);
-				String odatax = odataxc[0];
-				String odatac = odataxc[1];
-				ODataSchema odataSchema = new ODataSchema(odata.getLocation(), odata.getName(), null, null, odatax.getBytes());
-				odataSchemaService.save(odataSchema);
-				ODataContainer odataContainer = new ODataContainer(odata.getLocation(), odata.getName(), null, null, odatac.getBytes());
-				odataContainerService.save(odataContainer);
-				
-				String[] odatams = generateODataMappings(odata);
-				int i=1;
-				for (String odatam : odatams) {
-					ODataMapping odataMapping = new ODataMapping(odata.getLocation(), odata.getName() + "#" + i++, null, null, odatam.getBytes());
-					odataMappingService.save(odataMapping);
+			switch (flow) {
+			case CREATE:
+				if (odata.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+					generateOData(odata);
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 				}
-				
-				List<ODataHandler> odatahs = generateODataHandlers(odata);
-				for (ODataHandler odatah : odatahs) {
-					ODataHandler odataHandler = new ODataHandler(odata.getLocation(), odatah.getName() + "#" + i++, null, null, 
-							odatah.getNamespace(), odatah.getMethod(), odatah.getKind(), odatah.getHandler());
-					odataHandlerService.save(odataHandler);
-				}
-				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
 				break;
-			default:
-				callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, "Unknown flow: " + flow);
-				throw new UnsupportedOperationException(flow);
+			case UPDATE:
+				if (odata.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+					cleanupOData(odata);
+					generateOData(odata);
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+				}
+				break;
+			case DELETE:
+				if (odata.getLifecycle().equals(ArtefactLifecycle.CREATED)) {
+					cleanupOData(odata);
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+				}
+				break;
 			}
 			return true;
 		} catch (SQLException e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, e.getMessage());
+			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
 			return false;
 		}
     }
+
+	/**
+	 * Generate O data.
+	 *
+	 * @param odata the odata
+	 * @throws SQLException the SQL exception
+	 */
+	public void generateOData(OData odata) throws SQLException {
+		// METADATA AND MAPPINGS GENERATION LOGIC
+		String[] odataxc = generateODataSchema(odata);
+		String odatax = odataxc[0];
+		String odatac = odataxc[1];
+		ODataSchema odataSchema = new ODataSchema(odata.getLocation(), odata.getName(), null, null, odatax.getBytes());
+		odataSchemaService.save(odataSchema);
+		ODataContainer odataContainer = new ODataContainer(odata.getLocation(), odata.getName(), null, null, odatac.getBytes());
+		odataContainerService.save(odataContainer);
+		
+		String[] odatams = generateODataMappings(odata);
+		int i=1;
+		for (String odatam : odatams) {
+			ODataMapping odataMapping = new ODataMapping(odata.getLocation(), odata.getName() + "#" + i++, null, null, odatam.getBytes());
+			odataMappingService.save(odataMapping);
+		}
+		
+		List<ODataHandler> odatahs = generateODataHandlers(odata);
+		for (ODataHandler odatah : odatahs) {
+			ODataHandler odataHandler = new ODataHandler(odata.getLocation(), odatah.getName() + "#" + i++, null, null, 
+					odatah.getNamespace(), odatah.getMethod(), odatah.getKind(), odatah.getHandler());
+			odataHandlerService.save(odataHandler);
+		}
+	}
+
+	/**
+	 * Cleanup O data.
+	 *
+	 * @param odata the odata
+	 */
+	public void cleanupOData(OData odata) {
+		// CLEAN UP LOGIC
+		odataSchemaService.removeSchema(odata.getLocation());
+		odataContainerService.removeContainer(odata.getLocation());
+		odataMappingService.removeMappings(odata.getLocation());
+		odataHandlerService.removeHandlers(odata.getLocation());
+	}
     
     /**
      * Cleanup.
@@ -280,16 +293,15 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
     @Override
     public void cleanup(OData odata) {
         try {
-            getService().delete(odata);
             odataSchemaService.removeSchema(odata.getLocation());
 			odataContainerService.removeContainer(odata.getLocation());
 			odataMappingService.removeMappings(odata.getLocation());
 			odataHandlerService.removeHandlers(odata.getLocation());
-            callback.registerState(this, odata, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
+			getService().delete(odata);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, odata, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, "");
+            callback.registerState(this, odata, ArtefactLifecycle.DELETED, "");
         }
     }
 

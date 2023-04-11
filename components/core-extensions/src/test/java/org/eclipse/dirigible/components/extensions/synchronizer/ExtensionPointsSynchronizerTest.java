@@ -107,7 +107,7 @@ public class ExtensionPointsSynchronizerTest {
 	@Test
     public void load() {
 		String content = "{\"location\":\"/test/test.extensionpoint\",\"name\":\"/test/test\",\"description\":\"Test Extension Point\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
-		List<ExtensionPoint> list = extensionPointsSynchronizer.load("/test/test.extensionpoint", content.getBytes());
+		List<ExtensionPoint> list = extensionPointsSynchronizer.parse("/test/test.extensionpoint", content.getBytes());
 		assertNotNull(list);
 		assertEquals("/test/test.extensionpoint", list.get(0).getLocation());
     }

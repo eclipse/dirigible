@@ -116,7 +116,7 @@ public class TablesSynchronizerTest {
 	@Test
     public void load() {
 		String content = "{\"location\":\"/test/test.table\",\"name\":\"/test/test\",\"description\":\"Test Table\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
-		List<Table> list = tablesSynchronizer.load("/test/test.table", content.getBytes());
+		List<Table> list = tablesSynchronizer.parse("/test/test.table", content.getBytes());
 		assertNotNull(list);
 		assertEquals("/test/test.table", list.get(0).getLocation());
     }

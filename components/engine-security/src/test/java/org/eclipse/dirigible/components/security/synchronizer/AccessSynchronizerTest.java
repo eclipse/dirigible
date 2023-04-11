@@ -110,7 +110,7 @@ class AccessSynchronizerTest {
     @Test
     public void testLoad() throws IOException {
         byte[] content = AccessSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.access").readAllBytes();
-        List<Access> list = accessSynchronizer.load("/META-INF/dirigible/test/test.access", content);
+        List<Access> list = accessSynchronizer.parse("/META-INF/dirigible/test/test.access", content);
         assertNotNull(list);
         assertTrue(list.size() > 0);
         assertEquals("/META-INF/dirigible/test/test.access", list.get(0).getLocation());

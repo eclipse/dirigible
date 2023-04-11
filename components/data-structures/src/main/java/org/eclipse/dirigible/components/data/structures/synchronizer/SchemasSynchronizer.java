@@ -25,22 +25,21 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.Schema;
-import org.eclipse.dirigible.components.data.structures.domain.SchemaLifecycle;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
 import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
 import org.eclipse.dirigible.components.data.structures.domain.View;
 import org.eclipse.dirigible.components.data.structures.service.SchemaService;
 import org.eclipse.dirigible.components.data.structures.synchronizer.schema.SchemaCreateProcessor;
-import org.eclipse.dirigible.components.data.structures.synchronizer.schema.SchemaDropProcessor;
+import org.eclipse.dirigible.components.data.structures.synchronizer.schema.SchemaUpdateProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,7 +128,7 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 * @return the list
 	 */
 	@Override
-	public List<Schema> load(String location, byte[] content) {
+	public List<Schema> parse(String location, byte[] content) {
 		Schema schema = parseSchema(location, new String(content, StandardCharsets.UTF_8));
 		Configuration.configureObject(schema);
 		schema.setLocation(location);
@@ -144,7 +143,7 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 			if (maybe != null) {
 				schema.setId(maybe.getId());
 			}
-			getService().save(schema);
+			schema = getService().save(schema);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("schema: {}", schema);}
@@ -152,43 +151,30 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 		}
 		return List.of(schema);
 	}
-
+	
 	/**
-	 * Prepare.
+	 * Retrieve.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param location the location
+	 * @return the list
 	 */
 	@Override
-	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-//		// drop schemas in a reverse order
-//		try {
-//			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, SchemaLifecycle.DROP.toString());
-//			callback.registerErrors(this, results, SchemaLifecycle.DROP.toString(), ArtefactState.FAILED_DELETE);
-//		} catch (Exception e) {
-//			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-//			callback.addError(e.getMessage());
-//		}
+	public List<Schema> retrieve(String location) {
+		return getService().getAll();
 	}
 	
 	/**
-	 * Process.
+	 * Sets the status.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
 	 */
 	@Override
-	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-		
-		// process schemas
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, SchemaLifecycle.CREATE.toString());
-			callback.registerErrors(this, results, SchemaLifecycle.CREATE.toString(), ArtefactState.FAILED_CREATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
-		
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((Schema) artefact);
 	}
 
 	/**
@@ -199,7 +185,7 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 		
 		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
 		
@@ -210,34 +196,38 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 				throw new UnsupportedOperationException(String.format("Trying to process %s as Schema", wrapper.getArtefact().getClass()));
 			}
 			
-			SchemaLifecycle flag = SchemaLifecycle.valueOf(flow);
-			switch (flag) {
-			case UPDATE:
-				executeSchemaUpdate(connection, schema);
-				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
-				break;
+			switch (flow) {
 			case CREATE:
-				try {
-					executeSchemaCreate(connection, schema);
-					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
-				} catch (Exception e) {
-					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, e.getMessage());
+				if (schema.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+					try {
+						executeSchemaCreate(connection, schema);
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+					} catch (Exception e) {
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
+					}
 				}
 				break;
-			case DROP:
-				executeSchemaDrop(connection, schema);
-				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
+			case UPDATE:
+				if (schema.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+					executeSchemaUpdate(connection, schema);
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+				}
 				break;
-			default:
-				callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, "Unknown flow: " + flow);
-				throw new UnsupportedOperationException(flow);
+			case DELETE:
+				executeSchemaDrop(connection, schema);
+				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+				break;
+			case START:
+			case STOP:
 			}
+			
 			return true;
+			
 		} catch (SQLException e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, e.getMessage());
+			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
 			return false;
 		}
 	}
@@ -251,11 +241,10 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	public void cleanup(Schema schema) {
 		try {
 			getService().delete(schema);
-			callback.registerState(this, schema, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, schema, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+			callback.registerState(this, schema, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
 	
@@ -282,8 +271,7 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	public void executeSchemaUpdate(Connection connection, Schema schemaModel) throws SQLException {
 		if (logger.isInfoEnabled()) {logger.info("Processing Update Schema: " + schemaModel.getName());}
 		if (SqlFactory.getNative(connection).exists(connection, schemaModel.getName())) {
-			executeSchemaDrop(connection, schemaModel);
-			executeSchemaCreate(connection, schemaModel);
+			SchemaUpdateProcessor.execute(connection, schemaModel);
 		} else {
 			executeSchemaCreate(connection, schemaModel);
 		}
@@ -314,7 +302,7 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 *             the SQL exception
 	 */
 	public void executeSchemaDrop(Connection connection, Schema schemaModel) throws SQLException {
-		SchemaDropProcessor.execute(connection, schemaModel);
+//		SchemaDropProcessor.execute(connection, schemaModel);
 	}
 	
 	/**

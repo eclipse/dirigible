@@ -108,7 +108,7 @@ class OpenAPISynchronizerTest {
     public void testLoad() throws IOException {
         byte[] content =
                 OpenAPISynchronizer.class.getResourceAsStream("/META-INF/dirigible/test/test.openapi").readAllBytes();
-        List<OpenAPI> list = openAPISynchronizer.load("/META-INF/dirigible/test/test.openapi", content);
+        List<OpenAPI> list = openAPISynchronizer.parse("/META-INF/dirigible/test/test.openapi", content);
         assertNotNull(list);
         assertEquals("/META-INF/dirigible/test/test.openapi", list.get(0).getLocation());
     }

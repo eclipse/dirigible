@@ -458,13 +458,16 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	 */
 	@Override
 	public boolean exists(Connection connection, String schema, String table, int type) throws SQLException {
+		boolean exists = false;
 		table = normalizeTableName(table);
 		DatabaseMetaData metadata = connection.getMetaData();
 		ResultSet resultSet = metadata.getTables(null, schema, normalizeTableName(table), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
-		if (resultSet.next()) {
-			return true;
+		exists = resultSet != null && resultSet.next();
+		if (!exists) {
+			resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table.toUpperCase()), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+			exists = resultSet != null && resultSet.next();
 		}
-		return false;
+		return exists;
 	}
 
 	/**

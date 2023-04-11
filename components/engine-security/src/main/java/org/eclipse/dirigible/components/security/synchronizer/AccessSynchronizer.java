@@ -14,13 +14,14 @@ package org.eclipse.dirigible.components.security.synchronizer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
@@ -117,11 +118,12 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * @return the list
      */
     @Override
-    public List<Access> load(String location, byte[] content) {
+    public List<Access> parse(String location, byte[] content) {
         Constraints constraints = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
         Configuration.configureObject(constraints);
 
         List<Access> accesses = constraints.buildSecurityAccesses(location);
+        List<Access> result = new ArrayList<Access>();
 
         for (Access access : accesses) {
             try {
@@ -130,7 +132,9 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     			if (maybe != null) {
     				access.setId(maybe.getId());
     			}
-                getService().save(access);
+    			access = getService().save(access);
+                result.add(access);
+                return result;
             } catch (Exception e) {
                 if (logger.isErrorEnabled()) {
                     logger.error(e.getMessage(), e);
@@ -144,37 +148,33 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
             }
         }
 
-        return accesses;
+        return null;
     }
-
+    
     /**
-     * Prepare.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-    }
-
-    /**
-     * Process.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-        try {
-            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-            callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-            callback.addError(e.getMessage());
-        }
-    }
+	 * Retrieve.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	public List<Access> retrieve(String location) {
+		return getService().getAll();
+	}
+	
+	/**
+	 * Sets the status.
+	 *
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
+	 */
+	@Override
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((Access) artefact);
+	}
 
     /**
      * Complete.
@@ -184,8 +184,8 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
+    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
         return true;
     }
 
@@ -198,11 +198,10 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
     public void cleanup(Access access) {
         try {
             getService().delete(access);
-            callback.registerState(this, access, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, access, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+            callback.registerState(this, access, ArtefactLifecycle.DELETED, e.getMessage());
         }
     }
 

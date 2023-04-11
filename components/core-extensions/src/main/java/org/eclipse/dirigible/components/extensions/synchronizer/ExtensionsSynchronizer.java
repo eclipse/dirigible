@@ -19,8 +19,8 @@ import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
@@ -107,7 +107,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 * @return the list
 	 */
 	@Override
-	public List<Extension> load(String location, byte[] content) {
+	public List<Extension> parse(String location, byte[] content) {
 		Extension extension = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Extension.class);
 		Configuration.configureObject(extension);
 		extension.setLocation(location);
@@ -119,7 +119,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 			if (maybe != null) {
 				extension.setId(maybe.getId());
 			}
-			getService().save(extension);
+			extension = getService().save(extension);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("extension: {}", extension);}
@@ -129,30 +129,28 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	}
 	
 	/**
-	 * Prepare.
+	 * Retrieve.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param location the location
+	 * @return the list
 	 */
 	@Override
-	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
+	public List<Extension> retrieve(String location) {
+		return getService().getAll();
 	}
 	
 	/**
-	 * Process.
+	 * Sets the status.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
 	 */
 	@Override
-	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-			callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((Extension) artefact);
 	}
 	
 	/**
@@ -163,8 +161,8 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
+	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 		return true;
 	}
 
@@ -177,11 +175,10 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	public void cleanup(Extension extension) {
 		try {
 			getService().delete(extension);
-			callback.registerState(this, extension, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, extension, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+			callback.registerState(this, extension, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
 	

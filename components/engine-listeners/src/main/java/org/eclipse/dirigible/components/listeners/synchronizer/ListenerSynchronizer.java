@@ -19,8 +19,8 @@ import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
@@ -92,7 +92,7 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
      * @return the list
      */
     @Override
-    public List<Listener> load(String location, byte[] content) {
+    public List<Listener> parse(String location, byte[] content) {
         Listener listener = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Listener.class);
         Configuration.configureObject(listener);
         listener.setLocation(location);
@@ -103,7 +103,7 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
 			if (maybe != null) {
 				listener.setId(maybe.getId());
 			}
-            getService().save(listener);
+			listener = getService().save(listener);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             if (logger.isErrorEnabled()) {logger.error("listener: {}", listener);}
@@ -111,34 +111,31 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
         }
         return List.of(listener);
     }
-
+    
     /**
-     * Prepare.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-
-    }
-
-    /**
-     * Process.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-        try {
-            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-            callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            callback.addError(e.getMessage());
-        }
-    }
+	 * Retrieve.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	public List<Listener> retrieve(String location) {
+		return getService().getAll();
+	}
+	
+	/**
+	 * Sets the status.
+	 *
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
+	 */
+	@Override
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((Listener) artefact);
+	}
 
     /**
      * Gets the service.
@@ -158,44 +155,76 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-    	Listener listener = null;
-        if (wrapper.getArtefact() instanceof Listener){
-            listener = (Listener) wrapper.getArtefact();
-            ArtefactLifecycle flag = ArtefactLifecycle.valueOf(flow);
-            switch (flag){
-                case CREATED:
-					try {
-						listenersManager.startListener(listener);
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
-					} catch (Exception e) {
-						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			            callback.addError(e.getMessage());
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, e.getMessage());
-					}
-                    break;
-                case UPDATED:
-                	try {
-                		listenersManager.stopListener(listener);
-						listenersManager.startListener(listener);
-						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
-					} catch (Exception e) {
-						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			            callback.addError(e.getMessage());
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_UPDATE, e.getMessage());
-					}
-                    break;
-                default:
-    				callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, "Unknown flow: " + flow);
-    				throw new UnsupportedOperationException(flow);
-            }
-        } else {
-            String message = String.format("Trying to process %s as Listener", wrapper.getArtefact().getClass());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, message);
-			throw new UnsupportedOperationException(message);
-        }
-        
-        return true;
+    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+        Listener listener = null;
+		if (wrapper.getArtefact() instanceof Listener) {
+			listener = (Listener) wrapper.getArtefact();
+		} else {
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Listener", wrapper.getArtefact().getClass()));
+		}
+		
+		switch (flow) {
+		case CREATE:
+			if (listener.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+				try {
+					listenersManager.startListener(listener);
+					listener.setRunning(true);
+					getService().save(listener);
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
+				}
+			}
+			break;
+		case UPDATE:
+			if (listener.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				try {
+            		listenersManager.stopListener(listener);
+            		listener.setRunning(false);
+            		getService().save(listener);
+					listenersManager.startListener(listener);
+					listener.setRunning(true);
+					getService().save(listener);
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
+				}
+			}
+			break;
+		case DELETE:
+		case START:
+			if (listener.getRunning() == null || !listener.getRunning()) {
+				try {
+					listenersManager.startListener(listener);
+					listener.setRunning(true);
+					getService().save(listener);
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				}
+			}
+			break;
+		case STOP:
+			if (listener.getRunning()) {
+				try {
+					listenersManager.stopListener(listener);
+            		listener.setRunning(false);
+            		getService().save(listener);
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				}
+			}
+			break;
+		}
+		
+		return true;
     }
     
     /**
@@ -208,11 +237,10 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
         try {
         	listenersManager.stopListener(listener);
             getService().delete(listener);
-            callback.registerState(this, listener, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, listener, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+            callback.registerState(this, listener, ArtefactLifecycle.DELETED, e.getMessage());
         }
     }
 

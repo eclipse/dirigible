@@ -106,7 +106,7 @@ class SecurityRoleSynchronizerTest {
     public void testLoad() throws IOException {
         byte[] content =
                 SecurityRoleSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.role").readAllBytes();
-        List<Role> list = roleSynchronizer.load("/META-INF/dirigible/test/test.role", content);
+        List<Role> list = roleSynchronizer.parse("/META-INF/dirigible/test/test.role", content);
         assertNotNull(list);
         assertEquals("/META-INF/dirigible/test/test.role", list.get(0).getLocation());
     }

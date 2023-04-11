@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.components.base.artefact.topology;
 
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
+
 /**
  * The Interface ITopologicallyDepletable.
  */
@@ -29,6 +31,6 @@ public interface TopologicallyDepletable {
 	 * @param flow the flow
 	 * @return true, if successful
 	 */
-	public boolean complete(String flow);
+	public boolean complete(ArtefactPhase flow);
 
 }

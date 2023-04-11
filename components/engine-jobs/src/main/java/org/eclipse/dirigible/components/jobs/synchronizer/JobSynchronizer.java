@@ -20,14 +20,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.jobs.domain.Job;
+import org.eclipse.dirigible.components.jobs.domain.JobParameter;
 import org.eclipse.dirigible.components.jobs.manager.JobsManager;
 import org.eclipse.dirigible.components.jobs.service.JobEmailService;
 import org.eclipse.dirigible.components.jobs.service.JobLogService;
@@ -120,7 +120,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      * @return the list
      */
     @Override
-    public List<Job> load(String location, byte[] content) {
+    public List<Job> parse(String location, byte[] content) {
         Job job = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Job.class);
         Configuration.configureObject(job);
         job.setLocation(location);
@@ -132,42 +132,48 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
         	Job maybe = getService().findByKey(job.getKey());
 			if (maybe != null) {
 				job.setId(maybe.getId());
+				job.getParameters().forEach(p -> {
+					JobParameter m = maybe.getParameter(p.getName());
+					if (m != null) {
+						p.setId(m.getId());
+						p.setValue(m.getValue());
+					}
+				});
 			}
-            getService().save(job);
+			Job result = getService().save(job);
+			return List.of(result);
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             if (logger.isErrorEnabled()) {logger.error("job: {}", job);}
             if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
         }
-        return List.of(job);
+        return null;
     }
-
+    
     /**
-     * Prepare.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-    }
-
-    /**
-     * Process.
-     *
-     * @param wrappers the wrappers
-     * @param depleter the depleter
-     */
-    @Override
-    public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-        try {
-            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-            callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            callback.addError(e.getMessage());
-        }
-    }
+	 * Retrieve.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	public List<Job> retrieve(String location) {
+		return getService().getAll();
+	}
+	
+	/**
+	 * Sets the status.
+	 *
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
+	 */
+	@Override
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((Job) artefact);
+	}
 
     /**
      * Gets the service.
@@ -185,44 +191,76 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      * @return true, if successful
      */
     @Override
-    public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+    public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         Job job = null;
-        if (wrapper.getArtefact() instanceof Job){
-            job = (Job) wrapper.getArtefact();
-            ArtefactLifecycle flag = ArtefactLifecycle.valueOf(flow);
-            switch (flag){
-                case CREATED:
-					try {
-						schedulerManager.scheduleJob(job);
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE, "");
-					} catch (Exception e) {
-						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			            callback.addError(e.getMessage());
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE, "");
-					}
-                    break;
-                case UPDATED:
-                	try {
-                		schedulerManager.unscheduleJob(job.getName(), job.getGroup());
-						schedulerManager.scheduleJob(job);
-						callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED.toString(), ArtefactState.SUCCESSFUL_UPDATE, "");
-					} catch (Exception e) {
-						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			            callback.addError(e.getMessage());
-						callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_UPDATE, e.getMessage());
-					}
-                    break;
-                default:
-    				callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, "Unknown flow: " + flow);
-    				throw new UnsupportedOperationException(flow);
-            }
-        } else {
-            String message = String.format("Trying to process %s as Job", wrapper.getArtefact().getClass());
-            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED.toString(), ArtefactState.FAILED, message);
-			throw new UnsupportedOperationException(message);
-        }
-
-        return true;
+		if (wrapper.getArtefact() instanceof Job) {
+			job = (Job) wrapper.getArtefact();
+		} else {
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Job", wrapper.getArtefact().getClass()));
+		}
+		
+		switch (flow) {
+		case CREATE:
+			if (job.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+				try {
+					schedulerManager.scheduleJob(job);
+					job.setRunning(true);
+					getService().save(job);
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				}
+			}
+			break;
+		case UPDATE:
+			if (job.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				try {
+            		schedulerManager.unscheduleJob(job.getName(), job.getGroup());
+            		job.setRunning(false);
+            		getService().save(job);
+					schedulerManager.scheduleJob(job);
+					job.setRunning(true);
+					getService().save(job);
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
+				}
+			}
+			break;
+		case DELETE:
+		case START:
+			if (job.getRunning() == null || !job.getRunning()) {
+				try {
+					schedulerManager.scheduleJob(job);
+					job.setRunning(true);
+					getService().save(job);
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				}
+			}
+			break;
+		case STOP:
+			if (job.getRunning()) {
+				try {
+					schedulerManager.unscheduleJob(job.getName(), job.getGroup());
+					job.setRunning(false);
+					getService().save(job);
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				}
+			}
+			break;
+		}
+		
+		return true;
     }
     
     /**
@@ -237,11 +275,10 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
         	jobLogService.deleteAllByJobName(job.getName());
             jobEmailService.deleteAllByJobName(job.getName());
             getService().delete(job);
-            callback.registerState(this, job, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             callback.addError(e.getMessage());
-            callback.registerState(this, job, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+            callback.registerState(this, job, ArtefactLifecycle.DELETED, e.getMessage());
         }
     }
 

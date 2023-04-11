@@ -21,7 +21,7 @@ import javax.persistence.Id;
  * The Class TableConstraintPrimaryKey.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_TABLE_PRIMARYKEYS")
+@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_PRIMARYKEYS")
 public class TableConstraintPrimaryKey extends TableConstraint {
 	
 	/** The id. */

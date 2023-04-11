@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,13 +111,13 @@ public class TopologyWrapper<A extends Artefact> implements TopologicallySortabl
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(String flow) {
+	public boolean complete(ArtefactPhase flow) {
 		if (synchronizer.isAccepted(getArtefact().getType())) {
 			try {
-				if (getArtefact().getLifecycle().equals(ArtefactLifecycle.INITIAL)
-						|| getArtefact().getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+//				if (getArtefact().getLifecycle().equals(ArtefactLifecycle.NEW)
+//						|| getArtefact().getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
 					return synchronizer.complete((TopologyWrapper<Artefact>) this, flow);
-				}
+//				}
 			} catch (Exception e) {
 				if (logger.isErrorEnabled()) {logger.error("Complete failed in this cycle: " + e.getMessage(), e);}
 				return false;

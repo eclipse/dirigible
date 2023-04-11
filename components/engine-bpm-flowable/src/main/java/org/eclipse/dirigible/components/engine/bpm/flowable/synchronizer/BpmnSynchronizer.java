@@ -20,8 +20,8 @@ import java.util.List;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
@@ -124,7 +124,7 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 	 * @return the list
 	 */
 	@Override
-	public List<Bpmn> load(String location, byte[] content) {
+	public List<Bpmn> parse(String location, byte[] content) {
 		Bpmn bpmn = new Bpmn();
 		bpmn.setLocation(location);
 		bpmn.setName(Paths.get(location).getFileName().toString());
@@ -136,7 +136,7 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 			if (maybe != null) {
 				bpmn.setId(maybe.getId());
 			}
-			getService().save(bpmn);
+			bpmn = getService().save(bpmn);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("bpmn: {}", bpmn);}
@@ -146,30 +146,28 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 	}
 	
 	/**
-	 * Prepare.
+	 * Retrieve.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param location the location
+	 * @return the list
 	 */
 	@Override
-	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
+	public List<Bpmn> retrieve(String location) {
+		return getService().getAll();
 	}
 	
 	/**
-	 * Process.
+	 * Sets the status.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
 	 */
 	@Override
-	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-			callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((Bpmn) artefact);
 	}
 	
 	/**
@@ -180,7 +178,7 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
+	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 		
 		Bpmn bpmn = null;
 		if (wrapper.getArtefact() instanceof Bpmn) {
@@ -191,7 +189,7 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 		
 		deployOnProcessEngine(bpmn);
 		
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
+		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 		return true;
 	}
 
@@ -203,15 +201,12 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 	@Override
 	public void cleanup(Bpmn bpmn) {
 		try {
-			getService().delete(bpmn);
-			
 			removeFromProcessEngine(bpmn);
-			
-			callback.registerState(this, bpmn, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
+			getService().delete(bpmn);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, bpmn, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+			callback.registerState(this, bpmn, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
 	

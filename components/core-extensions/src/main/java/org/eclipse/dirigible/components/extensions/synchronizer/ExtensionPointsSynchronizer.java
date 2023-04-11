@@ -19,8 +19,8 @@ import java.util.List;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
+import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.ArtefactState;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
@@ -106,7 +106,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 * @return the list
 	 */
 	@Override
-	public List<ExtensionPoint> load(String location, byte[] content) {
+	public List<ExtensionPoint> parse(String location, byte[] content) {
 		ExtensionPoint extensionPoint = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), ExtensionPoint.class);
 		Configuration.configureObject(extensionPoint);
 		extensionPoint.setLocation(location);
@@ -117,7 +117,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 			if (maybe != null) {
 				extensionPoint.setId(maybe.getId());
 			}
-			getService().save(extensionPoint);
+			extensionPoint = getService().save(extensionPoint);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("extension point: {}", extensionPoint);}
@@ -125,32 +125,30 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 		}
 		return List.of(extensionPoint);
 	}
-
+	
 	/**
-	 * Prepare.
+	 * Retrieve.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param location the location
+	 * @return the list
 	 */
 	@Override
-	public void prepare(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
+	public List<ExtensionPoint> retrieve(String location) {
+		return getService().getAll();
 	}
 	
 	/**
-	 * Process.
+	 * Sets the status.
 	 *
-	 * @param wrappers the wrappers
-	 * @param depleter the depleter
+	 * @param artefact the artefact
+	 * @param lifecycle the lifecycle
+	 * @param error the error
 	 */
 	@Override
-	public void process(List<TopologyWrapper<? extends Artefact>> wrappers, TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter) {
-		try {
-			List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactLifecycle.CREATED.toString());
-			callback.registerErrors(this, results, ArtefactLifecycle.CREATED.toString(), ArtefactState.FAILED_CREATE_UPDATE);
-		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			callback.addError(e.getMessage());
-		}
+	public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
+		artefact.setLifecycle(lifecycle);
+		artefact.setError(error);
+		getService().save((ExtensionPoint) artefact);
 	}
 
 	/**
@@ -161,8 +159,8 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean complete(TopologyWrapper<Artefact> wrapper, String flow) {
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED.toString(), ArtefactState.SUCCESSFUL_CREATE_UPDATE, "");
+	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
+		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 		return true;
 	}
 
@@ -175,11 +173,10 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	public void cleanup(ExtensionPoint extensionPoint) {
 		try {
 			getService().delete(extensionPoint);
-			callback.registerState(this, extensionPoint, ArtefactLifecycle.DELETED.toString(), ArtefactState.SUCCESSFUL_DELETE, "");
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			callback.addError(e.getMessage());
-			callback.registerState(this, extensionPoint, ArtefactLifecycle.DELETED.toString(), ArtefactState.FAILED_DELETE, e.getMessage());
+			callback.registerState(this, extensionPoint, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
 	

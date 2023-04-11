@@ -24,7 +24,7 @@ import com.google.gson.annotations.Expose;
  * The Class TableConstraintUnique.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_TABLE_UNIQUES")
+@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_UNIQUES")
 public class TableConstraintUnique extends TableConstraint {
 	
 	/** The id. */
