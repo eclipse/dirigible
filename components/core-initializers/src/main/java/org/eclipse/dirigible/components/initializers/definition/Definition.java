@@ -112,7 +112,7 @@ public class Definition extends Auditable<String> implements Serializable {
 	 * @param location the location
 	 * @param name the name
 	 * @param type the type
-	 * @param dependencies the dependencies
+	 * @param content the content
 	 */
 	public Definition(String location, String name, String type, byte[] content) {
 		super();

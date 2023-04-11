@@ -14,6 +14,9 @@ package org.eclipse.dirigible.components.initializers;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The Class SynchronousSpringEventsConfig.
+ */
 @Configuration
 @ComponentScan
 public class SynchronousSpringEventsConfig {

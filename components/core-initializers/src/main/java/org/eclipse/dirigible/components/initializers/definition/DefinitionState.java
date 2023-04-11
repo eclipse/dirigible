@@ -16,15 +16,19 @@ package org.eclipse.dirigible.components.initializers.definition;
  */
 public enum DefinitionState {
 	
-		/** The file definition is brand new */
+		/**  The file definition is brand new. */
 		NEW("NEW"),
-		/** The file definition is successfully parsed */
+		
+		/**  The file definition is successfully parsed. */
 		PARSED("PARSED"),
-		/** The file definition cannot be parsed */
+		
+		/**  The file definition cannot be parsed. */
 		BROKEN("BROKEN"),
-		/** The file definition is modified */
+		
+		/**  The file definition is modified. */
 		MODIFIED("MODIFIED"),
-		/** The file definition is deleted */
+		
+		/**  The file definition is deleted. */
 		DELETED("DELETED");
 
 		/** The state. */

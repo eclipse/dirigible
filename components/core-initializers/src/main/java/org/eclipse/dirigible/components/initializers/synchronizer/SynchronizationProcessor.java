@@ -437,7 +437,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 * @param synchronizer the synchronizer
 	 * @param remained the remained
 	 * @param lifecycle the lifecycle
-	 * @param state the state
 	 */
 	@Override
 	public void registerErrors(Synchronizer<? extends Artefact> synchronizer, List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle) {
@@ -458,7 +457,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 * @param synchronizer the synchronizer
 	 * @param wrapper the wrapper
 	 * @param lifecycle the lifecycle
-	 * @param state the state
 	 * @param message the message
 	 */
 	@Override
@@ -473,7 +471,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 * @param synchronizer the synchronizer
 	 * @param artefact the artefact
 	 * @param lifecycle the lifecycle
-	 * @param state the state
 	 * @param message the message
 	 */
 	@Override

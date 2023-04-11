@@ -28,19 +28,37 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DefinitionService {
 	
+	/** The definition repository. */
 	@Autowired 
 	private DefinitionRepository definitionRepository;
 
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
 	@Transactional(readOnly = true)
 	public List<Definition> getAll() {
 		return definitionRepository.findAll();
 	}
 	
+	/**
+	 * Gets the pages.
+	 *
+	 * @param pageable the pageable
+	 * @return the pages
+	 */
 	@Transactional(readOnly = true)
 	public Page<Definition> getPages(Pageable pageable) {
 		return definitionRepository.findAll(pageable);
 	}
 	
+	/**
+	 * Find by id.
+	 *
+	 * @param id the id
+	 * @return the definition
+	 */
 	@Transactional(readOnly = true)
 	public Definition findById(Long id) {
 		Optional<Definition> definition = definitionRepository.findById(id);
@@ -51,6 +69,12 @@ public class DefinitionService {
 		}
 	}
 	
+	/**
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the definition
+	 */
 	@Transactional(readOnly = true)
 	public Definition findByKey(String key) {
 		Definition filter = new Definition();
@@ -63,6 +87,12 @@ public class DefinitionService {
 		return null;
 	}
 	
+	/**
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the definition
+	 */
 	@Transactional(readOnly = true)
 	public Definition findByLocation(String location) {
 		Definition filter = new Definition();
@@ -75,10 +105,21 @@ public class DefinitionService {
 		return null;
 	}
 	
+	/**
+	 * Save.
+	 *
+	 * @param definition the definition
+	 * @return the definition
+	 */
 	public Definition save(Definition definition) {
 		return definitionRepository.saveAndFlush(definition);
 	}
 	
+	/**
+	 * Delete.
+	 *
+	 * @param definition the definition
+	 */
 	public void delete(Definition definition) {
 		definitionRepository.delete(definition);
 	}

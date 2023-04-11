@@ -28,6 +28,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class ClasspathExpander.
+ */
 @Component
 public class ClasspathExpander {
 
@@ -36,18 +39,32 @@ public class ClasspathExpander {
      */
     private static final Logger logger = LoggerFactory.getLogger(ClasspathExpander.class);
 
+    /** The repository. */
     private final IRepository repository;
 
+    /**
+     * Instantiates a new classpath expander.
+     *
+     * @param repository the repository
+     */
     @Autowired
     public ClasspathExpander(IRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Expand content.
+     */
     public void expandContent() {
         expandContent("dirigible");
         expandContent("resources" + File.separator + "webjars");
     }
 
+    /**
+     * Expand content.
+     *
+     * @param root the root
+     */
     private void expandContent(String root) {
         try {
             Enumeration<URL> urls = ClasspathContentInitializer.class.getClassLoader().getResources("META-INF");
@@ -72,6 +89,13 @@ public class ClasspathExpander {
         }
     }
 
+    /**
+     * Handle jar URL connection.
+     *
+     * @param root the root
+     * @param urlConnection the url connection
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void handleJarURLConnection(String root, URLConnection urlConnection) throws IOException {
         String jarRoot = "META-INF/" + root;
         JarURLConnection jarUrlConnection = (JarURLConnection) urlConnection;
@@ -90,6 +114,11 @@ public class ClasspathExpander {
         }
     }
 
+    /**
+     * Handle local directory.
+     *
+     * @param dirPath the dir path
+     */
     private void handleLocalDirectory(Path dirPath) {
         try {
             File maybeDir = dirPath.toFile();
@@ -103,6 +132,12 @@ public class ClasspathExpander {
         }
     }
 
+    /**
+     * Log directory expanding error.
+     *
+     * @param dirPath the dir path
+     * @param e the e
+     */
     private void logDirectoryExpandingError(String dirPath, Exception e) {
         logger.error("Could not collect dir '" + dirPath + "'", e);
     }
