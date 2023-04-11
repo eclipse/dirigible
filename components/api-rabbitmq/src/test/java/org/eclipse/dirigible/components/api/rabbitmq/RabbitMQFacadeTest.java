@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.components.api.rabbitmq;
 
-import static org.junit.Assert.*;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +23,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.RabbitMQContainer;
 
 import nl.altindag.log.LogCaptor;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

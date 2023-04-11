@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.components.api.redis;
 
-import org.eclipse.dirigible.components.api.redis.RedisFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +25,7 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 import redis.clients.jedis.Jedis;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WithMockUser
 @ExtendWith(SpringExtension.class)
