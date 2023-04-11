@@ -76,7 +76,6 @@ public interface Synchronizer<A extends Artefact> {
 	 * @param artefact the artefact
 	 * @param lifecycle the lifecycle
 	 * @param message the message
-	 * @return the list
 	 */
 	void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String message);
 	
