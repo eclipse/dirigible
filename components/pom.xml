@@ -158,6 +158,7 @@
 		<module>api-mongodb</module>
 		<module>api-rabbitmq</module>
 		<module>api-redis</module>
+		<module>api-qldb</module>
 		
 		<!-- Resources -->
 		<module>resources-core</module>
