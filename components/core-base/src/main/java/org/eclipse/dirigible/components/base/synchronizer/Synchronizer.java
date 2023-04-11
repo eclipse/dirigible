@@ -73,7 +73,7 @@ public interface Synchronizer<A extends Artefact> {
 	/**
 	 * Retrieve all the processed artefacts by the definition location.
 	 *
-	 * @param key the key
+	 * @param artefact the artefact
 	 * @param lifecycle the lifecycle
 	 * @param message the message
 	 * @return the list
