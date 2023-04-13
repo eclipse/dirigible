@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.components.security.keycloak;
 
+import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
@@ -44,37 +45,42 @@ public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurer
         super.configure(http);
         http.csrf().disable();
         http.headers().frameOptions().sameOrigin();
-        http.authorizeRequests()
-            .antMatchers("/").permitAll()
-            .antMatchers("/home").permitAll()
-            .antMatchers("/logout").permitAll()
-            .antMatchers("/index-busy.html").permitAll()
-            
-            .antMatchers("/stomp").permitAll()
-
-            .antMatchers("/error/**").permitAll()
-            .antMatchers("/error.html").permitAll()
-
-            // Public
-            .antMatchers("/favicon.ico").permitAll()
-            .antMatchers("/public/**").permitAll()
-            .antMatchers("/webjars/**").permitAll()
-            
-            .antMatchers("/services/core/theme/**").permitAll()
-            .antMatchers("/services/core/version/**").permitAll()
-            .antMatchers("/services/core/healthcheck/**").permitAll()
-            .antMatchers("/services/web/resources/**").permitAll()
-            .antMatchers("/services/web/resources-core/**").permitAll()
-            .antMatchers("/services/js/resources-core/**").permitAll()
-
-            // Authenticated
-            .antMatchers("/services/**").authenticated()
-            .antMatchers("/websockets/**").authenticated()
-            .antMatchers("/odata/**").authenticated()
-
-            // "Developer" role required
-            .antMatchers("/services/ide/**").hasRole("Developer")
-            .antMatchers("/websockets/ide/**").hasRole("Developer")
+        HttpSecurityURIConfigurator.configure(http);
+        
+//        http
+//        	.authorizeRequests()
+//            .antMatchers("/").permitAll()
+//            .antMatchers("/home").permitAll()
+//            .antMatchers("/logout").permitAll()
+//            .antMatchers("/index-busy.html").permitAll()
+//            
+//            .antMatchers("/stomp").permitAll()
+//
+//            .antMatchers("/error/**").permitAll()
+//            .antMatchers("/error.html").permitAll()
+//
+//            // Public
+//            .antMatchers("/favicon.ico").permitAll()
+//            .antMatchers("/public/**").permitAll()
+//            .antMatchers("/webjars/**").permitAll()
+//            
+//            .antMatchers("/services/core/theme/**").permitAll()
+//            .antMatchers("/services/core/version/**").permitAll()
+//            .antMatchers("/services/core/healthcheck/**").permitAll()
+//            .antMatchers("/services/web/resources/**").permitAll()
+//            .antMatchers("/services/web/resources-core/**").permitAll()
+//            .antMatchers("/services/js/resources-core/**").permitAll()
+//            
+//            .antMatchers("/actuator/**").permitAll()
+//
+//            // Authenticated
+//            .antMatchers("/services/**").authenticated()
+//            .antMatchers("/websockets/**").authenticated()
+//            .antMatchers("/odata/**").authenticated()
+//
+//            // "Developer" role required
+//            .antMatchers("/services/ide/**").hasRole("Developer")
+//            .antMatchers("/websockets/ide/**").hasRole("Developer")
 
             // "Operator" role required
 //            .antMatchers("/services/ops/**").hasRole("Operator")
@@ -82,6 +88,6 @@ public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurer
 //            .antMatchers("/websockets/ops/**").hasRole("Operator")
 
             // Deny all other requests
-            .anyRequest().denyAll();
+//            .anyRequest().denyAll();
     }
 }

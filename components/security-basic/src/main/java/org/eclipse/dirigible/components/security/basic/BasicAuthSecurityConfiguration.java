@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.security.basic;
 
 import java.util.Arrays;
 
+import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,20 +38,23 @@ public class BasicAuthSecurityConfiguration {
 		    .csrf().disable()
 		    .httpBasic()
 		    .and()
-		    .authorizeRequests()
-		        .antMatchers("/login/**").permitAll()
-		        .antMatchers("/error/**").permitAll()
-		        .antMatchers("/error.html").permitAll()
-		        .antMatchers("/index-busy.html").permitAll()
-		        .antMatchers("/stomp").permitAll()
+//		    .authorizeRequests()
+//		        .antMatchers("/login/**").permitAll()
+//		        .antMatchers("/error/**").permitAll()
+//		        .antMatchers("/error.html").permitAll()
+//		        .antMatchers("/index-busy.html").permitAll()
+//		        .antMatchers("/stomp").permitAll()
+//		        .antMatchers("/actuator/**").permitAll()
 //		        .antMatchers("/*").fullyAuthenticated()
-		        .anyRequest().authenticated()
-		    .and()
+//		        .anyRequest().authenticated()
+//		    .and()
 		    .formLogin()
 		    .and()
 	        .logout().deleteCookies("JSESSIONID")
 	        .and()
 	        .headers().frameOptions().disable();
+		
+		HttpSecurityURIConfigurator.configure(http);
 		
 		return http.build();
 	}

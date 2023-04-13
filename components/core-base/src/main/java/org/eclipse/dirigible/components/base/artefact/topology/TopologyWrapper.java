@@ -114,12 +114,11 @@ public class TopologyWrapper<A extends Artefact> implements TopologicallySortabl
 	public boolean complete(ArtefactPhase flow) {
 		if (synchronizer.isAccepted(getArtefact().getType())) {
 			try {
-//				if (getArtefact().getLifecycle().equals(ArtefactLifecycle.NEW)
-//						|| getArtefact().getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
-					return synchronizer.complete((TopologyWrapper<Artefact>) this, flow);
-//				}
+				return synchronizer.complete((TopologyWrapper<Artefact>) this, flow);
 			} catch (Exception e) {
 				if (logger.isErrorEnabled()) {logger.error("Complete failed in this cycle: " + e.getMessage(), e);}
+				if (logger.isErrorEnabled()) {logger.error("Failed for artefact: {} and phase: {}" + getArtefact().getKey(), flow.getValue());}
+				
 				return false;
 			}
 		}
