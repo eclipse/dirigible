@@ -1,0 +1,27 @@
+[
+  {
+    "name": "@dirigible/qunit",
+    "description": "Dirigible QUnit module",
+    "isPackageDescription": true,
+    "dtsPath": "qunit/extensions/qunit.d.ts"
+  },
+  {
+    "name": "qunit/qunit",
+    "description": "QUnit API",
+    "api": "qunit",
+    "versionedPaths": [
+      "qunit/qunit"
+    ],
+    "pathDefault": "qunit/qunit"
+  },
+  {
+    "name": "qunit/runner",
+    "description": "QUnit Runner API",
+    "api": "runner",
+    "versionedPaths": [
+      "qunit/runner"
+    ],
+    "pathDefault": "qunit/runner"
+  }
+
+]
