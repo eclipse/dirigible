@@ -11,8 +11,10 @@
  */
 package org.eclipse.dirigible.components.security.basic;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -61,9 +63,11 @@ public class BasicAuthSecurityConfiguration {
 
 	@Bean
 	public InMemoryUserDetailsManager userDetailsService() {
+		String username = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_USERNAME", "YWRtaW4="); // admin
+		String password = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_PASSWORD", "YWRtaW4="); // admin
 		UserDetails user = User
-				.withUsername("admin")
-				.password("{noop}admin")
+				.withUsername(new String(new Base64().decode(username.getBytes()), StandardCharsets.UTF_8))
+				.password("{noop}" + new String(new Base64().decode(password.getBytes()), StandardCharsets.UTF_8))
 				.roles("DEVELOPER", "OPERATOR")
 				.build();
 		return new InMemoryUserDetailsManager(user);
