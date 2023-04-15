@@ -11,9 +11,11 @@
  */
 package org.eclipse.dirigible.components.data.sources.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.repository.DataSourceRepository;
@@ -122,6 +124,10 @@ public class DataSourceService implements ArtefactService<DataSource> {
 	 */
 	@Override
 	public DataSource save(DataSource datasource) {
+		if (datasource.getPassword() != null
+				&& !datasource.getPassword().isEmpty()) {
+			datasource.setPassword(new String(new Base64().decode(datasource.getPassword().getBytes()), StandardCharsets.UTF_8));
+		}
 		return datasourceRepository.saveAndFlush(datasource);
 	}
 	
