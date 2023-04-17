@@ -9,16 +9,16 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let ideBpmFilesView = angular.module('ide-bpm-files', ['ideUI', 'ideView']);
+let ideBpmProcessDefinitionsView = angular.module('ide-bpm-process-definitions', ['ideUI', 'ideView']);
 
-ideBpmFilesView.config(["messageHubProvider", function (messageHubProvider) {
+ideBpmProcessDefinitionsView.config(["messageHubProvider", function (messageHubProvider) {
     messageHubProvider.eventIdPrefix = 'IDEBPMWorkspace';
 }]);
 
-ideBpmFilesView.controller('IDEBpmFilesViewController', ['$scope', 'messageHub', function ($scope, messageHub) {
+ideBpmProcessDefinitionsView.controller('IDEBpmProcessDefinitionsViewController', ['$scope', 'messageHub', function ($scope, messageHub) {
     $scope.searchVisible = false;
     $scope.searchField = { text: '' };
-    $scope.jstreeWidget = angular.element('#bpmFiles');
+    $scope.jstreeWidget = angular.element('#bpmProcessDefinitions');
 
     let to = 0;
     $scope.search = function () {

@@ -10,11 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-	id: "ide-bpm-files-view",
-	label: "Process Files",
+	id: "bpm-process-definitions-view",
+	label: "Process Definitions",
 	factory: "frame",
 	region: "left",
-	link: "../ide-bpm-workspace/ide-bpm-files.html",
+	link: "../ide-bpm-workspace/bpm-process-definitions.html",
 };
 if (typeof exports !== 'undefined') {
 	exports.getView = function () {

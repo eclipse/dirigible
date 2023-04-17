@@ -10,15 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-    id: "ide-user-tasks",
-    factory: "frame",
-    region: "bottom",
-    label: "Process User Tasks",
-    link: "../ide-bpm-workspace/tasks.html"
+    id: "bpm-user-task-details",
+    label: "Process Task Details",
+    link: "../ide-bpm-workspace/bpm-task-details.html"
 };
-
 if (typeof exports !== 'undefined') {
-    exports.getView = function () {
+    exports.getDialogWindow = function () {
         return viewData;
     }
 }

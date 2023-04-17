@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-	id: "ide-bpm-image-viewer",
+	id: "bpm-image-viewer",
 	label: "Process Inspector",
 	factory: "frame",
 	region: "center",

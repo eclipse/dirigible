@@ -49,7 +49,7 @@ tasksView.controller('TasksController', ['$http', '$timeout', 'messageHub', func
                         this.tasksList = response.data;
                         this.selectionChanged();
                     });
-        }, 1000);
+        }, 5000);
 
     }
 

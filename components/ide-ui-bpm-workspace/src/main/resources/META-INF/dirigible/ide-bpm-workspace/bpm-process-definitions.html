@@ -8,14 +8,14 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="ide-bpm-files" ng-controller="IDEBpmFilesViewController">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="ide-bpm-files" ng-controller="IDEBpmProcessDefinitionsViewController">
 
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 		<title dg-view-title></title>
-		<script type="text/javascript" src="services/ide-bpm-files-view.js"></script>
+		<script type="text/javascript" src="services/bpm-process-definitions-view.js"></script>
 		<script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
 		<theme></theme>
 		<script type="text/javascript" src="/webjars/jstree/3.3.12/jstree.min.js"></script>
@@ -23,7 +23,7 @@
 		<link type="text/css" rel="stylesheet" href="/services/web/resources/styles/jstree.css" />
 		<link type="text/css" rel="stylesheet"
 			href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
-		<script type="text/javascript" src="js/ide-bpm-files.js"></script>
+		<script type="text/javascript" src="js/bpm-process-definitions.js"></script>
 	</head>
 
 	<body class="dg-vbox">
@@ -39,7 +39,7 @@
 		<fd-toolbar dg-size="cozy" ng-show="searchVisible">
 			<fd-input type="search" placeholder="Search" ng-keyup="search()" ng-model="searchField.text"></fd-input>
 		</fd-toolbar>
-		<div id="bpmFiles" class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar"></div>
+		<div id="bpmProcessDefinitions" class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar"></div>
 	</body>
 
 </html>

@@ -17,10 +17,10 @@ IDEBPMWorkspacePerspective.config(["messageHubProvider", function (messageHubPro
 
 IDEBPMWorkspacePerspective.controller("BpmWorkspaceViewController", ["$scope", function ($scope) {
     $scope.layoutModel = {
-        views: ["ide-bpm-files-view", "ide-bpm-image-viewer", "ide-user-tasks"],
+        views: ["bpm-process-definitions-view", "bpm-image-viewer", "bpm-user-tasks"],
         viewSettings: {
-            "ide-bpm-files-view": { expanded: true },
-            "ide-bpm-image-viewer": { closable: false },
+            "bpm-process-definitions-view": { expanded: true },
+            "bpm-image-viewer": { closable: false },
         },
         layoutSettings: {
             hideEditorsPane: false,
