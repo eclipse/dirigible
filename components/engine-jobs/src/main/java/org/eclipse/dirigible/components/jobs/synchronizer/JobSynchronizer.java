@@ -227,11 +227,25 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
 				} catch (Exception e) {
 					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 		            callback.addError(e.getMessage());
-					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, e.getMessage());
 				}
 			}
 			break;
 		case DELETE:
+			if (job.getLifecycle().equals(ArtefactLifecycle.CREATED)
+					|| job.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+				try {
+            		schedulerManager.unscheduleJob(job.getName(), job.getGroup());
+            		job.setRunning(false);
+            		getService().delete(job);
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
+				}
+			}
+			break;
 		case START:
 			if (job.getRunning() == null || !job.getRunning()) {
 				try {

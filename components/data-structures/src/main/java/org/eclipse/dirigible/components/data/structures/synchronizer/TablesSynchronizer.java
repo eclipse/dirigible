@@ -293,7 +293,8 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 				}
 				break;
 			case DELETE:
-				if (table.getLifecycle().equals(ArtefactLifecycle.CREATED)) { 
+				if (table.getLifecycle().equals(ArtefactLifecycle.CREATED)
+						|| table.getLifecycle().equals(ArtefactLifecycle.UPDATED)) { 
 					if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
 						if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
 							executeTableDrop(connection, table);

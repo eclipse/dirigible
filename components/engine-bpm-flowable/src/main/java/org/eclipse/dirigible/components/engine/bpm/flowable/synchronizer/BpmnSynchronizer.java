@@ -22,7 +22,6 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
@@ -32,6 +31,7 @@ import org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmnService;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.Deployment;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,17 +180,43 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
 		
-		Bpmn bpmn = null;
-		if (wrapper.getArtefact() instanceof Bpmn) {
-			bpmn = (Bpmn) wrapper.getArtefact();
-		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as BPMN", wrapper.getArtefact().getClass()));
+		try {
+			Bpmn bpmn = null;
+			if (wrapper.getArtefact() instanceof Bpmn) {
+				bpmn = (Bpmn) wrapper.getArtefact();
+			} else {
+				throw new UnsupportedOperationException(String.format("Trying to process %s as BPMN", wrapper.getArtefact().getClass()));
+			}
+			
+			
+			switch (flow) {
+			case CREATE:
+				if (bpmn.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+					deployOnProcessEngine(bpmn);
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				}
+				break;
+			case UPDATE:
+				if (bpmn.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+					updateOnProcessEngine(bpmn);
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+				}
+				break;
+			case DELETE:
+				if (bpmn.getLifecycle().equals(ArtefactLifecycle.CREATED)
+						|| bpmn.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+					removeFromProcessEngine(bpmn);
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+				}
+				break;
+			}
+			return true;
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			callback.addError(e.getMessage());
+			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+			return false;
 		}
-		
-		deployOnProcessEngine(bpmn);
-		
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
-		return true;
 	}
 
 	/**
@@ -254,7 +280,65 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 				.key(bpmn.getLocation())
 				.addBytes(bpmn.getLocation(), bpmn.getContent())
 				.deploy();
+			List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).list();
+			if (processDefinitions.size() > 0) {
+				ProcessDefinition processDefinition = processDefinitions.get(0);
+				bpmn.setDeploymentId(processDefinition.getDeploymentId());
+				bpmn.setProcessDefinitionId(processDefinition.getId());
+				bpmn.setProcessDefinitionKey(processDefinition.getKey());
+				bpmn.setProcessDefinitionName(processDefinition.getName());
+				bpmn.setProcessDefinitionVersion(processDefinition.getVersion());
+				bpmn.setProcessDefinitionTenantId(processDefinition.getTenantId());
+				bpmn.setProcessDefinitionCategory(processDefinition.getCategory());
+				bpmn.setProcessDefinitionDescription(processDefinition.getDescription());
+			}
 			if (logger.isInfoEnabled()) {logger.info(format("Deployed: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));}
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {logger.error("Error on deploying a BPMN file from location: {}", bpmn.getLocation(), e);}
+		}
+	}
+	
+	/**
+	 * Deploy on process engine.
+	 *
+	 * @param bpmn the bpmn
+	 */
+	private void updateOnProcessEngine(Bpmn bpmn) {
+		try {
+			ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
+			RepositoryService repositoryService = processEngine.getRepositoryService();
+			
+			
+			List<Deployment> deployments = repositoryService.createDeploymentQuery().list();
+			for (Deployment deployment : deployments) {
+				if (logger.isTraceEnabled()) {logger.trace(format("Deployment: [{0}] with key: [{1}]", deployment.getId(), deployment.getKey()));}
+				if (bpmn.getLocation().equals(deployment.getKey())) {
+					
+					List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).active().list();
+					if (processDefinitions.size() > 0) {
+						ProcessDefinition processDefinition = processDefinitions.get(0);
+						repositoryService.suspendProcessDefinitionById(processDefinition.getId());
+						Deployment newDeployment = repositoryService.createDeployment()
+								.key(bpmn.getLocation())
+								.addBytes(bpmn.getLocation(), bpmn.getContent())
+								.deploy();
+						processDefinitions = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).list();
+						if (processDefinitions.size() > 0) {
+							processDefinition = processDefinitions.get(0);
+							bpmn.setDeploymentId(processDefinition.getDeploymentId());
+							bpmn.setProcessDefinitionId(processDefinition.getId());
+							bpmn.setProcessDefinitionKey(processDefinition.getKey());
+							bpmn.setProcessDefinitionName(processDefinition.getName());
+							bpmn.setProcessDefinitionVersion(processDefinition.getVersion());
+							bpmn.setProcessDefinitionTenantId(processDefinition.getTenantId());
+							bpmn.setProcessDefinitionCategory(processDefinition.getCategory());
+							bpmn.setProcessDefinitionDescription(processDefinition.getDescription());
+							if (logger.isInfoEnabled()) {logger.info(format("Updated deployment: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));}
+							break;
+						}
+					}
+				}
+			}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error("Error on deploying a BPMN file from location: {}", bpmn.getLocation(), e);}
 		}
@@ -276,6 +360,7 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 			if (bpmn.getLocation().equals(deployment.getKey())) {
 				repositoryService.deleteDeployment(deployment.getId(), true);
 				if (logger.isInfoEnabled()) {logger.info(format("Deleted deployment: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));}
+				break;
 			}
 		}
 
