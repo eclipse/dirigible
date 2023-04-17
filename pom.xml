@@ -563,7 +563,7 @@
 		<h2database.version>2.1.214</h2database.version>
 		<postgresql.version>42.6.0</postgresql.version>
 		<ngdbc.version>2.16.11</ngdbc.version>
-		<activemq.version>5.17.4</activemq.version>
+		<activemq.version>5.18.1</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<lucene.version>9.4.2</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
