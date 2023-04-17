@@ -9,64 +9,70 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const tasksView = angular.module('tasks', ['ideUI', 'ideView']);
+let ideBpmProcessInstancesView = angular.module('ide-bpm-process-instances', ['ideUI', 'ideView']);
 
-tasksView.config(["messageHubProvider", function (messageHubProvider) {
-    messageHubProvider.eventIdPrefix = 'tasks-view';
+ideBpmProcessInstancesView.config(["messageHubProvider", function (messageHubProvider) {
+    messageHubProvider.eventIdPrefix = 'bpm';
 }]);
 
-tasksView.controller('TasksController', ['$http', '$timeout', 'messageHub', function ($http, $timeout, messageHub) {
+ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['$scope', '$http', '$timeout', 'messageHub', function ($scope, $http, $timeout, messageHub,) {
+
     this.selectAll = false;
     this.searchText = "";
     this.filterBy = "";
     this.displaySearch = false;
-    this.tasksList = [];
+    this.instancesList = [];
     this.pageSize = 10;
     this.currentPage = 1;
 
-    this.currentFetchDataTask = null;
+    this.currentFetchDataInstance = null;
 
     const fetchData = (args) => {
-        if (this.currentFetchDataTask) {
-            clearInterval(this.currentFetchDataTask);
+        if (this.currentFetchDataInstance) {
+            clearInterval(this.currentFetchDataInstance);
         }
 
-        this.currentFetchDataTask = setInterval(() => {
-                const pageNumber = (args && args.pageNumber) || this.currentPage;
-                const pageSize = (args && args.pageSize) || this.pageSize;
-                const limit = pageNumber * pageSize;
-                const startIndex = (pageNumber - 1) * pageSize;
-                if (startIndex >= this.totalRows) {
-                    return;
-                }
-
-                $http.get('/services/js/ide-bpm-workspace/api/tasks.mjs/tasks', { params: { 'condition': this.filterBy, 'limit': limit } })
-                    .then((response) => {
-                        if (this.tasksList.length < response.data.length ) {
-                            //messageHub.showAlertInfo("User tasks", "A new user task has been added");
-                        }
-
-                        this.tasksList = response.data;
-                        this.selectionChanged();
-                    });
-        }, 5000);
+    	this.currentFetchDatadInstance = setInterval(() => {
+	        const pageNumber = (args && args.pageNumber) || this.currentPage;
+	        const pageSize = (args && args.pageSize) || this.pageSize;
+	        const limit = pageNumber * pageSize;
+	        const startIndex = (pageNumber - 1) * pageSize;
+	        if (startIndex >= this.totalRows) {
+	            return;
+	        }
+	
+	        $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'condition': this.filterBy, 'limit': limit } })
+	            .then((response) => {
+	                if (this.instancesList.length < response.data.length) {
+	                    //messageHub.showAlertInfo("User instances", "A new user task has been added");
+	                }
+	
+	                this.instancesList = response.data;
+	            });
+    	}, 5000);
 
     }
 
     fetchData();
+
+    $scope.reload = function () {
+        fetchData();
+    };
 
     this.toggleSearch = function () {
         this.displaySearch = !this.displaySearch;
     }
 
     this.selectAllChanged = function () {
-        for (let task of this.tasksList) {
-            task.selected = this.selectAll;
+        for (let instance of this.instancesList) {
+            instance.selected = this.selectAll;
         }
     }
 
-    this.selectionChanged = function () {
-        this.selectAll = this.tasksList.every(x => x.selected);
+    this.selectionChanged = function (id) {
+        this.selectAll = this.instancesList.every(x => x.selected);
+        messageHub.postMessage('diagram.instance', { instance: id });
+        messageHub.postMessage('instance.selected', { instance: id });
     }
 
     this.clearSearch = function () {
@@ -76,14 +82,14 @@ tasksView.controller('TasksController', ['$http', '$timeout', 'messageHub', func
     }
 
     this.getSelectedCount = function () {
-        return this.tasksList.reduce((c, task) => {
-            if (task.selected) c++;
+        return this.instancesList.reduce((c, instance) => {
+            if (instance.selected) c++;
             return c;
         }, 0);
     }
 
     this.hasSelected = function () {
-        return this.tasksList.some(x => x.selected);
+        return this.instancesList.some(x => x.selected);
     }
 
     this.applyFilter = function () {
@@ -92,7 +98,7 @@ tasksView.controller('TasksController', ['$http', '$timeout', 'messageHub', func
     }
 
     this.getNoDataMessage = function () {
-        return this.filterBy ? 'No tasks found.' : 'No tasks have been detected.';
+        return this.filterBy ? 'No instances found.' : 'No instances have been detected.';
     }
 
     this.inputSearchKeyUp = function (e) {
@@ -132,17 +138,11 @@ tasksView.controller('TasksController', ['$http', '$timeout', 'messageHub', func
     }
 
     this.deleteSelected = function () {
-        const selectedIds = this.tasksList.reduce((ret, task) => {
-            if (task.selected)
-                ret.push(task.id);
+        const selectedIds = this.instancesList.reduce((ret, instance) => {
+            if (instance.selected)
+                ret.push(instance.id);
             return ret;
         }, []);
     }
 
-    this.showInfo = function (task) {
-        messageHub.showDialogWindow(
-            "task-details",
-            { taskDetails: task }
-        );
-    }
 }]);

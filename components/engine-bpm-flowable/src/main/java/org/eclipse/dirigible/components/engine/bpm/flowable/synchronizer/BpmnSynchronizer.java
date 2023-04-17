@@ -308,21 +308,20 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 			ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
 			RepositoryService repositoryService = processEngine.getRepositoryService();
 			
-			
 			List<Deployment> deployments = repositoryService.createDeploymentQuery().list();
 			for (Deployment deployment : deployments) {
 				if (logger.isTraceEnabled()) {logger.trace(format("Deployment: [{0}] with key: [{1}]", deployment.getId(), deployment.getKey()));}
 				if (bpmn.getLocation().equals(deployment.getKey())) {
-					
 					List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).active().list();
 					if (processDefinitions.size() > 0) {
 						ProcessDefinition processDefinition = processDefinitions.get(0);
-						repositoryService.suspendProcessDefinitionById(processDefinition.getId());
+//						repositoryService.suspendProcessDefinitionById(processDefinition.getId());
+						repositoryService.deleteDeployment(processDefinition.getDeploymentId());
 						Deployment newDeployment = repositoryService.createDeployment()
 								.key(bpmn.getLocation())
 								.addBytes(bpmn.getLocation(), bpmn.getContent())
 								.deploy();
-						processDefinitions = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).list();
+						processDefinitions = repositoryService.createProcessDefinitionQuery().deploymentId(newDeployment.getId()).list();
 						if (processDefinitions.size() > 0) {
 							processDefinition = processDefinitions.get(0);
 							bpmn.setDeploymentId(processDefinition.getDeploymentId());
@@ -334,10 +333,13 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 							bpmn.setProcessDefinitionCategory(processDefinition.getCategory());
 							bpmn.setProcessDefinitionDescription(processDefinition.getDescription());
 							if (logger.isInfoEnabled()) {logger.info(format("Updated deployment: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));}
-							break;
+							return;
 						}
 					}
 				}
+				
+				// backup if the definitions is modified, but the old version get broken and does not exist in the process engine
+				deployOnProcessEngine(bpmn);
 			}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error("Error on deploying a BPMN file from location: {}", bpmn.getLocation(), e);}

@@ -101,6 +101,16 @@ public class BpmFacade implements InitializingBean {
 	}
 	
 	/**
+	 * Delete a BPMN process by its id.
+	 *
+	 * @param id the id
+	 * @param reason the reason for deletion
+	 */
+	public static void deleteProcess(String id, String reason) {
+		BpmFacade.get().getBpmProviderFlowable().deleteProcess(id, reason);
+	}
+	
+	/**
 	 * Get a variable in the process execution context.
 	 *
 	 * @param processInstanceId the process instance id

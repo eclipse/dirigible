@@ -12,83 +12,136 @@
 let ideBpmProcessDefinitionsView = angular.module('ide-bpm-process-definitions', ['ideUI', 'ideView']);
 
 ideBpmProcessDefinitionsView.config(["messageHubProvider", function (messageHubProvider) {
-    messageHubProvider.eventIdPrefix = 'IDEBPMWorkspace';
+    messageHubProvider.eventIdPrefix = 'bpm';
 }]);
 
-ideBpmProcessDefinitionsView.controller('IDEBpmProcessDefinitionsViewController', ['$scope', 'messageHub', function ($scope, messageHub) {
-    $scope.searchVisible = false;
-    $scope.searchField = { text: '' };
-    $scope.jstreeWidget = angular.element('#bpmProcessDefinitions');
+ideBpmProcessDefinitionsView.controller('IDEBpmProcessDefinitionsViewController', ['$scope', '$http', '$timeout', 'messageHub', function ($scope, $http, $timeout, messageHub,) {
+    this.selectAll = false;
+    this.searchText = "";
+    this.filterBy = "";
+    this.displaySearch = false;
+    this.definitionsList = [];
+    this.pageSize = 10;
+    this.currentPage = 1;
 
-    let to = 0;
-    $scope.search = function () {
-        if (to) { clearTimeout(to); }
-        to = setTimeout(function () {
-            $scope.jstreeWidget.jstree(true).search($scope.searchField.text);
-        }, 250);
+    this.currentFetchDataDefinition = null;
+
+    const fetchData = (args) => {
+        if (this.currentFetchDataDefinition) {
+            clearInterval(this.currentFetchDataDefinition);
+        }
+
+        this.currentFetchDatadDefinition = setInterval(() => {
+	        const pageNumber = (args && args.pageNumber) || this.currentPage;
+	        const pageSize = (args && args.pageSize) || this.pageSize;
+	        const limit = pageNumber * pageSize;
+	        const startIndex = (pageNumber - 1) * pageSize;
+	        if (startIndex >= this.totalRows) {
+	            return;
+	        }
+	
+	        $http.get('/services/ide/bpm/bpm-processes/definitions', { params: { 'condition': this.filterBy, 'limit': limit } })
+	            .then((response) => {
+	                if (this.definitionsList.length < response.data.length) {
+	                    //messageHub.showAlertInfo("User definitions", "A new user task has been added");
+	                }
+	
+	                this.definitionsList = response.data;
+	            });
+        }, 10000);
+
+    }
+
+    fetchData();
+
+    $scope.reload = function () {
+        fetchData();
     };
 
-    $scope.reload = function () { // Doesn't do anything useful
-        $scope.jstreeWidget.jstree(true).refresh();
-    };
+    this.toggleSearch = function () {
+        this.displaySearch = !this.displaySearch;
+    }
 
-    $scope.toggleSearch = function () {
-        $scope.searchField.text = '';
-        $scope.jstreeWidget.jstree(true).clear_search();
-        $scope.searchVisible = !$scope.searchVisible;
-    };
+    this.selectAllChanged = function () {
+        for (let definition of this.definitionsList) {
+            definition.selected = this.selectAll;
+        }
+    }
 
-    fetch("/services/ide/bpm/bpm-processes/keys")
-        .then((response) => response.json())
-        .then((data) => {
-            $scope.jstreeWidget.jstree({ // JSTree should NOT be initialized here
-                core: {
-                    check_callback: true,
-                    themes: {
-                        name: "fiori",
-                        variant: "compact",
-                    },
-                    data: data.map(processKey => ({ text: processKey, type: "file" })),
-                },
-                plugins: ["wholerow", "dnd", "search", "state", "types", "indicator"],
-                dnd: {
-                    large_drop_target: true,
-                    large_drag_target: true,
-                    is_draggable: function (nodes) {
-                        for (let i = 0; i < nodes.length; i++) {
-                            if (nodes[i].type === 'project') return false;
-                        }
-                        return true;
-                    },
-                },
-                state: { "key": "ide-bpm-workspace" },
-                types: {
-                    '#': {
-                        valid_children: ["project"]
-                    },
-                    "default": {
-                        icon: "sap-icon--question-mark",
-                        valid_children: [],
-                    },
-                    file: {
-                        icon: "jstree-file",
-                        valid_children: [],
-                    },
-                    folder: {
-                        icon: "jstree-folder",
-                        valid_children: ['folder', 'file', 'spinner'],
-                    },
-                    project: {
-                        icon: "jstree-project",
-                        valid_children: ['folder', 'file', 'spinner'],
-                    },
-                    spinner: {
-                        icon: "jstree-spinner",
-                        valid_children: [],
-                    },
-                },
-            }).on("select_node.jstree", function (e, data) {
-                messageHub.postMessage('image-viewer.image', { filename: data.node.text });
-            });
-        });
+    this.selectionChanged = function (key) {
+        this.selectAll = this.definitionsList.every(x => x.selected);
+        messageHub.postMessage('diagram.definition', { definition: key });
+        messageHub.postMessage('definition.selected', { definition: key });
+    }
+
+    this.clearSearch = function () {
+        this.searchText = "";
+        this.filterBy = "";
+        fetchData();
+    }
+
+    this.getSelectedCount = function () {
+        return this.definitionsList.reduce((c, definition) => {
+            if (definition.selected) c++;
+            return c;
+        }, 0);
+    }
+
+    this.hasSelected = function () {
+        return this.definitionsList.some(x => x.selected);
+    }
+
+    this.applyFilter = function () {
+        this.filterBy = this.searchText;
+        fetchData();
+    }
+
+    this.getNoDataMessage = function () {
+        return this.filterBy ? 'No definitions found.' : 'No definitions have been detected.';
+    }
+
+    this.inputSearchKeyUp = function (e) {
+        if (this.lastSearchKeyUp) {
+            $timeout.cancel(this.lastSearchKeyUp);
+            this.lastSearchKeyUp = null;
+        }
+
+        switch (e.key) {
+            case 'Escape':
+                this.searchText = this.filterBy || '';
+                break;
+            case 'Enter':
+                this.applyFilter();
+                break;
+            default:
+                if (this.filterBy !== this.searchText) {
+                    this.lastSearchKeyUp = $timeout(() => {
+                        this.lastSearchKeyUp = null;
+                        this.applyFilter();
+                    }, 250);
+                }
+                break;
+        }
+    }
+
+    this.onPageChange = function (pageNumber) {
+        fetchData({ pageNumber });
+    }
+
+    this.onItemsPerPageChange = function (itemsPerPage) {
+        fetchData({ pageSize: itemsPerPage });
+    }
+
+    this.refresh = function () {
+        fetchData();
+    }
+
+    this.deleteSelected = function () {
+        const selectedIds = this.definitionsList.reduce((ret, definition) => {
+            if (definition.selected)
+                ret.push(definition.id);
+            return ret;
+        }, []);
+    }
+
 }]);

@@ -14,24 +14,38 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.endpoint;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
+import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessDefinitionData;
+import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ProcessInstanceData;
 import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
 import org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
+import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.ProcessEngine;
+import org.flowable.engine.ProcessEngineConfiguration;
 import org.flowable.engine.RepositoryService;
+import org.flowable.engine.RuntimeService;
 import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.image.ProcessDiagramGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -107,8 +121,8 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 	 */
 	@GetMapping(value = "/models/{workspace}/{project}/{*path}", produces = "application/json")
 	public ResponseEntity<ObjectNode> getModel(
-			@PathVariable("workspace") String workspace, 
-			@PathVariable("project") String project, 
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project,
 			@PathVariable("path") String path) throws JsonProcessingException {
 
 		path = sanitizePath(path);
@@ -122,6 +136,12 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 		return ResponseEntity.ok(model);
 	}
 
+	/**
+	 * Sanitize path.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	private String sanitizePath(String path) {
 		if (path.indexOf("?") > 0) {
 			path = path.substring(0, path.indexOf("?"));
@@ -146,9 +166,9 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 	 */
 	@PostMapping(value = "/models/{workspace}/{project}/{*path}", produces = "application/json")
 	public ResponseEntity<URI> saveModel(
-			@PathVariable("workspace") String workspace, 
-			@PathVariable("project") String project, 
-			@PathVariable("path") String path, 
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project,
+			@PathVariable("path") String path,
 			@RequestParam("json_xml") String payload) throws URISyntaxException, IOException {
 		
 		path = sanitizePath(path);
@@ -178,23 +198,66 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 	}
 
 	/**
+	 * Gets the process definitions.
+	 *
+	 * @return the process definitions
+	 */
+	@GetMapping(value = "/bpm-processes/definitions")
+	public ResponseEntity<List<ProcessDefinitionData>> getProcessDefinitions() {
+		return ResponseEntity.ok(getBpmService().getProcessDefinitions());
+	}
+	
+	/**
+	 * Gets the process definitions.
+	 *
+	 * @param id the id
+	 * @param key the key
+	 * @return the process definitions
+	 */
+	@GetMapping(value = "/bpm-processes/definition")
+	public ResponseEntity<ProcessDefinitionData> getProcessDefinition(
+			@Nullable @RequestParam("id") Optional<String> id,
+			@Nullable @RequestParam("key") Optional<String> key
+			) {
+		if (key.isPresent()) {
+			return ResponseEntity.ok(getBpmService().getProcessDefinitionByKey(key.get()));
+		} else if (id.isPresent()) {
+			return ResponseEntity.ok(getBpmService().getProcessDefinitionById(id.get()));
+		}
+		return null;
+	}
+	
+	/**
 	 * Gets the processes keys.
 	 *
+	 * @param businessKey the business key
+	 * @param key the key
 	 * @return the processes keys
 	 */
-	@GetMapping(value = "/bpm-processes/keys")
-	public ResponseEntity<List<String>> getProcessesKeys() {
-		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
-
-		List<String> keys = processEngine
-				.getRepositoryService()
-				.createProcessDefinitionQuery()
-				.list()
-				.stream()
-				.map(ProcessDefinition::getKey)
-				.collect(Collectors.toList());
-
-		return ResponseEntity.ok(keys);
+	@GetMapping(value = "/bpm-processes/instances")
+	public ResponseEntity<List<ProcessInstanceData>> getProcessesInstances(
+			@Nullable @RequestParam("id") Optional<String> businessKey,
+			@Nullable @RequestParam("key") Optional<String> key
+			) {
+		if (key.isPresent()) {
+			return ResponseEntity.ok(getBpmService().getProcessInstanceByKey(key.get()));
+		} else if (businessKey.isPresent()) {
+			return ResponseEntity.ok(getBpmService().getProcessInstanceByBusinessKey(businessKey.get()));
+		}
+		return ResponseEntity.ok(getBpmService().getProcessInstances());
+	}
+	
+	/**
+	 * Gets the processes keys.
+	 *
+	 * @param id the id
+	 * @return the processes keys
+	 */
+	@GetMapping(value = "/bpm-processes/instance/{id}")
+	public ResponseEntity<ProcessInstanceData> getProcessesInstances(
+			@PathVariable("id") String id
+			) {
+		return ResponseEntity.ok(getBpmService().getProcessInstanceById(id));
 	}
 
 	/**
@@ -204,8 +267,8 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 	 * @return the process image
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	@GetMapping(value = "/bpm-processes/{processDefinitionKey}/image", produces = "image/png")
-	public ResponseEntity<byte[]> getProcessImage(
+	@GetMapping(value = "/bpm-processes/diagram/definition/{processDefinitionKey}", produces = "image/png")
+	public ResponseEntity<byte[]> getProcessDefinitionImage(
 			@PathVariable("processDefinitionKey") String processDefinitionKey
 	) throws IOException {
 		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
@@ -216,15 +279,61 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
 				.processDefinitionKey(processDefinitionKey)
 				.latestVersion()
 				.singleResult();
+		
+		if (process != null) {
+			String deploymentId = process.getDeploymentId();
+			String diagramResourceName = process.getDiagramResourceName();
+	
+			byte[] imageBytes = repositoryService
+					.getResourceAsStream(deploymentId, diagramResourceName)
+					.readAllBytes();
+	
+			return ResponseEntity.ok(imageBytes);
+		}
+		return ResponseEntity.ok(new byte[] {});
+	}
+	
+	/**
+	 * Gets the process image.
+	 *
+	 * @param processInstanceId the process instance id
+	 * @return the process image
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@GetMapping(value = "/bpm-processes/diagram/instance/{processInstanceId}", produces = "image/png")
+	public ResponseEntity<byte[]> getProcessInstanceImage(
+			@PathVariable("processInstanceId") String processInstanceId
+	) throws IOException {
+		ProcessEngine processEngine = ((ProcessEngine) getBpmProviderFlowable().getProcessEngine());
+		RepositoryService repositoryService = processEngine.getRepositoryService();
+		ProcessEngineConfiguration processEngineConfiguration = processEngine.getProcessEngineConfiguration();
+		RuntimeService runtimeService = processEngine.getRuntimeService();
+		
+		ProcessInstanceData processInstanceData = getBpmService().getProcessInstanceById(processInstanceId);
 
-		String deploymentId = process.getDeploymentId();
-		String diagramResourceName = process.getDiagramResourceName();
-
-		byte[] imageBytes = repositoryService
-				.getResourceAsStream(deploymentId, diagramResourceName)
-				.readAllBytes();
-
-		return ResponseEntity.ok(imageBytes);
+		if (processInstanceData != null) {
+			ProcessDefinition processDefinition = repositoryService.getProcessDefinition(processInstanceData.getProcessDefinitionId());
+	
+	        if (processDefinition != null && processDefinition.hasGraphicalNotation()) {
+	            BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinition.getId());
+	            ProcessDiagramGenerator diagramGenerator = processEngineConfiguration.getProcessDiagramGenerator();
+	            InputStream resource = diagramGenerator.generateDiagram(bpmnModel, "png", runtimeService.getActiveActivityIds(processInstanceData.getId()), Collections.emptyList(),
+	                    processEngineConfiguration.getActivityFontName(), processEngineConfiguration.getLabelFontName(),
+	                    processEngineConfiguration.getAnnotationFontName(), processEngineConfiguration.getClassLoader(), 1.0,processEngineConfiguration.isDrawSequenceFlowNameWithNoLabelDI());
+	
+	            HttpHeaders responseHeaders = new HttpHeaders();
+	            responseHeaders.set("Content-Type", "image/png");
+	            try {
+	                return new ResponseEntity<>(IOUtils.toByteArray(resource), responseHeaders, HttpStatus.OK);
+	            } catch (Exception e) {
+	                throw new IllegalArgumentException("Error exporting diagram", e);
+	            }
+	
+	        } else {
+	            throw new IllegalArgumentException("Process instance with id '" + processInstanceData.getId() + "' has no graphical notation defined.");
+	        }
+		}
+		return ResponseEntity.ok(new byte[] {});
 	}
 
 }
