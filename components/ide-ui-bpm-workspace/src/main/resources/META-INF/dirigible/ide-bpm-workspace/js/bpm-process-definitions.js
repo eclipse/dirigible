@@ -68,10 +68,11 @@ ideBpmProcessDefinitionsView.controller('IDEBpmProcessDefinitionsViewController'
         }
     }
 
-    this.selectionChanged = function (key) {
-        this.selectAll = this.definitionsList.every(x => x.selected);
-        messageHub.postMessage('diagram.definition', { definition: key });
-        messageHub.postMessage('definition.selected', { definition: key });
+    this.selectionChanged = function (definition) {
+        this.selectAll = this.definitionsList.every(x => x.selected = false);
+        messageHub.postMessage('diagram.definition', { definition: definition.key });
+        messageHub.postMessage('definition.selected', { definition: definition.key });
+        definition.selected = true;
     }
 
     this.clearSearch = function () {

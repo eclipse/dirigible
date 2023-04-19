@@ -69,10 +69,12 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
         }
     }
 
-    this.selectionChanged = function (id) {
-        this.selectAll = this.instancesList.every(x => x.selected);
-        messageHub.postMessage('diagram.instance', { instance: id });
-        messageHub.postMessage('instance.selected', { instance: id });
+    this.selectionChanged = function (instance) {
+        this.selectAll = this.instancesList.every(x => x.selected = false);
+        messageHub.postMessage('diagram.instance', { instance: instance.id });
+        messageHub.postMessage('instance.selected', { instance: instance.id });
+        instance.selected = true;
+        
     }
 
     this.clearSearch = function () {
