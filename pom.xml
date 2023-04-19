@@ -580,7 +580,7 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.12</mongodb.version>
 		<caffeine.version>3.1.6</caffeine.version>
-		<liquibase-core.version>4.20.0</liquibase-core.version>
+		<liquibase-core.version>4.21.1</liquibase-core.version>
 		<commons-csv.version>1.10.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<sap-theming__theming-base-content.version>11.1.42</sap-theming__theming-base-content.version>
@@ -625,7 +625,7 @@
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<graalvm.version>22.3.1</graalvm.version>
 		<guava.version>31.1-jre</guava.version>
-		<icu4j.version>72.1</icu4j.version>
+		<icu4j.version>73.1</icu4j.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<velocity.version>2.3</velocity.version>
