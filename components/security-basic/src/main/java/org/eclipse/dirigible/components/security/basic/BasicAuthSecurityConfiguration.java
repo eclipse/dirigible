@@ -66,8 +66,8 @@ public class BasicAuthSecurityConfiguration {
 		String username = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_USERNAME", "YWRtaW4="); // admin
 		String password = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_PASSWORD", "YWRtaW4="); // admin
 		UserDetails user = User
-				.withUsername(new String(new Base64().decode(username.getBytes()), StandardCharsets.UTF_8))
-				.password("{noop}" + new String(new Base64().decode(password.getBytes()), StandardCharsets.UTF_8))
+				.withUsername(new String(new Base64().decode(username.getBytes()), StandardCharsets.UTF_8).trim())
+				.password("{noop}" + new String(new Base64().decode(password.getBytes()), StandardCharsets.UTF_8).trim())
 				.roles("DEVELOPER", "OPERATOR")
 				.build();
 		return new InMemoryUserDetailsManager(user);
