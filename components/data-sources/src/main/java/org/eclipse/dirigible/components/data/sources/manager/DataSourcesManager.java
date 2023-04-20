@@ -138,12 +138,7 @@ public class DataSourcesManager implements InitializingBean {
 		properties.put("jdbcUrl", datasource.getUrl());
 		properties.put("dataSource.url", datasource.getUrl());
 		properties.put("dataSource.user", datasource.getUsername());
-		if (datasource.getPassword() != null
-				&& !datasource.getPassword().isEmpty()) {
-			properties.put("dataSource.password", new String(new Base64().decode(datasource.getPassword().getBytes()), StandardCharsets.UTF_8));
-		} else {
-			properties.put("dataSource.password", datasource.getPassword());
-		}
+		properties.put("dataSource.password", datasource.getPassword());
 		properties.put("dataSource.logWriter", new PrintWriter(System.out));
 		
 		HikariConfig config = new HikariConfig(properties);

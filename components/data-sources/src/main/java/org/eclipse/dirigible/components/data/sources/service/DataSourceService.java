@@ -124,10 +124,6 @@ public class DataSourceService implements ArtefactService<DataSource> {
 	 */
 	@Override
 	public DataSource save(DataSource datasource) {
-		if (datasource.getPassword() != null
-				&& !datasource.getPassword().isEmpty()) {
-			datasource.setPassword(new String(new Base64().decode(datasource.getPassword().getBytes()), StandardCharsets.UTF_8));
-		}
 		return datasourceRepository.saveAndFlush(datasource);
 	}
 	

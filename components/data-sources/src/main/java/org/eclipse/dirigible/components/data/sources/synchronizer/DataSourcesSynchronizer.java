@@ -169,8 +169,40 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 	 */
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
-		return true;
+		try {
+			DataSource datasource = null;
+			if (wrapper.getArtefact() instanceof DataSource) {
+				datasource = (DataSource) wrapper.getArtefact();
+			} else {
+				throw new UnsupportedOperationException(String.format("Trying to process %s as DataSource", wrapper.getArtefact().getClass()));
+			}
+			
+			
+			switch (flow) {
+			case CREATE:
+				if (datasource.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				}
+				break;
+			case UPDATE:
+				if (datasource.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+				}
+				break;
+			case DELETE:
+				if (datasource.getLifecycle().equals(ArtefactLifecycle.CREATED)
+						|| datasource.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+				}
+				break;
+			}
+			return true;
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			callback.addError(e.getMessage());
+			callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
+			return false;
+		}
 	}
 
 	/**
