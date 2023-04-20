@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * https://github.com/galovics/hibernate-encryption-listener
- *
- * @see EncryptionEvent
  */
 @Component
 public class EncryptionListener implements PreInsertEventListener, PreUpdateEventListener, PreLoadEventListener {
