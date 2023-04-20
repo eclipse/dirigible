@@ -10,20 +10,21 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getContent = function () {
-	return [
-	  {
-	    "name": "@dirigible/template",
-	    "description": "Dirigible Template module",
-	    "isPackageDescription": true,
-	    "dtsPath": "template/extensions/template.d.ts"
-	  },{
-	  "name": "template/engines",
-	  "description": "Template Engines API",
-	  "api": "engines",
-	  "versionedPaths": [
-	    "template/engines"
-	  ],
-	  "pathDefault": "template/engines"
-	}
-	];
+    return [
+        {
+            "name": "@dirigible/template",
+            "description": "Dirigible Template module",
+            "isPackageDescription": true,
+            "dtsPath": "template/extensions/template.d.ts"
+        },
+        {
+            "name": "template/engines",
+            "description": "Template Engines API",
+            "api": "engines",
+            "versionedPaths": [
+                "template/engines"
+            ],
+            "pathDefault": "template/engines"
+        }
+    ];
 };
