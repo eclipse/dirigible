@@ -123,7 +123,8 @@
                                         ng-required="isRequired(item.visibility, item.required)" ng-model="item.value"
                                         ng-trim="false" ng-minlength="item.minlength || 0"
                                         ng-maxlength="item.maxlength || -1" dg-input-rules="item.inputRules || {}"
-                                        ng-change="isValid(formFieldset['i' + item.id].$valid, item)">
+                                        ng-change="isValid(formFieldset['i' + item.id].$valid, item)"
+                                        ng-keyup="$event.keyCode == 13 && item.submitOnEnterId && formFieldset.$valid && formDialogAction(item.submitOnEnterId)">
                                     </fd-input>
                                     <fd-form-message dg-type="error">{{ item.errorMsg || "Incorrect input" }}
                                     </fd-form-message>

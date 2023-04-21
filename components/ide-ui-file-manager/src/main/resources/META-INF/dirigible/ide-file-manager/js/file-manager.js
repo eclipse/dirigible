@@ -506,6 +506,7 @@ fileManagerView.controller('FileManagerViewController', [
                         [{
                             id: "fmnffi1",
                             type: "input",
+                            submitOnEnterId: "b1",
                             label: "Name",
                             required: true,
                             inputRules: {
@@ -539,6 +540,7 @@ fileManagerView.controller('FileManagerViewController', [
                         [{
                             id: "fmnffi1",
                             type: "input",
+                            submitOnEnterId: "b1",
                             label: "Name",
                             required: true,
                             inputRules: {

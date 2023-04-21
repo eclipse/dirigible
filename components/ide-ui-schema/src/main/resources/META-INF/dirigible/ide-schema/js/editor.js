@@ -540,6 +540,7 @@ angular.module('ui.schema.modeler', ["ideUI", "ideView"])
 									[{
 										id: `dsmt-${cell.id}`,
 										type: "input",
+										submitOnEnterId: "b1",
 										label: "SQL",
 										value: cell.value.name,
 									}],
@@ -659,6 +660,7 @@ angular.module('ui.schema.modeler', ["ideUI", "ideView"])
 								[{
 									id: `dsmt-${cell.id}`,
 									type: "input",
+									submitOnEnterId: "b1",
 									label: "Name",
 									value: cell.value.name,
 								}],

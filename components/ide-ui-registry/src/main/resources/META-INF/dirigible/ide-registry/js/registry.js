@@ -469,6 +469,7 @@ registryView.controller('RegistryController', [
 						[{
 							id: "rnffi1",
 							type: "input",
+							submitOnEnterId: "b1",
 							label: "Name",
 							required: true,
 							inputRules: {
@@ -502,6 +503,7 @@ registryView.controller('RegistryController', [
 						[{
 							id: "rnffi1",
 							type: "input",
+							submitOnEnterId: "b1",
 							label: "Name",
 							required: true,
 							inputRules: {

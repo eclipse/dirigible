@@ -78,7 +78,7 @@ public class JavascriptService implements InitializingBean {
             String sourceFilePath = Path.of(projectName, projectFilePath).toString();
 			String maybeJSCode = dirigibleSourceProvider.getSource(sourceFilePath);
             if (maybeJSCode == null) {
-                throw new IOException("JavaScript source code for project name '" + projectName + "' and file name '" + projectFilePath + "' could not be found, hence consider publish it.");
+                throw new IOException("JavaScript source code for project name '" + projectName + "' and file name '" + projectFilePath + "' could not be found, consider publishing it.");
             }
 
             Path absoluteSourcePath = dirigibleSourceProvider.getAbsoluteSourcePath(projectName, projectFilePath);
