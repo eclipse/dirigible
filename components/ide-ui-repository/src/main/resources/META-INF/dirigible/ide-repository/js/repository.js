@@ -517,6 +517,7 @@ repositoryView.controller('RepositoryViewController', [
                         [{
                             id: "fmnffi1",
                             type: "input",
+                            submitOnEnterId: "b1",
                             label: "Name",
                             required: true,
                             inputRules: {
@@ -550,6 +551,7 @@ repositoryView.controller('RepositoryViewController', [
                         [{
                             id: "fmnffi1",
                             type: "input",
+                            submitOnEnterId: "b1",
                             label: "Name",
                             required: true,
                             inputRules: {

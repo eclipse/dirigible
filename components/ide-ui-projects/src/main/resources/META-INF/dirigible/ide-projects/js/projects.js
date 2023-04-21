@@ -631,7 +631,7 @@ projectsView.controller('ProjectsViewController', [
                 else messageHub.setStatusMessage(`Published all projects in '${$scope.selectedWorkspace.name}'`);
                 messageHub.announcePublish();
             });
-            
+
         };
 
         $scope.unpublishAll = function () {
@@ -757,6 +757,7 @@ projectsView.controller('ProjectsViewController', [
                     {
                         id: "pgfi1",
                         type: "input",
+                        submitOnEnterId: "b1",
                         label: "Name",
                         required: true,
                         placeholder: "project name",
@@ -827,6 +828,7 @@ projectsView.controller('ProjectsViewController', [
             dialogItems.push({
                 id: "pgfi1",
                 type: "input",
+                submitOnEnterId: "b1",
                 label: "Duplicated project name",
                 required: true,
                 placeholder: "project name",
@@ -864,6 +866,7 @@ projectsView.controller('ProjectsViewController', [
                     {
                         id: "pgfi1",
                         type: "input",
+                        submitOnEnterId: "b1",
                         label: "Name",
                         required: true,
                         placeholder: "workspace name",
@@ -1512,6 +1515,7 @@ projectsView.controller('ProjectsViewController', [
                         [{
                             id: "fdti1",
                             type: "input",
+                            submitOnEnterId: "b1",
                             label: "Name",
                             required: true,
                             inputRules: {
@@ -1544,6 +1548,7 @@ projectsView.controller('ProjectsViewController', [
                         [{
                             id: "fdti1",
                             type: "input",
+                            submitOnEnterId: "b1",
                             label: "Name",
                             required: true,
                             inputRules: {
@@ -1574,6 +1579,7 @@ projectsView.controller('ProjectsViewController', [
                         [{
                             id: "fdti1",
                             type: "input",
+                            submitOnEnterId: "b1",
                             label: "Name",
                             required: true,
                             inputRules: {
@@ -1752,6 +1758,7 @@ projectsView.controller('ProjectsViewController', [
                                 {
                                     id: "pgfi1",
                                     type: "input",
+                                    submitOnEnterId: "b1",
                                     label: "File path in project",
                                     required: true,
                                     placeholder: "/path/file",
@@ -1807,6 +1814,7 @@ projectsView.controller('ProjectsViewController', [
                                 {
                                     id: "pgfi1",
                                     type: "input",
+                                    submitOnEnterId: "b1",
                                     label: "Model (must be in the root of the project)",
                                     required: true,
                                     inputRules: {
@@ -1875,6 +1883,7 @@ projectsView.controller('ProjectsViewController', [
                                 [{
                                     id: "fdti1",
                                     type: "input",
+                                    submitOnEnterId: "b1",
                                     label: "Name",
                                     required: true,
                                     inputRules: {

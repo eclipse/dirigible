@@ -131,6 +131,7 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 				{
 					id: 'name',
 					type: 'input',
+					submitOnEnterId: "btnOK",
 					label: 'Name',
 					required: true,
 					placeholder: 'Enter folder name...',
@@ -194,6 +195,7 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 				{
 					id: 'name',
 					type: 'input',
+					submitOnEnterId: "btnOK",
 					label: 'Name',
 					required: true,
 					placeholder: `Enter ${itemType} name...`,

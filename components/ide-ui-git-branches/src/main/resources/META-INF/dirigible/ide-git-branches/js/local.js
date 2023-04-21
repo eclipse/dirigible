@@ -52,6 +52,7 @@ localBranchesView.controller('LocalBranchesViewController', [
                 [{
                     id: "cbn",
                     type: "input",
+                    submitOnEnterId: "b1",
                     label: "Name",
                     value: '',
                 }],

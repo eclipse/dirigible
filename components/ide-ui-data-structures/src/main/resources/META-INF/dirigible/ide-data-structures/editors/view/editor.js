@@ -185,6 +185,7 @@ angular.module('page', ["ideUI", "ideView"])
 				}, {
 					id: "veiName",
 					type: "input",
+					submitOnEnterId: "b1",
 					label: "Name",
 					required: true,
 					placeholder: "Enter name",
@@ -232,6 +233,7 @@ angular.module('page', ["ideUI", "ideView"])
 				}, {
 					id: "veiName",
 					type: "input",
+					submitOnEnterId: "b1",
 					label: "Name",
 					required: true,
 					placeholder: "Enter name",
