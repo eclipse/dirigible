@@ -115,7 +115,7 @@ declare module "@dirigible/cms" {
          * @param contentStream
          * @param versioningState
          */
-        createDocument(properties: JSON, contentStream, versioningState): Document
+        createDocument(properties: object, contentStream, versioningState): Document
 
         /**
          * Returns an array of CmisObject sub-elements of this Folder
@@ -178,6 +178,7 @@ declare module "@dirigible/cms" {
          */
         rename();
 
+        getContentStream();
     }
 
     interface ObjectFactory {
@@ -240,6 +241,7 @@ declare module "@dirigible/cms" {
         CONTENT_STREAM_FILE_NAME: "cmis:contentStreamFileName";
         CONTENT_STREAM_ID: "cmis:contentStreamId";
 
+        delete();
     }
 
     interface TypeDefinition {

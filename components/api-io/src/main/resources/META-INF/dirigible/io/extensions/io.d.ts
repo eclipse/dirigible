@@ -33,7 +33,7 @@ declare module "@dirigible/io" {
          * Whether a file by this path exists
          * @param path
          */
-        function exist(path: string): boolean;
+        function exists(path: string): boolean;
 
         /**
          * List files under this path

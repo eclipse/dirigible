@@ -12,19 +12,28 @@
 exports.getContent = function () {
     return [
         {
-            "name": "@dirigible/template",
-            "description": "Dirigible Template module",
+            "name": "@dirigible/qunit",
+            "description": "Dirigible QUnit module",
             "isPackageDescription": true,
-            "dtsPath": "template/extensions/template.d.ts"
+            "dtsPath": "qunit/extensions/qunit.d.ts"
         },
         {
-            "name": "template/engines",
-            "description": "Template Engines API",
-            "api": "engines",
+            "name": "qunit/qunit",
+            "description": "QUnit API",
+            "api": "qunit",
             "versionedPaths": [
-                "template/engines"
+                "qunit/qunit"
             ],
-            "pathDefault": "template/engines"
-        }
+            "pathDefault": "qunit/qunit"
+        },
+        {
+            "name": "qunit/runner",
+            "description": "Qunit Runner API",
+            "api": "runner",
+            "versionedPaths": [
+                "qunit/runner"
+            ],
+            "pathDefault": "qunit/runner"
+        },
     ];
 };

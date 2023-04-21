@@ -8,7 +8,7 @@ declare module "@dirigible/mail" {
          * @param text
          * @param sybType
          */
-        send(from: string, recipients: string [], subject: string, text: string, sybType);
+        send(from: string, recipients: { to: string[], cc?: string[], bcc?: string[]} | string, subject: string, text: string, sybType);
 
         toJavaProperties(properties);
 
@@ -30,7 +30,7 @@ declare module "@dirigible/mail" {
          * @param text
          * @param sybType
          */
-        function send(from: string, recipients: string [], subject: string, text: string, sybType);
+        function send(from: string, recipients: { to: string[], cc?: string[], bcc?: string[]} | string , subject: string, text: string, sybType);
     }
 
 }
