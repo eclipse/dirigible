@@ -93,6 +93,22 @@ public class EntityService implements ArtefactService<Entity> {
 	}
 	
 	/**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Entity> findByLocation(String location) {
+    	Entity filter = new Entity();
+        filter.setName(location);
+        Example<Entity> example = Example.of(filter);
+        List<Entity> list = entityRepository.findAll(example);
+        return list;
+    }
+	
+	/**
      * Find by key.
      *
      * @param key the key

@@ -96,6 +96,22 @@ public class ExtensionService implements ArtefactService<Extension> {
 	}
 	
 	/**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Extension> findByLocation(String location) {
+    	Extension filter = new Extension();
+        filter.setName(location);
+        Example<Extension> example = Example.of(filter);
+        List<Extension> list = extensionRepository.findAll(example);
+        return list;
+    }
+	
+	/**
      * Find by key.
      *
      * @param key the key

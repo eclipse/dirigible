@@ -62,7 +62,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	private Map<Synchronizer<Artefact>, Map<String, Definition>> definitions = Collections.synchronizedMap(new HashMap<>());
 	
 	/** The artefacts. */
-	private List<? extends Artefact> artefacts = Collections.synchronizedList(new ArrayList<>());
+	private Map<String, Artefact> artefacts = Collections.synchronizedMap(new HashMap<>());
 	
 	/** The repository. */
 	private IRepository repository;
@@ -112,7 +112,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			// prepare map
 			synchronizers.forEach(s -> definitions.put(s, Collections.synchronizedMap(new HashMap<>())));
 			
-			if (logger.isDebugEnabled()) {logger.debug("Collecting files...");}
+			if (logger.isTraceEnabled()) {logger.trace("Collecting files...");}
 			
 			// collect definitions for processing
 			collectFiles();
@@ -120,70 +120,89 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			if (logger.isDebugEnabled()) {logger.debug("Collecting files done. {} known types of definitions collected - {}.", synchronizers.size(),
 					synchronizers.stream().map(Synchronizer::getArtefactType).collect(Collectors.toUnmodifiableList()));}
 			
-			if (logger.isDebugEnabled()) {logger.debug("Loading definitions...");}
+			if (logger.isTraceEnabled()) {logger.trace("Loading definitions...");}
+			
 			// parse definitions to artefacts
 			parseDefinitions();
-			if (logger.isDebugEnabled()) {logger.debug("Loading definitions done. {} artefacts found. ", artefacts.size());}
 			
-			TopologicalSorter<TopologyWrapper<? extends Artefact>> sorter = new TopologicalSorter<>();
-			TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter = new TopologicalDepleter<>();
-			
-			List<TopologyWrapper<? extends Artefact>> wrappers = TopologyFactory.wrap(artefacts, synchronizers);
-			
-			if (logger.isDebugEnabled()) {logger.debug("Topological sorting...");}
-			// topological sorting by dependencies
-			wrappers = sorter.sort(wrappers);
-			
-			// reverse the order
-			Collections.reverse(wrappers);
-			
-			if (logger.isDebugEnabled()) {logger.debug("Preparing for processing...");}
-			// preparing and depleting
-			for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
-				List<TopologyWrapper<? extends Artefact>> locals = 
-						wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toUnmodifiableList());
-				try {
-		            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactPhase.PREPARE);
-		            registerErrors(synchronizer, results, ArtefactLifecycle.PREPARED);
-		        } catch (Exception e) {
-		            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-		            addError(e.getMessage());
-		        }
+			int countNew = 0;
+			int countModified = 0;
+			for (Artefact artefact : artefacts.values()) {
+				if (ArtefactLifecycle.NEW.equals(artefact.getLifecycle())) countNew++;
+				if (ArtefactLifecycle.MODIFIED.equals(artefact.getLifecycle())) countModified++;
 			}
-			if (logger.isDebugEnabled()) {logger.debug("Preparing for processing done.");}
 			
-			// return back to the sorted the order 
-			Collections.reverse(wrappers);
+			if (logger.isDebugEnabled()) {				
+				logger.debug("Loading of {} definitions done. {} artefacts found in total. {} new and {} modified.",
+						definitions.values().size(), artefacts.size(), countNew, countModified);
+			}
 			
-			if (logger.isDebugEnabled()) {logger.debug("Processing of artefacts...");}
-			// processing and depleting
-			for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
-				HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Running);
-				List<TopologyWrapper<? extends Artefact>> locals = 
-						wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toUnmodifiableList());
-				try {
-					
-					// phase create
-		            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(wrappers, ArtefactPhase.CREATE);
-		            registerErrors(synchronizer, results, ArtefactLifecycle.CREATED);
-		            
-		            // phase update
-		            results = depleter.deplete(wrappers, ArtefactPhase.UPDATE);
-		            registerErrors(synchronizer, results, ArtefactLifecycle.UPDATED);
-		            
-		            // phase start
-		            results = depleter.deplete(wrappers, ArtefactPhase.START);
-		            
-				} catch (Exception e) {
-					if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
-					addError(e.getMessage());
-					HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Failed);
+			if (countNew > 0 || countModified > 0) {
+			
+				TopologicalSorter<TopologyWrapper<? extends Artefact>> sorter = new TopologicalSorter<>();
+				TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter = new TopologicalDepleter<>();
+				
+				List<TopologyWrapper<? extends Artefact>> wrappers = TopologyFactory.wrap(artefacts.values(), synchronizers);
+				
+				if (logger.isTraceEnabled()) {logger.trace("Topological sorting...");}
+				
+				// topological sorting by dependencies
+				wrappers = sorter.sort(wrappers);
+				
+				// reverse the order
+				Collections.reverse(wrappers);
+				
+				if (logger.isTraceEnabled()) {logger.trace("Preparing for processing...");}
+				
+				// preparing and depleting
+				for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
+					List<TopologyWrapper<? extends Artefact>> unmodifiable = 
+							wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toUnmodifiableList());
+					try {
+			            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(unmodifiable, ArtefactPhase.PREPARE);
+			            registerErrors(synchronizer, results, ArtefactLifecycle.PREPARED);
+			        } catch (Exception e) {
+			            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			            addError(e.getMessage());
+			        }
 				}
-				HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Succeeded);
-			}
-			if (logger.isDebugEnabled()) {logger.debug("Processing of artefacts done.");}
+				if (logger.isTraceEnabled()) {logger.trace("Preparing for processing done.");}
+				
+				// return back to the sorted the order 
+				Collections.reverse(wrappers);
+				
+				if (logger.isTraceEnabled()) {logger.trace("Processing of artefacts...");}
+				// processing and depleting
+				for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
+					HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Running);
+					List<TopologyWrapper<? extends Artefact>> unmodifiable = 
+							wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toUnmodifiableList());
+					try {
+						
+						// phase create
+			            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(unmodifiable, ArtefactPhase.CREATE);
+			            registerErrors(synchronizer, results, ArtefactLifecycle.CREATED);
+			            
+			            // phase update
+			            results = depleter.deplete(wrappers, ArtefactPhase.UPDATE);
+			            registerErrors(synchronizer, results, ArtefactLifecycle.UPDATED);
+			            
+			            // phase start
+			            results = depleter.deplete(wrappers, ArtefactPhase.START);
+			            
+					} catch (Exception e) {
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+						addError(e.getMessage());
+						HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Failed);
+					}
+					HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Succeeded);
+				}
+				
+				if (logger.isTraceEnabled()) {logger.trace("Processing of artefacts done.");}
 			
-			if (logger.isDebugEnabled()) {logger.debug("Cleaning up removed artefacts...");}
+			}
+			
+			if (logger.isTraceEnabled()) {logger.trace("Cleaning up removed artefacts...");}
 			
 			// cleanup
 			for (Synchronizer<Artefact> synchronizer : synchronizers) {
@@ -197,12 +216,23 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 					}
 				}
 			}
-			if (logger.isDebugEnabled()) {logger.debug("Cleaning up removed artefacts done.");}
+			if (logger.isTraceEnabled()) {logger.trace("Cleaning up removed artefacts done.");}
 			
 			// report results
 			getErrors().forEach(e -> {if (logger.isErrorEnabled()) {logger.error("Error occured during synchronization: " + e);}});
 		} finally {
-			if (logger.isDebugEnabled()) {logger.debug("Processing synchronizers done. {} artefacts processed.", artefacts.size());}
+			if (logger.isDebugEnabled()) {
+				int countCreated = 0;
+				int countUpdated = 0;
+				int countFailed = 0;
+				for (Artefact artefact : artefacts.values()) {
+					if (ArtefactLifecycle.CREATED.equals(artefact.getLifecycle())) countCreated++;
+					if (ArtefactLifecycle.UPDATED.equals(artefact.getLifecycle())) countUpdated++;
+					if (ArtefactLifecycle.FAILED.equals(artefact.getLifecycle())) countFailed++;
+				}
+				logger.debug("Processing synchronizers done. {} artefacts processed in total. {} ({}/{}) successful and {} failed.",
+						artefacts.size(), countCreated + countUpdated, countCreated, countUpdated, countFailed);
+			}
 			// clear maps
 			definitions.clear();
 			artefacts.clear();
@@ -259,7 +289,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 							((Artefact) a).setPhase(ArtefactPhase.CREATE);
 							synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.NEW, "");
 						});
-						artefacts.addAll(parsed);
+						addArtefacts(parsed);
 						break;
 					case MODIFIED: // modified existing definition
 						parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
@@ -267,11 +297,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 							((Artefact) a).setPhase(ArtefactPhase.UPDATE);
 							synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.MODIFIED, "");
 						});
-						artefacts.addAll(parsed);
+						addArtefacts(parsed);
 						break;
 					case PARSED: // not new nor modified
 						parsed = synchronizer.retrieve(definition.getLocation());
-						artefacts.addAll(parsed);
+						addArtefacts(parsed);
 						break;
 					case BROKEN: // has been broken
 						break;
@@ -290,6 +320,17 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 					definitionService.save(definition);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Adds the artefacts.
+	 *
+	 * @param parsed the parsed
+	 */
+	private void addArtefacts(List<Artefact> parsed) {
+		for (Artefact artefact : parsed) {
+			artefacts.put(artefact.getKey(), artefact);
 		}
 	}
 

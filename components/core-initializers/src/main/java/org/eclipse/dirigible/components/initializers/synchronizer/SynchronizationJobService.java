@@ -50,12 +50,12 @@ public class SynchronizationJobService {
      */
     public void executeSynchronizationJob() {
 
-        logger.debug("The synchronization job has begun...");
+    	if (logger.isDebugEnabled()) {logger.debug("Synchronization started...");}
         try {
         	synchronizationProcessor.processSynchronizers();
         } finally {
             count.incrementAndGet();
-            logger.debug("Synchronization job has finished...");
+            if (logger.isDebugEnabled()) {logger.debug("Synchronization finished.");}
         }
     }
 

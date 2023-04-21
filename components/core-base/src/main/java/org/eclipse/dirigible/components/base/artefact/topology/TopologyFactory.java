@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.components.base.artefact.topology;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class TopologyFactory {
 	 * @param synchronizers the synchronizers
 	 * @return the list of topology wrappers
 	 */
-	public static final List<TopologyWrapper<? extends Artefact>> wrap(List<? extends Artefact> artefacts, List<Synchronizer<Artefact>> synchronizers) {
+	public static final List<TopologyWrapper<? extends Artefact>> wrap(Collection<Artefact> artefacts, List<Synchronizer<Artefact>> synchronizers) {
 		List<TopologyWrapper<? extends Artefact>> list = new ArrayList<TopologyWrapper<? extends Artefact>>();
 		Map<String, TopologyWrapper<? extends Artefact>> wrappers = new HashMap<String, TopologyWrapper<? extends Artefact>>();
 		for (Artefact artefact : artefacts) {

@@ -96,6 +96,22 @@ public class SchemaService implements ArtefactService<Schema> {
 	}
 	
 	/**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Schema> findByLocation(String location) {
+    	Schema filter = new Schema();
+        filter.setName(location);
+        Example<Schema> example = Example.of(filter);
+        List<Schema> list = schemaRepository.findAll(example);
+        return list;
+    }
+	
+	/**
      * Find by key.
      *
      * @param key the key

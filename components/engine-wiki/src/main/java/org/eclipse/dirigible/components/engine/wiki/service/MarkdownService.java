@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.engine.wiki.domain.Confluence;
 import org.eclipse.dirigible.components.engine.wiki.domain.Markdown;
-import org.eclipse.dirigible.components.engine.wiki.repository.ConfluenceRepository;
 import org.eclipse.dirigible.components.engine.wiki.repository.MarkdownRepository;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -132,6 +130,22 @@ public class MarkdownService implements ArtefactService<Markdown> {
         } else {
             throw new IllegalArgumentException("Markdown with name does not exist: " + name);
         }
+    }
+    
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Markdown> findByLocation(String location) {
+    	Markdown filter = new Markdown();
+        filter.setName(location);
+        Example<Markdown> example = Example.of(filter);
+        List<Markdown> list = markdownRepository.findAll(example);
+        return list;
     }
     
     /**

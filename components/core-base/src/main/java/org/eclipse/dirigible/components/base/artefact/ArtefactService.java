@@ -55,6 +55,14 @@ public interface ArtefactService<A extends Artefact> {
 	public A findByName(String name);
 	
 	/**
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the a
+	 */
+	public List<A> findByLocation(String location);
+	
+	/**
 	 * Find by key.
 	 *
 	 * @param key the key

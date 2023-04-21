@@ -133,6 +133,22 @@ public class ConfluenceService implements ArtefactService<Confluence> {
     }
     
     /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Confluence> findByLocation(String location) {
+    	Confluence filter = new Confluence();
+        filter.setName(location);
+        Example<Confluence> example = Example.of(filter);
+        List<Confluence> list = confluenceRepository.findAll(example);
+        return list;
+    }
+    
+    /**
      * Find by key.
      *
      * @param key the key

@@ -131,6 +131,22 @@ public class JobEmailService implements ArtefactService<JobEmail> {
     }
     
     /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<JobEmail> findByLocation(String location) {
+    	JobEmail filter = new JobEmail();
+        filter.setName(location);
+        Example<JobEmail> example = Example.of(filter);
+        List<JobEmail> list = jobEmailRepository.findAll(example);
+        return list;
+    }
+    
+    /**
      * Find by key.
      *
      * @param key the key

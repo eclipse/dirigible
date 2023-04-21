@@ -96,6 +96,22 @@ public class BpmnService implements ArtefactService<Bpmn> {
 	}
 	
 	/**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Bpmn> findByLocation(String location) {
+    	Bpmn filter = new Bpmn();
+        filter.setName(location);
+        Example<Bpmn> example = Example.of(filter);
+        List<Bpmn> list = bpmnRepository.findAll(example);
+        return list;
+    }
+	
+	/**
      * Find by key.
      *
      * @param key the key

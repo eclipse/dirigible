@@ -115,6 +115,22 @@ public class ODataSchemaService implements ArtefactService<ODataSchema>, Initial
     }
     
     /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<ODataSchema> findByLocation(String location) {
+    	ODataSchema filter = new ODataSchema();
+        filter.setName(location);
+        Example<ODataSchema> example = Example.of(filter);
+        List<ODataSchema> list = odataSchemaRepository.findAll(example);
+        return list;
+    }
+    
+    /**
      * Find by key.
      *
      * @param key the key

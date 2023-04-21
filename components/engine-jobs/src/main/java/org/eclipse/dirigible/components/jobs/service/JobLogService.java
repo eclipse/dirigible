@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,6 +126,22 @@ public class JobLogService implements ArtefactService<JobLog> {
         Example<JobLog> example = Example.of(filter);
         List<JobLog> jobLog = jobLogRepository.findAll(example);
         return jobLog;
+    }
+    
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<JobLog> findByLocation(String location) {
+    	JobLog filter = new JobLog();
+        filter.setName(location);
+        Example<JobLog> example = Example.of(filter);
+        List<JobLog> list = jobLogRepository.findAll(example);
+        return list;
     }
     
     /**

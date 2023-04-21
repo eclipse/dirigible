@@ -100,6 +100,22 @@ public class RoleService implements ArtefactService<Role> {
     }
     
     /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Role> findByLocation(String location) {
+    	Role filter = new Role();
+        filter.setName(location);
+        Example<Role> example = Example.of(filter);
+        List<Role> list = roleRepository.findAll(example);
+        return list;
+    }
+    
+    /**
      * Find by key.
      *
      * @param key the key

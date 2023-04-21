@@ -133,6 +133,22 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
     }
     
     /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<OpenAPI> findByLocation(String location) {
+    	OpenAPI filter = new OpenAPI();
+        filter.setName(location);
+        Example<OpenAPI> example = Example.of(filter);
+        List<OpenAPI> list = openAPIRepository.findAll(example);
+        return list;
+    }
+    
+    /**
      * Find by key.
      *
      * @param key the key

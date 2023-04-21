@@ -96,6 +96,22 @@ public class ViewService implements ArtefactService<View> {
 	}
 	
 	/**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<View> findByLocation(String location) {
+    	View filter = new View();
+        filter.setName(location);
+        Example<View> example = Example.of(filter);
+        List<View> list = viewRepository.findAll(example);
+        return list;
+    }
+	
+	/**
      * Find by key.
      *
      * @param key the key

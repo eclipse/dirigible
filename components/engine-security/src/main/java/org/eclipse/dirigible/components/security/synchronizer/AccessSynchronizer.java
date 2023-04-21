@@ -148,7 +148,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
             }
         }
 
-        return null;
+        return result;
     }
     
     /**

@@ -15,11 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.odata.domain.OData;
 import org.eclipse.dirigible.components.odata.domain.ODataContainer;
-import org.eclipse.dirigible.components.odata.domain.ODataSchema;
 import org.eclipse.dirigible.components.odata.repository.ODataContainerRepository;
-import org.eclipse.dirigible.components.odata.repository.ODataRepository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -115,6 +112,22 @@ public class ODataContainerService implements ArtefactService<ODataContainer>, I
         } else {
             throw new IllegalArgumentException("OData Container with name does not exist: " + name);
         }
+    }
+    
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<ODataContainer> findByLocation(String location) {
+    	ODataContainer filter = new ODataContainer();
+        filter.setName(location);
+        Example<ODataContainer> example = Example.of(filter);
+        List<ODataContainer> list = odataContainerRepository.findAll(example);
+        return list;
     }
     
     /**

@@ -11,11 +11,9 @@
  */
 package org.eclipse.dirigible.components.data.sources.service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.repository.DataSourceRepository;
@@ -96,6 +94,22 @@ public class DataSourceService implements ArtefactService<DataSource> {
 			throw new IllegalArgumentException("DataSource with name does not exist: " + name);
 		}
 	}
+	
+	/**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<DataSource> findByLocation(String location) {
+    	DataSource filter = new DataSource();
+        filter.setName(location);
+        Example<DataSource> example = Example.of(filter);
+        List<DataSource> list = datasourceRepository.findAll(example);
+        return list;
+    }
 	
 	/**
      * Find by key.

@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.odata.domain.ODataHandler;
 import org.eclipse.dirigible.components.odata.domain.ODataMapping;
-import org.eclipse.dirigible.components.odata.factory.DirigibleODataServiceFactory;
 import org.eclipse.dirigible.components.odata.repository.ODataMappingRepository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +112,22 @@ public class ODataMappingService implements ArtefactService<ODataMapping>, Initi
         } else {
             throw new IllegalArgumentException("OData Mapping with name does not exist: " + name);
         }
+    }
+    
+    /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<ODataMapping> findByLocation(String location) {
+    	ODataMapping filter = new ODataMapping();
+        filter.setName(location);
+        Example<ODataMapping> example = Example.of(filter);
+        List<ODataMapping> list = odataMappingRepository.findAll(example);
+        return list;
     }
     
     /**

@@ -96,6 +96,22 @@ public class ExposeService implements ArtefactService<Expose> {
 	}
 	
 	/**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Expose> findByLocation(String location) {
+    	Expose filter = new Expose();
+        filter.setName(location);
+        Example<Expose> example = Example.of(filter);
+        List<Expose> list = exposeRepository.findAll(example);
+        return list;
+    }
+	
+	/**
      * Find by key.
      *
      * @param key the key

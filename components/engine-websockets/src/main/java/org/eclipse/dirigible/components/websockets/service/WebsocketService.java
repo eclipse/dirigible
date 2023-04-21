@@ -96,6 +96,22 @@ public class WebsocketService implements ArtefactService<Websocket> {
     }
     
     /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Websocket> findByLocation(String location) {
+    	Websocket filter = new Websocket();
+        filter.setName(location);
+        Example<Websocket> example = Example.of(filter);
+        List<Websocket> list = websocketRepository.findAll(example);
+        return list;
+    }
+    
+    /**
      * Find by endpoint.
      *
      * @param endpoint the endpoint

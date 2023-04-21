@@ -92,6 +92,22 @@ public class ListenerService implements ArtefactService<Listener> {
     }
     
     /**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Listener> findByLocation(String location) {
+    	Listener filter = new Listener();
+        filter.setName(location);
+        Example<Listener> example = Example.of(filter);
+        List<Listener> list = listenerRepository.findAll(example);
+        return list;
+    }
+    
+    /**
      * Find by key.
      *
      * @param key the key

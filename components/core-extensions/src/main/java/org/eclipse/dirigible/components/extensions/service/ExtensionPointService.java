@@ -96,6 +96,22 @@ public class ExtensionPointService implements ArtefactService<ExtensionPoint> {
 	}
 	
 	/**
+     * Find by location.
+     *
+     * @param location the location
+     * @return the list
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<ExtensionPoint> findByLocation(String location) {
+    	ExtensionPoint filter = new ExtensionPoint();
+        filter.setName(location);
+        Example<ExtensionPoint> example = Example.of(filter);
+        List<ExtensionPoint> list = extensionPointRepository.findAll(example);
+        return list;
+    }
+	
+	/**
      * Find by key.
      *
      * @param key the key
