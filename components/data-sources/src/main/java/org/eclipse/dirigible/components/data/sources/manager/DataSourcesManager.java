@@ -16,11 +16,13 @@ import static java.text.MessageFormat.format;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
@@ -124,10 +126,12 @@ public class DataSourcesManager implements InitializingBean {
 		if (logger.isInfoEnabled()) {logger.info("Initializing a datasource with name: " + name);}
 		DataSource datasource;
 		datasource = getDataSourceDefinition(name);
-		try {
-			prepareRootFolder(name);
-		} catch (IOException e) {
-			logger.error("Invalid configuration for the datasource: " + name);
+		if (datasource.getDriver().equals("org.h2.Driver")) {
+			try {
+					prepareRootFolder(name);
+			} catch (IOException e) {
+				logger.error("Invalid configuration for the datasource: " + name);
+			}
 		}
 		Properties properties = new Properties();
 		properties.put("driverClassName", datasource.getDriver());

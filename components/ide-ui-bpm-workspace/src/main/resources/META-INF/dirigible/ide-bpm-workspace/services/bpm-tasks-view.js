@@ -9,15 +9,16 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const perspectiveData = {
-	id: "ide-bpm-workspace",
-	name: "Processes Workspace",
-	link: "../ide-bpm-workspace/perspective.html",
-	order: "820",
-	icon: "../ide-bpm-workspace/images/process.svg",
+const viewData = {
+    id: "bpm-user-tasks",
+    factory: "frame",
+    region: "bottom",
+    label: "Process User Tasks",
+    link: "../ide-bpm-workspace/bpm-tasks.html"
 };
+
 if (typeof exports !== 'undefined') {
-	exports.getPerspective = function () {
-		return perspectiveData;
-	}
+    exports.getView = function () {
+        return viewData;
+    }
 }

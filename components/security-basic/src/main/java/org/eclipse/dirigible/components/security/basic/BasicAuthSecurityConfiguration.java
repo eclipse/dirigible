@@ -11,8 +11,11 @@
  */
 package org.eclipse.dirigible.components.security.basic;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import org.apache.commons.codec.binary.Base64;
+import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,29 +40,34 @@ public class BasicAuthSecurityConfiguration {
 		    .csrf().disable()
 		    .httpBasic()
 		    .and()
-		    .authorizeRequests()
-		        .antMatchers("/login/**").permitAll()
-		        .antMatchers("/error/**").permitAll()
-		        .antMatchers("/error.html").permitAll()
-		        .antMatchers("/index-busy.html").permitAll()
-		        .antMatchers("/stomp").permitAll()
+//		    .authorizeRequests()
+//		        .antMatchers("/login/**").permitAll()
+//		        .antMatchers("/error/**").permitAll()
+//		        .antMatchers("/error.html").permitAll()
+//		        .antMatchers("/index-busy.html").permitAll()
+//		        .antMatchers("/stomp").permitAll()
+//		        .antMatchers("/actuator/**").permitAll()
 //		        .antMatchers("/*").fullyAuthenticated()
-		        .anyRequest().authenticated()
-		    .and()
+//		        .anyRequest().authenticated()
+//		    .and()
 		    .formLogin()
 		    .and()
 	        .logout().deleteCookies("JSESSIONID")
 	        .and()
 	        .headers().frameOptions().disable();
 		
+		HttpSecurityURIConfigurator.configure(http);
+		
 		return http.build();
 	}
 
 	@Bean
 	public InMemoryUserDetailsManager userDetailsService() {
+		String username = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_USERNAME", "YWRtaW4="); // admin
+		String password = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_BASIC_PASSWORD", "YWRtaW4="); // admin
 		UserDetails user = User
-				.withUsername("admin")
-				.password("{noop}admin")
+				.withUsername(new String(new Base64().decode(username.getBytes()), StandardCharsets.UTF_8).trim())
+				.password("{noop}" + new String(new Base64().decode(password.getBytes()), StandardCharsets.UTF_8).trim())
 				.roles("DEVELOPER", "OPERATOR")
 				.build();
 		return new InMemoryUserDetailsManager(user);

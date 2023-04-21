@@ -245,6 +245,22 @@ public class BpmProviderFlowable implements BpmProvider {
 		if (logger.isDebugEnabled()) {logger.debug("Done starting a BPMN process by key: " + key);}
 		return processInstance.getId();
 	}
+	
+	/**
+	 * Delete process.
+	 *
+	 * @param id the id
+	 * @param reason the reason
+	 */
+	public void deleteProcess(String id, String reason) {
+		if (logger.isDebugEnabled()) {logger.debug("Deleting a BPMN process instance by id: " + id);}
+		try {
+			processEngine.getRuntimeService().deleteProcessInstance(id, reason);
+			if (logger.isDebugEnabled()) {logger.debug("Done deleting a BPMN process instance by id: " + id);}
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		}
+	}
 
 	/**
 	 * Gets the tasks.

@@ -226,7 +226,8 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 				}
 				break;
 			case DELETE:
-				if (odata.getLifecycle().equals(ArtefactLifecycle.CREATED)) {
+				if (odata.getLifecycle().equals(ArtefactLifecycle.CREATED)
+						|| odata.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
 					cleanupOData(odata);
 					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
 				}

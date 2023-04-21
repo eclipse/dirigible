@@ -200,6 +200,13 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 			}
 			break;
 		case DELETE:
+			if (wiki.getLifecycle().equals(ArtefactLifecycle.CREATED)
+					|| wiki.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+				wikiService.removeGenerated(wiki.getLocation());
+				getService().delete(wiki);
+				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+			}
+			break;
 		case START:
 		case STOP:
 		}

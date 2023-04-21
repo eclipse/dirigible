@@ -43,13 +43,13 @@ tasksView.controller('TasksController', ['$http', '$timeout', 'messageHub', func
                 $http.get('/services/js/ide-bpm-workspace/api/tasks.mjs/tasks', { params: { 'condition': this.filterBy, 'limit': limit } })
                     .then((response) => {
                         if (this.tasksList.length < response.data.length ) {
-                            messageHub.showAlertInfo("User tasks", "A new user task has been added");
+                            //messageHub.showAlertInfo("User tasks", "A new user task has been added");
                         }
 
                         this.tasksList = response.data;
                         this.selectionChanged();
                     });
-        }, 1000);
+        }, 5000);
 
     }
 

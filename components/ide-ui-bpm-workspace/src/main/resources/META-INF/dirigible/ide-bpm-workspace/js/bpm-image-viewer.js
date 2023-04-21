@@ -12,7 +12,7 @@
 let bpmImageView = angular.module('bpm-image-app', ['ideUI', 'ideView']);
 
 bpmImageView.config(["messageHubProvider", function (messageHubProvider) {
-    messageHubProvider.eventIdPrefix = 'IDEBPMWorkspace';
+    messageHubProvider.eventIdPrefix = 'bpm';
 }]);
 
 bpmImageView.controller('BpmImageViewController', ['$scope', 'messageHub', function ($scope, messageHub) {
@@ -23,20 +23,38 @@ bpmImageView.controller('BpmImageViewController', ['$scope', 'messageHub', funct
         busyText: "Loading...",
     };
 
-    $scope.loadImageLink = function (filename) {
-        $scope.imageLink = `/services/ide/bpm/bpm-processes/${filename}/image`;
+    $scope.loadDefinitionImageLink = function (definition) {
+        $scope.imageLink = `/services/ide/bpm/bpm-processes/diagram/definition/${definition}`;
+        $scope.state.isBusy = false;
+    };
+    
+    $scope.loadInstanceImageLink = function (instance) {
+        $scope.imageLink = `/services/ide/bpm/bpm-processes/diagram/instance/${instance}`;
         $scope.state.isBusy = false;
     };
 
-    messageHub.onDidReceiveMessage('image-viewer.image', function (msg) {
+    messageHub.onDidReceiveMessage('diagram.definition', function (msg) {
         $scope.$apply(function () {
             $scope.state.isBusy = true;
-            if (!msg.data.hasOwnProperty('filename')) {
+            if (!msg.data.hasOwnProperty('definition')) {
                 $scope.state.error = true;
-                $scope.errorMessage = "The 'filename' parameter is missing.";
+                $scope.errorMessage = "The 'definition' parameter is missing.";
             } else {
                 $scope.state.error = false;
-                $scope.loadImageLink(msg.data.filename);
+                $scope.loadDefinitionImageLink(msg.data.definition);
+            }
+        });
+    });
+    
+    messageHub.onDidReceiveMessage('diagram.instance', function (msg) {
+        $scope.$apply(function () {
+            $scope.state.isBusy = true;
+            if (!msg.data.hasOwnProperty('instance')) {
+                $scope.state.error = true;
+                $scope.errorMessage = "The 'definition' parameter is missing.";
+            } else {
+                $scope.state.error = false;
+                $scope.loadInstanceImageLink(msg.data.instance);
             }
         });
     });

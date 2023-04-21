@@ -7,7 +7,7 @@ rs.service()
     .execute();
 
 function getUserTasks(ctx, request, response) {
-    const tasks = tasksService.getTasks().map(t => {
+    const tasks = tasksService.list().map(t => {
         return {
             taskId: t.id,
             operationType: t.name,

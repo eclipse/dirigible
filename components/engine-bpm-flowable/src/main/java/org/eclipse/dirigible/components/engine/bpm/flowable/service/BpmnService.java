@@ -24,6 +24,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class BpmnService.
+ */
 @Service
 @Transactional
 public class BpmnService implements ArtefactService<Bpmn> {

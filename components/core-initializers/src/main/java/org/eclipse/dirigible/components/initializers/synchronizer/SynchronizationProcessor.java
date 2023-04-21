@@ -200,7 +200,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			if (logger.isDebugEnabled()) {logger.debug("Cleaning up removed artefacts done.");}
 			
 			// report results
-			getErrors().forEach(e -> {if (logger.isErrorEnabled()) {logger.error(e);}});
+			getErrors().forEach(e -> {if (logger.isErrorEnabled()) {logger.error("Error occured during synchronization: " + e);}});
 		} finally {
 			if (logger.isDebugEnabled()) {logger.debug("Processing synchronizers done. {} artefacts processed.", artefacts.size());}
 			// clear maps
@@ -382,7 +382,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 					}
 					break;
 				case BROKEN: // has been started in the past, but failed to parse the file
-					logger.warn("Definition with key: {} has been failed with reason {}", maybe.getKey(), maybe.getMessage());
+					logger.warn("Definition with key: {} has been failed with reason: {}", maybe.getKey(), maybe.getMessage());
 					break;
 				case DELETED: // has been deleted in the past
 					break;

@@ -49,6 +49,13 @@
 			<version>9.0.0-SNAPSHOT</version>
     	</dependency>
     	
+    	<!-- Libraries -->
+    	<dependency>
+		    <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		    <version>${commons.codec}</version>
+		</dependency>
+    	
     </dependencies>
 
 	<properties>

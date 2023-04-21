@@ -9,15 +9,17 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const viewData = {
-	id: "bpm-image-viewer",
-	label: "Process Inspector",
-	factory: "frame",
-	region: "center",
-	link: "../ide-bpm-workspace/bpm-image-viewer.html",
-};
-if (typeof exports !== 'undefined') {
-	exports.getView = function () {
-		return viewData;
-	}
+package org.eclipse.dirigible.components.base.encryption;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * https://github.com/galovics/hibernate-encryption-listener
+ */
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Encrypted {
 }

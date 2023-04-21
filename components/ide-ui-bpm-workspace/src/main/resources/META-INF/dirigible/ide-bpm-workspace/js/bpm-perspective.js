@@ -12,15 +12,16 @@
 let IDEBPMWorkspacePerspective = angular.module("IDEBPMWorkspace", ["ngResource", "ideLayout", "ideUI"]);
 
 IDEBPMWorkspacePerspective.config(["messageHubProvider", function (messageHubProvider) {
-    messageHubProvider.eventIdPrefix = 'IDEBPMWorkspace';
+    messageHubProvider.eventIdPrefix = 'bpm';
 }]);
 
 IDEBPMWorkspacePerspective.controller("BpmWorkspaceViewController", ["$scope", function ($scope) {
     $scope.layoutModel = {
-        views: ["ide-bpm-files-view", "ide-bpm-image-viewer", "ide-user-tasks"],
+        views: ["bpm-process-definitions-view", "bpm-process-instances-view", "bpm-image-viewer", "bpm-user-tasks"],
         viewSettings: {
-            "ide-bpm-files-view": { expanded: true },
-            "ide-bpm-image-viewer": { closable: false },
+            "bpm-process-definitions-view": { expanded: true },
+            "bpm-process-instances-view": { expanded: true },
+            "bpm-image-viewer": { closable: false },
         },
         layoutSettings: {
             hideEditorsPane: false,

@@ -199,6 +199,13 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 			}
 			break;
 		case DELETE:
+			if (entity.getLifecycle().equals(ArtefactLifecycle.CREATED)
+					|| entity.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+				dataStore.removeMapping(entity.getKey());
+				dataStore.initialize();
+				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+			}
+			break;
 		case START:
 		case STOP:
 		}

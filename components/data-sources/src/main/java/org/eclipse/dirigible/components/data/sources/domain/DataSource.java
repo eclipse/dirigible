@@ -28,6 +28,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
+import org.eclipse.dirigible.components.base.encryption.Encrypted;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -67,6 +68,7 @@ public class DataSource extends Artefact {
 	/** The password. */
 	@Column(name = "DS_PASSWORD", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
+	@Encrypted
 	private String password;
 	
 	/** The properties. */
