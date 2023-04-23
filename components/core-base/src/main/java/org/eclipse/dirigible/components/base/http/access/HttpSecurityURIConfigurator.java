@@ -45,6 +45,7 @@ public class HttpSecurityURIConfigurator {
 	        .antMatchers("/services/**").authenticated()
 	        .antMatchers("/websockets/**").authenticated()
 	        .antMatchers("/odata/**").authenticated()
+	        .antMatchers("/swagger-ui/**").authenticated()
 	
 	        // "Developer" role required
 	        .antMatchers("/services/ide/**").hasRole("Developer")
