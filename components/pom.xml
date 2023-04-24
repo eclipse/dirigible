@@ -55,6 +55,7 @@
 		<module>engine-security</module>
 		<module>engine-listeners</module>
 		<module>engine-odata</module>
+		<module>engine-camel</module>
 		
 		<!-- IDE -->
 		<module>ide-workspace</module>
@@ -96,6 +97,7 @@
 		<module>ide-ui-git-service</module>
 		<module>ide-ui-image</module>
 		<module>ide-ui-import</module>
+		<module>ide-ui-integrations</module>
 		<module>ide-ui-jobs</module>
 		<module>ide-ui-jobs-menu</module>
 		<module>ide-ui-listeners</module>
@@ -212,7 +214,7 @@
 
 		<!-- Test -->
 		<module>test-project</module>
-	</modules>
+    </modules>
 
 	<dependencies>
 

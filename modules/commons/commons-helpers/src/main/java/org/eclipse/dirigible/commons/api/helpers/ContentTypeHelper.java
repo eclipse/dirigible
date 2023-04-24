@@ -430,6 +430,8 @@ public class ContentTypeHelper {
 	/** The Constant APPLICATION_BPMN. */
 	public static final String APPLICATION_BPMN = "application/bpmn+xml";
 
+	public static final String APPLICATION_CAMEL = "application/camel";
+
 	/** The Constant APPLICATION_SCHEMA. */
 	public static final String APPLICATION_SCHEMA = "application/database-schema-model+xml";
 
@@ -741,6 +743,7 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("tracwiki", TEXT_HTML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("twiki", TEXT_HTML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("bpmn", APPLICATION_BPMN); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("camel", APPLICATION_CAMEL); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("dsm", APPLICATION_SCHEMA); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("edm", APPLICATION_ENTITY_DATA_MODEL); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("hdi", APPLICATION_JSON_HDI); //$NON-NLS-1$

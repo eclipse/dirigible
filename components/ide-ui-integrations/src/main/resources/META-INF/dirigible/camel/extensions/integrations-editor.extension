@@ -1,0 +1,5 @@
+{
+    "module": "camel/services/integrations-editor.js",
+    "extensionPoint": "ide-editor",
+    "description": "Integrations Editor"
+}
