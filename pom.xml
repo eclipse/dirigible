@@ -558,7 +558,7 @@
 		<junit.version>4.13.2</junit.version>
 		<hamcrest.all.version>1.3</hamcrest.all.version>
 		<retrofit.version>1.8.0</retrofit.version>
-		<okhttp3.version>4.10.0</okhttp3.version>
+		<okhttp3.version>4.11.0</okhttp3.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.1.214</h2database.version>
 		<postgresql.version>42.6.0</postgresql.version>
