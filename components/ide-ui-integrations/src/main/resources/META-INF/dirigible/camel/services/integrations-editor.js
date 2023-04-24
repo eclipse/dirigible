@@ -15,7 +15,7 @@ const editorData = {
 	factory: "frame",
 	region: "center",
 	link: "../camel/designer/index.html",
-	contentTypes: ["application/json+camel"],
+	contentTypes: ["application/camel"],
 };
 if (typeof exports !== 'undefined') {
 	exports.getEditor = function () {
