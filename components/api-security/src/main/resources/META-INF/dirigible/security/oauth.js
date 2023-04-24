@@ -114,7 +114,7 @@ function OAuthClient (config) {
             }]
         });
         if (oauthResponse.statusCode !== 200) {
-            let errorMessage = `Error occurred while retrieving OAuth token. Status code: [${response.status}], text: [${response.text}]`;
+            let errorMessage = `Error occurred while retrieving OAuth token. Status code: [${oauthResponse.statusCode}], text: [${oauthResponse.text}]`;
             console.error(errorMessage);
             throw new Error(errorMessage);
         }
