@@ -25,15 +25,6 @@ exports.getContent = function() {
 				"security/user"
 			],
 			"pathDefault": "security/user"
-		},
-		{
-			"name": "security/oauth",
-			"description": "OAuth API",
-			"api": "oauth",
-			"versionedPaths": [
-				"security/oauth"
-			],
-			"pathDefault": "security/oauth"
 		}
 	];
 };
