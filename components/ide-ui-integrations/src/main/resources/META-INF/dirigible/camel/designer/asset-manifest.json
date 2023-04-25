@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/services/web/camel/designer/static/css/main.741cd576.css",
-    "main.js": "/services/web/camel/designer/static/js/main.55437b2f.js",
+    "main.js": "/services/web/camel/designer/static/js/main.10495ca4.js",
     "static/media/pfbg_992@2x.jpg": "/services/web/camel/designer/static/media/pfbg_992@2x.30e8d31f821a144fe52c.jpg",
     "static/media/pfbg_768@2x.jpg": "/services/web/camel/designer/static/media/pfbg_768@2x.eea28e73c0df6dbbb1ff.jpg",
     "static/media/pfbg_2000.jpg": "/services/web/camel/designer/static/media/pfbg_2000.3b693db01ef2135e3f14.jpg",
@@ -77,10 +77,10 @@
     "static/media/status-icon-sprite.svg": "/services/web/camel/designer/static/media/status-icon-sprite.4fee9fefc3971799d2dd.svg",
     "index.html": "/services/web/camel/designer/index.html",
     "main.741cd576.css.map": "/services/web/camel/designer/static/css/main.741cd576.css.map",
-    "main.55437b2f.js.map": "/services/web/camel/designer/static/js/main.55437b2f.js.map"
+    "main.10495ca4.js.map": "/services/web/camel/designer/static/js/main.10495ca4.js.map"
   },
   "entrypoints": [
     "static/css/main.741cd576.css",
-    "static/js/main.55437b2f.js"
+    "static/js/main.10495ca4.js"
   ]
 }

@@ -184,6 +184,7 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
                 case 'csv':
                 case 'csvim':
                 case 'hdbti':
+                case 'camel':
                 case 'form':
                     return;
                 default:

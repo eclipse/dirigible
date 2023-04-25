@@ -14,7 +14,7 @@ const editorData = {
 	label: "Integrations",
 	factory: "frame",
 	region: "center",
-	link: "../camel/designer/index.html",
+	link: "../camel/editor.html",
 	contentTypes: ["application/camel"],
 };
 if (typeof exports !== 'undefined') {
