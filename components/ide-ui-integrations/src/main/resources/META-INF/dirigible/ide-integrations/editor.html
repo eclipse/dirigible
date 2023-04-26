@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2023 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="editor-app" ng-controller="EditorViewController">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+    <title dg-view-title></title>
+    <script type="text/javascript" src="services/integrations-editor.js"></script>
+    <theme></theme>
+    <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
+    <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+    <script type="text/javascript" src="js/editor.js"></script>
+    <script defer="defer" src="/services/web/camel/designer/static/js/main.55437b2f.js"></script>
+    <link href="/services/web/camel/designer/static/css/main.741cd576.css" rel="stylesheet">
+</head>
+
+<body class="dg-center" fd-scrollbar>
+<fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
+    {{state.busyText}}
+</fd-busy-indicator-extended>
+
+<div id="root"></div>
+
+<fd-message-page glyph="sap-icon--error" ng-if="state.error">
+    <fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
+    <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
+</fd-message-page>
+</body>
+
+</html>
