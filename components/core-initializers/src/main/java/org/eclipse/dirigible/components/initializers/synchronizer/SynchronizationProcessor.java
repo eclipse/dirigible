@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -86,6 +87,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	/** The prepared. */
 	private AtomicBoolean prepared = new AtomicBoolean(false);
 	
+	/** The processing. */
+	private AtomicBoolean processing = new AtomicBoolean(false);
+	
 	/**
 	 * Instantiates a new synchronization processor.
 	 *
@@ -132,6 +136,13 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			return;
 		}
 		
+		if (processing.get()) {
+			if (logger.isDebugEnabled()) {logger.debug("Skipped synchronization as it is currently in progress.");}
+			return;
+		}
+		
+		processing.set(true);
+		
 		if (logger.isDebugEnabled()) {logger.debug("Processing synchronizers started...");}
 		
 		try {
@@ -166,7 +177,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 						definitions.values().size(), artefacts.size(), countNew, countModified);
 			}
 			
-			if (countNew > 0 || countModified > 0) {
+			if (countNew > 0 || countModified > 0 || !initialized.get()) {
 			
 				TopologicalSorter<TopologyWrapper<? extends Artefact>> sorter = new TopologicalSorter<>();
 				TopologicalDepleter<TopologyWrapper<? extends Artefact>> depleter = new TopologicalDepleter<>();
@@ -267,6 +278,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			artefacts.clear();
 			synchronizationWatcher.reset();
 			initialized.set(true);
+			processing.set(false);
 		}
 	}
 
@@ -371,7 +383,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 * @return the registry folder
 	 */
 	public String getRegistryFolder() {
-		return ((LocalRepository) repository).getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+		String internalRegistryPath = ((LocalRepository) repository).getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+		File registry = Path.of(internalRegistryPath).toFile();
+		if (!registry.exists()) {
+			registry.mkdirs();
+		}
+		return internalRegistryPath;
 	}
 
 	/**

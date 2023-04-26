@@ -49,8 +49,8 @@ public class SynchronizationInitializer {
 	 */
 	@EventListener(ApplicationReadyEvent.class)
 	public void handleContextStart(final ApplicationReadyEvent are) {
-		classpathExpander.expandContent();
 		synchronizationProcessor.prepareSynchronizers();
+		classpathExpander.expandContent();
 		synchronizationProcessor.processSynchronizers();
 	}
 
