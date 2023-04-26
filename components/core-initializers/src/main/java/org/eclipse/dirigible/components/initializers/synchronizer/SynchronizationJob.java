@@ -11,6 +11,13 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -30,6 +37,8 @@ public class SynchronizationJob implements Job {
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationJob.class);
 	
+	private ExecutorService executor = Executors.newFixedThreadPool(1);
+	
 	/** The job service. */
 	@Autowired
     private SynchronizationJobService jobService;
@@ -44,7 +53,9 @@ public class SynchronizationJob implements Job {
 
         logger.debug("Job {} fired @ {}", context.getJobDetail().getKey().getName(), context.getFireTime());
 
-        jobService.executeSynchronizationJob();
+		executor.submit(() -> {
+			jobService.executeSynchronizationJob();
+		});
 
         logger.debug("Next job scheduled @ {}", context.getNextFireTime());
     }
