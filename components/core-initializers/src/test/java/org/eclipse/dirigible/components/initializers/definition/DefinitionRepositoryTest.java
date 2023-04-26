@@ -31,6 +31,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * The Class DefinitionRepositoryTest.
+ */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
@@ -38,12 +41,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DefinitionRepositoryTest {
 	
+	/** The definition repository. */
 	@Autowired
 	private DefinitionRepository definitionRepository;
 	
+	/** The entity manager. */
 	@Autowired
 	EntityManager entityManager;
 	
+	/**
+	 * Setup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeEach
     public void setup() throws Exception {
 		
@@ -57,12 +67,22 @@ public class DefinitionRepositoryTest {
 		definitionRepository.save(createDefinition("/a/b/c/e5.odata", "e5", "odata"));
     }
 	
+	/**
+	 * Cleanup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@AfterEach
     public void cleanup() throws Exception {
 		definitionRepository.deleteAll();
     }
 	
 
+	/**
+	 * Gets the one.
+	 *
+	 * @return the one
+	 */
 	@Test
     public void getOne() {
 		Long id = definitionRepository.findAll().get(0).getId();
@@ -77,6 +97,11 @@ public class DefinitionRepositoryTest {
 //        assertEquals("2A7E378A9D6EB6051F3A0D733263C78F", definition.getChecksum());
     }
 	
+	/**
+	 * Gets the reference using entity manager.
+	 *
+	 * @return the reference using entity manager
+	 */
 	@Test
     public void getReferenceUsingEntityManager() {
 		Long id = definitionRepository.findAll().get(0).getId();
@@ -85,12 +110,23 @@ public class DefinitionRepositoryTest {
         assertNotNull(definition.getLocation());
     }
 	
+	/**
+	 * Creates the definition.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param type the type
+	 * @return the definition
+	 */
 	public static Definition createDefinition(String location, String name, String type) {
 		Definition definition = new Definition(location, name, type, 
 				("{'location':" + location + ", 'name':" + name + ",  'type':" + type + "}").getBytes());
 		return definition;
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

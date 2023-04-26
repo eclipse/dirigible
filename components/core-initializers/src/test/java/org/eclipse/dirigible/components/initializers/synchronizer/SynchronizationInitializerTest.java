@@ -31,16 +31,27 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+/**
+ * The Class SynchronizationInitializerTest.
+ */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { SynchronousSpringEventsConfig.class }, loader = AnnotationConfigContextLoader.class)
 @EntityScan("org.eclipse.dirigible.components")
 public class SynchronizationInitializerTest {
 	
+	/**
+	 * The Class ContextConfiguration.
+	 */
 	@Configuration
 	@ComponentScan("org.eclipse.dirigible.components")
     static class ContextConfiguration {
 
+        /**
+         * Repository.
+         *
+         * @return the i repository
+         */
         @Bean("SynchronizationInitializerTestReposiotry")
         public IRepository repository() {
             return new RepositoryConfig().repository();
@@ -48,12 +59,20 @@ public class SynchronizationInitializerTest {
         
     }
 	
+	/** The listener. */
 	@Autowired
     private SynchronizationInitializer listener;
 	
+	/** The repository. */
 	@Autowired
     private IRepository repository;
 	
+	/**
+	 * Test context started handler.
+	 *
+	 * @throws RepositoryWriteException the repository write exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
     public void testContextStartedHandler() throws RepositoryWriteException, IOException {
 		System.out.println("Test context started listener.");
@@ -63,6 +82,9 @@ public class SynchronizationInitializerTest {
 		listener.handleContextStart(null);
     }
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

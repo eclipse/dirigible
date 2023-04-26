@@ -335,20 +335,6 @@
 			<version>${webjars-locator}</version>
 		</dependency>
 
-		<!-- Olingo -->
-		<dependency>
-			<groupId>org.apache.olingo</groupId>
-			<artifactId>olingo-odata2-lib</artifactId>
-			<version>${olingo.version}</version>
-			<type>pom</type>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.ws.rs</groupId>
-					<artifactId>javax.ws.rs-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
 	</dependencies>
 
 	<properties>

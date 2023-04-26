@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
@@ -76,18 +77,26 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	/** The definition service. */
 	private DefinitionService definitionService;
 	
+	/** The synchronization watcher. */
+	private SynchronizationWatcher synchronizationWatcher;
+	
+	/** The initialized. */
+	private AtomicBoolean initialized = new AtomicBoolean(false);
+	
 	/**
 	 * Instantiates a new synchronization processor.
 	 *
 	 * @param repository the repository
 	 * @param synchronizers the synchronizers
 	 * @param definitionService the definition service
+	 * @param synchronizationWatcher the synchronization watcher
 	 */
 	@Autowired
-	public SynchronizationProcessor(IRepository repository, List<Synchronizer<Artefact>> synchronizers, DefinitionService definitionService) {
+	public SynchronizationProcessor(IRepository repository, List<Synchronizer<Artefact>> synchronizers, DefinitionService definitionService, SynchronizationWatcher synchronizationWatcher) {
 		this.repository = repository;
 		this.synchronizers = Collections.synchronizedList(synchronizers);
 		this.definitionService = definitionService;
+		this.synchronizationWatcher = synchronizationWatcher;
 		this.synchronizers.forEach(s -> s.setCallback(this));
 	}
 	
@@ -96,12 +105,23 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 */
 	public synchronized void prepareSynchronizers() {
 		this.synchronizers.forEach(s -> s.getService().getAll().forEach(a -> {a.setRunning(false); s.getService().save(a);}));
+		try {
+			this.synchronizationWatcher.initialize(getRegistryFolder());
+		} catch (IOException | InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 	
 	/**
 	 * Process synchronizers.
 	 */
 	public synchronized void processSynchronizers() {
+		
+		if (!this.synchronizationWatcher.isModified()
+				&& initialized.get()) {
+			if (logger.isDebugEnabled()) {logger.debug("Skipped synchronization as no changes in the Registry.");}
+			return;
+		}
 		
 		if (logger.isDebugEnabled()) {logger.debug("Processing synchronizers started...");}
 		
@@ -236,6 +256,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			// clear maps
 			definitions.clear();
 			artefacts.clear();
+			synchronizationWatcher.reset();
+			initialized.set(true);
 		}
 	}
 

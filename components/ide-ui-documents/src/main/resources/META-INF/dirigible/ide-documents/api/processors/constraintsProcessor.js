@@ -76,8 +76,13 @@ exports.updateAccessDefinitions = function (accessDefinitions) {
     let content = JSON.stringify(accessDefinitions);
     let resource = repositoryManager.getResource(path);
     if (resource.exists()) {
-        repositoryManager.deleteResource(path);
-    }
-    repositoryManager.createResource(path, content);
-    updateAccessDefinitionsInCMS(content);
+		if (resource.getText() !== content) {
+			repositoryManager.deleteResource(path);
+        	repositoryManager.createResource(path, content);
+    		updateAccessDefinitionsInCMS(content);
+		}
+    } else {
+		repositoryManager.createResource(path, content);
+    	updateAccessDefinitionsInCMS(content);
+	}
 };

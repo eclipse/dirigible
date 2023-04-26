@@ -26,15 +26,26 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+/**
+ * The Class ClasspathContentInitializerTest.
+ */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { SynchronousSpringEventsConfig.class }, loader = AnnotationConfigContextLoader.class)
 @EntityScan("org.eclipse.dirigible.components") 
 public class ClasspathContentInitializerTest {
 	
+	/**
+	 * The Class ContextConfiguration.
+	 */
 	@Configuration
     static class ContextConfiguration {
 
+        /**
+         * Repository.
+         *
+         * @return the i repository
+         */
         @Bean("ClasspathContentInitializerTestRepository")
         public IRepository repository() {
             return new RepositoryConfig().repository();
@@ -42,15 +53,22 @@ public class ClasspathContentInitializerTest {
         
     }
 	
+	/** The listener. */
 	@Autowired
     private ClasspathContentInitializer listener;
 	
+	/**
+	 * Test context started handler.
+	 */
 	@Test
     public void testContextStartedHandler() {
 		System.out.println("Test context started listener.");
 		listener.handleContextStart(null);
     }
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}
