@@ -147,11 +147,11 @@ public class SystemScheduler {
     public Trigger trigger(JobDetail job) {
 
     	String frequency = org.eclipse.dirigible.commons.config.Configuration.get(
-    			DIRIGIBLE_SYNCHRONIZER_FREQUENCY, "20");
-        int frequencyInSec = 20;
+    			DIRIGIBLE_SYNCHRONIZER_FREQUENCY, "10");
+        int frequencyInSec = Integer.parseInt(frequency);
         logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
 
-        return newTrigger().forJob(job).withIdentity(TriggerKey.triggerKey("Synchronization_Trigger"))
+        return newTrigger().forJob(job).withIdentity(TriggerKey.triggerKey("Synchronizer"))
         		.withDescription("Synchronization trigger")
         		.withSchedule(simpleSchedule().withIntervalInSeconds(frequencyInSec).repeatForever()).build();
     }

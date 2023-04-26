@@ -83,6 +83,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	/** The initialized. */
 	private AtomicBoolean initialized = new AtomicBoolean(false);
 	
+	/** The prepared. */
+	private AtomicBoolean prepared = new AtomicBoolean(false);
+	
 	/**
 	 * Instantiates a new synchronization processor.
 	 *
@@ -107,6 +110,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		this.synchronizers.forEach(s -> s.getService().getAll().forEach(a -> {a.setRunning(false); s.getService().save(a);}));
 		try {
 			this.synchronizationWatcher.initialize(getRegistryFolder());
+			prepared.set(true);
 		} catch (IOException | InterruptedException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -120,6 +124,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 		if (!this.synchronizationWatcher.isModified()
 				&& initialized.get()) {
 			if (logger.isDebugEnabled()) {logger.debug("Skipped synchronization as no changes in the Registry.");}
+			return;
+		}
+		
+		if (!prepared.get()) {
+			if (logger.isDebugEnabled()) {logger.debug("Skipped synchronization as the runtime is not prepared yet.");}
 			return;
 		}
 		

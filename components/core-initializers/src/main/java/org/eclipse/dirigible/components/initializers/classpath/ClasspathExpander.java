@@ -13,7 +13,10 @@ package org.eclipse.dirigible.components.initializers.classpath;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.*;
+import java.net.JarURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
@@ -67,7 +70,7 @@ public class ClasspathExpander {
      */
     private void expandContent(String root) {
         try {
-            Enumeration<URL> urls = ClasspathContentInitializer.class.getClassLoader().getResources("META-INF");
+            Enumeration<URL> urls = ClasspathExpander.class.getClassLoader().getResources("META-INF");
 
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
