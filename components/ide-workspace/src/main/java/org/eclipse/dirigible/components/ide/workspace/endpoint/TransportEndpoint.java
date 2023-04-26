@@ -34,6 +34,7 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -132,11 +133,11 @@ public class TransportEndpoint {
 	 * @throws DecoderException the repository export exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	@PostMapping(value = "/zipimport/{workspace}/{project}/{folder}", consumes = "multipart/form-data", produces = "application/json")
+	@PostMapping(value = "/zipimport/{workspace}/{project}/{*folder}", consumes = "multipart/form-data", produces = "application/json")
 	public ResponseEntity<?> importZipToFolder(
-			@PathVariable("workspace") String workspace,
-			@PathVariable("project") String project,
-			@PathVariable("folder") String folder,
+			@Validated @PathVariable("workspace") String workspace,
+			@Validated @PathVariable("project") String project,
+			@Nullable @PathVariable("folder") String folder,
 			@Validated @RequestParam("file") MultipartFile file) throws RepositoryExportException, DecoderException, IOException {
 
 		String relativePath;
@@ -236,7 +237,7 @@ public class TransportEndpoint {
 	public ResponseEntity<?> importFilesToFolder(
 			@Validated @PathVariable("workspace") String workspace,
 			@Validated @PathVariable("project") String project,
-			@Validated @PathVariable("folder") String folder,
+			@Nullable @PathVariable("folder") String folder,
 			@Validated @RequestParam("file") MultipartFile file) throws RepositoryExportException, DecoderException, IOException {
 
 		String relativePath;

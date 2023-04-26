@@ -94,6 +94,8 @@ importView.controller('ImportViewController', [
                         'Dirigible-Editor': 'Editor'
                     };
                     item.url = new UriBuilder().path(transportApi.getFileImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).path('/').build();
+                } else {
+                    item.url = new UriBuilder().path(transportApi.getZipImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path('/').build();
                 }
             }
         };
