@@ -91,9 +91,7 @@ importView.controller('ImportViewController', [
                     item.url = new UriBuilder().path(projectImportUrl.split('/')).path($scope.selectedWorkspace.name).build();
                 } else if ($scope.inDialog && $scope.importType === 'file') {
                     item.headers = {
-                        'Dirigible-Editor': 'Editor',
-                        'Content-Type': 'multipart/form-data',
-                        'Content-Transfer-Encoding': 'base64'
+                        'Dirigible-Editor': 'Editor'
                     };
                     item.url = new UriBuilder().path(transportApi.getFileImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).path('/').build();
                 }

@@ -234,9 +234,9 @@ public class TransportEndpoint {
 	 */
 	@PostMapping(value = "/fileimport/{workspace}/{project}/{*folder}", consumes = "multipart/form-data", produces = "application/json")
 	public ResponseEntity<?> importFilesToFolder(
-			@PathVariable("workspace") String workspace,
-			@PathVariable("project") String project,
-			@PathVariable("folder") String folder,
+			@Validated @PathVariable("workspace") String workspace,
+			@Validated @PathVariable("project") String project,
+			@Validated @PathVariable("folder") String folder,
 			@Validated @RequestParam("file") MultipartFile file) throws RepositoryExportException, DecoderException, IOException {
 
 		String relativePath;
