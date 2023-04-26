@@ -9,16 +9,15 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let editorView = angular.module('editor-app', ['ideUI', 'ideView']);
+let editorView = angular.module('integrations', ['ideUI', 'ideView']);
 
-editorView.controller('EditorViewController', ['$scope', '$window', '$http', 'messageHub', 'ViewParameters', function ($scope, $window, $http, messageHub, ViewParameters) {
+editorView.controller('EditorViewController', ['$scope', '$window', 'messageHub', 'ViewParameters', function ($scope, $window, messageHub, ViewParameters) {
     $scope.state = {
         isBusy: true,
         error: false,
         busyText: "Loading...",
     };
-
-    $scope.integrationData = '';
+    $scope.errorMessage = '';
 
     angular.element($window).bind("focus", function () {
         messageHub.setFocusedEditor($scope.dataParameters.file);
@@ -34,28 +33,29 @@ editorView.controller('EditorViewController', ['$scope', '$window', '$http', 'me
         $scope.state.error = true;
         $scope.errorMessage = "The 'file' data parameter is missing.";
     } else {
-        // Do something and don't forget to set '$scope.state.isBusy' to 'false'
-        // loadFileContents();
-    }
-
-    function loadFileContents() {
-        $http.get('/services/ide/workspaces' + $scope.dataParameters.file)
-            .then(function (response) {
-                let contents = response.data;
-                if (!contents || !Array.isArray(contents)) {
-                    contents = [];
-                }
-                $scope.integrationData = contents;
-                $scope.state.isBusy = false;
-            }, function (response) {
-                $scope.state.error = true;
-                $scope.errorMessage = "Unable to load the file. See console, for more information.";
-                messageHub.setStatusError(`Error loading '${$scope.dataParameters.file}'`);
-                if (response.data) {
-                    if ("error" in response.data) {
-                        console.error("Error loading file:", response.data.error.message);
-                    }
-                } else console.error("Error loading file:", response);
-            });
+        const script = document.createElement('script');
+        script.src = "/designer/static/js/main.55437b2f.js";
+        document.getElementsByTagName('head')[0].appendChild(script);
     }
 }]);
+
+let editorScope;
+
+function getFileUrl() {
+    if (!editorScope) editorScope = angular.element(document.getElementsByTagName('html')).scope();
+    return `/services/ide/workspaces${editorScope.dataParameters.file}`;
+}
+
+function setStateBusy(isBusy, text = '') {
+    editorScope.$apply(function () {
+        editorScope.state.isBusy = isBusy;
+        editorScope.state.text = text;
+    });
+}
+
+function setStateError(isError, message) {
+    editorScope.$apply(function () {
+        editorScope.state.error = isError;
+        editorScope.errorMessage = message;
+    });
+}
