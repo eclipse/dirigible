@@ -26,8 +26,10 @@ import java.nio.file.StandardOpenOption;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.components.engine.web.exposure.ExposeManager;
 import org.eclipse.dirigible.components.engine.web.repository.ExposeRepository;
+import org.eclipse.dirigible.components.initializers.classpath.ClasspathExpander;
 import org.eclipse.dirigible.components.initializers.definition.DefinitionRepository;
 import org.eclipse.dirigible.components.initializers.synchronizer.SynchronizationProcessor;
+import org.eclipse.dirigible.components.initializers.synchronizer.SynchronizationWatcher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,6 +71,12 @@ public class WebEndpointTest {
 	
 	@Autowired
 	private SynchronizationProcessor synchronizationProcessor;
+	
+	@Autowired
+	private ClasspathExpander classpathExpander;
+	
+	@Autowired
+	private SynchronizationWatcher synchronizationWatcher;
 	
 	@MockBean
 	DefinitionRepository definitionRepository;
@@ -117,6 +125,7 @@ public class WebEndpointTest {
 		Files.writeString(Paths.get(registyrFolder, "demo", "hidden", "hidden.txt"), "Hidden", StandardOpenOption.CREATE);
 		Files.writeString(Paths.get(registyrFolder, "demo", "ui", "index.html"), "Hidden", StandardOpenOption.CREATE);
 		try {
+			synchronizationWatcher.force();
 			synchronizationProcessor.processSynchronizers();
 			assertTrue(ExposeManager.listRegisteredProjects().size() > 0);
 			assertTrue(ExposeManager.isPathExposed("demo/ui"));
