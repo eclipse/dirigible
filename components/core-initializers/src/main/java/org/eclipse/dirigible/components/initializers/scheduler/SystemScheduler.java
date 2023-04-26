@@ -132,7 +132,7 @@ public class SystemScheduler {
     public JobDetail jobDetail() {
 
         return newJob().ofType(SynchronizationJob.class).storeDurably()
-        		.withIdentity(JobKey.jobKey("SynchronizationJob_Detail"))
+        		.withIdentity(JobKey.jobKey("SynchronizationJobDetail"))
         		.withDescription("Invoke Synchronization Job service...")
         		.build();
     }
@@ -151,7 +151,7 @@ public class SystemScheduler {
         int frequencyInSec = Integer.parseInt(frequency);
         logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
 
-        return newTrigger().forJob(job).withIdentity(TriggerKey.triggerKey("Synchronizer"))
+        return newTrigger().forJob(job).withIdentity(TriggerKey.triggerKey("SynchronizationJobTrigger"))
         		.withDescription("Synchronization trigger")
         		.withSchedule(simpleSchedule().withIntervalInSeconds(frequencyInSec).repeatForever()).build();
     }
