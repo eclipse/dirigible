@@ -11,6 +11,8 @@
  */
 let editorView = angular.module('integrations', ['ideUI', 'ideView']);
 
+let editorScope;
+
 editorView.controller('EditorViewController', ['$scope', '$window', 'messageHub', 'ViewParameters', function ($scope, $window, messageHub, ViewParameters) {
     $scope.state = {
         isBusy: true,
@@ -33,23 +35,25 @@ editorView.controller('EditorViewController', ['$scope', '$window', 'messageHub'
         $scope.state.error = true;
         $scope.errorMessage = "The 'file' data parameter is missing.";
     } else {
+        editorScope = $scope;
         const script = document.createElement('script');
-        script.src = "/designer/static/js/main.55437b2f.js";
+        script.src = "designer/static/js/main.a9b4d6ee.js";
         document.getElementsByTagName('head')[0].appendChild(script);
     }
 }]);
 
-let editorScope;
-
-function getFileUrl() {
-    if (!editorScope) editorScope = angular.element(document.getElementsByTagName('html')).scope();
-    return `/services/ide/workspaces${editorScope.dataParameters.file}`;
+function getBaseUrl() {
+    return '/services/ide/workspaces';
 }
 
-function setStateBusy(isBusy, text = '') {
+function getFileName() {
+    return editorScope.dataParameters.file;
+}
+
+function setStateBusy(isBusy, text) {
     editorScope.$apply(function () {
         editorScope.state.isBusy = isBusy;
-        editorScope.state.text = text;
+        if (text) editorScope.state.text = text;
     });
 }
 

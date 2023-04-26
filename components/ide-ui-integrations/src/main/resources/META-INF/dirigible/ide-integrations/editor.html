@@ -8,7 +8,8 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="integrations" ng-controller="EditorViewController">
+<html id="appBase" lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="integrations"
+    ng-controller="EditorViewController">
 
     <head>
         <meta charset="utf-8" />
@@ -20,8 +21,7 @@
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
         <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <script type="text/javascript" src="js/editor.js"></script>
-        <script defer="defer" src="designer/static/js/main.55437b2f.js"></script>
-        <link href="designer/static/css/main.741cd576.css" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="designer/static/css/main.0f378c6c.css">
     </head>
 
     <body class="dg-center" fd-scrollbar>
@@ -29,7 +29,7 @@
             {{state.busyText}}
         </fd-busy-indicator-extended>
 
-        <div id="root" ng-show="!state.error && !state.isBusy"></div>
+        <div id="root" class="dg-fill-parent" ng-show="!state.error && !state.isBusy"></div>
 
         <fd-message-page glyph="sap-icon--error" ng-if="state.error">
             <fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
