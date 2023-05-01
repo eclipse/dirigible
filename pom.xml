@@ -630,7 +630,7 @@
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<velocity.version>2.3</velocity.version>
 		<wikitext.version>3.0.46.202301111837</wikitext.version>
-		<flexmark.version>0.64.0</flexmark.version>
+		<flexmark.version>0.64.2</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
 		<qldb.sdk.version>1.12.386</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
