@@ -17,6 +17,7 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * The Csv Entity.
@@ -44,7 +45,7 @@ public class Csv extends Artefact {
     /**
      * The content.
      */
-    @Column(name = "CSV_CONTENT", columnDefinition = "CLOB", nullable = true)
+    @Column(name = "CSV_CONTENT", columnDefinition = "CLOB")
     @Expose
     private byte[] content;
 
@@ -169,5 +170,26 @@ public class Csv extends Artefact {
                 ", updatedBy=" + updatedBy +
                 ", updatedAt=" + updatedAt +
                 '}';
+    }
+
+    /**
+     * @param o object
+     * @return true/false if the content is matching
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Csv csv = (Csv) o;
+
+        if (imported != csv.imported) return false;
+        if (!Objects.equals(id, csv.id)) return false;
+        return Arrays.equals(content, csv.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, getLocation());
     }
 }

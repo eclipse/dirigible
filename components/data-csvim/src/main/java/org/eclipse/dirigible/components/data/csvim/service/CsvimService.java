@@ -14,6 +14,8 @@ package org.eclipse.dirigible.components.data.csvim.service;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.data.csvim.domain.Csvim;
 import org.eclipse.dirigible.components.data.csvim.repository.CsvimRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -30,6 +32,11 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CsvimService implements ArtefactService<Csvim> {
+
+    /**
+     * The Constant logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(CsvimService.class);
 
     /**
      * The csvim repository.
@@ -64,7 +71,7 @@ public class CsvimService implements ArtefactService<Csvim> {
      * Find by id.
      *
      * @param id the id
-     * @return the table
+     * @return the csvim
      */
     @Override
     @Transactional(readOnly = true)
@@ -81,7 +88,7 @@ public class CsvimService implements ArtefactService<Csvim> {
      * Find by name.
      *
      * @param name the name
-     * @return the table
+     * @return the csvim
      */
     @Override
     @Transactional(readOnly = true)
@@ -101,7 +108,7 @@ public class CsvimService implements ArtefactService<Csvim> {
      * Find by location.
      *
      * @param location the location
-     * @return the list
+     * @return the list of csvims
      */
     @Override
     @Transactional(readOnly = true)
@@ -116,7 +123,7 @@ public class CsvimService implements ArtefactService<Csvim> {
      * Find by key.
      *
      * @param key the key
-     * @return the table
+     * @return the csvim
      */
     @Override
     @Transactional(readOnly = true)
@@ -128,13 +135,21 @@ public class CsvimService implements ArtefactService<Csvim> {
         return csvimDefinition.orElse(null);
     }
 
+    /**
+     * @param csvim the csvim
+     * @return the csvim
+     */
     @Override
     public Csvim save(Csvim csvim) {
         return csvimRepository.saveAndFlush(csvim);
     }
 
+    /**
+     * @param csvim the csvim
+     */
     @Override
     public void delete(Csvim csvim) {
         csvimRepository.delete(csvim);
     }
+
 }

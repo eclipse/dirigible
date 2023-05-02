@@ -12,7 +12,6 @@
 package org.eclipse.dirigible.components.data.csvim.domain;
 
 import org.apache.commons.csv.CSVRecord;
-import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public class CsvRecord {
     /**
      * The table metadata model.
      */
-    private Table table;
+    private PersistenceTableModel table;
 
     /**
      * The header names.
@@ -60,7 +59,7 @@ public class CsvRecord {
      * @param headerNames              the header names
      * @param distinguishEmptyFromNull the distinguish empty from null
      */
-    public CsvRecord(CSVRecord csvRecord, Table table, List<String> headerNames,
+    public CsvRecord(CSVRecord csvRecord, PersistenceTableModel table, List<String> headerNames,
                      boolean distinguishEmptyFromNull) {
         this.csvRecord = csvRecord;
         this.table = table;
@@ -126,7 +125,7 @@ public class CsvRecord {
      *
      * @return the table metadata model
      */
-    public Table getTableMetadataModel() {
+    public PersistenceTableModel getTableMetadataModel() {
         return table;
     }
 

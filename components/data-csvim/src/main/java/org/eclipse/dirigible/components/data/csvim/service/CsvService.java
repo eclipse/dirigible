@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.data.csvim.service;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -24,16 +35,27 @@ public class CsvService implements ArtefactService<Csv> {
     private CsvRepository csvRepository;
 
 
+    /**
+     * @return all csvs
+     */
     @Override
     public List<Csv> getAll() {
         return csvRepository.findAll();
     }
 
+    /**
+     * @param pageable the pageable
+     * @return the page
+     */
     @Override
     public Page<Csv> getPages(Pageable pageable) {
         return csvRepository.findAll(pageable);
     }
 
+    /**
+     * @param id the id
+     * @return the csv
+     */
     @Override
     public Csv findById(Long id) {
         Optional<Csv> csv = csvRepository.findById(id);
@@ -44,6 +66,10 @@ public class CsvService implements ArtefactService<Csv> {
         }
     }
 
+    /**
+     * @param name the name
+     * @return the csv
+     */
     @Override
     public Csv findByName(String name) {
         Csv filter = new Csv();
@@ -57,6 +83,10 @@ public class CsvService implements ArtefactService<Csv> {
         }
     }
 
+    /**
+     * @param location the location
+     * @return the list of csv's
+     */
     @Override
     public List<Csv> findByLocation(String location) {
         Csv filter = new Csv();
@@ -65,6 +95,10 @@ public class CsvService implements ArtefactService<Csv> {
         return csvRepository.findAll(example);
     }
 
+    /**
+     * @param key the key
+     * @return the csv
+     */
     @Override
     public Csv findByKey(String key) {
         Csv filter = new Csv();
@@ -74,11 +108,18 @@ public class CsvService implements ArtefactService<Csv> {
         return csv.orElse(null);
     }
 
+    /**
+     * @param csv the csv
+     * @return the csv
+     */
     @Override
     public Csv save(Csv csv) {
         return csvRepository.saveAndFlush(csv);
     }
 
+    /**
+     * @param csv the csv
+     */
     @Override
     public void delete(Csv csv) {
         csvRepository.delete(csv);

@@ -12,15 +12,15 @@
 
 package org.eclipse.dirigible.components.data.csvim.synchronizer;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -36,9 +36,12 @@ import org.eclipse.dirigible.components.data.csvim.domain.Csvim;
 import org.eclipse.dirigible.components.data.csvim.service.CsvService;
 import org.eclipse.dirigible.components.data.csvim.service.CsvimService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,6 +50,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
+@Order(400)
 public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim> {
 
     /**
@@ -59,11 +63,21 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      */
     public static final String FILE_EXTENSION_CSVIM = ".csvim";
 
-    /** The Constant CSVIM_SYNCHRONIZED. */
+    /**
+     * The Constant CSVIM_SYNCHRONIZED.
+     */
     private static final List<String> CSVIM_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
-    /** The Constant CSV_SYNCHRONIZED. */
+    /**
+     * The Constant CSV_SYNCHRONIZED.
+     */
     private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+
+    /**
+     * The Constant CSV_PREDELIVERED.
+     */
+    private static final Map<String, Csv> CSV_PREDELIVERED = Collections
+            .synchronizedMap(new HashMap<String, Csv>());
 
     /**
      * The csvimsynchronizer service
@@ -84,6 +98,13 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      * The synchronization callback.
      */
     private SynchronizerCallback callback;
+
+    /**
+     * The synchronization callback.
+     */
+    private IRepository repository;
+
+    CsvimProcessor csvimProcessor = new CsvimProcessor();
 
     /**
      * Instantiates a new csvim synchronizer.
@@ -128,23 +149,37 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
         return Csvim.ARTEFACT_TYPE.equals(type);
     }
 
+    /**
+     * Load.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the csvim
+     */
     @Override
     public List<Csvim> parse(String location, byte[] content) {
         Csvim csvim = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Csvim.class);
         Configuration.configureObject(csvim);
         csvim.setLocation(location);
+        csvim.setName(FilenameUtils.getBaseName(location));
         csvim.setType(Csvim.ARTEFACT_TYPE);
         csvim.updateKey();
-        if (csvim.getCsvFile() != null) {
-            csvim.getCsvFile().forEach(cf -> cf.setCsvim(csvim));
+        if (csvim.getFiles() != null) {
+            csvim.getFiles().forEach(cf -> {
+                cf.setCsvim(csvim);
+                cf.setLocation(csvim.getLocation() + "/" + cf.getFile());
+                cf.setType(CsvFile.ARTEFACT_TYPE);
+                cf.setName(cf.getFile());
+                cf.updateKey();
+            });
         }
 
         try {
             Csvim maybe = getService().findByKey(csvim.getKey());
             if (maybe != null) {
                 csvim.setId(maybe.getId());
-                csvim.getCsvFile().forEach(cf -> {
-                    CsvFile csvFile = maybe.getCsvFile(cf.getLocation());
+                csvim.getFiles().forEach(cf -> {
+                    CsvFile csvFile = maybe.getFileByLocation(cf.getLocation());
                     if (csvFile != null) {
                         cf.setId(csvFile.getId());
                     }
@@ -168,11 +203,24 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
         return null;
     }
 
+    /**
+     * Retrieve.
+     *
+     * @param location the location
+     * @return the csvim
+     */
     @Override
     public List<Csvim> retrieve(String location) {
         return getService().getAll();
     }
 
+    /**
+     * Sets the status.
+     *
+     * @param artefact the artefact
+     * @param lifecycle the lifecycle
+     * @param error the error
+     */
     @Override
     public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
         artefact.setLifecycle(lifecycle);
@@ -180,69 +228,161 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
         getService().save((Csvim) artefact);
     }
 
+    /**
+     * Complete.
+     *
+     * @param wrapper the wrapper
+     * @param flow the flow
+     * @return true, if successful
+     */
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()){
+        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
             Csvim csvim = null;
-            if (wrapper.getArtefact() instanceof Csvim){
+            if (wrapper.getArtefact() instanceof Csvim) {
                 csvim = (Csvim) wrapper.getArtefact();
             } else {
                 throw new UnsupportedOperationException(String.format("Trying to process %s as Csvim", wrapper.getArtefact().getClass()));
             }
 
-            switch (flow){
+            switch (flow) {
                 case CREATE:
+                    if (csvim.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+                        importCsvim(csvim, connection);
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                    }
+                    break;
                 case UPDATE:
+                    if (csvim.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+                        logger.info("UPDATE CSVIM");
+                        // TODO
+                        callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+                    }
+                    break;
                 case DELETE:
+                    if (csvim.getLifecycle().equals(ArtefactLifecycle.CREATED)
+                            || csvim.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                    }
+                    break;
                 case START:
                 case STOP:
             }
 
             return true;
-        } catch (SQLException e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
             callback.addError(e.getMessage());
             callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e.getMessage());
             return false;
         }
     }
 
+    /**
+     * Cleanup.
+     *
+     * @param csvim the csvim
+     */
     @Override
     public void cleanup(Csvim csvim) {
-        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()){
-            List<Csvim> csvimDefinitions = csvimService.getAll();
-            for (Csvim csvimDefinition : csvimDefinitions) {
-                if (!CSVIM_SYNCHRONIZED.contains(csvimDefinition.getLocation())) {
-                    csvimService.delete(csvimDefinition);
-                    if (logger.isWarnEnabled()) {logger.warn("Cleaned up CSVIM file from location: {}", csvimDefinition.getLocation());}
+        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
+            List<Csvim> csvims = csvimService.getAll();
+            for (Csvim c : csvims) {
+                if (!CSVIM_SYNCHRONIZED.contains(c.getLocation())) {
+                    csvimService.delete(c);
+                    if (logger.isWarnEnabled()) {
+                        logger.warn("Cleaned up CSVIM file from location: {}", c.getLocation());
+                    }
                 }
             }
             List<Csv> csvDefinitions = csvService.getAll();
             for (Csv csvDefinition : csvDefinitions) {
                 if (!CSV_SYNCHRONIZED.contains(csvDefinition.getLocation())) {
                     csvService.delete(csvDefinition);
-                    if (logger.isWarnEnabled()) {logger.warn("Cleaned up CSV file from location: {}", csvDefinition.getLocation());}
+                    if (logger.isWarnEnabled()) {
+                        logger.warn("Cleaned up CSV file from location: {}", csvDefinition.getLocation());
+                    }
                 }
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
             callback.addError(e.getMessage());
             callback.registerState(this, csvim, ArtefactLifecycle.DELETED, e.getMessage());
         }
     }
 
+    /**
+     * Sets the callback.
+     *
+     * @param callback the new callback
+     */
     @Override
     public void setCallback(SynchronizerCallback callback) {
         this.callback = callback;
     }
 
+    /**
+     * Gets the file extension.
+     *
+     * @return the file extension
+     */
     @Override
     public String getFileExtension() {
         return FILE_EXTENSION_CSVIM;
     }
 
+    /**
+     * Gets the artefact type.
+     *
+     * @return the artefact type
+     */
     @Override
     public String getArtefactType() {
         return Csvim.ARTEFACT_TYPE;
+    }
+
+    /**
+     * Execute csvim.
+     *
+     * @param csvim      the csvim definition
+     * @param connection the connection
+     */
+    private void importCsvim(Csvim csvim, Connection connection) throws Exception {
+        List<CsvFile> files = csvim.getFiles();
+
+        if (files != null) {
+            for (CsvFile file : files) {
+                try {
+                    Csv csv = null;
+                    String fileLocation = file.getLocation();
+                    List<Csv> list = csvService.findByLocation(fileLocation);
+                    if (list.size() > 0) {
+                        csv = list.get(0);
+                    } else{
+                        csv = new Csv();
+                    }
+                    byte[] content = null;
+                    IResource resource = CsvimProcessor.getCsvResource(file);
+                    if (resource.exists()) {
+                        content = csvimProcessor.getCsvContent(resource);
+                    } else {
+                        throw new Exception("CSV does not exist: " + fileLocation);
+                    }
+                    csv.setContent(content);
+                    csv = csvService.save(csv);
+                    csvimProcessor.process(file, content, connection);
+                    csv.setImported(true);
+                    csvService.save(csv);
+                } catch (SQLException | IOException e) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(String.format("An error occurred while trying to execute the data import: %s", e.getMessage()), e);
+                    }
+                }
+            }
+        }
     }
 }

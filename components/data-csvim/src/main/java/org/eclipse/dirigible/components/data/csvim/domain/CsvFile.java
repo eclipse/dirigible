@@ -17,12 +17,15 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Class CsvFile.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_CSV_FILE")
+@Table(name = "DIRIGIBLE_CSV_FILE")
 public class CsvFile extends Artefact {
 
     /**
@@ -41,60 +44,60 @@ public class CsvFile extends Artefact {
     /**
      * The table.
      */
-    @Column(name = "CSV_FILE_TABLE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Column(name = "CSV_FILE_TABLE", columnDefinition = "VARCHAR", nullable = false)
     @Expose
     private String table;
 
     /**
      * The schema.
      */
-    @Column(name = "CSV_FILE_SCHEMA", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Column(name = "CSV_FILE_SCHEMA", columnDefinition = "VARCHAR", nullable = false)
     @Expose
     private String schema;
 
     /**
      * The file.
      */
-    @Column(name = "CSV_FILE_FILE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Column(name = "CSV_FILE_FILE", columnDefinition = "VARCHAR", nullable = false)
     @Expose
     private String file;
 
     /**
      * The header.
      */
-    @Column(name = "CSV_FILE_HEADER", columnDefinition = "BOOLEAN", nullable = true)
+    @Column(name = "CSV_FILE_HEADER", columnDefinition = "BOOLEAN")
     @Expose
     private Boolean header;
 
     /**
      * The use header names.
      */
-    @Column(name = "CSV_FILE_USE_HEADER_NAMES", columnDefinition = "BOOLEAN", nullable = true)
+    @Column(name = "CSV_FILE_USE_HEADER_NAMES", columnDefinition = "BOOLEAN")
     @Expose
     private Boolean useHeaderNames;
 
     /**
      * The delim field.
      */
-    @Column(name = "CSV_FILE_DELIM_FIELD", columnDefinition = "VARCHAR", nullable = true, length = 255)
+    @Column(name = "CSV_FILE_DELIM_FIELD", columnDefinition = "VARCHAR")
     @Expose
     private String delimField;
 
     /**
      * The delim enclosing.
      */
-    @Column(name = "CSV_FILE_DELIM_ENCLOSING", columnDefinition = "VARCHAR", nullable = true, length = 255)
+    @Column(name = "CSV_FILE_DELIM_ENCLOSING", columnDefinition = "VARCHAR")
     @Expose
     private String delimEnclosing;
 
-    @Column(name = "CSV_FILE_SEQUENCE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+    @Column(name = "CSV_FILE_SEQUENCE", columnDefinition = "VARCHAR")
     @Expose
     private String sequence;
 
     /**
      * The distinguish empty from null.
      */
-    @Column(name = "CSV_FILE_DISTINGUISH_EMPTY_FROM_NULL", columnDefinition = "BOOLEAN", nullable = true)
+    @Column(name = "CSV_FILE_DISTINGUISH_EMPTY_FROM_NULL", columnDefinition = "BOOLEAN")
     @Expose
     private Boolean distinguishEmptyFromNull;
 
@@ -283,10 +286,9 @@ public class CsvFile extends Artefact {
         this.delimEnclosing = delimEnclosing;
     }
 
+
     /**
-     * Gets the sequence.
-     *
-     * @return
+     * @return sequence
      */
     public String getSequence() {
         return sequence;

@@ -13,27 +13,19 @@ package org.eclipse.dirigible.components.data.csvim.domain;
 
 import com.google.gson.annotations.Expose;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
-import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
-//	{
-//		files: [
-//			{name: "asd.csv"}
-//		]
-//	}
 
 /**
  * The Csvim Entity.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_CSVIM")
+@Table(name = "DIRIGIBLE_CSVIM")
 public class Csvim extends Artefact {
 
     /**
@@ -56,37 +48,53 @@ public class Csvim extends Artefact {
     @LazyCollection(LazyCollectionOption.FALSE)
     @Nullable
     @Expose
-    private List<CsvFile> csvFile = new ArrayList<CsvFile>();
+    private List<CsvFile> files = new ArrayList<CsvFile>();
 
-    public Csvim(Long id, List<CsvFile> csvFile) {
+    public Csvim(Long id, List<CsvFile> files) {
         this.id = id;
-        this.csvFile = csvFile;
+        this.files = files;
     }
 
     public Csvim() {
 
     }
 
+    /**
+     * @return get the id of csvim
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id the id of the csvim
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * @return get list of csvFiles
+     */
     @Nullable
-    public List<CsvFile> getCsvFile() {
-        return csvFile;
+    public List<CsvFile> getFiles() {
+        return files;
     }
 
-    public void setCsvFile(@Nullable List<CsvFile> csvFile) {
-        this.csvFile = csvFile;
+    /**
+     * @param csvFile set list of csvFiles
+     */
+    public void setFiles(@Nullable List<CsvFile> csvFile) {
+        this.files = csvFile;
     }
 
-    public CsvFile getCsvFile(String location) {
-        if (csvFile != null) {
-            for (CsvFile cf : csvFile) {
+    /**
+     * @param location the location of the file
+     * @return the file
+     */
+    public CsvFile getFileByLocation(String location) {
+        if (files != null) {
+            for (CsvFile cf : files) {
                 if (cf.getLocation().equals(location)) {
                     return cf;
                 }
