@@ -36,7 +36,6 @@ import org.eclipse.dirigible.components.data.csvim.domain.Csvim;
 import org.eclipse.dirigible.components.data.csvim.service.CsvService;
 import org.eclipse.dirigible.components.data.csvim.service.CsvimService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,12 +73,6 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
     /**
-     * The Constant CSV_PREDELIVERED.
-     */
-    private static final Map<String, Csv> CSV_PREDELIVERED = Collections
-            .synchronizedMap(new HashMap<String, Csv>());
-
-    /**
      * The csvimsynchronizer service
      */
     private final CsvimService csvimService;
@@ -100,11 +93,9 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     private SynchronizerCallback callback;
 
     /**
-     * The synchronization callback.
+     * The csvim processor.
      */
-    private IRepository repository;
-
-    CsvimProcessor csvimProcessor = new CsvimProcessor();
+    private CsvimProcessor csvimProcessor;
 
     /**
      * Instantiates a new csvim synchronizer.
@@ -115,10 +106,11 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      */
 
     @Autowired
-    public CsvimSynchronizer(CsvimService csvimService, CsvService csvService, DataSourcesManager datasourcesManager) {
+    public CsvimSynchronizer(CsvimService csvimService, CsvService csvService, DataSourcesManager datasourcesManager, CsvimProcessor csvimProcessor) {
         this.csvimService = csvimService;
         this.csvService = csvService;
         this.datasourcesManager = datasourcesManager;
+        this.csvimProcessor = csvimProcessor;
     }
 
     @Override
@@ -153,7 +145,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      * Load.
      *
      * @param location the location
-     * @param content the content
+     * @param content  the content
      * @return the csvim
      */
     @Override
@@ -217,9 +209,9 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     /**
      * Sets the status.
      *
-     * @param artefact the artefact
+     * @param artefact  the artefact
      * @param lifecycle the lifecycle
-     * @param error the error
+     * @param error     the error
      */
     @Override
     public void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String error) {
@@ -232,7 +224,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      * Complete.
      *
      * @param wrapper the wrapper
-     * @param flow the flow
+     * @param flow    the flow
      * @return true, if successful
      */
     @Override
@@ -297,12 +289,12 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                     }
                 }
             }
-            List<Csv> csvDefinitions = csvService.getAll();
-            for (Csv csvDefinition : csvDefinitions) {
-                if (!CSV_SYNCHRONIZED.contains(csvDefinition.getLocation())) {
-                    csvService.delete(csvDefinition);
+            List<Csv> csvs = csvService.getAll();
+            for (Csv csv : csvs) {
+                if (!CSV_SYNCHRONIZED.contains(csv.getLocation())) {
+                    csvService.delete(csv);
                     if (logger.isWarnEnabled()) {
-                        logger.warn("Cleaned up CSV file from location: {}", csvDefinition.getLocation());
+                        logger.warn("Cleaned up CSV file from location: {}", csv.getLocation());
                     }
                 }
             }
@@ -362,7 +354,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                     List<Csv> list = csvService.findByLocation(fileLocation);
                     if (list.size() > 0) {
                         csv = list.get(0);
-                    } else{
+                    } else {
                         csv = new Csv();
                     }
                     byte[] content = null;
@@ -373,6 +365,10 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                         throw new Exception("CSV does not exist: " + fileLocation);
                     }
                     csv.setContent(content);
+                    csv.setLocation(file.getLocation());
+                    csv.setType(Csv.ARTEFACT_TYPE);
+                    csv.setName(file.getName());
+                    csv.updateKey();
                     csv = csvService.save(csv);
                     csvimProcessor.process(file, content, connection);
                     csv.setImported(true);

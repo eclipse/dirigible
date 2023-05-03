@@ -27,6 +27,9 @@ import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -35,6 +38,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class CsvProcessor {
 
     /** The Constant MODULE. */
@@ -46,19 +50,17 @@ public class CsvProcessor {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(CsvProcessor.class);
 
-    /** The data source. */
-    private DataSource dataSource = null;
+    /**
+     * The datasources manager.
+     */
+    private DataSourcesManager datasourcesManager;
 
     /** The database metadata util. */
     private DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
 
-    /**
-     * Gets the data source.
-     *
-     * @return the data source
-     */
-    protected synchronized DataSource getDataSource() {
-        return DataSourcesManager.get().getDefaultDataSource();
+    @Autowired
+    public CsvProcessor(DataSourcesManager datasourcesManager) {
+        this.datasourcesManager = datasourcesManager;
     }
 
     /**
@@ -71,7 +73,7 @@ public class CsvProcessor {
     public void insert(List<CsvRecord> csvRecords, CsvFile csvFile) throws SQLException {
         String tableName = csvRecords.get(0).getTableMetadataModel().getTableName();
         String schemaName = csvRecords.get(0).getTableMetadataModel().getSchemaName();
-        try (Connection connection = getDataSource().getConnection()) {
+        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
             List<PersistenceTableColumnModel> availableTableColumns = databaseMetadataUtil.getTableMetadata(tableName, schemaName).getColumns();
             InsertBuilder insertBuilder = new InsertBuilder(SqlFactory.deriveDialect(connection));
             insertBuilder.into(tableName);
@@ -109,7 +111,7 @@ public class CsvProcessor {
     public void update(List<CsvRecord> csvRecords, CsvFile csvFile) throws SQLException {
         String tableName = csvRecords.get(0).getTableMetadataModel().getTableName();
         String schemaName = csvRecords.get(0).getTableMetadataModel().getSchemaName();
-        try (Connection connection = getDataSource().getConnection()) {
+        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
             List<PersistenceTableColumnModel> availableTableColumns = databaseMetadataUtil.getTableMetadata(tableName, schemaName).getColumns();
             //List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName, schemaName);
             UpdateBuilder updateBuilder = new UpdateBuilder(SqlFactory.deriveDialect(connection));

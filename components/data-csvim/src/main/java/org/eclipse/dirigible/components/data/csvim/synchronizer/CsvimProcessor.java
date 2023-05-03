@@ -17,11 +17,12 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.csvim.domain.Csv;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
 import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
+import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.utils.DatabaseMetadataUtil;
@@ -33,8 +34,9 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,6 +52,7 @@ import java.util.stream.Collectors;
 
 import static org.eclipse.dirigible.components.api.platform.RepositoryFacade.getResource;
 
+@Component
 public class CsvimProcessor {
 
     /**
@@ -118,19 +121,22 @@ public class CsvimProcessor {
     private static final String PROBLEM_MESSAGE_INSERT_RECORD = "Error occurred while trying to insert in table [%s] a CSV record [%s].";
 
     /**
-     * The data source.
+     * The datasources manager.
      */
-    private DataSource dataSource = null;
+    private DataSourcesManager datasourcesManager;
 
     /**
      * The csv processor.
      */
-    private final CsvProcessor csvProcessor = new CsvProcessor();
+    private CsvProcessor csvProcessor;
 
-    /**
-     * The database metadata util.
-     */
-    private static final DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
+    private final DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
+
+    @Autowired
+    public CsvimProcessor(CsvProcessor csvProcessor, DataSourcesManager datasourcesManager) {
+        this.csvProcessor = csvProcessor;
+        this.datasourcesManager = datasourcesManager;
+    }
 
     /**
      * Process.
@@ -224,7 +230,6 @@ public class CsvimProcessor {
         }
     }
 
-
     /**
      * Gets the csv resource.
      *
@@ -233,18 +238,6 @@ public class CsvimProcessor {
      */
     public static IResource getCsvResource(CsvFile csvFile) {
         return getResource(convertToActualFileName(csvFile.getFile()));
-    }
-
-    /**
-     * Gets the data source.
-     *
-     * @return the data source
-     */
-    protected synchronized DataSource getDataSource() {
-        if (dataSource == null) {
-            dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
-        }
-        return dataSource;
     }
 
     /**
@@ -276,8 +269,9 @@ public class CsvimProcessor {
      * @return the table metadata
      */
     private PersistenceTableModel getTableMetadata(String tableName) {
-        try {
-            return databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
+        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
+            return databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(datasourcesManager.getDefaultDataSource(), tableName));
+            //return DatabaseMetadataHelper.describeTable(connection, null, DatabaseMetadataHelper.getTableSchema(connection, tableName), tableName);
         } catch (SQLException sqlException) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Error occurred while trying to read table metadata for table with name: %s", tableName), sqlException);
@@ -383,13 +377,10 @@ public class CsvimProcessor {
      * @param recordsToProcess  the records to process
      * @param headerNames       the header names
      * @param csvFileDefinition the csv file definition
-     * @throws SQLException the SQL exception
      */
-    private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFileDefinition) throws SQLException {
+    private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFileDefinition){
         String tableName = csvFileDefinition.getTable();
-        PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
-
-        CsvRecord csvRecordDefinition = null;
+        PersistenceTableModel tableModel = getTableMetadata(tableName);
 
         try {
             for (List<CSVRecord> csvBatch : Lists.partition(recordsToProcess, getCsvDataBatchSize())) {
@@ -399,7 +390,7 @@ public class CsvimProcessor {
                         );
                 csvProcessor.insert(csvRecordDefinitions, csvFileDefinition);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             String csvRecordValue = e.getMessage();
             CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             if (logger.isErrorEnabled()) {
@@ -418,7 +409,7 @@ public class CsvimProcessor {
      */
     private void updateCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFileDefinition) throws SQLException {
         String tableName = csvFileDefinition.getTable();
-        PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
+        PersistenceTableModel tableModel = getTableMetadata(tableName);
 
         CsvRecord csvRecordDefinition = null;
 
