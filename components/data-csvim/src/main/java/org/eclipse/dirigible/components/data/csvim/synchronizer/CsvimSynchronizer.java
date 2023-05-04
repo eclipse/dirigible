@@ -104,7 +104,6 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      * @param csvService         the csvsyncrhonizer service
      * @param datasourcesManager the datasources manager
      */
-
     @Autowired
     public CsvimSynchronizer(CsvimService csvimService, CsvService csvService, DataSourcesManager datasourcesManager, CsvimProcessor csvimProcessor) {
         this.csvimService = csvimService;
@@ -230,7 +229,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
     @Override
     public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
         try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
-            Csvim csvim = null;
+            Csvim csvim;
             if (wrapper.getArtefact() instanceof Csvim) {
                 csvim = (Csvim) wrapper.getArtefact();
             } else {
@@ -349,7 +348,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
         if (files != null) {
             for (CsvFile file : files) {
                 try {
-                    Csv csv = null;
+                    Csv csv;
                     String fileLocation = file.getLocation();
                     List<Csv> list = csvService.findByLocation(fileLocation);
                     if (list.size() > 0) {
@@ -357,7 +356,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                     } else {
                         csv = new Csv();
                     }
-                    byte[] content = null;
+                    byte[] content;
                     IResource resource = CsvimProcessor.getCsvResource(file);
                     if (resource.exists()) {
                         content = csvimProcessor.getCsvContent(resource);
@@ -369,9 +368,12 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                     csv.setType(Csv.ARTEFACT_TYPE);
                     csv.setName(file.getName());
                     csv.updateKey();
+
                     csv = csvService.save(csv);
                     csvimProcessor.process(file, content, connection);
+
                     csv.setImported(true);
+
                     csvService.save(csv);
                 } catch (SQLException | IOException e) {
                     if (logger.isErrorEnabled()) {

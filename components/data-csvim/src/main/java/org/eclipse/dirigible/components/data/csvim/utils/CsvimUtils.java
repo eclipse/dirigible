@@ -14,8 +14,14 @@ package org.eclipse.dirigible.components.data.csvim.utils;
 import org.eclipse.dirigible.components.api.platform.ProblemsFacade;
 import org.eclipse.dirigible.components.data.csvim.synchronizer.CsvProcessor;
 import org.eclipse.dirigible.components.data.csvim.synchronizer.CsvimProcessor;
+import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
+import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class CsvimUtils {
 
@@ -44,5 +50,23 @@ public class CsvimUtils {
                 logger.error(e.getMessage());
             }
         }
+    }
+
+    /**
+     * Gets the table metadata.
+     *
+     * @param tableName the table name
+     * @return the table metadata
+     */
+    public static TableMetadata getTableMetadata(String tableName, DataSourcesManager datasourcesManager) {
+        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
+            //return databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(datasourcesManager.getDefaultDataSource(), tableName));
+            return DatabaseMetadataHelper.describeTable(connection, null, DatabaseMetadataHelper.getTableSchema(connection, tableName), tableName);
+        } catch (SQLException sqlException) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Error occurred while trying to read table metadata for table with name: %s", tableName), sqlException);
+            }
+        }
+        return null;
     }
 }

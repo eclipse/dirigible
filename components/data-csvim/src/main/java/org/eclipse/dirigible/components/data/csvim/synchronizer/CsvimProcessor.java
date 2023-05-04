@@ -17,15 +17,13 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.components.data.management.domain.ColumnMetadata;
+import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
 import org.eclipse.dirigible.components.data.csvim.domain.Csv;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
 import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
-import org.eclipse.dirigible.database.persistence.utils.DatabaseMetadataUtil;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -130,8 +128,13 @@ public class CsvimProcessor {
      */
     private CsvProcessor csvProcessor;
 
-    private final DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
 
+    /**
+     * Instantiates a new csvim processor.
+     *
+     * @param csvProcessor       the csvprocessor service
+     * @param datasourcesManager the datasources manager
+     */
     @Autowired
     public CsvimProcessor(CsvProcessor csvProcessor, DataSourcesManager datasourcesManager) {
         this.csvProcessor = csvProcessor;
@@ -150,7 +153,7 @@ public class CsvimProcessor {
     public void process(CsvFile csvFile, byte[] content, Connection connection) throws Exception {
         String tableName = csvFile.getTable();
         CSVParser csvParser = getCsvParser(csvFile, new ByteArrayInputStream(content));
-        PersistenceTableModel tableMetadata = getTableMetadata(tableName);
+        TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
         if (tableMetadata == null || csvParser == null) {
             return;
         }
@@ -168,7 +171,7 @@ public class CsvimProcessor {
         } catch (NumberFormatException e) {
             // Do nothing
         }
-        List<PersistenceTableColumnModel> tableColumns = tableMetadata.getColumns();
+        List<ColumnMetadata> tableColumns = tableMetadata.getColumns();
         if (csvRecords.size() > maxCompareSize) {
             if (isEmptyTable(tableName, connection)) {
                 //recordsToInsert = csvRecords.stream().filter(e -> recordShouldBeIncluded(e, tableColumns, keysMap)).collect(Collectors.toList());
@@ -263,24 +266,6 @@ public class CsvimProcessor {
     }
 
     /**
-     * Gets the table metadata.
-     *
-     * @param tableName the table name
-     * @return the table metadata
-     */
-    private PersistenceTableModel getTableMetadata(String tableName) {
-        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
-            return databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(datasourcesManager.getDefaultDataSource(), tableName));
-            //return DatabaseMetadataHelper.describeTable(connection, null, DatabaseMetadataHelper.getTableSchema(connection, tableName), tableName);
-        } catch (SQLException sqlException) {
-            if (logger.isErrorEnabled()) {
-                logger.error(String.format("Error occurred while trying to read table metadata for table with name: %s", tableName), sqlException);
-            }
-        }
-        return null;
-    }
-
-    /**
      * Gets the csv parser.
      *
      * @param csvFileDefinition the csv file definition
@@ -338,15 +323,15 @@ public class CsvimProcessor {
      * @return the pk name for CSV record
      */
     private String getPkNameForCSVRecord(String tableName, List<String> headerNames) {
-        PersistenceTableModel tableModel = getTableMetadata(tableName);
+        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
         if (tableModel != null) {
-            List<PersistenceTableColumnModel> columnModels = tableModel.getColumns();
+            List<ColumnMetadata> columnModels = tableModel.getColumns();
             if (headerNames.size() > 0) {
-                return columnModels.stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().get().getName();
+                return columnModels.stream().filter(ColumnMetadata::isKey).findFirst().get().getName();
             }
 
             for (int i = 0; i < columnModels.size(); i++) {
-                if (columnModels.get(i).isPrimaryKey()) {
+                if (columnModels.get(i).isKey()) {
                     return columnModels.get(i).getName();
                 }
             }
@@ -376,25 +361,25 @@ public class CsvimProcessor {
      *
      * @param recordsToProcess  the records to process
      * @param headerNames       the header names
-     * @param csvFileDefinition the csv file definition
+     * @param csvFile the csv file definition
      */
-    private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFileDefinition){
-        String tableName = csvFileDefinition.getTable();
-        PersistenceTableModel tableModel = getTableMetadata(tableName);
+    private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFile){
+        String tableName = csvFile.getTable();
+        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
 
         try {
             for (List<CSVRecord> csvBatch : Lists.partition(recordsToProcess, getCsvDataBatchSize())) {
                 List<CsvRecord> csvRecordDefinitions = csvBatch.stream().map(
-                                e -> new CsvRecord(e, tableModel, headerNames, csvFileDefinition.getDistinguishEmptyFromNull()))
+                                e -> new CsvRecord(e, tableModel, headerNames, csvFile.getDistinguishEmptyFromNull()))
                         .collect(Collectors.toList()
                         );
-                csvProcessor.insert(csvRecordDefinitions, csvFileDefinition);
+                csvProcessor.insert(csvRecordDefinitions, csvFile);
             }
         } catch (Exception e) {
             String csvRecordValue = e.getMessage();
-            CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+            CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             if (logger.isErrorEnabled()) {
-                logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);
+                logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFile.getFile()), e);
             }
         }
     }
@@ -405,13 +390,10 @@ public class CsvimProcessor {
      * @param recordsToProcess  the records to process
      * @param headerNames       the header names
      * @param csvFileDefinition the csv file definition
-     * @throws SQLException the SQL exception
      */
-    private void updateCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFileDefinition) throws SQLException {
+    private void updateCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFileDefinition) {
         String tableName = csvFileDefinition.getTable();
-        PersistenceTableModel tableModel = getTableMetadata(tableName);
-
-        CsvRecord csvRecordDefinition = null;
+        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
 
         try {
             for (List<CSVRecord> csvBatch : Lists.partition(recordsToProcess, getCsvDataBatchSize())) {
@@ -439,17 +421,17 @@ public class CsvimProcessor {
      * @return the pk value for CSV record
      */
     private String getPkValueForCSVRecord(CSVRecord csvRecord, String tableName, List<String> headerNames) {
-        PersistenceTableModel tableModel = getTableMetadata(tableName);
+        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
         if (tableModel != null) {
-            List<PersistenceTableColumnModel> columnModels = tableModel.getColumns();
+            List<ColumnMetadata> columnModels = tableModel.getColumns();
             if (headerNames.size() > 0) {
-                String pkColumnName = columnModels.stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().get().getName();
+                String pkColumnName = columnModels.stream().filter(ColumnMetadata::isKey).findFirst().get().getName();
                 int csvRecordPkValueIndex = headerNames.indexOf(pkColumnName);
                 return csvRecordPkValueIndex >= 0 ? csvRecord.get(csvRecordPkValueIndex) : null;
             }
 
             for (int i = 0; i < csvRecord.size(); i++) {
-                boolean isColumnPk = columnModels.get(i).isPrimaryKey();
+                boolean isColumnPk = columnModels.get(i).isKey();
                 if (isColumnPk && !StringUtils.isEmpty(csvRecord.get(i))) {
                     return csvRecord.get(i);
                 }
@@ -474,12 +456,12 @@ public class CsvimProcessor {
         SelectBuilder selectBuilder = new SelectBuilder(SqlFactory.deriveDialect(connection));
         String sql = selectBuilder.distinct().column("1 " + pkNameForCSVRecord).from(tableName).where(pkNameForCSVRecord + " = ?").build();
         try (PreparedStatement pstmt = connection.prepareCall(sql)) {
-            ResultSet rs = null;
+            ResultSet rs;
             try {
                 pstmt.setString(1, pkValueForCSVRecord);
                 rs = pstmt.executeQuery();
             } catch (Throwable e) {
-                pstmt.setInt(1, Integer.valueOf(pkValueForCSVRecord));
+                pstmt.setInt(1, Integer.parseInt(pkValueForCSVRecord));
                 rs = pstmt.executeQuery();
             }
             if (rs.next()) {

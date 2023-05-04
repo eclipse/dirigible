@@ -18,20 +18,20 @@ import org.eclipse.dirigible.components.data.csvim.domain.Csv;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
 import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
+import org.eclipse.dirigible.components.data.management.domain.ColumnMetadata;
+import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
+import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
-import org.eclipse.dirigible.database.persistence.utils.DatabaseMetadataUtil;
+import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
@@ -55,9 +55,6 @@ public class CsvProcessor {
      */
     private DataSourcesManager datasourcesManager;
 
-    /** The database metadata util. */
-    private DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
-
     @Autowired
     public CsvProcessor(DataSourcesManager datasourcesManager) {
         this.datasourcesManager = datasourcesManager;
@@ -71,10 +68,14 @@ public class CsvProcessor {
      * @throws SQLException the SQL exception
      */
     public void insert(List<CsvRecord> csvRecords, CsvFile csvFile) throws SQLException {
-        String tableName = csvRecords.get(0).getTableMetadataModel().getTableName();
-        String schemaName = csvRecords.get(0).getTableMetadataModel().getSchemaName();
+        String tableName = csvRecords.get(0).getTableMetadataModel().getName();
+        String schemaName = csvFile.getSchema(); // check if correct
         try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
-            List<PersistenceTableColumnModel> availableTableColumns = databaseMetadataUtil.getTableMetadata(tableName, schemaName).getColumns();
+            TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
+            if (tableMetadata == null) {
+                return;
+            }
+            List<ColumnMetadata> availableTableColumns = tableMetadata.getColumns();
             InsertBuilder insertBuilder = new InsertBuilder(SqlFactory.deriveDialect(connection));
             insertBuilder.into(tableName);
 
@@ -109,10 +110,10 @@ public class CsvProcessor {
      * @throws SQLException the SQL exception
      */
     public void update(List<CsvRecord> csvRecords, CsvFile csvFile) throws SQLException {
-        String tableName = csvRecords.get(0).getTableMetadataModel().getTableName();
-        String schemaName = csvRecords.get(0).getTableMetadataModel().getSchemaName();
+        String tableName = csvRecords.get(0).getTableMetadataModel().getName();
+        String schemaName = csvFile.getSchema(); // check if correct
         try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
-            List<PersistenceTableColumnModel> availableTableColumns = databaseMetadataUtil.getTableMetadata(tableName, schemaName).getColumns();
+            List<ColumnMetadata> availableTableColumns = DatabaseMetadataHelper.describeTable(connection, null, tableName, schemaName).getColumns();
             //List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName, schemaName);
             UpdateBuilder updateBuilder = new UpdateBuilder(SqlFactory.deriveDialect(connection));
             updateBuilder.table(tableName);
@@ -160,7 +161,7 @@ public class CsvProcessor {
      * @param statement the statement
      * @throws SQLException the SQL exception
      */
-    private void populateInsertPreparedStatementValues(CsvRecord csvRecord, List<PersistenceTableColumnModel> tableColumns, PreparedStatement statement) throws SQLException {
+    private void populateInsertPreparedStatementValues(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
         if (csvRecord.getHeaderNames().size() > 0) {
             insertCsvWithHeader(csvRecord, tableColumns, statement);
         } else {
@@ -176,7 +177,7 @@ public class CsvProcessor {
      * @param statement the statement
      * @throws SQLException the SQL exception
      */
-    private void executeUpdatePreparedStatement(CsvRecord csvRecord, List<PersistenceTableColumnModel> tableColumns,
+    private void executeUpdatePreparedStatement(CsvRecord csvRecord, List<ColumnMetadata> tableColumns,
                                                 PreparedStatement statement) throws SQLException {
         if (csvRecord.getHeaderNames().size() > 0) {
             updateCsvWithHeader(csvRecord, tableColumns, statement);
@@ -195,10 +196,10 @@ public class CsvProcessor {
      * @param statement the statement
      * @throws SQLException the SQL exception
      */
-    private void insertCsvWithHeader(CsvRecord csvRecord, List<PersistenceTableColumnModel> tableColumns, PreparedStatement statement) throws SQLException {
+    private void insertCsvWithHeader(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
         for (int i = 0; i < tableColumns.size(); i++) {
             String columnName = tableColumns.get(i).getName();
-            int columnType = Integer.parseInt(tableColumns.get(i).getType());
+            String columnType = tableColumns.get(i).getType();
             String value = csvRecord.getCsvValueForColumn(columnName);
             setPreparedStatementValue(csvRecord.isDistinguishEmptyFromNull(), statement, i + 1, value, columnType);
         }
@@ -212,10 +213,10 @@ public class CsvProcessor {
      * @param statement the statement
      * @throws SQLException the SQL exception
      */
-    private void insertCsvWithoutHeader(CsvRecord csvRecordDefinition, List<PersistenceTableColumnModel> tableColumns, PreparedStatement statement) throws SQLException {
+    private void insertCsvWithoutHeader(CsvRecord csvRecordDefinition, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
         for (int i = 0; i < csvRecordDefinition.getCsvRecord().size(); i++) {
             String value = csvRecordDefinition.getCsvRecord().get(i);
-            int columnType = Integer.parseInt(tableColumns.get(i).getType());
+            String columnType = tableColumns.get(i).getType();
 
             setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i + 1, value, columnType);
         }
@@ -229,18 +230,18 @@ public class CsvProcessor {
      * @param statement the statement
      * @throws SQLException the SQL exception
      */
-    private void updateCsvWithHeader(CsvRecord csvRecordDefinition, List<PersistenceTableColumnModel> tableColumns, PreparedStatement statement) throws SQLException {
+    private void updateCsvWithHeader(CsvRecord csvRecordDefinition, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
         CSVRecord csvRecord = csvRecordDefinition.getCsvRecord();
 
         for (int i = 1; i < tableColumns.size(); i++) {
             String columnName = tableColumns.get(i).getName();
             String value = csvRecordDefinition.getCsvValueForColumn(columnName);
-            int columnType = Integer.parseInt(tableColumns.get(i).getType());
+            String columnType = tableColumns.get(i).getType();
 
             setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i, value, columnType);
         }
 
-        int pkColumnType = Integer.parseInt(tableColumns.get(0).getType());
+        String pkColumnType = tableColumns.get(0).getType();
         int lastStatementPlaceholderIndex = csvRecord.size();
 
         setValue(statement, lastStatementPlaceholderIndex, pkColumnType, csvRecordDefinition.getCsvRecordPkValue());
@@ -254,15 +255,15 @@ public class CsvProcessor {
      * @param statement the statement
      * @throws SQLException the SQL exception
      */
-    private void updateCsvWithoutHeader(CsvRecord csvRecordDefinition, List<PersistenceTableColumnModel> tableColumns, PreparedStatement statement) throws SQLException {
+    private void updateCsvWithoutHeader(CsvRecord csvRecordDefinition, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
         CSVRecord csvRecord = csvRecordDefinition.getCsvRecord();
         for (int i = 1; i < csvRecord.size(); i++) {
             String value = csvRecord.get(i);
-            int columnType = Integer.parseInt(tableColumns.get(i).getType());
+            String columnType = tableColumns.get(i).getType();
             setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i, value, columnType);
         }
 
-        int pkColumnType = Integer.parseInt(tableColumns.get(0).getType());
+        String pkColumnType = tableColumns.get(0).getType();
         int lastStatementPlaceholderIndex = csvRecord.size();
         setValue(statement, lastStatementPlaceholderIndex, pkColumnType, csvRecord.get(0));
     }
@@ -278,7 +279,7 @@ public class CsvProcessor {
      * @throws SQLException the SQL exception
      */
     private void setPreparedStatementValue(Boolean distinguishEmptyFromNull, PreparedStatement statement, int i,
-                                           String value, int columnType) throws SQLException {
+                                           String value, String columnType) throws SQLException {
         if (StringUtils.isEmpty(value)) {
             value = distinguishEmptyFromNull ? "" : null;
         }
@@ -294,48 +295,48 @@ public class CsvProcessor {
      * @param value             the value
      * @throws SQLException the SQL exception
      */
-    protected void setValue(PreparedStatement preparedStatement, int i, int dataType, String value)
+    protected void setValue(PreparedStatement preparedStatement, int i, String dataType, String value)
             throws SQLException {
         if (logger.isTraceEnabled()) {logger.trace("setValue -> i: " + i + ", dataType: " + dataType + ", value: " + value);}
 
         if (value == null) {
-            preparedStatement.setNull(i, dataType);
-        } else if (Types.VARCHAR == dataType) {
+            preparedStatement.setNull(i, DataTypeUtils.getSqlTypeByDataType(dataType));
+        } else if ("CHARACTER VARYING".equals(dataType) || Types.VARCHAR == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setString(i, sanitize(value));
-        } else if (Types.NVARCHAR == dataType) {
+        } else if (Types.NVARCHAR == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setString(i, sanitize(value));
-        } else if (Types.CHAR == dataType) {
+        } else if (Types.CHAR == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setString(i, sanitize(value));
-        } else if (Types.DATE == dataType) {
+        } else if (Types.DATE == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setDate(i, DateTimeUtils.parseDate(value));
-        } else if (Types.TIME == dataType) {
+        } else if (Types.TIME == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setTime(i, DateTimeUtils.parseTime(value));
-        } else if (Types.TIMESTAMP == dataType) {
+        } else if (Types.TIMESTAMP == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setTimestamp(i, DateTimeUtils.parseDateTime(value));
-        } else if (Types.INTEGER == dataType) {
+        } else if (Types.INTEGER == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setInt(i, Integer.parseInt(value));
-        } else if (Types.TINYINT == dataType) {
+        } else if (Types.TINYINT == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setByte(i, Byte.parseByte(value));
-        } else if (Types.SMALLINT == dataType) {
+        } else if (Types.SMALLINT == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setShort(i, Short.parseShort(value));
-        } else if (Types.BIGINT == dataType) {
+        } else if (Types.BIGINT == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setLong(i, new BigInteger(value).longValueExact());
-        } else if (Types.REAL == dataType) {
+        } else if (Types.REAL == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setFloat(i, Float.parseFloat(value));
-        } else if (Types.DOUBLE == dataType) {
+        } else if (Types.DOUBLE == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setDouble(i, Double.parseDouble(value));
-        } else if (Types.BOOLEAN == dataType || Types.BIT == dataType) {
+        } else if (Types.BOOLEAN == DataTypeUtils.getSqlTypeByDataType(dataType) || Types.BIT == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setBoolean(i, Boolean.parseBoolean(value));
-        } else if (Types.DECIMAL == dataType) {
+        } else if (Types.DECIMAL == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setBigDecimal(i, new BigDecimal(value));
-        } else if (Types.NCLOB == dataType) {
+        } else if (Types.NCLOB == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setString(i, sanitize(value));
         } else {
             throw new PersistenceException(
