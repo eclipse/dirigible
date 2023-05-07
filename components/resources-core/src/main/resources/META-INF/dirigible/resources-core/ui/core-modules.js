@@ -1085,7 +1085,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                                     scope.showWindow();
                                 }
                             } else console.error(
-                                "Dialog Window Error: There is no window dialog with such id."
+                                "Dialog Window Error: There is no window dialog with such id: " + data.dialogWindowId
                             );
                         });
                     },

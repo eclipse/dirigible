@@ -1,0 +1,5 @@
+{
+  "location":"/ide-workspace/ide-workspace-after-unpublish.extensionpoint",
+  "name":"ide-workspace-after-unpublish",
+  "description":"After Unpublish Extension Point"
+}

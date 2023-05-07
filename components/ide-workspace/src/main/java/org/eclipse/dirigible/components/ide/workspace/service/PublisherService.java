@@ -11,7 +11,10 @@
  */
 package org.eclipse.dirigible.components.ide.workspace.service;
 
+import java.util.List;
+
 import org.eclipse.dirigible.components.api.security.UserFacade;
+import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -31,8 +34,8 @@ public class PublisherService {
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PublisherService.class);
 	
-	// TODO
-//	public ServiceLoader<IPublisherHandler> publisherHandlers = ServiceLoader.load(IPublisherHandler.class);
+	@Autowired
+	public List<PublisherHandler> publisherHandlers;
 	
 	/** The repository. */
 	private final IRepository repository;
@@ -111,9 +114,9 @@ public class PublisherService {
 	 * @param targetLocation the target location
 	 */
 	private void publishResource(String sourceLocation, String targetLocation) {
-//		for (IPublisherHandler next : publisherHandlers) {
-//			next.beforePublish(sourceLocation);
-//		}
+		for (PublisherHandler next : publisherHandlers) {
+			next.beforePublish(sourceLocation);
+		}
 		
 		ICollection sourceCollection = getRepository().getCollection(sourceLocation);
 		if (sourceCollection.exists()) {
@@ -133,9 +136,9 @@ public class PublisherService {
 			logger.info("Published resource: {} -> {}", sourceResource.getPath(), targetResource.getPath());
 		}
 		
-//		for (IPublisherHandler next : publisherHandlers) {
-//			next.afterPublish(sourceLocation, targetLocation);
-//		}
+		for (PublisherHandler next : publisherHandlers) {
+			next.afterPublish(sourceLocation, targetLocation);
+		}
 	}
 	
 	/**
@@ -145,9 +148,9 @@ public class PublisherService {
 	 */
 	private void unpublishResource(String targetLocation) {
 		
-//		for (IPublisherHandler next : publisherHandlers) {
-//			next.beforeUnpublish(targetLocation);
-//		}
+		for (PublisherHandler next : publisherHandlers) {
+			next.beforeUnpublish(targetLocation);
+		}
 		
 		ICollection targetCollection = getRepository().getCollection(targetLocation);
 		if (targetCollection.exists()) {
@@ -163,9 +166,9 @@ public class PublisherService {
 			logger.info("Unpublished resource: {}", targetCollection.getPath());
 		}
 		
-//		for (IPublisherHandler next : publisherHandlers) {
-//			next.afterUnpublish(targetLocation);
-//		}
+		for (PublisherHandler next : publisherHandlers) {
+			next.afterUnpublish(targetLocation);
+		}
 	}
 	
 	/**

@@ -1,0 +1,5 @@
+{
+  "location":"/ide-workspace/ide-workspace-before-publish.extensionpoint",
+  "name":"ide-workspace-before-publish",
+  "description":"Before Publish Extension Point"
+}
