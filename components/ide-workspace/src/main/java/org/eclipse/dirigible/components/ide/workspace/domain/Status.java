@@ -25,10 +25,20 @@ public enum Status {
 	 * R - Renamed (The file has been renamed, the change has been added to the repository but has not been committed).
 	 */
 	A,
+	
+	/** The m. */
 	M,
+	
+	/** The d. */
 	D,
+	
+	/** The u. */
 	U,
+	
+	/** The c. */
 	C,
+	
+	/** The r. */
 	R
 	
 }

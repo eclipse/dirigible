@@ -33,7 +33,7 @@ public interface ProjectStatusProvider {
 	 * @param workspace the workspace
 	 * @param project the project
 	 * @return the project git folder
-	 * @throws IOException 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	String getProjectGitFolder(String workspace, String project) throws IOException;
 

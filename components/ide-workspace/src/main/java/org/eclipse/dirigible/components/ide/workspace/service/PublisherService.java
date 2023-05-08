@@ -34,6 +34,7 @@ public class PublisherService {
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PublisherService.class);
 	
+	/** The publisher handlers. */
 	@Autowired
 	public List<PublisherHandler> publisherHandlers;
 	

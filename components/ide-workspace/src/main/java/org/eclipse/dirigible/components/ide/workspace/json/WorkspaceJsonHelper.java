@@ -47,8 +47,14 @@ public class WorkspaceJsonHelper implements InitializingBean {
 	/** The workspace json helper instance. */
 	private static WorkspaceJsonHelper INSTANCE;
 	
+	/** The project status provider. */
 	private ProjectStatusProvider projectStatusProvider;
 	
+	/**
+	 * Instantiates a new workspace json helper.
+	 *
+	 * @param projectStatusProvider the project status provider
+	 */
 	@Autowired
 	private WorkspaceJsonHelper(ProjectStatusProvider projectStatusProvider) {
 		this.projectStatusProvider = projectStatusProvider;
@@ -73,6 +79,11 @@ public class WorkspaceJsonHelper implements InitializingBean {
         return INSTANCE;
     }
 	
+	/**
+	 * Gets the project status provider.
+	 *
+	 * @return the project status provider
+	 */
 	public ProjectStatusProvider getProjectStatusProvider() {
 		return projectStatusProvider;
 	}

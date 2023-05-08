@@ -61,6 +61,7 @@ public class ProjectStatus {
 	 * Instantiates a new project status.
 	 *
 	 * @param project the project
+	 * @param git the git
 	 * @param added the added
 	 * @param changed the changed
 	 * @param removed the removed

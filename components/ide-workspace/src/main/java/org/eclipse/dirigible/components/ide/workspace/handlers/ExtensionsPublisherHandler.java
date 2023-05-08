@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.eclipse.dirigible.components.ide.workspace.handlers;
 
 import java.util.HashMap;
@@ -44,7 +47,6 @@ public class ExtensionsPublisherHandler implements PublisherHandler {
 	 * Before publish.
 	 *
 	 * @param location the location
-	 * @throws Exception the exception
 	 */
 	@Override
 	public void beforePublish(String location) {
@@ -56,7 +58,6 @@ public class ExtensionsPublisherHandler implements PublisherHandler {
 	 *
 	 * @param workspaceLocation the workspace location
 	 * @param registryLocation the registry location
-	 * @throws Exception the exception
 	 */
 	@Override
 	public void afterPublish(String workspaceLocation, String registryLocation) {
@@ -67,7 +68,6 @@ public class ExtensionsPublisherHandler implements PublisherHandler {
 	 * Before unpublish.
 	 *
 	 * @param location the location
-	 * @throws Exception the exception
 	 */
 	@Override
 	public void beforeUnpublish(String location) {
@@ -78,7 +78,6 @@ public class ExtensionsPublisherHandler implements PublisherHandler {
 	 * After unpublish.
 	 *
 	 * @param location the location
-	 * @throws Exception the exception
 	 */
 	@Override
 	public void afterUnpublish(String location) {
