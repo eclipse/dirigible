@@ -101,7 +101,8 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_EXTENSION_CONFLUENCE);
+		return file.toString().endsWith(FILE_EXTENSION_CONFLUENCE)
+				&& file.toString().indexOf("webjars") == -1;
 	}
 	
 	/**

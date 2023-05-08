@@ -101,7 +101,8 @@ public class MarkdownSynchronizer<A extends Artefact> implements Synchronizer<Ma
 	 */
 	@Override
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
-		return file.toString().endsWith(FILE_EXTENSION_MARKDOWN);
+		return file.toString().endsWith(FILE_EXTENSION_MARKDOWN)
+				&& file.toString().indexOf("webjars") == -1;
 	}
 	
 	/**
