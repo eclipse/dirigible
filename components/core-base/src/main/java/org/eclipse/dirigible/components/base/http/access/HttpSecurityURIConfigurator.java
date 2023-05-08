@@ -13,8 +13,17 @@ package org.eclipse.dirigible.components.base.http.access;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
+/**
+ * The Class HttpSecurityURIConfigurator.
+ */
 public class HttpSecurityURIConfigurator {
 	
+	/**
+	 * Configure.
+	 *
+	 * @param http the http
+	 * @throws Exception the exception
+	 */
 	public static void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 	        .antMatchers("/").permitAll()

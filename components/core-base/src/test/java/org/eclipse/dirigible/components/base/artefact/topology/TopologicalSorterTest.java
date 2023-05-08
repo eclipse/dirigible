@@ -19,8 +19,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * The Class TopologicalSorterTest.
+ */
 public class TopologicalSorterTest {
 
+	/**
+	 * Test.
+	 */
 	@Test
 	public void test() {
 		SortableNode nodeA = new SortableNode("A");
@@ -78,22 +84,43 @@ public class TopologicalSorterTest {
 		
 	}
 	
+	/**
+	 * The Class SortableNode.
+	 */
 	public static class SortableNode implements TopologicallySortable {
 		
+		/** The id. */
 		public String id;
 		
+		/** The dependencies. */
 		public List<TopologicallySortable> dependencies;
 		
+		/**
+		 * Instantiates a new sortable node.
+		 *
+		 * @param id the id
+		 * @param dependencies the dependencies
+		 */
 		public SortableNode(String id, TopologicallySortable ... dependencies) {
 			this.id = id;
 			this.dependencies = Arrays.asList(dependencies);
 		}
 
+		/**
+		 * Gets the id.
+		 *
+		 * @return the id
+		 */
 		@Override
 		public String getId() {
 			return this.id;
 		}
 
+		/**
+		 * Gets the dependencies.
+		 *
+		 * @return the dependencies
+		 */
 		@Override
 		public List<TopologicallySortable> getDependencies() {
 			return this.dependencies;

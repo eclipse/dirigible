@@ -19,8 +19,14 @@ import java.util.List;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.junit.jupiter.api.Test;
 
+/**
+ * The Class TopologicalDepleterTest.
+ */
 public class TopologicalDepleterTest {
 
+	/**
+	 * Test depleted.
+	 */
 	@Test
 	public void testDepleted() {
 		System.out.println("Depleted:");
@@ -66,6 +72,9 @@ public class TopologicalDepleterTest {
 		
 	}
 	
+	/**
+	 * Test not depleted.
+	 */
 	@Test
 	public void testNotDepleted() {
 		System.out.println("Not depleted:");
@@ -111,22 +120,44 @@ public class TopologicalDepleterTest {
 		
 	}
 	
+	/**
+	 * The Class DepletableNode.
+	 */
 	public static class DepletableNode implements TopologicallyDepletable {
 		
+		/** The id. */
 		public String id;
 		
+		/** The completable. */
 		int completable;
 		
+		/**
+		 * Instantiates a new depletable node.
+		 *
+		 * @param id the id
+		 * @param completable the completable
+		 */
 		public DepletableNode(String id, int completable) {
 			this.id = id;
 			this.completable = completable;
 		}
 
+		/**
+		 * Gets the id.
+		 *
+		 * @return the id
+		 */
 		@Override
 		public String getId() {
 			return this.id;
 		}
 
+		/**
+		 * Complete.
+		 *
+		 * @param flow the flow
+		 * @return true, if successful
+		 */
 		@Override
 		public boolean complete(ArtefactPhase flow) {
 			if (completable == 0) {

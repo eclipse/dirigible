@@ -338,9 +338,9 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	/**
 	 * Construct key.
 	 *
-	 * @param type the type
-	 * @param location the location
-	 * @param name the name
+	 * @param typeA the type A
+	 * @param locationA the location A
+	 * @param nameA the name A
 	 * @return the string
 	 */
 	public String constructKey(String typeA, String locationA, String nameA) {

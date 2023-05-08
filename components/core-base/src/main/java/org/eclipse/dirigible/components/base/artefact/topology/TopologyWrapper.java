@@ -125,6 +125,11 @@ public class TopologyWrapper<A extends Artefact> implements TopologicallySortabl
 		return true;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "TopologyWrapper [artefact=" + artefact + ", synchronizer=" + synchronizer.getArtefactType() + "]";
