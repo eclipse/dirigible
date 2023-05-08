@@ -168,8 +168,14 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			int countNew = 0;
 			int countModified = 0;
 			for (Artefact artefact : artefacts.values()) {
-				if (ArtefactLifecycle.NEW.equals(artefact.getLifecycle())) countNew++;
-				if (ArtefactLifecycle.MODIFIED.equals(artefact.getLifecycle())) countModified++;
+				if (ArtefactLifecycle.NEW.equals(artefact.getLifecycle())) {
+					if (logger.isInfoEnabled()) {logger.info("Preparing for processing a new artefact: {}", artefact.getKey());}
+					countNew++;
+				};
+				if (ArtefactLifecycle.MODIFIED.equals(artefact.getLifecycle())) {
+					if (logger.isInfoEnabled()) {logger.info("Preparing for processing a modified artefact: {}", artefact.getKey());}
+					countModified++;
+				};
 			}
 			
 			if (logger.isDebugEnabled()) {				
@@ -224,11 +230,12 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			            registerErrors(synchronizer, results, ArtefactLifecycle.CREATED);
 			            
 			            // phase update
-			            results = depleter.deplete(wrappers, ArtefactPhase.UPDATE);
+			            results = depleter.deplete(unmodifiable, ArtefactPhase.UPDATE);
 			            registerErrors(synchronizer, results, ArtefactLifecycle.UPDATED);
 			            
 			            // phase start
-			            results = depleter.deplete(wrappers, ArtefactPhase.START);
+			            results = depleter.deplete(unmodifiable, ArtefactPhase.START);
+			            registerErrors(synchronizer, results, ArtefactLifecycle.STARTED);
 			            
 					} catch (Exception e) {
 						if (logger.isErrorEnabled()) {logger.error(e.getMessage());}

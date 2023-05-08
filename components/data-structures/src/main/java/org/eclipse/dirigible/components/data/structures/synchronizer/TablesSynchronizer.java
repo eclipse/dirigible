@@ -274,7 +274,6 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 					if (!SqlFactory.getNative(connection).exists(connection, table.getName())) {
 						try {
 							executeTableCreate(connection, table);
-							executeTableForeignKeysCreate(connection, table);
 						} catch (Exception e) {
 							if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 							callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, e.getMessage());
@@ -288,6 +287,11 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 				}
 				break;
 			case UPDATE:
+				if (table.getLifecycle().equals(ArtefactLifecycle.CREATED)) {
+					if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
+						executeTableForeignKeysCreate(connection, table);
+					}
+				}
 				if (table.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
 					executeTableUpdate(connection, table);
 					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");

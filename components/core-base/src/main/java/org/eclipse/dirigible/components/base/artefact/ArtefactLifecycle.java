@@ -28,6 +28,8 @@ public enum ArtefactLifecycle {
 	UPDATED("UPDATED"),
 	/** The deleted. */
 	DELETED("DELETED"),
+	/** The started. */
+	STARTED("STARTED"),
 	/** The failed. */
 	FAILED("FAILED");
 	
