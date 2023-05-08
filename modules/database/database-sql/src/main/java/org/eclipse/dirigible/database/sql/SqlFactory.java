@@ -318,6 +318,19 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	public boolean exists(Connection connection, String schema, String name, int type) throws SQLException {
 		return this.dialect.exists(connection, schema, name, type);
 	}
+	
+	/**
+	 * Exists schema.
+	 *
+	 * @param connection the connection
+	 * @param schema the schema
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
+	@Override
+	public boolean existsSchema(Connection connection, String schema) throws SQLException {
+		return this.dialect.existsSchema(connection, schema);
+	}
 
 	/**
 	 * Count.

@@ -484,6 +484,26 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	}
 
 	/**
+	 * Exists schema.
+	 *
+	 * @param connection the connection
+	 * @param schema the schema
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
+	@Override
+	public boolean existsSchema(Connection connection, String schema) throws SQLException {
+		String sql = new SelectBuilder(this).column("*").schema("information_schema").from("schemata").where("schema_name = ?").build();
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, schema);
+		ResultSet resultSet = statement.executeQuery();
+		if (resultSet.next()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Count.
 	 *
 	 * @param connection the connection

@@ -399,6 +399,11 @@ public interface ISqlKeywords {
      * The Constant COMMA.
      */
     public static final String COMMA = ","; //$NON-NLS-1$
+    
+    /**
+     * The Constant DOT.
+     */
+    public static final String DOT = "."; //$NON-NLS-1$
 
     /**
      * The Constant SPACE.

@@ -343,8 +343,8 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 						addArtefacts(parsed);
 						break;
 					case PARSED: // not new nor modified
-						parsed = synchronizer.retrieve(definition.getLocation());
-						addArtefacts(parsed);
+//						parsed = synchronizer.retrieve(definition.getLocation());
+//						addArtefacts(parsed);
 						break;
 					case BROKEN: // has been broken
 						break;

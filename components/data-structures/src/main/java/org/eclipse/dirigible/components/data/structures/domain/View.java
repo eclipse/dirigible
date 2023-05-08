@@ -23,13 +23,18 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
 
 /**
@@ -62,6 +67,13 @@ public class View extends Artefact {
 	@Column(name = "VIEW_QUERY", columnDefinition = "CLOB", nullable = false)
 	@Expose
 	protected String query;
+	
+	/** The schema reference. */
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "SCHEMA_ID", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Schema schemaReference;
 	
 	
 	/**
@@ -168,6 +180,24 @@ public class View extends Artefact {
 	 */
 	public void setQuery(String query) {
 		this.query = query;
+	}
+	
+	/**
+	 * Gets the schema reference.
+	 *
+	 * @return the schema reference
+	 */
+	public Schema getSchemaReference() {
+		return schemaReference;
+	}
+	
+	/**
+	 * Sets the schema reference.
+	 *
+	 * @param schemaReference the new schema reference
+	 */
+	public void setSchemaReference(Schema schemaReference) {
+		this.schemaReference = schemaReference;
 	}
 
 	/**

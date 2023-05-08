@@ -74,6 +74,7 @@ public class TableAlterProcessor {
 		// ADD iteration
 		for (TableColumn columnModel : tableModel.getColumns()) {
 			String name = columnModel.getName();
+			String nameOriginal = name;
 			if (caseSensitive) {
 				name = "\"" + name + "\"";
 			}
@@ -110,7 +111,7 @@ public class TableAlterProcessor {
 			
 			modelColumnNames.add(name.toUpperCase());
 
-			if (!columnDefinitions.containsKey(name.toUpperCase())) {
+			if (!columnDefinitions.containsKey(nameOriginal.toUpperCase())) {
 				
 				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
 				
@@ -125,7 +126,7 @@ public class TableAlterProcessor {
 				
 				executeAlterBuilder(connection, alterTableBuilder);
 
-			} else if (!columnDefinitions.get(name.toUpperCase()).equals(type.toString())) {
+			} else if (!columnDefinitions.get(nameOriginal.toUpperCase()).equals(type.toString())) {
 				throw new SQLException(String.format(INCOMPATIBLE_CHANGE_OF_TABLE, tableName, name, "of type " + columnDefinitions.get(name) + " to be changed to" + type));
 			}
 		}
@@ -133,11 +134,11 @@ public class TableAlterProcessor {
 		// DROP iteration
 		
 		for (String columnName : columnDefinitions.keySet()) {
+			if (caseSensitive) {
+				columnName = "\"" + columnName + "\"";
+			}
 			if (!modelColumnNames.contains(columnName.toUpperCase())) {
 				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
-				if (caseSensitive) {
-					columnName = "\"" + columnName + "\"";
-				}
 				alterTableBuilder.drop().column(columnName, DataType.BOOLEAN);
 				executeAlterBuilder(connection, alterTableBuilder);
 			}

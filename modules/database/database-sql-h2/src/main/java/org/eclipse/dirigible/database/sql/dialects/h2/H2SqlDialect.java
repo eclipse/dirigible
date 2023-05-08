@@ -11,6 +11,10 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.h2;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -313,5 +317,25 @@ public class H2SqlDialect extends
     public H2CreateBranchingBuilder create() {
         return new H2CreateBranchingBuilder(this);
     }
+    
+    /**
+	 * Exists schema.
+	 *
+	 * @param connection the connection
+	 * @param schema the schema
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
+	@Override
+	public boolean existsSchema(Connection connection, String schema) throws SQLException {
+		String sql = new SelectBuilder(this).column("*").schema("INFORMATION_SCHEMA").from("SCHEMATA").where("SCHEMA_NAME = ?").build();
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, schema);
+		ResultSet resultSet = statement.executeQuery();
+		if (resultSet.next()) {
+			return true;
+		}
+		return false;
+	}
 
 }

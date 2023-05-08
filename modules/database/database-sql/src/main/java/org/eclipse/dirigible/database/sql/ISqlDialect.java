@@ -262,6 +262,20 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 
 	@Override
 	public boolean exists(Connection connection, String name, int type) throws SQLException;
+	
+	/**
+	 * Check existence of a schema.
+	 *
+	 * @param connection
+	 *            the current connection
+	 * @param schema
+	 *            the schema name
+	 * @return true if the table exists and false otherwise
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	@Override
+	public boolean existsSchema(Connection connection, String schema) throws SQLException;
 
 	/**
 	 * Returns the count of rows in the given table.
@@ -282,7 +296,7 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 * (e.g. to reduce the provisioned schemas down to those that the current
 	 * user is entitled to see).
 	 *
-	 * @return true if the feature is supported , false otherwise
+	 * @return true if the feature is supported, false otherwise
 	 */
 	public boolean isSchemaFilterSupported();
 
@@ -360,7 +374,7 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	public String getFuzzySearchIndex();
 	
 	/**
-	 * Returns the escape symbol
+	 * Returns the escape symbol.
 	 *
 	 * @return the string for escape symbol
 	 */

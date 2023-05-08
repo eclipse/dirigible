@@ -50,11 +50,15 @@ public class Schema extends Artefact {
 	private Long id;
 	
 	/** The tables. */
-	@Transient
+	@OneToMany(mappedBy = "schema", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@Expose
 	private List<Table> tables = new ArrayList<Table>();
 	
 	/** The views. */
-	@Transient
+	@OneToMany(mappedBy = "schema", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@Expose
 	private List<View> views = new ArrayList<View>();
 
 	/**
@@ -137,6 +141,36 @@ public class Schema extends Artefact {
 	 */
 	public void setViews(List<View> views) {
 		this.views = views;
+	}
+	
+	/**
+	 * Find table.
+	 *
+	 * @param name the name
+	 * @return the table
+	 */
+	public Table findTable(String name) {
+		for (Table t : getTables()) {
+			if (t.getName().equals(name)) {
+				return t;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Find view.
+	 *
+	 * @param name the name
+	 * @return the view
+	 */
+	public View findView(String name) {
+		for (View v : getViews()) {
+			if (v.getName().equals(name)) {
+				return v;
+			}
+		}
+		return null;
 	}
 
 	/**

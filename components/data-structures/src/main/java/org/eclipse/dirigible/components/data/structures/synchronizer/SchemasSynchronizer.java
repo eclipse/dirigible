@@ -27,7 +27,6 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
@@ -36,8 +35,11 @@ import org.eclipse.dirigible.components.data.structures.domain.Schema;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
 import org.eclipse.dirigible.components.data.structures.domain.TableConstraintForeignKey;
+import org.eclipse.dirigible.components.data.structures.domain.TableConstraints;
 import org.eclipse.dirigible.components.data.structures.domain.View;
 import org.eclipse.dirigible.components.data.structures.service.SchemaService;
+import org.eclipse.dirigible.components.data.structures.service.TableService;
+import org.eclipse.dirigible.components.data.structures.service.ViewService;
 import org.eclipse.dirigible.components.data.structures.synchronizer.schema.SchemaCreateProcessor;
 import org.eclipse.dirigible.components.data.structures.synchronizer.schema.SchemaUpdateProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -69,6 +71,12 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	/** The schema service. */
 	private SchemaService schemaService;
 	
+	/** The table service. */
+	private TableService tableService;
+	
+	/** The view service. */
+	private ViewService viewService;
+	
 	/** The datasources manager. */
 	private DataSourcesManager datasourcesManager;
 	
@@ -80,11 +88,15 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 *
 	 * @param schemaService the schema service
 	 * @param datasourcesManager the datasources manager
+	 * @param tableService the table service
+	 * @param viewService the view service
 	 */
 	@Autowired
-	public SchemasSynchronizer(SchemaService schemaService, DataSourcesManager datasourcesManager) {
+	public SchemasSynchronizer(SchemaService schemaService, DataSourcesManager datasourcesManager, TableService tableService, ViewService viewService) {
 		this.schemaService = schemaService;
 		this.datasourcesManager = datasourcesManager;
+		this.tableService = tableService;
+		this.viewService = viewService;
 	}
 	
 	/**
@@ -95,6 +107,24 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	@Override
 	public ArtefactService<Schema> getService() {
 		return schemaService;
+	}
+	
+	/**
+	 * Gets the table service.
+	 *
+	 * @return the table service
+	 */
+	public TableService getTableService() {
+		return tableService;
+	}
+	
+	/**
+	 * Gets the view service.
+	 *
+	 * @return the view service
+	 */
+	public ViewService getViewService() {
+		return viewService;
 	}
 
 	/**
@@ -129,27 +159,48 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 */
 	@Override
 	public List<Schema> parse(String location, byte[] content) {
-		Schema schema = parseSchema(location, new String(content, StandardCharsets.UTF_8));
+		final Schema schema = parseSchema(location, new String(content, StandardCharsets.UTF_8));
 		Configuration.configureObject(schema);
 		schema.setLocation(location);
 		if (schema.getName() == null) {
-			schema.setName("");
+			schema.setName("PUBLIC");
 		}
 		schema.setType(Schema.ARTEFACT_TYPE);
 		schema.updateKey();
+		
+		schema.getTables().forEach(t -> {
+				t.setSchemaReference(schema);
+				t.setConstraints(new TableConstraints(t));
+				TablesSynchronizer.assignParent(t);
+			});
+		schema.getViews().forEach(v -> v.setSchemaReference(schema));
 		
 		try {
 			Schema maybe = getService().findByKey(schema.getKey());
 			if (maybe != null) {
 				schema.setId(maybe.getId());
+				schema.getTables().forEach(t -> {
+					Table m = getTableService().findByKey(schema.constructKey(Table.ARTEFACT_TYPE, location, t.getName()));
+					if (m != null) {
+						t.setId(m.getId());
+					}
+					TablesSynchronizer.reassignIds(t, m);
+				});
+				schema.getViews().forEach(v -> {
+					View m = getViewService().findByKey(schema.constructKey(View.ARTEFACT_TYPE, location, v.getName()));
+					if (m != null) {
+						v.setId(m.getId());
+					}
+				});
 			}
-			schema = getService().save(schema);
+			Schema result = getService().save(schema);
+			return List.of(result);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("schema: {}", schema);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
 		}
-		return List.of(schema);
+		return null;
 	}
 	
 	/**
@@ -270,7 +321,7 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 */
 	public void executeSchemaUpdate(Connection connection, Schema schemaModel) throws SQLException {
 		if (logger.isInfoEnabled()) {logger.info("Processing Update Schema: " + schemaModel.getName());}
-		if (SqlFactory.getNative(connection).exists(connection, schemaModel.getName())) {
+		if (SqlFactory.getNative(connection).existsSchema(connection, schemaModel.getName())) {
 			SchemaUpdateProcessor.execute(connection, schemaModel);
 		} else {
 			executeSchemaCreate(connection, schemaModel);

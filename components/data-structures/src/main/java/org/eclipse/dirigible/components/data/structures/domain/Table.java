@@ -22,13 +22,18 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
 
 /**
@@ -75,6 +80,13 @@ public class Table extends Artefact {
 	@Nullable
 	@Expose
 	private TableConstraints constraints;
+	
+	/** The schema reference. */
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "SCHEMA_ID", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Schema schemaReference;
 
 	/**
 	 * Instantiates a new table.
@@ -185,6 +197,7 @@ public class Table extends Artefact {
 	/**
 	 * Get the column by name.
 	 *
+	 * @param name the name
 	 * @return the column
 	 */
 	public TableColumn getColumn(String name) {
@@ -217,6 +230,7 @@ public class Table extends Artefact {
 	/**
 	 * Get the index by name.
 	 *
+	 * @param name the name
 	 * @return the index
 	 */
 	public TableIndex getIndex(String name) {
@@ -247,6 +261,24 @@ public class Table extends Artefact {
 	 */
 	public void setConstraints(TableConstraints constraints) {
 		this.constraints = constraints;
+	}
+	
+	/**
+	 * Gets the schema reference.
+	 *
+	 * @return the schema reference
+	 */
+	public Schema getSchemaReference() {
+		return schemaReference;
+	}
+	
+	/**
+	 * Sets the schema reference.
+	 *
+	 * @param schemaReference the new schema reference
+	 */
+	public void setSchemaReference(Schema schemaReference) {
+		this.schemaReference = schemaReference;
 	}
 
 	/**

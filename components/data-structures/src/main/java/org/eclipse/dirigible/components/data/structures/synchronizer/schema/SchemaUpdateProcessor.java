@@ -18,8 +18,12 @@ import org.eclipse.dirigible.components.data.structures.domain.Schema;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.View;
 import org.eclipse.dirigible.components.data.structures.synchronizer.table.TableAlterProcessor;
+import org.eclipse.dirigible.components.data.structures.synchronizer.table.TableCreateProcessor;
+import org.eclipse.dirigible.components.data.structures.synchronizer.table.TableForeignKeysCreateProcessor;
+import org.eclipse.dirigible.components.data.structures.synchronizer.table.TableForeignKeysDropProcessor;
 import org.eclipse.dirigible.components.data.structures.synchronizer.view.ViewCreateProcessor;
 import org.eclipse.dirigible.components.data.structures.synchronizer.view.ViewDropProcessor;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,27 +43,41 @@ public class SchemaUpdateProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, Schema schemaModel) throws SQLException {
+		
 		for (Table tableModel : schemaModel.getTables()) {
 			try {
-				TableAlterProcessor.execute(connection, tableModel);
+				if (!SqlFactory.getNative(connection).exists(connection, tableModel.getName())) {
+					try {
+						TableCreateProcessor.execute(connection, tableModel, true);
+					} catch (Exception e) {
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+					}
+				} else {
+					TableAlterProcessor.execute(connection, tableModel);
+				}
 			} catch (SQLException e) {
 				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			}
 		}
+		
+		for (Table tableModel : schemaModel.getTables()) {
+			try {
+				TableForeignKeysDropProcessor.execute(connection, tableModel);
+				TableForeignKeysCreateProcessor.execute(connection, tableModel);
+			} catch (SQLException e) {
+				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			}
+		}
+		
 		for (View viewModel : schemaModel.getViews()) {
 			try {
 				ViewDropProcessor.execute(connection, viewModel);
-			} catch (SQLException e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			}
-		}
-		for (View viewModel : schemaModel.getViews()) {
-			try {
 				ViewCreateProcessor.execute(connection, viewModel);
 			} catch (SQLException e) {
 				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			}
 		}
+		
 	}
 
 }

@@ -82,6 +82,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	@Expose
 	protected String error;
 	
+	/** The running. */
 	@Column(name = "ARTEFACT_RUNNING", columnDefinition = "BOOLEAN")
 	@JsonIgnore
 	private Boolean running;
@@ -303,6 +304,8 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	}
 	
 	/**
+	 * Gets the running.
+	 *
 	 * @return the running
 	 */
 	public Boolean getRunning() {
@@ -310,6 +313,8 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	}
 
 	/**
+	 * Sets the running.
+	 *
 	 * @param running the running to set
 	 */
 	public void setRunning(Boolean running) {
@@ -328,6 +333,24 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 		} else {
 			throw new IllegalArgumentException(String.format("Attempt to generate an artefact key by type=[%s], location=[%s], name=[%s]", type, location, name));
 		}
+	}
+	
+	/**
+	 * Construct key.
+	 *
+	 * @param type the type
+	 * @param location the location
+	 * @param name the name
+	 * @return the string
+	 */
+	public String constructKey(String typeA, String locationA, String nameA) {
+		if (typeA != null
+				&& locationA != null 
+				&& nameA != null) {
+			String keyA = typeA + KEY_SEPARATOR + locationA + KEY_SEPARATOR + nameA;
+			return keyA;
+		}
+		return null;
 	}
 
 	/**

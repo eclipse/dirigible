@@ -612,5 +612,27 @@ public class SelectRecordTest {
 			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
 		}
 	}
+	
+	/**
+	 * Select column and where clause with schema in case sensitive mode.
+	 */
+	@Test
+	public void selectColumnWhereAndSchemaCaseSensitive() {
+		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+		try {
+			String sql = SqlFactory.getDefault()
+				.select()
+				.column("FIRST_NAME")
+				.from("CUSTOMERS")
+				.schema("PUBLIC")
+				.where("PRICE_BASIC LIKE ?")
+				.build();
+			
+			assertNotNull(sql);
+			assertEquals("SELECT \"FIRST_NAME\" FROM \"PUBLIC\".\"CUSTOMERS\" WHERE (\"PRICE_BASIC\" LIKE ?)", sql);
+		} finally {
+			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+		}
+	}
 
 }

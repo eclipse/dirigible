@@ -62,6 +62,9 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 
 	/** The for update. */
 	private boolean forUpdate = false;
+	
+	/** The schema. */
+	private String schema = null;
 
 	/**
 	 * Instantiates a new select builder.
@@ -139,6 +142,23 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		this.tables.add(snippet.toString());
 		return this;
 	}
+	
+	/**
+	 * From.
+	 *
+	 * @param table
+	 *            the table
+	 * @param alias
+	 *            the alias
+	 * @return the select builder
+	 */
+	public SelectBuilder schema(String schema) {
+		if (logger.isTraceEnabled()) {logger.trace("schema: " + schema);}
+		this.schema = schema;
+		return this;
+	}
+	
+	
 
 	/**
 	 * Join.
@@ -336,8 +356,13 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	public SelectBuilder genericJoin(String type, String table, String on, String alias) {
 		if (logger.isTraceEnabled()) {logger.trace("genericJoin: " + type + ", table: " + table + ", on: " + on + ", alias: " + alias);}
 		StringBuilder snippet = new StringBuilder();
+		String schemaName = (isCaseSensitive()) ? encapsulate(schema, true) : schema;
 		String tableName = (isCaseSensitive()) ? encapsulate(table, true) : table;
-		snippet.append(type).append(SPACE).append(KEYWORD_JOIN).append(SPACE).append(tableName);
+		if (schema != null) {
+			snippet.append(type).append(SPACE).append(KEYWORD_JOIN).append(SPACE).append(schemaName).append(DOT).append(tableName);
+		} else {
+			snippet.append(type).append(SPACE).append(KEYWORD_JOIN).append(SPACE).append(tableName);
+		}
 		if (alias != null) {
 			String aliasName = (isCaseSensitive()) ? encapsulate(alias) : alias;
 			snippet.append(SPACE).append(KEYWORD_AS).append(SPACE).append(aliasName);
@@ -656,8 +681,13 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	protected String traverseTables() {
 		StringBuilder snippet = new StringBuilder();
 		for (String table : this.tables) {
+			String schemaName = (isCaseSensitive()) ? encapsulate(schema, true) : schema;
 			String tableName = (isCaseSensitive()) ? encapsulate(table, true) : table;
-			snippet.append(tableName).append(COMMA).append(SPACE);
+			if (schema != null) {
+				snippet.append(schemaName).append(DOT).append(tableName).append(COMMA).append(SPACE);
+			} else {
+				snippet.append(tableName).append(COMMA).append(SPACE);
+			}
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}

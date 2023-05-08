@@ -93,6 +93,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return the encapsulated name
 	 */
 	protected String encapsulate(String name, boolean isDataStructureName) {
+		if (name == null) return null;
 		String escapeSymbol = getEscapeSymbol();
 		if ("*".equals(name.trim())) {
 			return name;

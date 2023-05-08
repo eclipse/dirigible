@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.sql.dialects.postgres;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -410,6 +411,26 @@ public class PostgresSqlDialect extends
 	@Override
 	public Set<String> getFunctionsNames() {
 		return FUNCTIONS;
+	}
+	
+	/**
+	 * Exists schema.
+	 *
+	 * @param connection the connection
+	 * @param schema the schema
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
+	@Override
+	public boolean existsSchema(Connection connection, String schema) throws SQLException {
+		String sql = new SelectBuilder(this).column("*").schema("information_schema").from("schemata").where("schema_name = ?").build();
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, schema);
+		ResultSet resultSet = statement.executeQuery();
+		if (resultSet.next()) {
+			return true;
+		}
+		return false;
 	}
 
 }

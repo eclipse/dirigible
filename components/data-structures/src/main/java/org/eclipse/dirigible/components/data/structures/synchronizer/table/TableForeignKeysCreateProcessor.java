@@ -60,11 +60,13 @@ public class TableForeignKeysCreateProcessor {
                     valsToHashFKName.add(foreignKey.getReferencedTable());
                     String hashedFKName = "fk" + generateHashedName(valsToHashFKName);
                     String foreignKeyName = Objects.isNull(foreignKey.getName()) ? hashedFKName : foreignKey.getName();
+                    String referencedTable = foreignKey.getReferencedTable();
                     if (caseSensitive) {
                         foreignKeyName = "\"" + foreignKeyName + "\"";
+                        referencedTable = "\"" + referencedTable + "\"";
                     }
                     alterTableBuilder.add().foreignKey(foreignKeyName, foreignKey.getColumns(), 
-                    		foreignKey.getReferencedTable(), foreignKey.getReferencedColumns());
+                    		referencedTable, foreignKey.getReferencedColumns());
                 }
                 final String sql = alterTableBuilder.build();
                 if (logger.isInfoEnabled()) {logger.info(sql);}

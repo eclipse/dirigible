@@ -144,6 +144,16 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @throws SQLException             the SQL exception
 	 */
 	public boolean exists(Connection connection, String schema, String name, int type) throws SQLException;
+	
+	/**
+	 * Check existence of a schema.
+	 *
+	 * @param connection the current connection
+	 * @param schema the schema name
+	 * @return true if the table exists and false otherwise
+	 * @throws SQLException the SQL exception
+	 */
+	public boolean existsSchema(Connection connection, String schema) throws SQLException;
 
 	/**
 	 * Count.
