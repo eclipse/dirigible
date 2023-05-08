@@ -146,10 +146,7 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * From.
 	 *
-	 * @param table
-	 *            the table
-	 * @param alias
-	 *            the alias
+	 * @param schema the schema
 	 * @return the select builder
 	 */
 	public SelectBuilder schema(String schema) {

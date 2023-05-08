@@ -85,7 +85,7 @@ public class AlterTableTest {
 	}
 	
 	/**
-	 * Alter table add foreign key
+	 * Alter table add foreign key.
 	 */
 	@Test
 	public void alterAddForeignKey() {
@@ -100,7 +100,7 @@ public class AlterTableTest {
 	}
 	
 	/**
-	 * Alter table drop foreign key
+	 * Alter table drop foreign key.
 	 */
 	@Test
 	public void alterDropForeignKey() {

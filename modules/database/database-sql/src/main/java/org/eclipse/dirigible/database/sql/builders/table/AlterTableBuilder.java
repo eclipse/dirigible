@@ -223,6 +223,11 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         return generated;
     }
 
+	/**
+	 * Generate foreign key names for drop.
+	 *
+	 * @param sql the sql
+	 */
 	private void generateForeignKeyNamesForDrop(StringBuilder sql) {
 		if (!this.getForeignKeys().isEmpty()) {
 			sql.append(KEYWORD_DROP)
@@ -234,6 +239,11 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         }
 	}
 	
+	/**
+	 * Generate unique indices for drop.
+	 *
+	 * @param sql the sql
+	 */
 	private void generateUniqueIndicesForDrop(StringBuilder sql) {
 		if (!this.getUniqueIndices().isEmpty()) {
 			sql.append(KEYWORD_DROP)
