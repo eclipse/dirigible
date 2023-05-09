@@ -98,6 +98,7 @@ public class JavascriptService implements InitializingBean {
         			logger.error(e.getMessage());
         			return e.getMessage();
         		} else {
+        			logger.error("Error on processing JavaScript service: [/{}/{}], with parameters: [{}]", projectName, projectFilePath, projectFilePathParam);
         			logger.error(e.getMessage(), e);
         			throw new RuntimeException(e);
         		}
