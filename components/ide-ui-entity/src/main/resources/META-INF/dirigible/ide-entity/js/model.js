@@ -28,6 +28,7 @@ Entity.prototype.layoutType = 'MANAGE';
 Entity.prototype.perspectiveName = 'Entities';
 Entity.prototype.perspectiveIcon = '/services/web/resources/unicons/copy.svg';
 Entity.prototype.perspectiveOrder = 100;
+Entity.prototype.navigationPath = '/Home';
 Entity.prototype.feedUrl = null;
 Entity.prototype.feedUsername = null;
 Entity.prototype.feedPassword = null;

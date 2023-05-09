@@ -40,6 +40,7 @@ function createModel(graph) {
 				'" menuLabel="' + _.escape(child.value.menuLabel) +
 				'" menuIndex="' + _.escape(child.value.menuIndex) +
 				'" layoutType="' + _.escape(child.value.layoutType) +
+				'" navigationPath="' + _.escape(child.value.navigationPath) +
 				'" perspectiveName="' + _.escape(child.value.perspectiveName) +
 				'" perspectiveIcon="' + getPerspectiveIcon(graph, child) +
 				'" perspectiveOrder="' + getPerspectiveOrder(graph, child) + '"';

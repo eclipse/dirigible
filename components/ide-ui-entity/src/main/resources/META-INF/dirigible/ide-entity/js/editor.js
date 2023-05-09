@@ -190,6 +190,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 				cell.value.menuIndex = msg.data.menuIndex;
 				cell.value.layoutType = msg.data.layoutType;
 				cell.value.perspectiveName = msg.data.perspectiveName;
+				cell.value.navigationPath = msg.data.navigationPath;
 				cell.value.feedUrl = msg.data.feedUrl;
 				cell.value.feedUsername = msg.data.feedUsername;
 				cell.value.feedPassword = msg.data.feedPassword;
@@ -782,6 +783,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 									menuIndex: cell.value.menuIndex,
 									layoutType: cell.value.layoutType,
 									perspectiveName: cell.value.perspectiveName,
+									navigationPath: cell.value.navigationPath,
 									feedUrl: cell.value.feedUrl,
 									feedUsername: cell.value.feedUsername,
 									feedPassword: cell.value.feedPassword,
