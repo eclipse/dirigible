@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-components-parent</artifactId>
-        <version>9.0.0-SNAPSHOT</version>
+        <version>8.4.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -18,28 +18,28 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-group-api-platform</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.4.2</version>
             <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-bpm</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.4.2</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-cms</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.4.2</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-kafka</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.4.2</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-etcd</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.4.2</version>
         </dependency>
         <!--
         <dependency>
@@ -51,17 +51,17 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-rabbitmq</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.4.2</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-redis</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.4.2</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-qldb</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.4.2</version>
         </dependency>
 
     </dependencies>
