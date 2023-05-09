@@ -236,8 +236,8 @@
                         <fd-form-label for="uip" dg-required="true" dg-colon="true">Perspective</fd-form-label>
                         <fd-select dg-placeholder="Select an perspective" label-id="uip" ng-required="true"
                             ng-model="dataParameters.perspectiveName" dropdown-fixed="true">
-                            <fd-option text="{{ perspectives.label }}" value="perspectives.value"
-                                ng-repeat="perspective in perspectives">
+                            <fd-option text="{{ perspective.label }}" value="perspective.id"
+                                ng-repeat="perspective in dataParameters.perspectives">
                             </fd-option>
                         </fd-select>
                     </fd-form-item>

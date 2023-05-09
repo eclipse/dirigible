@@ -789,6 +789,8 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 									feedPath: cell.value.feedPath,
 									roleRead: cell.value.roleRead,
 									roleWrite: cell.value.roleWrite,
+									perspectives: $scope.graph.model.perspectives,
+									sidebar: $scope.graph.model.sidebar,
 								},
 								null,
 								false,
