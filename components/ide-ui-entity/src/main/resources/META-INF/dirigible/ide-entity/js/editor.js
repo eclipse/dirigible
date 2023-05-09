@@ -275,7 +275,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 			"edmEditor.navigation.details",
 			function (msg) {
 				$scope.graph.model.perspectives = msg.data.perspectives;
-				$scope.graph.model.sidebar = msg.data.sidebar;
+				$scope.graph.model.navigations = msg.data.navigations;
 				messageHub.setEditorDirty($scope.dataParameters.file, true);
 				messageHub.closeDialogWindow("edmNavDetails");
 			},
@@ -790,7 +790,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 									roleRead: cell.value.roleRead,
 									roleWrite: cell.value.roleWrite,
 									perspectives: $scope.graph.model.perspectives,
-									sidebar: $scope.graph.model.sidebar,
+									navigations: $scope.graph.model.navigations,
 								},
 								null,
 								false,
@@ -914,7 +914,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 						"edmNavDetails",
 						{
 							perspectives: $scope.graph.model.perspectives,
-							sidebar: $scope.graph.model.sidebar,
+							navigations: $scope.graph.model.navigations,
 						},
 						null,
 						false,
@@ -984,7 +984,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 
 			deserializeFilter($scope.graph);
 			loadPerspectives(doc, $scope.graph);
-			loadSidebar(doc, $scope.graph);
+			loadNavigations(doc, $scope.graph);
 			$scope.graph.model.addListener(mxEvent.START_EDIT, function (sender, evt) {
 				messageHub.setEditorDirty($scope.dataParameters.file, true);
 			});
@@ -1049,18 +1049,18 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 			}
 		}
 
-		function loadSidebar(doc, graph) {
-			if (!graph.getModel().sidebar) {
-				graph.getModel().sidebar = [];
+		function loadNavigations(doc, graph) {
+			if (!graph.getModel().navigations) {
+				graph.getModel().navigations = [];
 			}
 			for (let i = 0; i < doc.children.length; i++) {
 				let element = doc.children[i];
 				if (element.localName === "model") {
 					for (let j = 0; j < element.children.length; j++) {
-						let sidebar = element.children[j];
-						if (sidebar.localName === "sidebar") {
-							for (let k = 0; k < sidebar.children.length; k++) {
-								let item = sidebar.children[k];
+						let navigation = element.children[j];
+						if (navigation.localName === "navigations") {
+							for (let k = 0; k < navigation.children.length; k++) {
+								let item = navigation.children[k];
 								let copy = {};
 								for (let m = 0; m < item.children.length; m++) {
 									let attribute = item.children[m];
@@ -1074,7 +1074,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 										copy.url = attribute.textContent;
 									}
 								}
-								graph.getModel().sidebar.push(copy);
+								graph.getModel().navigations.push(copy);
 							}
 							break;
 						}

@@ -29,7 +29,7 @@ exports.transform = function (workspaceName, projectName, filePath) {
     root.model = {};
     root.model.entities = [];
     root.model.perspectives = [];
-    root.model.sidebar = [];
+    root.model.navigations = [];
     if (raw.model) {
         if (raw.model.entities) {
             if (raw.model.entities.entity) {
@@ -64,12 +64,12 @@ exports.transform = function (workspaceName, projectName, filePath) {
             console.error("Invalid source model: 'perspectives' element is null");
         }
 
-        if (raw.model.sidebar) {
-            if (raw.model.sidebar.item) {
-                if (Array.isArray(raw.model.sidebar.item)) {
-                    raw.model.sidebar.item.forEach(item => { root.model.sidebar.push(transformSidebar(item)) });
+        if (raw.model.navigations) {
+            if (raw.model.navigations.item) {
+                if (Array.isArray(raw.model.navigations.item)) {
+                    raw.model.navigations.item.forEach(item => { root.model.navigations.push(transformNavigations(item)) });
                 } else {
-                    root.model.sidebar.push(transformSidebar(raw.model.sidebar.item));
+                    root.model.navigations.push(transformNavigations(raw.model.navigations.item));
                 }
             }
         }
@@ -126,7 +126,7 @@ exports.transform = function (workspaceName, projectName, filePath) {
         return perspective;
     }
 
-    function transformSidebar(raw) {
+    function transformNavigations(raw) {
         let item = {};
         for (let propertyName in raw) {
             item[propertyName] = raw[propertyName];

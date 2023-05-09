@@ -206,12 +206,12 @@ function createModel(graph) {
 		model.push(' </perspectives>\n');
 	}
 
-	if (graph.getModel().sidebar) {
-		model.push(' <sidebar>\n');
-		for (let i = 0; i < graph.getModel().sidebar.length; i++) {
-			model.push('  <item><path>' + _.escape(graph.getModel().sidebar[i].path) + '</path><label>' + _.escape(graph.getModel().sidebar[i].label) + '</label><icon>' + _.escape(graph.getModel().sidebar[i].icon) + '</icon><url>' + _.escape(graph.getModel().sidebar[i].url) + '</url></item>\n');
+	if (graph.getModel().navigations) {
+		model.push(' <navigations>\n');
+		for (let i = 0; i < graph.getModel().navigations.length; i++) {
+			model.push('  <item><path>' + _.escape(graph.getModel().navigations[i].path) + '</path><label>' + _.escape(graph.getModel().navigations[i].label) + '</label><icon>' + _.escape(graph.getModel().navigations[i].icon) + '</icon><url>' + _.escape(graph.getModel().navigations[i].url) + '</url></item>\n');
 		}
-		model.push(' </sidebar>\n');
+		model.push(' </navigations>\n');
 	}
 
 	let enc = new mxCodec(mxUtils.createXmlDocument());

@@ -85,8 +85,8 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                 $scope.editElement.id = '';
                 $scope.editElement.order = 0;
             } else {
-                for (let i = 0; i < $scope.dataParameters.sidebar.length; i++) {
-                    $scope.inputRules.excluded.push($scope.dataParameters.sidebar[i].path);
+                for (let i = 0; i < $scope.dataParameters.navigations.length; i++) {
+                    $scope.inputRules.excluded.push($scope.dataParameters.navigations[i].path);
                 }
                 $scope.editElement.path = '';
                 $scope.editElement.url = '';
@@ -103,9 +103,9 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         $scope.inputRules.excluded.push($scope.dataParameters.perspectives[i].id);
                 }
             } else {
-                for (let i = 0; i < $scope.dataParameters.sidebar.length; i++) {
+                for (let i = 0; i < $scope.dataParameters.navigations.length; i++) {
                     if (i !== index)
-                        $scope.inputRules.excluded.push($scope.dataParameters.sidebar[i].path);
+                        $scope.inputRules.excluded.push($scope.dataParameters.navigations[i].path);
                 }
             }
             $scope.editElement.editType = 'Update';
@@ -115,7 +115,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
         $scope.delete = function (index) {
             if ($scope.tabNumber === 0)
                 $scope.dataParameters.perspectives.splice(index, 1);
-            else $scope.dataParameters.sidebar.splice(index, 1);
+            else $scope.dataParameters.navigations.splice(index, 1);
         };
         $scope.save = function () {
             if (!$scope.state.error) {
@@ -123,7 +123,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                 $scope.state.isBusy = true;
                 messageHub.postMessage('edmEditor.navigation.details', {
                     perspectives: $scope.dataParameters.perspectives,
-                    sidebar: $scope.dataParameters.sidebar,
+                    navigations: $scope.dataParameters.navigations,
                 }, true);
             }
         };
@@ -136,7 +136,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         icon: $scope.editElement.icon,
                         order: $scope.editElement.order,
                     });
-                else $scope.dataParameters.sidebar.push({
+                else $scope.dataParameters.navigations.push({
                     path: $scope.editElement.path,
                     label: $scope.editElement.label,
                     icon: $scope.editElement.icon,
