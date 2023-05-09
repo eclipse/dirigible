@@ -42,6 +42,13 @@ public class Csvim extends Artefact {
     private Long id;
 
     /**
+     * The version.
+     */
+    @Column(name = "CSVIM_VERSION", columnDefinition = "VARCHAR")
+    @Expose
+    private String version;
+
+    /**
      * The csv file definitions.
      */
     @OneToMany(mappedBy = "csvim", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -50,8 +57,9 @@ public class Csvim extends Artefact {
     @Expose
     private List<CsvFile> files = new ArrayList<CsvFile>();
 
-    public Csvim(Long id, List<CsvFile> files) {
+    public Csvim(Long id, String version, List<CsvFile> files) {
         this.id = id;
+        this.version = version;
         this.files = files;
     }
 
@@ -71,6 +79,20 @@ public class Csvim extends Artefact {
      */
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * @return get the version of csvim
+     */
+    public String getVersion() {
+        return version;
+    }
+
+    /**
+     * @param version the version of the csvim
+     */
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     /**

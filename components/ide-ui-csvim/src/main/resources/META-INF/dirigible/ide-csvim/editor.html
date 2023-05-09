@@ -138,6 +138,20 @@
 												fileExists ? filepathError[0] : filepathError[1] }}</fd-form-message>
 										</fd-form-input-message-group>
 									</fd-form-item>
+									<fd-form-item horizontal="false">
+										<fd-form-label for="idVersion" dg-colon="true">Version
+										</fd-form-label>
+										<fd-form-input-message-group
+												dg-inactive="{{ forms.editor['version'].$valid ? 'true' : 'false' }}">
+											<fd-input id="idVersion" name="version" ng-trim="false"
+													  ng-attr-readonly="{{ !editEnabled || undefined }}"
+													  state="{{ forms.editor['version'].$valid ? '' : 'error' }}"
+													  ng-model="csvimData[activeItemId].version" ng-change="fileChanged()"
+													  dg-input-rules="{ patterns: ['^[A-Za-z0-9_$.-]+$'] }" type="text">
+											</fd-input>
+											<fd-form-message dg-type="error">{{versionError}}</fd-form-message>
+										</fd-form-input-message-group>
+									</fd-form-item>
 									<fd-form-item>
 										<fd-checkbox id="idHeader" compact="false" ng-change="fileChanged()"
 											ng-model="csvimData[activeItemId].header" ng-disabled="!editEnabled">
@@ -195,6 +209,7 @@
 												text="This quote character is not supported!"></span>
 										</div>
 									</div>
+									<!--
 									<fd-form-item>
 										<fd-toolbar class="fd-padding--none fd-margin-top-bottom--tiny"
 											no-bottom-border="true" dg-type="transparent">
@@ -273,6 +288,7 @@
 											</tbody>
 										</table>
 									</fd-form-item>
+									-->
 								</fd-form-group>
 							</fd-fieldset>
 						</div>

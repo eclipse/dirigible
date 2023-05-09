@@ -52,6 +52,7 @@ editorView.controller('CsvimViewController', ['$scope', '$http', 'messageHub', '
     $scope.tableError = 'Table can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), dollar signs ("$") and two consecutive colons ("::")';
     $scope.filepathError = ['Path can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), forward slashes ("/"), dots ("."), underscores ("_"), and dollar signs ("$")', 'File does not exist.'];
     $scope.columnError = 'Column keys must be unique and can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), and dollar signs ("$")';
+    $scope.versionError = 'Version can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), and dollar signs ("$")';
     $scope.fileExists = true;
     $scope.editEnabled = false;
     $scope.dataEmpty = true;
@@ -70,27 +71,27 @@ editorView.controller('CsvimViewController', ['$scope', '$http', 'messageHub', '
         $scope.searchVisible = !$scope.searchVisible;
     };
 
-    $scope.checkUniqueColumn = function (index, value) {
-        for (let i = 0; i < $scope.csvimData[$scope.activeItemId].keys.length; i++) {
-            if (i != index) {
-                if (value === $scope.csvimData[$scope.activeItemId].keys[i].column) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    };
-
-    $scope.checkUniqueValue = function (kindex, vindex, value) {
-        for (let i = 0; i < $scope.csvimData[$scope.activeItemId].keys[kindex].values.length; i++) {
-            if (i != vindex) {
-                if (value === $scope.csvimData[$scope.activeItemId].keys[kindex].values[i]) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    };
+    // $scope.checkUniqueColumn = function (index, value) {
+    //     for (let i = 0; i < $scope.csvimData[$scope.activeItemId].keys.length; i++) {
+    //         if (i != index) {
+    //             if (value === $scope.csvimData[$scope.activeItemId].keys[i].column) {
+    //                 return false;
+    //             }
+    //         }
+    //     }
+    //     return true;
+    // };
+    //
+    // $scope.checkUniqueValue = function (kindex, vindex, value) {
+    //     for (let i = 0; i < $scope.csvimData[$scope.activeItemId].keys[kindex].values.length; i++) {
+    //         if (i != vindex) {
+    //             if (value === $scope.csvimData[$scope.activeItemId].keys[kindex].values[i]) {
+    //                 return false;
+    //             }
+    //         }
+    //     }
+    //     return true;
+    // };
 
     $scope.openFile = function () {
         if ($scope.checkResource($scope.csvimData[$scope.activeItemId].file)) {
@@ -129,7 +130,8 @@ editorView.controller('CsvimViewController', ['$scope', '$http', 'messageHub', '
             "delimField": ";",
             "delimEnclosing": "\"",
             "distinguishEmptyFromNull": true,
-            "keys": []
+            "version": ""
+            //"keys": []
         };
         // Clean search bar
         $scope.searchField.text = "";
@@ -166,50 +168,50 @@ editorView.controller('CsvimViewController', ['$scope', '$http', 'messageHub', '
         return $scope.quoteCharList.includes(quoteChar);
     };
 
-    $scope.addValueToKey = function (column) {
-        let entry_num = 1;
-        for (let i = 0; i < $scope.csvimData[$scope.activeItemId].keys.length; i++) {
-            if ($scope.csvimData[$scope.activeItemId].keys[i].column === column) {
-                for (let k = 0; k < $scope.csvimData[$scope.activeItemId].keys[i].values.length; k++) {
-                    let num = getNumber(
-                        $scope.csvimData[$scope.activeItemId].keys[i].values[k].replace("NEW_ENTRY_", '')
-                    );
-                    if (!isNaN(num) && num >= entry_num) {
-                        entry_num = num + 1;
-                    }
-                }
-                $scope.csvimData[$scope.activeItemId].keys[i].values.push(`NEW_ENTRY_${entry_num}`);
-                break;
-            }
-        }
-        $scope.fileChanged();
-    };
-
-    $scope.removeValueFromKey = function (columnIndex, valueIndex) {
-        $scope.csvimData[$scope.activeItemId].keys[columnIndex].values.splice(valueIndex, 1);
-        $scope.fileChanged();
-    };
-
-    $scope.addKeyColumn = function () {
-        let num = 1;
-        for (let i = 0; i < $scope.csvimData[$scope.activeItemId].keys.length; i++) {
-            if ($scope.csvimData[$scope.activeItemId].keys[i].column === `NEW_ENTRY_${num}`) {
-                num++;
-            }
-        }
-        $scope.csvimData[$scope.activeItemId].keys.push(
-            {
-                "column": `NEW_ENTRY_${num}`,
-                "values": []
-            }
-        );
-        $scope.fileChanged();
-    };
-
-    $scope.removeKeyColumn = function (index) {
-        $scope.csvimData[$scope.activeItemId].keys.splice(index, 1);
-        $scope.fileChanged();
-    };
+    // $scope.addValueToKey = function (column) {
+    //     let entry_num = 1;
+    //     for (let i = 0; i < $scope.csvimData[$scope.activeItemId].keys.length; i++) {
+    //         if ($scope.csvimData[$scope.activeItemId].keys[i].column === column) {
+    //             for (let k = 0; k < $scope.csvimData[$scope.activeItemId].keys[i].values.length; k++) {
+    //                 let num = getNumber(
+    //                     $scope.csvimData[$scope.activeItemId].keys[i].values[k].replace("NEW_ENTRY_", '')
+    //                 );
+    //                 if (!isNaN(num) && num >= entry_num) {
+    //                     entry_num = num + 1;
+    //                 }
+    //             }
+    //             $scope.csvimData[$scope.activeItemId].keys[i].values.push(`NEW_ENTRY_${entry_num}`);
+    //             break;
+    //         }
+    //     }
+    //     $scope.fileChanged();
+    // };
+    //
+    // $scope.removeValueFromKey = function (columnIndex, valueIndex) {
+    //     $scope.csvimData[$scope.activeItemId].keys[columnIndex].values.splice(valueIndex, 1);
+    //     $scope.fileChanged();
+    // };
+    //
+    // $scope.addKeyColumn = function () {
+    //     let num = 1;
+    //     for (let i = 0; i < $scope.csvimData[$scope.activeItemId].keys.length; i++) {
+    //         if ($scope.csvimData[$scope.activeItemId].keys[i].column === `NEW_ENTRY_${num}`) {
+    //             num++;
+    //         }
+    //     }
+    //     $scope.csvimData[$scope.activeItemId].keys.push(
+    //         {
+    //             "column": `NEW_ENTRY_${num}`,
+    //             "values": []
+    //         }
+    //     );
+    //     $scope.fileChanged();
+    // };
+    //
+    // $scope.removeKeyColumn = function (index) {
+    //     $scope.csvimData[$scope.activeItemId].keys.splice(index, 1);
+    //     $scope.fileChanged();
+    // };
 
     $scope.save = function () {
         if ($scope.forms.editor.$valid && $scope.isFileChanged) {
