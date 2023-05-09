@@ -171,7 +171,6 @@
 		<module>resources-theme-quartz-dark</module>
 		<module>resources-theme-quartz-light</module>
 		<module>resources-themes</module>
-		<module>resources-unicons</module>
 		
 		<!-- Templates -->
 		<module>template-application-angular</module>
