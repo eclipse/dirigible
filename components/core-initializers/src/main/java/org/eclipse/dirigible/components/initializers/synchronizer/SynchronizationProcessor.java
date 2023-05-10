@@ -283,6 +283,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			// clear maps
 			definitions.clear();
 			artefacts.clear();
+			
 			synchronizationWatcher.reset();
 			initialized.set(true);
 			processing.set(false);

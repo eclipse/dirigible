@@ -50,11 +50,6 @@
 			<artifactId>dirigible-components-resources-themes</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-resources-unicons</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
-		</dependency>
     	
     </dependencies>
     

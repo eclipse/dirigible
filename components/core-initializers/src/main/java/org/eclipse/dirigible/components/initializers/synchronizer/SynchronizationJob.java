@@ -50,7 +50,23 @@ public class SynchronizationJob implements Job {
         logger.debug("Job {} fired @ {}", context.getJobDetail().getKey().getName(), context.getFireTime());
 
 		executor.submit(() -> {
+			Runtime runtime = Runtime.getRuntime();
+			runtime.gc();
+			long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+			
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("Used memory at the start: %-+,15d", usedMemoryBefore));
+			}
+			
 			jobService.executeSynchronizationJob();
+			
+			runtime.gc();
+			long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("Used memory at the end:   %-+,15d", usedMemoryAfter));
+				logger.debug(String.format("Used memory delta:        %-+,15d", (usedMemoryAfter - usedMemoryBefore)));
+			}
+			
 		});
 
         logger.debug("Next job scheduled @ {}", context.getNextFireTime());

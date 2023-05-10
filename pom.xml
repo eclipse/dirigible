@@ -349,7 +349,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.0.1</version>
+						<version>3.1.0</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -543,7 +543,7 @@
 		<java.version>11</java.version>
 		<maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
 		<maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
-		<maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.1.0</maven-surefire-plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.scm.plugin.version>2.0.0</maven.scm.plugin.version>
@@ -565,7 +565,7 @@
 		<ngdbc.version>2.16.14</ngdbc.version>
 		<activemq.version>5.18.1</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
-		<lucene.version>9.5.0</lucene.version>
+		<lucene.version>9.6.0</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.8.0</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
@@ -598,7 +598,7 @@
 		<angular-file-upload.version>2.6.1</angular-file-upload.version>
 		<angularjs.version>1.8.2</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
-		<classgraph.version>4.8.157</classgraph.version>
+		<classgraph.version>4.8.158</classgraph.version>
 		<commons-compress.version>1.22</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.6</testcontainers.elasticsearch.version>
 		<testcontainers.version>1.18.0</testcontainers.version>
@@ -635,7 +635,7 @@
 		<qldb.sdk.version>1.12.386</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
-		<jedis.version>4.3.2</jedis.version>
+		<jedis.version>4.4.0</jedis.version>
 		<spark.version>3.3.2</spark.version>
 		<path-to-regexp.version>6.2.1</path-to-regexp.version>
 		<javax.websocket-api.version>1.1</javax.websocket-api.version>
