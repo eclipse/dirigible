@@ -52,9 +52,7 @@ public class SynchronizationJobService {
 
     	if (logger.isDebugEnabled()) {logger.debug("Synchronization started...");}
         try {
-        	synchronized (SynchronizationJobService.class) {
-        		synchronizationProcessor.processSynchronizers();
-        	}
+        	synchronizationProcessor.processSynchronizers();
         } finally {
             count.incrementAndGet();
             if (logger.isDebugEnabled()) {logger.debug("Synchronization finished.");}
