@@ -20,7 +20,6 @@ import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
 import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
 import org.eclipse.dirigible.components.data.management.domain.ColumnMetadata;
 import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
-import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
@@ -41,13 +40,19 @@ import java.util.stream.Collectors;
 @Component
 public class CsvProcessor {
 
-    /** The Constant MODULE. */
+    /**
+     * The Constant MODULE.
+     */
     private static final String MODULE = "dirigible-cms-csv";
 
-    /** The Constant ERROR_TYPE_PROCESSOR. */
+    /**
+     * The Constant ERROR_TYPE_PROCESSOR.
+     */
     private static final String ERROR_TYPE_PROCESSOR = "PROCESSOR";
 
-    /** The Constant logger. */
+    /**
+     * The Constant logger.
+     */
     private static final Logger logger = LoggerFactory.getLogger(CsvProcessor.class);
 
     /**
@@ -63,13 +68,12 @@ public class CsvProcessor {
     /**
      * Insert.
      *
-     * @param csvRecords the csv record definitions
-     * @param csvFile   the csv file definition
+     * @param csvRecords the csv records
+     * @param csvFile    the csv file
      * @throws SQLException the SQL exception
      */
     public void insert(List<CsvRecord> csvRecords, CsvFile csvFile) throws SQLException {
         String tableName = csvRecords.get(0).getTableMetadataModel().getName();
-        String schemaName = csvFile.getSchema(); // check if correct
         try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
             TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
             if (tableMetadata == null) {
@@ -105,16 +109,18 @@ public class CsvProcessor {
     /**
      * Update.
      *
-     * @param csvRecords the csv record definitions
-     * @param csvFile    the csv file definition
+     * @param csvRecords the csv records
+     * @param csvFile    the csv file
      * @throws SQLException the SQL exception
      */
     public void update(List<CsvRecord> csvRecords, CsvFile csvFile) throws SQLException {
         String tableName = csvRecords.get(0).getTableMetadataModel().getName();
-        String schemaName = csvFile.getSchema(); // check if correct
         try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
-            List<ColumnMetadata> availableTableColumns = DatabaseMetadataHelper.describeTable(connection, null, tableName, schemaName).getColumns();
-            //List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName, schemaName);
+            TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
+            if (tableMetadata == null) {
+                return;
+            }
+            List<ColumnMetadata> availableTableColumns = tableMetadata.getColumns();
             UpdateBuilder updateBuilder = new UpdateBuilder(SqlFactory.deriveDialect(connection));
             updateBuilder.table(tableName);
 
@@ -156,9 +162,9 @@ public class CsvProcessor {
     /**
      * Populate insert prepared statement values.
      *
-     * @param csvRecord the csv record definition
+     * @param csvRecord    the csv record
      * @param tableColumns the table columns
-     * @param statement the statement
+     * @param statement    the statement
      * @throws SQLException the SQL exception
      */
     private void populateInsertPreparedStatementValues(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
@@ -172,9 +178,9 @@ public class CsvProcessor {
     /**
      * Execute update prepared statement.
      *
-     * @param csvRecord the csv record definition
+     * @param csvRecord    the csv record
      * @param tableColumns the table columns
-     * @param statement the statement
+     * @param statement    the statement
      * @throws SQLException the SQL exception
      */
     private void executeUpdatePreparedStatement(CsvRecord csvRecord, List<ColumnMetadata> tableColumns,
@@ -191,9 +197,9 @@ public class CsvProcessor {
     /**
      * Insert csv with header.
      *
-     * @param csvRecord the csv record definition
+     * @param csvRecord    the csv record
      * @param tableColumns the table columns
-     * @param statement the statement
+     * @param statement    the statement
      * @throws SQLException the SQL exception
      */
     private void insertCsvWithHeader(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
@@ -208,74 +214,74 @@ public class CsvProcessor {
     /**
      * Insert csv without header.
      *
-     * @param csvRecordDefinition the csv record definition
+     * @param csvRecord    the csv record
      * @param tableColumns the table columns
-     * @param statement the statement
+     * @param statement    the statement
      * @throws SQLException the SQL exception
      */
-    private void insertCsvWithoutHeader(CsvRecord csvRecordDefinition, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
-        for (int i = 0; i < csvRecordDefinition.getCsvRecord().size(); i++) {
-            String value = csvRecordDefinition.getCsvRecord().get(i);
+    private void insertCsvWithoutHeader(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
+        for (int i = 0; i < csvRecord.getCsvRecord().size(); i++) {
+            String value = csvRecord.getCsvRecord().get(i);
             String columnType = tableColumns.get(i).getType();
 
-            setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i + 1, value, columnType);
+            setPreparedStatementValue(csvRecord.isDistinguishEmptyFromNull(), statement, i + 1, value, columnType);
         }
     }
 
     /**
      * Update csv with header.
      *
-     * @param csvRecordDefinition the csv record definition
+     * @param csvRecord    the csv record
      * @param tableColumns the table columns
-     * @param statement the statement
+     * @param statement    the statement
      * @throws SQLException the SQL exception
      */
-    private void updateCsvWithHeader(CsvRecord csvRecordDefinition, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
-        CSVRecord csvRecord = csvRecordDefinition.getCsvRecord();
+    private void updateCsvWithHeader(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
+        CSVRecord existingCsvRecord = csvRecord.getCsvRecord();
 
         for (int i = 1; i < tableColumns.size(); i++) {
             String columnName = tableColumns.get(i).getName();
-            String value = csvRecordDefinition.getCsvValueForColumn(columnName);
+            String value = csvRecord.getCsvValueForColumn(columnName);
             String columnType = tableColumns.get(i).getType();
 
-            setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i, value, columnType);
+            setPreparedStatementValue(csvRecord.isDistinguishEmptyFromNull(), statement, i, value, columnType);
         }
 
         String pkColumnType = tableColumns.get(0).getType();
-        int lastStatementPlaceholderIndex = csvRecord.size();
+        int lastStatementPlaceholderIndex = existingCsvRecord.size();
 
-        setValue(statement, lastStatementPlaceholderIndex, pkColumnType, csvRecordDefinition.getCsvRecordPkValue());
+        setValue(statement, lastStatementPlaceholderIndex, pkColumnType, csvRecord.getCsvRecordPkValue());
     }
 
     /**
      * Update csv without header.
      *
-     * @param csvRecordDefinition the csv record definition
+     * @param csvRecord    the csv record
      * @param tableColumns the table columns
-     * @param statement the statement
+     * @param statement    the statement
      * @throws SQLException the SQL exception
      */
-    private void updateCsvWithoutHeader(CsvRecord csvRecordDefinition, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
-        CSVRecord csvRecord = csvRecordDefinition.getCsvRecord();
-        for (int i = 1; i < csvRecord.size(); i++) {
-            String value = csvRecord.get(i);
+    private void updateCsvWithoutHeader(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, PreparedStatement statement) throws SQLException {
+        CSVRecord existingCsvRecord = csvRecord.getCsvRecord();
+        for (int i = 1; i < existingCsvRecord.size(); i++) {
+            String value = existingCsvRecord.get(i);
             String columnType = tableColumns.get(i).getType();
-            setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i, value, columnType);
+            setPreparedStatementValue(csvRecord.isDistinguishEmptyFromNull(), statement, i, value, columnType);
         }
 
         String pkColumnType = tableColumns.get(0).getType();
-        int lastStatementPlaceholderIndex = csvRecord.size();
-        setValue(statement, lastStatementPlaceholderIndex, pkColumnType, csvRecord.get(0));
+        int lastStatementPlaceholderIndex = existingCsvRecord.size();
+        setValue(statement, lastStatementPlaceholderIndex, pkColumnType, existingCsvRecord.get(0));
     }
 
     /**
      * Sets the prepared statement value.
      *
      * @param distinguishEmptyFromNull the distinguish empty from null
-     * @param statement the statement
-     * @param i the i
-     * @param value the value
-     * @param columnType the column type
+     * @param statement                the statement
+     * @param i                        the i
+     * @param value                    the value
+     * @param columnType               the column type
      * @throws SQLException the SQL exception
      */
     private void setPreparedStatementValue(Boolean distinguishEmptyFromNull, PreparedStatement statement, int i,
@@ -297,7 +303,9 @@ public class CsvProcessor {
      */
     protected void setValue(PreparedStatement preparedStatement, int i, String dataType, String value)
             throws SQLException {
-        if (logger.isTraceEnabled()) {logger.trace("setValue -> i: " + i + ", dataType: " + dataType + ", value: " + value);}
+        if (logger.isTraceEnabled()) {
+            logger.trace("setValue -> i: " + i + ", dataType: " + dataType + ", value: " + value);
+        }
 
         if (value == null) {
             preparedStatement.setNull(i, DataTypeUtils.getSqlTypeByDataType(dataType));

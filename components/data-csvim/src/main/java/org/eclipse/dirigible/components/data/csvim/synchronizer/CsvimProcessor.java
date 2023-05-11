@@ -144,7 +144,7 @@ public class CsvimProcessor {
     /**
      * Process.
      *
-     * @param csvFile    the csv file definition
+     * @param csvFile    the csv file
      * @param content    the content
      * @param connection the connection
      * @throws SQLException the SQL exception
@@ -163,7 +163,6 @@ public class CsvimProcessor {
 
         String pkNameForCSVRecord = getPkNameForCSVRecord(tableName, csvParser.getHeaderNames());
 
-        //Map<String, List<String>> keysMap = csvFileDefinition.getKeysAsMap();
         List<CSVRecord> csvRecords = csvParser.getRecords();
         int maxCompareSize = DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE_DEFAULT;
         try {
@@ -174,7 +173,6 @@ public class CsvimProcessor {
         List<ColumnMetadata> tableColumns = tableMetadata.getColumns();
         if (csvRecords.size() > maxCompareSize) {
             if (isEmptyTable(tableName, connection)) {
-                //recordsToInsert = csvRecords.stream().filter(e -> recordShouldBeIncluded(e, tableColumns, keysMap)).collect(Collectors.toList());
                 recordsToInsert = new ArrayList<>(csvRecords);
             }
         } else {
@@ -236,7 +234,7 @@ public class CsvimProcessor {
     /**
      * Gets the csv resource.
      *
-     * @param csvFile the csv file definition
+     * @param csvFile the csv file
      * @return the csv resource
      */
     public static IResource getCsvResource(CsvFile csvFile) {
@@ -268,16 +266,16 @@ public class CsvimProcessor {
     /**
      * Gets the csv parser.
      *
-     * @param csvFileDefinition the csv file definition
+     * @param csvFile the csv file
      * @return the csv parser
      */
-    private CSVParser getCsvParser(CsvFile csvFileDefinition, InputStream contentAsInputStream) {
+    private CSVParser getCsvParser(CsvFile csvFile, InputStream contentAsInputStream) {
         try {
-            CSVFormat csvFormat = createCSVFormat(csvFileDefinition);
+            CSVFormat csvFormat = createCSVFormat(csvFile);
             return CSVParser.parse(contentAsInputStream, StandardCharsets.UTF_8, csvFormat);
         } catch (Exception e) {
-            String errorMessage = String.format("Error occurred while trying to parse data from CSV file [%s].", csvFileDefinition.getFile());
-            //logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
+            String errorMessage = String.format("Error occurred while trying to parse data from CSV file [%s].", csvFile.getFile());
+            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             if (logger.isErrorEnabled()) {
                 logger.error(errorMessage, e);
             }
@@ -289,25 +287,25 @@ public class CsvimProcessor {
     /**
      * Creates the CSV format.
      *
-     * @param csvFileDefinition the csv file definition
+     * @param csvFile the csv file
      * @return the CSV format
      */
-    private CSVFormat createCSVFormat(CsvFile csvFileDefinition) throws Exception {
-        if (csvFileDefinition.getDelimField() != null && (!csvFileDefinition.getDelimField().equals(",") && !csvFileDefinition.getDelimField().equals(";"))) {
+    private CSVFormat createCSVFormat(CsvFile csvFile) throws Exception {
+        if (csvFile.getDelimField() != null && (!csvFile.getDelimField().equals(",") && !csvFile.getDelimField().equals(";"))) {
             String errorMessage = "Only ';' or ',' characters are supported as delimiters for CSV files.";
-            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             throw new Exception(errorMessage);
-        } else if (csvFileDefinition.getDelimEnclosing() != null && csvFileDefinition.getDelimEnclosing().length() > 1) {
+        } else if (csvFile.getDelimEnclosing() != null && csvFile.getDelimEnclosing().length() > 1) {
             String errorMessage = "Delim enclosing should only contain one character.";
-            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+            CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             throw new Exception(errorMessage);
         }
 
-        char delimiter = Objects.isNull(csvFileDefinition.getDelimField()) ? ',' : csvFileDefinition.getDelimField().charAt(0);
-        char quote = Objects.isNull(csvFileDefinition.getDelimEnclosing()) ? '"' : csvFileDefinition.getDelimEnclosing().charAt(0);
+        char delimiter = Objects.isNull(csvFile.getDelimField()) ? ',' : csvFile.getDelimField().charAt(0);
+        char quote = Objects.isNull(csvFile.getDelimEnclosing()) ? '"' : csvFile.getDelimEnclosing().charAt(0);
         CSVFormat csvFormat = CSVFormat.newFormat(delimiter).withIgnoreEmptyLines().withQuote(quote).withEscape('\\');
 
-        boolean useHeader = !Objects.isNull(csvFileDefinition.getHeader()) && csvFileDefinition.getHeader();
+        boolean useHeader = !Objects.isNull(csvFile.getHeader()) && csvFile.getHeader();
         if (useHeader) {
             csvFormat = csvFormat.withFirstRecordAsHeader();
         }
@@ -359,21 +357,21 @@ public class CsvimProcessor {
     /**
      * Insert csv records.
      *
-     * @param recordsToProcess  the records to process
-     * @param headerNames       the header names
-     * @param csvFile the csv file definition
+     * @param recordsToProcess the records to process
+     * @param headerNames      the header names
+     * @param csvFile          the csv file
      */
-    private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFile){
+    private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFile) {
         String tableName = csvFile.getTable();
         TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
 
         try {
             for (List<CSVRecord> csvBatch : Lists.partition(recordsToProcess, getCsvDataBatchSize())) {
-                List<CsvRecord> csvRecordDefinitions = csvBatch.stream().map(
+                List<CsvRecord> csvRecords = csvBatch.stream().map(
                                 e -> new CsvRecord(e, tableModel, headerNames, csvFile.getDistinguishEmptyFromNull()))
                         .collect(Collectors.toList()
                         );
-                csvProcessor.insert(csvRecordDefinitions, csvFile);
+                csvProcessor.insert(csvRecords, csvFile);
             }
         } catch (Exception e) {
             String csvRecordValue = e.getMessage();
@@ -387,27 +385,27 @@ public class CsvimProcessor {
     /**
      * Update csv records.
      *
-     * @param recordsToProcess  the records to process
-     * @param headerNames       the header names
-     * @param csvFileDefinition the csv file definition
+     * @param recordsToProcess the records to process
+     * @param headerNames      the header names
+     * @param csvFile          the csv file
      */
-    private void updateCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFileDefinition) {
-        String tableName = csvFileDefinition.getTable();
+    private void updateCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFile) {
+        String tableName = csvFile.getTable();
         TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
 
         try {
             for (List<CSVRecord> csvBatch : Lists.partition(recordsToProcess, getCsvDataBatchSize())) {
-                List<CsvRecord> csvRecordDefinitions = csvBatch.stream().map(
-                                e -> new CsvRecord(e, tableModel, headerNames, csvFileDefinition.getDistinguishEmptyFromNull()))
+                List<CsvRecord> csvRecords = csvBatch.stream().map(
+                                e -> new CsvRecord(e, tableModel, headerNames, csvFile.getDistinguishEmptyFromNull()))
                         .collect(Collectors.toList()
                         );
-                csvProcessor.update(csvRecordDefinitions, csvFileDefinition);
+                csvProcessor.update(csvRecords, csvFile);
             }
         } catch (SQLException e) {
             String csvRecordValue = e.getMessage();
-            CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+            CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             if (logger.isErrorEnabled()) {
-                logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);
+                logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFile.getFile()), e);
             }
         }
     }

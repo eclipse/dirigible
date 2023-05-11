@@ -245,8 +245,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                     break;
                 case UPDATE:
                     if (csvim.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
-                        logger.info("UPDATE CSVIM");
-                        // TODO
+                        updateCsvim(csvim, connection);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
                     break;
@@ -336,10 +335,11 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
         return Csvim.ARTEFACT_TYPE;
     }
 
+
     /**
      * Execute csvim.
      *
-     * @param csvim      the csvim definition
+     * @param csvim      the csvim
      * @param connection the connection
      */
     private void importCsvim(Csvim csvim, Connection connection) throws Exception {
@@ -375,6 +375,36 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                     csv.setImported(true);
 
                     csvService.save(csv);
+                } catch (SQLException | IOException e) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(String.format("An error occurred while trying to execute the data import: %s", e.getMessage()), e);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Update csvim.
+     *
+     * @param csvim      the csvim
+     * @param connection the connection
+     */
+
+    private void updateCsvim(Csvim csvim, Connection connection) throws Exception {
+        List<CsvFile> files = csvim.getFiles();
+        if (files != null) {
+            for (CsvFile file : files) {
+                try {
+                    String fileLocation = file.getLocation();
+                    byte[] content;
+                    IResource resource = CsvimProcessor.getCsvResource(file);
+                    if (resource.exists()) {
+                        content = csvimProcessor.getCsvContent(resource);
+                    } else {
+                        throw new Exception("CSV does not exist: " + fileLocation);
+                    }
+                    csvimProcessor.process(file, content, connection);
                 } catch (SQLException | IOException e) {
                     if (logger.isErrorEnabled()) {
                         logger.error(String.format("An error occurred while trying to execute the data import: %s", e.getMessage()), e);
