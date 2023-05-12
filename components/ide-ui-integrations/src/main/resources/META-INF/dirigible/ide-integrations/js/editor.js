@@ -37,9 +37,52 @@ editorView.controller('EditorViewController', ['$scope', '$window', 'messageHub'
     } else {
         editorScope = $scope;
         const script = document.createElement('script');
-        script.src = "designer/static/js/main.a9b4d6ee.js";
+        script.src = "designer/static/js/main.8b055e74.js";
         document.getElementsByTagName('head')[0].appendChild(script);
     }
+
+    $scope.saveContents = function(text) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('PUT', '/services/ide/workspaces' + $scope.dataParameters.file);
+        //xhr.setRequestHeader('X-Requested-With', 'Fetch');
+        //xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+              messageHub.announceFileSaved({
+                  name: $scope.dataParameters.file.substring($scope.dataParameters.file.lastIndexOf('/') + 1),
+                  path: $scope.dataParameters.file.substring($scope.dataParameters.file.indexOf('/', 1)),
+                  contentType: $scope.dataParameters.contentType,
+                  workspace: $scope.dataParameters.file.substring(1, $scope.dataParameters.file.indexOf('/', 1)),
+              });
+              messageHub.setStatusMessage(`File '${$scope.dataParameters.file}' saved`);
+              messageHub.setEditorDirty($scope.dataParameters.file, false);
+              $scope.$apply(function () {
+                  $scope.state.isBusy = false;
+                  $scope.isFileChanged = false;
+              });
+          }
+        };
+        xhr.onerror = function (error) {
+          console.error(`Error saving '${$scope.dataParameters.file}'`, error);
+          messageHub.setStatusError(`Error saving '${$scope.dataParameters.file}'`);
+          messageHub.showAlertError('Error while saving the file', 'Please look at the console for more information');
+          $scope.$apply(function () {
+              $scope.state.isBusy = false;
+          });
+        };
+        xhr.send(text);
+    }
+
+    window.addEventListener('keydown',
+        function (event) {
+            if ((event.ctrlKey || event.metaKey) && event.key == 's') {
+                event.preventDefault();
+                if(window.designerApp) {
+                    $scope.saveContents(window.designerApp.state.yaml);
+                }
+            }
+        }
+    );
 }]);
 
 function getBaseUrl() {
