@@ -68,6 +68,6 @@
 		<appender-ref ref="FILE_BASE" />
 	</root>
 	
-	<logger name="org.eclipse.dirigible.components.initializers.synchronizer" level="INFO"/>
+	<logger name="org.eclipse.dirigible.components.initializers.synchronizer" level="ALL"/>
 	
 </configuration>

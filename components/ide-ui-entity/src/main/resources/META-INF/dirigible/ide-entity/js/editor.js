@@ -290,7 +290,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 				model.beginUpdate();
 				try {
 					let cell = $scope.graph.model.getCell(msg.data.cellId);
-					cell.value.name = msg.data.model + ":" + msg.data.entity;
+					cell.value.name = msg.data.entity;
 					cell.value.entityType = "PROJECTION";
 					cell.value.projectionReferencedModel = msg.data.model;
 					cell.value.projectionReferencedEntity = msg.data.entity;

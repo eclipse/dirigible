@@ -27,7 +27,7 @@
 				<br>
 				<div class="fd-panel fd-panel--fixed" ng-repeat="group in groups">
 					<div class="fd-panel__header">
-						<h4 class="fd-panel__title">{{group}}</h4>
+						<h4 class="fd-panel__title" style="text-transform: capitalize;">{{group.replaceAll('-', ' ').replaceAll('_', ' ')}}</h4>
 					</div>
 					<div role="region" class="fd-panel__content" style="border-bottom: none">
 						<div class="fd-container">
