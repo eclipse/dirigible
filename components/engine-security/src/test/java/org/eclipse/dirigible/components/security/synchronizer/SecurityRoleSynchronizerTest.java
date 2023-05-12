@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.List;
 
 import static org.eclipse.dirigible.components.security.repository.RoleRepositoryTest.createSecurityRole;
@@ -66,12 +67,16 @@ class SecurityRoleSynchronizerTest {
     	
     	cleanup();
     	
-        // Create test security accesses
-        roleRepository.save(createSecurityRole("/a/b/c/test1.access", "test1", "description"));
-        roleRepository.save(createSecurityRole("/a/b/c/test2.access", "test2", "description"));
-        roleRepository.save(createSecurityRole("/a/b/c/test3.access", "test3", "description"));
-        roleRepository.save(createSecurityRole("/a/b/c/test4.access", "test4", "description"));
-        roleRepository.save(createSecurityRole("/a/b/c/test5.access", "test5", "description"));
+        try {
+			// Create test security accesses
+			roleRepository.save(createSecurityRole("/a/b/c/test1.access", "test1", "description"));
+			roleRepository.save(createSecurityRole("/a/b/c/test2.access", "test2", "description"));
+			roleRepository.save(createSecurityRole("/a/b/c/test3.access", "test3", "description"));
+			roleRepository.save(createSecurityRole("/a/b/c/test4.access", "test4", "description"));
+			roleRepository.save(createSecurityRole("/a/b/c/test5.access", "test5", "description"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -101,9 +106,10 @@ class SecurityRoleSynchronizerTest {
 
     /**
      * Load the artefact.
+     * @throws ParseException 
      */
     @Test
-    public void testLoad() throws IOException {
+    public void testLoad() throws IOException, ParseException {
         byte[] content =
                 SecurityRoleSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.role").readAllBytes();
         List<Role> list = roleSynchronizer.parse("/META-INF/dirigible/test/test.role", content);

@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.listeners.synchronizer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -90,9 +91,10 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
      * @param location the location
      * @param content the content
      * @return the list
+     * @throws ParseException 
      */
     @Override
-    public List<Listener> parse(String location, byte[] content) {
+    public List<Listener> parse(String location, byte[] content) throws ParseException {
         Listener listener = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Listener.class);
         Configuration.configureObject(listener);
         listener.setLocation(location);
@@ -108,6 +110,7 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             if (logger.isErrorEnabled()) {logger.error("listener: {}", listener);}
             if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+            throw new ParseException(e.getMessage(), 0);
         }
         return List.of(listener);
     }

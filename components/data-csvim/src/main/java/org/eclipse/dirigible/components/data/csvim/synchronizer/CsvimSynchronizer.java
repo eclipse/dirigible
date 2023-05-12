@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.*;
 
 import org.apache.commons.io.FilenameUtils;
@@ -146,9 +147,10 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      * @param location the location
      * @param content  the content
      * @return the csvim
+     * @throws ParseException 
      */
     @Override
-    public List<Csvim> parse(String location, byte[] content) {
+    public List<Csvim> parse(String location, byte[] content) throws ParseException {
         Csvim csvim = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Csvim.class);
         Configuration.configureObject(csvim);
         csvim.setLocation(location);
@@ -180,18 +182,11 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
             Csvim result = getService().save(csvim);
             return List.of(result);
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-            if (logger.isErrorEnabled()) {
-                logger.error("csvim: {}", csvim);
-            }
-            if (logger.isErrorEnabled()) {
-                logger.error("content: {}", new String(content));
-            }
+            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+            if (logger.isErrorEnabled()) {logger.error("csvim: {}", csvim);}
+            if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+            throw new ParseException(e.getMessage(), 0);
         }
-
-        return null;
     }
 
     /**

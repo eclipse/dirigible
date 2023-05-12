@@ -16,6 +16,7 @@ import static java.text.MessageFormat.format;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -122,9 +123,10 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
+	 * @throws ParseException 
 	 */
 	@Override
-	public List<Bpmn> parse(String location, byte[] content) {
+	public List<Bpmn> parse(String location, byte[] content) throws ParseException {
 		Bpmn bpmn = new Bpmn();
 		bpmn.setLocation(location);
 		bpmn.setName(Paths.get(location).getFileName().toString());
@@ -141,6 +143,7 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("bpmn: {}", bpmn);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			throw new ParseException(e.getMessage(), 0);
 		}
 		return List.of(bpmn);
 	}

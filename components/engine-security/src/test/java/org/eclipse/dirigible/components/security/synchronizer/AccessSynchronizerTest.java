@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.List;
 
 import static org.eclipse.dirigible.components.security.repository.AccessRepositoryTest.createSecurityAccess;
@@ -65,17 +66,21 @@ class AccessSynchronizerTest {
     	
     	cleanup();
     	
-        // Create test security accesses
-        accessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
-                "/b/c/test1.txt", "GET", "test_role_1"));
-        accessRepository.save(createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" +
-                "/b/c/test2.txt", "GET", "test_role_2"));
-        accessRepository.save(createSecurityAccess("/a/b/c/test3.access", "test3", "description", "HTTP", "/a" +
-                "/b/c/test3.txt", "GET", "test_role_3"));
-        accessRepository.save(createSecurityAccess("/a/b/c/test4.access", "test4", "description", "HTTP", "/a" +
-                "/b/c/test4.txt", "GET", "test_role_4"));
-        accessRepository.save(createSecurityAccess("/a/b/c/test5.access", "test5", "description", "HTTP", "/a" +
-                "/b/c/test5.txt", "GET", "test_role_5"));
+        try {
+			// Create test security accesses
+			accessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
+			        "/b/c/test1.txt", "GET", "test_role_1"));
+			accessRepository.save(createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" +
+			        "/b/c/test2.txt", "GET", "test_role_2"));
+			accessRepository.save(createSecurityAccess("/a/b/c/test3.access", "test3", "description", "HTTP", "/a" +
+			        "/b/c/test3.txt", "GET", "test_role_3"));
+			accessRepository.save(createSecurityAccess("/a/b/c/test4.access", "test4", "description", "HTTP", "/a" +
+			        "/b/c/test4.txt", "GET", "test_role_4"));
+			accessRepository.save(createSecurityAccess("/a/b/c/test5.access", "test5", "description", "HTTP", "/a" +
+			        "/b/c/test5.txt", "GET", "test_role_5"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -106,9 +111,10 @@ class AccessSynchronizerTest {
 
     /**
      * Load the artefact.
+     * @throws ParseException 
      */
     @Test
-    public void testLoad() throws IOException {
+    public void testLoad() throws IOException, ParseException {
         byte[] content = AccessSynchronizerTest.class.getResourceAsStream("/META-INF/dirigible/test/test.access").readAllBytes();
         List<Access> list = accessSynchronizer.parse("/META-INF/dirigible/test/test.access", content);
         assertNotNull(list);

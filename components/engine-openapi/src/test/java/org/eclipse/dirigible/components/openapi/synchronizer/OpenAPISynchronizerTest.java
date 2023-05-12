@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -68,12 +69,16 @@ class OpenAPISynchronizerTest {
     	
     	cleanup();
     	
-        // Create test OpenAPIs
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
-        openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
+        try {
+			// Create test OpenAPIs
+			openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
+			openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
+			openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
+			openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
+			openAPIRepository.save(OpenAPIRepositoryTest.createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -103,9 +108,10 @@ class OpenAPISynchronizerTest {
 
     /**
      * Load the artefact.
+     * @throws ParseException 
      */
     @Test
-    public void testLoad() throws IOException {
+    public void testLoad() throws IOException, ParseException {
         byte[] content =
                 OpenAPISynchronizer.class.getResourceAsStream("/META-INF/dirigible/test/test.openapi").readAllBytes();
         List<OpenAPI> list = openAPISynchronizer.parse("/META-INF/dirigible/test/test.openapi", content);

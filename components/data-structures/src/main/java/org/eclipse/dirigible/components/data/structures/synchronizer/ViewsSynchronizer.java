@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -115,9 +116,10 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
+	 * @throws ParseException 
 	 */
 	@Override
-	public List<View> parse(String location, byte[] content) {
+	public List<View> parse(String location, byte[] content) throws ParseException {
 		View view = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), View.class);
 		Configuration.configureObject(view);
 		view.setLocation(location);
@@ -137,6 +139,7 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("view: {}", view);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			throw new ParseException(e.getMessage(), 0);
 		}
 		return List.of(view);
 	}

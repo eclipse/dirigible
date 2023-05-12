@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.engine.web.synchronizer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -107,9 +108,10 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
+	 * @throws ParseException 
 	 */
 	@Override
-	public List<Expose> parse(String location, byte[] content) {
+	public List<Expose> parse(String location, byte[] content) throws ParseException {
 		ProjectMetadata projectMetadata = ProjectMetadataUtils.fromJson(new String(content, StandardCharsets.UTF_8));
 		Expose expose = new Expose();
 		expose.setExposes(projectMetadata.getExposes());
@@ -129,6 +131,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("expose: {}", expose);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			throw new ParseException(e.getMessage(), 0);
 		}
 		return List.of(expose);
 	}

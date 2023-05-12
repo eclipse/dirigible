@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -103,9 +104,10 @@ public class DataSourcesSynchronizerTest {
 	
 	/**
 	 * Load the artefact.
+	 * @throws ParseException 
 	 */
 	@Test
-    public void load() {
+    public void load() throws ParseException {
 		String content = "{\"location\":\"/test/test.datasource\",\"name\":\"test\",\"driver\":\"org.h2.Driver\",\"url\":\"jdbc:h2:~/test\",\"username\":\"sa\",\"password\":\"\"}";
 		List<DataSource> list = datasourcesSynchronizer.parse("/test/test.datasource", content.getBytes());
 		assertNotNull(list);

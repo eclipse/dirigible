@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.base.synchronizer;
 
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -59,7 +60,7 @@ public interface Synchronizer<A extends Artefact> {
 	 * @param content the content
 	 * @return the list
 	 */
-	List<A> parse(String location, byte[] content);
+	List<A> parse(String location, byte[] content) throws ParseException;
 	
 	/**
 	 * Retrieve all the processed artefacts by the definition location.

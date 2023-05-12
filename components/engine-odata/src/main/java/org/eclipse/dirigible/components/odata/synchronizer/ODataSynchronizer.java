@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -115,9 +116,10 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
      * @param location the location
      * @param content the content
      * @return the list
+     * @throws ParseException 
      */
     @Override
-    public List<OData> parse(String location, byte[] content) {
+    public List<OData> parse(String location, byte[] content) throws ParseException {
     	OData odata = parseOData(location, content);
         try {
         	OData maybe = getService().findByKey(odata.getKey());
@@ -129,6 +131,7 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             if (logger.isErrorEnabled()) {logger.error("odata: {}", odata);}
             if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+            throw new ParseException(e.getMessage(), 0);
         }
         return List.of(odata);
     }

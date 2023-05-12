@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -122,9 +123,10 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
+	 * @throws ParseException 
 	 */
 	@Override
-	public List<Table> parse(String location, byte[] content) {
+	public List<Table> parse(String location, byte[] content) throws ParseException {
 		Table table = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Table.class);
 		Configuration.configureObject(table);
 		table.setLocation(location);
@@ -147,8 +149,8 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("table: {}", table);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			throw new ParseException(e.getMessage(), 0);
 		}
-		return null;
 	}
 
 	static void assignParent(Table table) {

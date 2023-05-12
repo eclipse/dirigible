@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.websockets.synchronizer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -86,9 +87,10 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
      * @param location the location
      * @param content the content
      * @return the list
+     * @throws ParseException 
      */
     @Override
-    public List<Websocket> parse(String location, byte[] content) {
+    public List<Websocket> parse(String location, byte[] content) throws ParseException {
         Websocket websocket = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Websocket.class);
         Configuration.configureObject(websocket);
         websocket.setLocation(location);
@@ -107,6 +109,7 @@ public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<
                 logger.error("websocket: {}", websocket);
                 logger.error("content: {}", new String(content));
             }
+            throw new ParseException(e.getMessage(), 0);
         }
         return List.of(websocket);
     }

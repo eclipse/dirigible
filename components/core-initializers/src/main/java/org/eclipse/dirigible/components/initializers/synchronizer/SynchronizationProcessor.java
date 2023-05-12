@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -161,6 +162,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 					synchronizers.stream().map(Synchronizer::getArtefactType).collect(Collectors.toUnmodifiableList()));}
 			
 			if (logger.isTraceEnabled()) {logger.trace("Loading definitions...");}
+			
+			// mark the deleted definitions, which previousely processed
+			markDeleted();
 			
 			// parse definitions to artefacts
 			parseDefinitions();
@@ -314,6 +318,28 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	}
 	
 	/**
+	 * Mark deleted.
+	 */
+	private void markDeleted() {
+		Map<String, Definition> found = new HashMap<>();
+		for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
+			Map<String, Definition> map = checkSynchronizerMap(synchronizer);
+			Collection<Definition> immutableDefinitions = Collections.synchronizedCollection(map.values());
+			for (Definition definition : immutableDefinitions) {
+				found.put(definition.getLocation(), definition);
+			}
+		}
+		List<Definition> existings = definitionService.getAll();
+		for (Definition existing : existings) {
+			if (found.get(existing.getLocation()) == null
+					&& !existing.getState().equals(DefinitionState.DELETED)) {
+				registerDeleteState(existing);
+			}
+		}
+		
+	}
+	
+	/**
 	 * Load definitions.
 	 */
 	private void parseDefinitions() {
@@ -335,43 +361,95 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 					List parsed;
 					switch (definition.getState()) {
 					case NEW: // brand new definition
-						parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
-						parsed.forEach(a -> {
-							((Artefact) a).setPhase(ArtefactPhase.CREATE);
-							synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.NEW, "");
-						});
-						addArtefacts(parsed);
+						try {
+							parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
+							parsed.forEach(a -> {
+								((Artefact) a).setPhase(ArtefactPhase.CREATE);
+								synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.NEW, "");
+							});
+							addArtefacts(parsed);
+						} catch (ParseException e) {
+							registerBrokenState(definition, e);
+						}
 						break;
 					case MODIFIED: // modified existing definition
-						parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
-						parsed.forEach(a -> {
-							((Artefact) a).setPhase(ArtefactPhase.UPDATE);
-							synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.MODIFIED, "");
-						});
-						addArtefacts(parsed);
+						try {
+							parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
+							parsed.forEach(a -> {
+								((Artefact) a).setPhase(ArtefactPhase.UPDATE);
+								synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.MODIFIED, "");
+							});
+							addArtefacts(parsed);
+						} catch (ParseException e) {
+							registerBrokenState(definition, e);
+						}
 						break;
 					case PARSED: // not new nor modified
 //						parsed = synchronizer.retrieve(definition.getLocation());
 //						addArtefacts(parsed);
 						break;
 					case BROKEN: // has been broken
+						try {
+							parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
+							parsed.forEach(a -> {
+								((Artefact) a).setPhase(ArtefactPhase.UPDATE);
+								synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.MODIFIED, "");
+							});
+							addArtefacts(parsed);
+						} catch (ParseException e) {
+							registerBrokenState(definition, e);
+						}
 						break;
 					case DELETED: // has been deleted
+						try {
+							parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
+							parsed.forEach(a -> {
+								((Artefact) a).setPhase(ArtefactPhase.CREATE);
+								synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.NEW, "");
+							});
+							addArtefacts(parsed);
+						} catch (ParseException e) {
+							registerBrokenState(definition, e);
+						}
 						break;
 					}
-					definition.setState(DefinitionState.PARSED);
-					definition.setMessage("");
-					definitionService.save(definition);
-					
+					if (!definition.getState().equals(DefinitionState.PARSED)) {
+						definition.setState(DefinitionState.PARSED);
+						definition.setMessage("");
+						definitionService.save(definition);
+					}
 				} catch (Exception e) {
-					if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
-					addError(e.getMessage());
-					definition.setState(DefinitionState.BROKEN);
-					definition.setMessage(e.getMessage());
-					definitionService.save(definition);
+					registerBrokenState(definition, e);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Register broken state.
+	 *
+	 * @param definition the definition
+	 * @param e the e
+	 */
+	public void registerBrokenState(Definition definition, Exception e) {
+		if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+		addError(e.getMessage());
+		definition.setState(DefinitionState.BROKEN);
+		definition.setMessage(e.getMessage());
+		definitionService.save(definition);
+	}
+	
+	/**
+	 * Register delete state.
+	 *
+	 * @param definition the definition
+	 */
+	public void registerDeleteState(Definition definition) {
+		String msg = "Definition deleted: " + definition.getLocation();
+		if (logger.isWarnEnabled()) {logger.warn(msg);}
+		definition.setState(DefinitionState.DELETED);
+		definition.setMessage(msg);
+		definitionService.save(definition);
 	}
 
 	/**
@@ -482,6 +560,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 					logger.warn("Definition with key: {} has been failed with reason: {}", maybe.getKey(), maybe.getMessage());
 					break;
 				case DELETED: // has been deleted in the past
+					if (map.get(maybe.getKey()) == null) {
+						maybe.setContent(definition.getContent());
+						maybe.setState(DefinitionState.NEW);
+						map.put(maybe.getKey(), maybe);
+					}
 					break;
 				}
 			}

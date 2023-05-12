@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -103,9 +104,10 @@ public class ExtensionPointsSynchronizerTest {
 	
 	/**
 	 * Load the artefact.
+	 * @throws ParseException 
 	 */
 	@Test
-    public void load() {
+    public void load() throws ParseException {
 		String content = "{\"location\":\"/test/test.extensionpoint\",\"name\":\"/test/test\",\"description\":\"Test Extension Point\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
 		List<ExtensionPoint> list = extensionPointsSynchronizer.parse("/test/test.extensionpoint", content.getBytes());
 		assertNotNull(list);

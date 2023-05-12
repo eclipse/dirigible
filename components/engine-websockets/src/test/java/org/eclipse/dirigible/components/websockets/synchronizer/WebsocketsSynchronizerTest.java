@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.dirigible.components.websockets.domain.Websocket;
@@ -48,7 +49,7 @@ public class WebsocketsSynchronizerTest {
     }
 
     @Test
-    public void load() {
+    public void load() throws ParseException {
         String content = "{\"location\":\"/control/control.websocket\",\"handler\":\"control/handler.js\",\"endpoint\":\"mywebsocket\",\"description\":\"Control Websocket\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:24:12+0000\"}";
         List<Websocket> list = websocketsSynchronizer.parse("/test/test.websocket", content.getBytes());
         assertNotNull(list);

@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -131,9 +132,10 @@ public class ExposesSynchronizerTest {
 	
 	/**
 	 * Load the artefact.
+	 * @throws ParseException 
 	 */
 	@Test
-    public void load() {
+    public void load() throws ParseException {
 		List<Expose> list = exposesSynchronizer.parse("/load/project.json", content.getBytes());
 		assertNotNull(list);
 		assertEquals("/load/project.json", list.get(0).getLocation());

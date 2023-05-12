@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 
@@ -102,9 +103,10 @@ public class JobSynchronizerTest {
 
     /**
      * Load the artefact.
+     * @throws ParseException 
      */
     @Test
-    public void load() {
+    public void load() throws ParseException {
         String content = "{\"expression\":\"0/1 * * * * ?\",\"group\":\"dirigible-defined\",\"handler\":\"test/handler.js\",\"description\":\"Control Job\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
         List<Job> list = jobSynchronizer.parse("/test/control.job", content.getBytes());
         assertNotNull(list);

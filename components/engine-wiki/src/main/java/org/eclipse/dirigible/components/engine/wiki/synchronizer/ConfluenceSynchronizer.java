@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -122,9 +123,10 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
+	 * @throws ParseException 
 	 */
 	@Override
-	public List<Confluence> parse(String location, byte[] content) {
+	public List<Confluence> parse(String location, byte[] content) throws ParseException {
 		Confluence wiki = new Confluence();
 		Configuration.configureObject(wiki);
 		wiki.setLocation(location);
@@ -142,6 +144,7 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("wiki: {}", wiki);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			throw new ParseException(e.getMessage(), 0);
 		}
 		return List.of(wiki);
 	}

@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.jobs.synchronizer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -118,9 +119,10 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
      * @param location the location
      * @param content the content
      * @return the list
+     * @throws ParseException 
      */
     @Override
-    public List<Job> parse(String location, byte[] content) {
+    public List<Job> parse(String location, byte[] content) throws ParseException {
         Job job = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Job.class);
         Configuration.configureObject(job);
         job.setLocation(location);
@@ -146,8 +148,8 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
             if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
             if (logger.isErrorEnabled()) {logger.error("job: {}", job);}
             if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+            throw new ParseException(e.getMessage(), 0);
         }
-        return null;
     }
     
     /**

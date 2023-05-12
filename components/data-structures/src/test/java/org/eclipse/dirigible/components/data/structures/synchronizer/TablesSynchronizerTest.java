@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Array;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -112,9 +113,10 @@ public class TablesSynchronizerTest {
 	
 	/**
 	 * Load the artefact.
+	 * @throws ParseException 
 	 */
 	@Test
-    public void load() {
+    public void load() throws ParseException {
 		String content = "{\"location\":\"/test/test.table\",\"name\":\"/test/test\",\"description\":\"Test Table\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
 		List<Table> list = tablesSynchronizer.parse("/test/test.table", content.getBytes());
 		assertNotNull(list);

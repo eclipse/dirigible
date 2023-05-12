@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,9 +157,10 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
+	 * @throws ParseException 
 	 */
 	@Override
-	public List<Schema> parse(String location, byte[] content) {
+	public List<Schema> parse(String location, byte[] content) throws ParseException {
 		final Schema schema = parseSchema(location, new String(content, StandardCharsets.UTF_8));
 		Configuration.configureObject(schema);
 		schema.setLocation(location);
@@ -199,8 +201,8 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("schema: {}", schema);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			throw new ParseException(e.getMessage(), 0);
 		}
-		return null;
 	}
 	
 	/**

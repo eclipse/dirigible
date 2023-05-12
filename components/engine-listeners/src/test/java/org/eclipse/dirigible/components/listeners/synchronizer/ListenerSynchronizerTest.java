@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,7 +55,7 @@ public class ListenerSynchronizerTest {
     }
 
     @Test
-    public void load() {
+    public void load() throws ParseException {
         String content = "{\"location\":\"/control/control.listener\",\"name\":\"/control/control\",\"kind\":\"Q\",\"handler\":\"control/handler.js\",\"description\":\"Control Listener\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:53:01+0000\"}";
         List<Listener> list = listenerSynchronizer.parse("/test/test.listener", content.getBytes());
         assertNotNull(list);

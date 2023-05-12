@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -118,9 +119,10 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
+	 * @throws ParseException 
 	 */
 	@Override
-	public List<Entity> parse(String location, byte[] content) {
+	public List<Entity> parse(String location, byte[] content) throws ParseException {
 		Entity entity = new Entity();
 		entity.setLocation(location);
 		entity.setName(Paths.get(location).getFileName().toString());
@@ -137,6 +139,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("entity: {}", entity);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			throw new ParseException(e.getMessage(), 0);
 		}
 		return List.of(entity);
 	}

@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.data.sources.synchronizer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -105,9 +106,10 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
+	 * @throws ParseException 
 	 */
 	@Override
-	public List<DataSource> parse(String location, byte[] content) {
+	public List<DataSource> parse(String location, byte[] content) throws ParseException {
 		DataSource datasource = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), DataSource.class);
 		Configuration.configureObject(datasource);
 		datasource.setLocation(location);
@@ -131,8 +133,8 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			if (logger.isErrorEnabled()) {logger.error("datasource: {}", datasource);}
 			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			throw new ParseException(e.getMessage(), 0);
 		}
-		return null;
 	}
 	
 	/**

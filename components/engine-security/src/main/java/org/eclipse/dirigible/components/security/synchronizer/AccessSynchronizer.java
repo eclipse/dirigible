@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.security.synchronizer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,7 +119,7 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
      * @return the list
      */
     @Override
-    public List<Access> parse(String location, byte[] content) {
+    public List<Access> parse(String location, byte[] content) throws ParseException {
         Constraints constraints = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
         Configuration.configureObject(constraints);
 
@@ -136,15 +137,10 @@ public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Acce
                 result.add(access);
                 return result;
             } catch (Exception e) {
-                if (logger.isErrorEnabled()) {
-                    logger.error(e.getMessage(), e);
-                }
-                if (logger.isErrorEnabled()) {
-                    logger.error("security access: {}", access);
-                }
-                if (logger.isErrorEnabled()) {
-                    logger.error("content: {}", new String(content));
-                }
+                if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+                if (logger.isErrorEnabled()) {logger.error("security access: {}", access);}
+                if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+                throw new ParseException(e.getMessage(), 0);
             }
         }
 
