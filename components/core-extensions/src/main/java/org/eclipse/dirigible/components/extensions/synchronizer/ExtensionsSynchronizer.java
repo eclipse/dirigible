@@ -17,6 +17,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -28,6 +29,7 @@ import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.extensions.domain.Extension;
+import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
 import org.eclipse.dirigible.components.extensions.service.ExtensionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +115,7 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 		Extension extension = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Extension.class);
 		Configuration.configureObject(extension);
 		extension.setLocation(location);
-		extension.setName("");
+		extension.setName(FilenameUtils.getBaseName(location));
 		extension.setType(Extension.ARTEFACT_TYPE);
 		extension.updateKey();
 		try {
@@ -165,7 +167,40 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 	 */
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+		Extension extension = null;
+		if (wrapper.getArtefact() instanceof Extension) {
+			extension = (Extension) wrapper.getArtefact();
+		} else {
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Extension", wrapper.getArtefact().getClass()));
+		}
+		
+		switch (flow) {
+		case CREATE:
+			if (extension.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+			}
+			break;
+		case UPDATE:
+			if (extension.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+			}
+			break;
+		case DELETE:
+			if (extension.getLifecycle().equals(ArtefactLifecycle.CREATED)
+					|| extension.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+				try {
+            		getService().delete(extension);
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
+				}
+			}
+			break;
+		case START:
+		case STOP:
+		}		
 		return true;
 	}
 

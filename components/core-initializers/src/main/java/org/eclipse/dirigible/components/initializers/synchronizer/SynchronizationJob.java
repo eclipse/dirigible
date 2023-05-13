@@ -33,6 +33,7 @@ public class SynchronizationJob implements Job {
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationJob.class);
 	
+	/** The executor. */
 	private ExecutorService executor = Executors.newFixedThreadPool(1);
 	
 	/** The job service. */

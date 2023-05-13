@@ -47,7 +47,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { SynchronousSpringEventsConfig.class }, loader = AnnotationConfigContextLoader.class)
 @EntityScan("org.eclipse.dirigible.components")
-public class SynchronizationInitializerTest {
+public class SynchronizationInitializerBrokenTest {
 	
 	/**
 	 * The Class ContextConfiguration.
@@ -61,7 +61,7 @@ public class SynchronizationInitializerTest {
          *
          * @return the i repository
          */
-        @Bean("SynchronizationInitializerTestReposiotry")
+        @Bean("SynchronizationInitializerBrokenTestReposiotry")
         public IRepository repository() {
             return new RepositoryConfig().repository();
         }
@@ -96,34 +96,33 @@ public class SynchronizationInitializerTest {
 	 * @throws SQLException the SQL exception
 	 */
 	@Test
-    public void testSynchronizationSuccessful() throws RepositoryWriteException, IOException, SQLException {
+    public void testSynchronizationBroken() throws RepositoryWriteException, IOException, SQLException {
 		
 		try (Connection connection = datasource.getConnection()) {
 		
 			// initialization
 			initializer.handleContextStart(null);
 			
-			// check if the definition has been parsed successfully
-			CheckDefinitionUtils.isDefinitionParsed(connection);
+			// check if the definition has been created
+			CheckDefinitionUtils.isDefinitionBroken(connection);
 						
 			// check if the artefact has been created
-			CheckArtefactUtils.isArtefactCreated(connection);
+			CheckArtefactUtils.isArtefactNotCreated(connection);
 			
 			// correct the artefact
-			repository.getResource("/registry/public/test/test.extension").setContent(
+			repository.getResource("/registry/public/test/test_broken.extension").setContent(
 					IOUtils.toByteArray(SynchronizationInitializerBrokenTest.class.getResourceAsStream(
-							"/META-INF/dirigible/test/test.extension_modified")));
+							"/META-INF/dirigible/test/test_broken.extension_recovered")));
 			
 			// process again
 			synchronizationWatcher.force();
 			synchronizationProcessor.processSynchronizers();
 			
-			// check if the definition has been parsed successfully again
-			CheckDefinitionUtils.isDefinitionParsed(connection);
-						
-			// check if the artefact has been updated
-			CheckArtefactUtils.isArtefactUpdated(connection);
-		
+			// check if the definition has been recovered
+			CheckDefinitionUtils.isDefinitionRecovered(connection);
+			
+			// check if the artefact has been recovered
+			CheckArtefactUtils.isArtefactRecovered(connection);
 		}
     }
 	

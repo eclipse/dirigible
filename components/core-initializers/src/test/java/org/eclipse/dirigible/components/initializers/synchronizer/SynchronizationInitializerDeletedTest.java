@@ -47,7 +47,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { SynchronousSpringEventsConfig.class }, loader = AnnotationConfigContextLoader.class)
 @EntityScan("org.eclipse.dirigible.components")
-public class SynchronizationInitializerTest {
+public class SynchronizationInitializerDeletedTest {
 	
 	/**
 	 * The Class ContextConfiguration.
@@ -61,7 +61,7 @@ public class SynchronizationInitializerTest {
          *
          * @return the i repository
          */
-        @Bean("SynchronizationInitializerTestReposiotry")
+        @Bean("SynchronizationInitializerDeletedTestReposiotry")
         public IRepository repository() {
             return new RepositoryConfig().repository();
         }
@@ -96,34 +96,31 @@ public class SynchronizationInitializerTest {
 	 * @throws SQLException the SQL exception
 	 */
 	@Test
-    public void testSynchronizationSuccessful() throws RepositoryWriteException, IOException, SQLException {
+    public void testSynchronizationDeleted() throws RepositoryWriteException, IOException, SQLException {
 		
 		try (Connection connection = datasource.getConnection()) {
 		
 			// initialization
 			initializer.handleContextStart(null);
 			
-			// check if the definition has been parsed successfully
-			CheckDefinitionUtils.isDefinitionParsed(connection);
+			// check if the definition has been created
+			CheckDefinitionUtils.isDefinitionForDeletionExists(connection);
 						
 			// check if the artefact has been created
-			CheckArtefactUtils.isArtefactCreated(connection);
+			CheckArtefactUtils.isArtefactForDeletionCreated(connection);
 			
-			// correct the artefact
-			repository.getResource("/registry/public/test/test.extension").setContent(
-					IOUtils.toByteArray(SynchronizationInitializerBrokenTest.class.getResourceAsStream(
-							"/META-INF/dirigible/test/test.extension_modified")));
+			// delete the artefact
+			repository.getResource("/registry/public/test/test_deleted.extension").delete();
 			
 			// process again
 			synchronizationWatcher.force();
 			synchronizationProcessor.processSynchronizers();
 			
-			// check if the definition has been parsed successfully again
-			CheckDefinitionUtils.isDefinitionParsed(connection);
-						
-			// check if the artefact has been updated
-			CheckArtefactUtils.isArtefactUpdated(connection);
-		
+			// check if the definition has been set as deleted
+			CheckDefinitionUtils.isDefinitionDeleted(connection);
+			
+			// check if the artefact has been deleted
+			CheckArtefactUtils.isArtefactDeleted(connection);
 		}
     }
 	

@@ -350,11 +350,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 				try {
 					if (definition.getContent() == null) {
 						String error = String.format("Content of %s has not been loaded correctly", definition.getLocation());
-						logger.error(error);
-						addError(error);
-						definition.setState(DefinitionState.BROKEN);
-						definition.setMessage(error);
-						definitionService.save(definition);
+						registerBrokenState(definition, error);
 						continue;
 					}
 					
@@ -368,8 +364,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 								synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.NEW, "");
 							});
 							addArtefacts(parsed);
+							registerParsedState(definition);
 						} catch (ParseException e) {
-							registerBrokenState(definition, e);
+							registerBrokenState(definition, e.getMessage());
 						}
 						break;
 					case MODIFIED: // modified existing definition
@@ -380,8 +377,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 								synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.MODIFIED, "");
 							});
 							addArtefacts(parsed);
+							registerParsedState(definition);
 						} catch (ParseException e) {
-							registerBrokenState(definition, e);
+							registerBrokenState(definition, e.getMessage());
 						}
 						break;
 					case PARSED: // not new nor modified
@@ -389,18 +387,9 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 //						addArtefacts(parsed);
 						break;
 					case BROKEN: // has been broken
-						try {
-							parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
-							parsed.forEach(a -> {
-								((Artefact) a).setPhase(ArtefactPhase.UPDATE);
-								synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.MODIFIED, "");
-							});
-							addArtefacts(parsed);
-						} catch (ParseException e) {
-							registerBrokenState(definition, e);
-						}
+						// do not try to parse it again as it is still not modified
 						break;
-					case DELETED: // has been deleted
+					case DELETED: // has been deleted before, but appeared again
 						try {
 							parsed = synchronizer.parse(definition.getLocation(), definition.getContent());
 							parsed.forEach(a -> {
@@ -408,20 +397,29 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 								synchronizer.setStatus(((Artefact) a), ArtefactLifecycle.NEW, "");
 							});
 							addArtefacts(parsed);
+							registerParsedState(definition);
 						} catch (ParseException e) {
-							registerBrokenState(definition, e);
+							registerBrokenState(definition, e.getMessage());
 						}
 						break;
 					}
-					if (!definition.getState().equals(DefinitionState.PARSED)) {
-						definition.setState(DefinitionState.PARSED);
-						definition.setMessage("");
-						definitionService.save(definition);
-					}
 				} catch (Exception e) {
-					registerBrokenState(definition, e);
+					registerBrokenState(definition, e.getMessage());
 				}
 			}
+		}
+	}
+
+	/**
+	 * Register parsed state.
+	 *
+	 * @param definition the definition
+	 */
+	public void registerParsedState(Definition definition) {
+		if (!definition.getState().equals(DefinitionState.PARSED)) {
+			definition.setState(DefinitionState.PARSED);
+			definition.setMessage("");
+			definitionService.save(definition);
 		}
 	}
 
@@ -431,11 +429,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 * @param definition the definition
 	 * @param e the e
 	 */
-	public void registerBrokenState(Definition definition, Exception e) {
-		if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
-		addError(e.getMessage());
+	public void registerBrokenState(Definition definition, String e) {
+		if (logger.isErrorEnabled()) {logger.error(e);}
+		addError(e);
 		definition.setState(DefinitionState.BROKEN);
-		definition.setMessage(e.getMessage());
+		definition.setMessage(e);
 		definitionService.save(definition);
 	}
 	
@@ -558,6 +556,10 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 					break;
 				case BROKEN: // has been started in the past, but failed to parse the file
 					logger.warn("Definition with key: {} has been failed with reason: {}", maybe.getKey(), maybe.getMessage());
+					if (map.get(maybe.getKey()) == null) {
+						maybe.setContent(definition.getContent());
+						map.put(maybe.getKey(), maybe);
+					}
 					break;
 				case DELETED: // has been deleted in the past
 					if (map.get(maybe.getKey()) == null) {

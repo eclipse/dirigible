@@ -35,6 +35,7 @@ public class SynchronizationInitializer {
 	 * Instantiates a new synchronizers initializer.
 	 *
 	 * @param synchronizationProcessor the synchronization processor
+	 * @param classpathExpander the classpath expander
 	 */
 	@Autowired
 	public SynchronizationInitializer(SynchronizationProcessor synchronizationProcessor, ClasspathExpander classpathExpander) {

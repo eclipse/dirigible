@@ -22,7 +22,6 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
@@ -163,7 +162,40 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 */
 	@Override
 	public boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow) {
-		callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+		ExtensionPoint extensionPoint = null;
+		if (wrapper.getArtefact() instanceof ExtensionPoint) {
+			extensionPoint = (ExtensionPoint) wrapper.getArtefact();
+		} else {
+			throw new UnsupportedOperationException(String.format("Trying to process %s as Extension Point", wrapper.getArtefact().getClass()));
+		}
+		
+		switch (flow) {
+		case CREATE:
+			if (extensionPoint.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+			}
+			break;
+		case UPDATE:
+			if (extensionPoint.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+			}
+			break;
+		case DELETE:
+			if (extensionPoint.getLifecycle().equals(ArtefactLifecycle.CREATED)
+					|| extensionPoint.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+				try {
+            		getService().delete(extensionPoint);
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		            callback.addError(e.getMessage());
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
+				}
+			}
+			break;
+		case START:
+		case STOP:
+		}		
 		return true;
 	}
 

@@ -15,6 +15,9 @@ import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class SynchronizationWatcherPublisherHandler.
+ */
 @Component
 public class SynchronizationWatcherPublisherHandler implements PublisherHandler {
 	
@@ -22,21 +25,42 @@ public class SynchronizationWatcherPublisherHandler implements PublisherHandler 
 	@Autowired
 	private SynchronizationWatcher synchronizationWatcher;
 
+	/**
+	 * Before publish.
+	 *
+	 * @param location the location
+	 */
 	@Override
 	public void beforePublish(String location) {
 		
 	}
 
+	/**
+	 * After publish.
+	 *
+	 * @param workspaceLocation the workspace location
+	 * @param registryLocation the registry location
+	 */
 	@Override
 	public void afterPublish(String workspaceLocation, String registryLocation) {
 		synchronizationWatcher.force();
 	}
 
+	/**
+	 * Before unpublish.
+	 *
+	 * @param location the location
+	 */
 	@Override
 	public void beforeUnpublish(String location) {
 		
 	}
 
+	/**
+	 * After unpublish.
+	 *
+	 * @param location the location
+	 */
 	@Override
 	public void afterUnpublish(String location) {
 		synchronizationWatcher.force();
