@@ -11,13 +11,6 @@
  */
 package org.eclipse.dirigible.graalium.core.modules;
 
-import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
-import org.eclipse.dirigible.commons.config.StaticObjects;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.repository.api.IResource;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -25,13 +18,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
+import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.dirigible.repository.api.IResource;
+
 /**
  * The Class DirigibleSourceProvider.
  */
 @CalledFromJS
-public class DirigibleSourceProvider {
-    
-    static IRepository getRepository() {
+public class DirigibleSourceProvider implements JavascriptSourceProvider {
+	
+	static IRepository getRepository() {
     	return (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
     }
     
@@ -42,6 +42,7 @@ public class DirigibleSourceProvider {
      * @param projectFileName the project file name
      * @return the absolute source path
      */
+    @Override
     public Path getAbsoluteSourcePath(String projectName, String projectFileName) {
         String projectFilePath = Path.of(projectName, projectFileName).toString();
         String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
@@ -55,7 +56,7 @@ public class DirigibleSourceProvider {
      * @param projectFilePath the project file path
      * @return the internal repository relative source path
      */
-    private String getInternalRepositoryRelativeSourcePath(String projectFilePath) {
+    protected String getInternalRepositoryRelativeSourcePath(String projectFilePath) {
         return Path.of(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectFilePath).toString();
     }
 
@@ -65,6 +66,7 @@ public class DirigibleSourceProvider {
      * @param sourceFilePath the project file path
      * @return the source
      */
+    @Override
     public String getSource(String sourceFilePath) {
         sourceFilePath = withDefaultFileExtensionIfNecessary(sourceFilePath);
 
@@ -89,7 +91,7 @@ public class DirigibleSourceProvider {
      * @param filePath the file path
      * @return the string
      */
-    private static String withDefaultFileExtensionIfNecessary(String filePath) {
+    protected static String withDefaultFileExtensionIfNecessary(String filePath) {
         if (filePath.endsWith(".js")
                 || filePath.endsWith(".json")
                 || filePath.endsWith(".mjs")
@@ -107,7 +109,7 @@ public class DirigibleSourceProvider {
      * @param repositoryFilePathString the repository file path string
      * @return the byte[]
      */
-    private static byte[] tryGetFromRepository(String repositoryFilePathString) {
+    protected byte[] tryGetFromRepository(String repositoryFilePathString) {
         IResource resource = getRepository().getResource(repositoryFilePathString);
         if (!resource.exists()) {
             return null;
@@ -122,10 +124,10 @@ public class DirigibleSourceProvider {
      * @param filePathString the file path string
      * @return the byte[]
      */
-    private static byte[] tryGetFromClassLoader(String repositoryAwareFilePathString, String filePathString) {
+    protected byte[] tryGetFromClassLoader(String repositoryAwareFilePathString, String filePathString) {
         try {
             var lookupPath = createLookupPath(filePathString);
-            try (InputStream bundled = DirigibleSourceProvider.class.getResourceAsStream(lookupPath)) {
+            try (InputStream bundled = this.getClass().getResourceAsStream(lookupPath)) {
                 byte[] content = null;
                 if (bundled != null) {
                     content = bundled.readAllBytes();
@@ -138,7 +140,13 @@ public class DirigibleSourceProvider {
         }
     }
 
-    private static String createLookupPath(String filePathString) {
+    /**
+     * Creates the lookup path.
+     *
+     * @param filePathString the file path string
+     * @return the string
+     */
+    protected String createLookupPath(String filePathString) {
         var lookupPath = "/META-INF/dirigible/" + filePathString;
         if (filePathString.startsWith("/webjars") || filePathString.startsWith("webjars")) {
             lookupPath = "/META-INF/resources/" + filePathString;
@@ -147,8 +155,15 @@ public class DirigibleSourceProvider {
         return lookupPath;
     }
 
+    /**
+     * Unpacked to file system.
+     *
+     * @param pathToUnpack the path to unpack
+     * @param pathToLookup the path to lookup
+     * @return the path
+     */
     public Path unpackedToFileSystem(Path pathToUnpack, Path pathToLookup) {
-        try (InputStream bundled = DirigibleSourceProvider.class.getResourceAsStream("/META-INF/dirigible/" + pathToLookup.toString())) {
+        try (InputStream bundled = this.getClass().getResourceAsStream("/META-INF/dirigible/" + pathToLookup.toString())) {
             Files.createDirectories(pathToUnpack.getParent());
             Files.createFile(pathToUnpack);
             Files.copy(bundled, pathToUnpack, StandardCopyOption.REPLACE_EXISTING);

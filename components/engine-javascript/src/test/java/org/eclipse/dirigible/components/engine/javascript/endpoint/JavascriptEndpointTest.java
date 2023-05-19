@@ -34,6 +34,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class JavascriptEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -41,21 +44,31 @@ import org.springframework.web.context.WebApplicationContext;
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
 public class JavascriptEndpointTest {
 	
+	/** The javascript service. */
 	@Autowired
 	private JavascriptService javascriptService;
 	
+	/** The mock mvc. */
 	@Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 	
+	/** The repository. */
 	@Autowired
 	private IRepository repository;
 	
+	/**
+	 * Setup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeEach
     public void setup() throws Exception {
 
@@ -66,6 +79,11 @@ public class JavascriptEndpointTest {
 				"org.eclipse.dirigible.components.base.http.access.UserResponseVerifier.getResponse().getOutputStream().println(\"Hello World!\");".getBytes());
     }
 	
+	/**
+	 * Cleanup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@AfterEach
     public void cleanup() throws Exception {
 		
@@ -79,7 +97,13 @@ public class JavascriptEndpointTest {
 //		assertNotNull(javascriptService.handleRequest("test", "hello-world.js", null, null, false));
 //	}
 	
-	@Test
+	/**
+ * Gets the status.
+ *
+ * @return the status
+ * @throws Exception the exception
+ */
+@Test
 	public void getStatus() throws Exception {
 
 		mockMvc.perform(get("/services/js/test/hello-world.js"))
@@ -88,6 +112,12 @@ public class JavascriptEndpointTest {
 		
 	}
 	
+	/**
+	 * Gets the status deep.
+	 *
+	 * @return the status deep
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getStatusDeep() throws Exception {
 
@@ -97,6 +127,12 @@ public class JavascriptEndpointTest {
 		
 	}
 	
+	/**
+	 * Gets the status deep query.
+	 *
+	 * @return the status deep query
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getStatusDeepQuery() throws Exception {
 
@@ -106,6 +142,12 @@ public class JavascriptEndpointTest {
 		
 	}
 	
+	/**
+	 * Gets the result.
+	 *
+	 * @return the result
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getResult() throws Exception {
 
@@ -115,6 +157,12 @@ public class JavascriptEndpointTest {
 		
 	}
 	
+	/**
+	 * Gets the result deep.
+	 *
+	 * @return the result deep
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getResultDeep() throws Exception {
 
@@ -124,6 +172,12 @@ public class JavascriptEndpointTest {
 		
 	}
 	
+	/**
+	 * Gets the result deep query.
+	 *
+	 * @return the result deep query
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getResultDeepQuery() throws Exception {
 
@@ -133,6 +187,12 @@ public class JavascriptEndpointTest {
 		
 	}
 	
+	/**
+	 * Gets the result deep path.
+	 *
+	 * @return the result deep path
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getResultDeepPath() throws Exception {
 
@@ -142,6 +202,9 @@ public class JavascriptEndpointTest {
 		
 	}
 
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

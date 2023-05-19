@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.graalium.core.modules;
 
-import org.eclipse.dirigible.graalium.core.graal.modules.ModuleResolver;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
+import org.eclipse.dirigible.graalium.core.graal.modules.ModuleResolver;
 
 /**
  * The Class DirigibleModuleResolver.
@@ -37,14 +38,15 @@ public class DirigibleModuleResolver implements ModuleResolver {
     
     /** The cache directory path. */
     private final Path cacheDirectoryPath;
-
+    
     /**
      * Instantiates a new dirigible module resolver.
      *
      * @param cacheDirectoryPath the cache directory path
+     * @param dirigibleSourceProvider the dirigible source provider
      */
-    public DirigibleModuleResolver(Path cacheDirectoryPath) {
-        dirigibleModuleESMProxyGenerator = new DirigibleModuleESMProxyGenerator();
+    public DirigibleModuleResolver(Path cacheDirectoryPath, JavascriptSourceProvider dirigibleSourceProvider) {
+        dirigibleModuleESMProxyGenerator = new DirigibleModuleESMProxyGenerator(dirigibleSourceProvider);
         cacheDirectoryPath.toFile().mkdirs();
         this.cacheDirectoryPath = cacheDirectoryPath;
     }

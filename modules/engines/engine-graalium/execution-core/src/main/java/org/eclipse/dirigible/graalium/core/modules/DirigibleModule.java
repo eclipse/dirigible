@@ -37,7 +37,7 @@ public class DirigibleModule {
     /** The should be unexposed to ESM. */
     private final Boolean shouldBeUnexposedToESM;
 
-    /** The CJS exported members to re-export in a deconstructed manner */
+    /**  The CJS exported members to re-export in a deconstructed manner. */
     private final List<String> deconstruct;
 
     /**
@@ -124,7 +124,8 @@ public class DirigibleModule {
     }
 
     /**
-     * Gets the CJS exported members to re-export in a deconstructed manner
+     * Gets the CJS exported members to re-export in a deconstructed manner.
+     *
      * @return names of the exported members
      */
     public List<String> getDeconstruct() {

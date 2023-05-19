@@ -53,7 +53,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(JavascriptEndpoint.class.getCanonicalName());
 	
-		/** The Constant HTTP_PATH_MATCHER. */
+	/** The Constant HTTP_PATH_MATCHER. */
 	private static final String HTTP_PATH_MATCHER = "/{projectName}/{*projectFilePath}";
 	
 	
@@ -230,7 +230,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param projectFilePath the project file path
 	 * @return the string
 	 */
-	private String extractProjectFilePath(String projectFilePath) {
+	protected String extractProjectFilePath(String projectFilePath) {
 		if (projectFilePath.indexOf(JS) > 0) {
 			projectFilePath = projectFilePath.substring(0, projectFilePath.indexOf(JS) + 3);
 		} else if (projectFilePath.indexOf(MJS) > 0) {
@@ -247,7 +247,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param projectFilePath the project file path
 	 * @return the string
 	 */
-	private String extractPathParam(String projectFilePath) {
+	protected String extractPathParam(String projectFilePath) {
 		String projectFilePathParam = "";
 		if (projectFilePath.indexOf(JS) > 0) {
 			projectFilePathParam = projectFilePath.substring(projectFilePath.indexOf(JS) + 3);
@@ -269,7 +269,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param files the files
 	 * @return the response
 	 */
-	private ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam, 
+	protected ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam, 
 			MultiValueMap<String,String> params, MultipartFile[] files) {
 		try {
 			if (!isValid(projectName) || !isValid(projectFilePath)) {
@@ -302,7 +302,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 *
 	 * @return the javascript handler
 	 */
-	private JavascriptService getJavascriptHandler() {
+	protected JavascriptService getJavascriptHandler() {
 		return javascriptService;
 	}
 
@@ -311,7 +311,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 *
 	 * @return the dirigible working directory
 	 */
-	private java.nio.file.Path getDirigibleWorkingDirectory() {
+	protected java.nio.file.Path getDirigibleWorkingDirectory() {
 		String publicRegistryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		return java.nio.file.Path.of(publicRegistryPath);
 	}
@@ -339,7 +339,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param path the path
 	 * @return the string
 	 */
-	private String normalizePath(String path) {
+	protected String normalizePath(String path) {
 		if (path != null) {
 			if (path.startsWith(IRepository.SEPARATOR)) {
 				return path.substring(1);

@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
+
 /**
  * The Class DirigibleModuleESMProxyGenerator.
  */
@@ -49,7 +51,25 @@ public class DirigibleModuleESMProxyGenerator {
     private final Gson gson = new Gson();
     
     /** The dirigible source provider. */
-    private final DirigibleSourceProvider dirigibleSourceProvider = new DirigibleSourceProvider();
+    private JavascriptSourceProvider dirigibleSourceProvider;
+    
+    /**
+     * Instantiates a new dirigible module ESM proxy generator.
+     *
+     * @param dirigibleSourceProvider the dirigible source provider
+     */
+    public DirigibleModuleESMProxyGenerator(JavascriptSourceProvider dirigibleSourceProvider) {
+    	this.dirigibleSourceProvider = dirigibleSourceProvider;
+    }
+    
+    /**
+     * Gets the source provider.
+     *
+     * @return the source provider
+     */
+    public JavascriptSourceProvider getSourceProvider() {
+		return dirigibleSourceProvider;
+	}
 
     /**
      * Generate.
@@ -84,11 +104,25 @@ public class DirigibleModuleESMProxyGenerator {
         return source.toString();
     }
 
+    /**
+     * Should deconstruct module.
+     *
+     * @param module the module
+     * @return true, if successful
+     */
     private static boolean shouldDeconstructModule(DirigibleModule module) {
         List<String> deconstructs = module.getDeconstruct();
         return deconstructs != null && !deconstructs.isEmpty();
     }
 
+    /**
+     * Write exported CJS module.
+     *
+     * @param sourceBuilder the source builder
+     * @param module the module
+     * @param moduleNames the module names
+     * @param apiVersion the api version
+     */
     private static void writeExportedCJSModule(
             StringBuilder sourceBuilder,
             DirigibleModule module,
@@ -106,6 +140,13 @@ public class DirigibleModuleESMProxyGenerator {
         moduleNames.append(',');
     }
 
+    /**
+     * Write deconstructed exported CJS module.
+     *
+     * @param sourceBuilder the source builder
+     * @param module the module
+     * @param apiVersion the api version
+     */
     private static void writeDeconstructedExportedCJSModule(
             StringBuilder sourceBuilder,
             DirigibleModule module,
@@ -127,7 +168,7 @@ public class DirigibleModuleESMProxyGenerator {
      * @return the dirigible module[]
      */
     private DirigibleModule[] readApiModuleJson(String path) {
-        String apiModuleJson = dirigibleSourceProvider.getSource(path);
+        String apiModuleJson = getSourceProvider().getSource(path);
         return gson.fromJson(apiModuleJson, DirigibleModule[].class);
     }
 
