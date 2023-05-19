@@ -635,7 +635,7 @@
 		<qldb.sdk.version>1.12.386</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
-		<jedis.version>4.4.0</jedis.version>
+		<jedis.version>4.4.1</jedis.version>
 		<spark.version>3.3.2</spark.version>
 		<path-to-regexp.version>6.2.1</path-to-regexp.version>
 		<javax.websocket-api.version>1.1</javax.websocket-api.version>
