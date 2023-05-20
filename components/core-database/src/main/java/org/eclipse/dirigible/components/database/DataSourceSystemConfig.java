@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +37,9 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory",
     transactionManagerRef = "transactionManager", basePackages = {"org.eclipse.dirigible.components"})
 public class DataSourceSystemConfig {
+
+	@Value("${dirigible.scan.packages:org.eclipse.dirigible.components}")
+	private String dirigibleScanPackages;
 	
 	@Bean(name = "SystemDB")
 	public HikariDataSource getDataSource() {
@@ -53,8 +57,9 @@ public class DataSourceSystemConfig {
 			@Qualifier("SystemDB") DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(dataSource);
-		em.setPackagesToScan(new String[] { "org.eclipse.dirigible.components" });
-
+		String[] packages = dirigibleScanPackages.split(",");
+		em.setPackagesToScan(packages);
+		
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);
 

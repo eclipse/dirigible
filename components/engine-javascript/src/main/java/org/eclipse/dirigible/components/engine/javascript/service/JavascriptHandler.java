@@ -48,7 +48,15 @@ public class JavascriptHandler {
     	this.repository = repository;
     	this.sourceProvider = sourceProvider;
     }
-	
+
+	public IRepository getRepository() {
+		return repository;
+	}
+
+	public JavascriptSourceProvider getSourceProvider() {
+		return sourceProvider;
+	}
+
 	/**
      * Handle request.
      *
