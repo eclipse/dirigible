@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-components-parent</artifactId>
-		<version>9.0.0-SNAPSHOT</version>
+		<version>8.4.5</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -18,21 +18,21 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-jobs</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.4.5</version>
 		</dependency>
 
 		<!-- Helpers -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-helpers</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.4.5</version>
 		</dependency>
 		
 		<!-- Test -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-test</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.4.5</version>
 		</dependency>
 		
 		<!-- Libs -->
