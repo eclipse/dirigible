@@ -136,6 +136,7 @@ public class GraaliumJavascriptEngineExecutor extends AbstractJavascriptExecutor
     		projectName = "";
     		projectFilePath = path.constructPathFrom(0);
     	}
+		javascriptHandler.setOnAfterExecuteCallback(onAfterExecute);
     	return javascriptHandler.handleRequest(projectName, projectFilePath, "", executionContext, false);
 	}
 

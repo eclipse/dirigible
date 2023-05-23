@@ -14,11 +14,13 @@ package org.eclipse.dirigible.graalium.handler;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.engine.js.service.JavascriptHandler;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
+import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
@@ -34,6 +36,12 @@ public class GraaliumJavascriptHandler implements JavascriptHandler {
 
     /** The dirigible source provider. */
     private final DirigibleSourceProvider dirigibleSourceProvider = new DirigibleSourceProvider();
+
+	private BiConsumer<Context, Value> onAfterExecuteCallback;
+
+  	public void setOnAfterExecuteCallback(BiConsumer<Context, Value> onAfterExecuteCallback) {
+    	this.onAfterExecuteCallback = onAfterExecuteCallback;
+  	}
 
     /**
      * Handle request.
@@ -63,6 +71,9 @@ public class GraaliumJavascriptHandler implements JavascriptHandler {
             	runner.getGraalJSInterceptor().onBeforeRun(sourceFilePath, absoluteSourcePath, source, runner.getCodeRunner().getGraalContext());
             	Value value = runner.run(source);
             	runner.getGraalJSInterceptor().onAfterRun(sourceFilePath, absoluteSourcePath, source, runner.getCodeRunner().getGraalContext(), value);
+				if (onAfterExecuteCallback != null) {
+          			onAfterExecuteCallback.accept(runner.getCodeRunner().getGraalContext(), value);
+        		}
             	return transformValue(value);
             }
         } catch (Exception e) {
