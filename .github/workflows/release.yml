@@ -54,7 +54,7 @@ jobs:
     - name: "Configure Git"
       run: |
         git fetch
-        git checkout master
+        git checkout ${{ github.event.inputs.branch }}
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
@@ -95,7 +95,7 @@ jobs:
         git add .
         git commit -m "version set to ${{ github.event.inputs.releaseVersion }} for release"
         git checkout -b ${{ github.event.inputs.releaseVersion }}
-        git checkout master
+        git checkout ${{ github.event.inputs.branch }}
 
     - name: "Maven: Set Snapshot Version"
       run: mvn versions:set -DnewVersion=${{ github.event.inputs.snapshotVersion }}
@@ -226,5 +226,5 @@ jobs:
 
         git add .
         git reset --hard
-        git checkout master
+        git checkout ${{ github.event.inputs.branch }}
 #----------------Publish Helm Release------------------#
