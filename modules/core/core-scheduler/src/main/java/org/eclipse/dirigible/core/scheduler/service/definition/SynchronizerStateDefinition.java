@@ -31,7 +31,7 @@ public class SynchronizerStateDefinition {
 	private int state;
 
 	/** The message. */
-	@Column(name = "SYNCHRONIZER_MESSAGE", columnDefinition = "VARCHAR", nullable = false, length = 2000)
+	@Column(name = "SYNCHRONIZER_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	private String message = "";
 
 	/** The first time triggered. */
