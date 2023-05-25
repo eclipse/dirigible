@@ -336,11 +336,7 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	public SelectBuilder genericJoin(String type, String table, String on, String alias) {
 		logger.trace("genericJoin: " + type + ", table: " + table + ", on: " + on + ", alias: " + alias);
 		StringBuilder snippet = new StringBuilder();
-<<<<<<< HEAD
-		String tableName = (isCaseSensitive()) ? encapsulate(table) : table;
-=======
 		String tableName = (isCaseSensitive()) ? encapsulate(table, true) : table;
->>>>>>> c0118d8f8c (Refactoring of encapsulation changes)
 		snippet.append(type).append(SPACE).append(KEYWORD_JOIN).append(SPACE).append(tableName);
 		if (alias != null) {
 			String aliasName = (isCaseSensitive()) ? encapsulate(alias, false) : alias;
@@ -372,13 +368,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 * @return the select builder
 	 */
 	public SelectBuilder order(String column) {
-<<<<<<< HEAD
-		logger.trace("order: " + column);
-		String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
-=======
 		if (logger.isTraceEnabled()) {logger.trace("order: " + column);}
 		String columnName = (isCaseSensitive()) ? encapsulate(column, false) : column;
->>>>>>> c0118d8f8c (Refactoring of encapsulation changes)
 		return order(columnName, true);
 	}
 
@@ -392,13 +383,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 * @return the select builder
 	 */
 	public SelectBuilder order(String column, boolean asc) {
-<<<<<<< HEAD
-		logger.trace("order: " + column + ", asc: " + asc);
-		String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
-=======
 		if (logger.isTraceEnabled()) {logger.trace("order: " + column + ", asc: " + asc);}
 		String columnName = (isCaseSensitive()) ? encapsulate(column, false) : column;
->>>>>>> c0118d8f8c (Refactoring of encapsulation changes)
 		if (asc) {
 			this.orders.add(columnName + SPACE + KEYWORD_ASC);
 		} else {
@@ -670,11 +656,7 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	protected String traverseTables() {
 		StringBuilder snippet = new StringBuilder();
 		for (String table : this.tables) {
-<<<<<<< HEAD
-			String tableName = (isCaseSensitive()) ? encapsulate(table) : table;
-=======
 			String tableName = (isCaseSensitive()) ? encapsulate(table, true) : table;
->>>>>>> c0118d8f8c (Refactoring of encapsulation changes)
 			snippet.append(tableName).append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);

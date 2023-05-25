@@ -20,8 +20,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.Modifiers;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.TableStatements;
 import org.hamcrest.MatcherAssert;
@@ -50,8 +52,6 @@ public class HanaCreateTableBuilderTest {
     assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
   }
 
-<<<<<<< HEAD:modules/database/database-sql/src/test/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaCreateTableBuilderTest.java
-=======
   /**
    * Creates the table generic with case sensitive flag.
    */
@@ -74,7 +74,6 @@ public class HanaCreateTableBuilderTest {
     }
   }
 
->>>>>>> c0118d8f8c (Refactoring of encapsulation changes):modules/database/database-sql-hana/src/test/java/org/eclipse/dirigible/database/sql/dialects/hana/HanaCreateTableBuilderTest.java
   /**
    * Creates the table column.
    */

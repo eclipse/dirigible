@@ -74,11 +74,7 @@ public class DropSynonymBuilder extends AbstractDropSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateSynonym(StringBuilder sql) {
-<<<<<<< HEAD
-		String synonymName = (isCaseSensitive()) ? encapsulate(this.getSynonym()) : this.getSynonym();
-=======
 		String synonymName = (isCaseSensitive()) ? encapsulate(this.getSynonym(), true) : this.getSynonym();
->>>>>>> c0118d8f8c (Refactoring of encapsulation changes)
 		sql.append(SPACE).append(KEYWORD_SYNONYM).append(SPACE).append(synonymName);
 	}
 
