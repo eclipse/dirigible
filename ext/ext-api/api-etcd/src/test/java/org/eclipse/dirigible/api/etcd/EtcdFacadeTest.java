@@ -11,26 +11,25 @@
  */
 package org.eclipse.dirigible.api.etcd;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
-import io.etcd.jetcd.kv.GetResponse;
-import io.etcd.jetcd.ByteSequence;
-import io.etcd.jetcd.KV;
-import io.etcd.jetcd.launcher.EtcdCluster;
-import io.etcd.jetcd.test.EtcdClusterExtension;
-
-import com.google.common.base.Charsets;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+
+import com.google.common.base.Charsets;
+
+import io.etcd.jetcd.ByteSequence;
+import io.etcd.jetcd.KV;
+import io.etcd.jetcd.kv.GetResponse;
+import io.etcd.jetcd.launcher.EtcdCluster;
+import io.etcd.jetcd.test.EtcdClusterExtension;
 
 /**
  * The Class EtcdFacadeTest.
@@ -38,7 +37,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public class EtcdFacadeTest {
 
 	/** The Constant etcd. */
-	@RegisterExtension static final EtcdCluster etcd = new EtcdClusterExtension("test-etcd", 1);
+	static final EtcdCluster etcd = new EtcdClusterExtension("test-etcd", 1);
 
 	/**
 	 * Sets the up.
