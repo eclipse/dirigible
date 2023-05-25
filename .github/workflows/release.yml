@@ -200,71 +200,6 @@ jobs:
         docker image prune -a -f
         cd ../../
 
-    - uses: buildpacks/github-actions/setup-pack@v4.1.0
-    - name: Eclipse Dirigible Buildpack
-      run: |
-        cd releng/buildpacks/server/
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-base-dirigible . --target base
-        docker tag dirigiblelabs/buildpacks-stack-base-dirigible dirigiblelabs/buildpacks-stack-base-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-stack-base-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-run-dirigible . --target run
-        docker tag dirigiblelabs/buildpacks-stack-run-dirigible dirigiblelabs/buildpacks-stack-run-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-stack-run-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-build-dirigible . --target build
-        docker tag dirigiblelabs/buildpacks-stack-build-dirigible dirigiblelabs/buildpacks-stack-build-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-stack-build-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        cd buildpack/
-        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ env.DIRIGIBLE_VERSION }}/g'' {} \;
-        pack buildpack package dirigiblelabs/buildpacks-dirigible --config ./package.toml
-        docker tag dirigiblelabs/buildpacks-dirigible dirigiblelabs/buildpacks-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        pack builder create dirigiblelabs/buildpacks-builder-dirigible --config ./builder.toml
-        docker tag dirigiblelabs/buildpacks-builder-dirigible dirigiblelabs/buildpacks-builder-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-builder-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        cd ../../../../
-    - name: Eclipse Dirigible Kyma Buildpack
-      run: |
-        cd releng/buildpacks/sap-kyma/
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-base-dirigible-kyma . --target base
-        docker tag dirigiblelabs/buildpacks-stack-base-dirigible-kyma dirigiblelabs/buildpacks-stack-base-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-stack-base-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-run-dirigible-kyma . --target run
-        docker tag dirigiblelabs/buildpacks-stack-run-dirigible-kyma dirigiblelabs/buildpacks-stack-run-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-stack-run-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-build-dirigible-kyma . --target build
-        docker tag dirigiblelabs/buildpacks-stack-build-dirigible-kyma dirigiblelabs/buildpacks-stack-build-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-stack-build-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        cd buildpack/
-        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ env.DIRIGIBLE_VERSION }}/g'' {} \;
-        pack buildpack package dirigiblelabs/buildpacks-dirigible-kyma --config ./package.toml
-        docker tag dirigiblelabs/buildpacks-dirigible-kyma dirigiblelabs/buildpacks-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        pack builder create dirigiblelabs/buildpacks-builder-dirigible-kyma --config ./builder.toml
-        docker tag dirigiblelabs/buildpacks-builder-dirigible-kyma dirigiblelabs/buildpacks-builder-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-builder-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        cd ../../../../
-    - name: Eclipse Dirigible Cloud Foundry Buildpack
-      run: |
-        cd releng/buildpacks/sap-cf/
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-base-dirigible-cf . --target base
-        docker tag dirigiblelabs/buildpacks-stack-base-dirigible-cf dirigiblelabs/buildpacks-stack-base-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-stack-base-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-run-dirigible-cf . --target run
-        docker tag dirigiblelabs/buildpacks-stack-run-dirigible-cf dirigiblelabs/buildpacks-stack-run-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-stack-run-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-build-dirigible-cf . --target build
-        docker tag dirigiblelabs/buildpacks-stack-build-dirigible-cf dirigiblelabs/buildpacks-stack-build-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-stack-build-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        cd buildpack/
-        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ env.DIRIGIBLE_VERSION }}/g'' {} \;
-        pack buildpack package dirigiblelabs/buildpacks-dirigible-cf --config ./package.toml
-        docker tag dirigiblelabs/buildpacks-dirigible-cf dirigiblelabs/buildpacks-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        pack builder create dirigiblelabs/buildpacks-builder-dirigible-cf --config ./builder.toml
-        docker tag dirigiblelabs/buildpacks-builder-dirigible-cf dirigiblelabs/buildpacks-builder-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        docker push dirigiblelabs/buildpacks-builder-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        cd ../../../../
-
 #-----------------Publish to DockerHub-------------------#
 
 #---------------Publish to Maven Central-----------------#
@@ -350,18 +285,6 @@ jobs:
           helm repo update
           helm install dirigible dirigible/dirigible --version ${{ env.DIRIGIBLE_VERSION }}
           ```
-
-          #### Cloud Native Buildpacks:
-
-          - [dirigiblelabs/buildpacks-builder-dirigible](https://hub.docker.com/r/dirigiblelabs/buildpacks-builder-dirigible) - builder for local deployments.
-          - [dirigiblelabs/buildpacks-builder-dirigible-kyma](https://hub.docker.com/r/dirigiblelabs/buildpacks-builder-dirigible-kyma) - builder for Kyma ready deployments.
-          - [dirigiblelabs/buildpacks-builder-dirigible-cf](https://hub.docker.com/r/dirigiblelabs/buildpacks-builder-dirigible-cf) - builder for Cloud Foundry ready deployments
-
-          Building Docker Image with **pack**:
-          ```
-          pack build --builder dirigiblelabs/buildpacks-builder-dirigible:${{ env.DIRIGIBLE_VERSION }} <my-org>/<my-repository>
-          ```
-          > _**Note:** The command will package all sub-folders (`project1`, `project2`, etc.) into a Dirigible docker image with the application sources._
 
           #### Docker images:
             - [dirigiblelabs/dirigible-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-anonymous/tags?page=1&ordering=last_updated) - Anonymous access.
