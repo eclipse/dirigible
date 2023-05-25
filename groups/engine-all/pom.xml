@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-groups-parent</artifactId>
-		<version>6.3.16</version>
+		<version>6.3.16.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,17 +34,17 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-api</artifactId>
-            <version>6.3.16</version>
+            <version>6.3.16.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-javascript</artifactId>
-            <version>6.3.16</version>
+            <version>6.3.16.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-javascript-graalvm</artifactId>
-            <version>6.3.16</version>
+            <version>6.3.16.1</version>
         </dependency>
 
         <!--
@@ -67,37 +67,37 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-job</artifactId>
-            <version>6.3.16</version>
+            <version>6.3.16.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-listener</artifactId>
-            <version>6.3.16</version>
+            <version>6.3.16.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-web</artifactId>
-            <version>6.3.16</version>
+            <version>6.3.16.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-wiki</artifactId>
-            <version>6.3.16</version>
+            <version>6.3.16.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-command</artifactId>
-            <version>6.3.16</version>
+            <version>6.3.16.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-odata</artifactId>
-            <version>6.3.16</version>
+            <version>6.3.16.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-graalium-execution-web</artifactId>
-            <version>6.3.16</version>
+            <version>6.3.16.1</version>
         </dependency>
     </dependencies>
 
