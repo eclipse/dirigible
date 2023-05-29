@@ -92,7 +92,26 @@ projectsView.controller('ProjectsViewController', [
                         e.preventDefault();
                         $scope.renameNodeData = $scope.jstreeWidget.jstree(true).get_node(e.target.id);
                         openRenameDialog();
-                    }
+                    },
+                    'delete': function () {
+                        let nodes = $scope.jstreeWidget.jstree(true).get_selected(true);
+                        if (nodes.length === 1) openDeleteDialog(nodes[0]);
+                        else if (nodes.length > 1) openDeleteDialog(nodes);
+                    },
+                    'ctrl+c': function (e) {
+                        $scope.jstreeWidget.jstree(true).copy($scope.jstreeWidget.jstree(true).get_node(e.target.id));
+                    },
+                    'ctrl+x': function (e) {
+                        $scope.jstreeWidget.jstree(true).cut($scope.jstreeWidget.jstree(true).get_node(e.target.id));
+                    },
+                    'ctrl+v': function (e) {
+                        if ($scope.jstreeWidget.jstree(true).can_paste()) {
+                            let parent = $scope.jstreeWidget.jstree(true).get_node(e.target.id);
+                            if (parent.type === 'folder' || parent.type === 'project') {
+                                $scope.jstreeWidget.jstree(true).paste(parent);
+                            }
+                        }
+                    },
                 },
             },
             search: {
@@ -1111,6 +1130,38 @@ projectsView.controller('ProjectsViewController', [
             });
         }
 
+        function openNewFileDialog() {
+            messageHub.showFormDialog(
+                "projectsNewFileForm",
+                "Create a new file",
+                [{
+                    id: "fdti1",
+                    type: "input",
+                    submitOnEnterId: "b1",
+                    label: "Name",
+                    required: true,
+                    inputRules: {
+                        excluded: getChildrenNames($scope.newNodeData.parent, 'file'),
+                        patterns: ['^[^/:]*$'],
+                    },
+                    value: '',
+                }],
+                [{
+                    id: "b1",
+                    type: "emphasized",
+                    label: "Create",
+                    whenValid: true
+                },
+                {
+                    id: "b2",
+                    type: "transparent",
+                    label: "Cancel",
+                }],
+                "projects.formDialog.create.file",
+                "Creating..."
+            );
+        }
+
         function openRenameDialog() {
             messageHub.showFormDialog(
                 "projectsRenameForm",
@@ -1141,6 +1192,60 @@ projectsView.controller('ProjectsViewController', [
                 "projects.formDialog.rename",
                 "Renameing..."
             );
+        }
+
+        function openDeleteDialog(selected) {
+            let isMultiple = Array.isArray(selected);
+            messageHub.showDialogAsync(
+                (isMultiple) ? `Delete ${selected.length} items?` : `Delete '${selected.text}'?`,
+                'This action cannot be undone. It is recommended that you unpublish and delete.',
+                [{
+                    id: 'b1',
+                    type: 'negative',
+                    label: 'Delete',
+                },
+                {
+                    id: 'b2',
+                    type: 'emphasized',
+                    label: 'Delete & Unpublish',
+                },
+                {
+                    id: 'b3',
+                    type: 'transparent',
+                    label: 'Cancel',
+                }],
+            ).then(function (dialogResponse) {
+                function deleteNode(node) {
+                    if (node.type === 'project') {
+                        $scope.deleteProject(node.data.workspace, node.text, node.id);
+                    } else {
+                        $scope.deleteFileFolder(node.data.workspace, node.data.path, node.id);
+                    }
+                };
+                if (dialogResponse.data === 'b1') {
+                    if (isMultiple) {
+                        for (let i = 0; i < selected.length; i++) {
+                            let node = $scope.jstreeWidget.jstree(true).get_node(selected[i]);
+                            deleteNode(node);
+                        }
+                    } else {
+                        deleteNode(selected);
+                    }
+                } else if (dialogResponse.data === 'b2') {
+                    if (isMultiple) {
+                        for (let i = 0; i < selected.length; i++) {
+                            let node = $scope.jstreeWidget.jstree(true).get_node(selected[i]);
+                            $scope.unpublish(node.data.path, node.data.workspace, function () {
+                                deleteNode(node);
+                            });
+                        }
+                    } else {
+                        $scope.unpublish(selected.data.path, selected.data.workspace, function () {
+                            deleteNode(selected);
+                        });
+                    }
+                }
+            });
         }
 
         // Temp
@@ -1552,35 +1657,7 @@ projectsView.controller('ProjectsViewController', [
                     $scope.newNodeData.workspace = msg.data.data.workspace;
                     $scope.newNodeData.path = msg.data.data.path;
                     $scope.newNodeData.content = '';
-                    messageHub.showFormDialog(
-                        "projectsNewFileForm",
-                        "Create a new file",
-                        [{
-                            id: "fdti1",
-                            type: "input",
-                            submitOnEnterId: "b1",
-                            label: "Name",
-                            required: true,
-                            inputRules: {
-                                excluded: getChildrenNames(msg.data.data.parent, 'file'),
-                                patterns: ['^[^/:]*$'],
-                            },
-                            value: '',
-                        }],
-                        [{
-                            id: "b1",
-                            type: "emphasized",
-                            label: "Create",
-                            whenValid: true
-                        },
-                        {
-                            id: "b2",
-                            type: "transparent",
-                            label: "Cancel",
-                        }],
-                        "projects.formDialog.create.file",
-                        "Creating..."
-                    );
+                    openNewFileDialog();
                 } else if (msg.data.itemId === 'folder') {
                     $scope.newNodeData.parent = msg.data.data.parent;
                     $scope.newNodeData.workspace = msg.data.data.workspace;
@@ -1618,57 +1695,7 @@ projectsView.controller('ProjectsViewController', [
                     $scope.renameNodeData = msg.data.data;
                     openRenameDialog();
                 } else if (msg.data.itemId === 'delete') {
-                    let isMultiple = Array.isArray(msg.data.data);
-                    messageHub.showDialogAsync(
-                        (isMultiple) ? `Delete ${msg.data.data.length} items?` : `Delete '${msg.data.data.text}'?`,
-                        'This action cannot be undone. It is recommended that you unpublish and delete.',
-                        [{
-                            id: 'b1',
-                            type: 'negative',
-                            label: 'Delete',
-                        },
-                        {
-                            id: 'b2',
-                            type: 'emphasized',
-                            label: 'Delete & Unpublish',
-                        },
-                        {
-                            id: 'b3',
-                            type: 'transparent',
-                            label: 'Cancel',
-                        }],
-                    ).then(function (dialogResponse) {
-                        function deleteNode(node) {
-                            if (node.type === 'project') {
-                                $scope.deleteProject(node.data.workspace, node.text, node.id);
-                            } else {
-                                $scope.deleteFileFolder(node.data.workspace, node.data.path, node.id);
-                            }
-                        };
-                        if (dialogResponse.data === 'b1') {
-                            if (isMultiple) {
-                                for (let i = 0; i < msg.data.data.length; i++) {
-                                    let node = $scope.jstreeWidget.jstree(true).get_node(msg.data.data[i]);
-                                    deleteNode(node);
-                                }
-                            } else {
-                                deleteNode(msg.data.data);
-                            }
-                        } else if (dialogResponse.data === 'b2') {
-                            if (isMultiple) {
-                                for (let i = 0; i < msg.data.data.length; i++) {
-                                    let node = $scope.jstreeWidget.jstree(true).get_node(msg.data.data[i]);
-                                    $scope.unpublish(node.data.path, node.data.workspace, function () {
-                                        deleteNode(node);
-                                    });
-                                }
-                            } else {
-                                $scope.unpublish(msg.data.data.data.path, msg.data.data.data.workspace, function () {
-                                    deleteNode(msg.data.data);
-                                });
-                            }
-                        }
-                    });
+                    openDeleteDialog(msg.data.data)
                 } else if (msg.data.itemId === 'cut') {
                     $scope.jstreeWidget.jstree(true).cut(msg.data.data);
                 } else if (msg.data.itemId === 'copy') {
