@@ -83,6 +83,17 @@ projectsView.controller('ProjectsViewController', [
                 data: function (node, cb) {
                     cb($scope.projects);
                 },
+                keyboard: {
+                    'enter': function (e) {
+                        e.type = "dblclick";
+                        $(e.currentTarget).trigger(e);
+                    },
+                    'f2': function (e) {
+                        e.preventDefault();
+                        $scope.renameNodeData = $scope.jstreeWidget.jstree(true).get_node(e.target.id);
+                        openRenameDialog();
+                    }
+                },
             },
             search: {
                 case_sensitive: false,
@@ -1100,6 +1111,38 @@ projectsView.controller('ProjectsViewController', [
             });
         }
 
+        function openRenameDialog() {
+            messageHub.showFormDialog(
+                "projectsRenameForm",
+                `Rename ${$scope.renameNodeData.type}`,
+                [{
+                    id: "fdti1",
+                    type: "input",
+                    submitOnEnterId: "b1",
+                    label: "Name",
+                    required: true,
+                    inputRules: {
+                        excluded: getChildrenNames($scope.renameNodeData.parent, 'file'),
+                        patterns: ['^[^/:]*$'],
+                    },
+                    value: $scope.renameNodeData.text,
+                }],
+                [{
+                    id: "b1",
+                    type: "emphasized",
+                    label: "Rename",
+                    whenValid: true
+                },
+                {
+                    id: "b2",
+                    type: "transparent",
+                    label: "Cancel",
+                }],
+                "projects.formDialog.rename",
+                "Renameing..."
+            );
+        }
+
         // Temp
         // $scope.test = function () {
         //     messageHub.postMessage('projects.tree.select', { filePath: '/ide/index.html' }, true);
@@ -1573,35 +1616,7 @@ projectsView.controller('ProjectsViewController', [
                     );
                 } else if (msg.data.itemId === 'rename') {
                     $scope.renameNodeData = msg.data.data;
-                    messageHub.showFormDialog(
-                        "projectsRenameForm",
-                        `Rename ${$scope.renameNodeData.type}`,
-                        [{
-                            id: "fdti1",
-                            type: "input",
-                            submitOnEnterId: "b1",
-                            label: "Name",
-                            required: true,
-                            inputRules: {
-                                excluded: getChildrenNames($scope.renameNodeData.parent, 'file'),
-                                patterns: ['^[^/:]*$'],
-                            },
-                            value: $scope.renameNodeData.text,
-                        }],
-                        [{
-                            id: "b1",
-                            type: "emphasized",
-                            label: "Rename",
-                            whenValid: true
-                        },
-                        {
-                            id: "b2",
-                            type: "transparent",
-                            label: "Cancel",
-                        }],
-                        "projects.formDialog.rename",
-                        "Renameing..."
-                    );
+                    openRenameDialog();
                 } else if (msg.data.itemId === 'delete') {
                     let isMultiple = Array.isArray(msg.data.data);
                     messageHub.showDialogAsync(
