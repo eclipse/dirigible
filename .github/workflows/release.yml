@@ -327,9 +327,6 @@ jobs:
             - [server-oauth](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-oauth.zip) - Basic package - recommended for local test & development, _**requires additional OAuth configurations.**_
             - [server-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-runtime.zip) - Basic package - recommended for local test & development _(runtime only)_.
             - [trial-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/trial-all.zip) - Trial package _(guest/nickname)_.
-            - [sap-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-all.zip) - SAP BTP Neo Runtime package.
-            - [sap-all-ephemeral](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-all-ephemeral.zip) - SAP BTP Neo Runtime package _(ephemeral database & repository)_.
-            - [sap-cms](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-cms.zip) - SAP BTP Neo Runtime package _(content management only)_.
             
           > _**Note:** Unzip the downloaded file to extract the `ROOT.war` binary._
           
@@ -436,48 +433,6 @@ jobs:
         asset_name: trial-all.zip
         asset_content_type: application/zip
 
-    - name: Build Dirigible for SAP BTP Neo
-      run: mvn clean install -DskipTests -Djava.version=8 -Dmaven.javadoc.skip=true -Dmaven.compiler.source=1.8 -Dmaven.compiler.target=1.8
-
-    - name: Package SAP BTP Neo WAR files
-      run: |
-        zip --junk-paths sap-all releng/sap-all/target/ROOT.war
-        zip --junk-paths sap-all-ephemeral releng/sap-all-ephemeral/target/ROOT.war
-        zip --junk-paths sap-cms releng/sap-cms/target/ROOT.war
-
-    - name: Upload sap-all
-      id: upload-sap-all
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./sap-all.zip
-        asset_name: sap-all.zip
-        asset_content_type: application/zip
-
-    - name: Upload sap-all-ephemeral
-      id: upload-sap-all-ephemeral
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./sap-all-ephemeral.zip
-        asset_name: sap-all-ephemeral.zip
-        asset_content_type: application/zip
-
-    - name: Upload sap-cms
-      id: upload-sap-cms
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./sap-cms.zip
-        asset_name: sap-cms.zip
-        asset_content_type: application/zip
-
 #----------------Publish GitHub Release------------------#
 
     - name: "Git: Push Changes"
@@ -545,15 +500,6 @@ jobs:
         git reset --hard
         git checkout master
 #----------------Publish Helm Release------------------#
-
-#-----------------Create GitHub Branch-------------------#
-
-    - name: Create GitHub Branch
-      run: |
-        git checkout -b ${{ github.event.inputs.releaseVersion }}
-        git push origin ${{ github.event.inputs.releaseVersion }}
-
-#-----------------Create GitHub Branch-------------------#
 
 #-----------------Update Trial Instance------------------#
 
