@@ -251,12 +251,12 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        tag_name: v${{ env.DIRIGIBLE_VERSION }}
-        release_name: ${{ env.DIRIGIBLE_VERSION }}
+        tag_name: v${{ github.event.inputs.releaseVersion }}
+        release_name: ${{ github.event.inputs.releaseVersion }}
         draft: false
         prerelease: false
         body: |
-          ## Eclipse Dirigible - ${{ env.DIRIGIBLE_VERSION }}
+          ## Eclipse Dirigible - ${{ github.event.inputs.releaseVersion }}
 
           #### Release:
 
@@ -271,7 +271,7 @@ jobs:
           <dependency>
               <groupId>org.eclipse.dirigible</groupId>
               <artifactId>dirigible-server-all</artifactId>
-              <version>${{ env.DIRIGIBLE_VERSION }}</version>
+              <version>${{ github.event.inputs.releaseVersion }}</version>
           </dependency>
           ```
 
@@ -283,7 +283,7 @@ jobs:
           ```
           helm repo add dirigible https://eclipse.github.io/dirigible
           helm repo update
-          helm install dirigible dirigible/dirigible --version ${{ env.DIRIGIBLE_VERSION }}
+          helm install dirigible dirigible/dirigible --version ${{ github.event.inputs.releaseVersion }}
           ```
 
           #### Docker images:
@@ -317,19 +317,19 @@ jobs:
           > _**Note:** All Docker images are availalbe [here](https://hub.docker.com/u/dirigiblelabs)_
 
           #### Available for download `*.war` packages:
-            - _**[server-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-all.zip) - Basic package - recommended for local test & development.**_
-            - [server-minimal](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-minimal.zip) - Minimal package still containing the WebIDE.
-            - [anonymous-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-all.zip) - Anonymous access.
-            - [anonymous-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-runtime.zip) - Anonymous access _(runtime only)_.
-            - [sap-cf-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-cf-all.zip) - SAP Cloud Platform - Cloud Foundry environment.
-            - [sap-cf-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-cf-runtime.zip) - SAP Cloud Platform - Cloud Foundry environment _(runtime only)_.
-            - [desktop-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/desktop-all.zip) - Desktop package.
-            - [server-oauth](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-oauth.zip) - Basic package - recommended for local test & development, _**requires additional OAuth configurations.**_
-            - [server-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-runtime.zip) - Basic package - recommended for local test & development _(runtime only)_.
-            - [trial-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/trial-all.zip) - Trial package _(guest/nickname)_.
-            - [sap-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-all.zip) - SAP BTP Neo Runtime package.
-            - [sap-all-ephemeral](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-all-ephemeral.zip) - SAP BTP Neo Runtime package _(ephemeral database & repository)_.
-            - [sap-cms](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-cms.zip) - SAP BTP Neo Runtime package _(content management only)_.
+            - _**[server-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-all.zip) - Basic package - recommended for local test & development.**_
+            - [server-minimal](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-minimal.zip) - Minimal package still containing the WebIDE.
+            - [anonymous-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/anonymous-all.zip) - Anonymous access.
+            - [anonymous-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/anonymous-runtime.zip) - Anonymous access _(runtime only)_.
+            - [sap-cf-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-cf-all.zip) - SAP Cloud Platform - Cloud Foundry environment.
+            - [sap-cf-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-cf-runtime.zip) - SAP Cloud Platform - Cloud Foundry environment _(runtime only)_.
+            - [desktop-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/desktop-all.zip) - Desktop package.
+            - [server-oauth](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-oauth.zip) - Basic package - recommended for local test & development, _**requires additional OAuth configurations.**_
+            - [server-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-runtime.zip) - Basic package - recommended for local test & development _(runtime only)_.
+            - [trial-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/trial-all.zip) - Trial package _(guest/nickname)_.
+            - [sap-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-all.zip) - SAP BTP Neo Runtime package.
+            - [sap-all-ephemeral](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-all-ephemeral.zip) - SAP BTP Neo Runtime package _(ephemeral database & repository)_.
+            - [sap-cms](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-cms.zip) - SAP BTP Neo Runtime package _(content management only)_.
             
           > _**Note:** Unzip the downloaded file to extract the `ROOT.war` binary._
           
@@ -517,7 +517,7 @@ jobs:
     - name: Helm Charts Release - Set Chart Version - Dirigible
       run: |
         cd charts-temp/helm-charts/dirigible/
-        find *.yaml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ env.DIRIGIBLE_VERSION }}/g'' {} \;
+        find *.yaml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ github.event.inputs.releaseVersion }}/g'' {} \;
 
     - name: Helm Charts Release
       run: |
