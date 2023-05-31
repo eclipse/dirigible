@@ -140,7 +140,7 @@ public class TablesSynchronizerTest {
 		Table table = new Table(location, name, description, dependencies, "TABLE", null);
 		table.addColumn(name + "_1", "VARCHAR", "20", true, false, "", "0", false);
 		table.addColumn(name + "_2", "VARCHAR", "20", true, false, "", "0", false);
-		table.addIndex(name + "_1", "", true, new String[] { name + "_1"});
+		table.addIndex(name + "_1", "", true, null, new String[] { name + "_1"});
 		tableRepository.save(table);
 		return table;
 	}

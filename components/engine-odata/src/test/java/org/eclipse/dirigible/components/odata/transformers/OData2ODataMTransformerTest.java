@@ -70,7 +70,7 @@ public class OData2ODataMTransformerTest {
         model = new Table("ITEMS");
         TableColumn column3 = new TableColumn("Id", "Edm.Int32", "0", true, true, model);
         TableColumn column4 = new TableColumn("OrderId", "Edm.Int32", "0", model);
-        TableConstraintForeignKey rel = new TableConstraintForeignKey("ORDERS", "OrderId", "Id", model.getConstraints());
+        TableConstraintForeignKey rel = new TableConstraintForeignKey("ORDERS", null, "OrderId", "Id", model.getConstraints());
         
         when(odataDatabaseMetadataUtil.getTableMetadata("ITEMS", null)).thenReturn(model);
 
@@ -126,7 +126,7 @@ public class OData2ODataMTransformerTest {
         model = new Table("ITEMS");
         TableColumn column3 = new TableColumn("ITEM_ID", "Edm.Int32", "0", true, true, model);
         TableColumn column4 = new TableColumn("ORDER_ID", "Edm.Int32", "0", model);
-        TableConstraintForeignKey rel = new TableConstraintForeignKey("ORDERS", "ORDER_ID", "ID", model.getConstraints());
+        TableConstraintForeignKey rel = new TableConstraintForeignKey("ORDERS", null, "ORDER_ID", "ID", model.getConstraints());
         
         when(odataDatabaseMetadataUtil.getTableMetadata("ITEMS", null)).thenReturn(model);
 

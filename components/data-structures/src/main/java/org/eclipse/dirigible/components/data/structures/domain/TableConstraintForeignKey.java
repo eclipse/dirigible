@@ -40,6 +40,12 @@ public class TableConstraintForeignKey extends TableConstraint {
 	@Nullable
 	@Expose
 	private String referencedTable;
+
+	/** The referenced schema. */
+	@Column(name = "FOREIGNKEY_REF_SCHEMA", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	@Nullable
+	@Expose
+	private String referencedSchema;
 	
 	/** The referenced columns. */
 	@Column(name = "FOREIGNKEY_REF_COLUMNS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
@@ -56,13 +62,15 @@ public class TableConstraintForeignKey extends TableConstraint {
 	 * @param modifiers the modifiers
 	 * @param columns the columns
 	 * @param referencedTable the referenced table
+	 * @param referencedSchema the referenced schema
 	 * @param referencedColumns the referenced columns
 	 * @param constraints the constraints
 	 */
 	public TableConstraintForeignKey(String name, String[] modifiers, String[] columns,
-			String referencedTable, String[] referencedColumns, TableConstraints constraints) {
+			String referencedTable, String referencedSchema, String[] referencedColumns, TableConstraints constraints) {
 		super(name, modifiers, columns, constraints);
 		this.referencedTable = referencedTable;
+		this.referencedSchema = referencedSchema;
 		this.referencedColumns = referencedColumns;
 		this.constraints.getForeignKeys().add(this);
 	}
@@ -71,16 +79,16 @@ public class TableConstraintForeignKey extends TableConstraint {
 	 * Instantiates a new table constraint foreign key.
 	 *
 	 * @param referencedTable the referenced table
+	 * @param referencedSchema the referenced schema
 	 * @param columnName the column name
 	 * @param referencedColumnName the referenced column name
 	 * @param constraints the constraints
 	 */
-	public TableConstraintForeignKey(String referencedTable, String columnName, String referencedColumnName, TableConstraints constraints) {
+	public TableConstraintForeignKey(String referencedTable, String referencedSchema, String columnName, String referencedColumnName, TableConstraints constraints) {
 		this(constraints.getTable().getName() + "_" + referencedTable, null,
-				new String[] {columnName}, referencedTable, new String[] {referencedColumnName}, constraints);
+				new String[] {columnName}, referencedTable, referencedSchema, new String[] {referencedColumnName}, constraints);
 	}
-	
-	
+
 
 	/**
 	 * Instantiates a new table constraint foreign key.
@@ -123,6 +131,24 @@ public class TableConstraintForeignKey extends TableConstraint {
 	 */
 	public void setReferencedTable(String referencedTable) {
 		this.referencedTable = referencedTable;
+	}
+
+	/**
+	 * Gets the referenced schema.
+	 *
+	 * @return the referenced schema
+	 */
+	public String getReferencedSchema() {
+		return referencedSchema;
+	}
+
+	/**
+	 * Sets the referenced schema.
+	 *
+	 * @param referencedSchema the new referenced schema
+	 */
+	public void setReferencedSchema(String referencedSchema) {
+		this.referencedSchema = referencedSchema;
 	}
 
 	/**

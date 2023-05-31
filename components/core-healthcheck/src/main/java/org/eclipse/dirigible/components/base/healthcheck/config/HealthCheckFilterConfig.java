@@ -29,7 +29,7 @@ public class HealthCheckFilterConfig {
      * @return the filter registration bean
      */
     @Bean
-    public FilterRegistrationBean<HealthCheckFilter> securityFilterRegistrationBean(HealthCheckFilter healthCheckFilter) {
+    public FilterRegistrationBean<HealthCheckFilter> healthCheckFilterRegistrationBean(HealthCheckFilter healthCheckFilter) {
         FilterRegistrationBean<HealthCheckFilter> filterRegistrationBean = new FilterRegistrationBean<>(healthCheckFilter);
 
         filterRegistrationBean.setFilter(healthCheckFilter);

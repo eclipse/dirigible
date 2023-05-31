@@ -57,7 +57,7 @@ public class OData2ODataTransformerTestUtil {
         TableColumn column6 = new TableColumn("PROPERTY3", "Edm.String", "0", model);
         TableColumn column7 = new TableColumn("PROPERTY4_5", "Edm.Int32", "0", model);
         TableColumn column8 = new TableColumn("ENTITY1ENTITY1ID", "Edm.Int32", "0", model);
-        TableConstraintForeignKey rel = new TableConstraintForeignKey("ENTITY1ID", "ENTITY1ENTITY1ID", "ENTITY1ID", model.getConstraints());
+        TableConstraintForeignKey rel = new TableConstraintForeignKey("ENTITY1ID", "ENTITY1ENTITY1ID", "ENTITY1ID", null, model.getConstraints());
         
         when(odataDatabaseMetadataUtil.getTableMetadata("ENTITY2", null)).thenReturn(model);
 

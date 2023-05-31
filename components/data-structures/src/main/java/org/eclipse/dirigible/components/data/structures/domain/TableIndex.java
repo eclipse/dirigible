@@ -60,6 +60,11 @@ public class TableIndex {
 	@Column(name = "INDEX_UNIQUE", columnDefinition = "BOOLEAN", nullable = true)
 	@Expose
 	private boolean unique;
+
+	/** The order. */
+	@Column(name = "INDEX_ORDER", columnDefinition = "VARCHAR", nullable = true, length = 20)
+	@Expose
+	private String order;
     
     /** The index columns. */
 	@Column(name = "INDEX_COLUMNS", columnDefinition = "VARCHAR", nullable = false, length = 2000)
@@ -84,11 +89,12 @@ public class TableIndex {
 	 * @param columns the columns
 	 * @param table the table
 	 */
-	TableIndex(String name, String type, boolean unique, String[] columns, Table table) {
+	public TableIndex(String name, String type, boolean unique, String order, String[] columns, Table table) {
 		super();
 		this.name = name;
 		this.type = type;
 		this.unique = unique;
+		this.order = order;
 		this.columns = columns;
 		this.table = table;
 		this.table.getIndexes().add(this);
@@ -174,6 +180,24 @@ public class TableIndex {
 	}
 
 	/**
+	 * Gets the order.
+	 *
+	 * @return the order
+	 */
+	public String getOrder() {
+		return order;
+	}
+
+	/**
+	 * Sets the order.
+	 *
+	 * @param order the order to set
+	 */
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
+	/**
 	 * Gets the columns.
 	 *
 	 * @return the columns
@@ -216,7 +240,7 @@ public class TableIndex {
 	 */
 	@Override
 	public String toString() {
-		return "TableIndex [id=" + id + ", name=" + name + ", type=" + type + ", unique=" + unique + ", columns="
+		return "TableIndex [id=" + id + ", name=" + name + ", type=" + type + ", unique=" + unique + ", order=" + order + ", columns="
 				+ columns + ", table=" + table.getName() + "]";
 	}
 	

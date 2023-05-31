@@ -324,8 +324,8 @@ public class Table extends Artefact {
 	 * @param columns the columns
 	 * @return the table index
 	 */
-	public TableIndex addIndex(String name, String type, boolean unique, String[] columns) {
-		TableIndex tableIndex = new TableIndex(name, type, unique, columns, this);
+	public TableIndex addIndex(String name, String type, boolean unique, String order, String[] columns) {
+		TableIndex tableIndex = new TableIndex(name, type, unique, order, columns, this);
 		indexes.add(tableIndex);
 		return tableIndex;
 	}

@@ -171,7 +171,10 @@ public interface DatabaseParameters {
     
     /** The Constant JDBC_PK_TABLE_NAME_PROPERTY. */
     public static final String JDBC_PK_TABLE_NAME_PROPERTY = "PKTABLE_NAME";
-    
+
+	/** The Constant JDBC_PK_TABLE_NAME_PROPERTY. */
+	public static final String JDBC_PK_SCHEMA_NAME_PROPERTY = "PKTABLE_SCHEM";
+
     /** The Constant JDBC_FK_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_FK_COLUMN_NAME_PROPERTY = "FKCOLUMN_NAME";
     

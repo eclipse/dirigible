@@ -59,7 +59,7 @@ public class DataSourceSystemConfig {
 		em.setDataSource(dataSource);
 		String[] packages = dirigibleScanPackages.split(",");
 		em.setPackagesToScan(packages);
-		
+
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);
 
