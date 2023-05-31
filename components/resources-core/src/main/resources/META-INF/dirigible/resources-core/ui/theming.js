@@ -95,19 +95,29 @@ angular.module('ideTheming', ['ngResource', 'ideMessageHub'])
                 return theme.type || 'light';
             }
         }
-    }).directive('theme', ['Theme', 'messageHub', function (Theme, messageHub) {
+    }).directive('theme', ['Theme', 'messageHub', '$document', function (Theme, messageHub, $document) {
         return {
             restrict: 'E',
             replace: true,
             transclude: false,
             link: function (scope) {
                 scope.links = Theme.getLinks();
+                if (Theme.getType() === 'dark') {
+                    $document[0].body.classList.add("dg-dark");
+                } else $document[0].body.classList.add("dg-light");
                 messageHub.onDidReceiveMessage(
                     'ide.themeChange',
                     function () {
                         scope.$apply(function () {
                             Theme.reload();
                             scope.links = Theme.getLinks();
+                            if (Theme.getType() === 'dark') {
+                                $document[0].body.classList.add("dg-dark");
+                                $document[0].body.classList.remove("dg-light");
+                            } else {
+                                $document[0].body.classList.add("dg-light");
+                                $document[0].body.classList.remove("dg-dark");
+                            }
                         });
                     },
                     true

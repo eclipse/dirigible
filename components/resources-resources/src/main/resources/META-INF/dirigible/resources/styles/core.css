@@ -43,11 +43,19 @@ html {
   font-size: 16px;
 }
 body {
-  background: var(--sapBackgroundColor, #f7f7f7);
+  background: transparent;
   font-size: var(--sapFontSize, .875rem);
   line-height: var(--sapContent_LineHeight, 1.4);
   color: var(--sapTextColor, #32363a);
   font-family: var(--sapFontFamily, "72", "72full", Arial, Helvetica, sans-serif);
+}
+body.dg-dark {
+  background: var(--sapBackgroundColor, #1c2228);
+  color: var(--sapTextColor, #fafafa);
+}
+body.dg-light {
+  background: var(--sapBackgroundColor, #f7f7f7);
+  color: var(--sapTextColor, #32363a);
 }
 .dg-hidden {
   display: none;
