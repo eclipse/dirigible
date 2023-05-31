@@ -64,10 +64,10 @@ public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBu
 		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
 		String tableType = "";
 
-		if (this.tableType.equalsIgnoreCase(KEYWORD_COLUMN)) {
+		if (this.tableType.equalsIgnoreCase(KEYWORD_COLUMN) || this.tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)) {
 			tableType = KEYWORD_COLUMN;
 		}
-		else if (this.tableType.equalsIgnoreCase(KEYWORD_ROW)) {
+		else if (this.tableType.equalsIgnoreCase(KEYWORD_ROW) || this.tableType.equalsIgnoreCase(KEYWORD_ROWSTORE)) {
 			tableType = KEYWORD_ROW;
 		}
 		else if (this.tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY)) {

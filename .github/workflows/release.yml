@@ -92,7 +92,7 @@ jobs:
 
     - name: "Git: Commit Release Version"
       run: |
-        git add .
+        git add **/pom.xml
         git commit -m "version set to ${{ github.event.inputs.releaseVersion }} for release"
         git checkout -b ${{ github.event.inputs.releaseVersion }}
         git checkout ${{ github.event.inputs.branch }}
@@ -102,7 +102,7 @@ jobs:
 
     - name: "Git: Commit Snapshot Version"
       run: |
-        git add .
+        git add **/pom.xml
         git commit -m "version set to ${{ github.event.inputs.snapshotVersion }} for development"
 
 #---------------Publish to Maven Central-----------------#
@@ -171,7 +171,7 @@ jobs:
 
     - name: "Git: Push Changes"
       run: |
-        git push origin ${{ github.event.inputs.releaseVersion }}
+        git push --set-upstream origin ${{ github.event.inputs.releaseVersion }}
         git push
 
 #----------------Publish Helm Release------------------#

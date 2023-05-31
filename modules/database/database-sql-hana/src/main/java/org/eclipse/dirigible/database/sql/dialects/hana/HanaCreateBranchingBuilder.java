@@ -54,7 +54,9 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	@Override
 	public HanaCreateTableBuilder table(String table, String tableType) {
 		if(tableType.equalsIgnoreCase(KEYWORD_COLUMN)
+				|| tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)
 				|| tableType.equalsIgnoreCase(KEYWORD_ROW)
+				|| tableType.equalsIgnoreCase(KEYWORD_ROWSTORE)
 				|| tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY)
 				|| tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY_COLUMN)
 		){
