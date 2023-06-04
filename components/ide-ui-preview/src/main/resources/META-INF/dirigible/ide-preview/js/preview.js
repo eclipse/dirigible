@@ -21,7 +21,7 @@ const defaultParameters = `{
 }`;
 
 previewView.controller('PreviewController', ['$scope', 'messageHub', function ($scope, messageHub) {
-    $scope.customizeLabel = "Customize data parameters";
+    $scope.customizeLabel = "Set custom view parameters";
     $scope.reloadLabel = "Reload";
     $scope.backLabel = "Go back";
     $scope.forwardLabel = "Go forward";
@@ -197,11 +197,11 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
     $scope.customizeParameters = function () {
         messageHub.showFormDialog(
             "previewCustomizeDataParameters",
-            "Customize view data parameters",
+            "Set custom ViewParameters",
             [{
                 id: "pdpta",
                 type: "textarea",
-                label: "JSON ViewParameters data",
+                label: "JSON data",
                 placeholder: defaultParameters,
                 rows: 10,
                 value: $scope.customParameters,
@@ -219,7 +219,7 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
             "preview.formDialog.data-parameters",
             "Applying data...",
             "",
-            "Data will be passed to the 'data-paremeters' iframe attribute (ViewParameters)."
+            "Data will be passed to the 'data-parameters' iframe attribute (ViewParameters)."
         );
     };
 
