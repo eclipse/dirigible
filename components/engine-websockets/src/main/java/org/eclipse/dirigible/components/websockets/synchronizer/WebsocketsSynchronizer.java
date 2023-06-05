@@ -28,6 +28,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.websockets.domain.Websocket;
 import org.eclipse.dirigible.components.websockets.service.WebsocketService;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(120)
+@Order(SynchronizersOrder.WEBSOCKET)
 public class WebsocketsSynchronizer<A extends Artefact> implements Synchronizer<Websocket> {
     
     /** The Constant logger. */

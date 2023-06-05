@@ -31,6 +31,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.Schema;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
@@ -60,7 +61,7 @@ import com.google.gson.JsonObject;
  * @param <A> the generic type
  */
 @Component
-@Order(230)
+@Order(SynchronizersOrder.SCHEMA)
 public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Schema> {
 	
 	/** The Constant logger. */

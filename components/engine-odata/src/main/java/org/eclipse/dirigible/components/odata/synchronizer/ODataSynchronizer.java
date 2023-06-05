@@ -29,6 +29,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.odata.domain.OData;
 import org.eclipse.dirigible.components.odata.domain.ODataContainer;
 import org.eclipse.dirigible.components.odata.domain.ODataHandler;
@@ -55,7 +56,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(360)
+@Order(SynchronizersOrder.ODATA)
 public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData> {
 
     /** The Constant logger. */

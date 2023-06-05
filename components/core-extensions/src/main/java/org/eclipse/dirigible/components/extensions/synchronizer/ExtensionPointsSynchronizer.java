@@ -26,6 +26,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
 import org.eclipse.dirigible.components.extensions.service.ExtensionPointService;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(10)
+@Order(SynchronizersOrder.EXTENSIONPOINT)
 public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchronizer<ExtensionPoint> {
 	
 	/** The Constant logger. */

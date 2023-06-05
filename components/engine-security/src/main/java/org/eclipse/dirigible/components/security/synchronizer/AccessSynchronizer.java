@@ -28,6 +28,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.security.domain.Access;
 import org.eclipse.dirigible.components.security.domain.Constraints;
 import org.eclipse.dirigible.components.security.service.AccessService;
@@ -44,7 +45,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@Order(40)
+@Order(SynchronizersOrder.ACCESS)
 public class AccessSynchronizer<A extends Artefact> implements Synchronizer<Access> {
 
     /**

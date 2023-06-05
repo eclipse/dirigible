@@ -26,6 +26,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.domain.DataSourceProperty;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
@@ -41,7 +42,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(200)
+@Order(SynchronizersOrder.DATASOURCE)
 public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer<DataSource> {
 	
 	/** The Constant logger. */

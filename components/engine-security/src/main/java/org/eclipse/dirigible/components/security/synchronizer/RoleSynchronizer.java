@@ -27,6 +27,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.security.service.RoleService;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@Order(30)
+@Order(SynchronizersOrder.ROLE)
 public class RoleSynchronizer<A extends Artefact> implements Synchronizer<Role> {
 
     /**

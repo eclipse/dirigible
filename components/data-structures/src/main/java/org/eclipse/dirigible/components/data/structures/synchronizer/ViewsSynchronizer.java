@@ -29,6 +29,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.structures.domain.View;
 import org.eclipse.dirigible.components.data.structures.service.ViewService;
@@ -47,7 +48,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(220)
+@Order(SynchronizersOrder.VIEW)
 public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View> {
 	
 	/** The Constant logger. */

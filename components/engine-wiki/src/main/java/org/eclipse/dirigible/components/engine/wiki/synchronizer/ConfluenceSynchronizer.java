@@ -27,6 +27,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDeplet
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.engine.wiki.domain.Confluence;
 import org.eclipse.dirigible.components.engine.wiki.service.ConfluenceService;
 import org.eclipse.dirigible.components.engine.wiki.service.WikiService;
@@ -42,7 +43,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(70)
+@Order(SynchronizersOrder.CONFLUENCE)
 public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<Confluence> {
 	
 	/** The Constant logger. */

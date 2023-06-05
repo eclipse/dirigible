@@ -26,6 +26,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDeplet
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.data.store.DataStore;
 import org.eclipse.dirigible.components.data.store.domain.Entity;
 import org.eclipse.dirigible.components.data.store.service.EntityService;
@@ -41,7 +42,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(290)
+@Order(SynchronizersOrder.ENTITY)
 public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Entity> {
 	
 	/** The Constant logger. */

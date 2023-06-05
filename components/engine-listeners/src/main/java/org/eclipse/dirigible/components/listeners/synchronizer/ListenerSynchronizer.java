@@ -27,6 +27,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.listeners.domain.Listener;
 import org.eclipse.dirigible.components.listeners.service.ListenerService;
 import org.eclipse.dirigible.components.listeners.service.ListenersManager;
@@ -42,7 +43,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(60)
+@Order(SynchronizersOrder.LISTENER)
 public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Listener> {
 
     /** The Constant logger. */

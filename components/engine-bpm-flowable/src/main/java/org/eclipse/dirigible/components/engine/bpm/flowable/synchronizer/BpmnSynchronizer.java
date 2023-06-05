@@ -26,6 +26,7 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.engine.bpm.flowable.domain.Bpmn;
 import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
 import org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmnService;
@@ -45,7 +46,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(300)
+@Order(SynchronizersOrder.BPMN)
 public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> {
 	
 	/** The Constant logger. */

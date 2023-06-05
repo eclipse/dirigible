@@ -28,6 +28,7 @@ import org.eclipse.dirigible.components.base.project.ProjectMetadata;
 import org.eclipse.dirigible.components.base.project.ProjectMetadataUtils;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.engine.web.domain.Expose;
 import org.eclipse.dirigible.components.engine.web.exposure.ExposeManager;
 import org.eclipse.dirigible.components.engine.web.service.ExposeService;
@@ -43,7 +44,7 @@ import org.springframework.stereotype.Component;
  * @param <A> the generic type
  */
 @Component
-@Order(70)
+@Order(SynchronizersOrder.EXPOSE)
 public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Expose> {
 	
 	/** The Constant logger. */
