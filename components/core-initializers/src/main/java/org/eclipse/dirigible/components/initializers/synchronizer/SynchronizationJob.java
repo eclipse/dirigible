@@ -34,7 +34,7 @@ public class SynchronizationJob implements Job {
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationJob.class);
 	
 	/** The executor. */
-	private ExecutorService executor = Executors.newFixedThreadPool(1);
+	private static ExecutorService executor = Executors.newFixedThreadPool(1);
 	
 	/** The job service. */
 	@Autowired
