@@ -15,85 +15,103 @@ previewView.config(["messageHubProvider", function (messageHubProvider) {
     messageHubProvider.eventIdPrefix = 'preview-view';
 }]);
 
-previewView.controller('PreviewController', ['$scope', 'messageHub', function ($scope, messageHub) {
+const defaultParameters = `{
+  "container": "layout",
+  "perspectiveId": "workbench"
+}`;
 
-    this.urlLocked = false;
-    this.iframe = document.getElementById('preview-iframe');
-    this.history = {
+previewView.controller('PreviewController', ['$scope', 'messageHub', function ($scope, messageHub) {
+    $scope.customizeLabel = "Set custom view parameters";
+    $scope.reloadLabel = "Reload";
+    $scope.backLabel = "Go back";
+    $scope.forwardLabel = "Go forward";
+    $scope.urlLocked = localStorage.getItem('DIRIGIBLE.preview.urlLocked') === 'true';
+    $scope.customParameters = localStorage.getItem('DIRIGIBLE.preview.customParameters');
+    if (!$scope.customParameters) {
+        $scope.customParameters = defaultParameters;
+        localStorage.setItem('DIRIGIBLE.preview.customParameters', defaultParameters);
+    }
+    $scope.iframe = document.getElementById('preview-iframe');
+    $scope.history = {
         idx: -1,
         state: []
     };
 
-    this.reload = function () {
-        let iframeDocument = this.iframe.contentDocument || this.contentWindow.document;
+    $scope.urlLockedToggle = function () {
+        $scope.urlLocked = !$scope.urlLocked;
+        localStorage.setItem('DIRIGIBLE.preview.urlLocked', `${$scope.urlLocked}`);
+    };
+
+    $scope.reload = function () {
+        let iframeDocument = $scope.iframe.contentDocument || $scope.contentWindow.document;
         if (iframeDocument) {
             iframeDocument.location.reload(true);
         }
-    }
+    };
 
-    this.getCurrentUrl = function () {
-        return this.history.state[this.history.idx];
-    }
+    $scope.getCurrentUrl = function () {
+        return $scope.history.state[$scope.history.idx];
+    };
 
-    this.hasBack = function () {
-        return this.history.idx > 0;
-    }
+    $scope.hasBack = function () {
+        return $scope.history.idx > 0;
+    };
 
-    this.hasForward = function () {
-        return this.history.idx < this.history.state.length - 1;
-    }
+    $scope.hasForward = function () {
+        return $scope.history.idx < $scope.history.state.length - 1;
+    };
 
-    this.goBack = function () {
-        if (this.hasBack()) {
-            const url = this.history.state[--this.history.idx];
-            this.replaceLocationUrl(url);
+    $scope.goBack = function () {
+        if ($scope.hasBack()) {
+            const url = $scope.history.state[--$scope.history.idx];
+            $scope.replaceLocationUrl(url);
         }
-    }
+    };
 
-    this.goForward = function () {
-        if (this.hasForward()) {
-            const url = this.history.state[++this.history.idx];
-            this.replaceLocationUrl(url);
+    $scope.goForward = function () {
+        if ($scope.hasForward()) {
+            const url = $scope.history.state[++$scope.history.idx];
+            $scope.replaceLocationUrl(url);
         }
-    }
+    };
 
-    this.gotoUrl = function (url, shouldReload = true) {
-        const currentUrl = this.getCurrentUrl();
+    $scope.gotoUrl = function (url, shouldReload = true) {
+        const currentUrl = $scope.getCurrentUrl();
         if (currentUrl && currentUrl === url) {
             if (shouldReload)
-                this.reload();
+                $scope.reload();
             return;
         };
 
-        if (this.history.idx >= 0)
-            this.history.state.length = this.history.idx + 1;
+        if ($scope.history.idx >= 0)
+            $scope.history.state.length = $scope.history.idx + 1;
 
-        this.history.state.push(url);
-        this.history.idx++;
+        $scope.history.state.push(url);
+        $scope.history.idx++;
 
-        this.replaceLocationUrl(url);
-    }
+        $scope.replaceLocationUrl(url);
+    };
 
-    this.replaceLocationUrl = function (url) {
-        this.previewUrl = url;
-        this.iframe.contentWindow.location.replace(url);
-    }
+    $scope.replaceLocationUrl = function (url) {
+        $scope.previewUrl = url;
+        $scope.iframe.contentWindow.location.replace(url);
+    };
 
-    this.inputUrlKeyUp = function (e) {
+    $scope.inputUrlKeyUp = function (e) {
         switch (e.key) {
             case 'Escape': // cancel url edit
-                const currentUrl = this.getCurrentUrl();
-                this.previewUrl = currentUrl || '';
+                const currentUrl = $scope.getCurrentUrl();
+                $scope.previewUrl = currentUrl || '';
                 break;
             case 'Enter':
-                if (this.previewUrl) {
-                    this.gotoUrl(this.previewUrl);
+                if ($scope.previewUrl) {
+                    $scope.gotoUrl($scope.previewUrl);
                 }
                 break;
         }
     };
 
-    this.makeUrlFromPath = function (resourcePath) {
+    $scope.makeUrlFromPath = function (resourcePath) {
         let url = window.location.protocol + '//' + window.location.host + window.location.pathname.substring(window.location.pathname.indexOf('/web/'), 0);
         let type = resourcePath.substring(resourcePath.lastIndexOf('.') + 1);
         let isOData = resourcePath.endsWith(".odata");
@@ -174,47 +192,108 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
             url += resourcePath;
         }
         return url;
-    }
+    };
+
+    $scope.customizeParameters = function () {
+        messageHub.showFormDialog(
+            "previewCustomizeDataParameters",
+            "Set custom ViewParameters",
+            [{
+                id: "pdpta",
+                type: "textarea",
+                label: "JSON data",
+                placeholder: defaultParameters,
+                rows: 10,
+                value: $scope.customParameters,
+            }],
+            [{
+                id: "b1",
+                type: "emphasized",
+                label: "Apply",
+            },
+            {
+                id: "b2",
+                type: "transparent",
+                label: "Cancel",
+            }],
+            "preview.formDialog.data-parameters",
+            "Applying data...",
+            "",
+            "Data will be passed to the 'data-parameters' iframe attribute (ViewParameters)."
+        );
+    };
+
+    messageHub.onDidReceiveMessage(
+        "preview.formDialog.data-parameters",
+        function (msg) {
+            if (msg.data.buttonId === "b1") {
+                let customData;
+                try {
+                    customData = JSON.parse(msg.data.formData[0].value)
+                } catch (error) {
+                    console.error(error);
+                    msg.data.formData[0].error = true;
+                    msg.data.formData[0].errorMsg = "Input is not a valid JSON.";
+                }
+                if (msg.data.formData[0].error) {
+                    messageHub.updateFormDialog(
+                        "previewCustomizeDataParameters",
+                        msg.data.formData,
+                        "Applying data...",
+                        "Input is not a valid JSON"
+                    );
+                } else {
+                    $scope.customParameters = JSON.stringify(customData, null, 2);
+                    localStorage.setItem('DIRIGIBLE.preview.customParameters', $scope.customParameters);
+                    messageHub.hideFormDialog("previewCustomizeDataParameters");
+                    $scope.reload();
+                }
+            } else {
+                messageHub.hideFormDialog("previewCustomizeDataParameters");
+            }
+        },
+        true
+    );
 
     messageHub.onFileSelected((fileDescriptor) => {
-        if (this.urlLocked)
+        if ($scope.urlLocked)
             return;
 
-        let url = this.makeUrlFromPath(fileDescriptor.path);
+        let url = $scope.makeUrlFromPath(fileDescriptor.path);
         if (url) {
-            this.gotoUrl(url, false);
+            $scope.gotoUrl(url, false);
             $scope.$apply();
         }
     });
 
     messageHub.onPublish((fileDescriptor) => {
-        if (this.urlLocked)
+        if ($scope.urlLocked)
             return;
 
         if (fileDescriptor.path) {
-            let url = this.makeUrlFromPath(fileDescriptor.path);
+            let url = $scope.makeUrlFromPath(fileDescriptor.path);
             if (url) {
-                this.gotoUrl(url);
+                $scope.gotoUrl(url);
                 $scope.$apply();
             }
         } else {
-            this.reload();
+            $scope.reload();
             $scope.$apply();
         }
     });
 
     messageHub.onUnpublish((fileDescriptor) => {
-        if (this.urlLocked)
+        if ($scope.urlLocked)
             return;
 
         if (fileDescriptor.path) {
-            let url = this.makeUrlFromPath(fileDescriptor.path);
+            let url = $scope.makeUrlFromPath(fileDescriptor.path);
             if (url) {
-                this.gotoUrl(url);
+                $scope.gotoUrl(url);
                 $scope.$apply();
             }
         } else {
-            this.reload();
+            $scope.reload();
             $scope.$apply();
         }
     });
