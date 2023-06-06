@@ -48,6 +48,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class WebEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -57,30 +60,39 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class WebEndpointTest {
 	
+	/** The expose repository. */
 	@Autowired
 	private ExposeRepository exposeRepository;
 	
+	/** The mock mvc. */
 	@Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 	
+	/** The synchronization processor. */
 	@Autowired
 	private SynchronizationProcessor synchronizationProcessor;
 	
+	/** The classpath expander. */
 	@Autowired
 	private ClasspathExpander classpathExpander;
 	
+	/** The synchronization watcher. */
 	@Autowired
 	private SynchronizationWatcher synchronizationWatcher;
 	
+	/** The definition repository. */
 	@MockBean
 	DefinitionRepository definitionRepository;
 	
+	/** The project json. */
 	private String projectJson = "{\n"
 			+ "    \"guid\":\"demo\",\n"
 			+ "    \"repository\":{\n"
@@ -105,6 +117,11 @@ public class WebEndpointTest {
 		cleanup();
     }
 	
+	/**
+	 * Cleanup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@AfterEach
     public void cleanup() throws Exception {
 		exposeRepository.deleteAll();
@@ -112,7 +129,8 @@ public class WebEndpointTest {
 	
 	/**
 	 * Load the artefact.
-	 * @throws Exception 
+	 *
+	 * @throws Exception the exception
 	 */
 	@Test
     public void process() throws Exception {
@@ -144,6 +162,9 @@ public class WebEndpointTest {
 		}
     }
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

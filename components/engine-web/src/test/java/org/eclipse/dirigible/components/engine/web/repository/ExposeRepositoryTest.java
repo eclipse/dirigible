@@ -50,6 +50,7 @@ public class ExposeRepositoryTest {
 	@Autowired
 	EntityManager entityManager;
 	
+	/** The definition repository. */
 	@MockBean
 	DefinitionRepository definitionRepository;
 	
@@ -123,7 +124,7 @@ public class ExposeRepositoryTest {
 	 * @param location the location
 	 * @param name the name
 	 * @param description the description
-	 * @param dependencies the dependencies
+	 * @param exposes the exposes
 	 * @return the expose
 	 */
 	public static Expose createExpose(ExposeRepository exposeRepository, String location, String name, String description, String[] exposes) {

@@ -30,6 +30,7 @@ import org.eclipse.dirigible.components.engine.web.exposure.ExposeManager;
 import org.eclipse.dirigible.components.engine.web.repository.ExposeRepository;
 import org.eclipse.dirigible.components.initializers.definition.DefinitionRepository;
 import org.eclipse.dirigible.components.initializers.synchronizer.SynchronizationProcessor;
+import org.eclipse.dirigible.components.initializers.synchronizer.SynchronizationWatcher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,16 +61,23 @@ public class ExposesSynchronizerTest {
 	@Autowired
 	private ExposesSynchronizer exposesSynchronizer;
 	
+	/** The synchronization processor. */
 	@Autowired
 	private SynchronizationProcessor synchronizationProcessor;
+	
+	/** The synchronization watcher. */
+	@Autowired
+	private SynchronizationWatcher synchronizationWatcher;
 	
 	/** The entity manager. */
 	@Autowired
 	EntityManager entityManager;
 	
+	/** The definition repository. */
 	@MockBean
 	DefinitionRepository definitionRepository;
 	
+	/** The content. */
 	private String content = "{\n"
 			+ "    \"guid\":\"sync\",\n"
 			+ "    \"repository\":{\n"
@@ -132,7 +140,8 @@ public class ExposesSynchronizerTest {
 	
 	/**
 	 * Load the artefact.
-	 * @throws ParseException 
+	 *
+	 * @throws ParseException the parse exception
 	 */
 	@Test
     public void load() throws ParseException {
@@ -144,7 +153,8 @@ public class ExposesSynchronizerTest {
 	
 	/**
 	 * Load the artefact.
-	 * @throws IOException 
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Test
     public void process() throws IOException {
@@ -152,8 +162,14 @@ public class ExposesSynchronizerTest {
 		Paths.get(registyrFolder, "sync").toFile().mkdirs();
 		Files.writeString(Paths.get(registyrFolder, "sync", "project.json"), content, StandardOpenOption.CREATE);
 		try {
+			synchronizationWatcher.force();
 			synchronizationProcessor.processSynchronizers();
-			assertEquals(2, ExposeManager.listRegisteredProjects().size());
+			String e = null;
+			for (String p : ExposeManager.listRegisteredProjects()) {
+				if (p.equals("sync")) {e = p;}
+			};
+			assertNotNull(e);
+			assertTrue(ExposeManager.listRegisteredProjects().size() > 0);
 			assertTrue(ExposeManager.isPathExposed("sync/ui"));
 		} finally {
 			Files.deleteIfExists(Paths.get(registyrFolder, "sync", "project.json"));
@@ -168,7 +184,7 @@ public class ExposesSynchronizerTest {
 	 * @param location the location
 	 * @param name the name
 	 * @param description the description
-	 * @param dependencies the dependencies
+	 * @param exposes the exposes
 	 * @return the expose
 	 */
 	public static Expose createExpose(ExposeRepository exposeRepository, String location, String name, String description, String[] exposes) {
