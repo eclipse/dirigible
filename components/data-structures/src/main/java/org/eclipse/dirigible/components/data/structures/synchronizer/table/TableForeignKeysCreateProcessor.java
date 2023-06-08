@@ -75,7 +75,7 @@ public class TableForeignKeysCreateProcessor {
                     statement.executeUpdate();
                 } catch (SQLException e) {
                 	if (logger.isErrorEnabled()) {logger.error(sql);}
-                	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+//                	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
                     throw new SQLException(e.getMessage(), e);
                 } finally {
                     if (statement != null) {

@@ -273,7 +273,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 			
 			switch (flow) {
 			case CREATE:
-				if (table.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+				if (ArtefactLifecycle.NEW.equals(table.getLifecycle())) {
 					if (!SqlFactory.getNative(connection).exists(connection, table.getName())) {
 						try {
 							executeTableCreate(connection, table);
@@ -290,19 +290,23 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 				}
 				break;
 			case UPDATE:
-				if (table.getLifecycle().equals(ArtefactLifecycle.CREATED)) {
+				if (ArtefactLifecycle.CREATED.equals(table.getLifecycle())) {
 					if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
-						executeTableForeignKeysCreate(connection, table);
+						try {
+							executeTableForeignKeysCreate(connection, table);
+						} catch (SQLException e) {
+							if (logger.isWarnEnabled()) {logger.warn(e.getMessage());}
+						}
 					}
 				}
-				if (table.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				if (ArtefactLifecycle.MODIFIED.equals(table.getLifecycle())) {
 					executeTableUpdate(connection, table);
 					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
 				}
 				break;
 			case DELETE:
-				if (table.getLifecycle().equals(ArtefactLifecycle.CREATED)
-						|| table.getLifecycle().equals(ArtefactLifecycle.UPDATED)) { 
+				if (ArtefactLifecycle.CREATED.equals(table.getLifecycle())
+						|| ArtefactLifecycle.UPDATED.equals(table.getLifecycle())) { 
 					if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
 						if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
 							executeTableDrop(connection, table);
