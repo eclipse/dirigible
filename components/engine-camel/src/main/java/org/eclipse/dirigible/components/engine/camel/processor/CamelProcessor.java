@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.engine.camel.processor;
 
 import org.apache.camel.CamelContext;
@@ -34,9 +45,20 @@ public class CamelProcessor {
         loader = this.context.getRoutesLoader();
     }
 
-    public void process(Camel camel) {
+    public void onCreateOrUpdate(Camel camel) {
         Resource resource = ResourceHelper.fromBytes("any.yaml", camel.getContent());
         camels.put(camel.getId(), resource);
+        removeAllRoutes();
+        addAllRoutes();
+    }
+
+    public void onRemove(Camel camel) {
+        camels.remove(camel.getId());
+        removeAllRoutes();
+        addAllRoutes();
+    }
+
+    private void addAllRoutes() {
         camels.values().forEach(routesResource -> {
             try {
                 loader.loadRoutes(routesResource);
@@ -46,7 +68,7 @@ public class CamelProcessor {
         });
     }
 
-    public void clear() {
+    private void removeAllRoutes() {
         try {
             context.getRouteController().stopAllRoutes();
             context.getRouteController().removeAllRoutes();

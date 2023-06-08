@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.engine.camel.synchronizer;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
@@ -35,8 +46,8 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
     private SynchronizerCallback callback;
 
     /** The camel service. */
-    private CamelService camelService;
-    private CamelProcessor camelProcessor;
+    private final CamelService camelService;
+    private final CamelProcessor camelProcessor;
 
     /**
      * Instantiates a new camel synchronizer.
@@ -100,7 +111,9 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
             if (wrapper.getArtefact() instanceof Camel) {
                 camel = (Camel) wrapper.getArtefact();
             } else {
-                throw new UnsupportedOperationException(String.format("Trying to process %s as Camel", wrapper.getArtefact().getClass()));
+                throw new UnsupportedOperationException(
+                        String.format("Trying to process %s as Camel", wrapper.getArtefact().getClass())
+                );
             }
 
             switch (flow) {
@@ -119,6 +132,16 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
                 case DELETE:
                     if (camel.getLifecycle().equals(ArtefactLifecycle.CREATED)
                             || camel.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+                        removeFromProcessor(camel);
+                        callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+                    }
+                    break;
+                case START: {
+                        addToProcessor(camel);
+                        callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+                    }
+                    break;
+                case STOP: {
                         removeFromProcessor(camel);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     }
@@ -165,11 +188,11 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
     }
 
     private void addToProcessor(Camel camel) {
-        camelProcessor.process(camel);
+        camelProcessor.onCreateOrUpdate(camel);
     }
 
     private void removeFromProcessor(Camel camel) {
         getService().delete(camel);
-        camelProcessor.clear(); // TODO: must be remove specific camel file's resources??
+        camelProcessor.onRemove(camel);
     }
 }
