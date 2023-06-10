@@ -118,20 +118,20 @@ public class CamelSynchronizer<A extends Artefact> implements Synchronizer<Camel
 
             switch (flow) {
                 case CREATE:
-                    if (camel.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+                    if (ArtefactLifecycle.NEW.equals(camel.getLifecycle())) {
                         addToProcessor(camel);
                         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
                     }
                     break;
                 case UPDATE:
-                    if (camel.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+                    if (ArtefactLifecycle.MODIFIED.equals(camel.getLifecycle())) {
                         addToProcessor(camel);
                         callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
                     }
                     break;
                 case DELETE:
-                    if (camel.getLifecycle().equals(ArtefactLifecycle.CREATED)
-                            || camel.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+                    if (ArtefactLifecycle.CREATED.equals(camel.getLifecycle())
+                            || ArtefactLifecycle.UPDATED.equals(camel.getLifecycle())) {
                         removeFromProcessor(camel);
                         callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
                     }

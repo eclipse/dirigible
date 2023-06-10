@@ -193,20 +193,20 @@ public class ConfluenceSynchronizer<A extends Artefact> implements Synchronizer<
 		
 		switch (flow) {
 		case CREATE:
-			if (wiki.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+			if (ArtefactLifecycle.NEW.equals(wiki.getLifecycle())) {
 				wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
 				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 			}
 			break;
 		case UPDATE:
-			if (wiki.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+			if (ArtefactLifecycle.MODIFIED.equals(wiki.getLifecycle())) {
 				wikiService.generateContent(wiki.getLocation(), new String(wiki.getContent(), StandardCharsets.UTF_8));
 				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
 			}
 			break;
 		case DELETE:
-			if (wiki.getLifecycle().equals(ArtefactLifecycle.CREATED)
-					|| wiki.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+			if (ArtefactLifecycle.CREATED.equals(wiki.getLifecycle())
+					|| ArtefactLifecycle.UPDATED.equals(wiki.getLifecycle())) {
 				wikiService.removeGenerated(wiki.getLocation());
 				getService().delete(wiki);
 				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");

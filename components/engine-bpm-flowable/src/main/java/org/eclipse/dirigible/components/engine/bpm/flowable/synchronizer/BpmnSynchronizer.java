@@ -195,20 +195,20 @@ public class BpmnSynchronizer<A extends Artefact> implements Synchronizer<Bpmn> 
 			
 			switch (flow) {
 			case CREATE:
-				if (bpmn.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+				if (ArtefactLifecycle.NEW.equals(bpmn.getLifecycle())) {
 					deployOnProcessEngine(bpmn);
 					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 				}
 				break;
 			case UPDATE:
-				if (bpmn.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				if (ArtefactLifecycle.MODIFIED.equals(bpmn.getLifecycle())) {
 					updateOnProcessEngine(bpmn);
 					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
 				}
 				break;
 			case DELETE:
-				if (bpmn.getLifecycle().equals(ArtefactLifecycle.CREATED)
-						|| bpmn.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+				if (ArtefactLifecycle.CREATED.equals(bpmn.getLifecycle())
+						|| ArtefactLifecycle.UPDATED.equals(bpmn.getLifecycle())) {
 					removeFromProcessEngine(bpmn);
 					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
 				}

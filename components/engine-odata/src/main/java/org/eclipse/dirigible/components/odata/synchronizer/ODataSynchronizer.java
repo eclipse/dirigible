@@ -217,21 +217,21 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 			
 			switch (flow) {
 			case CREATE:
-				if (odata.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+				if (ArtefactLifecycle.NEW.equals(odata.getLifecycle())) {
 					generateOData(odata);
 					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 				}
 				break;
 			case UPDATE:
-				if (odata.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+				if (ArtefactLifecycle.MODIFIED.equals(odata.getLifecycle())) {
 					cleanupOData(odata);
 					generateOData(odata);
 					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
 				}
 				break;
 			case DELETE:
-				if (odata.getLifecycle().equals(ArtefactLifecycle.CREATED)
-						|| odata.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+				if (ArtefactLifecycle.CREATED.equals(odata.getLifecycle())
+						|| ArtefactLifecycle.UPDATED.equals(odata.getLifecycle())) {
 					cleanupOData(odata);
 					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
 				}

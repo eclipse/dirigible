@@ -269,9 +269,12 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 				}
 				break;
 			case DELETE:
-				executeSchemaDrop(connection, schema);
-				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
-				break;
+				if (ArtefactLifecycle.CREATED.equals(schema.getLifecycle())
+						|| ArtefactLifecycle.UPDATED.equals(schema.getLifecycle())) {
+					executeSchemaDrop(connection, schema);
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+					break;
+				}
 			case START:
 			case STOP:
 			}

@@ -169,7 +169,7 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
 		
 		switch (flow) {
 		case CREATE:
-			if (listener.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+			if (ArtefactLifecycle.NEW.equals(listener.getLifecycle())) {
 				try {
 					listenersManager.startListener(listener);
 					listener.setRunning(true);
@@ -183,7 +183,7 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
 			}
 			break;
 		case UPDATE:
-			if (listener.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+			if (ArtefactLifecycle.MODIFIED.equals(listener.getLifecycle())) {
 				try {
             		listenersManager.stopListener(listener);
             		listener.setRunning(false);
@@ -200,8 +200,8 @@ public class ListenerSynchronizer<A extends Artefact> implements Synchronizer<Li
 			}
 			break;
 		case DELETE:
-			if (listener.getLifecycle().equals(ArtefactLifecycle.CREATED)
-					|| listener.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+			if (ArtefactLifecycle.CREATED.equals(listener.getLifecycle())
+					|| ArtefactLifecycle.UPDATED.equals(listener.getLifecycle())) {
 				try {
             		listenersManager.stopListener(listener);
             		listener.setRunning(false);

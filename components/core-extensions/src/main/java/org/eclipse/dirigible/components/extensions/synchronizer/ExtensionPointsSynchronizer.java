@@ -172,18 +172,18 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 		
 		switch (flow) {
 		case CREATE:
-			if (extensionPoint.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+			if (ArtefactLifecycle.NEW.equals(extensionPoint.getLifecycle())) {
 				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 			}
 			break;
 		case UPDATE:
-			if (extensionPoint.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+			if (ArtefactLifecycle.MODIFIED.equals(extensionPoint.getLifecycle())) {
 				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
 			}
 			break;
 		case DELETE:
-			if (extensionPoint.getLifecycle().equals(ArtefactLifecycle.CREATED)
-					|| extensionPoint.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+			if (ArtefactLifecycle.CREATED.equals(extensionPoint.getLifecycle())
+					|| ArtefactLifecycle.UPDATED.equals(extensionPoint.getLifecycle())) {
 				try {
             		getService().delete(extensionPoint);
 					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");

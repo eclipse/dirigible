@@ -204,7 +204,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
 		
 		switch (flow) {
 		case CREATE:
-			if (job.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+			if (ArtefactLifecycle.NEW.equals(job.getLifecycle())) {
 				try {
 					schedulerManager.scheduleJob(job);
 					job.setRunning(true);
@@ -218,7 +218,7 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
 			}
 			break;
 		case UPDATE:
-			if (job.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+			if (ArtefactLifecycle.MODIFIED.equals(job.getLifecycle())) {
 				try {
             		schedulerManager.unscheduleJob(job.getName(), job.getGroup());
             		job.setRunning(false);
@@ -235,8 +235,8 @@ public class JobSynchronizer<A extends Artefact> implements Synchronizer<Job> {
 			}
 			break;
 		case DELETE:
-			if (job.getLifecycle().equals(ArtefactLifecycle.CREATED)
-					|| job.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+			if (ArtefactLifecycle.CREATED.equals(job.getLifecycle())
+					|| ArtefactLifecycle.UPDATED.equals(job.getLifecycle())) {
 				try {
             		schedulerManager.unscheduleJob(job.getName(), job.getGroup());
             		job.setRunning(false);

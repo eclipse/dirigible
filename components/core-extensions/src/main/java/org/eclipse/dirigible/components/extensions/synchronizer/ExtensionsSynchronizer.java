@@ -177,18 +177,18 @@ public class ExtensionsSynchronizer<A extends Artefact> implements Synchronizer<
 		
 		switch (flow) {
 		case CREATE:
-			if (extension.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+			if (ArtefactLifecycle.NEW.equals(extension.getLifecycle())) {
 				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 			}
 			break;
 		case UPDATE:
-			if (extension.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+			if (ArtefactLifecycle.MODIFIED.equals(extension.getLifecycle())) {
 				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
 			}
 			break;
 		case DELETE:
-			if (extension.getLifecycle().equals(ArtefactLifecycle.CREATED)
-					|| extension.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+			if (ArtefactLifecycle.CREATED.equals(extension.getLifecycle())
+					|| ArtefactLifecycle.UPDATED.equals(extension.getLifecycle())) {
 				try {
             		getService().delete(extension);
 					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
