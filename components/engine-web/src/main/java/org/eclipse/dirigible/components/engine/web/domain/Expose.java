@@ -15,6 +15,7 @@ import java.util.Arrays;
 
 import javax.annotation.Nullable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,6 +25,7 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
+import org.eclipse.dirigible.components.base.converters.ArrayOfStringsToCsvConverter;
 
 /**
  * The Class Expose.
@@ -49,8 +51,9 @@ public class Expose extends Artefact {
 	/** The exposes. */
 	@Column(name = "EXPOSE_EXPOSES", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Nullable
-	@ElementCollection
-	@OrderColumn
+//	@ElementCollection
+//	@OrderColumn
+	@Convert(converter = ArrayOfStringsToCsvConverter.class)
 	@com.google.gson.annotations.Expose
 	private String[] exposes = new String[] {};
 	

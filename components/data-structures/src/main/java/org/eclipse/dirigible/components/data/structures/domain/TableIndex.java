@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,6 +27,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 
+import org.eclipse.dirigible.components.base.converters.ArrayOfStringsToCsvConverter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.Transient;
@@ -68,8 +70,9 @@ public class TableIndex {
     
     /** The index columns. */
 	@Column(name = "INDEX_COLUMNS", columnDefinition = "VARCHAR", nullable = false, length = 2000)
-	@ElementCollection
-	@OrderColumn
+//	@ElementCollection
+//	@OrderColumn
+	@Convert(converter = ArrayOfStringsToCsvConverter.class)
 	@Expose
     private String[] columns;
 	

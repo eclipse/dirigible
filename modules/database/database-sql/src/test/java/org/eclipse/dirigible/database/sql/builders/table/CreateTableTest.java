@@ -246,11 +246,11 @@ public class CreateTableTest {
                 .table("CUSTOMERS")
                 .column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
                 .column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
-                .index("NAMES_INDEX", false, "", new HashSet<>(List.of("FIRST_NAME", "LAST_NAME")))
+                .index("NAMES_INDEX", false, "", "", new HashSet<>(List.of("FIRST_NAME", "LAST_NAME")))
                 .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE TABLE CUSTOMERS ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) ); CREATE  INDEX NAMES_INDEX ON CUSTOMERS ( LAST_NAME , FIRST_NAME )",
+        assertEquals("CREATE TABLE CUSTOMERS ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) ); CREATE  INDEX NAMES_INDEX ON CUSTOMERS ( LAST_NAME , FIRST_NAME ) ",
                 sql);
     }
 

@@ -237,15 +237,17 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
      *
      * @param name    the name
      * @param isUnique    the isUnique
+     * @param order the order
      * @param type the type
      * @param columns the index columns
      * @return the creates the table builder
      */
-    public TABLE_BUILDER index(String name, Boolean isUnique, String type, Set<String> columns) {
+    public TABLE_BUILDER index(String name, Boolean isUnique, String order, String type, Set<String> columns) {
     	if (logger.isTraceEnabled()) {logger.trace("index: " + name + ", isUnique" + isUnique + ", type" + type + ", columns" + columns);}
     	CreateTableIndexBuilder index = new CreateTableIndexBuilder(getDialect(), name);
     	index.setIndexType(type);
     	index.setUnique(isUnique);
+        index.setOrder(order);
     	index.setColumns(columns);
     	this.indices.add(index);
         return (TABLE_BUILDER) this;

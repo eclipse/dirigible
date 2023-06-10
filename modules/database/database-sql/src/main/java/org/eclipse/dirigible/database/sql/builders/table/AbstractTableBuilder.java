@@ -134,7 +134,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param columns the list of the columns names
      * @return the table builder
      */
-    public TABLE_BUILDER index(String name, Boolean isUnique, String type, Set<String> columns) {
+    public TABLE_BUILDER index(String name, Boolean isUnique, String order, String type, Set<String> columns) {
         throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
 
