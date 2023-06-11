@@ -98,7 +98,7 @@ public class Table extends Artefact {
 	 * @param kind the kind
 	 * @param schema the schema name
 	 */
-	public Table(String location, String name, String description, String dependencies, String kind, String schema) {
+	public Table(String location, String name, String description, List<String> dependencies, String kind, String schema) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.constraints = new TableConstraints(this);
 		this.kind = kind;

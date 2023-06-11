@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,11 +58,11 @@ public class JobLogRepositoryTest {
     public void setup() throws Exception {
         cleanup();
         // create test Tables
-        createJobLog(jobLogRepository, "/a/b/c/jobLog1.jobLog", "jobLog1", "description", "",
+        createJobLog(jobLogRepository, "/a/b/c/jobLog1.jobLog", "jobLog1", "description", null,
                 "job1", "test-handler.js", new Timestamp(1667667600), 1L, new Timestamp(1667667660), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
-        createJobLog(jobLogRepository, "/a/b/c/jobLog2.jobLog", "jobLog2", "description", "",
+        createJobLog(jobLogRepository, "/a/b/c/jobLog2.jobLog", "jobLog2", "description", null,
                 "job2", "test-handler.js", new Timestamp(1667667720), 2L, new Timestamp(1667667780), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
-        createJobLog(jobLogRepository, "/a/b/c/jobLog3.jobLog", "jobLog3", "description", "",
+        createJobLog(jobLogRepository, "/a/b/c/jobLog3.jobLog", "jobLog3", "description", null,
                 "job3", "test-handler.js", new Timestamp(1667667840), 3L, new Timestamp(1667667900), JobLog.JOB_LOG_STATUS_LOGGED, "job logged");
     }
 
@@ -130,7 +131,7 @@ public class JobLogRepositoryTest {
      * @param status the status
      * @param message the message
      */
-    public static void createJobLog(JobLogRepository jobLogRepository, String location, String name, String description, String dependencies, String jobName, String handler,
+    public static void createJobLog(JobLogRepository jobLogRepository, String location, String name, String description, List<String> dependencies, String jobName, String handler,
                                      Timestamp triggeredAt, long triggeredId, Timestamp finishedAt, short status, String message) {
         JobLog jobLog = new JobLog(location, name, description, dependencies, jobName, handler, triggeredAt, triggeredId, finishedAt, status, message);
         jobLogRepository.save(jobLog);

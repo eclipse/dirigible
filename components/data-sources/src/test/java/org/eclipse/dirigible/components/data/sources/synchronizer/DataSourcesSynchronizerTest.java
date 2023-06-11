@@ -125,7 +125,7 @@ public class DataSourcesSynchronizerTest {
 	 * @return the extension point
 	 */
 	public static DataSource createDataSource(String location, String name, String description) {
-		DataSource dataSource = new DataSource(location, name, description, "", "", "", "", "");
+		DataSource dataSource = new DataSource(location, name, description, "", "", "", "");
 		return dataSource;
 	}
 	

@@ -89,8 +89,8 @@ public class DataSource extends Artefact {
 	 * @param username the username
 	 * @param password the password
 	 */
-	public DataSource(String location, String name, String description, String dependencies, String driver, String url, String username, String password) {
-		super(location, name, ARTEFACT_TYPE, description, dependencies);
+	public DataSource(String location, String name, String description, String driver, String url, String username, String password) {
+		super(location, name, ARTEFACT_TYPE, description, null);
 		this.driver = driver;
 		this.url = url;
 		this.username = username;

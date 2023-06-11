@@ -16,6 +16,8 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 import com.google.gson.annotations.Expose;
 
 import java.sql.Timestamp;
+import java.util.List;
+
 import javax.persistence.*;
 
 /**
@@ -116,7 +118,7 @@ public class JobLog extends Artefact {
      * @param status the status
      * @param message the message
      */
-    public JobLog(String location, String name, String description, String dependencies, String jobName, String handler, 
+    public JobLog(String location, String name, String description, List<String> dependencies, String jobName, String handler, 
     		Timestamp triggeredAt, Long triggeredId, Timestamp finishedAt, Short status, String message) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.jobName = jobName;

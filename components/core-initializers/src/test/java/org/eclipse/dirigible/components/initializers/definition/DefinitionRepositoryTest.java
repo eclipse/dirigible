@@ -18,8 +18,6 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
-import org.eclipse.dirigible.components.initializers.definition.Definition;
-import org.eclipse.dirigible.components.initializers.definition.DefinitionRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

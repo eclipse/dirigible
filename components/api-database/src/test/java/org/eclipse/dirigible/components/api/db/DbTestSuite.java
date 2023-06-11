@@ -51,7 +51,7 @@ public class DbTestSuite {
     
     @BeforeAll
     public void setup() {
-		DataSource datasource = new DataSource("/test/DefaultDB.datasource", "DefaultDB", "", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
+		DataSource datasource = new DataSource("/test/DefaultDB.datasource", "DefaultDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
 		datasourceRepository.save(datasource);
     }
 

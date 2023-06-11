@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.data.structures.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -59,11 +60,11 @@ public class ViewRepositoryTest {
 		cleanup();
 
     	// create test Views
-		createView(viewRepository, "/a/b/c/v1.view", "v1", "description", "");
-		createView(viewRepository, "/a/b/c/v2.view", "v2", "description", "");
-		createView(viewRepository, "/a/b/c/v3.view", "v3", "description", "");
-		createView(viewRepository, "/a/b/c/v4.view", "v4", "description", "");
-		createView(viewRepository, "/a/b/c/v5.view", "v5", "description", "");
+		createView(viewRepository, "/a/b/c/v1.view", "v1", "description", null);
+		createView(viewRepository, "/a/b/c/v2.view", "v2", "description", null);
+		createView(viewRepository, "/a/b/c/v3.view", "v3", "description", null);
+		createView(viewRepository, "/a/b/c/v4.view", "v4", "description", null);
+		createView(viewRepository, "/a/b/c/v5.view", "v5", "description", null);
     }
 	
 	/**
@@ -120,7 +121,7 @@ public class ViewRepositoryTest {
 	 * @param dependencies the dependencies
 	 * @return the view
 	 */
-	public static View createView(ViewRepository viewRepository, String location, String name, String description, String dependencies) {
+	public static View createView(ViewRepository viewRepository, String location, String name, String description, List<String> dependencies) {
 		View view = new View(location, name, description, dependencies, null, "VIEW", "SELECT ...");
 		viewRepository.save(view);
 		return view;

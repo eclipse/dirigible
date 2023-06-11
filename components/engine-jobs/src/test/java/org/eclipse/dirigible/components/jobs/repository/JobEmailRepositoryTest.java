@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,11 +58,11 @@ public class JobEmailRepositoryTest {
     public void setup() throws Exception {
         cleanup();
         // create test JobEmails
-       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail1.jobEmail","jobEmail1", "description", "", "job1", "email1");
-       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail2.jobEmail","jobEmail2", "description", "", "job2", "email2");
-       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail3.jobEmail","jobEmail3", "description", "", "job3", "email3");
-       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail4.jobEmail","jobEmail4", "description", "", "job4", "email4");
-       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail5.jobEmail","jobEmail5", "description", "", "job5", "email5");
+       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail1.jobEmail","jobEmail1", "description", null, "job1", "email1");
+       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail2.jobEmail","jobEmail2", "description", null, "job2", "email2");
+       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail3.jobEmail","jobEmail3", "description", null, "job3", "email3");
+       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail4.jobEmail","jobEmail4", "description", null, "job4", "email4");
+       createJobEmail(jobEmailRepository, "/a/b/c/jobEmail5.jobEmail","jobEmail5", "description", null, "job5", "email5");
     }
 
     /**
@@ -121,7 +122,7 @@ public class JobEmailRepositoryTest {
      * @param jobName the name
      * @param email the email
      */
-    public static void createJobEmail(JobEmailRepository jobEmailRepository, String location, String name, String description, String dependencies, String jobName, String email){
+    public static void createJobEmail(JobEmailRepository jobEmailRepository, String location, String name, String description, List<String> dependencies, String jobName, String email){
         JobEmail jobEmail = new JobEmail(location, name, description, dependencies, jobName, email);
         jobEmailRepository.save(jobEmail);
     }

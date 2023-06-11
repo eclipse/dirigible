@@ -165,7 +165,7 @@ public class DataSourcesManager implements InitializingBean {
 		} catch (Exception e) {
 			if (DatabaseParameters.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) {
 				if (logger.isErrorEnabled()) {logger.error("DataSource cannot be initialized, hence fail over database is started as a backup - " + name);}
-				return new DataSource(name, name, name, null, "org.h2.Driver", "jdbc:h2:~/DefaultDBFailOver", "sa", "");
+				return new DataSource(name, name, name, "org.h2.Driver", "jdbc:h2:~/DefaultDBFailOver", "sa", "");
 			}
 			throw e;
 		}

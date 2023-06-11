@@ -15,6 +15,8 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.List;
+
 import javax.persistence.*;
 
 /**
@@ -61,7 +63,7 @@ public class JobEmail extends Artefact {
      * @param jobName the job name
      * @param email the email
      */
-    public JobEmail(String location, String name, String description, String dependencies, String jobName, String email) {
+    public JobEmail(String location, String name, String description, List<String> dependencies, String jobName, String email) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.jobName = jobName;
         this.email = email;

@@ -60,7 +60,7 @@ public class DatabaseMetadataEndpointTest {
 	
 	@BeforeEach
     public void setup() {
-		DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
+		DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
 		datasourceRepository.save(datasource);
     }
 	

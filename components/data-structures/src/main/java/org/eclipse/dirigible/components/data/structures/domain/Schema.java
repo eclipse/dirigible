@@ -69,7 +69,7 @@ public class Schema extends Artefact {
 	 * @param description the description
 	 * @param dependencies the dependencies
 	 */
-	public Schema(String location, String name, String description, String dependencies) {
+	public Schema(String location, String name, String description, List<String> dependencies) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 	}
 	

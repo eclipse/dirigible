@@ -92,7 +92,7 @@ public class TopologyWrapper<A extends Artefact> implements TopologicallySortabl
 	public List<TopologicallySortable> getDependencies() {
 		List<TopologicallySortable> dependencies = new ArrayList<TopologicallySortable>();
 		if (this.artefact.getDependencies() != null) {
-			String[] keys = this.artefact.getDependencies().split(",");
+			List<String> keys = this.artefact.getDependencies();
 			for (String key : keys) {
 				if (!wrappers.containsKey(key)) {
 					if (logger.isWarnEnabled()) {logger.warn("Dependency is not present in this cycle: " + key);}

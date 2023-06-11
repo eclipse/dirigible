@@ -11,15 +11,23 @@
  */
 package org.eclipse.dirigible.components.data.csvim.domain;
 
-import com.google.gson.annotations.Expose;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gson.annotations.Expose;
 
 /**
  * The Class CsvFile.
@@ -109,7 +117,7 @@ public class CsvFile extends Artefact {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Csvim csvim;
 
-    public CsvFile(String location, String name, String type, String description, String dependencies, Long id, String table, String schema, String file, Boolean header, Boolean useHeaderNames, String delimField, String delimEnclosing, String sequence, Boolean distinguishEmptyFromNull, Csvim csvim) {
+    public CsvFile(String location, String name, String type, String description, List<String> dependencies, Long id, String table, String schema, String file, Boolean header, Boolean useHeaderNames, String delimField, String delimEnclosing, String sequence, Boolean distinguishEmptyFromNull, Csvim csvim) {
         super(location, name, type, description, dependencies);
         this.id = id;
         this.table = table;

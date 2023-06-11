@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.components.odata.domain;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,7 +55,7 @@ public class ODataSchema extends Artefact {
 	 * @param dependencies the dependencies
 	 * @param content the content
 	 */
-	public ODataSchema(String location, String name, String description, String dependencies,
+	public ODataSchema(String location, String name, String description, List<String> dependencies,
 			byte[] content) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.content = content;

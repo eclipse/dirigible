@@ -92,11 +92,11 @@ public class JobEndpointTest {
     public void setup() throws Exception {
         // create test Job
         createJob(jobService, "job1", "test_group1", "org....", "test-handler.js", "engine1", "description",
-                "0/1 * * * * ?", false, Collections.emptyList(),"/a/b/c/j1.job","");
+                "0/1 * * * * ?", false, Collections.emptyList(),"/a/b/c/j1.job",null);
         createJob(jobService, "job2", "test_group2", "org....", "test-handler.js", "engine2", "description",
-                "0/1 * * * * ?", false, Collections.emptyList(),"/a/b/c/j2.job","");
+                "0/1 * * * * ?", false, Collections.emptyList(),"/a/b/c/j2.job",null);
         createJob(jobService, "job3", "test_group3", "org....", "test-handler.js", "engine3", "description",
-                "0/1 * * * * ?", false, Collections.emptyList(),"/a/b/c/j3.job","");
+                "0/1 * * * * ?", false, Collections.emptyList(),"/a/b/c/j3.job",null);
 
         Page<Job> job = jobService.getPages(PageRequest.of(0, BaseEndpoint.DEFAULT_PAGE_SIZE));
         assertNotNull(job);
@@ -169,7 +169,7 @@ public class JobEndpointTest {
      */
     public static void createJob(JobService jobService, String name, String group, String clazz, String handler,
                                  String engine, String description, String expression, boolean singleton,
-                                 List<JobParameter> parameters, String location, String dependencies){
+                                 List<JobParameter> parameters, String location, List<String> dependencies){
         Job job = new Job(name, group, clazz, handler, engine, description, expression, singleton, parameters, location, dependencies);
         jobService.save(job);
     }

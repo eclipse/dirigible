@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.data.structures.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -64,11 +65,11 @@ public class TableRepositoryTest {
 		cleanup();
 
     	// create test Tables
-		createTable(tableRepository, tableColumnRepository, "/a/b/c/t1.table", "t1", "description", "");
-		createTable(tableRepository, tableColumnRepository, "/a/b/c/t2.table", "t2", "description", "");
-		createTable(tableRepository, tableColumnRepository, "/a/b/c/t3.table", "t3", "description", "");
-		createTable(tableRepository, tableColumnRepository, "/a/b/c/t4.table", "t4", "description", "");
-		createTable(tableRepository, tableColumnRepository, "/a/b/c/t5.table", "t5", "description", "");
+		createTable(tableRepository, tableColumnRepository, "/a/b/c/t1.table", "t1", "description", null);
+		createTable(tableRepository, tableColumnRepository, "/a/b/c/t2.table", "t2", "description", null);
+		createTable(tableRepository, tableColumnRepository, "/a/b/c/t3.table", "t3", "description", null);
+		createTable(tableRepository, tableColumnRepository, "/a/b/c/t4.table", "t4", "description", null);
+		createTable(tableRepository, tableColumnRepository, "/a/b/c/t5.table", "t5", "description", null);
     }
 	
 	/**
@@ -131,7 +132,7 @@ public class TableRepositoryTest {
 	 * @param dependencies the dependencies
 	 * @return the table
 	 */
-	public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location, String name, String description, String dependencies) {
+	public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location, String name, String description, List<String> dependencies) {
 		Table table = new Table(location, name, description, dependencies, "TABLE", null);
 		table.addColumn(name + "_1", "VARCHAR", "20", true, false, "", "0", false);
 		table.addColumn(name + "_2", "VARCHAR", "20", true, false, "", "0", false);

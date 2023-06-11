@@ -87,7 +87,7 @@ public class View extends Artefact {
 	 * @param schema the schema name
 	 * @param query the query
 	 */
-	public View(String location, String name, String description, String dependencies, String kind, String schema, String query) {
+	public View(String location, String name, String description, List<String> dependencies, String kind, String schema, String query) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.kind = kind;
 		this.schema = schema;

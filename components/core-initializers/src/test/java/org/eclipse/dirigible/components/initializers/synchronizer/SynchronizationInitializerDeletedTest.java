@@ -11,18 +11,12 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.components.initializers.SynchronousSpringEventsConfig;
 import org.eclipse.dirigible.components.repository.RepositoryConfig;
 import org.eclipse.dirigible.repository.api.IRepository;
