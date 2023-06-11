@@ -115,7 +115,6 @@ public class DataSourceRepositoryTest {
 	 * Creates the datasource.
 	 *
 	 * @param datasourceRepository the datasource repository
-	 * @param datasourcePropertyRepository the datasource property repository
 	 * @param location the location
 	 * @param name the name
 	 * @param description the description

@@ -104,7 +104,8 @@ public class DataSourcesSynchronizerTest {
 	
 	/**
 	 * Load the artefact.
-	 * @throws ParseException 
+	 *
+	 * @throws ParseException the parse exception
 	 */
 	@Test
     public void load() throws ParseException {

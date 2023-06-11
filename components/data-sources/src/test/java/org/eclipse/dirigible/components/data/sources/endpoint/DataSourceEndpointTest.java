@@ -44,6 +44,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class DataSourceEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -53,26 +56,38 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class DataSourceEndpointTest {
 	
+	/** The entity manager. */
 	@Autowired
 	private EntityManager entityManager;
 	
+	/** The datasource service. */
 	@Autowired
 	private DataSourceService datasourceService;
 	
+	/** The datasource repository. */
 	@Autowired
 	private DataSourceRepository datasourceRepository;
 	
+	/** The test data source. */
 	private DataSource testDataSource;
 	
+	/** The mock mvc. */
 	@Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 	
+	/**
+	 * Setup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeEach
     public void setup() throws Exception {
 		
@@ -94,11 +109,19 @@ public class DataSourceEndpointTest {
 		entityManager.refresh(testDataSource);
     }
 	
+	/**
+	 * Cleanup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@AfterEach
     public void cleanup() throws Exception {
 		datasourceRepository.deleteAll();
     }
 
+	/**
+	 * Find all data sources.
+	 */
 	@Test
 	public void findAllDataSources() {
 		Integer size = 10;
@@ -107,6 +130,12 @@ public class DataSourceEndpointTest {
 		assertNotNull(datasourceService.getPages(pageable));
 	}
 	
+	/**
+	 * Gets the data source by id.
+	 *
+	 * @return the data source by id
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getDataSourceById() throws Exception {
 		Long id = testDataSource.getId();
@@ -117,6 +146,12 @@ public class DataSourceEndpointTest {
 		;
 	}
 	
+	/**
+	 * Gets the data source by name.
+	 *
+	 * @return the data source by name
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getDataSourceByName() throws Exception {
 		String name = testDataSource.getName();
@@ -127,6 +162,12 @@ public class DataSourceEndpointTest {
 		;
 	}
 	
+	/**
+	 * Gets the pages data sources.
+	 *
+	 * @return the pages data sources
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getPagesDataSources() throws Exception {
 		String name = testDataSource.getName();
@@ -137,6 +178,12 @@ public class DataSourceEndpointTest {
 		;
 	}
 	
+	/**
+	 * Gets the all data sources.
+	 *
+	 * @return the all data sources
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getAllDataSources() throws Exception {
 		String name = testDataSource.getName();
@@ -147,6 +194,9 @@ public class DataSourceEndpointTest {
 		;
 	}
 
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

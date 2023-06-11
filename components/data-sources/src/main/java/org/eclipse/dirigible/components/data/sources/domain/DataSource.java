@@ -83,7 +83,6 @@ public class DataSource extends Artefact {
 	 * @param location the location
 	 * @param name the name
 	 * @param description the description
-	 * @param dependencies the dependencies
 	 * @param driver the driver
 	 * @param url the url
 	 * @param username the username
@@ -215,6 +214,7 @@ public class DataSource extends Artefact {
 	/**
 	 * Get the property by name.
 	 *
+	 * @param name the name
 	 * @return the property
 	 */
 	public DataSourceProperty getProperty(String name) {
