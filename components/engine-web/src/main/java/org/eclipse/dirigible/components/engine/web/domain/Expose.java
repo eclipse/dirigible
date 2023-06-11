@@ -55,7 +55,7 @@ public class Expose extends Artefact {
 //	@OrderColumn
 	@Convert(converter = ArrayOfStringsToCsvConverter.class)
 	@com.google.gson.annotations.Expose
-	private String[] exposes = new String[] {};
+	private String[] exposes;
 	
 	/**
 	 * Instantiates a new web.
