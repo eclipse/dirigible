@@ -78,11 +78,6 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.5</version>
 		</dependency>
-        <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>path-to-regexp</artifactId>
-            <version>${path-to-regexp.version}</version>
-        </dependency>
 
 	</dependencies>
 

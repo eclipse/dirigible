@@ -30,7 +30,7 @@
  * @return {Boolean} true if the arrays are equal, false otherwise
  * @private
  */
-const { match } = require("path-to-regexp/6.2.1/dist/index.js");
+const { match } = require("path-to-regexp/6.2.1/index.js");
 
 var arrayEquals = function(source, target){
 	if(source===target)
@@ -689,7 +689,7 @@ function calculateMatchedRouteWeight(matchedRoute) {
 
 function transformPathParamsDeclaredInBraces(pathDefinition) {
 	const pathParamsInBracesMatcher = /({(\w*\*?)})/g; // matches cases like '/api/{pathParam}' or '/api/{pathParam*}'
-	return String(pathDefinition.replace(pathParamsInBracesMatcher, ":$2")); // transforms matched cases to '/api/:pathParam' or '/api/:pathParam*'
+	return pathDefinition.replace(pathParamsInBracesMatcher, ":$2"); // transforms matched cases to '/api/:pathParam' or '/api/:pathParam*'
 }
 
 	//  content-type, consumes
