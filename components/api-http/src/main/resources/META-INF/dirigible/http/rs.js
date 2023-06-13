@@ -689,7 +689,7 @@ function calculateMatchedRouteWeight(matchedRoute) {
 
 function transformPathParamsDeclaredInBraces(pathDefinition) {
 	const pathParamsInBracesMatcher = /({(\w*\*?)})/g; // matches cases like '/api/{pathParam}' or '/api/{pathParam*}'
-	return pathDefinition.replace(pathParamsInBracesMatcher, ":$2"); // transforms matched cases to '/api/:pathParam' or '/api/:pathParam*'
+	return String(pathDefinition.replace(pathParamsInBracesMatcher, ":$2")); // transforms matched cases to '/api/:pathParam' or '/api/:pathParam*'
 }
 
 	//  content-type, consumes
