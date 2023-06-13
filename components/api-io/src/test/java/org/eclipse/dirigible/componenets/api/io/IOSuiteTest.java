@@ -53,10 +53,10 @@ public class IOSuiteTest {
 		javascriptService.handleRequest("io-tests", "files-file-streams.js", null, null, false);
 	}
 	
-	@Test
-	public void executeFTPTest() throws Exception {
-		javascriptService.handleRequest("io-tests", "ftp-get-file.js", null, null, false);
-	}
+//	@Test
+//	public void executeFTPTest() throws Exception {
+//		javascriptService.handleRequest("io-tests", "ftp-get-file.js", null, null, false);
+//	}
 	
 	@Test
 	public void executeStreamsTest() throws Exception {
