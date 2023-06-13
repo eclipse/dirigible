@@ -10,11 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var command = require('platform/command');
-var response = require('http/response');
+var assertTrue = require('test/assert').assertTrue;
 
 var result = command.execute("echo 'hello dirigible!'");
-response.println("[Result]: " + result);
-response.flush();
-response.close();
+console.log("[Result]: " + result);
 
 assertTrue(result !== undefined && result !== null);

@@ -55,7 +55,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 @ContextConfiguration
 @WebAppConfiguration
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
-public class HttpTestSuite {
+public class HttpSuiteTest {
 	
 	@Autowired
 	private JavascriptService javascriptService;

@@ -32,7 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
 @TestInstance(Lifecycle.PER_CLASS)
-public class PlatformTestSuite {
+public class PlatformSuiteTest {
 	
 	@Autowired
 	private JavascriptService javascriptService;

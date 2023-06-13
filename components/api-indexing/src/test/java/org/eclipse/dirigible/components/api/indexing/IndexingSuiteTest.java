@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.api.cms;
+package org.eclipse.dirigible.components.api.indexing;
 
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.junit.jupiter.api.Test;
@@ -19,34 +19,30 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
 
-@WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ContextConfiguration
+@WebAppConfiguration
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
-public class CmsTestSuite {
+public class IndexingSuiteTest {
 	
 	@Autowired
 	private JavascriptService javascriptService;
 	
-	@Autowired
-    private MockMvc mockMvc;
-
     @Autowired
-    protected WebApplicationContext wac;
-
+    protected WebApplicationContext context;
+    
 	@Test
-	public void executeCMISTest() throws Exception {
-		javascriptService.handleRequest("cms-tests", "cmis-create-document.js", null, null, false);
-		javascriptService.handleRequest("cms-tests", "cmis-create-folder.js", null, null, false);
-		javascriptService.handleRequest("cms-tests", "cmis-get-children.js", null, null, false);
-		javascriptService.handleRequest("cms-tests", "cmis-get-root-folder.js", null, null, false);
-		javascriptService.handleRequest("cms-tests", "cmis-get-session.js", null, null, false);
+	public void executeClientTest() throws Exception {
+		javascriptService.handleRequest("indexing-tests", "searcher-between.js", null, null, false);
+		javascriptService.handleRequest("indexing-tests", "searcher-search.js", null, null, false);
+		javascriptService.handleRequest("indexing-tests", "writer-add.js", null, null, false);
 	}
 	
 	@SpringBootApplication

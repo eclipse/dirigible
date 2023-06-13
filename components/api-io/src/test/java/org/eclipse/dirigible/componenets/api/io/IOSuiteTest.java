@@ -36,7 +36,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
-public class IOTestSuite {
+public class IOSuiteTest {
 	
 	@Autowired
 	private JavascriptService javascriptService;
