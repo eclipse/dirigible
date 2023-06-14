@@ -400,7 +400,7 @@ function createCloseAction() {
         // @param editor The editor instance is passed in as a convinience
         run: function (editor) {
             let fileIO = new FileIO();
-            messageHub.post({ fileName: fileIO.resolveFileName() }, 'ide-core.closeEditor');
+            messageHub.post({ resourcePath: fileIO.resolveFileName() }, 'ide-core.closeEditor');
         }
     };
 };
@@ -432,7 +432,7 @@ function createCloseOthersAction() {
         // @param editor The editor instance is passed in as a convinience
         run: function (editor) {
             let fileIO = new FileIO();
-            messageHub.post({ fileName: fileIO.resolveFileName() }, 'ide-core.closeOtherEditors');
+            messageHub.post({ resourcePath: fileIO.resolveFileName() }, 'ide-core.closeOtherEditors');
         }
     };
 };
