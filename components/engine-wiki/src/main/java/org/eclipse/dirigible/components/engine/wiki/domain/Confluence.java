@@ -18,6 +18,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -40,7 +41,8 @@ public class Confluence extends Artefact {
 	private Long id;
 	
 	/** The content. */
-	@Transient
+	@Column(name = "MARKDOWN_CONTENT", columnDefinition = "CLOB")
+	@Lob
 	private transient byte[] content;
 	
 	/**
