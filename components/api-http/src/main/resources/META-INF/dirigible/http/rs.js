@@ -30,7 +30,7 @@
  * @return {Boolean} true if the arrays are equal, false otherwise
  * @private
  */
-const { match } = require("path-to-regexp/6.2.1/index.js");
+const { match } = require("http/path-to-regexp/6.2.1/index.js");
 
 var arrayEquals = function(source, target){
 	if(source===target)
