@@ -19,6 +19,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -49,6 +50,11 @@ public class OData extends Artefact {
 	@Column(name = "ODATA_NAMESPACE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String namespace;
+	
+	/** The raw content. */
+	@Column(name = "HDB_CONTENT", columnDefinition = "CLOB")
+	@Lob
+	private String content;
 	
 	/** The entities. */
 	@Transient
@@ -123,6 +129,24 @@ public class OData extends Artefact {
 	public void setNamespace(String namespace) {
 		this.namespace = namespace;
 	}
+	
+	/**
+	 * Gets the content.
+	 *
+	 * @return the content
+	 */
+	public String getContent() {
+		return content;
+	}
+	
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the new content
+	 */
+	public void setContent(String content) {
+		this.content = content;
+	}
 
 	/**
 	 * To json.
@@ -143,12 +167,30 @@ public class OData extends Artefact {
 	}
 	
 	/**
+	 * Sets the entities.
+	 *
+	 * @param entities the new entities
+	 */
+	public void setEntities(List<ODataEntity> entities) {
+		this.entities = entities;
+	}
+	
+	/**
 	 * Gets the associations.
 	 *
 	 * @return the associations
 	 */
 	public List<ODataAssociation> getAssociations() {
 		return associations;
+	}
+	
+	/**
+	 * Sets the associations.
+	 *
+	 * @param associations the new associations
+	 */
+	public void setAssociations(List<ODataAssociation> associations) {
+		this.associations = associations;
 	}
 
 	/**

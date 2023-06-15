@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.components.odata.synchronizer;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -121,7 +122,7 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
      */
     @Override
     public List<OData> parse(String location, byte[] content) throws ParseException {
-    	OData odata = parseOData(location, content);
+    	OData odata = parseOData(location, new String(content, StandardCharsets.UTF_8));
         try {
         	OData maybe = getService().findByKey(odata.getKey());
 			if (maybe != null) {
@@ -145,7 +146,13 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 	 */
 	@Override
 	public List<OData> retrieve(String location) {
-		return getService().getAll();
+		List<OData> list = getService().getAll();
+		for (OData odata : list) {
+			OData parsed = parseOData(location, odata.getContent());
+			odata.setEntities(parsed.getEntities());
+			odata.setAssociations(parsed.getAssociations());
+		}
+		return list;
 	}
 	
 	/**
@@ -170,11 +177,23 @@ public class ODataSynchronizer<A extends Artefact> implements Synchronizer<OData
 	 * @return the o data
 	 */
 	public static OData parseOData(String location, byte[] content) {
-		OData odata = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), OData.class);
+		return parseOData(location, new String(content, StandardCharsets.UTF_8));
+	}
+	
+	/**
+	 * Parses the O data.
+	 *
+	 * @param location the location
+	 * @param content the content
+	 * @return the o data
+	 */
+	public static OData parseOData(String location, String content) {
+		OData odata = JsonHelper.fromJson(content, OData.class);
         Configuration.configureObject(odata);
         odata.setLocation(location);
         odata.setType(OData.ARTEFACT_TYPE);
         odata.setName(FilenameUtils.getBaseName(location));
+        odata.setContent(content);
         odata.updateKey();
         odata.getAssociations().forEach(association -> {
 			if (association.getFrom().getProperty() != null) {
