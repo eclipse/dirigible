@@ -173,11 +173,11 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 			int countModified = 0;
 			for (Artefact artefact : artefacts.values()) {
 				if (ArtefactLifecycle.NEW.equals(artefact.getLifecycle())) {
-					if (logger.isInfoEnabled()) {logger.info("Preparing for processing a new artefact: {}", artefact.getKey());}
+					if (logger.isInfoEnabled()) {logger.info("Processing a new artefact: {}", artefact.getKey());}
 					countNew++;
 				};
 				if (ArtefactLifecycle.MODIFIED.equals(artefact.getLifecycle())) {
-					if (logger.isInfoEnabled()) {logger.info("Preparing for processing a modified artefact: {}", artefact.getKey());}
+					if (logger.isInfoEnabled()) {logger.info("Processing a modified artefact: {}", artefact.getKey());}
 					countModified++;
 				};
 			}
