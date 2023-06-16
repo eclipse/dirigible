@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class CamelEngine implements Engine {
     @Override
     public String getName() {
-        return "Process (Camel)";
+        return "Integrations (Camel)";
     }
 
     @Override
