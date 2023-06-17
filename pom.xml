@@ -562,7 +562,7 @@
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.1.214</h2database.version>
 		<postgresql.version>42.6.0</postgresql.version>
-		<ngdbc.version>2.16.14</ngdbc.version>
+		<ngdbc.version>2.17.7</ngdbc.version>
 		<activemq.version>5.18.1</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<lucene.version>9.6.0</lucene.version>
