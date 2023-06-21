@@ -32,6 +32,7 @@ public class AutoWiringSpringBeanJobFactory extends SpringBeanJobFactory impleme
      * @param applicationContext the new application context
      * @throws BeansException the beans exception
      */
+	@Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 
         beanFactory = applicationContext.getAutowireCapableBeanFactory();
