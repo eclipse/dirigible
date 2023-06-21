@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -88,8 +87,6 @@ public class BpmProviderFlowable implements BpmProvider {
 	
 	/** The repository. */
 	private final IRepository repository;
-
-	private static ApplicationContext applicationContext;
 	
 	/**
 	 * Instantiates a new bpm provider flowable.
@@ -98,14 +95,9 @@ public class BpmProviderFlowable implements BpmProvider {
 	 * @param repository the repository
 	 */
 	@Autowired
-	public BpmProviderFlowable(DataSource datasource, IRepository repository, ApplicationContext applicationContext) {
+	public BpmProviderFlowable(DataSource datasource, IRepository repository) {
 		this.datasource = datasource;
 		this.repository = repository;
-		BpmProviderFlowable.applicationContext = applicationContext;
-	}
-
-	public static <T> T provideBean(Class<T> clazz) {
-		return applicationContext.getBean(clazz);
 	}
 	
 	/**
