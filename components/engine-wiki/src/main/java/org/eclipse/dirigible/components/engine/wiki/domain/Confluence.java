@@ -20,7 +20,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
@@ -43,7 +42,7 @@ public class Confluence extends Artefact {
 	/** The content. */
 	@Column(name = "MARKDOWN_CONTENT", columnDefinition = "CLOB")
 	@Lob
-	private transient byte[] content;
+	private byte[] content;
 	
 	/**
 	 * Instantiates a new markdown.
