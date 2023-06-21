@@ -12,43 +12,42 @@
 const DirigibleSourceProvider = Java.type("org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider");
 const dirigibleSourceProvider = new DirigibleSourceProvider();
 
-var Require = (function (modulePath) {
-    var _loadedModules = {};
-    var _require = function (path) {
-        var moduleInfo, buffered, head = '(function(exports,module,require){ ',
-            code = '',
-            tail = '\n})',
-            line = null;
-        moduleInfo = _loadedModules[path];
-        if (moduleInfo) {
-            return moduleInfo;
-        }
-        code = dirigibleSourceProvider.getSource(path);
+const _loadedModules = {};
 
-        moduleInfo = {
-            loaded: false,
-            id: path,
-            exports: {},
-            require: _requireClosure()
-        };
-        code = head + code + tail;
-        _loadedModules[path] = moduleInfo;
-        var compiledWrapper = load({
-            name: path,
-            script: code
-        });
-        var parameters = [moduleInfo.exports, /* exports */ moduleInfo, /* module */ moduleInfo.require /* require */];
-        compiledWrapper.apply(moduleInfo.exports, /* this */ parameters);
-        moduleInfo.loaded = true;
+function _require (path) {
+    let moduleInfo = _loadedModules[path];
+    if (moduleInfo) {
         return moduleInfo;
+    }
+
+    const code = '(function(exports, module, require) { ' + dirigibleSourceProvider.getSource(path) + '\n})';
+    moduleInfo = {
+        loaded: false,
+        id: path,
+        exports: {},
+        require: require
     };
-    var _requireClosure = function () {
-        return function (path) {
-            var module = _require(path);
-            return module.exports;
-        };
-    };
-    return _requireClosure();
-});
-globalThis.require = Require();
+    _loadedModules[path] = moduleInfo;
+
+    const compiledWrapper = load({
+        name: path,
+        script: code
+    });
+    const cjsModuleProps = [
+        moduleInfo.exports, /* exports */
+        moduleInfo, /* module */
+        moduleInfo.require /* require */
+    ];
+
+    compiledWrapper.apply(moduleInfo.exports, cjsModuleProps);
+    moduleInfo.loaded = true;
+    return moduleInfo;
+};
+
+function require(path) {
+    const module = _require(path);
+    return module.exports;
+}
+
+globalThis.require = require;
 globalThis.dirigibleRequire = globalThis.require;
