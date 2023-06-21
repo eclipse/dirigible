@@ -260,7 +260,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 					let cell = $scope.graph.model.getCell(msg.data.formData[0].id.substring(4));
 					cell.source.value.relationshipName = msg.data.formData[0].value;
 					cell.source.value.relationshipType = msg.data.formData[1].value;
-					cell.source.value.relationshipCardinalities = msg.data.formData[2].value;
+					cell.source.value.relationshipCardinality = msg.data.formData[2].value;
 					$scope.graph.model.setValue(cell.source, cell.source.value);
 
 					let connector = new Connector();
