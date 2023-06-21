@@ -214,6 +214,7 @@
 
 		<!-- Test -->
 		<module>test-project</module>
+        <module>core-spring</module>
     </modules>
 
 	<dependencies>
