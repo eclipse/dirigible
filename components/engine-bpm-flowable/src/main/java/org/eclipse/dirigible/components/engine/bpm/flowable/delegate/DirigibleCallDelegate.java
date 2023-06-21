@@ -11,28 +11,44 @@
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.delegate;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ExecutionData;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.components.spring.SpringBeanProvider;
+import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
+import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.flowable.engine.delegate.BpmnError;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.flowable.engine.impl.el.FixedValue;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
 import org.springframework.beans.BeanUtils;
+
+import javax.annotation.Nullable;
 
 /**
  * The Class DirigibleCallDelegate.
  */
 public class DirigibleCallDelegate implements JavaDelegate {
 
-    /** The handler. */
+    private static Pattern JS_EXPRESSION_REGEX = Pattern.compile("(.*\\.m?js)(?:\\/(\\w*))?(?:\\/(\\w*))?");
+
+    /**
+     * The handler.
+     */
     private FixedValue handler;
 
-    /** The type. */
+    /**
+     * The type.
+     */
     private FixedValue type;
 
     /**
@@ -102,11 +118,82 @@ public class DirigibleCallDelegate implements JavaDelegate {
      * Execute JS handler.
      *
      * @param context the context
-     * @return the object
      */
-    private Object executeJSHandler(Map<Object, Object> context) {
+    private void executeJSHandler(Map<Object, Object> context) {
         RepositoryPath path = new RepositoryPath(handler.getExpressionText());
-    	return JavascriptService.get().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+        IRepository repository = SpringBeanProvider.getBean(IRepository.class);
+        JavascriptSourceProvider sourceProvider = new DirigibleSourceProvider();
+
+        JSTask task = JSTask.fromRepositoryPath(path);
+
+        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(context, false, repository, sourceProvider)) {
+            Source source = runner.prepareSource(task.getSourceFilePath());
+            Value value = runner.run(source);
+
+            if (task.hasExportedClassAndMethod()) {
+                value.getMember(task.getClassName()).newInstance().getMember(task.getMethodName()).executeVoid();
+            } else if (task.hasExportedMethod()) {
+                value.getMember(task.getMethodName()).executeVoid();
+            }
+
+        }
+    }
+
+    static class JSTask {
+        private final Path sourceFilePath;
+        private final @Nullable String className;
+        private final @Nullable String methodName;
+        private final boolean hasExportedClassAndMethod;
+        private final boolean hasExportedMethod;
+
+        JSTask(Path sourceFilePath, @Nullable String className, @Nullable String methodName) {
+            this.sourceFilePath = sourceFilePath;
+            this.className = className;
+            this.methodName = methodName;
+            this.hasExportedMethod = className == null && methodName != null;
+            this.hasExportedClassAndMethod = className != null && methodName != null;
+        }
+
+        static JSTask fromRepositoryPath(RepositoryPath repositoryPath) {
+            var matcher = JS_EXPRESSION_REGEX.matcher(repositoryPath.getPath());
+            if (!matcher.matches()) {
+                throw new BpmnError("Invalid JS expression provided for task!");
+            }
+
+            String maybeClassName;
+            String maybeMethodName;
+
+            if (matcher.group(2) != null && matcher.group(3) != null) {
+                maybeClassName = matcher.group(2);
+                maybeMethodName = matcher.group(3);
+            } else {
+                maybeClassName = null;
+                maybeMethodName = matcher.group(2);
+            }
+
+            Path sourceFilePath = Path.of(matcher.group(1));
+            return new JSTask(sourceFilePath, maybeClassName, maybeMethodName);
+        }
+
+        public Path getSourceFilePath() {
+            return sourceFilePath;
+        }
+
+        public String getClassName() {
+            return className;
+        }
+
+        public String getMethodName() {
+            return methodName;
+        }
+
+        public boolean hasExportedClassAndMethod() {
+            return hasExportedClassAndMethod;
+        }
+
+        public boolean hasExportedMethod() {
+            return hasExportedMethod;
+        }
     }
 
 }
