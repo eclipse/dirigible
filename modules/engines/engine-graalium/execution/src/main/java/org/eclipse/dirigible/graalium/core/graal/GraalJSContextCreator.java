@@ -18,6 +18,7 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.EnvironmentAccess;
 import org.graalvm.polyglot.HostAccess;
+import org.graalvm.polyglot.io.IOAccess;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -106,8 +107,8 @@ public class GraalJSContextCreator {
                 .engine(engine)
                 .allowEnvironmentAccess(EnvironmentAccess.INHERIT)
                 .allowExperimentalOptions(true)
-                .currentWorkingDirectory(workingDirectoryPath)
-                .fileSystem(graalJSFileSystem);
+                .currentWorkingDirectory(workingDirectoryPath);
+        IOAccess.Builder ioAccessBuilder = IOAccess.newBuilder().fileSystem(graalJSFileSystem);
 
         onBeforeContextCreatedHook.accept(contextBuilder);
 
@@ -120,7 +121,7 @@ public class GraalJSContextCreator {
             contextBuilder.allowCreateThread(true);
         }
         if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO, "true"))) {
-            contextBuilder.allowIO(true);
+            ioAccessBuilder.allowHostSocketAccess(true);
         }
         if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS, "true"))) {
             contextBuilder.allowCreateProcess(true);
@@ -138,6 +139,7 @@ public class GraalJSContextCreator {
             contextBuilder.option("js.operator-overloading", "true");
         }
 
+        contextBuilder.allowIO(ioAccessBuilder.build());
         Context context = contextBuilder.build();
         
         if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA, "false"))) {
