@@ -619,7 +619,7 @@
 		<spring.boot.logback.version>1.2.11</spring.boot.logback.version>
 		<spring-context-support.version>5.3.24</spring-context-support.version>
 		<spring-security.version>5.8.0</spring-security.version>
-		<webjars-locator>0.46</webjars-locator>
+		<webjars-locator>0.47</webjars-locator>
 
 		<keycloak.keycloak-spring-boot-starter>21.1.1</keycloak.keycloak-spring-boot-starter>
 		<hikaricp.version>5.0.1</hikaricp.version>
