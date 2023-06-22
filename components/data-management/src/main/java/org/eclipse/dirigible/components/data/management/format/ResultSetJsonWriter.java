@@ -11,9 +11,12 @@
  */
 package org.eclipse.dirigible.components.data.management.format;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -105,7 +108,32 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 						value = "[BINARY]";
 					}
 				}
-				record.add(name, value == null ? null : new JsonPrimitive(value.toString()));
+
+				if (value instanceof String) {
+					record.add(name, value == null ? null : new JsonPrimitive((String) value));
+				} else if (value instanceof Character) {
+					record.add(name, value == null ? null : new JsonPrimitive(new String(new char[] { (char) value })));
+				} else if (value instanceof Float) {
+					record.add(name, value == null ? null : new JsonPrimitive((Float) value));
+				} else if (value instanceof Double) {
+					record.add(name, value == null ? null : new JsonPrimitive((Double) value));
+				} else if (value instanceof BigDecimal) {
+					record.add(name, value == null ? null : new JsonPrimitive((BigDecimal) value));
+				} else if (value instanceof Long) {
+					record.add(name, value == null ? null : new JsonPrimitive((Long) value));
+				} else if (value instanceof BigInteger) {
+					record.add(name, value == null ? null : new JsonPrimitive((BigInteger) value));
+				} else if (value instanceof Integer) {
+					record.add(name, value == null ? null : new JsonPrimitive((Integer) value));
+				} else if (value instanceof Byte) {
+					record.add(name, value == null ? null : new JsonPrimitive((Byte) value));
+				} else if (value instanceof Short) {
+					record.add(name, value == null ? null : new JsonPrimitive((Short) value));
+				} else if (value instanceof Boolean) {
+					record.add(name, value == null ? null : new JsonPrimitive((Boolean) value));
+				} else {
+					record.add(name, value == null ? null : new JsonPrimitive(value.toString()));
+				}
 			}
 
 			records.add(record);
