@@ -48,8 +48,10 @@ jobs:
       with:
         install: true
 
-    - name: Set Multi-Builder Docker Buildx
-      run: docker buildx create --use --name multi-builder --platform linux/arm64,linux/amd64,linux/arm64/v8
+    - name: Setup Docker Buildx
+      run: |
+        docker buildx create --name dirigible-builder
+        docker buildx use dirigible-builder
 
     - name: "Configure Git"
       run: |
@@ -72,11 +74,7 @@ jobs:
     - name: Push Dirigible (Spring)
       run: |
         cd build/application
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible .
-        docker tag dirigible dirigiblelabs/dirigible:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
+        docker buildx build --push --tag dirigiblelabs/dirigible:${{ github.event.inputs.releaseVersion }} -o type=image --platform=linux/arm64,linux/amd64 .
 #-----------------Publish to DockerHub-------------------#
 
 #---------------Publish to Maven Central-----------------#
