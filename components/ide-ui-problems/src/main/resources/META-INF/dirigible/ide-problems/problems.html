@@ -19,8 +19,7 @@
         <script type="text/javascript" src="services/problems-view.js"></script>
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
         <script type="text/javascript" src="js/problems.js"></script>
-        <link type="text/css" rel="stylesheet"
-            href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
     </head>
 
@@ -38,7 +37,7 @@
                 ng-click="problems.refresh()">
             </fd-button>
             <fd-button glyph="sap-icon--delete" aria-label="Delete" title="Delete selected" dg-type="transparent"
-                ng-click="problems.deleteSelected()" state="{{problems.hasSelected() ? undefined : 'disabled'}}">
+                ng-click="problems.deleteSelected()" dg-toggled="problems.hasSelected()">
             </fd-button>
         </fd-toolbar>
         <fd-toolbar ng-if="problems.displaySearch" has-title="false" dg-type="solid" dg-size="cozy">

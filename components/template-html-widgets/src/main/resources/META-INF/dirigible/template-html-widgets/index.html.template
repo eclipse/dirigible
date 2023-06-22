@@ -32,9 +32,10 @@
 	<body fd-scrollbar dg-contextmenu="contextMenuContent">
 		<fd-button dg-label="Reload view" onClick="window.location.reload();"></fd-button>
 		<h4>Buttons</h4>
-		<fd-button dg-label="Change state" ng-click="state()"></fd-button>
+		<fd-button dg-label="Change state" ng-click="state()" state="{{ btnState }}"></fd-button>
+		<fd-button dg-label="Toggle button" ng-click="toggle()" dg-toggled="btnToggled"></fd-button>
 
-		<fd-button dg-label="{{ btnText }}" badge="121" compact="true" glyph="sap-icon--folder" state="{{ btnState }}"
+		<fd-button dg-label="{{ btnText }}" badge="121" compact="true" glyph="sap-icon--folder"
 			dg-aria-desc="Just testing stuff" dg-type="{{ btnType }}" ng-click="test()">
 		</fd-button>
 
@@ -45,13 +46,13 @@
 		</fd-button>
 
 		<fd-segmented-button aria-label="Test group">
-			<fd-button dg-label="Left" state="{{ segmentedModel == 'left' ? 'selected' : '' }}"
+			<fd-button dg-label="Left" dg-toggled="segmentedModel === 'left' ? true : false"
 				ng-click="segmentedClick('left')">
 			</fd-button>
-			<fd-button dg-label="Middle" state="{{ segmentedModel == 'middle' ? 'selected' : '' }}"
+			<fd-button dg-label="Middle" dg-toggled="segmentedModel === 'middle' ? true : false"
 				ng-click="segmentedClick('middle')">
 			</fd-button>
-			<fd-button dg-label="Right" state="{{ segmentedModel == 'right' ? 'selected' : '' }}"
+			<fd-button dg-label="Right" dg-toggled="segmentedModel === 'right' ? true : false"
 				ng-click="segmentedClick('right')">
 			</fd-button>
 		</fd-segmented-button>
@@ -953,7 +954,7 @@
 			<fd-bar-middle>
 				<fd-bar-element>
 					<fd-segmented-button aria-label="Test group">
-						<fd-button glyph="sap-icon--email" aria-label="button" state="selected"></fd-button>
+						<fd-button glyph="sap-icon--email" aria-label="button" dg-toggled="true"></fd-button>
 						<fd-button glyph="sap-icon--iphone" aria-label="button"></fd-button>
 						<fd-button glyph="sap-icon--notification-2" aria-label="button"></fd-button>
 					</fd-segmented-button>
@@ -977,7 +978,7 @@
 			<fd-bar-middle>
 				<fd-bar-element>
 					<fd-segmented-button aria-label="Test group">
-						<fd-button glyph="sap-icon--email" aria-label="button" state="selected" compact="true">
+						<fd-button glyph="sap-icon--email" aria-label="button" dg-toggled="true" compact="true">
 						</fd-button>
 						<fd-button glyph="sap-icon--iphone" aria-label="button" compact="true"></fd-button>
 						<fd-button glyph="sap-icon--notification-2" aria-label="button" compact="true"></fd-button>
@@ -1075,7 +1076,7 @@
 					<fd-card-status dg-type="counter" status="positive"> 4 of 10</fd-card-status>
 				</fd-card-header>
 				<fd-card-content>
-					<table fd-table inner-borders="none">
+					<table fd-table inner-borders="top" outer-borders="none">
 						<thead fd-table-header>
 							<tr fd-table-row>
 								<td fd-table-cell content-type="checkbox">

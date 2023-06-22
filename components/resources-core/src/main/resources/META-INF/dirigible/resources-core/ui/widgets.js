@@ -1045,7 +1045,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         return {
             getTemplate: function (tagName) {
                 return `<${tagName} fd-button-internal class="fd-button" ng-class="getClasses()" ng-disabled="{'disabled':true}[state]"
-                    aria-selected="{{ state === 'selected' ? true : false }}" ng-attr-aria-expanded="{{ state === 'expanded' ? true : undefined }}">
+                    aria-pressed="{{ toggled }}" ng-attr-aria-expanded="{{ state === 'expanded' ? true : undefined }}">
                     <i ng-if="glyph" ng-class="glyph" role="presentation" aria-hidden="true"></i>
                     <span ng-if="dgLabel" ng-class="getTextClasses()">{{ dgLabel }}</span>
                     <span ng-if="badge" class="fd-button__badge">{{ badge }}</span>
@@ -1085,9 +1085,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (scope.compact === true) classList.push('fd-button--compact');
                         if (scope.inGroup === true) classList.push('fd-input-group__button');
                         if (scope.inMsgStrip === true) classList.push('fd-message-strip__close');
-                        if (scope.state === "selected") {
-                            element[0].removeAttribute('aria-disabled');
-                            classList.push('is-selected');
+                        if (scope.toggled) {
+                            classList.push('fd-button--toggled');
                         }
                         else if (scope.state === 'expanded') {
                             classList.push('is-expanded');
@@ -1148,7 +1147,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * compact: Boolean - Button size.
          * badge: String/Number - Used for showing a badge inside the button.
          * glyph: String - Icon class/classes.
-         * state: String - Possible options are 'selected', 'expanded', 'disabled' and 'disabled-focusable' (must be used with dgAriaDesc). If not specified, normal state is assumed.
+         * state: String - Possible options are 'expanded', 'disabled' and 'disabled-focusable' (must be used with dgAriaDesc). If not specified, normal state is assumed.
+         * dgToggled: Boolean - Set the toggle state.
          * dgType: String - 'emphasized', 'transparent', 'ghost', 'positive', 'negative' and 'attention'. If not specified, normal state is assumed.
          * dgAriaDesc: String - Short description of the button. If the button is disabled, it should contain the reason and what needs to be done to enable it.
          * isMenu: Boolean - Adds an arrow to the button.
@@ -1167,6 +1167,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 badge: '@?',
                 glyph: '@?',
                 state: '@?',
+                dgToggled: '<?',
                 dgType: '@?',
                 dgAriaDesc: '@?',
                 isMenu: '<?',
@@ -1195,7 +1196,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * dgAlign: String - Relative position of the popover. Possible values are "left" and "right". If not provided, right is assumed.
          * compact: Boolean - Button size.
          * glyph: String - Icon class for the dropdown button.
-         * state: String - Possible options are 'selected' and 'disabled'. If not specified, normal state is assumed.
+         * state: String - Possible options are 'disabled' and 'disabled-focusable'. If not specified, normal state is assumed.
          * dgType: String - 'emphasized', 'transparent', 'ghost', 'positive', 'negative' and 'attention'. If not specified, normal state is assumed.
          * callback: Function - The passed function will be called when the main action button is clicked.
          */
@@ -1718,8 +1719,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         }
     }]).directive('fdTable', [function () {
         /**
-         * innerBorders: String - Table inner borders. One of 'horizontal', 'vertical', 'none' or 'all' (default value)
-         * outerBorders: String - Table outer borders. One of 'horizontal', 'vertical', 'none' or 'all (default value)
+         * innerBorders: String - Table inner borders. One of 'horizontal', 'vertical', 'top', 'none' or 'all' (default value)
+         * outerBorders: String - Table outer borders. One of 'horizontal', 'vertical', 'none' or 'all' (default value)
          * displayMode: String - The size of the table. Could be one of 'compact', 'condensed' or 'standard' (default value)
          */
         return {
@@ -1739,10 +1740,16 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
 
                 $scope.getClasses = function () {
                     let classList = ['fd-table'];
-                    if ($scope.innerBorders === 'horizontal' || $scope.innerBorders === 'none') {
+                    if ($scope.innerBorders === 'top') {
+                        classList.push('fd-table--top-border');
                         classList.push('fd-table--no-horizontal-borders');
-                    }
-                    if ($scope.innerBorders === 'vertical' || $scope.innerBorders === 'none') {
+                        classList.push('fd-table--no-vertical-borders');
+                    } else if ($scope.innerBorders === 'none') {
+                        classList.push('fd-table--no-horizontal-borders');
+                        classList.push('fd-table--no-vertical-borders');
+                    } else if ($scope.innerBorders === 'horizontal') {
+                        classList.push('fd-table--no-horizontal-borders');
+                    } else if ($scope.innerBorders === 'vertical') {
                         classList.push('fd-table--no-vertical-borders');
                     }
                     if ($scope.displayMode === 'compact') {

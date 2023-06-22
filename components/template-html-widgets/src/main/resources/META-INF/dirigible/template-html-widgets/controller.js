@@ -12,9 +12,10 @@ gameView.config(["messageHubProvider", function (messageHubProvider) {
 // Initialize controller
 gameView.controller('GameViewController', ['$scope', 'messageHub', function ($scope, messageHub) {
 
-    $scope.btnText = "State button";
+    $scope.btnText = "Badge button";
     $scope.btnType = "positive";
-    $scope.btnState = "disabled-focusable";
+    $scope.btnState = "";
+    $scope.btnToggled = false;
 
     $scope.splitButtonAction = "Default";
     $scope.segmentedModel = "middle";
@@ -220,11 +221,11 @@ gameView.controller('GameViewController', ['$scope', 'messageHub', function ($sc
     };
 
     $scope.state = function () {
-        if ($scope.btnState === "disabled-focusable")
-            $scope.btnState = 'selected';
-        else if ($scope.btnState === "selected")
-            $scope.btnState = '';
-        else $scope.btnState = "disabled-focusable";
+        $scope.btnState = "disabled-focusable";
+    };
+
+    $scope.toggle = function () {
+        $scope.btnToggled = !$scope.btnToggled;
     };
 
     $scope.steps = [
