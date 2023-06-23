@@ -20,7 +20,8 @@
         <script type="text/javascript" src="/services/web/ide-operations/services/operations-perspective.js">
         </script>
         <theme></theme>
-        <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-perspective-js"></script>
+        <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-perspective-js">
+        </script>
         <link type="text/css" rel="stylesheet"
             href="/services/js/resources-core/services/loader.js?id=ide-perspective-css" />
     </head>
@@ -40,7 +41,7 @@
             }])
             .controller('OperationsController', ["$scope", "messageHub", function ($scope, messageHub) {
                 $scope.layoutModel = {
-                    views: ['registry', 'repository', 'extensions', 'configurations', 'jobs', 'listeners', 'datastructures', 'access', 'roles', 'websockets', 'logs', 'loggers', 'console'],
+                    views: ['registry', 'repository', 'extensions', 'configurations', 'artefacts', 'jobs', 'listeners', 'datastructures', 'access', 'roles', 'websockets', 'logs', 'loggers', 'console'],
                 };
             }]);
         </script>

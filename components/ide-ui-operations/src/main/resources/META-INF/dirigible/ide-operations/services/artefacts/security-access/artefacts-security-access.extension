@@ -1,0 +1,5 @@
+{
+    "module": "ide-operations/services/artefacts/security-access/artefacts-security-access.mjs",
+    "extensionPoint": "ide-operations-artefacts",
+    "description": "Security Access Artefacts Extension"
+}
