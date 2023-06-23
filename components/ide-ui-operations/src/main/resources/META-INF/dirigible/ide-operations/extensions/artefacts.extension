@@ -1,0 +1,5 @@
+{
+    "module": "ide-operations/services/artefacts-view.js",
+    "extensionPoint": "ide-view",
+    "description": "Artefacts View"
+}
