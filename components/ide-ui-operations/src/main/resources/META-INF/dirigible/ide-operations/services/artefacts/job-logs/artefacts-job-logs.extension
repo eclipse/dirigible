@@ -1,5 +1,0 @@
-{
-    "module": "ide-operations/services/artefacts/job-logs/artefacts-job-logs.mjs",
-    "extensionPoint": "ide-operations-artefacts",
-    "description": "Job Logs Emails Artefacts Extension"
-}
