@@ -1,0 +1,5 @@
+{
+    "module": "ide-operations/services/artefacts/odata-mapping/artefacts-odata-mapping.mjs",
+    "extensionPoint": "ide-operations-artefacts",
+    "description": "OData Mapping Artefacts Extension"
+}
