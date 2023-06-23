@@ -26,6 +26,12 @@ function getMaster(parameters) {
             rename: "gen/ui/{{perspectiveName}}/perspective.extension",
             collection: "uiListMasterModels"
         },
+		{
+			location: "/template-application-ui-angular/ui/perspective/perspective-portal.extension",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/perspective-portal.extension",
+			collection: "uiListMasterModels"
+		},
         {
             location: "/template-application-ui-angular/ui/perspective/perspective.js",
             action: "generate",
@@ -50,6 +56,12 @@ function getMaster(parameters) {
             location: "/template-application-ui-angular/ui/perspective/master-list/tile.extension",
             action: "generate",
             rename: "gen/ui/{{perspectiveName}}/{{name}}/tile.extension",
+            collection: "uiListMasterModels"
+        },
+        {
+            location: "/template-application-ui-angular/ui/perspective/master-list/tile-portal.extension",
+            action: "generate",
+            rename: "gen/ui/{{perspectiveName}}/{{name}}/tile-portal.extension",
             collection: "uiListMasterModels"
         },
         {

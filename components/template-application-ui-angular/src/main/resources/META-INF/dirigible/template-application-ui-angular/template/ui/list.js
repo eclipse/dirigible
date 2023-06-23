@@ -20,6 +20,12 @@ exports.getSources = function (parameters) {
 			collection: "uiListModels"
 		},
 		{
+			location: "/template-application-ui-angular/ui/perspective/perspective-portal.extension",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/perspective-portal.extension",
+			collection: "uiListModels"
+		},
+		{
 			location: "/template-application-ui-angular/ui/perspective/perspective.js",
 			action: "generate",
 			rename: "gen/ui/{{perspectiveName}}/perspective.js",
@@ -70,6 +76,12 @@ exports.getSources = function (parameters) {
 			location: "/template-application-ui-angular/ui/perspective/list/tile.extension",
 			action: "generate",
 			rename: "gen/ui/{{perspectiveName}}/{{name}}/tile.extension",
+			collection: "uiListModels"
+		},
+		{
+			location: "/template-application-ui-angular/ui/perspective/list/tile-portal.extension",
+			action: "generate",
+			rename: "gen/ui/{{perspectiveName}}/{{name}}/tile-portal.extension",
 			collection: "uiListModels"
 		},
 		{

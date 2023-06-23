@@ -173,13 +173,13 @@
 		<module>resources-theme-quartz-dark</module>
 		<module>resources-theme-quartz-light</module>
 		<module>resources-themes</module>
+		<module>resources-portal</module>
 		
 		<!-- Templates -->
 		<module>template-application-angular</module>
 		<module>template-application-dao</module>
 		<module>template-application-data</module>
 		<module>template-application-feed</module>
-		<module>template-application-launchpad</module>
 		<module>template-application-odata</module>
 		<module>template-application-rest</module>
 		<module>template-application-schema</module>

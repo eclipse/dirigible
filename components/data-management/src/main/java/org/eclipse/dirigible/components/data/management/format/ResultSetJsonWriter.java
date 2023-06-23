@@ -16,7 +16,6 @@ import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Date;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
