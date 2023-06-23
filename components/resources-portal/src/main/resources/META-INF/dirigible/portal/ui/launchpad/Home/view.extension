@@ -1,0 +1,5 @@
+{
+    "module": "portal/ui/launchpad/Home/view.js",
+    "extensionPoint": "portal-view",
+    "description": "portal - Application View"
+}

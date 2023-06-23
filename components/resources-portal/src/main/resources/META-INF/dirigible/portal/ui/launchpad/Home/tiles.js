@@ -8,7 +8,7 @@ const extensions = require("extensions/extensions");
 
 let tiles = {};
 
-let tileExtensions = extensions.getExtensions("${projectName}-tile");
+let tileExtensions = extensions.getExtensions("portal-tile");
 for (let i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
     let tileExtension = require(tileExtensions[i]);
     if (typeof tileExtension.getTile !== "function") {
