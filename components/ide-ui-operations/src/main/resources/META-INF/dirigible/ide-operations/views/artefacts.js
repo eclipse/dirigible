@@ -9,16 +9,16 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const viewData = {
-	id: "artefacts",
-	factory: "frame",
-	region: "center",
-	label: "Artefacts",
-	link: "../ide-operations/views/artefacts.html"
-};
+const artefactsView = angular.module('artefacts', ['ideUI', 'ideView']);
 
-if (typeof exports !== 'undefined') {
-	exports.getView = function () {
-		return viewData;
-	}
-}
+artefactsView.config(["messageHubProvider", function (messageHubProvider) {
+    messageHubProvider.eventIdPrefix = 'artefacts-view';
+}]);
+
+artefactsView.controller('ArtefactsController', ['$scope', '$http', function ($scope, $http) {
+
+    $http.get('/services/js/ide-operations/services/artefacts/artefacts.mjs').then(function (response) {
+        $scope.artefacts = response.data;
+    });
+
+}]);
