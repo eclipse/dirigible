@@ -1,0 +1,5 @@
+{
+    "module": "ide-operations/services/artefacts/bpmn/artefacts-bpmn.mjs",
+    "extensionPoint": "ide-operations-artefacts",
+    "description": "BPMN Artefacts Extension"
+}
