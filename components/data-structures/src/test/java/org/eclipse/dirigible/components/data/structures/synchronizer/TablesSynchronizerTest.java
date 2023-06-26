@@ -15,11 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
@@ -136,7 +135,8 @@ public class TablesSynchronizerTest {
 	 * @param dependencies the dependencies
 	 * @return the table
 	 */
-	public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location, String name, String description, List<String> dependencies) {
+	public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location, String name,
+			String description, Set<String> dependencies) {
 		Table table = new Table(location, name, description, dependencies, "TABLE", null);
 		table.addColumn(name + "_1", "VARCHAR", "20", true, false, "", "0", false);
 		table.addColumn(name + "_2", "VARCHAR", "20", true, false, "", "0", false);

@@ -107,7 +107,7 @@ public class AccessService implements ArtefactService<Access> {
     @Transactional(readOnly = true)
     public List<Access> findByLocation(String location) {
         Access filter = new Access();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Access> example = Example.of(filter);
         List<Access> list = accessRepository.findAll(example);
         return list;

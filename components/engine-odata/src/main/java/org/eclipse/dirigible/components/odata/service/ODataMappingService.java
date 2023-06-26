@@ -124,7 +124,7 @@ public class ODataMappingService implements ArtefactService<ODataMapping>, Initi
     @Transactional(readOnly = true)
     public List<ODataMapping> findByLocation(String location) {
     	ODataMapping filter = new ODataMapping();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<ODataMapping> example = Example.of(filter);
         List<ODataMapping> list = odataMappingRepository.findAll(example);
         return list;

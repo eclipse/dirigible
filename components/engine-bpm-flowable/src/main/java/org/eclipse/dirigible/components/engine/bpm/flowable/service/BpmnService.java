@@ -105,7 +105,7 @@ public class BpmnService implements ArtefactService<Bpmn> {
     @Transactional(readOnly = true)
     public List<Bpmn> findByLocation(String location) {
     	Bpmn filter = new Bpmn();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Bpmn> example = Example.of(filter);
         List<Bpmn> list = bpmnRepository.findAll(example);
         return list;

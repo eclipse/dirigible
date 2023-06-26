@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.data.csvim.domain;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -117,7 +117,9 @@ public class CsvFile extends Artefact {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Csvim csvim;
 
-    public CsvFile(String location, String name, String type, String description, List<String> dependencies, Long id, String table, String schema, String file, Boolean header, Boolean useHeaderNames, String delimField, String delimEnclosing, String sequence, Boolean distinguishEmptyFromNull, Csvim csvim) {
+    public CsvFile(String location, String name, String type, String description, Set<String> dependencies, Long id, String table, String schema,
+    		String file, Boolean header, Boolean useHeaderNames, String delimField, String delimEnclosing, String sequence,
+    		Boolean distinguishEmptyFromNull, Csvim csvim) {
         super(location, name, type, description, dependencies);
         this.id = id;
         this.table = table;
@@ -132,7 +134,8 @@ public class CsvFile extends Artefact {
         this.csvim = csvim;
     }
 
-    public CsvFile(Long id, String table, String schema, String file, Boolean header, Boolean useHeaderNames, String delimField, String delimEnclosing, String sequence, Boolean distinguishEmptyFromNull, Csvim csvim) {
+    public CsvFile(Long id, String table, String schema, String file, Boolean header, Boolean useHeaderNames, String delimField, String delimEnclosing,
+    		String sequence, Boolean distinguishEmptyFromNull, Csvim csvim) {
         this.id = id;
         this.table = table;
         this.schema = schema;

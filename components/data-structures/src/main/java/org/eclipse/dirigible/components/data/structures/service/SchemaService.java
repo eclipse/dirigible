@@ -16,7 +16,11 @@ import java.util.Optional;
 
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.data.structures.domain.Schema;
+import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.domain.View;
 import org.eclipse.dirigible.components.data.structures.repository.SchemaRepository;
+import org.eclipse.dirigible.components.data.structures.repository.TableRepository;
+import org.eclipse.dirigible.components.data.structures.repository.ViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -34,6 +38,14 @@ public class SchemaService implements ArtefactService<Schema> {
 	/** The Schema repository. */
 	@Autowired 
 	private SchemaRepository schemaRepository;
+	
+	/** The Table service. */
+	@Autowired 
+	private TableService tableService;
+	
+	/** The View service. */
+	@Autowired 
+	private ViewService viewService;
 
 	/**
 	 * Gets the all.
@@ -43,7 +55,31 @@ public class SchemaService implements ArtefactService<Schema> {
 	@Override
 	@Transactional(readOnly = true)
 	public List<Schema> getAll() {
-		return schemaRepository.findAll();
+		List<Schema> schemas = schemaRepository.findAll();
+		populateChildren(schemas);
+		return schemas;
+	}
+
+	/**
+	 * Populate children.
+	 *
+	 * @param schemas the schemas
+	 */
+	public void populateChildren(List<Schema> schemas) {
+		schemas.forEach(s -> {
+			List<Table> tables = tableService.findByLocation(s.getLocation());
+			tables.forEach(t -> {
+				t.setSchema(s.getName());
+				t.setSchemaReference(s);
+			});
+			s.setTables(tables);
+			List<View> views = viewService.findByLocation(s.getLocation());
+			views.forEach(v -> {
+				v.setSchema(s.getName());
+				v.setSchemaReference(s);
+			});
+			s.setViews(views);
+		});
 	}
 	
 	/**
@@ -69,6 +105,7 @@ public class SchemaService implements ArtefactService<Schema> {
 	public Schema findById(Long id) {
 		Optional<Schema> schema = schemaRepository.findById(id);
 		if (schema.isPresent()) {
+			populateChildren(List.of(schema.get()));
 			return schema.get();
 		} else {
 			throw new IllegalArgumentException("Schema with id does not exist: " + id);
@@ -89,6 +126,7 @@ public class SchemaService implements ArtefactService<Schema> {
 		Example<Schema> example = Example.of(filter);
 		Optional<Schema> schema = schemaRepository.findOne(example);
 		if (schema.isPresent()) {
+			populateChildren(List.of(schema.get()));
 			return schema.get();
 		} else {
 			throw new IllegalArgumentException("Schema with name does not exist: " + name);
@@ -105,9 +143,10 @@ public class SchemaService implements ArtefactService<Schema> {
     @Transactional(readOnly = true)
     public List<Schema> findByLocation(String location) {
     	Schema filter = new Schema();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Schema> example = Example.of(filter);
         List<Schema> list = schemaRepository.findAll(example);
+        populateChildren(list);
         return list;
     }
 	
@@ -125,6 +164,7 @@ public class SchemaService implements ArtefactService<Schema> {
         Example<Schema> example = Example.of(filter);
         Optional<Schema> schema = schemaRepository.findOne(example);
         if (schema.isPresent()) {
+        	populateChildren(List.of(schema.get()));
             return schema.get();
         }
         return null;

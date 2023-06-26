@@ -11,6 +11,15 @@
  */
 package org.eclipse.dirigible.components.jobs.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.sql.Timestamp;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,14 +31,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * The Class JobLogRepositoryTest.
@@ -131,7 +132,7 @@ public class JobLogRepositoryTest {
      * @param status the status
      * @param message the message
      */
-    public static void createJobLog(JobLogRepository jobLogRepository, String location, String name, String description, List<String> dependencies, String jobName, String handler,
+    public static void createJobLog(JobLogRepository jobLogRepository, String location, String name, String description, Set<String> dependencies, String jobName, String handler,
                                      Timestamp triggeredAt, long triggeredId, Timestamp finishedAt, short status, String message) {
         JobLog jobLog = new JobLog(location, name, description, dependencies, jobName, handler, triggeredAt, triggeredId, finishedAt, status, message);
         jobLogRepository.save(jobLog);

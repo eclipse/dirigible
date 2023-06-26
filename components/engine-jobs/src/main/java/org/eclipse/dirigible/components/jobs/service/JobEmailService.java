@@ -140,7 +140,7 @@ public class JobEmailService implements ArtefactService<JobEmail> {
     @Transactional(readOnly = true)
     public List<JobEmail> findByLocation(String location) {
     	JobEmail filter = new JobEmail();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<JobEmail> example = Example.of(filter);
         List<JobEmail> list = jobEmailRepository.findAll(example);
         return list;

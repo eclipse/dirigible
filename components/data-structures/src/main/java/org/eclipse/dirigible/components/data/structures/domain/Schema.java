@@ -13,9 +13,8 @@ package org.eclipse.dirigible.components.data.structures.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
-import javax.annotation.Nullable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,8 +23,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.hibernate.annotations.LazyCollection;
@@ -69,7 +66,7 @@ public class Schema extends Artefact {
 	 * @param description the description
 	 * @param dependencies the dependencies
 	 */
-	public Schema(String location, String name, String description, List<String> dependencies) {
+	public Schema(String location, String name, String description, Set<String> dependencies) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 	}
 	

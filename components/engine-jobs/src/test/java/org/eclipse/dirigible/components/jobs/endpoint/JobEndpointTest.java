@@ -16,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
@@ -169,7 +169,7 @@ public class JobEndpointTest {
      */
     public static void createJob(JobService jobService, String name, String group, String clazz, String handler,
                                  String engine, String description, String expression, boolean singleton,
-                                 List<JobParameter> parameters, String location, List<String> dependencies){
+                                 List<JobParameter> parameters, String location, Set<String> dependencies){
         Job job = new Job(name, group, clazz, handler, engine, description, expression, singleton, parameters, location, dependencies);
         jobService.save(job);
     }

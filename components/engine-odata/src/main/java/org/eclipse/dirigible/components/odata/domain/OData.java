@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.odata.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,7 +78,7 @@ public class OData extends Artefact {
 	 * @param entities the entities
 	 * @param associations the associations
 	 */
-	public OData(String location, String name, String description, List<String> dependencies,
+	public OData(String location, String name, String description, Set<String> dependencies,
 			String namespace, List<ODataEntity> entities, List<ODataAssociation> associations) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.namespace = namespace;

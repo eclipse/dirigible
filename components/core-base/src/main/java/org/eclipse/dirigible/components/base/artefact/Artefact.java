@@ -12,8 +12,8 @@
 package org.eclipse.dirigible.components.base.artefact;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -22,7 +22,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
-import org.eclipse.dirigible.components.base.converters.ListOfStringsToCsvConverter;
+import org.eclipse.dirigible.components.base.converters.SetOfStringsToCsvConverter;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -69,8 +69,8 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	@Column(name = "ARTEFACT_DEPENDENCIES", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Expose
 	@Nullable
-	@Convert(converter = ListOfStringsToCsvConverter.class)
-	protected List<String> dependencies;
+	@Convert(converter = SetOfStringsToCsvConverter.class)
+	protected Set<String> dependencies;
 	
 	/** The lifecycle. */
 	@Column(name = "ARTEFACT_STATUS", columnDefinition = "VARCHAR", nullable = true, length = 32)
@@ -105,7 +105,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 * @param description the description
 	 * @param dependencies the dependencies
 	 */
-	public Artefact(String location, String name, String type, String description, List<String> dependencies) {
+	public Artefact(String location, String name, String type, String description, Set<String> dependencies) {
 		super();
 		this.location = location;
 		this.name = name;
@@ -218,7 +218,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 *
 	 * @return the dependencies
 	 */
-	public List<String> getDependencies() {
+	public Set<String> getDependencies() {
 		return dependencies;
 	}
 
@@ -227,7 +227,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 *
 	 * @param dependencies the dependencies to set
 	 */
-	public void setDependencies(List<String> dependencies) {
+	public void setDependencies(Set<String> dependencies) {
 		this.dependencies = dependencies;
 	}
 	
@@ -238,7 +238,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 */
 	public void addDependency(String dependency) {
 		if (dependencies == null) {
-			dependencies = new ArrayList<String>();
+			dependencies = new HashSet<String>();
 		}
 		dependencies.add(dependency);
 	}

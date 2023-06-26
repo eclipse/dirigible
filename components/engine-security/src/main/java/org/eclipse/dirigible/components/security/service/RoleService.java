@@ -109,7 +109,7 @@ public class RoleService implements ArtefactService<Role> {
     @Transactional(readOnly = true)
     public List<Role> findByLocation(String location) {
     	Role filter = new Role();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Role> example = Example.of(filter);
         List<Role> list = roleRepository.findAll(example);
         return list;

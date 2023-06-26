@@ -105,7 +105,7 @@ public class ExtensionService implements ArtefactService<Extension> {
     @Transactional(readOnly = true)
     public List<Extension> findByLocation(String location) {
     	Extension filter = new Extension();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Extension> example = Example.of(filter);
         List<Extension> list = extensionRepository.findAll(example);
         return list;

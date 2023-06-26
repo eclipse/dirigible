@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.jobs.domain;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -142,7 +143,7 @@ public class Job extends Artefact {
      * @param message the message
      * @param executedAt the executed at
      */
-    public Job(String location, String name, String description, List<String> dependencies, String group, String clazz, 
+    public Job(String location, String name, String description, Set<String> dependencies, String group, String clazz, 
     		String expression, String handler, String engine, Boolean singleton, Boolean enabled, Short status, String message, Timestamp executedAt) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.group = group;
@@ -173,7 +174,7 @@ public class Job extends Artefact {
      * @param dependencies the dependencies
      */
     public Job(String name, String group, String clazz, String handler, String engine, String description, String expression,
-               Boolean singleton, List<JobParameter> parameters, String location, List<String> dependencies) {
+               Boolean singleton, List<JobParameter> parameters, String location, Set<String> dependencies) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.group = group;
         this.clazz = clazz;

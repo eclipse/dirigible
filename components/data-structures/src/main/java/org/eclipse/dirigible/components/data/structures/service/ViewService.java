@@ -105,7 +105,7 @@ public class ViewService implements ArtefactService<View> {
     @Transactional(readOnly = true)
     public List<View> findByLocation(String location) {
     	View filter = new View();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<View> example = Example.of(filter);
         List<View> list = viewRepository.findAll(example);
         return list;

@@ -11,13 +11,18 @@
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 import com.google.gson.annotations.Expose;
-
-import java.util.List;
-
-import javax.persistence.*;
 
 /**
  * The Class JobEmail.
@@ -63,7 +68,7 @@ public class JobEmail extends Artefact {
      * @param jobName the job name
      * @param email the email
      */
-    public JobEmail(String location, String name, String description, List<String> dependencies, String jobName, String email) {
+    public JobEmail(String location, String name, String description, Set<String> dependencies, String jobName, String email) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.jobName = jobName;
         this.email = email;

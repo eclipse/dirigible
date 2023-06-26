@@ -124,7 +124,7 @@ public class ODataContainerService implements ArtefactService<ODataContainer>, I
     @Transactional(readOnly = true)
     public List<ODataContainer> findByLocation(String location) {
     	ODataContainer filter = new ODataContainer();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<ODataContainer> example = Example.of(filter);
         List<ODataContainer> list = odataContainerRepository.findAll(example);
         return list;

@@ -142,7 +142,7 @@ public class MarkdownService implements ArtefactService<Markdown> {
     @Transactional(readOnly = true)
     public List<Markdown> findByLocation(String location) {
     	Markdown filter = new Markdown();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Markdown> example = Example.of(filter);
         List<Markdown> list = markdownRepository.findAll(example);
         return list;

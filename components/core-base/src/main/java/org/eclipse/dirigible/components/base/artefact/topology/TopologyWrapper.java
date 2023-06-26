@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.base.artefact.topology;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
@@ -92,7 +93,7 @@ public class TopologyWrapper<A extends Artefact> implements TopologicallySortabl
 	public List<TopologicallySortable> getDependencies() {
 		List<TopologicallySortable> dependencies = new ArrayList<TopologicallySortable>();
 		if (this.artefact.getDependencies() != null) {
-			List<String> keys = this.artefact.getDependencies();
+			Set<String> keys = this.artefact.getDependencies();
 			for (String key : keys) {
 				if (!wrappers.containsKey(key)) {
 					if (logger.isWarnEnabled()) {logger.warn("Dependency is not present in this cycle: " + key);}

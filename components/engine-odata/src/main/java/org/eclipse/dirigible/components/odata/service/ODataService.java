@@ -124,7 +124,7 @@ public class ODataService implements ArtefactService<OData>, InitializingBean {
     @Transactional(readOnly = true)
     public List<OData> findByLocation(String location) {
     	OData filter = new OData();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<OData> example = Example.of(filter);
         List<OData> list = odataRepository.findAll(example);
         return list;
