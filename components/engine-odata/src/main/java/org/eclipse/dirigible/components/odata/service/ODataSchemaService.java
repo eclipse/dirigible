@@ -124,7 +124,7 @@ public class ODataSchemaService implements ArtefactService<ODataSchema>, Initial
     @Transactional(readOnly = true)
     public List<ODataSchema> findByLocation(String location) {
     	ODataSchema filter = new ODataSchema();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<ODataSchema> example = Example.of(filter);
         List<ODataSchema> list = odataSchemaRepository.findAll(example);
         return list;

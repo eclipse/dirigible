@@ -114,7 +114,7 @@ public class CsvimService implements ArtefactService<Csvim> {
     @Transactional(readOnly = true)
     public List<Csvim> findByLocation(String location) {
         Csvim filter = new Csvim();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Csvim> example = Example.of(filter);
         return csvimRepository.findAll(example);
     }

@@ -11,12 +11,8 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
-import javax.annotation.Nullable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,12 +21,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -87,7 +79,7 @@ public class View extends Artefact {
 	 * @param schema the schema name
 	 * @param query the query
 	 */
-	public View(String location, String name, String description, List<String> dependencies, String kind, String schema, String query) {
+	public View(String location, String name, String description, Set<String> dependencies, String kind, String schema, String query) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.kind = kind;
 		this.schema = schema;

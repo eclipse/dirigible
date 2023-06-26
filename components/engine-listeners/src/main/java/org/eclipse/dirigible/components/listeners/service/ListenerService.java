@@ -101,7 +101,7 @@ public class ListenerService implements ArtefactService<Listener> {
     @Transactional(readOnly = true)
     public List<Listener> findByLocation(String location) {
     	Listener filter = new Listener();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Listener> example = Example.of(filter);
         List<Listener> list = listenerRepository.findAll(example);
         return list;

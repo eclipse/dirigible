@@ -72,7 +72,7 @@ public class CamelService implements ArtefactService<Camel> {
     @Override
     public List<Camel> findByLocation(String location) {
         Camel filter = new Camel();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Camel> example = Example.of(filter);
         return camelRepository.findAll(example);
     }

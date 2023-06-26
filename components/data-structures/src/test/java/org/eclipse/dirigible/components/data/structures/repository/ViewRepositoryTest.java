@@ -14,8 +14,8 @@ package org.eclipse.dirigible.components.data.structures.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
@@ -121,7 +121,7 @@ public class ViewRepositoryTest {
 	 * @param dependencies the dependencies
 	 * @return the view
 	 */
-	public static View createView(ViewRepository viewRepository, String location, String name, String description, List<String> dependencies) {
+	public static View createView(ViewRepository viewRepository, String location, String name, String description, Set<String> dependencies) {
 		View view = new View(location, name, description, dependencies, null, "VIEW", "SELECT ...");
 		viewRepository.save(view);
 		return view;

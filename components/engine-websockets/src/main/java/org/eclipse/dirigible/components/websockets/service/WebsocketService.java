@@ -105,7 +105,7 @@ public class WebsocketService implements ArtefactService<Websocket> {
     @Transactional(readOnly = true)
     public List<Websocket> findByLocation(String location) {
     	Websocket filter = new Websocket();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Websocket> example = Example.of(filter);
         List<Websocket> list = websocketRepository.findAll(example);
         return list;

@@ -130,7 +130,7 @@ public class JobService implements ArtefactService<Job>  {
     @Transactional(readOnly = true)
     public List<Job> findByLocation(String location) {
     	Job filter = new Job();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Job> example = Example.of(filter);
         List<Job> list = jobRepository.findAll(example);
         return list;

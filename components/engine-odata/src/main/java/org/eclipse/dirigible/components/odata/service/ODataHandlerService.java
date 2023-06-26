@@ -124,7 +124,7 @@ public class ODataHandlerService implements ArtefactService<ODataHandler>, Initi
     @Transactional(readOnly = true)
     public List<ODataHandler> findByLocation(String location) {
     	ODataHandler filter = new ODataHandler();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<ODataHandler> example = Example.of(filter);
         List<ODataHandler> list = odataHandlerRepository.findAll(example);
         return list;

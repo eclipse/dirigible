@@ -105,7 +105,7 @@ public class TableService implements ArtefactService<Table> {
     @Transactional(readOnly = true)
     public List<Table> findByLocation(String location) {
     	Table filter = new Table();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Table> example = Example.of(filter);
         List<Table> list = tableRepository.findAll(example);
         return list;

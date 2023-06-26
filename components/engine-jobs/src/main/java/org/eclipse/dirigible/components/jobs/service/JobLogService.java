@@ -138,7 +138,7 @@ public class JobLogService implements ArtefactService<JobLog> {
     @Transactional(readOnly = true)
     public List<JobLog> findByLocation(String location) {
     	JobLog filter = new JobLog();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<JobLog> example = Example.of(filter);
         List<JobLog> list = jobLogRepository.findAll(example);
         return list;

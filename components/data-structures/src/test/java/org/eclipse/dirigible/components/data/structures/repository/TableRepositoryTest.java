@@ -14,13 +14,12 @@ package org.eclipse.dirigible.components.data.structures.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.data.structures.domain.Table;
-import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -132,7 +131,8 @@ public class TableRepositoryTest {
 	 * @param dependencies the dependencies
 	 * @return the table
 	 */
-	public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location, String name, String description, List<String> dependencies) {
+	public static Table createTable(TableRepository tableRepository, TableColumnRepository tableColumnRepository, String location, String name,
+			String description, Set<String> dependencies) {
 		Table table = new Table(location, name, description, dependencies, "TABLE", null);
 		table.addColumn(name + "_1", "VARCHAR", "20", true, false, "", "0", false);
 		table.addColumn(name + "_2", "VARCHAR", "20", true, false, "", "0", false);

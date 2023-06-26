@@ -105,7 +105,7 @@ public class ExposeService implements ArtefactService<Expose> {
     @Transactional(readOnly = true)
     public List<Expose> findByLocation(String location) {
     	Expose filter = new Expose();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Expose> example = Example.of(filter);
         List<Expose> list = exposeRepository.findAll(example);
         return list;

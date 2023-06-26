@@ -14,7 +14,6 @@ package org.eclipse.dirigible.components.data.structures.synchronizer.schema;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.data.structures.domain.Schema;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
 import org.eclipse.dirigible.components.data.structures.domain.View;

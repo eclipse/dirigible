@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.odata.domain;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -72,7 +72,7 @@ public class ODataHandler extends Artefact {
 	 * @param kind the kind
 	 * @param handler the handler
 	 */
-	public ODataHandler(String location, String name, String description, List<String> dependencies,
+	public ODataHandler(String location, String name, String description, Set<String> dependencies,
 			String namespace, String method, String kind, String handler) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.namespace = namespace;

@@ -105,7 +105,7 @@ public class DataSourceService implements ArtefactService<DataSource> {
     @Transactional(readOnly = true)
     public List<DataSource> findByLocation(String location) {
     	DataSource filter = new DataSource();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<DataSource> example = Example.of(filter);
         List<DataSource> list = datasourceRepository.findAll(example);
         return list;

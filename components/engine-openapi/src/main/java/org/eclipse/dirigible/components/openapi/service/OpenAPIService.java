@@ -142,7 +142,7 @@ public class OpenAPIService implements ArtefactService<OpenAPI> {
     @Transactional(readOnly = true)
     public List<OpenAPI> findByLocation(String location) {
     	OpenAPI filter = new OpenAPI();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<OpenAPI> example = Example.of(filter);
         List<OpenAPI> list = openAPIRepository.findAll(example);
         return list;

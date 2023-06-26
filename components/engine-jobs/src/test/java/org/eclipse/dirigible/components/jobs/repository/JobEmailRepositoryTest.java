@@ -11,6 +11,14 @@
  */
 package org.eclipse.dirigible.components.jobs.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Optional;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+
 import org.eclipse.dirigible.components.jobs.domain.JobEmail;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,14 +30,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * The Class JobEmailRepositoryTest.
@@ -122,7 +122,7 @@ public class JobEmailRepositoryTest {
      * @param jobName the name
      * @param email the email
      */
-    public static void createJobEmail(JobEmailRepository jobEmailRepository, String location, String name, String description, List<String> dependencies, String jobName, String email){
+    public static void createJobEmail(JobEmailRepository jobEmailRepository, String location, String name, String description, Set<String> dependencies, String jobName, String email){
         JobEmail jobEmail = new JobEmail(location, name, description, dependencies, jobName, email);
         jobEmailRepository.save(jobEmail);
     }

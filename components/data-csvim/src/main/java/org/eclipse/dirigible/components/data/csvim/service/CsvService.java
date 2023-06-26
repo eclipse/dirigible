@@ -90,7 +90,7 @@ public class CsvService implements ArtefactService<Csv> {
     @Override
     public List<Csv> findByLocation(String location) {
         Csv filter = new Csv();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Csv> example = Example.of(filter);
         return csvRepository.findAll(example);
     }

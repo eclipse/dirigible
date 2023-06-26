@@ -173,6 +173,7 @@ public class SchemasSynchronizer<A extends Artefact> implements Synchronizer<Sch
 		
 		schema.getTables().forEach(t -> {
 				t.setSchemaReference(schema);
+//				t.setSchema(schema.getName());
 				t.setConstraints(new TableConstraints(t));
 				TablesSynchronizer.assignParent(t);
 			});

@@ -12,8 +12,8 @@
 package org.eclipse.dirigible.components.data.csvim.domain;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,7 +57,7 @@ public class Csv extends Artefact {
     @Expose
     private byte[] content;
 
-    public Csv(String location, String name, String type, String description, List<String> dependencies, Long id, boolean imported, byte[] content) {
+    public Csv(String location, String name, String type, String description, Set<String> dependencies, Long id, boolean imported, byte[] content) {
         super(location, name, type, description, dependencies);
         this.id = id;
         this.imported = imported;

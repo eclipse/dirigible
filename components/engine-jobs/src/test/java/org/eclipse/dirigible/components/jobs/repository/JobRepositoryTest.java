@@ -11,6 +11,16 @@
  */
 package org.eclipse.dirigible.components.jobs.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobParameter;
 import org.junit.jupiter.api.AfterEach;
@@ -23,15 +33,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * The Class JobRepositoryTest.
@@ -136,7 +137,7 @@ public class JobRepositoryTest {
      */
     public static void createJob(JobRepository jobRepository, String name, String group, String clazz, String handler,
                                 String engine, String description, String expression, boolean singleton,
-                                List<JobParameter> parameters, String location, List<String> dependencies){
+                                List<JobParameter> parameters, String location, Set<String> dependencies){
         Job job = new Job(name, group, clazz, handler, engine, description, expression, singleton, parameters, location, dependencies);
         jobRepository.save(job);
     }

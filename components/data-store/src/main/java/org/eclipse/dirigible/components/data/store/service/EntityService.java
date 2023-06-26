@@ -102,7 +102,7 @@ public class EntityService implements ArtefactService<Entity> {
     @Transactional(readOnly = true)
     public List<Entity> findByLocation(String location) {
     	Entity filter = new Entity();
-        filter.setName(location);
+        filter.setLocation(location);
         Example<Entity> example = Example.of(filter);
         List<Entity> list = entityRepository.findAll(example);
         return list;

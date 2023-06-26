@@ -11,14 +11,19 @@
  */
 package org.eclipse.dirigible.components.jobs.domain;
 
+import java.sql.Timestamp;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
 import com.google.gson.annotations.Expose;
-
-import java.sql.Timestamp;
-import java.util.List;
-
-import javax.persistence.*;
 
 /**
  * The JobLogDefinition serialization object.
@@ -118,7 +123,7 @@ public class JobLog extends Artefact {
      * @param status the status
      * @param message the message
      */
-    public JobLog(String location, String name, String description, List<String> dependencies, String jobName, String handler, 
+    public JobLog(String location, String name, String description, Set<String> dependencies, String jobName, String handler, 
     		Timestamp triggeredAt, Long triggeredId, Timestamp finishedAt, Short status, String message) {
         super(location, name, ARTEFACT_TYPE, description, dependencies);
         this.jobName = jobName;
