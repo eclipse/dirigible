@@ -26,39 +26,33 @@
 				<p class="fd-text">All the products available on this instance are listed below</p>
 				<br>
 				<div class="fd-panel fd-panel--fixed" ng-repeat="group in groups">
-					<div class="fd-panel__header">
-						<h4 class="fd-panel__title" style="text-transform: capitalize;">
-							{{group.replaceAll('-', ' ').replaceAll('_', ' ')}}
-						</h4>
-					</div>
-					<div role="region" class="fd-panel__content" style="border-bottom: none">
-						<div class="fd-container">
-							<div class="fd-row">
-								<div class="fd-col fd-col--12 fd-col-md--6 fd-col-lg--4 fd-col-xl--3"
-									ng-repeat="next in data[group]">
+					<div class="fd-container">
+						<div class="fd-row">
+							<div class="fd-col fd-col--12 fd-col-md--6 fd-col-lg--4 fd-col-xl--3"
+								ng-repeat="next in data[group]">
 
-									<fd-card card-type="object">
-										<fd-card-header ng-click="openView(next.location)">
-											<fd-card-title>{{next.name}}</fd-card-title>
-											<fd-card-status><i class="sap-icon--navigation-right-arrow"></i>
-											</fd-card-status>
-										</fd-card-header>
-										<fd-card-content aria-label="Card Content">
-											<div class="fd-card__content-container">
-												<div class="fd-card__content-section">
-													<div class="fd-card__content-title-container">Description
-													</div>
-													<div class="fd-card__content-group">
-														<div class="fd-card__content-group-text">
-															<span>{{next.caption}}</span>
-														</div>
+								<fd-card card-type="object">
+									<fd-card-header ng-click="openView(next.location)">
+										<fd-card-title>{{next.name}}</fd-card-title>
+										<fd-card-status><i class="sap-icon--navigation-right-arrow"></i>
+										</fd-card-status>
+									</fd-card-header>
+									<fd-card-content aria-label="Card Content">
+										<div class="fd-card__content-container">
+											<div class="fd-card__content-section">
+												<div class="fd-card__content-title-container">
+													{{group.replaceAll('-', ' ').replaceAll('_', ' ').toUpperCase()}}
+												</div>
+												<div class="fd-card__content-group">
+													<div class="fd-card__content-group-text">
+														<span>{{next.caption}}</span>
 													</div>
 												</div>
 											</div>
-										</fd-card-content>
-									</fd-card>
+										</div>
+									</fd-card-content>
+								</fd-card>
 
-								</div>
 							</div>
 						</div>
 					</div>
