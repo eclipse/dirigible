@@ -40,7 +40,11 @@ public class SqlDialectFactory {
 	 */
 	public static final ISqlDialect getDialect(Connection connection) throws SQLException {
 		String productName = connection.getMetaData().getDatabaseProductName();
-		return databaseTypeMappings.get(productName);
+		ISqlDialect dialect = databaseTypeMappings.get(productName);
+		if (dialect == null) {
+			throw new RuntimeException("Database dialect for " + productName + " is not avalable.");
+		}
+		return dialect;
 	}
 
 	

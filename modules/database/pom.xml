@@ -22,6 +22,8 @@
 		<module>database-sql-mysql</module>
 		<module>database-sql-postgres</module>
 		<module>database-sql-sybase</module>
+		<module>database-sql-mongodb</module>
+		<module>database-mongodb-jdbc</module>
 	</modules>
 
 	<properties>

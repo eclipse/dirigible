@@ -237,12 +237,14 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
     $scope.drivers.push({ "text": "PostgreSQL - org.postgresql.Driver", "value": "org.postgresql.Driver" });
     $scope.drivers.push({ "text": "MySQL - com.mysql.jdbc.Driver", "value": "com.mysql.jdbc.Driver" });
     $scope.drivers.push({ "text": "SAP HANA - com.sap.db.jdbc.Driver", "value": "com.sap.db.jdbc.Driver" });
+    $scope.drivers.push({ "text": "MongoDB - org.eclipse.dirigible.mongodb.jdbc.Driver", "value": "org.eclipse.dirigible.mongodb.jdbc.Driver" });
 
     $scope.urls = {};
     $scope.urls["org.h2.Driver"] = "jdbc:h2:path/name";
     $scope.urls["org.postgresql.Driver"] = "jdbc:postgresql://host:port/database";
     $scope.urls["com.mysql.jdbc.Driver"] = "jdbc:mysql://host:port/database";
     $scope.urls["com.sap.db.jdbc.Driver"] = "jdbc:sap://host:port/?encrypt=true&validateCertificate=false";
+    $scope.urls["org.eclipse.dirigible.mongodb.jdbc.Driver"] = "jdbc:mongodb://host:port/database";
 
     $scope.driverChanged = function () {
         $scope.database.url = $scope.urls[$scope.database.driver];

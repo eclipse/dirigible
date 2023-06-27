@@ -86,12 +86,10 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 	 */
 	@Override
 	public String write(ResultSet resultSet) throws SQLException {
-
-		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-
 		JsonArray records = new JsonArray();
 		int count = 0;
 		while (resultSet.next()) {
+			ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 			JsonObject record = new JsonObject();
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 				String name = resultSetMetaData.getColumnName(i);

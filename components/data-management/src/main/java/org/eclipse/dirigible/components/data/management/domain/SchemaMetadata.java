@@ -67,14 +67,14 @@ public class SchemaMetadata {
 		
 		try {
 			this.procedures = DatabaseMetadataHelper.listProcedures(connection, catalogName, name, nameFilter);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			this.procedures = new ArrayList<ProcedureMetadata>();
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
 		
 		try {
 			this.functions = DatabaseMetadataHelper.listFunctions(connection, catalogName, name, nameFilter);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			this.functions = new ArrayList<FunctionMetadata>();
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 		}
