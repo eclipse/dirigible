@@ -47,13 +47,13 @@ public class Schema extends Artefact {
 	private Long id;
 	
 	/** The tables. */
-	@OneToMany(mappedBy = "schema", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "schemaReference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Expose
 	private List<Table> tables = new ArrayList<Table>();
 	
 	/** The views. */
-	@OneToMany(mappedBy = "schema", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "schemaReference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Expose
 	private List<View> views = new ArrayList<View>();
@@ -68,15 +68,6 @@ public class Schema extends Artefact {
 	 */
 	public Schema(String location, String name, String description, Set<String> dependencies) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
-	}
-	
-	/**
-	 * Instantiates a new schema.
-	 *
-	 * @param schemaName the schema name
-	 */
-	public Schema(String schemaName) {
-		this(schemaName, schemaName, null, null);
 	}
 	
 	/**
