@@ -132,6 +132,57 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                 }
                 $scope.state.isBusy = false;
             });
+        } else if (sql.startsWith('query: ')) {
+            $http({
+                method: 'POST',
+                url: url + "/query",
+                data: command.data.substring(6).trim(),
+                headers: {
+                    'Content-Type': 'text/plain',
+                    'X-Requested-With': 'Fetch',
+                    'X-CSRF-Token': csrfToken
+                }
+            }).then(function (result) {
+                cleanScope();
+                if (result.data != null && result.data.length > 0) {
+                    $scope.rows = result.data;
+                    $scope.columns = [];
+                    for (let i = 0; i < result.data.length; i++) {
+                        for (let column in result.data[i]) {
+                            $scope.columns.push(column);
+                        }
+                        break;
+                    }
+                } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                    $scope.state.error = true;
+                    $scope.errorMessage = result.data.errorMessage;
+                } else {
+                    $scope.result = 'Empty result';
+                }
+                $scope.state.isBusy = false;
+            });
+        } else if (sql.startsWith('update: ')) {
+            $http({
+                method: 'POST',
+                url: url + "/update",
+                data: command.data.substring(7).trim(),
+                headers: {
+                    'Content-Type': 'text/plain',
+                    'X-Requested-With': 'Fetch',
+                    'X-CSRF-Token': csrfToken
+                }
+            }).then(function (result) {
+                cleanScope();
+                if (!isNaN(result.data)) {
+                    result = 'Rows updated: ' + result.data;
+                } else if (result.data !== null) {
+                    $scope.result = result.data;
+                } else {
+                    $scope.result = 'Empty result';
+                }
+                $scope.result = result.data;
+                $scope.state.isBusy = false;
+            });
         } else {
             $http({
                 method: 'POST',

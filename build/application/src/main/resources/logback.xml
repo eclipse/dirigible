@@ -66,6 +66,7 @@
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE_BASE" />
+		<appender-ref ref="ConsoleLoggingAppender" />
 	</root>
 	
 	<logger name="org.eclipse.dirigible.components.initializers.synchronizer" level="ALL"/>
