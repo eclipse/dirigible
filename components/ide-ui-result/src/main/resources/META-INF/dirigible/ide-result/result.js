@@ -233,6 +233,12 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         window.open(url);
     }, true);
 
+    messageHub.onDidReceiveMessage("database.metadata.project.export.schema", function (command) {
+        let schema = command.data;
+        let url = "/services/data/export/project/" + $scope.datasource + "/" + schema;
+        window.open(url);
+    }, true);
+
     function cleanScope() {
         $scope.result = null;
         $scope.columns = null;
