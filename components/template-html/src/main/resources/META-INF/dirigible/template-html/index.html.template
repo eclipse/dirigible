@@ -22,7 +22,7 @@
       {{state.busyText}}
     </fd-busy-indicator-extended>
     <fd-toolbar has-title="true" ng-show="!state.error && !state.isBusy">
-      <h4>Explore:</h4>
+      <fd-toolbar-title>Explore:</fd-toolbar-title>
       <fd-select dg-size="compact" ng-model="explore.value">
         <fd-option text="Customers" value="'customers'"></fd-option>
         <fd-option text="Employees" value="'employees'"></fd-option>

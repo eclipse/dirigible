@@ -73,8 +73,7 @@
 			</fd-popover-control>
 			<fd-popover-body can-scroll="true" dg-align="right" max-height="200">
 				<fd-menu aria-label="popover items">
-					<fd-menu-item title="Specal item" ng-click="popoverItemClick()"></fd-menu-item>
-					<fd-menu-separator></fd-menu-separator>
+					<fd-menu-item title="Specal item" ng-click="popoverItemClick()" has-separator="true"></fd-menu-item>
 					<fd-menu-item title="Some option" ng-click="popoverItemClick()"></fd-menu-item>
 					<fd-menu-item title="Some option" ng-click="popoverItemClick()"></fd-menu-item>
 					<fd-menu-item title="Some option" ng-click="popoverItemClick()"></fd-menu-item>
@@ -123,14 +122,13 @@
 			<fd-menu aria-label="example menu with submenus" show="menusShown" can-scroll="false">
 				<fd-menu-item title="Menu item 1"></fd-menu-item>
 				<fd-menu-item title="Menu item 2"></fd-menu-item>
-				<fd-menu-sublist title="Submenu 1">
+				<fd-menu-sublist title="Submenu 1" has-separator="true">
 					<fd-menu-item title="Submenu item 1"></fd-menu-item>
 					<fd-menu-item title="Submenu item 2"></fd-menu-item>
 				</fd-menu-sublist>
 				<fd-menu-sublist title="Submenu 2">
 					<fd-menu-item title="Submenu item 3"></fd-menu-item>
-					<fd-menu-item title="Submenu item 4"></fd-menu-item>
-					<fd-menu-separator></fd-menu-separator>
+					<fd-menu-item title="Submenu item 4" has-separator="true"></fd-menu-item>
 					<fd-menu-sublist title="Submenu 3">
 						<fd-menu-item title="Submenu item 5"></fd-menu-item>
 						<fd-menu-item title="Submenu item 6"></fd-menu-item>
@@ -467,7 +465,7 @@
 		</div>
 
 		<fd-toolbar has-title="true">
-			<h4>Producs (104)</h4>
+			<fd-toolbar-title>Producs (104)</fd-toolbar-title>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
 			<fd-button compact="true" dg-type="transparent" dg-label="Save"></fd-button>
 			<fd-toolbar-separator></fd-toolbar-separator>
@@ -475,7 +473,7 @@
 		</fd-toolbar>
 
 		<fd-toolbar has-title="true">
-			<h4>Producs (35)</h4>
+			<fd-toolbar-title>Producs (35)</fd-toolbar-title>
 			<fd-button compact="true" dg-type="transparent" dg-label="Create"></fd-button>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
 			<fd-button compact="true" dg-type="transparent" dg-label="Save"></fd-button>

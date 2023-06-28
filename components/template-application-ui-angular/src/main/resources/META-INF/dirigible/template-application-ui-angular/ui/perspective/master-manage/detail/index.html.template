@@ -22,7 +22,7 @@
 		</fd-message-page>
 
 		<fd-toolbar has-title="true" ng-hide="data == null">
-			<h4>Items ({{dataCount}})</h4>
+			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
 			<fd-button compact="true" dg-type="transparent" dg-label="Create" ng-click="createEntity()"
 				state="{{selectedMainEntityId == null ? 'disabled' : ''}}"></fd-button>

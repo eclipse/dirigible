@@ -374,12 +374,11 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     <fd-popover-body no-arrow="true" can-scroll="isScrollable()">
                         <fd-menu aria-label="header menu">
                             <fd-menu-item ng-repeat-start="item in menuItem.items track by $index" ng-if="!item.items"
-                                title="{{ item.label }}" ng-click="menuHandler(item)">
+                                title="{{ item.label }}" ng-click="menuHandler(item)" has-separator="item.divider">
                             </fd-menu-item>
-                            <fd-menu-sublist ng-if="item.items" title="{{ item.label }}" can-scroll="isScrollable(item.items)">
+                            <fd-menu-sublist ng-if="item.items" has-separator="item.divider" title="{{ item.label }}" can-scroll="isScrollable(item.items)" ng-repeat-end>
                                 <header-submenu sublist="item.items" menu-handler="menuHandler"></header-submenu>
                             </fd-menu-sublist>
-                            <fd-menu-separator ng-if="item.divider" ng-repeat-end></fd-menu-separator>
                         </fd-menu>
                     </fd-popover-body>
                 </fd-popover>
@@ -402,9 +401,8 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     return true;
                 };
             },
-            template: `<fd-menu-item ng-repeat-start="item in sublist track by $index" ng-if="!item.items" title="{{ item.label }}" ng-click="menuHandler(item)"></fd-menu-item>
-<fd-menu-sublist ng-if="item.items" title="{{ item.label }}" can-scroll="isScrollable($index)"><header-submenu sublist="item.items" menu-handler="menuHandler"></header-submenu></fd-menu-sublist>
-<fd-menu-separator ng-if="item.divider" ng-repeat-end></fd-menu-separator>`,
+            template: `<fd-menu-item ng-repeat-start="item in sublist track by $index" ng-if="!item.items" has-separator="item.divider" title="{{ item.label }}" ng-click="menuHandler(item)"></fd-menu-item>
+<fd-menu-sublist ng-if="item.items" has-separator="item.divider" title="{{ item.label }}" can-scroll="isScrollable($index)" ng-repeat-end><header-submenu sublist="item.items" menu-handler="menuHandler"></header-submenu></fd-menu-sublist>`,
         };
     })
     .directive('ideContainer', ['perspective', function (perspective) {

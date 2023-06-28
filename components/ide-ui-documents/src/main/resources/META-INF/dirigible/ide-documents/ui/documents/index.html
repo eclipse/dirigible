@@ -1,4 +1,13 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2023 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
 <html id="ng-app" ng-app="app" ng-controller="DocServiceCtrl">
 
     <head>
@@ -6,23 +15,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-
-        <!-- Title directive -->
         <title dg-view-title></title>
-
-        <!-- View data -->
         <script type="text/javascript" src="../../services/documents-view.js"></script>
-
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=file-upload-js">
         </script>
-
         <script type="text/javascript" src="js/controllers.js"></script>
-
-        <link type="text/css" rel="stylesheet"
-            href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
-
         <link type="text/css" rel="stylesheet" href="css/documents.css" />
     </head>
 
@@ -77,17 +77,17 @@
             </fd-popover>
             <input id="fileUpload" type="file" nv-file-select="" uploader="uploader" ng-hide="true" multiple />
         </fd-toolbar>
-        <fd-toolbar ng-if="search.displaySearch" has-title="false" dg-type="solid">
+        <fd-toolbar ng-if="search.displaySearch" dg-size="cozy" has-title="false" dg-type="solid">
             <fd-toolbar-spacer></fd-toolbar-spacer>
-            <fd-input-group style="max-width: 50%;">
-                <fd-input-group-addon compact="true" has-button="true">
+            <fd-input-group compact="true" style="max-width: 50%;">
+                <fd-input-group-addon has-button="true">
                     <span class="sap-icon--search" role="presentation"></span>
                 </fd-input-group-addon>
-                <fd-input type="search" compact="true" in-group="true" ng-model="search.filterBy"
-                    ng-change="clearSelection()" placeholder="Find in folder">
+                <fd-input type="search" in-group="true" ng-model="search.filterBy" ng-change="clearSelection()"
+                    placeholder="Find in folder">
                 </fd-input>
-                <fd-input-group-addon ng-if="search.filterBy" compact="true" has-button="true">
-                    <fd-button compact="true" in-group="true" glyph="sap-icon--clear-filter" dg-type="transparent"
+                <fd-input-group-addon ng-if="search.filterBy" has-button="true">
+                    <fd-button in-group="true" glyph="sap-icon--clear-filter" dg-type="transparent"
                         ng-click="search.filterBy = ''" aria-label="Clear filter">
                     </fd-button>
                 </fd-input-group-addon>

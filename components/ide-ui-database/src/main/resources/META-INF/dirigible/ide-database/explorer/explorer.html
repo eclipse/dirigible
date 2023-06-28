@@ -22,8 +22,7 @@
 		<script type="text/javascript" src="/services/web/ide-repository-service/repository.js"></script>
 		<script type="text/javascript" src="/webjars/jstree/3.3.12/jstree.min.js"></script>
 		<link type="text/css" rel="stylesheet" href="/services/web/resources/styles/jstree.css" />
-		<link type="text/css" rel="stylesheet"
-			href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+		<link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
 		<script type="text/javascript" src="explorer.js"></script>
 	</head>
 
@@ -44,7 +43,7 @@
 				<fd-popover-body dg-align="right" no-arrow="true">
 					<fd-menu aria-label="datasources menu">
 						<fd-menu-item title="{{ name }}" ng-repeat="name in datasources"
-							is-selected="{{ isSelectedDatasource(name) }}" ng-click="switchDatasource(name)">
+							is-selected="isSelectedDatasource(name)" ng-click="switchDatasource(name)">
 						</fd-menu-item>
 					</fd-menu>
 				</fd-popover-body>

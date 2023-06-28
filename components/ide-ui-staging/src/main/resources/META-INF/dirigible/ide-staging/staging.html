@@ -29,10 +29,10 @@
   <body class="dg-vbox fd-scrollbar">
     <div class="dg-center fd-margin-top--tiny">
       <fd-segmented-button aria-label="View type group">
-        <fd-button compact="true" dg-label="Path" dg-toggled="listType == 'path' ? true : false"
+        <fd-button compact="true" dg-label="Path" dg-toggled="listType === 'path' ? true : false"
           ng-click="changeListType('path')">
         </fd-button>
-        <fd-button compact="true" dg-label="Tree" dg-toggled="listType == 'tree' ? true : false"
+        <fd-button compact="true" dg-label="Tree" dg-toggled="listType === 'tree' ? true : false"
           ng-click="changeListType('tree')">
         </fd-button>
       </fd-segmented-button>

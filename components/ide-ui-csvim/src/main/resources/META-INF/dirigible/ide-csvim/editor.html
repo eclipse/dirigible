@@ -217,7 +217,7 @@
                                 <fd-form-item>
                                     <fd-toolbar class="fd-padding--none fd-margin-top-bottom--tiny"
                                         no-bottom-border="true" dg-type="transparent">
-                                        <h4>Keys:</h4>
+                                        <fd-toolbar-title>Keys:</fd-toolbar-title>
                                         <fd-toolbar-spacer></fd-toolbar-spacer>
                                         <fd-button compact="true" dg-label="Add Column Key"
                                             ng-click="addKeyColumn()" state="{{ editEnabled ? '' : 'disabled' }}">
@@ -261,15 +261,15 @@
                                                         ng-repeat="val in csvimData[activeItemId].keys[$index].values track by $index">
                                                         <fd-input name="v{{pindex}}{{$index}}" kindex="{{pindex}}"
                                                             vindex="{{$index}}" type="text" in-group="true"
-                                                            ng-trim="false" compact="true"
+                                                            ng-trim="false"
                                                             unique-field="{ regex: '^[A-Za-z0-9_$.-]+$', checkUniqueValue: checkUniqueValue }"
                                                             ng-model="csvimData[activeItemId].keys[pindex].values[$index]"
                                                             ng-changed="fileChanged()"
                                                             ng-attr-readonly="{{ !editEnabled || undefined }}">
                                                         </fd-input>
-                                                        <fd-input-group-addon compact="true" ng-if="editEnabled"
+                                                        <fd-input-group-addon ng-if="editEnabled"
                                                             has-button="true">
-                                                            <fd-button compact="true" in-group="true"
+                                                            <fd-button in-group="true"
                                                                 glyph="sap-icon--delete"
                                                                 ng-click="removeValueFromKey(pindex, $index)"
                                                                 title="Delete Value" aria-label="delete value">

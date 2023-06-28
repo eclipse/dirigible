@@ -22,7 +22,7 @@
 		</fd-message-page>
 
 		<fd-toolbar has-title="true" ng-hide="data == null">
-			<h4>Items ({{dataCount}})</h4>
+			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
 		</fd-toolbar>
 		<fd-scrollbar class="dg-full-height">
 

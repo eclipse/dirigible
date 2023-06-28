@@ -45,12 +45,12 @@
                     </fd-button>
                 </fd-bar-element>
                 <fd-bar-element class="dg-stretch">
-                    <fd-input-group state="{{urlLocked ? 'warning' : undefined}}">
-                        <fd-input type="text" compact="true" in-group="true" ng-model="previewUrl"
-                            ng-keyup="inputUrlKeyUp($event)" placeholder="Url">
+                    <fd-input-group compact="true" state="{{urlLocked ? 'warning' : undefined}}">
+                        <fd-input type="text" in-group="true" ng-model="previewUrl" ng-keyup="inputUrlKeyUp($event)"
+                            placeholder="Url">
                         </fd-input>
-                        <fd-input-group-addon compact="true" has-button="true">
-                            <fd-button compact="true" dg-label="{{ urlLocked ? 'Locked' : 'Unlocked'}}" in-group="true"
+                        <fd-input-group-addon has-button="true">
+                            <fd-button dg-label="{{ urlLocked ? 'Locked' : 'Unlocked'}}" in-group="true"
                                 glyph="{{ urlLocked ? 'sap-icon--locked' : 'sap-icon--unlocked'}}" dg-type="transparent"
                                 ng-click="urlLockedToggle()"></fd-button>
                         </fd-input-group-addon>
