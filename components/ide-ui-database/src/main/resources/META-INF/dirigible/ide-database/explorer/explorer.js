@@ -159,7 +159,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
 							let parentNodeName = tree.get_text(node.parent);
-							let sqlCommand = "SELECT * FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+							let sqlCommand = "SELECT * FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\";\n";
 							messageHub.postMessage('database.sql.execute', sqlCommand);
 						}.bind(this)
 					};
@@ -185,11 +185,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 								let columns = tree.get_node(node.children[0]);
 								let sqlCommand = "SELECT ";
 								for (let i = 0; i < columns.children.length; i++) {
-									sqlCommand += tree.get_node(columns.children[i]).original.column.name;
+									sqlCommand += "\"" + tree.get_node(columns.children[i]).original.column.name + "\"";
 									sqlCommand += ", ";
 								}
 								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
-								sqlCommand += " FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+								sqlCommand += " FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\";\n";
 								messageHub.postMessage('database.sql.script', sqlCommand);
 								$scope.jstreeWidget.jstree(true).refresh();
 
@@ -210,7 +210,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 								let columns = tree.get_node(node.children[0]);
 								let sqlCommand = "INSERT INTO \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" (";
 								for (let i = 0; i < columns.children.length; i++) {
-									sqlCommand += tree.get_node(columns.children[i]).original.column.name;
+									sqlCommand += "\"" + tree.get_node(columns.children[i]).original.column.name + "\"";
 									sqlCommand += ", ";
 								}
 								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
@@ -220,7 +220,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 									sqlCommand += "', ";
 								}
 								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
-								sqlCommand += ")";
+								sqlCommand += ");\n";
 								messageHub.postMessage('database.sql.script', sqlCommand);
 								$scope.jstreeWidget.jstree(true).refresh();
 
@@ -241,18 +241,19 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 								let columns = tree.get_node(node.children[0]);
 								let sqlCommand = "UPDATE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" SET ";
 								for (let i = 0; i < columns.children.length; i++) {
-									sqlCommand += tree.get_node(columns.children[i]).original.column.name +
+									sqlCommand += "\"" + tree.get_node(columns.children[i]).original.column.name + "\"" +
 										" = '" + tree.get_node(columns.children[i]).original.column.type
 									sqlCommand += "', ";
 								}
 								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
 								sqlCommand += " WHERE ";
 								for (let i = 0; i < columns.children.length; i++) {
-									sqlCommand += tree.get_node(columns.children[i]).original.column.name +
+									sqlCommand += "\"" + tree.get_node(columns.children[i]).original.column.name + "\"" +
 										" = '" + tree.get_node(columns.children[i]).original.column.type
 									sqlCommand += "' AND ";
 								}
 								sqlCommand = sqlCommand.substring(0, sqlCommand.length - 5);
+								sqlCommand += ";\n";
 								messageHub.postMessage('database.sql.script', sqlCommand);
 								$scope.jstreeWidget.jstree(true).refresh();
 
@@ -274,7 +275,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 								let sqlCommand = "DELETE FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
 								sqlCommand += " WHERE ";
 								for (let i = 0; i < columns.children.length; i++) {
-									sqlCommand += tree.get_node(columns.children[i]).original.column.name +
+									sqlCommand += "\"" + tree.get_node(columns.children[i]).original.column.name + "\"" +
 										" = '" + tree.get_node(columns.children[i]).original.column.type
 									sqlCommand += "' AND ";
 								}
@@ -282,35 +283,6 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 								messageHub.postMessage('database.sql.script', sqlCommand);
 								$scope.jstreeWidget.jstree(true).refresh();
 
-							}.bind(this)
-						};
-					}
-
-					// Drop table
-					if (node.original.type === 'table' || node.original.type === 'base table') {
-						ctxmenu.dropScript = {
-							"separator_before": false,
-							"label": "Drop",
-							"action": function (data) {
-								let tree = $.jstree.reference(data.reference);
-								let node = tree.get_node(data.reference);
-								let parentNodeName = tree.get_text(node.parent);
-								let sqlCommand = "DROP TABLE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
-								messageHub.postMessage('database.sql.script', sqlCommand);
-							}.bind(this)
-						};
-					}
-					// Drop view
-					if (node.original.type === 'view') {
-						ctxmenu.dropScript = {
-							"separator_before": false,
-							"label": "Drop",
-							"action": function (data) {
-								let tree = $.jstree.reference(data.reference);
-								let node = tree.get_node(data.reference);
-								let parentNodeName = tree.get_text(node.parent);
-								let sqlCommand = "DROP VIEW \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
-								messageHub.postMessage('database.sql.script', sqlCommand);
 							}.bind(this)
 						};
 					}
@@ -337,6 +309,35 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.export.artifact', sqlCommand);
 						}.bind(this)
 					};
+					
+					// Drop table
+					if (node.original.type === 'table' || node.original.type === 'base table') {
+						ctxmenu.dropScript = {
+							"separator_before": true,
+							"label": "Drop",
+							"action": function (data) {
+								let tree = $.jstree.reference(data.reference);
+								let node = tree.get_node(data.reference);
+								let parentNodeName = tree.get_text(node.parent);
+								let sqlCommand = "DROP TABLE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" CASCADE;\n";
+								messageHub.postMessage('database.sql.script', sqlCommand);
+							}.bind(this)
+						};
+					}
+					// Drop view
+					if (node.original.type === 'view') {
+						ctxmenu.dropScript = {
+							"separator_before": false,
+							"label": "Drop",
+							"action": function (data) {
+								let tree = $.jstree.reference(data.reference);
+								let node = tree.get_node(data.reference);
+								let parentNodeName = tree.get_text(node.parent);
+								let sqlCommand = "DROP VIEW \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\";\n";
+								messageHub.postMessage('database.sql.script', sqlCommand);
+							}.bind(this)
+						};
+					}
 
 				}
 
@@ -348,7 +349,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);
-							let sqlCommand = "DROP PROCEDURE \"" + node.original.text + "\"";
+							let sqlCommand = "DROP PROCEDURE \"" + node.original.text + "\";\n";
 							messageHub.postMessage('database.sql.script', sqlCommand);
 						}.bind(this)
 					};
@@ -376,6 +377,16 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.export.schema', sqlCommand);
 						}.bind(this)
 					};
+					ctxmenu.dropScript = {
+							"separator_before": true,
+							"label": "Drop",
+							"action": function (data) {
+								let tree = $.jstree.reference(data.reference);
+								let node = tree.get_node(data.reference);
+								let sqlCommand = "DROP SCHEMA \"" + node.original.text + "\" CASCADE;\n";
+								messageHub.postMessage('database.sql.script', sqlCommand);
+							}.bind(this)
+						};
 				}
 				return ctxmenu;
 			}
