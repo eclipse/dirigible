@@ -378,7 +378,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 					};
 					ctxmenu.exportAsProject = {
 						"separator_before": false,
-						"label": "Export As Project",
+						"label": "Export Metadata in Project",
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
 							let node = tree.get_node(data.reference);

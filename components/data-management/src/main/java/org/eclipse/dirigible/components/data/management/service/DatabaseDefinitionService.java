@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.gson.*;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.management.load.DataSourceMetadataLoader;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
@@ -94,10 +95,22 @@ public class DatabaseDefinitionService {
 	public String loadSchemaMetadata(String datasource, String schema) throws SQLException {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		List<Table> model = datasourceMetadataLoader.loadSchemaMetadata(schema, dataSource);
-		if (model != null) {
-			return JsonHelper.toJson(model);
+		model.forEach(m -> m.setType("TABLE"));
+
+		JsonArray structureArray = new JsonArray();
+		for(Table m : model){
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			structureArray.add(gson.fromJson(JsonHelper.toJson(m), JsonElement.class));
 		}
-		return null;
+		JsonObject schemaObject = new JsonObject();
+		schemaObject.add("structures", structureArray);
+
+		JsonObject json = new JsonObject();
+		json.add("schema", schemaObject);
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+		return gson.toJson(json);
 	}
 
 	/**

@@ -169,9 +169,10 @@ public class DatabaseExportEndpoint {
 		project.createFile(schema, schemaMetadata.getBytes()).renameTo(schema + "." + "schema");
 
 		byte[] zip = transportService.exportProject(workspace.getName(), project.getName());
-		
+
 		final HttpHeaders httpHeaders= new HttpHeaders();
 		httpHeaders.add("Content-Disposition", "attachment; filename=\"" + schema + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".zip\"");
+		workspace.delete();
 		return new ResponseEntity<byte[]>(zip, httpHeaders, HttpStatus.OK);
 	}
 
