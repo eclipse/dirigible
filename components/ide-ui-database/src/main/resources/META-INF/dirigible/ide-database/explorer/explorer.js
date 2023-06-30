@@ -376,7 +376,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.export.schema', sqlCommand);
 						}.bind(this)
 					};
-					ctxmenu.exportAsProject = {
+					ctxmenu.exportMetadataInProject = {
 						"separator_before": false,
 						"label": "Export Metadata in Project",
 						"action": function (data) {

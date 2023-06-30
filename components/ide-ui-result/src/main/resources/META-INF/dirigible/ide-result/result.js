@@ -32,7 +32,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     $scope.procedureResults = [];
     $scope.hasMultipleProcedureResults = false;
 
-    $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).then(function (response) {
+    $http.get("", {headers: {"X-CSRF-Token": "Fetch"}}).then(function (response) {
         csrfToken = response.headers()["x-csrf-token"];
     }, function (response) {
         console.error("Error getting token.", response);
@@ -235,8 +235,28 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
     messageHub.onDidReceiveMessage("database.metadata.project.export.schema", function (command) {
         let schema = command.data;
+        //console.log(command, "command");
         let url = "/services/data/export/project/" + $scope.datasource + "/" + schema;
-        window.open(url);
+        //console.log(url, "URL");
+        $http({
+            method: 'PUT',
+            url: url,
+            headers: {
+                'Content-Type': 'text/plain', 'Accept': 'text/plain',
+                'X-Requested-With': 'Fetch',
+                'X-CSRF-Token': csrfToken
+            }
+        }).then(function (resourceURI) {
+            console.info(`Created file [${schema}.schema] in Project [${schema}] in Workspace [${schema}]`)
+            //open window - status dialog with status message
+            //file ... is created - url
+            // messageHub.showDialogWindow(
+            //     "task-details",
+            //     { fileLocation: url }
+            // );
+        }).catch(function (err) {
+            console.error("Error in exporting metadata in project", err);
+        });
     }, true);
 
     function cleanScope() {

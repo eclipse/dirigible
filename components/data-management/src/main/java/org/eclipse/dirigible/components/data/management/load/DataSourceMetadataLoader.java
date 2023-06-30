@@ -388,7 +388,7 @@ public class DataSourceMetadataLoader implements DatabaseParameters {
      */
     private static void iterateTables(Table tableMetadata, ResultSet tables) throws SQLException {
         do {
-            tableMetadata.setType(tables.getString(JDBC_TABLE_TYPE_PROPERTY));
+            tableMetadata.setKind(tables.getString(JDBC_TABLE_TYPE_PROPERTY));
         } while (tables.next());
     }
 

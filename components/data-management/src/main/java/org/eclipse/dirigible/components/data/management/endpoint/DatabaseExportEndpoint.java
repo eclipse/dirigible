@@ -13,18 +13,15 @@ package org.eclipse.dirigible.components.data.management.endpoint;
 
 import static java.text.MessageFormat.format;
 
-import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.eclipse.dirigible.components.api.platform.WorkspaceFacade;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExportService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseMetadataService;
-import org.eclipse.dirigible.components.ide.workspace.domain.Project;
-import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.service.TransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -54,8 +48,6 @@ public class DatabaseExportEndpoint {
 	/** The database metadata service. */
 	private DatabaseMetadataService databaseMetadataService;
 
-	/** The database definition service. */
-	private DatabaseDefinitionService databaseDefinitionService;
 
 	private TransportService transportService;
 	
@@ -64,14 +56,12 @@ public class DatabaseExportEndpoint {
 	 *
 	 * @param databaseExportService     the database export service
 	 * @param databaseMetadataService   the database metadata service
-	 * @param databaseDefinitionService
 	 * @param transportService
 	 */
 	@Autowired
-	public DatabaseExportEndpoint(DatabaseExportService databaseExportService, DatabaseMetadataService databaseMetadataService, DatabaseDefinitionService databaseDefinitionService, TransportService transportService) {
+	public DatabaseExportEndpoint(DatabaseExportService databaseExportService, DatabaseMetadataService databaseMetadataService, TransportService transportService) {
 		this.databaseExportService = databaseExportService;
 		this.databaseMetadataService = databaseMetadataService;
-		this.databaseDefinitionService = databaseDefinitionService;
 		this.transportService = transportService;
 	}
 	
@@ -152,28 +142,18 @@ public class DatabaseExportEndpoint {
 	 * @return the response
 	 * @throws SQLException the SQL exception
 	 */
-	@GetMapping(value = "/project/{datasource}/{schema}", produces = "application/octet-stream")
-	public ResponseEntity<byte[]> exportMetadataAsProject(
+	@PutMapping(value = "/project/{datasource}/{schema}")
+	public ResponseEntity<URI> exportMetadataAsProject(
 			@PathVariable("datasource") String datasource,
-			@PathVariable("schema") String schema) throws SQLException, IOException {
+			@PathVariable("schema") String schema) throws SQLException, URISyntaxException {
 
 		if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
 			String error = format("Datasource {0} does not exist.", datasource);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
 		}
 
-		String schemaMetadata = databaseDefinitionService.loadSchemaMetadata(datasource, schema);
+		String fileWorkspacePath = databaseExportService.exportMetadataAsProject(datasource, schema);
 
-		Workspace workspace = WorkspaceFacade.createWorkspace(schema);
-		Project project = workspace.createProject(schema);
-		project.createFile(schema, schemaMetadata.getBytes()).renameTo(schema + "." + "schema");
-
-		byte[] zip = transportService.exportProject(workspace.getName(), project.getName());
-
-		final HttpHeaders httpHeaders= new HttpHeaders();
-		httpHeaders.add("Content-Disposition", "attachment; filename=\"" + schema + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".zip\"");
-		workspace.delete();
-		return new ResponseEntity<byte[]>(zip, httpHeaders, HttpStatus.OK);
+		return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + fileWorkspacePath));
 	}
-
 }
