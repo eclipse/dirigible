@@ -9,7 +9,8 @@
         <i class="sap-icon--overflow"></i>
       </button>
     </div>
-    <div class="fd-popover__body fd-popover__body--right fd-popover__body--no-arrow" aria-hidden="{{hidden}}">
+    <div class="fd-popover__body fd-popover__body--after fd-popover__body--bottom fd-popover__body--no-arrow"
+      aria-hidden="{{hidden}}">
       <div class="fd-toolbar__overflow">
         <button ng-repeat="item in items" ng-disabled="isLastVisibleItem(item)" ng-click="item.hidden=!item.hidden"
           class="fd-button fd-button--compact fd-button--transparent fd-toolbar__overflow-button">

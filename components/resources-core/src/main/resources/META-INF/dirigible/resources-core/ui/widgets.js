@@ -460,15 +460,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 dgText: '@',
-                accentColor: '@',
-                tile: '@',
-                dgPlaceholder: '@',
+                accentColor: '@?',
+                tile: '<?',
+                dgPlaceholder: '<?',
                 dgSize: '@',
                 glyph: '@',
-                dgBorder: '@',
-                circle: '@',
-                zoomIcon: '@',
-                zoomLabel: '@',
+                dgBorder: '<?',
+                circle: '<?',
+                zoomIcon: '@?',
+                zoomLabel: '@?',
                 image: '@',
             },
             link: function (scope, element, attrs) {
@@ -485,7 +485,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
 
                 scope.getClasses = function () {
                     let classList = [];
-                    if (scope.tile === 'true') classList.push('fd-avatar--tile');
+                    if (scope.tile) classList.push('fd-avatar--tile');
                     else {
                         if (scope.accentColor) classList.push(`fd-avatar--accent-color-${scope.accentColor}`);
                         else {
@@ -495,8 +495,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
                     if (scope.dgSize) classList.push(`fd-avatar--${scope.dgSize}`);
                     else classList.push('fd-avatar--xs');
-                    if (scope.dgBorder === 'true') classList.push('fd-avatar--border');
-                    if (scope.circle === 'true') classList.push('fd-avatar--circle');
+                    if (scope.dgBorder) classList.push('fd-avatar--border');
+                    if (scope.circle) classList.push('fd-avatar--circle');
                     return classList.join(' ');
                 };
                 scope.getIconClass = function () {
@@ -638,20 +638,20 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             scope: {
-                dgRequired: '@',
-                dgColon: '@',
+                dgRequired: '<?',
+                dgColon: '<?',
             },
             link: {
                 pre: function (scope) {
                     scope.getClasses = function () {
                         let classList = [];
-                        if (scope.dgColon === 'true') classList.push('fd-form-label--colon');
-                        if (scope.dgRequired === 'true') classList.push('fd-form-label--required');
+                        if (scope.dgColon) classList.push('fd-form-label--colon');
+                        if (scope.dgRequired) classList.push('fd-form-label--required');
                         return classList.join(' ');
                     };
                 },
             },
-            template: `<label class="fd-form-label" ng-class="getClasses()" ng-required="dgRequired === 'true'" ng-transclude></label>`,
+            template: `<label class="fd-form-label" ng-class="getClasses()" ng-required="dgRequired" ng-transclude></label>`,
         }
     }]).directive('fdFormHeader', [function () {
         return {
@@ -664,6 +664,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         /**
          * compact: Boolean - Input size.
          * inGroup: Boolean - If the input is inside an fd-input-group element.
+         * isHover: Boolean - If the checkbox is in hover state.
          * state: String - You have five options - 'error', 'success', 'warning' and 'information'.
          */
         return {
@@ -673,6 +674,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             scope: {
                 compact: '<?',
                 inGroup: '<?',
+                isHover: '<?',
                 state: '@?',
             },
             link: {
@@ -689,6 +691,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (scope.compact === true) classList.push('fd-input--compact');
                         if (scope.state) classList.push(`is-${scope.state}`);
                         if (scope.inGroup === true) classList.push('fd-input-group__input');
+                        if (scope.isHover === true) classList.push('is-hover');
                         if (attrs.disabled) classList.push('is-disabled');
                         return classList.join(' ');
                     };
@@ -732,7 +735,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         }
     }]).directive('fdInputGroupAddon', [function () {
         /**
-         * compact: Boolean - Addon size.
          * hasButton: Boolean - Addon contains a button.
          * isReadonly: Boolean - If the addon is in readonly mode.
          */
@@ -741,7 +743,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             scope: {
-                compact: '<?',
                 hasButton: '<?',
                 isReadonly: '<?'
             },
@@ -749,7 +750,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 pre: function (scope) {
                     scope.getClasses = function () {
                         let classList = [];
-                        if (scope.compact === true) classList.push('fd-input-group__addon--compact');
                         if (scope.isReadonly === true) classList.push('fd-input-group__addon--readonly');
                         if (scope.hasButton === true) classList.push('fd-input-group__addon--button');
                         return classList.join(' ');
@@ -935,6 +935,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         /**
          * compact: Boolean - Checkbox size.
          * state: String - You have five options - 'error', 'success', 'warning' and 'information'.
+         * dgIndeterminate: Boolean - Indeterminate/tri-state.
          */
         return {
             restrict: 'E',
@@ -943,6 +944,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             scope: {
                 compact: '<?',
                 state: '@?',
+                dgIndeterminate: '<?',
             },
             link: {
                 pre: function (scope, elem, attrs) {
@@ -951,6 +953,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (scope.compact === true) classList.push('fd-checkbox--compact');
                         if (scope.state) classList.push(`is-${scope.state}`);
                         if (attrs.disabled) classList.push('is-disabled');
+                        if (scope.dgIndeterminate === true) elem[0].indeterminate = true;
+                        else elem[0].indeterminate = false;
                         return classList.join(' ');
                     };
                 },
@@ -961,6 +965,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         /**
          * compact: Boolean - Checkbox label size.
          * dgRequired: Boolean - If the checkbox is required.
+         * isHover: Boolean - If the checkbox is in hover state.
          * empty: Boolean - If the label has text
          */
         return {
@@ -970,6 +975,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             scope: {
                 compact: '<?',
                 dgRequired: '<?',
+                isHover: '<?',
                 empty: '@'
             },
             link: {
@@ -978,6 +984,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         let classList = [];
                         if (scope.compact === true) classList.push('fd-checkbox__label--compact');
                         if (scope.dgRequired === true) classList.push('fd-checkbox__label--required');
+                        if (scope.isHover === true) classList.push('is-hover');
                         return classList.join(' ');
                     };
                 },
@@ -1015,7 +1022,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'E',
             transclude: true,
             replace: true,
-            template: '<label class="fd-radio__label" ng-transclude></label>',
+            template: '<label class="fd-radio__label"><span class="fd-radio__text" ng-transclude></span></label>',
         }
     }]).directive('fdTextarea', [function () {
         /**
@@ -1045,11 +1052,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         return {
             getTemplate: function (tagName) {
                 return `<${tagName} fd-button-internal class="fd-button" ng-class="getClasses()" ng-disabled="{'disabled':true}[state]"
-                    aria-selected="{{ state === 'selected' ? true : false }}" ng-attr-aria-expanded="{{ state === 'expanded' ? true : undefined }}">
-                    <i ng-if="glyph" ng-class="glyph" role="presentation" aria-hidden="true"></i>
+                    aria-pressed="{{ dgToggled }}" ng-attr-aria-expanded="{{ state === 'expanded' ? true : undefined }}">
+                    <i ng-if="glyph" ng-class="glyph" role="presentation"></i>
                     <span ng-if="dgLabel" ng-class="getTextClasses()">{{ dgLabel }}</span>
                     <span ng-if="badge" class="fd-button__badge">{{ badge }}</span>
-                    <i ng-if="isMenu" class="sap-icon--slim-arrow-down" aria-hidden="true"></i>
+                    <i ng-if="isMenu" ng-class="getArrowClass()"></i>
                     <p ng-if="dgAriaDesc" class="fd-button__instructions" id="{{ uuid }}">{{ dgAriaDesc }}</p>
                 </${tagName}>`
             }
@@ -1066,6 +1073,18 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     scope.lastState = '';
                     if (!scope.dgLabel && scope.glyph && !attrs.hasOwnProperty('ariaLabel'))
                         console.error('fd-button error: Icon-only buttons must have the "aria-label" attribute');
+                    scope.getArrowClass = function () {
+                        switch (scope.arrowDirection) {
+                            case 'up':
+                                return 'sap-icon--slim-arrow-up';
+                            case 'left':
+                                return 'sap-icon--slim-arrow-left';
+                            case 'right':
+                                return 'sap-icon--slim-arrow-right';
+                            default:
+                                return 'sap-icon--slim-arrow-down';
+                        }
+                    }
                     scope.getClasses = function () {
                         let classList = [];
                         if (scope.lastState === 'disabled-focusable' && scope.state !== 'disabled-focusable')
@@ -1085,9 +1104,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (scope.compact === true) classList.push('fd-button--compact');
                         if (scope.inGroup === true) classList.push('fd-input-group__button');
                         if (scope.inMsgStrip === true) classList.push('fd-message-strip__close');
-                        if (scope.state === "selected") {
-                            element[0].removeAttribute('aria-disabled');
-                            classList.push('is-selected');
+                        if (scope.dgToggled) {
+                            classList.push('fd-button--toggled');
                         }
                         else if (scope.state === 'expanded') {
                             classList.push('is-expanded');
@@ -1136,6 +1154,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 dgType: '@?',
                 dgAriaDesc: '@?',
                 isMenu: '<?',
+                arrowDirection: '@?',
                 isOverflow: '<?',
                 isSplit: '<?',
                 inGroup: '<?',
@@ -1148,10 +1167,12 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * compact: Boolean - Button size.
          * badge: String/Number - Used for showing a badge inside the button.
          * glyph: String - Icon class/classes.
-         * state: String - Possible options are 'selected', 'expanded', 'disabled' and 'disabled-focusable' (must be used with dgAriaDesc). If not specified, normal state is assumed.
+         * state: String - Possible options are 'expanded', 'disabled' and 'disabled-focusable' (must be used with dgAriaDesc). If not specified, normal state is assumed.
+         * dgToggled: Boolean - Set the toggle state.
          * dgType: String - 'emphasized', 'transparent', 'ghost', 'positive', 'negative' and 'attention'. If not specified, normal state is assumed.
          * dgAriaDesc: String - Short description of the button. If the button is disabled, it should contain the reason and what needs to be done to enable it.
          * isMenu: Boolean - Adds an arrow to the button.
+         * arrowDirection: String - Direction of the menu arrow. Possible options are "up", "left", "right" and "down" (default).
          * isOverflow: Boolean - Used when the button is in a toolbar overflow popover.
          * isSplit: Boolean - (Internal use) If the button is part of a split button.
          * inGroup: Boolean - If the button is inside an fd-input-group-addon element.
@@ -1167,9 +1188,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 badge: '@?',
                 glyph: '@?',
                 state: '@?',
+                dgToggled: '<?',
                 dgType: '@?',
                 dgAriaDesc: '@?',
                 isMenu: '<?',
+                arrowDirection: '@?',
                 isOverflow: '<?',
                 isSplit: '<?',
                 inGroup: '<?',
@@ -1195,7 +1218,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * dgAlign: String - Relative position of the popover. Possible values are "left" and "right". If not provided, right is assumed.
          * compact: Boolean - Button size.
          * glyph: String - Icon class for the dropdown button.
-         * state: String - Possible options are 'selected' and 'disabled'. If not specified, normal state is assumed.
+         * state: String - Possible options are 'disabled' and 'disabled-focusable'. If not specified, normal state is assumed.
          * dgType: String - 'emphasized', 'transparent', 'ghost', 'positive', 'negative' and 'attention'. If not specified, normal state is assumed.
          * callback: Function - The passed function will be called when the main action button is clicked.
          */
@@ -1221,7 +1244,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         console.error('fd-split-button error: You should provide a description of the split button using the "aria-label" attribute');
                     scope.getSplitClasses = function () {
                         if (scope.dgType) return `fd-button-split--${scope.dgType}`;
-                        else return 'fd-has-margin-right-small';
+                        return '';
                     };
                 },
                 post: function (scope, element) {
@@ -1282,20 +1305,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     scope.$on('$destroy', cleanUp);
                 },
             },
-            template: `<div class="fd-button-split" ng-class="getSplitClasses()" role="group">
-                <fd-button glyph="{{ mainGlyph }}" dg-label="{{ mainAction }}" state="{{ state }}" dg-type="{{ dgType }}" is-split="true" compact="compact || false" ng-click="mainActionClicked()">
-                </fd-button>
-                <fd-button glyph="{{ glyph || 'sap-icon--slim-arrow-down' }}" state="{{ state }}" dg-type="{{ dgType }}" compact="compact || false" aria-label="arrow down" aria-controls="{{ popoverId }}"
-                    aria-haspopup="true" aria-expanded="{{ popupExpanded }}" ng-click="togglePopover()">
-                </fd-button>
-                <fd-popover-body no-arrow="true" dg-align="{{ dgAlign || 'right' }}">
-                  <ng-transclude></ng-transclude>
-                </fd-popover-body>
-            </div>`,
+            template: `<div class="fd-popover"><div class="fd-button-split" ng-class="getSplitClasses()" role="group">
+            <fd-button glyph="{{ mainGlyph }}" dg-label="{{ mainAction }}" state="{{ state }}" dg-type="{{ dgType }}" is-split="true" compact="compact || false" ng-click="mainActionClicked()"></fd-button>
+            <fd-button glyph="{{ glyph || 'sap-icon--slim-arrow-down' }}" state="{{ state }}" dg-type="{{ dgType }}" compact="compact || false" aria-label="arrow down" aria-controls="{{ popoverId }}" aria-haspopup="true" aria-expanded="{{ popupExpanded }}" ng-click="togglePopover()"></fd-button>
+			</div><fd-popover-body no-arrow="true" dg-align="bottom-{{ dgAlign || 'right' }}"><ng-transclude></ng-transclude></fd-popover-body></div>`,
         }
     }]).directive('fdPopover', ['uuid', '$window', 'backdrop', function (uuid, $window, backdrop) {
         /**
-         * dgAlign: String - Relative position of the popover. Possible values are "left" and "right". If not provided, left is assumed.
          * closeInnerclick: Boolean - If the popover should close when there is a click event inside it(*1). Default is true.
          * 
          * Comments:
@@ -1374,7 +1390,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     scope.$on('$destroy', cleanUp);
                 }
             },
-            template: `<div class="fd-popover" ng-class="{'right': 'fd-popover--right'}[dgAlign]">
+            template: `<div class="fd-popover">
                 <ng-transclude ng-transclude-slot="control"></ng-transclude>
                 <ng-transclude ng-transclude-slot="body"></ng-transclude>
             </div>`,
@@ -1402,9 +1418,21 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: '<div class="fd-popover__control" ng-transclude></div>',
         }
-    }]).directive('fdPopoverBody', ['$window', 'ScreenEdgeMargin', function ($window, ScreenEdgeMargin) {
+    }]).directive('fdPopoverBody', ['$window', 'ScreenEdgeMargin', 'classNames', function ($window, ScreenEdgeMargin, classNames) {
         /**
-         * dgAlign: String - Relative position of the popover. Possible values are "left" and "right". If not provided, left is assumed.
+         * dgAlign: String - Relative position of the popover. Possible values are:
+         * - "top-left": Alings the popover to the top left side of the control.
+         * - "top": Alings the popover to the top center side of the control.
+         * - "top-right": Alings the popover to the top right side of the control.
+         * - "bottom-left": Alings the popover to the bottom left side of the control. Default option.
+         * - "bottom": Alings the popover to the bottom center side of the control.
+         * - "bottom-right": Alings the popover to the bottom right side of the control.
+         * - "left-top": Alings the popover to the left top side of the control.
+         * - "left": Alings the popover to the left center side of the control.
+         * - "left-bottom": Alings the popover to the left bottom side of the control.
+         * - "right-top": Alings the popover to the right top side of the control.
+         * - "right": Alings the popover to the right center side of the control.
+         * - "right-bottom": Alings the popover to the right bottom side of the control.
          * maxHeight: Number - Maximum popover height in pixels before it starts scrolling. Default is the height of the window.
          * noArrow: Boolean - If the popup should have an arrow.
          * dropdownFill: Boolean - The dropdown body will be adjusted to match the text length.
@@ -1418,8 +1446,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             scope: {
                 maxHeight: '@?',
                 dgAlign: '@?',
-                noArrow: '@?',
-                dropdownFill: '@?',
+                noArrow: '<?',
+                dropdownFill: '<?',
                 canScroll: '<?',
             },
             controller: function PopoverBodyController() {
@@ -1442,13 +1470,21 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         scope.popoverId = scope.$parent.popoverId;
                     else if (scope.$parent && scope.$parent.$parent && scope.$parent.$parent.popoverId)
                         scope.popoverId = scope.$parent.$parent.popoverId;
-                    scope.getClasses = function () {
-                        let classList = [];
-                        if (scope.dgAlign === 'right') classList.push('fd-popover__body--right');
-                        if (scope.noArrow === 'true') classList.push('fd-popover__body--no-arrow');
-                        if (scope.dropdownFill === 'true') classList.push('fd-popover__body--dropdown-fill');
-                        return classList.join(' ');
-                    };
+                    scope.getClasses = () => classNames({
+                        'fd-popover__body--no-arrow': scope.noArrow,
+                        'fd-popover__body--dropdown-fill': scope.dropdownFill,
+                        'fd-popover__body--above fd-popover__body--arrow-bottom': scope.dgAlign === 'top-left',
+                        'fd-popover__body--above fd-popover__body--center fd-popover__body--arrow-bottom fd-popover__body--arrow-x-center': scope.dgAlign === 'top',
+                        'fd-popover__body--above fd-popover__body--right fd-popover__body--arrow-bottom fd-popover__body--arrow-x-end': scope.dgAlign === 'top-right',
+                        'fd-popover__body--center fd-popover__body--arrow-x-center': scope.dgAlign === 'bottom',
+                        'fd-popover__body--right fd-popover__body--arrow-x-end': scope.dgAlign === 'bottom-right',
+                        'fd-popover__body--before fd-popover__body--arrow-right': scope.dgAlign === 'left-top',
+                        'fd-popover__body--before fd-popover__body--middle fd-popover__body--arrow-right fd-popover__body--arrow-y-center': scope.dgAlign === 'left',
+                        'fd-popover__body--before fd-popover__body--bottom fd-popover__body--arrow-right fd-popover__body--arrow-y-bottom': scope.dgAlign === 'left-bottom',
+                        'fd-popover__body--after fd-popover__body--arrow-left': scope.dgAlign === 'right-top',
+                        'fd-popover__body--after fd-popover__body--middle fd-popover__body--arrow-left fd-popover__body--arrow-y-center': scope.dgAlign === 'right',
+                        'fd-popover__body--after fd-popover__body--bottom fd-popover__body--arrow-left fd-popover__body--arrow-y-bottom': scope.dgAlign === 'right-bottom',
+                    });
                     function cleanUp() {
                         $window.removeEventListener('resize', resizeEvent);
                     }
@@ -1550,8 +1586,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdMenuItem', [function () {
         /**
          * title: String - Title/label of the menu item.
-         * maxHeight: Number - Maximum height in pixels before it starts scrolling. Default is the height of the window.
-         * canScroll: Boolean - Enable/disable scroll menu support. Default is false.
+         * hasSeparator: Boolean - The menu item will have a separating line on the bottom side.
+         * isActive: Boolean - Set the menu item as active.
+         * isSelected: Boolean - Set the menu item as selected.
          * iconBefore: String - Icon class. Displays the icon before the title. Use 'none' to display a transparent icon.
          * iconAfter: String - Icon class. Displays the icon at the end of the menu item.
          */
@@ -1561,20 +1598,26 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 title: '@',
-                isActive: '@?',
-                isSelected: '@?',
+                hasSeparator: '<?',
+                isActive: '<?',
+                isSelected: '<?',
                 iconBefore: '@?',
                 iconAfter: '@?',
             },
             link: function (scope) {
                 scope.getClasses = function () {
                     let classList = [];
-                    if (scope.isActive === 'true') classList.push('is-active');
-                    if (scope.isSelected === 'true') classList.push('is-selected');
+                    if (scope.isActive) classList.push('is-active');
+                    if (scope.hasSeparator) classList.push('has-separator');
+                    if (scope.isSelected) classList.push('is-selected');
                     return classList.join(' ');
                 };
+                scope.getItemClasses = function () {
+                    if (scope.hasSeparator) return 'has-separator';
+                    return '';
+                };
             },
-            template: `<li class="fd-menu__item" role="presentation">
+            template: `<li class="fd-menu__item" ng-class="getItemClasses()" role="presentation">
                 <span class="fd-menu__link" ng-class="getClasses()" role="menuitem">
                     <span ng-if="iconBefore" class="fd-menu__addon-before">
                         <i class="{{ iconBefore }}" ng-if="iconBefore !== 'none'" role="presentation"></i>
@@ -1589,6 +1632,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdMenuSublist', ['uuid', '$window', 'ScreenEdgeMargin', function (uuid, $window, ScreenEdgeMargin) {
         /**
          * title: String - Title/label of the menu item.
+         * hasSeparator: Boolean - The menu item will have a separating line on the bottom side.
          * maxHeight: Number - Maximum height in pixels before it starts scrolling. Default is the height of the window.
          * canScroll: Boolean - Enable/disable scroll menu support. Default is false.
          * icon: String - Icon class. Displays the icon before the title.
@@ -1599,9 +1643,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 title: '@',
-                icon: '@?',
+                hasSeparator: '<?',
                 maxHeight: '@?',
                 canScroll: '<?',
+                icon: '@?',
             },
             link: {
                 pre: function (scope) {
@@ -1643,6 +1688,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         }
                     }
                     element.on('pointerup', pointerupEvent);
+                    scope.getItemClasses = function () {
+                        if (scope.hasSeparator) return 'has-separator';
+                        return '';
+                    };
                     scope.getClasses = function () {
                         let classList = [];
                         if (scope.isExpanded === 'true') classList.push('is-expanded');
@@ -1699,7 +1748,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     scope.$on('$destroy', cleanUp);
                 }
             },
-            template: `<li class="fd-menu__item" role="presentation" ng-mouseenter="show()" ng-mouseleave="hide($event)">
+            template: `<li class="fd-menu__item" ng-class="getItemClasses()" role="presentation" ng-mouseenter="show()" ng-mouseleave="hide($event)">
                 <span class="fd-menu__link has-child" aria-controls="{{sublistId}}" aria-expanded="{{isExpanded}}" aria-haspopup="true" role="menuitem" ng-class="getClasses()">
                     <span ng-if="icon" class="fd-menu__addon-before"><i class="{{icon}}" role="presentation"></i></span>
                     <span class="fd-menu__title">{{title}}</span>
@@ -1709,17 +1758,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 <ul ng-if="!canScroll" class="fd-menu__sublist" id="{{sublistId}}" aria-hidden="{{!isExpanded}}" role="menu" ng-transclude></ul>
             </li>`
         }
-    }]).directive('fdMenuSeparator', [function () {
-        return {
-            restrict: 'E',
-            transclude: false,
-            replace: true,
-            template: '<span class="fd-menu__separator"></span>'
-        }
     }]).directive('fdTable', [function () {
         /**
-         * innerBorders: String - Table inner borders. One of 'horizontal', 'vertical', 'none' or 'all' (default value)
-         * outerBorders: String - Table outer borders. One of 'horizontal', 'vertical', 'none' or 'all (default value)
+         * innerBorders: String - Table inner borders. One of 'horizontal', 'vertical', 'top', 'none' or 'all' (default value)
+         * outerBorders: String - Table outer borders. One of 'horizontal', 'vertical', 'none' or 'all' (default value)
          * displayMode: String - The size of the table. Could be one of 'compact', 'condensed' or 'standard' (default value)
          */
         return {
@@ -1739,10 +1781,16 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
 
                 $scope.getClasses = function () {
                     let classList = ['fd-table'];
-                    if ($scope.innerBorders === 'horizontal' || $scope.innerBorders === 'none') {
+                    if ($scope.innerBorders === 'top') {
+                        classList.push('fd-table--top-border');
                         classList.push('fd-table--no-horizontal-borders');
-                    }
-                    if ($scope.innerBorders === 'vertical' || $scope.innerBorders === 'none') {
+                        classList.push('fd-table--no-vertical-borders');
+                    } else if ($scope.innerBorders === 'none') {
+                        classList.push('fd-table--no-horizontal-borders');
+                        classList.push('fd-table--no-vertical-borders');
+                    } else if ($scope.innerBorders === 'horizontal') {
+                        classList.push('fd-table--no-horizontal-borders');
+                    } else if ($scope.innerBorders === 'vertical') {
                         classList.push('fd-table--no-vertical-borders');
                     }
                     if ($scope.displayMode === 'compact') {
@@ -2152,16 +2200,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             scope: {
-                dgType: '@',
-                dgSize: '@',
-                hasTitle: '<',
-                noBottomBorder: '<',
-                active: '<'
+                dgType: '@?',
+                dgSize: '@?',
+                hasTitle: '<?',
+                noBottomBorder: '<?',
+                active: '<?'
             },
             link: function (scope) {
                 scope.getClasses = function () {
-                    let classList = ['fd-toolbar'];
-
+                    let classList = [];
                     switch (scope.dgType) {
                         case 'transparent':
                             classList.push('fd-toolbar--transparent');
@@ -2176,27 +2223,21 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             classList.push('fd-toolbar--solid');
                             break;
                     }
-
-                    if (scope.hasTitle) {
-                        classList.push('fd-toolbar--title');
-                    }
-
-                    if (scope.noBottomBorder) {
-                        classList.push('fd-toolbar--clear');
-                    }
-
-                    if (scope.active) {
-                        classList.push('fd-toolbar--active');
-                    }
-
-                    if (scope.dgSize === 'cozy') {
-                        classList.push('fd-toolbar--cozy');
-                    }
-
+                    if (scope.hasTitle) classList.push('fd-toolbar--title');
+                    if (scope.noBottomBorder) classList.push('fd-toolbar--clear');
+                    if (scope.active) classList.push('fd-toolbar--active');
+                    if (scope.dgSize === 'cozy') classList.push('fd-toolbar--cozy');
                     return classList.join(' ');
                 };
             },
-            template: '<div ng-class="getClasses()" ng-transclude></div>'
+            template: '<div class="fd-toolbar" ng-class="getClasses()" ng-transclude></div>'
+        }
+    }]).directive('fdToolbarTitle', [function () {
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            template: '<h4 class="fd-title fd-title--h4 fd-toolbar__title" ng-transclude></h4>'
         }
     }]).directive('fdToolbarSpacer', [function () {
         /**
@@ -2240,11 +2281,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         return {
             restrict: 'EA',
             transclude: true,
+            scope: {
+                compact: '<?'
+            },
             template: `<fd-popover>
 				<fd-popover-control>
-					<fd-button compact="true" glyph="sap-icon--overflow" dg-type="transparent" aria-label="Toolbar overflow"></fd-button>
+					<fd-button compact="compact === undefined ? true : compact" glyph="sap-icon--overflow" dg-type="transparent" aria-label="Toolbar overflow"></fd-button>
 				</fd-popover-control>
-				<fd-popover-body dg-align="right">
+				<fd-popover-body dg-align="bottom-right">
 					<div class="fd-toolbar__overflow" ng-transclude></div>
 				</fd-popover-body>
 			</fd-popover>`
@@ -2351,9 +2395,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             scope: {
-                interactive: '<',
-                inactive: '<',
-                dgSelected: '<'
+                interactive: '<?',
+                inactive: '<?',
+                dgSelected: '<?'
             },
             controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
 
@@ -2773,7 +2817,19 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * dropdownFill: Boolean - Adjusts the popover body that wraps the dropdown to match the text length
          * labelId: String - The id of the label element if present (Necessary for aria-labelledby)
          * dropdownFixed: Boolean - Dropdown css position will be fixed, allowing for use in dialogs. Works for the message popup as well.
-         * placement: String - Placement of the dropdown. It can be any of 'top', 'bottom', 'right', and then can be suffixed with '-start' or '-end'. Deafult is 'bottom-start'. Incompatible with dropdownFixed.
+         * placement: String - Placement of the dropdown. Incompatible with dropdownFixed. Possible options:
+         * - "top-start": Alings the popover to the top left side of the control.
+         * - "top": Alings the popover to the top center side of the control.
+         * - "top-end": Alings the popover to the top right side of the control.
+         * - "bottom-start": Alings the popover to the bottom left side of the control. Default option.
+         * - "bottom": Alings the popover to the bottom center side of the control.
+         * - "bottom-end": Alings the popover to the bottom right side of the control.
+         * - "left-start": Alings the popover to the left top side of the control.
+         * - "left": Alings the popover to the left center side of the control.
+         * - "left-end": Alings the popover to the left bottom side of the control.
+         * - "right-start": Alings the popover to the right top side of the control.
+         * - "right": Alings the popover to the right center side of the control.
+         * - "right-end": Alings the popover to the right bottom side of the control.
          * isReadonly: Boolean - If the select must be readonly.
          */
         return {
@@ -2809,6 +2865,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             controller: ['$scope', '$element', function ($scope, $element) {
                 let control = $element[0].querySelector(`.fd-popover__control`);
                 let rect;
+                $scope.iconClass = 'sap-icon--slim-arrow-down';
                 $scope.setDefault = function () {
                     rect = control.getBoundingClientRect();
                     $scope.defaultHeight = $window.innerHeight - ScreenEdgeMargin.FULL - rect.bottom;
@@ -2855,24 +2912,52 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
                     if ($scope.placement && $scope.dropdownFixed !== 'true') {
                         switch ($scope.placement) {
+                            case 'bottom':
+                                classList.push('fd-popover__body--center');
+                                $scope.iconClass = 'sap-icon--slim-arrow-down';
+                                break;
                             case 'bottom-end':
-                                classList.push('dg-popover--align-bottom-end');
+                                classList.push('fd-popover__body--right');
+                                $scope.iconClass = 'sap-icon--slim-arrow-down';
                                 break;
                             case 'top':
+                                classList.push('fd-popover__body--above fd-popover__body--center');
+                                $scope.iconClass = 'sap-icon--slim-arrow-up';
+                                break;
                             case 'top-start':
-                                classList.push('dg-popover--align-top-start');
+                                classList.push('fd-popover__body--above');
+                                $scope.iconClass = 'sap-icon--slim-arrow-up';
                                 break;
                             case 'top-end':
-                                classList.push('dg-popover--align-top-end');
+                                classList.push('fd-popover__body--above fd-popover__body--right');
+                                $scope.iconClass = 'sap-icon--slim-arrow-up';
                                 break;
                             case 'right':
+                                classList.push('fd-popover__body--after fd-popover__body--middle');
+                                $scope.iconClass = 'sap-icon--slim-arrow-right';
+                                break;
                             case 'right-start':
-                                classList.push('dg-popover--align-right-start');
+                                classList.push('fd-popover__body--after');
+                                $scope.iconClass = 'sap-icon--slim-arrow-right';
                                 break;
                             case 'right-end':
-                                classList.push('dg-popover--align-right-end');
+                                classList.push('fd-popover__body--after fd-popover__body--bottom');
+                                $scope.iconClass = 'sap-icon--slim-arrow-right';
+                                break;
+                            case 'left':
+                                classList.push('fd-popover__body--before fd-popover__body--middle');
+                                $scope.iconClass = 'sap-icon--slim-arrow-left';
+                                break;
+                            case 'left-start':
+                                classList.push('fd-popover__body--before');
+                                $scope.iconClass = 'sap-icon--slim-arrow-left';
+                                break;
+                            case 'left-end':
+                                classList.push('fd-popover__body--before fd-popover__body--bottom');
+                                $scope.iconClass = 'sap-icon--slim-arrow-left';
                                 break;
                             default:
+                                $scope.iconClass = 'sap-icon--slim-arrow-down';
                                 break;
                         }
                     }
@@ -3009,7 +3094,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         <button id="{{ buttonId }}" ng-class="getControlClasses()" ng-click="onControllClick($event)" aria-labelledby="{{ [labelId, textId].join(' ') }}" aria-expanded="{{ bodyExpanded }}" aria-haspopup="listbox" aria-disabled="{{ !!dgDisabled }}">
                             <span id="{{ textId }}" class="fd-select__text-content">{{ getSelectedItemText() }}</span>
                             <span class="fd-button fd-button--transparent fd-select__button">
-                                <i class="sap-icon--slim-arrow-down"></i>
+                                <i class="{{iconClass}}"></i>
                             </span>
                         </button>
                     </div>
@@ -3345,10 +3430,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             transclude: true,
             scope: {
-                barDesign: '@',
-                cozy: '<',
-                inPage: '<',
-                size: '@'
+                barDesign: '@?',
+                cozy: '<?',
+                inPage: '<?',
+                size: '@?'
             },
             link: function (scope) {
                 const barDesigns = ['header', 'subheader', 'header-with-subheader', 'footer', 'floating-footer'];
@@ -3730,15 +3815,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: `<div class="fd-popover" ng-keydown="onKeyDown($event)">
                 <div class="fd-popover__control" ng-attr-disabled="{{isDisabled()}}" ng-attr-aria-disabled="{{isDisabled()}}" aria-expanded="{{ isBodyExpanded() }}" aria-haspopup="true" aria-controls="{{ bodyId }}">
-                    <fd-input-group class="fd-input-group--control" dg-disabled="isDisabled()" state="{{ state }}">
-                        <fd-tokenizer ng-if="multiSelect" compact="compact">
-                            <fd-token ng-repeat="item in getSelectedItems()" close-clicked="onTokenClick(item)" compact="compact" dg-text="{{item.text}}" close-button-aria-label="unselect option: {{item.text}}" tabindex="0"></fd-token>
+                    <fd-input-group compact="compact" class="fd-input-group--control" dg-disabled="isDisabled()" state="{{ state }}">
+                        <fd-tokenizer ng-if="multiSelect">
+                            <fd-token ng-repeat="item in getSelectedItems()" close-clicked="onTokenClick(item)" dg-text="{{item.text}}" close-button-aria-label="unselect option: {{item.text}}" tabindex="0"></fd-token>
                             <fd-token-indicator></fd-token-indicator>
-                            <fd-input ng-attr-id="{{ inputId }}" type="text" class="fd-tokenizer__input" autocomplete="off" placeholder="{{ dgPlaceholder }}" in-group="true" compact="compact" ng-focus="openDropdown()" ng-change="onInputChange()" ng-model="search.term" ng-keydown="onSearchKeyDown($event)"></fd-input>
+                            <fd-input ng-attr-id="{{ inputId }}" type="text" class="fd-tokenizer__input" autocomplete="off" placeholder="{{ dgPlaceholder }}" in-group="true" ng-focus="openDropdown()" ng-change="onInputChange()" ng-model="search.term" ng-keydown="onSearchKeyDown($event)"></fd-input>
                         </fd-tokenizer>
-                        <fd-input ng-if="!multiSelect" ng-attr-id="{{ inputId }}" type="text" autocomplete="off" placeholder="{{ dgPlaceholder }}" in-group="true" compact="compact" ng-focus="openDropdown()" ng-change="onInputChange()" ng-model="search.term"></fd-input>
-                        <fd-input-group-addon has-button="true" compact="compact">
-                            <fd-button class="fd-select__button" in-group="true" compact="compact" glyph="sap-icon--navigation-down-arrow" dg-type="transparent" state="{{ isBodyExpanded() ? 'expanded' : '' }}" ng-click="onControllClick()"
+                        <fd-input ng-if="!multiSelect" ng-attr-id="{{ inputId }}" type="text" autocomplete="off" placeholder="{{ dgPlaceholder }}" in-group="true" ng-focus="openDropdown()" ng-change="onInputChange()" ng-model="search.term"></fd-input>
+                        <fd-input-group-addon has-button="true">
+                            <fd-button class="fd-select__button" in-group="true" glyph="sap-icon--navigation-down-arrow" dg-type="transparent" state="{{ isBodyExpanded() ? 'expanded' : '' }}" ng-click="onControllClick()"
                                 ng-attr-aria-label="{{ dgAriaLabel }}"
                                 aria-controls="{{ bodyId }}"
                                 aria-haspopup="true"></fd-button>
@@ -4907,5 +4992,77 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             transclude: true,
             template: '<li role="listitem" class="fd-list__group-header fd-vertical-nav__group-header"><span class="fd-list__title" ng-transclude></span></li>'
+        }
+    }]).directive('fdProductSwitch', ['classNames', function (classNames) {
+        /**
+         * dgAriaLabel: String - Text for the button aria-label
+         * dgAlign: String - Relative position of the popover. Same as on fd-popover-body. Default is 'bottom-right'.
+         * dgSize: String - Size of the product switch. Possible options are 'large' (default), 'medium' and 'small'.
+         * dgType: String - State of the button. Same as on 'fd-button'. Default is 'transparent'.
+         * noArrow: Boolean - If the popup should have an arrow. Default is false.
+         */
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            scope: {
+                dgAriaLabel: '@?',
+                dgAlign: '@?',
+                dgSize: '@?',
+                dgType: '@?',
+                noArrow: '<?',
+            },
+            link: function (scope) {
+                if (!scope.dgAriaLabel)
+                    console.error('fd-product-switch error: Must have the "dg-aria-label" attribute');
+                scope.getClasses = () => classNames('fd-product-switch__body', {
+                    'fd-product-switch__body--col-3': scope.dgSize === 'medium',
+                    'fd-product-switch__body--mobile': scope.dgSize === 'small',
+                });
+            },
+            template: `<div class="fd-product-switch"><fd-popover>
+                <fd-popover-control>
+                    <fd-button dg-type="{{ dgType || 'transparent' }}" glyph="sap-icon--grid" aria-label="{{dgAriaLabel}}">
+                    </fd-button>
+                </fd-popover-control>
+                <fd-popover-body dg-align="{{ dgAlign || 'bottom-right' }}" no-arrow="noArrow">
+                    <div ng-class="getClasses()">
+                        <ul class="fd-product-switch__list" ng-transclude></ul>
+                    </div>
+                </fd-popover-body>
+            </fd-popover></div`
+        }
+    }]).directive('fdProductSwitchItem', ['classNames', function (classNames) {
+        /**
+         * dgSelected: Boolean - Selects the item.
+         * dgTitle: String - Product title.
+         * dgSubtitle: String - Product subtitle.
+         * glyph: String - Icon class.
+         * iconSrc: String - URL to the icon.
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            scope: {
+                dgSelected: '<?',
+                dgTitle: '@',
+                dgSubtitle: '@?',
+                glyph: '@?',
+                iconSrc: '@?',
+            },
+            link: function (scope) {
+                scope.getClasses = () => classNames('fd-product-switch__item', {
+                    'selected': scope.dgSelected,
+                });
+            },
+            template: `<li ng-class="getClasses()" tabindex="0">
+                <i ng-if="glyph" class="fd-product-switch__icon" ng-class="glyph" role="presentation"></i>
+                <div ng-if="iconSrc" class="fd-product-switch__icon sap-icon-dg-img dg-center"><img ng-src="{{iconSrc}}" alt="{{dgTitle}}" width="24" height="24"></div>
+                <div class="fd-product-switch__text">
+                    <div class="fd-product-switch__title">{{dgTitle}}</div>
+                    <div ng-if="dgSubtitle" class="fd-product-switch__subtitle">{{dgSubtitle}}</div>
+                </div>
+            </li>`
         }
     }]);

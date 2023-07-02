@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2010-2022 SAP and others.
+  ~ Copyright (c) 2010-2023 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -28,11 +28,11 @@
 
   <body class="dg-vbox fd-scrollbar">
     <div class="dg-center fd-margin-top--tiny">
-      <fd-segmented-button aria-label="Test group">
-        <fd-button compact="true" dg-label="Path" state="{{ listType == 'path' ? 'selected' : '' }}"
+      <fd-segmented-button aria-label="View type group">
+        <fd-button compact="true" dg-label="Path" dg-toggled="listType === 'path' ? true : false"
           ng-click="changeListType('path')">
         </fd-button>
-        <fd-button compact="true" dg-label="Tree" state="{{ listType == 'tree' ? 'selected' : '' }}"
+        <fd-button compact="true" dg-label="Tree" dg-toggled="listType === 'tree' ? true : false"
           ng-click="changeListType('tree')">
         </fd-button>
       </fd-segmented-button>

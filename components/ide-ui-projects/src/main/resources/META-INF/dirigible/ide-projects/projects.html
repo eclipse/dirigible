@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2010-2022 SAP and others.
+  ~ Copyright (c) 2010-2023 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -44,20 +44,20 @@
             <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
                 aria-label="Refresh" ng-click="reloadWorkspace()"></fd-button>
             <fd-toolbar-separator></fd-toolbar-separator>
-            <fd-button compact="true" dg-type="{{ searchVisible ? 'emphasized' : 'transparent' }}"
-                glyph="sap-icon--search" title="Toggle search" aria-label="Toggle search" ng-click="toggleSearch()">
+            <fd-button compact="true" dg-type="transparent" dg-toggled="searchVisible" glyph="sap-icon--search"
+                title="Toggle search" aria-label="Toggle search" ng-click="toggleSearch()">
             </fd-button>
             <fd-toolbar-separator></fd-toolbar-separator>
-            <fd-popover compact="true" dg-align="right">
+            <fd-popover>
                 <fd-popover-control>
                     <fd-button compact="true" dg-type="transparent" is-menu="true"
                         dg-label="{{ selectedWorkspace.name }}" title="Workspace select">
                     </fd-button>
                 </fd-popover-control>
-                <fd-popover-body dg-align="right" no-arrow="true">
+                <fd-popover-body dg-align="bottom-right" no-arrow="true">
                     <fd-menu aria-label="workspaces menu">
                         <fd-menu-item title="{{ name }}" ng-repeat="name in workspaceNames"
-                            is-selected="{{ isSelectedWorkspace(name) }}" ng-click="switchWorkspace(name)">
+                            is-selected="isSelectedWorkspace(name)" ng-click="switchWorkspace(name)">
                         </fd-menu-item>
                     </fd-menu>
                 </fd-popover-body>

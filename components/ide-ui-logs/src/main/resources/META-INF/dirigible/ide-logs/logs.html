@@ -25,13 +25,12 @@
 
     <body class="dg-vbox">
         <fd-toolbar has-title="true" dg-type="solid">
-            <span>Log File</span>
+            <fd-toolbar-title>Log File</fd-toolbar-title>
             <fd-combobox-input dropdown-items="log.logsList" compact="true" ng-model="log.selectedLog"
                 ng-change="logChanged()" dg-placeholder="Select log file..." dg-aria-label="Log files">
             </fd-combobox-input>
         </fd-toolbar>
-        <fd-textarea class="dg-stretch">{{ logContent }}
-        </fd-textarea>
+        <fd-textarea class="dg-stretch">{{ logContent }}</fd-textarea>
     </body>
 
 </html>

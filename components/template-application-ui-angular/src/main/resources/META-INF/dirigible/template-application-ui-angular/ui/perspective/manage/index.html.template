@@ -18,7 +18,7 @@
 
 	<body class="dg-vbox" dg-contextmenu="contextMenuContent">
 		<fd-toolbar has-title="true">
-			<h4>Items ({{dataCount}})</h4>
+			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
 			<fd-button compact="true" dg-type="transparent" dg-label="Create" ng-click="createEntity()"></fd-button>
 		</fd-toolbar>

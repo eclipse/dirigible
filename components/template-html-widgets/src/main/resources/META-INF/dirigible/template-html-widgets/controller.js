@@ -3,20 +3,21 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-let gameView = angular.module('game', ['ideUI', 'ideView']);
+let widgetsView = angular.module('widgets', ['ideUI', 'ideView']);
 
-gameView.config(["messageHubProvider", function (messageHubProvider) {
-    messageHubProvider.eventIdPrefix = 'example';
+widgetsView.config(["messageHubProvider", function (messageHubProvider) {
+    messageHubProvider.eventIdPrefix = 'template';
 }]);
 
 // Initialize controller
-gameView.controller('GameViewController', ['$scope', 'messageHub', function ($scope, messageHub) {
+widgetsView.controller('WidgetsViewController', ['$scope', 'messageHub', function ($scope, messageHub) {
 
-    $scope.btnText = "State button";
+    $scope.btnText = "Badge button";
     $scope.btnType = "positive";
-    $scope.btnState = "disabled-focusable";
+    $scope.btnState = "";
+    $scope.btnToggled = true;
 
-    $scope.splitButtonAction = "Default";
+    $scope.splitButtonAction = "Action";
     $scope.segmentedModel = "middle";
     $scope.fdCheckboxModel = true;
     $scope.fdRadioModel = false;
@@ -99,14 +100,6 @@ gameView.controller('GameViewController', ['$scope', 'messageHub', function ($sc
     ];
     $scope.multiComboboxSelectedItems = [1];
 
-    $scope.setTristate = function () {
-        $scope.tristate = true;
-    };
-
-    $scope.toggleMenus = function () {
-        $scope.menusShown = !$scope.menusShown;
-    };
-
     $scope.splitItemClick = function (selected) {
         $scope.splitButtonAction = selected;
     };
@@ -131,7 +124,7 @@ gameView.controller('GameViewController', ['$scope', 'messageHub', function ($sc
 
     $scope.contextMenuContent = function (element) {
         return {
-            callbackTopic: "example.game.contextmenu",
+            callbackTopic: "template.widgets.contextmenu",
             items: [
                 {
                     id: "new",
@@ -163,35 +156,6 @@ gameView.controller('GameViewController', ['$scope', 'messageHub', function ($sc
                     ]
                 },
                 {
-                    id: "new1",
-                    label: "New",
-                    icon: "sap-icon--create",
-                    items: [
-                        {
-                            id: "file1",
-                            label: "File",
-                            icon: "sap-icon--document"
-                        },
-                        {
-                            id: "folder1",
-                            label: "Folder",
-                            icon: "sap-icon--folder-blank",
-                            items: [
-                                {
-                                    id: "file2",
-                                    label: "File",
-                                    icon: "sap-icon--document"
-                                },
-                                {
-                                    id: "folder2",
-                                    label: "Folder",
-                                    icon: "sap-icon--folder-blank"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
                     id: "copy",
                     label: "Copy",
                     shortcut: "Ctrl+C",
@@ -214,29 +178,20 @@ gameView.controller('GameViewController', ['$scope', 'messageHub', function ($sc
         }
     };
 
-    $scope.test = function () {
-        $scope.btnText = "test";
-        $scope.btnType = "attention";
-    };
-
-    $scope.state = function () {
-        if ($scope.btnState === "disabled-focusable")
-            $scope.btnState = 'selected';
-        else if ($scope.btnState === "selected")
-            $scope.btnState = '';
-        else $scope.btnState = "disabled-focusable";
+    $scope.toggle = function () {
+        $scope.btnToggled = !$scope.btnToggled;
     };
 
     $scope.steps = [
-        { id: 1, name: "Choose a number", topicId: "example.game.screeen.one" },
-        { id: 2, name: "Enter random numbers", topicId: "example.game.screeen.two" },
-        { id: 3, name: "Select magic box", topicId: "example.game.screeen.three" },
-        { id: 4, name: "Finish game", topicId: "example.game.screeen.four" },
+        { id: 1, name: "Choose a number", topicId: "template.widgets.screeen.one" },
+        { id: 2, name: "Enter random numbers", topicId: "template.widgets.screeen.two" },
+        { id: 3, name: "Select magic box", topicId: "template.widgets.screeen.three" },
+        { id: 4, name: "Finish widgets", topicId: "template.widgets.screeen.four" },
     ];
     $scope.currentStep = $scope.steps[0];
 
     messageHub.onDidReceiveMessage(
-        "game.contextmenu",
+        "widgets.contextmenu",
         function (msg) {
             messageHub.showAlertInfo(
                 "Context menu item selected",
@@ -252,7 +207,7 @@ gameView.controller('GameViewController', ['$scope', 'messageHub', function ($sc
                 break;
             }
         };
-    }
+    };
 
     $scope.isStepActive = function (stepId) {
         if (stepId == $scope.currentStep.id)
@@ -261,17 +216,17 @@ gameView.controller('GameViewController', ['$scope', 'messageHub', function ($sc
             return "done";
         else
             return "inactive";
-    }
+    };
 
     $scope.wizard = {
         currentStep: 1,
         completedSteps: 0,
         stepsCount: 4
-    }
+    };
 
     $scope.revert = function (completedStepsCount) {
         $scope.wizard.completedSteps = completedStepsCount;
-    }
+    };
 
     $scope.gotoNextStep = function () {
         if ($scope.wizard.currentStep > $scope.wizard.completedSteps) {
@@ -281,29 +236,29 @@ gameView.controller('GameViewController', ['$scope', 'messageHub', function ($sc
         if ($scope.wizard.currentStep <= $scope.wizard.stepsCount) {
             $scope.gotoStep($scope.wizard.currentStep + 1);
         }
-    }
+    };
 
     $scope.gotoPreviousStep = function () {
         if ($scope.wizard.currentStep > 1) {
             $scope.gotoStep($scope.wizard.currentStep - 1);
         }
-    }
+    };
 
     $scope.gotoStep = function (step) {
         $scope.wizard.currentStep = step;
-    }
+    };
 
     $scope.getIndicatorGlyph = function (step) {
         return step <= $scope.wizard.completedSteps ? 'sap-icon--accept' : undefined;
-    }
+    };
 
     $scope.isLastStep = function () {
         return $scope.wizard.currentStep === $scope.wizard.stepsCount;
-    }
+    };
 
     $scope.allStepsCompleted = function () {
         return $scope.wizard.completedSteps >= $scope.wizard.stepsCount;
-    }
+    };
 
     $scope.filesToUpload = [
         { fileName: 'file1', extension: 'txt', selected: false },
@@ -315,7 +270,7 @@ gameView.controller('GameViewController', ['$scope', 'messageHub', function ($sc
         let index = $scope.filesToUpload.indexOf(file);
         if (index >= 0)
             $scope.filesToUpload.splice(index, 1);
-    }
+    };
 
     $scope.select = {
         s1: 1,
@@ -326,21 +281,21 @@ gameView.controller('GameViewController', ['$scope', 'messageHub', function ($sc
         onS1Change: function () {
             console.log($scope.select.s1);
         }
-    }
+    };
 
-    $scope.cb = {
+    $scope.combobox = {
         selectedModelValue: null,
         selectedModelValues: [],
         onCBChange: function () {
-            console.log($scope.cb.selectedModelValue);
+            console.log($scope.combobox.selectedModelValue);
         },
         onMCBChange: function () {
-            console.log($scope.cb.selectedModelValues);
+            console.log($scope.combobox.selectedModelValues);
         }
-    }
+    };
 }]);
 
-gameView.filter('startFrom', function () {
+widgetsView.filter('startFrom', function () {
     return function (input, start) {
         start = +start; //parse to int
         return input.slice(start);

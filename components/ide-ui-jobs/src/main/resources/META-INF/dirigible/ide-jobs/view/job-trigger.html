@@ -23,7 +23,7 @@
 
     <body class="dg-vbox">
         <fd-toolbar has-title="true">
-            <h4>{{ jobName }}</h4>
+            <fd-toolbar-title>{{ jobName }}</fd-toolbar-title>
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button compact="true" glyph="sap-icon--play" dg-type="transparent" dg-label="Trigger"
                 ng-click="triggerJob()" state="{{ shouldDisableTriggerButton() ? 'disabled' : undefined }}"></fd-button>
