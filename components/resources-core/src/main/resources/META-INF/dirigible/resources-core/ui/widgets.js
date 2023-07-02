@@ -1420,7 +1420,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         }
     }]).directive('fdPopoverBody', ['$window', 'ScreenEdgeMargin', 'classNames', function ($window, ScreenEdgeMargin, classNames) {
         /**
-         * dgAlign: String - Relative position of the popover.. Possible values are:
+         * dgAlign: String - Relative position of the popover. Possible values are:
          * - "top-left": Alings the popover to the top left side of the control.
          * - "top": Alings the popover to the top center side of the control.
          * - "top-right": Alings the popover to the top right side of the control.
@@ -2395,9 +2395,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             scope: {
-                interactive: '<',
-                inactive: '<',
-                dgSelected: '<'
+                interactive: '<?',
+                inactive: '<?',
+                dgSelected: '<?'
             },
             controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
 
@@ -4992,5 +4992,77 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             transclude: true,
             template: '<li role="listitem" class="fd-list__group-header fd-vertical-nav__group-header"><span class="fd-list__title" ng-transclude></span></li>'
+        }
+    }]).directive('fdProductSwitch', ['classNames', function (classNames) {
+        /**
+         * dgAriaLabel: String - Text for the button aria-label
+         * dgAlign: String - Relative position of the popover. Same as on fd-popover-body. Default is 'bottom-right'.
+         * dgSize: String - Size of the product switch. Possible options are 'large' (default), 'medium' and 'small'.
+         * dgType: String - State of the button. Same as on 'fd-button'. Default is 'transparent'.
+         * noArrow: Boolean - If the popup should have an arrow. Default is false.
+         */
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            scope: {
+                dgAriaLabel: '@?',
+                dgAlign: '@?',
+                dgSize: '@?',
+                dgType: '@?',
+                noArrow: '<?',
+            },
+            link: function (scope) {
+                if (!scope.dgAriaLabel)
+                    console.error('fd-product-switch error: Must have the "dg-aria-label" attribute');
+                scope.getClasses = () => classNames('fd-product-switch__body', {
+                    'fd-product-switch__body--col-3': scope.dgSize === 'medium',
+                    'fd-product-switch__body--mobile': scope.dgSize === 'small',
+                });
+            },
+            template: `<div class="fd-product-switch"><fd-popover>
+                <fd-popover-control>
+                    <fd-button dg-type="{{ dgType || 'transparent' }}" glyph="sap-icon--grid" aria-label="{{dgAriaLabel}}">
+                    </fd-button>
+                </fd-popover-control>
+                <fd-popover-body dg-align="{{ dgAlign || 'bottom-right' }}" no-arrow="noArrow">
+                    <div ng-class="getClasses()">
+                        <ul class="fd-product-switch__list" ng-transclude></ul>
+                    </div>
+                </fd-popover-body>
+            </fd-popover></div`
+        }
+    }]).directive('fdProductSwitchItem', ['classNames', function (classNames) {
+        /**
+         * dgSelected: Boolean - Selects the item.
+         * dgTitle: String - Product title.
+         * dgSubtitle: String - Product subtitle.
+         * glyph: String - Icon class.
+         * iconSrc: String - URL to the icon.
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            scope: {
+                dgSelected: '<?',
+                dgTitle: '@',
+                dgSubtitle: '@?',
+                glyph: '@?',
+                iconSrc: '@?',
+            },
+            link: function (scope) {
+                scope.getClasses = () => classNames('fd-product-switch__item', {
+                    'selected': scope.dgSelected,
+                });
+            },
+            template: `<li ng-class="getClasses()" tabindex="0">
+                <i ng-if="glyph" class="fd-product-switch__icon" ng-class="glyph" role="presentation"></i>
+                <div ng-if="iconSrc" class="fd-product-switch__icon sap-icon-dg-img dg-center"><img ng-src="{{iconSrc}}" alt="{{dgTitle}}" width="24" height="24"></div>
+                <div class="fd-product-switch__text">
+                    <div class="fd-product-switch__title">{{dgTitle}}</div>
+                    <div ng-if="dgSubtitle" class="fd-product-switch__subtitle">{{dgSubtitle}}</div>
+                </div>
+            </li>`
         }
     }]);

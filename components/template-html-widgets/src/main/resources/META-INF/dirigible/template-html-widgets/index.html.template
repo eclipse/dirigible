@@ -1339,6 +1339,65 @@
 		<fd-panel expanded="false">
 			<fd-panel-header>
 				<fd-panel-expand></fd-panel-expand>
+				<h4 fd-panel-title>Product Switch</h4>
+			</fd-panel-header>
+			<fd-panel-content aria-label="Product Switch Panel Content" style="min-height:40rem">
+				<h4>Large</h4>
+				<fd-product-switch dg-align="bottom-left" dg-aria-label="test">
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Dirigible" dg-subtitle="Eclipse Dirigible"
+						dg-selected="true">
+					</fd-product-switch-item>
+					<fd-product-switch-item icon-src="/services/web/resources/images/dirigible.png" dg-title="Dirigible"
+						dg-subtitle="Eclipse Dirigible">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 3" dg-subtitle="subtest">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 4" dg-subtitle="subtest">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 5" dg-subtitle="subtest">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 6" dg-subtitle="subtest">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 7" dg-subtitle="subtest">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 8" dg-subtitle="subtest">
+					</fd-product-switch-item>
+				</fd-product-switch>
+				<h4>Medium</h4>
+				<fd-product-switch dg-align="bottom-left" dg-aria-label="test" dg-size="medium">
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Dirigible" dg-subtitle="Eclipse Dirigible"
+						dg-selected="true">
+					</fd-product-switch-item>
+					<fd-product-switch-item icon-src="/services/web/resources/images/dirigible.png" dg-title="Dirigible"
+						dg-subtitle="Eclipse Dirigible">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 3" dg-subtitle="subtest">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 4" dg-subtitle="subtest">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 5" dg-subtitle="subtest">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 6" dg-subtitle="subtest">
+					</fd-product-switch-item>
+				</fd-product-switch>
+				<h4>Small</h4>
+				<fd-product-switch dg-align="bottom-left" dg-aria-label="test" dg-size="small">
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Dirigible" dg-subtitle="Eclipse Dirigible"
+						dg-selected="true">
+					</fd-product-switch-item>
+					<fd-product-switch-item icon-src="/services/web/resources/images/dirigible.png" dg-title="Dirigible"
+						dg-subtitle="Eclipse Dirigible">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 3" dg-subtitle="subtest">
+					</fd-product-switch-item>
+					<fd-product-switch-item glyph="sap-icon--home" dg-title="Product 4" dg-subtitle="subtest">
+					</fd-product-switch-item>
+				</fd-product-switch>
+			</fd-panel-content>
+		</fd-panel>
+		<fd-panel expanded="false">
+			<fd-panel-header>
+				<fd-panel-expand></fd-panel-expand>
 				<h4 fd-panel-title>Scrollbar</h4>
 			</fd-panel-header>
 			<fd-panel-content aria-label="Scrollbar Panel Content">
@@ -1978,7 +2037,7 @@
 									<fd-list-navigation-item-text>Home</fd-list-navigation-item-text>
 								</fd-list-navigation-item>
 								<fd-list-navigation-item>
-									<fd-list-navigation-item-icon svg-path="images/sample.svg">
+									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg">
 									</fd-list-navigation-item-icon>
 									<fd-list-navigation-item-text>Sample</fd-list-navigation-item-text>
 								</fd-list-navigation-item>
@@ -1997,7 +2056,7 @@
 									<fd-list-navigation-item-text>Home</fd-list-navigation-item-text>
 								</fd-list-navigation-item>
 								<fd-list-navigation-item condensed="isCondensed">
-									<fd-list-navigation-item-icon svg-path="images/sample.svg">
+									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg">
 									</fd-list-navigation-item-icon>
 									<fd-list-navigation-item-text>Sample</fd-list-navigation-item-text>
 								</fd-list-navigation-item>
@@ -2016,7 +2075,7 @@
 									<span fd-list-navigation-item-text>Home</span>
 								</fd-list-navigation-item>
 								<fd-list-navigation-item condensed="isCondensed">
-									<fd-list-navigation-item-icon svg-path="images/sample.svg" icon-size="lg">
+									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg" icon-size="lg">
 									</fd-list-navigation-item-icon>
 									<span fd-list-navigation-item-text>Sample</span>
 								</fd-list-navigation-item>
@@ -2036,7 +2095,7 @@
 								</fd-list-navigation-item>
 								<fd-list-navigation-group-header>Group header</fd-list-navigation-group-header>
 								<fd-list-navigation-item>
-									<fd-list-navigation-item-icon svg-path="images/sample.svg">
+									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg">
 									</fd-list-navigation-item-icon>
 									<span fd-list-navigation-item-text>Sample</span>
 								</fd-list-navigation-item>
@@ -2071,7 +2130,7 @@
 									<span fd-list-navigation-item-text>Home</span>
 								</fd-list-navigation-item>
 								<fd-list-navigation-item condensed="isCondensed">
-									<fd-list-navigation-item-icon svg-path="images/sample.svg">
+									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg">
 									</fd-list-navigation-item-icon>
 									<span fd-list-navigation-item-text>Sample</span>
 								</fd-list-navigation-item>
@@ -2146,7 +2205,7 @@
 									<span fd-list-navigation-item-text>Health</span>
 								</fd-list-navigation-item>
 								<fd-list-navigation-item>
-									<fd-list-navigation-item-icon svg-path="images/sample.svg">
+									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg">
 									</fd-list-navigation-item-icon>
 									<span fd-list-navigation-item-text>Sample</span>
 								</fd-list-navigation-item>
@@ -2165,7 +2224,7 @@
 									<span fd-list-navigation-item-text>Home</span>
 								</fd-list-navigation-item>
 								<fd-list-navigation-item indicated="isIndicated">
-									<fd-list-navigation-item-icon svg-path="images/sample.svg">
+									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg">
 									</fd-list-navigation-item-icon>
 									<span fd-list-navigation-item-text>Sample</span>
 									<fd-list-navigation-item-indicator ng-if="isIndicated">
@@ -2203,7 +2262,7 @@
 									<span fd-list-navigation-item-text>Home</span>
 								</fd-list-navigation-item>
 								<fd-list-navigation-item indicated="isIndicated" condensed="isCondensed">
-									<fd-list-navigation-item-icon svg-path="images/sample.svg">
+									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg">
 									</fd-list-navigation-item-icon>
 									<span fd-list-navigation-item-text>Sample</span>
 									<fd-list-navigation-item-indicator ng-if="isIndicated">
@@ -2254,7 +2313,7 @@
 									<fd-list-navigation-item-text>Home</fd-list-navigation-item-text>
 								</fd-list-navigation-item>
 								<fd-list-navigation-item>
-									<fd-list-navigation-item-icon svg-path="images/sample.svg">
+									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg">
 									</fd-list-navigation-item-icon>
 									<fd-list-navigation-item-text>Sample</fd-list-navigation-item-text>
 								</fd-list-navigation-item>
