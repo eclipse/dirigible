@@ -583,7 +583,7 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.14</mongodb.version>
 		<caffeine.version>3.1.6</caffeine.version>
-		<liquibase-core.version>4.22.0</liquibase-core.version>
+		<liquibase-core.version>4.23.0</liquibase-core.version>
 		<commons-csv.version>1.10.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<sap-theming__theming-base-content.version>11.4.2</sap-theming__theming-base-content.version>
