@@ -39,6 +39,7 @@ public class GraalJSFileSystem implements FileSystem {
      */
     private Path currentWorkingDirectoryPath;
 
+
     /**
      * The module resolvers.
      */
@@ -126,6 +127,10 @@ public class GraalJSFileSystem implements FileSystem {
      */
     @Override
     public Path toRealPath(Path path, LinkOption... linkOptions) throws IOException {
+        if (path.isAbsolute() && !path.startsWith(currentWorkingDirectoryPath)) {
+            path = currentWorkingDirectoryPath.resolve(path.toString().substring(1));
+        }
+
         String pathString = path.toString();
         if (!pathString.endsWith(".js")
                 && !pathString.endsWith(".mjs")
