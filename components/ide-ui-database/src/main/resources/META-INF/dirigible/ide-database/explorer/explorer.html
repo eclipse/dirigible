@@ -34,13 +34,13 @@
 			<fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
 				aria-label="Refresh" ng-click="refreshDatabase()"></fd-button>
 			<fd-toolbar-separator></fd-toolbar-separator>
-			<fd-popover compact="true" dg-align="right">
+			<fd-popover compact="true">
 				<fd-popover-control>
 					<fd-button compact="true" dg-type="transparent" is-menu="true" dg-label="{{ selectedDatasource }}"
 						title="Datasource select">
 					</fd-button>
 				</fd-popover-control>
-				<fd-popover-body dg-align="right" no-arrow="true">
+				<fd-popover-body dg-align="bottom-right" no-arrow="true">
 					<fd-menu aria-label="datasources menu">
 						<fd-menu-item title="{{ name }}" ng-repeat="name in datasources"
 							is-selected="isSelectedDatasource(name)" ng-click="switchDatasource(name)">

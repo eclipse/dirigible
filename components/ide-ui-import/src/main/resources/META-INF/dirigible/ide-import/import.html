@@ -52,13 +52,13 @@
                 glyph="sap-icon--add" title="Add files" dg-label="Add" ng-click="addFiles()">
             </fd-button>
             <fd-toolbar-separator ng-hide="inDialog"></fd-toolbar-separator>
-            <fd-popover ng-hide="inDialog" dg-align="right">
+            <fd-popover ng-hide="inDialog">
                 <fd-popover-control>
                     <fd-button state="{{ uploader.isUploading ? 'disabled' : '' }}" dg-type="transparent" is-menu="true"
                         dg-label="{{ selectedWorkspace.name }}">
                     </fd-button>
                 </fd-popover-control>
-                <fd-popover-body dg-align="right" no-arrow="true">
+                <fd-popover-body dg-align="bottom-right" no-arrow="true">
                     <fd-menu aria-label="workspaces menu">
                         <fd-menu-item title="{{ name }}" ng-repeat="name in workspaceNames"
                             is-selected="isSelectedWorkspace(name)" ng-click="switchWorkspace(name)">

@@ -13,13 +13,13 @@
         </div>
         <div fd-tool-header-group>
             <div fd-tool-header-element class="dg-backdrop-element">
-                <fd-popover dg-align="right" close-innerclick="true">
+                <fd-popover close-innerclick="true">
                     <fd-popover-control>
                         <fd-button compact="true" dg-label="Theme" dg-type="transparent" is-menu="true"
                             fd-tool-header-button>
                         </fd-button>
                     </fd-popover-control>
-                    <fd-popover-body no-arrow="true" dg-align="right">
+                    <fd-popover-body no-arrow="true" dg-align="bottom-right">
                         <fd-menu aria-label="theme menu">
                             <fd-menu-item title="{{ theme.name }}" has-separator="true"
                                 ng-repeat="theme in themes track by $index"
@@ -30,13 +30,13 @@
                         </fd-menu>
                     </fd-popover-body>
                 </fd-popover>
-                <fd-popover dg-align="right" close-innerclick="true">
+                <fd-popover close-innerclick="true">
                     <fd-popover-control>
                         <fd-button compact="true" dg-label="{{ user.name }}" dg-type="transparent" is-menu="true"
                             fd-tool-header-button>
                         </fd-button>
                     </fd-popover-control>
-                    <fd-popover-body no-arrow="true" dg-align="right" can-scroll="false">
+                    <fd-popover-body no-arrow="true" dg-align="bottom-right" can-scroll="false">
                         <fd-menu aria-label="user menu">
                             <fd-menu-item title="Logout" ng-click="logout()"></fd-menu-item>
                         </fd-menu>

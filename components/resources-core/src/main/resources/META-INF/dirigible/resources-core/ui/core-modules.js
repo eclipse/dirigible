@@ -326,7 +326,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             link: function (scope) {
                 scope.menuHandler = scope.menuHandler();
             },
-            template: `<fd-popover compact="true">
+            template: `<fd-popover">
     <fd-popover-control>
         <fd-button fd-tool-header-button compact="true" dg-type="transparent" glyph="sap-icon--menu2"
             aria-label="main menu button">
@@ -365,7 +365,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 };
             },
             template: `<div fd-tool-header-element ng-repeat="menuItem in menuList track by $index">
-                <fd-popover compact="true">
+                <fd-popover>
                     <fd-popover-control>
                         <fd-button fd-tool-header-button compact="true" dg-label="{{ menuItem.label }}" dg-type="transparent"
                             is-menu="true" aria-label="menu button {{ menuItem.label }}">

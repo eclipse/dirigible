@@ -29,13 +29,13 @@
     <body class="dg-vbox">
         <fd-toolbar dg-size="cozy" no-bottom-border="true">
             <fd-toolbar-spacer></fd-toolbar-spacer>
-            <fd-popover dg-align="right">
+            <fd-popover>
                 <fd-popover-control>
                     <fd-button state="{{ uploader.isUploading ? 'disabled' : '' }}" dg-type="transparent" is-menu="true"
                         dg-label="{{ selectedWorkspace.name }}">
                     </fd-button>
                 </fd-popover-control>
-                <fd-popover-body dg-align="right" no-arrow="true">
+                <fd-popover-body dg-align="bottom-right" no-arrow="true">
                     <fd-menu aria-label="workspaces menu">
                         <fd-menu-item title="{{ name }}" ng-repeat="name in workspaceNames"
                             is-selected="isSelectedWorkspace(name)" ng-click="switchWorkspace(name)">

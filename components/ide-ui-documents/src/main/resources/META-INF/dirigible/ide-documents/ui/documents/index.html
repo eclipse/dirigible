@@ -48,8 +48,7 @@
             </nav>
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button glyph="sap-icon--search" aria-label="Find item" title="Find item" dg-type="transparent"
-                ng-click="search.displaySearch = !search.displaySearch"
-                state="{{search.displaySearch ? 'selected' : undefined}}">
+                ng-click="search.displaySearch = !search.displaySearch" dg-toggled="search.displaySearch">
             </fd-button>
             <fd-toolbar-separator></fd-toolbar-separator>
             <fd-button glyph="sap-icon--add-folder" aria-label="New folder" title="New folder" dg-type="transparent"
@@ -67,7 +66,7 @@
                         title="Upload file" dg-type="transparent">
                     </fd-button>
                 </fd-popover-control>
-                <fd-popover-body dg-align="right">
+                <fd-popover-body dg-align="bottom-right">
                     <fd-menu aria-label="upload options menu">
                         <fd-menu-item title="Upload files" ng-click="showUploadFileDialog()"></fd-menu-item>
                         <fd-menu-item title="Upload zip contents" ng-click="showUploadFileDialog({ unpackZip: true })">
