@@ -627,7 +627,7 @@
 		<quartz.version>2.3.2</quartz.version>
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<graalvm.version>23.0.0</graalvm.version>
-		<guava.version>32.1.0-jre</guava.version>
+		<guava.version>32.1.1-jre</guava.version>
 		<icu4j.version>73.2</icu4j.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
