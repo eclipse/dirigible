@@ -29,64 +29,10 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-function getNewLines(oldText, newText, isWhitespaceIgnored = true) {
-    if (
-        oldText[oldText.length - 1] !== "\n" ||
-        newText[newText.length - 1] !== "\n"
-    ) {
-        oldText += "\n";
-        newText += "\n";
-    }
-    let lineDiff;
-    if (isWhitespaceIgnored) {
-        lineDiff = Diff.diffTrimmedLines(oldText, newText);
-    } else {
-        lineDiff = Diff.diffLines(oldText, newText);
-    }
-    let addedCount = 0;
-    let addedLines = [];
-    let removedLines = [];
-    lineDiff.forEach((part) => {
-        let { added, removed, value } = part;
-        let count = value.split("\n").length - 1;
-        if (!added && !removed) {
-            addedCount += count;
-        } else if (added) {
-            for (let i = 0; i < count; i++) {
-                addedLines.push(addedCount + i + 1);
-            }
-            addedCount += count;
-        } else if (removed && !addedLines.includes(addedCount + count)) {
-            removedLines.push(addedCount);
-        }
-    });
-    return { updated: addedLines, removed: removedLines };
+let computeDiff = new Worker("js/workers/computeDiff.js");
+computeDiff.onmessage = function (event) {
+    lineDecorations = _editor.deltaDecorations(lineDecorations, event.data);;
 };
-
-function highlight_changed(lines, editor) {
-    let new_decorations = [];
-    lines.updated.forEach((line) => {
-        new_decorations.push({
-            range: new monaco.Range(line, 1, line, 1),
-            options: {
-                isWholeLine: true,
-                linesDecorationsClassName: 'modified-line' + (
-                    lines.removed.includes(line) ? ' deleted-line' : '')
-            },
-        });
-    });
-    lines.removed.forEach((line) => {
-        if (!lines.updated.includes(line + 1))
-            new_decorations.push({
-                range: new monaco.Range(line, 1, line, 1),
-                options: {
-                    isWholeLine: true,
-                    linesDecorationsClassName: 'deleted-line'
-                },
-            });
-    });
-    return editor.deltaDecorations(lineDecorations, new_decorations);
-}
 
 function FileIO() {
 
@@ -742,9 +688,11 @@ function isDirty(model) {
 
                             _editor.onDidChangeModel(function () {
                                 if (_fileObject.isGit) {
-                                    lineDecorations = highlight_changed(
-                                        getNewLines(_fileObject.git, fileText),
-                                        _editor
+                                    computeDiff.postMessage(
+                                        {
+                                            oldText: _fileObject.git,
+                                            newText: fileText
+                                        }
                                     );
                                 }
                             });
@@ -767,16 +715,23 @@ function isDirty(model) {
                                     'ide.status.caret',
                                 );
                             });
+                            let to = 0;
                             _editor.onDidChangeModelContent(function (e) {
                                 if (e.changes && e.changes[0].text === ".") {
                                     codeCompletionAssignments = parseAssignments(acornLoose, _editor.getValue());
                                 }
+
                                 if (_fileObject.isGit && e.changes) {
-                                    let content = _editor.getValue();
-                                    lineDecorations = highlight_changed(
-                                        getNewLines(_fileObject.git, content),
-                                        _editor
-                                    );
+                                    if (to) { clearTimeout(to); }
+                                    to = setTimeout(function () {
+                                        computeDiff.postMessage(
+                                            {
+                                                oldText: _fileObject.git,
+                                                newText: _editor.getValue()
+                                            }
+                                        );
+                                    }, 200);
+
                                 }
                                 let newModuleImports = getModuleImports(_editor.getValue());
                                 let dirty = isDirty(_editor.getModel());
