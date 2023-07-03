@@ -227,7 +227,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         window.open(url);
     }, true);
 
-    messageHub.onDidReceiveMessage("database.metadata.export.schema", function (command) {
+    messageHub.onDidReceiveMessage("database.metadata.ex    port.schema", function (command) {
         let schema = command.data;
         let url = "/services/data/definition/" + $scope.datasource + "/" + schema;
         window.open(url);
@@ -235,25 +235,21 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
     messageHub.onDidReceiveMessage("database.metadata.project.export.schema", function (command) {
         let schema = command.data;
-        //console.log(command, "command");
         let url = "/services/data/export/project/" + $scope.datasource + "/" + schema;
-        //console.log(url, "URL");
         $http({
             method: 'PUT',
             url: url,
             headers: {
-                'Content-Type': 'text/plain', 'Accept': 'text/plain',
                 'X-Requested-With': 'Fetch',
                 'X-CSRF-Token': csrfToken
             }
         }).then(function (resourceURI) {
-            console.info(`Created file [${schema}.schema] in Project [${schema}] in Workspace [${schema}]`)
-            //open window - status dialog with status message
-            //file ... is created - url
-            // messageHub.showDialogWindow(
-            //     "task-details",
-            //     { fileLocation: url }
-            // );
+            let fileURL= window.location.protocol + '//' + window.location.host + `/services/ide/workspaces/${schema}/${schema}/${schema}.schema`
+            let msg = `Created file [${schema}.schema] in Project [${schema}] in Workspace [${schema}]. \n To access it it please go to: ${fileURL}`;
+
+            console.info(msg);
+
+            messageHub.showDialog('', msg);
         }).catch(function (err) {
             console.error("Error in exporting metadata in project", err);
         });
