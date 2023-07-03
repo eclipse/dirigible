@@ -18,8 +18,7 @@
         <title dg-view-title></title>
         <script type="text/javascript" src="../services/details-window.js"></script>
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
-        <link type="text/css" rel="stylesheet"
-            href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
         <script type="text/javascript" src="../js/details.js"></script>
     </head>
@@ -87,7 +86,7 @@
                             placeholder="Property name"></fd-input>
                     </fd-form-item>
                     <fd-form-item class="fd-margin-top--tiny">
-                        <fd-checkbox id="generalCalc" compact="false" dg-required="true"
+                        <fd-checkbox id="generalCalc" compact="false" ng-required="true"
                             ng-model="dataParameters.isCalculatedProperty" data-ng-true-value="'true'"
                             data-ng-false-value="'false'">
                         </fd-checkbox>
@@ -139,27 +138,27 @@
                         </fd-step-input>
                     </fd-form-item>
                     <fd-form-item class="fd-margin-top--tiny">
-                        <fd-checkbox id="dbpk" compact="false" dg-required="true"
+                        <fd-checkbox id="dbpk" compact="false" ng-required="true"
                             ng-model="dataParameters.dataPrimaryKey" data-ng-true-value="'true'"
                             data-ng-false-value="'false'">
                         </fd-checkbox>
                         <fd-checkbox-label for="dbpk" dg-required="true">Primary key</fd-checkbox-label>
                     </fd-form-item>
                     <fd-form-item class="fd-margin-top--tiny">
-                        <fd-checkbox id="dbpk" compact="false" dg-required="true"
+                        <fd-checkbox id="dbpk" compact="false" ng-required="true"
                             ng-model="dataParameters.dataAutoIncrement" data-ng-true-value="'true'"
                             data-ng-false-value="'false'">
                         </fd-checkbox>
                         <fd-checkbox-label for="dbpk" dg-required="true">Auto increment</fd-checkbox-label>
                     </fd-form-item>
                     <fd-form-item class="fd-margin-top--tiny">
-                        <fd-checkbox id="dbnn" compact="false" dg-required="true" ng-model="dataParameters.dataNotNull"
+                        <fd-checkbox id="dbnn" compact="false" ng-required="true" ng-model="dataParameters.dataNotNull"
                             data-ng-true-value="'true'" data-ng-false-value="'false'">
                         </fd-checkbox>
                         <fd-checkbox-label for="dbnn" dg-required="true">Not null</fd-checkbox-label>
                     </fd-form-item>
                     <fd-form-item class="fd-margin-top--tiny">
-                        <fd-checkbox id="dbu" compact="false" dg-required="true" ng-model="dataParameters.dataUnique"
+                        <fd-checkbox id="dbu" compact="false" ng-required="true" ng-model="dataParameters.dataUnique"
                             data-ng-true-value="'true'" data-ng-false-value="'false'">
                         </fd-checkbox>
                         <fd-checkbox-label for="dbu" dg-required="true">Unique</fd-checkbox-label>

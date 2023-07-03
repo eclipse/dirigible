@@ -172,9 +172,11 @@ function FileIO() {
                             });
                         }
                     } else {
-                        reject(`HTTP ${xhr.status} - ${xhr.statusText}`);
+                        if (xhr.responseText)
+                            reject(JSON.parse(xhr.responseText));
+                        else reject(`HTTP ${xhr.status} - Error loading '${parameters.file}'`);
                         messageHub.post({
-                            message: `Error loading '${fileName}'`
+                            message: `Error loading '${parameters.file}'`
                         }, 'ide.status.error');
                     }
                     csrfToken = xhr.getResponseHeader("x-csrf-token");
@@ -263,6 +265,10 @@ function setResourceApiUrl() {
     else if (rtype === "repository") resourceApiUrl = "/services/core/repository";
     else if (rtype === "registry") resourceApiUrl = "/services/core/registry";
     else resourceApiUrl = "/services/ide/workspaces";
+}
+
+function closeEditor() {
+    messageHub.post({ resourcePath: parameters.file }, 'ide-core.closeEditor');
 }
 
 function createEditorInstance(readOnly = false) {
@@ -398,9 +404,8 @@ function createCloseAction() {
 
         // Method that will be executed when the action is triggered.
         // @param editor The editor instance is passed in as a convinience
-        run: function (editor) {
-            let fileIO = new FileIO();
-            messageHub.post({ resourcePath: fileIO.resolveFileName() }, 'ide-core.closeEditor');
+        run: function () {
+            callCloseEditor();
         }
     };
 };
@@ -598,7 +603,7 @@ function loadSuggestions(moduleName, suggestions) {
     xhr.open('GET', '/services/js/ide-monaco-extensions/api/suggestions.js?moduleName=' + moduleName);
     xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
     xhr.onload = function (xhr) {
-        if (xhr.target.status === 200) {
+        if (xhr.target.status === 200 && xhr.target.responseText) {
             let loadedSuggestions = JSON.parse(xhr.target.responseText);
             suggestions[moduleName] = loadedSuggestions;
         }
@@ -684,8 +689,8 @@ function isDirty(model) {
                         return createEditorInstance(readOnly);
                     })
                     .catch((status) => {
-                        if (fileName) messageHub.post({ fileName: fileName }, 'ide-core.closeEditor');
                         console.error(status);
+                        closeEditor();
                     })
                     .then((editor) => {
                         _editor = editor;

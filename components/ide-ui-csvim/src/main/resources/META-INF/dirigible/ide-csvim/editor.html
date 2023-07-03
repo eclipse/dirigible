@@ -34,7 +34,7 @@
                 <div class="dg-vbox dg-fill-parent">
                     <fd-toolbar class="dg-full-width" dg-size="cozy">
                         <fd-toolbar-spacer></fd-toolbar-spacer>
-                        <fd-button compact="true" dg-type="transparent" state="{{ searchVisible ? 'selected' : '' }}"
+                        <fd-button compact="true" dg-type="transparent" dg-toggled="searchVisible"
                             glyph="sap-icon--search" title="Toggle search" aria-label="Toggle search"
                             ng-click="toggleSearch()">
                         </fd-button>
@@ -47,7 +47,8 @@
                         </fd-button>
                     </fd-toolbar>
                     <fd-toolbar dg-size="cozy" ng-show="searchVisible">
-                        <fd-input type="search" placeholder="Search" ng-keyup="filterFiles()" ng-model="searchField.text">
+                        <fd-input type="search" placeholder="Search" ng-keyup="filterFiles()"
+                            ng-model="searchField.text">
                         </fd-input>
                     </fd-toolbar>
                     <fd-list fd-scrollbar>
@@ -69,7 +70,7 @@
                             ng-click="openFile()" state="{{ fileExists ? '' : 'disabled'  }}">
                         </fd-button>
                         <fd-button compact="true" glyph="sap-icon--edit" dg-label="Edit" dg-type="transparent"
-                            state="{{ editEnabled ? 'selected' : '' }}" ng-click="setEditEnabled()">
+                            dg-toggled="editEnabled" ng-click="setEditEnabled()">
                         </fd-button>
                         <fd-toolbar-spacer></fd-toolbar-spacer>
                     </fd-toolbar>
@@ -84,9 +85,11 @@
                                             dg-inactive="{{ forms.editor['table'].$valid ? 'true' : 'false' }}">
                                             <fd-input id="idTable" name="table" ng-trim="false"
                                                 ng-attr-readonly="{{ !editEnabled || undefined }}"
-                                                state="{{ forms.editor['table'].$valid ? '' : 'error' }}" ng-required="true"
-                                                ng-model="csvimData.files[activeItemId].table" ng-change="fileChanged()"
-                                                dg-input-rules="{ patterns: ['^([A-Za-z0-9_$.-](::)?)+$'] }" type="text">
+                                                state="{{ forms.editor['table'].$valid ? '' : 'error' }}"
+                                                ng-required="true" ng-model="csvimData.files[activeItemId].table"
+                                                ng-change="fileChanged()"
+                                                dg-input-rules="{ patterns: ['^([A-Za-z0-9_$.-](::)?)+$'] }"
+                                                type="text">
                                             </fd-input>
                                             <fd-form-message dg-type="error">{{tableError}}</fd-form-message>
                                         </fd-form-input-message-group>
@@ -114,7 +117,8 @@
                                             <fd-input id="idSequence" name="sequence" ng-trim="false"
                                                 ng-attr-readonly="{{ !editEnabled || undefined }}"
                                                 state="{{ forms.editor['sequence'].$valid ? '' : 'error' }}"
-                                                ng-model="csvimData.files[activeItemId].sequence" ng-change="fileChanged()"
+                                                ng-model="csvimData.files[activeItemId].sequence"
+                                                ng-change="fileChanged()"
                                                 dg-input-rules="{ patterns: ['^[A-Za-z0-9_$.-]+$'] }" type="text">
                                             </fd-input>
                                             <fd-form-message dg-type="error">{{sequenceError}}</fd-form-message>
@@ -143,7 +147,8 @@
                                             <fd-input id="idVersion" name="version" ng-trim="false"
                                                 ng-attr-readonly="{{ !editEnabled || undefined }}"
                                                 state="{{ forms.editor['version'].$valid ? '' : 'error' }}"
-                                                ng-model="csvimData.files[activeItemId].version" ng-change="fileChanged()"
+                                                ng-model="csvimData.files[activeItemId].version"
+                                                ng-change="fileChanged()"
                                                 dg-input-rules="{ patterns: ['^[A-Za-z0-9_$.-]+$'] }" type="text">
                                             </fd-input>
                                             <fd-form-message dg-type="error">{{versionError}}</fd-form-message>
@@ -193,7 +198,8 @@
                                             <fd-form-label dg-required="true" dg-colon="true">
                                                 Quote character
                                             </fd-form-label>
-                                            <fd-select dg-placeholder="{{ csvimData.files[activeItemId].delimEnclosing }}"
+                                            <fd-select
+                                                dg-placeholder="{{ csvimData.files[activeItemId].delimEnclosing }}"
                                                 ng-required="true"
                                                 state="{{ isQuoteCharSupported(csvimData.files[activeItemId].delimEnclosing) ? '' : 'warning' }}"
                                                 ng-change="fileChanged()" is-readonly="!editEnabled"
@@ -211,7 +217,7 @@
                                 <fd-form-item>
                                     <fd-toolbar class="fd-padding--none fd-margin-top-bottom--tiny"
                                         no-bottom-border="true" dg-type="transparent">
-                                        <h4>Keys:</h4>
+                                        <fd-toolbar-title>Keys:</fd-toolbar-title>
                                         <fd-toolbar-spacer></fd-toolbar-spacer>
                                         <fd-button compact="true" dg-label="Add Column Key"
                                             ng-click="addKeyColumn()" state="{{ editEnabled ? '' : 'disabled' }}">
@@ -255,15 +261,15 @@
                                                         ng-repeat="val in csvimData[activeItemId].keys[$index].values track by $index">
                                                         <fd-input name="v{{pindex}}{{$index}}" kindex="{{pindex}}"
                                                             vindex="{{$index}}" type="text" in-group="true"
-                                                            ng-trim="false" compact="true"
+                                                            ng-trim="false"
                                                             unique-field="{ regex: '^[A-Za-z0-9_$.-]+$', checkUniqueValue: checkUniqueValue }"
                                                             ng-model="csvimData[activeItemId].keys[pindex].values[$index]"
                                                             ng-changed="fileChanged()"
                                                             ng-attr-readonly="{{ !editEnabled || undefined }}">
                                                         </fd-input>
-                                                        <fd-input-group-addon compact="true" ng-if="editEnabled"
+                                                        <fd-input-group-addon ng-if="editEnabled"
                                                             has-button="true">
-                                                            <fd-button compact="true" in-group="true"
+                                                            <fd-button in-group="true"
                                                                 glyph="sap-icon--delete"
                                                                 ng-click="removeValueFromKey(pindex, $index)"
                                                                 title="Delete Value" aria-label="delete value">

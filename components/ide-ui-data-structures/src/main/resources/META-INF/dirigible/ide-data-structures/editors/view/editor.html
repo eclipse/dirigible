@@ -1,4 +1,13 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2023 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
 <html lang="en" ng-app="page" ng-controller="PageController">
 
     <head>
@@ -11,8 +20,7 @@
         <theme></theme>
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js">
         </script>
-        <link type="text/css" rel="stylesheet"
-            href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <script type="text/javascript" src="editor.js"></script>
     </head>
 
@@ -44,7 +52,7 @@
                 </fd-form-group>
             </fd-fieldset>
             <fd-toolbar no-bottom-border="true" has-title="true">
-                <h4>Dependencies:</h4>
+                <fd-toolbar-title>Dependencies:</fd-toolbar-title>
                 <fd-toolbar-spacer></fd-toolbar-spacer>
                 <fd-button compact="true" dg-label="Save" ng-click="save()"
                     state="{{ forms.editor.$valid ? '' : 'disabled'  }}">

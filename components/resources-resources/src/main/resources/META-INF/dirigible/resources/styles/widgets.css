@@ -342,6 +342,10 @@ body {
 .dg-menu__sublist--overflow .fd-menu__separator {
   padding-top: .0625rem;
 }
+/* Form label fix for 0.29.4 */
+.fd-form-label--colon {
+  padding-right: .25rem;
+}
 /* fd-form-layout-grid-container fixes */
 .fd-container.fd-form-layout-grid-container .fd-row .fd-col {
   overflow: visible;

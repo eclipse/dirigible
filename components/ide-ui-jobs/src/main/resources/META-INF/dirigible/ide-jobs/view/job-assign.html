@@ -22,28 +22,26 @@
     </head>
 
     <body class="dg-vbox">
-        <fd-toolbar has-title="true" dg-type="transparent" no-bottom-border="true">
-            <h4>{{ job.name }}</h4>
-        </fd-toolbar>
-        <fd-toolbar>
+        <fd-toolbar has-title="true">
+            <fd-toolbar-title>{{ job.name }}</fd-toolbar-title>
+            <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-form-item style="width: 20rem">
                 <fd-form-input-message-group>
                     <fd-input compact="true" type="text" placeholder="Enter email..." ng-model="job.email">
                     </fd-input>
-                    <fd-form-message ng-if="job.email && !isEmailValid()" dg-type="error">Please, enter a valid email address</fd-form-message>
+                    <fd-form-message ng-if="job.email && !isEmailValid()" dg-type="error">{{errorMsg}}</fd-form-message>
                 </fd-form-input-message-group>
             </fd-form-item>
             <fd-button compact="true" dg-type="transparent" dg-label="Add" ng-click="addEmail()"
                 state="{{ getAddButtonState() }}"></fd-button>
         </fd-toolbar>
-        <fd-scrollbar class="dg-stretch">
-
-            <fd-list ng-if="emails.length > 0">
-                <fd-list-item ng-repeat="next in emails">
+        <fd-scrollbar class="dg-stretch dg-center">
+            <fd-list class="dg-full-height" ng-if="emails.length > 0">
+                <fd-list-item ng-repeat="email in emails track by $index">
                     <fd-list-icon glyph="sap-icon--email"></fd-list-icon>
-                    <fd-list-title>{{next.email}}</fd-list-title>
+                    <fd-list-title>{{email.email}}</fd-list-title>
                     <fd-button fd-list-button dg-type="transparent" glyph="sap-icon--delete" aria-label="delete"
-                        ng-click="removeEmail(next.id)">
+                        ng-click="removeEmail(email.id)">
                     </fd-button>
                 </fd-list-item>
             </fd-list>
@@ -80,6 +78,8 @@
         <script type="text/javascript">
             angular.module('jobAssign', ['ideUI', 'ideView'])
                 .controller('JobAssignController', ['$scope', '$http', function ($scope, $http) {
+                    $scope.errorMsg = "Please, enter a valid email address";
+                    $scope.emails = [];
                     function getEmails (job) {
                         $http.get(`/services/jobs/emails/${job.name}`)
                             .then(function (response) {

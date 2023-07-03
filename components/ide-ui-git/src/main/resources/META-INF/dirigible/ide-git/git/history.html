@@ -25,7 +25,7 @@
 
     <body class="dg-vbox">
         <fd-toolbar dg-type="solid" dg-size="cozy">
-            <h4 ng-if="selectedProject">{{selectedProject}}</h4>
+            <fd-toolbar-title ng-if="selectedProject">{{selectedProject}}</fd-toolbar-title>
             <span ng-if="selectedFile">/{{selectedFile}}</span>
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button glyph="sap-icon--refresh" aria-label="Refresh" dg-type="transparent"

@@ -18,7 +18,7 @@
 
 	<body class="dg-vbox" dg-contextmenu="contextMenuContent">
 		<fd-toolbar has-title="true" class="fd-toolbar">
-			<h4>Items ({{dataCount}})</h4>
+			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
 		</fd-toolbar>
 
 		<fd-scrollbar>
