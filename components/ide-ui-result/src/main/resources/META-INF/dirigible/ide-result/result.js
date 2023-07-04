@@ -221,6 +221,28 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         window.open(url);
     }, true);
 
+    messageHub.onDidReceiveMessage("database.data.project.export.schema", function (command) {
+        let schema = command.data;
+        let url = "/services/data/project/csv/" + $scope.datasource + "/" + schema;
+        $http({
+            method: 'PUT',
+            url: url,
+            headers: {
+                'X-Requested-With': 'Fetch',
+                'X-CSRF-Token': csrfToken
+            }
+        }).then(function (resourceURI) {
+            let fileURL= window.location.protocol + '//' + window.location.host + `/services/ide/workspaces/${schema}/${schema}`
+            let msg = `Created requested files in Project [${schema}] in Workspace [${schema}]. \n To access it it please go to: ${fileURL}`;
+
+            console.info(msg);
+
+            messageHub.showDialog('', msg);
+        }).catch(function (err) {
+            console.error("Error in exporting data in project", err);
+        });
+    }, true);
+
     messageHub.onDidReceiveMessage("database.metadata.export.artifact", function (command) {
         let artifact = command.data.split('.');
         let url = "/services/data/definition/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
@@ -235,7 +257,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
     messageHub.onDidReceiveMessage("database.metadata.project.export.schema", function (command) {
         let schema = command.data;
-        let url = "/services/data/export/project/" + $scope.datasource + "/" + schema;
+        let url = "/services/data/project/metadata/" + $scope.datasource + "/" + schema;
         $http({
             method: 'PUT',
             url: url,

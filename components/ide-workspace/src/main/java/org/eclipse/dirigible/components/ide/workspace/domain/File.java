@@ -230,4 +230,14 @@ public class File implements IResource {
 		RepositoryPath repositoryPath = new RepositoryPath(internal.getPath());
 		return repositoryPath.constructPathFrom(2);
 	}
+
+	/**
+	 * Gets the project path.
+	 *
+	 * @return the project path
+	 */
+	public String getProjectPath() {
+		RepositoryPath repositoryPath = new RepositoryPath(internal.getPath());
+		return repositoryPath.constructPathFrom(3);
+	}
 }

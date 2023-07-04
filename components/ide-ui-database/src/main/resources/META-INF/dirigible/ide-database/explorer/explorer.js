@@ -377,6 +377,16 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.export.schema', sqlCommand);
 						}.bind(this)
 					};
+					ctxmenu.exportDataInProject= {
+						"separator_before": true,
+						"label": "Export Data in Project",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = node.original.text;
+							messageHub.postMessage('database.data.project.export.schema', sqlCommand);
+						}.bind(this)
+					};
 					ctxmenu.exportMetadataInProject = {
 						"separator_before": false,
 						"label": "Export Metadata in Project",

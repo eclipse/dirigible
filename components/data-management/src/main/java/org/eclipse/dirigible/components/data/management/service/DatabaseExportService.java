@@ -25,7 +25,6 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.components.api.platform.WorkspaceFacade;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseErrorHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseQueryHelper;
@@ -33,10 +32,6 @@ import org.eclipse.dirigible.components.data.management.helpers.DatabaseQueryHel
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseResultSetHelper;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
-import org.eclipse.dirigible.components.ide.workspace.domain.File;
-import org.eclipse.dirigible.components.ide.workspace.domain.Project;
-import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
-import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +40,6 @@ import org.springframework.stereotype.Service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import static java.text.MessageFormat.format;
 
 /**
  * The Class DataSourceMetadataService.
@@ -91,22 +84,18 @@ public class DatabaseExportService {
 
     private final DatabaseDefinitionService databaseDefinitionService;
 
-    private WorkspaceService workspaceService;
-
     /**
      * Instantiates a new data source endpoint.
      *
      * @param datasourceManager         the datasource manager
      * @param datasourceService         the datasource service
      * @param databaseDefinitionService the database definition service
-     * @param workspaceService          the workspace service
      */
     @Autowired
-    public DatabaseExportService(DataSourcesManager datasourceManager, DataSourceService datasourceService, DatabaseDefinitionService databaseDefinitionService, WorkspaceService workspaceService) {
+    public DatabaseExportService(DataSourcesManager datasourceManager, DataSourceService datasourceService, DatabaseDefinitionService databaseDefinitionService) {
         this.datasourceManager = datasourceManager;
         this.datasourceService = datasourceService;
         this.databaseDefinitionService = databaseDefinitionService;
-        this.workspaceService = workspaceService;
     }
 
     /**
@@ -270,24 +259,6 @@ public class DatabaseExportService {
         }
 
         return String.join("\n", results);
-    }
-
-    public String exportMetadataAsProject(String datasource, String schema) throws SQLException {
-        String schemaMetadata = databaseDefinitionService.loadSchemaMetadata(datasource, schema);
-        Workspace workspace;
-        Project project;
-        File file;
-        if (!workspaceService.existsWorkspace(schema)) {
-            workspace = WorkspaceFacade.createWorkspace(schema);
-            project = workspace.createProject(schema);
-            file = project.createFile(schema + ".schema", schemaMetadata.getBytes());
-            logger.info(format("Created file [{0}] in Project [{1}] in Workspace [{2}]", file.getName(), project.getName(), workspace.getName()));
-        } else {
-            logger.warn(format("File with name [{0}] in Project [{1}] in Workspace [{2}] already exists and new metadata could not be exported", schema + ".schema", schema, schema));
-            project = workspaceService.getProject(schema, schema);
-            file = project.find(schema + ".schema").get(0);
-        }
-        return file.getWorkspacePath();
     }
 
     /**
