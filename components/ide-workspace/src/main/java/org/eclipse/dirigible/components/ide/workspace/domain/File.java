@@ -11,12 +11,7 @@
  */
 package org.eclipse.dirigible.components.ide.workspace.domain;
 
-import org.eclipse.dirigible.repository.api.ICollection;
-import org.eclipse.dirigible.repository.api.IEntityInformation;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.repository.api.RepositoryReadException;
-import org.eclipse.dirigible.repository.api.RepositoryWriteException;
+import org.eclipse.dirigible.repository.api.*;
 
 /**
  * The Workspace's File.
@@ -226,4 +221,13 @@ public class File implements IResource {
 		return internal.isEmpty();
 	}
 
+	/**
+	 * Gets the workspace path.
+	 *
+	 * @return the workspace path
+	 */
+	public String getWorkspacePath() {
+		RepositoryPath repositoryPath = new RepositoryPath(internal.getPath());
+		return repositoryPath.constructPathFrom(2);
+	}
 }

@@ -13,6 +13,8 @@ package org.eclipse.dirigible.components.data.management.endpoint;
 
 import static java.text.MessageFormat.format;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,16 +22,14 @@ import java.util.Date;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExportService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseMetadataService;
+import org.eclipse.dirigible.components.ide.workspace.service.TransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -47,17 +47,22 @@ public class DatabaseExportEndpoint {
 	
 	/** The database metadata service. */
 	private DatabaseMetadataService databaseMetadataService;
+
+
+	private TransportService transportService;
 	
 	/**
 	 * Instantiates a new database export endpoint.
 	 *
-	 * @param databaseExportService the database export service
-	 * @param databaseMetadataService the database metadata service
+	 * @param databaseExportService     the database export service
+	 * @param databaseMetadataService   the database metadata service
+	 * @param transportService
 	 */
 	@Autowired
-	public DatabaseExportEndpoint(DatabaseExportService databaseExportService, DatabaseMetadataService databaseMetadataService) {
+	public DatabaseExportEndpoint(DatabaseExportService databaseExportService, DatabaseMetadataService databaseMetadataService, TransportService transportService) {
 		this.databaseExportService = databaseExportService;
 		this.databaseMetadataService = databaseMetadataService;
+		this.transportService = transportService;
 	}
 	
 	/**
@@ -129,4 +134,26 @@ public class DatabaseExportEndpoint {
 		return new ResponseEntity<byte[]>(result, httpHeaders, HttpStatus.OK);
 	}
 
+	/**
+	 * Execute schema export.
+	 *
+	 * @param datasource the datasource
+	 * @param schema the schema name
+	 * @return the response
+	 * @throws SQLException the SQL exception
+	 */
+	@PutMapping(value = "/project/{datasource}/{schema}")
+	public ResponseEntity<URI> exportMetadataAsProject(
+			@PathVariable("datasource") String datasource,
+			@PathVariable("schema") String schema) throws SQLException, URISyntaxException {
+
+		if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
+			String error = format("Datasource {0} does not exist.", datasource);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+		}
+
+		String fileWorkspacePath = databaseExportService.exportMetadataAsProject(datasource, schema);
+
+		return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + fileWorkspacePath));
+	}
 }

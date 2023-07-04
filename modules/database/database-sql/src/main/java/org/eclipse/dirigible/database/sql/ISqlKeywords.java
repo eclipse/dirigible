@@ -514,6 +514,12 @@ public interface ISqlKeywords {
             METADATA_SYNONYM, METADATA_GLOBAL_TEMPORARY, METADATA_LOCAL_TEMPORARY, METADATA_SYSTEM_TABLE, METADATA_BASE_TABLE));
 
     /**
+     * The Constant METADATA_TABLE_STRUCTURES.
+     */
+    public static final List<String> METADATA_TABLE_STRUCTURES = Collections.unmodifiableList(Arrays.asList(METADATA_TABLE, METADATA_GLOBAL_TEMPORARY,
+            METADATA_LOCAL_TEMPORARY, METADATA_SYSTEM_TABLE, METADATA_BASE_TABLE));
+
+    /**
      * The Constant KEYWORD_COLUMNSTORE.
      */
     public static final String KEYWORD_COLUMNSTORE = "COLUMNSTORE";

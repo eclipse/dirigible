@@ -32,7 +32,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     $scope.procedureResults = [];
     $scope.hasMultipleProcedureResults = false;
 
-    $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).then(function (response) {
+    $http.get("", {headers: {"X-CSRF-Token": "Fetch"}}).then(function (response) {
         csrfToken = response.headers()["x-csrf-token"];
     }, function (response) {
         console.error("Error getting token.", response);
@@ -231,6 +231,28 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         let schema = command.data;
         let url = "/services/data/definition/" + $scope.datasource + "/" + schema;
         window.open(url);
+    }, true);
+
+    messageHub.onDidReceiveMessage("database.metadata.project.export.schema", function (command) {
+        let schema = command.data;
+        let url = "/services/data/export/project/" + $scope.datasource + "/" + schema;
+        $http({
+            method: 'PUT',
+            url: url,
+            headers: {
+                'X-Requested-With': 'Fetch',
+                'X-CSRF-Token': csrfToken
+            }
+        }).then(function (resourceURI) {
+            let fileURL= window.location.protocol + '//' + window.location.host + `/services/ide/workspaces/${schema}/${schema}/${schema}.schema`
+            let msg = `Created file [${schema}.schema] in Project [${schema}] in Workspace [${schema}]. \n To access it it please go to: ${fileURL}`;
+
+            console.info(msg);
+
+            messageHub.showDialog('', msg);
+        }).catch(function (err) {
+            console.error("Error in exporting metadata in project", err);
+        });
     }, true);
 
     function cleanScope() {

@@ -17,12 +17,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.gson.*;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.management.load.DataSourceMetadataLoader;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.database.sql.DataTypeUtils;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,10 +98,25 @@ public class DatabaseDefinitionService {
 	public String loadSchemaMetadata(String datasource, String schema) throws SQLException {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		List<Table> model = datasourceMetadataLoader.loadSchemaMetadata(schema, dataSource);
-		if (model != null) {
-			return JsonHelper.toJson(model);
+		model.forEach(m -> {
+			m.setType(m.getKind());
+			if (ISqlKeywords.METADATA_TABLE_STRUCTURES.contains(m.getType())){
+				m.setType(ISqlKeywords.METADATA_TABLE);
+			}
+		});
+
+		JsonArray structureArray = new JsonArray();
+		for(Table m : model){
+			structureArray.add(JsonHelper.fromJson(JsonHelper.toJson(m), JsonElement.class));
 		}
-		return null;
+
+		JsonObject schemaObject = new JsonObject();
+		schemaObject.add("structures", structureArray);
+
+		JsonObject json = new JsonObject();
+		json.add("schema", schemaObject);
+
+		return JsonHelper.toJson(json);
 	}
 
 	/**
