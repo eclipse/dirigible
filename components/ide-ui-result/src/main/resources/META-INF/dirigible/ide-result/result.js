@@ -227,7 +227,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         window.open(url);
     }, true);
 
-    messageHub.onDidReceiveMessage("database.metadata.ex    port.schema", function (command) {
+    messageHub.onDidReceiveMessage("database.metadata.export.schema", function (command) {
         let schema = command.data;
         let url = "/services/data/definition/" + $scope.datasource + "/" + schema;
         window.open(url);
