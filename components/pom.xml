@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>9.0.0-SNAPSHOT</version>
+		<version>8.6.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -243,7 +243,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.6.1</version>
 		</dependency>
 
 		<!-- Spring Boot -->
