@@ -13,8 +13,6 @@ package org.eclipse.dirigible.components.data.management.endpoint;
 
 import static java.text.MessageFormat.format;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +20,6 @@ import java.util.Date;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExportService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseMetadataService;
-import org.eclipse.dirigible.components.ide.workspace.service.TransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,21 +45,16 @@ public class DatabaseExportEndpoint {
 	/** The database metadata service. */
 	private DatabaseMetadataService databaseMetadataService;
 
-
-	private TransportService transportService;
-	
 	/**
 	 * Instantiates a new database export endpoint.
 	 *
 	 * @param databaseExportService     the database export service
 	 * @param databaseMetadataService   the database metadata service
-	 * @param transportService
 	 */
 	@Autowired
-	public DatabaseExportEndpoint(DatabaseExportService databaseExportService, DatabaseMetadataService databaseMetadataService, TransportService transportService) {
+	public DatabaseExportEndpoint(DatabaseExportService databaseExportService, DatabaseMetadataService databaseMetadataService) {
 		this.databaseExportService = databaseExportService;
 		this.databaseMetadataService = databaseMetadataService;
-		this.transportService = transportService;
 	}
 	
 	/**
@@ -127,33 +119,9 @@ public class DatabaseExportEndpoint {
 			String error = format("Datasource {0} does not exist.", datasource);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
 		}
-		
 		byte[] result = databaseExportService.exportSchema(datasource, schema);
 		final HttpHeaders httpHeaders= new HttpHeaders();
 	    httpHeaders.add("Content-Disposition", "attachment; filename=\"" + schema + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".zip\"");
 		return new ResponseEntity<byte[]>(result, httpHeaders, HttpStatus.OK);
-	}
-
-	/**
-	 * Execute schema export.
-	 *
-	 * @param datasource the datasource
-	 * @param schema the schema name
-	 * @return the response
-	 * @throws SQLException the SQL exception
-	 */
-	@PutMapping(value = "/project/{datasource}/{schema}")
-	public ResponseEntity<URI> exportMetadataAsProject(
-			@PathVariable("datasource") String datasource,
-			@PathVariable("schema") String schema) throws SQLException, URISyntaxException {
-
-		if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
-			String error = format("Datasource {0} does not exist.", datasource);
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
-		}
-
-		String fileWorkspacePath = databaseExportService.exportMetadataAsProject(datasource, schema);
-
-		return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + fileWorkspacePath));
 	}
 }
