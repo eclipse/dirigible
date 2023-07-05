@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.components.data.export.endpoint;/*
+/*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
@@ -10,9 +10,9 @@ package org.eclipse.dirigible.components.data.export.endpoint;/*
  * SPDX-License-Identifier: EPL-2.0
  */
 
+package org.eclipse.dirigible.components.data.export.endpoint;
+
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.data.csvim.domain.Csv;
-import org.eclipse.dirigible.components.data.csvim.domain.Csvim;
 import org.eclipse.dirigible.components.data.export.service.DataExportService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExportService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseMetadataService;
@@ -27,7 +27,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.List;
 
 import static java.text.MessageFormat.format;
 
