@@ -334,5 +334,4 @@ public class DatabaseExecutionService {
 		}
 		return SCRIPT_DELIMITER;
 	}
-
 }
