@@ -18,6 +18,7 @@ import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
+import org.eclipse.dirigible.components.data.management.service.DatabaseExecutionService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExportService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
@@ -58,7 +59,12 @@ public class DataExportService {
     private final WorkspaceService workspaceService;
 
     /**
-     * The database definition service.
+     * The database execution service.
+     */
+    private final DatabaseExecutionService databaseExecutionService;
+
+    /**
+     * The database execution service.
      */
     private final DatabaseDefinitionService databaseDefinitionService;
 
@@ -68,13 +74,15 @@ public class DataExportService {
      * @param datasourceManager         the datasource manager
      * @param databaseExportService     the database export service
      * @param workspaceService          the workspace service
+     * @param databaseExecutionService  the database execution service
      * @param databaseDefinitionService the database definition service
      */
     @Autowired
-    public DataExportService(DataSourcesManager datasourceManager, DatabaseExportService databaseExportService, WorkspaceService workspaceService, DatabaseDefinitionService databaseDefinitionService) {
+    public DataExportService(DataSourcesManager datasourceManager, DatabaseExportService databaseExportService, WorkspaceService workspaceService, DatabaseExecutionService databaseExecutionService, DatabaseDefinitionService databaseDefinitionService) {
         this.datasourceManager = datasourceManager;
         this.databaseExportService = databaseExportService;
         this.workspaceService = workspaceService;
+        this.databaseExecutionService = databaseExecutionService;
         this.databaseDefinitionService = databaseDefinitionService;
     }
 
@@ -112,7 +120,7 @@ public class DataExportService {
                         JsonObject table = tables.get(j).getAsJsonObject();
                         String artifact = table.get("name").getAsString();
                         String sql = "SELECT * FROM \"" + schema + "\".\"" + artifact + "\"";
-                        String tableExport = databaseExportService.executeStatement(dataSource, sql, true, false, true);
+                        String tableExport = databaseExecutionService.executeStatement(dataSource, sql, true, false, true, false);
 
                         file = project.createFile(schema + "." + artifact + ".csv", tableExport.getBytes());
 
