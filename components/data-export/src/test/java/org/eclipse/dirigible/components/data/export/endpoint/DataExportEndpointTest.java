@@ -1,0 +1,99 @@
+/*
+ * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
+package org.eclipse.dirigible.components.data.export.endpoint;
+
+import org.eclipse.dirigible.components.data.sources.domain.DataSource;
+import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.data.sources.repository.DataSourceRepository;
+import org.eclipse.dirigible.components.ide.workspace.domain.Project;
+import org.eclipse.dirigible.components.ide.workspace.domain.ProjectStatusProvider;
+import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
+import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.FilterChainProxy;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WithMockUser
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@EntityScan("org.eclipse.dirigible.components")
+@Transactional
+public class DataExportEndpointTest {
+    @Autowired
+    private DataSourceRepository datasourceRepository;
+
+    @Autowired
+    private WorkspaceService workspaceService;
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    protected WebApplicationContext wac;
+
+    @BeforeEach
+    public void setup() {
+        DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
+        datasourceRepository.save(datasource);
+    }
+
+    @Test
+    public void exportDataAsProjectTest() throws Exception {
+        mockMvc.perform(put("/services/data/project/csv/{datasource}/{schema}",
+                        "TestDB", "INFORMATION_SCHEMA")
+                .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk());
+        Workspace workspace = workspaceService.getWorkspace("INFORMATION_SCHEMA");
+        assertNotNull(workspace);
+        Project project = workspace.getProject("INFORMATION_SCHEMA");
+        assertNotNull(project);
+    }
+
+    @Test
+    public void exportMetadataAsProjectTest() throws Exception {
+        mockMvc.perform(put("/services/data/project/metadata/{datasource}/{schema}",
+                        "TestDB", "INFORMATION_SCHEMA")
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk());
+        Workspace workspace = workspaceService.getWorkspace("INFORMATION_SCHEMA");
+        assertNotNull(workspace);
+        Project project = workspace.getProject("INFORMATION_SCHEMA");
+        assertNotNull(project);
+    }
+
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
+}
