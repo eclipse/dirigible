@@ -601,7 +601,7 @@
 		<angular-file-upload.version>2.6.1</angular-file-upload.version>
 		<angularjs.version>1.8.2</angularjs.version>
 		<fontawesome.version>4.7.0</fontawesome.version>
-		<classgraph.version>4.8.160</classgraph.version>
+		<classgraph.version>4.8.161</classgraph.version>
 		<commons-compress.version>1.22</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.6</testcontainers.elasticsearch.version>
 		<testcontainers.version>1.18.3</testcontainers.version>
