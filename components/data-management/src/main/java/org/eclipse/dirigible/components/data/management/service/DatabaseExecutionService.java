@@ -54,15 +54,13 @@ public class DatabaseExecutionService {
 	private static final String PROCEDURE_DELIMITER = "--";
 
 	/** The limited. */
-	private boolean LIMITED = true;
+	private final boolean LIMITED = true;
 
-	
 	/** The data sources manager. */
 	private final DataSourcesManager datasourceManager;
-	
+
 	/** The data sources service. */
 	private final DataSourceService datasourceService;
-	
 
 	/**
 	 * Instantiates a new data source endpoint.
@@ -75,7 +73,7 @@ public class DatabaseExecutionService {
 		this.datasourceManager = datasourceManager;
 		this.datasourceService = datasourceService;
 	}
-	
+
 	/**
 	 * Gets the data sources.
 	 *
@@ -84,8 +82,8 @@ public class DatabaseExecutionService {
 	public Set<String> getDataSourcesNames() {
 		return datasourceService.getAll().stream().map(DataSource::getName).collect(Collectors.toSet());
 	}
-	
-	
+
+
 	/**
 	 * Execute query.
 	 *
@@ -102,7 +100,7 @@ public class DatabaseExecutionService {
 	public String executeQuery(String datasource, String sql, boolean isJson, boolean isCsv) {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		if (dataSource != null) {
-			return executeStatement(dataSource, sql, true, isJson, isCsv);
+			return executeStatement(dataSource, sql, true, isJson, isCsv, true);
 		}
 		return null;
 	}
@@ -123,7 +121,7 @@ public class DatabaseExecutionService {
 	public String executeUpdate(String datasource, String sql, boolean isJson, boolean isCsv) {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		if (dataSource != null) {
-			return executeStatement(dataSource, sql, false, isJson, isCsv);
+			return executeStatement(dataSource, sql, false, isJson, isCsv, true);
 		}
 		return null;
 	}
@@ -165,7 +163,7 @@ public class DatabaseExecutionService {
 	public String execute(String datasource, String sql, boolean isJson, boolean isCsv) {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		if (dataSource != null) {
-			return executeStatement(dataSource, sql, true, isJson, isCsv);
+			return executeStatement(dataSource, sql, true, isJson, isCsv, true);
 		}
 		return null;
 	}
@@ -185,7 +183,7 @@ public class DatabaseExecutionService {
 	 *            the is csv
 	 * @return the string
 	 */
-	public String executeStatement(javax.sql.DataSource dataSource, String sql, boolean isQuery, boolean isJson, boolean isCsv) {
+	public String executeStatement(javax.sql.DataSource dataSource, String sql, boolean isQuery, boolean isJson, boolean isCsv, boolean limited) {
 
 		if ((sql == null) || (sql.length() == 0)) {
 			return "";
@@ -212,11 +210,11 @@ public class DatabaseExecutionService {
 					public void queryDone(ResultSet rs) {
 						try {
 							if (isJson) {
-								results.add(DatabaseResultSetHelper.toJson(rs, LIMITED, true));
+								results.add(DatabaseResultSetHelper.toJson(rs, limited, true));
 							} else if (isCsv) {
-								results.add(DatabaseResultSetHelper.toCsv(rs, LIMITED, false));
+								results.add(DatabaseResultSetHelper.toCsv(rs, limited, false));
 							} else {
-								results.add(DatabaseResultSetHelper.print(rs, LIMITED));
+								results.add(DatabaseResultSetHelper.print(rs, limited));
 							}
 						} catch (SQLException e) {
 							if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
@@ -336,5 +334,4 @@ public class DatabaseExecutionService {
 		}
 		return SCRIPT_DELIMITER;
 	}
-
 }

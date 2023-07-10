@@ -18,7 +18,7 @@ import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
-import org.eclipse.dirigible.components.data.management.service.DatabaseExportService;
+import org.eclipse.dirigible.components.data.management.service.DatabaseExecutionService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
@@ -48,17 +48,17 @@ public class DataExportService {
     private final DataSourcesManager datasourceManager;
 
     /**
-     * The data sources manager.
-     */
-    private final DatabaseExportService databaseExportService;
-
-    /**
      * The workspace service.
      */
     private final WorkspaceService workspaceService;
 
     /**
-     * The database definition service.
+     * The database execution service.
+     */
+    private final DatabaseExecutionService databaseExecutionService;
+
+    /**
+     * The database execution service.
      */
     private final DatabaseDefinitionService databaseDefinitionService;
 
@@ -66,25 +66,23 @@ public class DataExportService {
      * Instantiates a new data export service.
      *
      * @param datasourceManager         the datasource manager
-     * @param databaseExportService     the database export service
      * @param workspaceService          the workspace service
+     * @param databaseExecutionService  the database execution service
      * @param databaseDefinitionService the database definition service
      */
     @Autowired
-    public DataExportService(DataSourcesManager datasourceManager, DatabaseExportService databaseExportService, WorkspaceService workspaceService, DatabaseDefinitionService databaseDefinitionService) {
+    public DataExportService(DataSourcesManager datasourceManager, WorkspaceService workspaceService, DatabaseExecutionService databaseExecutionService, DatabaseDefinitionService databaseDefinitionService) {
         this.datasourceManager = datasourceManager;
-        this.databaseExportService = databaseExportService;
         this.workspaceService = workspaceService;
+        this.databaseExecutionService = databaseExecutionService;
         this.databaseDefinitionService = databaseDefinitionService;
     }
 
     /**
-     *
      * @param datasource the datasource
-     * @param schema the schema
-     * @throws SQLException the SQL exception
+     * @param schema     the schema
      */
-    public void exportSchemaInCsvs(String datasource, String schema) throws SQLException {
+    public void exportSchemaInCsvs(String datasource, String schema) {
         try {
             javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
             if (dataSource != null) {
@@ -112,7 +110,7 @@ public class DataExportService {
                         JsonObject table = tables.get(j).getAsJsonObject();
                         String artifact = table.get("name").getAsString();
                         String sql = "SELECT * FROM \"" + schema + "\".\"" + artifact + "\"";
-                        String tableExport = databaseExportService.executeStatement(dataSource, sql, true, false, true);
+                        String tableExport = databaseExecutionService.executeStatement(dataSource, sql, true, false, true, false);
 
                         file = project.createFile(schema + "." + artifact + ".csv", tableExport.getBytes());
 
@@ -133,9 +131,8 @@ public class DataExportService {
     }
 
     /**
-     *
      * @param datasource the datasource
-     * @param schema the schema
+     * @param schema     the schema
      * @return the workspace path of the file
      * @throws SQLException the SQL exception
      */
@@ -158,7 +155,6 @@ public class DataExportService {
     }
 
     /**
-     *
      * @param csvFiles the csvFiles
      * @return the transformed csvFiles to Json
      */
@@ -170,9 +166,8 @@ public class DataExportService {
     }
 
     /**
-     *
-     * @param csvFile the csvFile
-     * @param schema the schema
+     * @param csvFile  the csvFile
+     * @param schema   the schema
      * @param artefact the artefact
      * @param filePath the filePath
      */
@@ -187,5 +182,4 @@ public class DataExportService {
         csvFile.setDistinguishEmptyFromNull(true);
 
     }
-
 }
