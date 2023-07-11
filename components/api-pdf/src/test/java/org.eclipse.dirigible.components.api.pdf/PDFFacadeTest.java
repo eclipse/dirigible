@@ -42,8 +42,8 @@ public class PDFFacadeTest {
      */
     @Test
     public void generatePdfTest() throws IOException {
-        String template = IOUtils.toString(this.getClass().getResourceAsStream("template.xsl"), Charset.defaultCharset());
-        String data = IOUtils.toString(this.getClass().getResourceAsStream("data.xml"), Charset.defaultCharset());
+        String template = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("template.xsl"), Charset.defaultCharset());
+        String data = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("data.xml"), Charset.defaultCharset());
 
         byte[] pdf = PDFFacade.generate(template.toString(), data.toString());
 
@@ -58,8 +58,8 @@ public class PDFFacadeTest {
      */
     @Test
     public void generateLargerPdfTest() throws IOException {
-        String template = IOUtils.toString(PDFFacadeTest.class.getResourceAsStream("template.xsl"), Charset.defaultCharset());
-        String data = IOUtils.toString(PDFFacadeTest.class.getResourceAsStream("data2.xml"), Charset.defaultCharset());
+        String template = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("template.xsl"), Charset.defaultCharset());
+        String data = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("data.xml"), Charset.defaultCharset());
 
         byte[] pdf = PDFFacade.generate(template, data);
 
