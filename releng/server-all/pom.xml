@@ -11,7 +11,7 @@
 
     <name>Releng - Server - All</name>
 	<artifactId>dirigible-server-all</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
