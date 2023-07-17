@@ -32,9 +32,13 @@ public class EdmTableBinding extends Mapping {
     public enum DataStructureType {
         
         /** The table. */
-        TABLE("TABLE"), 
- /** The calc view. */
- CALC_VIEW("CALC VIEW");
+        TABLE("TABLE"),
+
+        /** The view. */
+        VIEW("VIEW"),
+
+        /** The calc view. */
+        CALC_VIEW("CALC VIEW");
 
         /** The value. */
         private final String value;

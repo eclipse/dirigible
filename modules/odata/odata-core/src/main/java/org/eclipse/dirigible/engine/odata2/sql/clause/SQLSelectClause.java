@@ -402,8 +402,10 @@ public final class SQLSelectClause {
 			String tableAlias = it.next();
 			EdmStructuralType type = query.getEntityInQueryForAlias(tableAlias);
 			if (isSelectTarget(type)) {
-				if (EdmTableBinding.DataStructureType.CALC_VIEW == targetDataStructureType
-						&& context.getDatabaseProduct().equals(DatabaseProduct.HANA) && !this.parameters.isEmpty()) {
+				boolean isView = EdmTableBinding.DataStructureType.VIEW == targetDataStructureType;
+				boolean isCalculationView = EdmTableBinding.DataStructureType.CALC_VIEW == targetDataStructureType;
+				boolean isHanaDatabase = context.getDatabaseProduct().equals(DatabaseProduct.HANA);
+				if ((isView  || (isCalculationView && isHanaDatabase)) && !this.parameters.isEmpty()) {
 					addInputParamsAsStatementParams(parameters);
 					tables.add(query.getSQLTableName(target) + buildTargetParameters() + " AS " + tableAlias);
 				} else {
