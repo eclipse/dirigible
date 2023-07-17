@@ -33,6 +33,8 @@ public class EdmTableBinding extends Mapping {
 
 		/** The table. */
 		TABLE("TABLE"),
+		/** The view. */
+		VIEW("VIEW"),
 		/** The calc view. */
 		CALC_VIEW("CALC VIEW");
 
