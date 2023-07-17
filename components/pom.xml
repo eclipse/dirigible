@@ -57,6 +57,7 @@
 		<module>engine-listeners</module>
 		<module>engine-odata</module>
 		<module>engine-camel</module>
+		<module>engine-ftp</module>
 		
 		<!-- IDE -->
 		<module>ide-workspace</module>
