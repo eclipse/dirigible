@@ -69,81 +69,6 @@ jobs:
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
 
-    - name: Push Anonymous
-      run: |
-        cd releng/anonymous-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-anonymous -f Dockerfile-base .
-        docker tag dirigible-base-platform-anonymous dirigiblelabs/dirigible-base-platform-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-anonymous .
-        docker tag dirigible-anonymous dirigiblelabs/dirigible-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-    - name: Push Anonymous - Runtime
-      run: |
-        cd releng/anonymous-runtime
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-runtime-anonymous -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime-anonymous dirigiblelabs/dirigible-base-platform-runtime-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-runtime-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-runtime-anonymous .
-        docker tag dirigible-runtime-anonymous dirigiblelabs/dirigible-runtime-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-runtime-anonymous:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-    - name: Push OpenShift
-      run: |
-        cd releng/openshift-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-openshift -f Dockerfile-base .
-        docker tag dirigible-base-platform-openshift dirigiblelabs/dirigible-base-platform-openshift:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-openshift:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-openshift .
-        docker tag dirigible-openshift dirigiblelabs/dirigible-openshift:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-openshift:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-    - name: Push SAP Cloud Foundry
-      run: |
-        cd releng/sap-cf-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-cf -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-cf dirigiblelabs/dirigible-base-platform-sap-cf:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-sap-cf:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-cf .
-        docker tag dirigible-sap-cf dirigiblelabs/dirigible-sap-cf:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-sap-cf:${{ github.event.inputs.releaseVersion }}
-        cd ../../
-    - name: Push SAP Cloud Foundry - Runtime
-      run: |
-        cd releng/sap-cf-runtime
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-cf-runtime -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-cf-runtime dirigiblelabs/dirigible-base-platform-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-cf-runtime .
-        docker tag dirigible-sap-cf-runtime dirigiblelabs/dirigible-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-    - name: Push SAP Kyma
-      run: |
-        cd releng/sap-kyma-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-kyma -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-kyma dirigiblelabs/dirigible-base-platform-sap-kyma:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-sap-kyma:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-kyma .
-        docker tag dirigible-sap-kyma dirigiblelabs/dirigible-sap-kyma:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-sap-kyma:${{ github.event.inputs.releaseVersion }}
-        cd ../../
-    - name: Push SAP Kyma - Runtime
-      run: |
-        cd releng/sap-kyma-runtime
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-kyma-runtime -f Dockerfile-base .
-        docker tag dirigible-base-platform-sap-kyma-runtime dirigiblelabs/dirigible-base-platform-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-kyma-runtime .
-        docker tag dirigible-sap-kyma-runtime dirigiblelabs/dirigible-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
     - name: Push Dirigible
       run: |
         cd releng/server-all
@@ -153,50 +78,6 @@ jobs:
         docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-all .
         docker tag dirigible-all dirigiblelabs/dirigible-all:${{ github.event.inputs.releaseVersion }}
         docker push dirigiblelabs/dirigible-all:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible - Runtime
-      run: |
-        cd releng/server-runtime
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-runtime -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime dirigiblelabs/dirigible-base-platform-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-runtime:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-runtime .
-        docker tag dirigible-runtime dirigiblelabs/dirigible-runtime:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-runtime:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible - Trial
-      run: |
-        cd releng/trial-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-trial -f Dockerfile-base .
-        docker tag dirigible-base-platform-trial dirigiblelabs/dirigible-base-platform-trial:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-trial:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-trial .
-        docker tag dirigible-trial dirigiblelabs/dirigible-trial:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-trial:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible - Keycloak
-      run: |
-        cd releng/server-keycloak-all
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-keycloak -f Dockerfile-base .
-        docker tag dirigible-base-platform-keycloak dirigiblelabs/dirigible-base-platform-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-keycloak .
-        docker tag dirigible-keycloak dirigiblelabs/dirigible-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker image prune -a -f
-        cd ../../
-    - name: Push Dirigible - Keycloak - Runtime
-      run: |
-        cd releng/server-runtime-keycloak
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-runtime-keycloak -f Dockerfile-base .
-        docker tag dirigible-base-platform-runtime-keycloak dirigiblelabs/dirigible-base-platform-runtime-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-base-platform-runtime-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-runtime-keycloak .
-        docker tag dirigible-runtime-keycloak dirigiblelabs/dirigible-runtime-keycloak:${{ github.event.inputs.releaseVersion }}
-        docker push dirigiblelabs/dirigible-runtime-keycloak:${{ github.event.inputs.releaseVersion }}
         docker image prune -a -f
         cd ../../
 
@@ -234,16 +115,7 @@ jobs:
 
     - name: Package WAR files
       run: |
-        zip --junk-paths anonymous-all releng/anonymous-all/target/ROOT.war
-        zip --junk-paths anonymous-runtime releng/anonymous-runtime/target/ROOT.war
-        zip --junk-paths desktop-all releng/desktop-all/target/ROOT.war
-        zip --junk-paths sap-cf-all releng/sap-cf-all/target/ROOT.war
-        zip --junk-paths sap-cf-runtime releng/sap-cf-runtime/target/ROOT.war
         zip --junk-paths server-all releng/server-all/target/ROOT.war
-        zip --junk-paths server-minimal releng/server-minimal/target/ROOT.war
-        zip --junk-paths server-oauth releng/server-oauth/target/ROOT.war
-        zip --junk-paths server-runtime releng/server-runtime/target/ROOT.war
-        zip --junk-paths trial-all releng/trial-all/target/ROOT.war
 
     - name: Create Release
       id: create_release
@@ -275,113 +147,18 @@ jobs:
           </dependency>
           ```
 
-          #### Helm:
-
-          To install Eclipse Dirigible with Helm go to the [Setup with Helm](https://www.dirigible.io/help/setup/helm/) page.
-          All Helm charts, with detailed explanation, setup and configurations, can be found [here](https://artifacthub.io/packages/search?org=dirigiblelabs).
-
-          ```
-          helm repo add dirigible https://eclipse.github.io/dirigible
-          helm repo update
-          helm install dirigible dirigible/dirigible --version ${{ github.event.inputs.releaseVersion }}
-          ```
-
           #### Docker images:
-            - [dirigiblelabs/dirigible-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-anonymous/tags?page=1&ordering=last_updated) - Anonymous access.
-            - [dirigiblelabs/dirigible-runtime-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime-anonymous/tags?page=1&ordering=last_updated) - Anonymous access _(runtime only)_.
-            - [dirigiblelabs/dirigible-openshift](https://hub.docker.com/r/dirigiblelabs/dirigible-openshift/tags?page=1&ordering=last_updated) - OpenShift.
-            - [dirigiblelabs/dirigible-sap-cf](https://hub.docker.com/r/dirigiblelabs/dirigible-sap-cf/tags?page=1&ordering=last_updated) - SAP Cloud Platform - Cloud Foundry environment.
-            - [dirigiblelabs/dirigible-sap-cf-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-sap-cf-runtime/tags?page=1&ordering=last_updated) - SAP Cloud Platform - Cloud Foundry environment _(runtime only)_.
-            - [dirigiblelabs/dirigible-sap-kyma](https://hub.docker.com/r/dirigiblelabs/dirigible-sap-kyma/tags?page=1&ordering=last_updated) - SAP Cloud Platform - Kyma environment.
-            - [dirigiblelabs/dirigible-sap-kyma-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-sap-kyma-runtime/tags?page=1&ordering=last_updated) - SAP Cloud Platform - Kyma environment _(runtime only)_.
             - [dirigiblelabs/dirigible-all](https://hub.docker.com/r/dirigiblelabs/dirigible-all/tags?page=1&ordering=last_updated) - Basic docker image - recommended for local test & development.
-            - [dirigiblelabs/dirigible-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime/tags?page=1&ordering=last_updated) - Basic docker image - recommended for local test & development _(runtime only)_.
-            - [dirigiblelabs/dirigible-trial](https://hub.docker.com/r/dirigiblelabs/dirigible-trial/tags?page=1&ordering=last_updated) - Trial _(guest/nickname access)_.
-            - [dirigiblelabs/dirigible-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-keycloak/tags?page=1&ordering=last_updated) - Keycloak integration.
-            - [dirigiblelabs/dirigible-runtime-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime-keycloak/tags?page=1&ordering=last_updated) - Keycloak integration _(runtime only)_
-
-          #### Base Docker images:
-            - [dirigiblelabs/dirigible-base-platform-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-anonymous/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-runtime-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-runtime-anonymous/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-openshift](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-openshift/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-sap-cf](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-sap-cf/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-sap-cf-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-sap-cf-runtime/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-sap-kyma](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-sap-kyma/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-sap-kyma-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-sap-kyma-runtime/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-runtime/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-trial](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-trial/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-keycloak/tags?page=1&ordering=last_updated)
-            - [dirigiblelabs/dirigible-base-platform-runtime-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-base-platform-runtime-keycloak/tags?page=1&ordering=last_updated)
           
           > _**Note:** All Docker images are availalbe [here](https://hub.docker.com/u/dirigiblelabs)_
 
           #### Available for download `*.war` packages:
             - _**[server-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-all.zip) - Basic package - recommended for local test & development.**_
-            - [server-minimal](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-minimal.zip) - Minimal package still containing the WebIDE.
-            - [anonymous-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/anonymous-all.zip) - Anonymous access.
-            - [anonymous-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/anonymous-runtime.zip) - Anonymous access _(runtime only)_.
-            - [sap-cf-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-cf-all.zip) - SAP Cloud Platform - Cloud Foundry environment.
-            - [sap-cf-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/sap-cf-runtime.zip) - SAP Cloud Platform - Cloud Foundry environment _(runtime only)_.
-            - [desktop-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/desktop-all.zip) - Desktop package.
-            - [server-oauth](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-oauth.zip) - Basic package - recommended for local test & development, _**requires additional OAuth configurations.**_
-            - [server-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/server-runtime.zip) - Basic package - recommended for local test & development _(runtime only)_.
-            - [trial-all](https://github.com/eclipse/dirigible/releases/download/v${{ github.event.inputs.releaseVersion }}/trial-all.zip) - Trial package _(guest/nickname)_.
             
           > _**Note:** Unzip the downloaded file to extract the `ROOT.war` binary._
           
           For more information go to [https://www.dirigible.io/help/setup/](https://www.dirigible.io/help/setup/).
-          
-    - name: Upload anonymous-all
-      id: upload-anonymous-all 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./anonymous-all.zip
-        asset_name: anonymous-all.zip
-        asset_content_type: application/zip
-    - name: Upload anonymous-runtime
-      id: upload-anonymous-runtime 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./anonymous-runtime.zip
-        asset_name: anonymous-runtime.zip
-        asset_content_type: application/zip
-    - name: Upload desktop-all
-      id: upload-desktop-all 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./desktop-all.zip
-        asset_name: desktop-all.zip
-        asset_content_type: application/zip
-    - name: Upload sap-cf-all
-      id: upload-sap-cf-all 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./sap-cf-all.zip
-        asset_name: sap-cf-all.zip
-        asset_content_type: application/zip
-    - name: Upload sap-cf-runtime
-      id: upload-sap-cf-runtime
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./sap-cf-runtime.zip
-        asset_name: sap-cf-runtime.zip
-        asset_content_type: application/zip
+
     - name: Upload server-all
       id: upload-server-all 
       uses: actions/upload-release-asset@v1
@@ -392,46 +169,6 @@ jobs:
         asset_path: ./server-all.zip
         asset_name: server-all.zip
         asset_content_type: application/zip
-    - name: Upload server-minimal
-      id: upload-server-minimal 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./server-minimal.zip
-        asset_name: server-minimal.zip
-        asset_content_type: application/zip
-    - name: Upload server-oauth
-      id: upload-server-oauth
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./server-oauth.zip
-        asset_name: server-oauth.zip
-        asset_content_type: application/zip
-    - name: Upload server-runtime
-      id: upload-server-runtime
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./server-runtime.zip
-        asset_name: server-runtime.zip
-        asset_content_type: application/zip
-    - name: Upload trial-all
-      id: upload-trial-all
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./trial-all.zip
-        asset_name: trial-all.zip
-        asset_content_type: application/zip
 
 #----------------Publish GitHub Release------------------#
 
@@ -439,77 +176,3 @@ jobs:
       run: |
         git push --set-upstream origin ${{ github.event.inputs.releaseVersion }}
         git push
-
-#----------------Publish Helm Release------------------#
-
-    - name: Helm tool installer
-      uses: Azure/setup-helm@v1
-    - name: Helm Charts Release - Checkout gh-pages
-      run: |
-        mkdir charts-temp
-        cp -r releng/helm-charts/ charts-temp/
-
-        #### Git Checkout Workaround
-        git add .github/
-        git add .reuse/
-        git add LICENSES/
-        git add api/
-        git add ext/
-        git add ide/
-        git add logo/
-        git add modules/
-        git add releng/
-        git add resources/
-        git add templates/
-        git reset --hard
-        ####
-
-        git fetch
-        git checkout gh-pages
-        
-        cp charts/* .
-
-    - name: Helm Charts Release - Set Chart Version - Dirigible
-      run: |
-        cd charts-temp/helm-charts/dirigible/
-        find *.yaml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ github.event.inputs.releaseVersion }}/g'' {} \;
-
-    - name: Helm Charts Release
-      run: |
-
-        cp charts/* charts-temp/helm-charts/
-        cd charts-temp/helm-charts/
-
-        helm package dirigible
-        
-        cd ..
-        helm repo index helm-charts/ --url https://eclipse.github.io/dirigible/charts
-        
-        cp helm-charts/index.yaml ../.
-        cp helm-charts/dirigible-${{ github.event.inputs.releaseVersion }}.tgz ../charts/
-
-        cd ..
-        git config user.name "$GITHUB_ACTOR"
-        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-        git add index.yaml
-        git add charts/
-        git commit -m "Updates Helm Charts - Release ${{ github.event.inputs.releaseVersion }}"
-        git push origin gh-pages
-
-        git add .
-        git reset --hard
-        git checkout master
-#----------------Publish Helm Release------------------#
-
-#-----------------Update Trial Instance------------------#
-
-#     - name: Kubectl tool installer
-#       uses: Azure/setup-kubectl@v1
-#     - name: Setup Kube Config File
-#       run: |
-#         mkdir $HOME/.kube
-#         echo "${{ secrets.KUBE_CONFIG }}" >> $HOME/.kube/config
-#     - name: Update Trial Instance
-#       run: kubectl -n trial set image deployment/trial dirigible=dirigiblelabs/dirigible-keycloak:${{ github.event.inputs.releaseVersion }}
-
-#-----------------Update Trial Instance------------------#
