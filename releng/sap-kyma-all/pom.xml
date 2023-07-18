@@ -11,7 +11,7 @@
 
   <name>Releng - SAP - Kyma - All</name>
 	<artifactId>dirigible-sap-kyma-all</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<build>
 		<finalName>ROOT</finalName>

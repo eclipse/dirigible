@@ -69,6 +69,48 @@ jobs:
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
 
+    - name: Push SAP Cloud Foundry
+      run: |
+        cd releng/sap-cf-all
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-cf -f Dockerfile-base .
+        docker tag dirigible-base-platform-sap-cf dirigiblelabs/dirigible-base-platform-sap-cf:${{ github.event.inputs.releaseVersion }}
+        docker push dirigiblelabs/dirigible-base-platform-sap-cf:${{ github.event.inputs.releaseVersion }}
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-cf .
+        docker tag dirigible-sap-cf dirigiblelabs/dirigible-sap-cf:${{ github.event.inputs.releaseVersion }}
+        docker push dirigiblelabs/dirigible-sap-cf:${{ github.event.inputs.releaseVersion }}
+        cd ../../
+    - name: Push SAP Cloud Foundry - Runtime
+      run: |
+        cd releng/sap-cf-runtime
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-cf-runtime -f Dockerfile-base .
+        docker tag dirigible-base-platform-sap-cf-runtime dirigiblelabs/dirigible-base-platform-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
+        docker push dirigiblelabs/dirigible-base-platform-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-cf-runtime .
+        docker tag dirigible-sap-cf-runtime dirigiblelabs/dirigible-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
+        docker push dirigiblelabs/dirigible-sap-cf-runtime:${{ github.event.inputs.releaseVersion }}
+        docker image prune -a -f
+        cd ../../
+    - name: Push SAP Kyma
+      run: |
+        cd releng/sap-kyma-all
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-kyma -f Dockerfile-base .
+        docker tag dirigible-base-platform-sap-kyma dirigiblelabs/dirigible-base-platform-sap-kyma:${{ github.event.inputs.releaseVersion }}
+        docker push dirigiblelabs/dirigible-base-platform-sap-kyma:${{ github.event.inputs.releaseVersion }}
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-kyma .
+        docker tag dirigible-sap-kyma dirigiblelabs/dirigible-sap-kyma:${{ github.event.inputs.releaseVersion }}
+        docker push dirigiblelabs/dirigible-sap-kyma:${{ github.event.inputs.releaseVersion }}
+        cd ../../
+    - name: Push SAP Kyma - Runtime
+      run: |
+        cd releng/sap-kyma-runtime
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-base-platform-sap-kyma-runtime -f Dockerfile-base .
+        docker tag dirigible-base-platform-sap-kyma-runtime dirigiblelabs/dirigible-base-platform-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
+        docker push dirigiblelabs/dirigible-base-platform-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ github.event.inputs.releaseVersion }} -t dirigible-sap-kyma-runtime .
+        docker tag dirigible-sap-kyma-runtime dirigiblelabs/dirigible-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
+        docker push dirigiblelabs/dirigible-sap-kyma-runtime:${{ github.event.inputs.releaseVersion }}
+        docker image prune -a -f
+        cd ../../
     - name: Push Dirigible
       run: |
         cd releng/server-all

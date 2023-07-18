@@ -5,6 +5,7 @@ on:
     branches: 
       - main
       - master
+      - 6.3.16-main
 jobs:
   build:
     runs-on: ubuntu-latest

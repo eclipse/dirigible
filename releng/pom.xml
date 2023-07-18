@@ -14,30 +14,13 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<!-- <module>anonymous-all</module>
-		<module>anonymous-runtime</module>
-		<module>desktop-all</module>
-		<module>openshift-all</module>
-		<module>sap-all</module>
-		<module>sap-all-ephemeral</module>
 		<module>sap-cf-all</module>
 		<module>sap-cf-base</module>
 		<module>sap-cf-runtime</module>
 		<module>sap-kyma-all</module>
 		<module>sap-kyma-base</module>
 		<module>sap-kyma-runtime</module>
-		<module>sap-cms</module>
-		<module>sap-runtime-ephemeral</module> -->
 		<module>server-all</module>
-		<!-- <module>server-keycloak-all</module>
-		<module>server-oauth</module>
-		<module>server-runtime</module>
-		<module>server-runtime-keycloak</module>
-		<module>trial-all</module>
-		<module>server-minimal</module>
-		<module>server-spring</module>
-		<module>server-picocli</module>
-		<module>server-vertx</module> -->
 	</modules>
 
 	<properties>
