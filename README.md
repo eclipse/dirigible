@@ -64,6 +64,7 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 - [Git](http://git-scm.com/)
 - [Java JDK 11+](https://adoptopenjdk.net/)
 - [Maven 3.5.x](http://maven.apache.org/docs/3.5.3/release-notes.html)
+- [esbuild](https://esbuild.github.io/getting-started/#install-esbuild) - only if going to use TypeScript
 
 
 ##### Steps

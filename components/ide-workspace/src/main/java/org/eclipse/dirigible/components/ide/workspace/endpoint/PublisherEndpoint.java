@@ -57,17 +57,19 @@ public class PublisherEndpoint {
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
 	 */
-	@PostMapping("{workspace}/{*path}")
-	public ResponseEntity<?> publish(@PathVariable("workspace") String workspace,
-			@PathVariable("path") String path)
-			throws URISyntaxException {
+	@PostMapping("{workspace}/{project}/{*path}")
+	public ResponseEntity<?> publish(
+			@PathVariable("workspace") String workspace,
+			@PathVariable("project") String project,
+			@PathVariable("path") String path
+	) throws URISyntaxException {
 
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
 		}
 
-		publisherService.publish(workspace, path);
+		publisherService.publish(workspace, project, path);
 
 		return ResponseEntity.ok().build();
 	}

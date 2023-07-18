@@ -17,23 +17,30 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
-import org.eclipse.dirigible.components.ide.workspace.domain.File;
-import org.eclipse.dirigible.components.ide.workspace.domain.Folder;
-import org.eclipse.dirigible.components.ide.workspace.domain.Project;
-import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
+import org.eclipse.dirigible.components.ide.workspace.domain.*;
 import org.eclipse.dirigible.components.ide.workspace.json.ProjectDescriptor;
 import org.eclipse.dirigible.components.ide.workspace.json.WorkspaceDescriptor;
+import org.eclipse.dirigible.components.ide.workspace.service.TypeScriptService;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +73,12 @@ public class WorkspacesEndpoint {
 	/** The workspace service. */
     @Autowired
     private WorkspaceService workspaceService;
-    
+
+	@Autowired
+	private IRepository repository;
+
+	@Autowired
+	private TypeScriptService typeScriptService;
 
     // Workspace
     
@@ -254,6 +266,8 @@ public class WorkspacesEndpoint {
 			@PathVariable("project") String project,
 			@PathVariable("path") String path,
 			@Nullable @RequestHeader("describe") String headerContentType) {
+		if (path.startsWith("/")) path = path.substring(1);
+
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
@@ -284,6 +298,11 @@ public class WorkspacesEndpoint {
 	    httpHeaders.setContentType(MediaType.valueOf(file.getContentType()));
 		if (file.isBinary()) {
 			return new ResponseEntity(file.getContent(), httpHeaders, HttpStatus.OK);
+		}
+		if (typeScriptService.isTypeScriptFile(path)) {
+			var tsFile = new TypeScriptFile(repository, workspace, project, path);
+			httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+			return new ResponseEntity<>(tsFile, httpHeaders, HttpStatus.OK);
 		}
 		return new ResponseEntity(new String(file.getContent(), StandardCharsets.UTF_8), httpHeaders, HttpStatus.OK);
 	}

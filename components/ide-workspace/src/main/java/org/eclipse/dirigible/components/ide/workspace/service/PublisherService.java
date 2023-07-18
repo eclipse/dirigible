@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.ide.workspace.service;
 
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
@@ -38,6 +38,9 @@ public class PublisherService {
 	@Autowired
 	public List<PublisherHandler> publisherHandlers;
 	
+	@Autowired
+	private TypeScriptService typeScriptService;
+
 	/** The repository. */
 	private final IRepository repository;
 	
@@ -64,11 +67,12 @@ public class PublisherService {
 	 * Publish.
 	 *
 	 * @param workspace the workspace
+	 * @param project the project
 	 * @param path the path
 	 */
-	public void publish(String workspace, String path) {
+	public void publish(String workspace, String project, String path) {
 		String user = UserFacade.getName();
-		publish(user, workspace, path);
+		publish(user, workspace, project, path);
 	}
 		
 	/**
@@ -78,23 +82,27 @@ public class PublisherService {
 	 * @param workspace the workspace
 	 * @param path the path
 	 */
-	public void publish(String user, String workspace, String path) {
+	public void publish(String user, String workspace, String project, String path) {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
 		if ("/*".equals(path)) {
 			path = "";
 		}
 		
-		String sourceLocation = new RepositoryPath(workspacePath.toString(), path).toString();
+		String sourceLocation = new RepositoryPath(workspacePath.toString(), project, path).toString();
 		ICollection collection = getRepository().getCollection(sourceLocation);
 		if (collection.exists()) {
-			String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path).toString();
+			String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, project, path).toString();
 			publishResource(sourceLocation, targetLocation);
 		} else {
 			IResource resource = getRepository().getResource(sourceLocation);
 			if (resource.exists()) {
-				String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path).toString();
+				String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, project, path).toString();
 				publishResource(sourceLocation, targetLocation);
 			}
+		}
+
+		if (typeScriptService.shouldCompileTypeScript(project, path)) {
+			typeScriptService.compileTypeScript(project, path);
 		}
 	}
 

@@ -262,7 +262,7 @@ public class CloneCommand {
 				for (Project project : projects) {
 					if (project.getName().equals(projectName)) {
 						try {
-							publisherService.publish(generateWorkspacePath(workspace.getName()), projectName);
+							publisherService.publish(generateWorkspacePath(workspace.getName()), projectName, "");
 							if (logger.isInfoEnabled()) {logger.info(String.format("Project [%s] has been published", project.getName()));}
 						} catch (Exception e) {
 							if (logger.isErrorEnabled()) {logger.error(String.format("An error occurred while publishing the cloned project [%s]", project.getName()), e);}
