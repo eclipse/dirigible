@@ -11,7 +11,7 @@
 
   <name>Releng - SAP - CF - All</name>
 	<artifactId>dirigible-sap-cf-all</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<build>
 		<finalName>ROOT</finalName>

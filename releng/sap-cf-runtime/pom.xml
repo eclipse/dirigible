@@ -11,7 +11,7 @@
 
   	<name>Releng - SAP - CF - Runtime</name>
 	<artifactId>dirigible-sap-cf-runtime</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<build>
 		<finalName>ROOT</finalName>

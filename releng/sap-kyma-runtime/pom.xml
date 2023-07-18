@@ -11,7 +11,7 @@
 
   <name>Releng - SAP - Kyma - Runtime</name>
 	<artifactId>dirigible-sap-kyma-runtime</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<build>
 		<finalName>ROOT</finalName>
