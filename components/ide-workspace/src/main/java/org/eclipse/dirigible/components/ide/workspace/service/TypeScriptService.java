@@ -34,7 +34,7 @@ public class TypeScriptService {
         }
 
         var projectDir = getProjectDirFile(projectName);
-        return !getTypeScriptFilesInDir(projectDir).isEmpty();
+        return projectDir.exists() && !getTypeScriptFilesInDir(projectDir).isEmpty();
     }
 
     private File getProjectDirFile(String projectName) {
