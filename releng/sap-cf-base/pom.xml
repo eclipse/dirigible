@@ -11,7 +11,7 @@
 
   <name>Releng - SAP - CF - Base</name>
 	<artifactId>dirigible-sap-cf-base</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	
 	<build>
 		<finalName>ROOT</finalName>

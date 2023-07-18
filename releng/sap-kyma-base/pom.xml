@@ -11,7 +11,7 @@
 
   <name>Releng - SAP - Kyma - Base</name>
 	<artifactId>dirigible-sap-kyma-base</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<dependencies>
 
