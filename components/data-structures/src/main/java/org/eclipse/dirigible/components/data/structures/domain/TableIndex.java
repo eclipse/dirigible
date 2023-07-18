@@ -70,8 +70,6 @@ public class TableIndex {
     
     /** The index columns. */
 	@Column(name = "INDEX_COLUMNS", columnDefinition = "VARCHAR", nullable = false, length = 2000)
-//	@ElementCollection
-//	@OrderColumn
 	@Convert(converter = ArrayOfStringsToCsvConverter.class)
 	@Expose
     private String[] columns;

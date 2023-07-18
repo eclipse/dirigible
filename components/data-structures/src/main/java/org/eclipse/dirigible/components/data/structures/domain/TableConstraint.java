@@ -45,8 +45,6 @@ public abstract class TableConstraint {
 	/** The modifiers. */
 	@Column(name = "CONSTRAINT_MODIFIERS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Nullable
-//	@ElementCollection
-//	@OrderColumn
 	@Convert(converter = ArrayOfStringsToCsvConverter.class)
 	@Expose
 	protected String[] modifiers;
@@ -54,8 +52,6 @@ public abstract class TableConstraint {
 	/** The columns. */
 	@Column(name = "CONSTRAINT_COLUMNS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Nullable
-//	@ElementCollection
-//	@OrderColumn
 	@Convert(converter = ArrayOfStringsToCsvConverter.class)
 	@Expose
 	protected String[] columns;
