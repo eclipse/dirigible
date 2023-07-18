@@ -104,7 +104,7 @@ public class FtpRepositoryTest {
     @Test
     public void getAllUsernames() {
         List<String> list = ftpUserRepository.findAll().stream().map(FtpUser::getUsername).collect(Collectors.toList());
-        assertEquals(2, list.size());
+        assertEquals(3, list.size());
     }
 
     /**
