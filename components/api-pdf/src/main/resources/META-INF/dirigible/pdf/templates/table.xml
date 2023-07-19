@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v20.html
+
+    SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format" exclude-result-prefixes="fo">
+    <xsl:template match="content">
+        <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+
+            <fo:layout-master-set>
+                <fo:simple-page-master master-name="simpleTable" page-height="${pageHeight}mm"
+                                       page-width="${pageWidth}mm" margin-top="20mm" margin-bottom="20mm" margin-left="20mm"
+                                       margin-right="20mm">
+                    <fo:region-body />
+                </fo:simple-page-master>
+            </fo:layout-master-set>
+
+            <fo:page-sequence master-reference="simpleTable">
+                <fo:flow flow-name="xsl-region-body">
+                    <fo:block>
+                    </fo:block>
+                    <!-- Title -->
+                    <fo:block font-size="16pt" font-weight="bold" space-after="5mm">
+                        <xsl:value-of select="title" />
+                    </fo:block>
+
+                    <!-- Description -->
+                    <fo:block font-size="12pt" space-after="5mm">
+                        <xsl:value-of select="description" />
+                    </fo:block>
+
+                    <fo:block font-size="10pt">
+                        <fo:table table-layout="fixed" width="100%" border-collapse="separate">
+                            <fo:table-header text-align="${alignColumns}" font-weight="bold">
+                                <fo:table-row>
+                                    #foreach ($column in $columns)
+                                    <fo:table-cell border-width="0.5mm" border-style="solid">
+                                        <fo:block>${column.name}</fo:block>
+                                    </fo:table-cell>
+                                    #end
+                                </fo:table-row>
+                            </fo:table-header>
+
+                            <fo:table-body>
+                                #if($rows.size() > 0)
+                                <xsl:apply-templates select="rows" />
+                                #else
+                                <fo:table-row text-align="${alignRows}">
+                                    #foreach ($column in $columns)
+                                    <fo:table-cell border-width="0.01cm" border-style="solid">
+                                        <fo:block>
+                                            No Data
+                                        </fo:block>
+                                    </fo:table-cell>
+                                    #end
+                                </fo:table-row>
+                                #end
+                            </fo:table-body>
+
+                        </fo:table>
+                    </fo:block>
+                </fo:flow>
+            </fo:page-sequence>
+        </fo:root>
+    </xsl:template>
+
+    #if($rows.size() > 0)
+    <xsl:template match="rows" keep-with-next="always">
+        <fo:table-row text-align="${alignRows}">
+            <xsl:if test="bold = 'true'">
+                <xsl:attribute name="font-weight">bold</xsl:attribute>
+            </xsl:if>
+            <xsl:if test="highlight = 'true'">
+                <xsl:attribute name="background-color">yellow</xsl:attribute>
+            </xsl:if>
+            <xsl:if test="breakAfter = 'true'">
+                <xsl:attribute name="break-after">page</xsl:attribute>
+            </xsl:if>
+            #foreach ($column in $columns)
+            <fo:table-cell border-width="0.01cm" border-style="solid">
+                <fo:block>
+                    <xsl:value-of select="${column.key}" />
+                </fo:block>
+            </fo:table-cell>
+            #end
+        </fo:table-row>
+    </xsl:template>
+    #end
+</xsl:stylesheet>

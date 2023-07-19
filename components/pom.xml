@@ -164,6 +164,7 @@
 		<module>api-rabbitmq</module>
 		<module>api-redis</module>
 		<module>api-qldb</module>
+		<module>api-pdf</module>
 		
 		<!-- Resources -->
 		<module>resources-core</module>
