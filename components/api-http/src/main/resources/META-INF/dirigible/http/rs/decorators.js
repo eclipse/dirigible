@@ -31,8 +31,6 @@ function handleRequest(req, res, ctx, handler) {
 
 exports.Get = function (path) {
     return function (target, propertyKey, descriptor) {
-        console.log("!!!! VM: target: " + target);
-        console.log('!!!! VM: descriptor: ' + descriptor);
         const handler = descriptor ? descriptor.value : target;
         return registerRequestHandler(handler, path, "get");
     };

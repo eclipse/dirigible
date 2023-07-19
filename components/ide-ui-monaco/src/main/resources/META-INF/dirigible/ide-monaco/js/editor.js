@@ -173,7 +173,6 @@ function FileIO() {
                             message: `File '${fileName}' saved`
                         }, 'ide.status.message');
                         if (isTypeScriptFile(fileName)) {
-                            console.log("!!! VM: saved...")
                             messageHub.post({fileName}, 'ide.ts.reload');
                         }
                     })
@@ -719,7 +718,6 @@ function isDirty(model) {
                                                 const importedFile = JSON.parse(fileObject.modified);
                                                 const uri = new monaco.Uri().with({path: `/${importedFile.workspace}/${importedFile.project}/${importedFile.filePath}`});
                                                 if (isReload) {
-                                                    console.log("!!! VM: reload models...")
                                                     const model = monaco.editor.getModel(uri);
                                                     model.setValue(importedFile.sourceCode);
                                                 } else {
@@ -733,7 +731,6 @@ function isDirty(model) {
                                 };
                                 loadImportedFiles(false);
                                 messageHub.subscribe(() => {
-                                    console.log("!!! VM: reload triggered...")
                                     loadImportedFiles(true);
                                 }, "ide.ts.reload")
                             }
@@ -744,7 +741,6 @@ function isDirty(model) {
 
                             messageHub.subscribe((changed) => {
                                 if (changed.fileName === fileName) return;
-                                console.log("!!! VM: reload triggered...")
                                 sourceBeingChangedProgramatically = true;
                                 model.setValue(model.getValue());
                                 lastSavedVersionId = model.getAlternativeVersionId();

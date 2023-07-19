@@ -14,7 +14,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class TypeScriptFile {
-    private IRepository repository;
+
+    private static final Pattern IMPORT_STATEMENTS_PATTERN = Pattern.compile("(?:import|export)\\s+\\{.*\\}\\s+from\\s+['\"](.*)['\"];*");
+
+    private final IRepository repository;
     private final String workspace;
     private final String project;
     private final String filePath;
@@ -44,9 +47,8 @@ public class TypeScriptFile {
         var fileRepositoryPathParentDir = fileRepositoryPath.getParent();
 
         var allImports = new HashSet<String>();
-        Pattern importStatementsPattern = Pattern.compile("(?:import|export)\\s+\\{.*\\}\\s+from\\s+['\"](.*)['\"];*");
-        Matcher importStatementsMatcher = importStatementsPattern.matcher(sourceCode);
 
+        Matcher importStatementsMatcher = IMPORT_STATEMENTS_PATTERN.matcher(sourceCode);
         while (importStatementsMatcher.find()) {
             var fromStatement = importStatementsMatcher.group(1);
             allImports.add(fromStatement);
@@ -71,18 +73,15 @@ public class TypeScriptFile {
     }
 
     private String generateWorkspaceProjectFilePath(String user, String workspace, String project, String path) {
-        return new StringBuilder(IRepositoryStructure.PATH_USERS)
-                .append(IRepositoryStructure.SEPARATOR).append(user)
-                .append(IRepositoryStructure.SEPARATOR).append(workspace)
-                .append(IRepositoryStructure.SEPARATOR).append(project)
-                .append(IRepositoryStructure.SEPARATOR).append(path)
-                .toString();
+        return IRepositoryStructure.PATH_USERS +
+                IRepositoryStructure.SEPARATOR + user +
+                IRepositoryStructure.SEPARATOR + workspace +
+                IRepositoryStructure.SEPARATOR + project +
+                IRepositoryStructure.SEPARATOR + path;
     }
 
     private String generateUserRepositoryPath(String user) {
-        return new StringBuilder(IRepositoryStructure.PATH_USERS)
-                .append(IRepositoryStructure.SEPARATOR).append(user)
-                .toString();
+        return IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + user;
     }
 
     public String getSourceCode() {

@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class TypeScriptService {
@@ -28,25 +27,16 @@ public class TypeScriptService {
         return path.endsWith(".ts");
     }
 
-    boolean shouldCompileTypeScript(String projectName, String entryPath) {
-        if (entryPath != null & entryPath.endsWith(".ts")) {
-            return true;
+    public boolean shouldCompileTypeScript(String projectName, String entryPath) {
+        if (entryPath != null && !entryPath.equals("")) {
+            return entryPath.endsWith(".ts");
         }
 
         var projectDir = getProjectDirFile(projectName);
         return projectDir.exists() && !getTypeScriptFilesInDir(projectDir).isEmpty();
     }
 
-    private File getProjectDirFile(String projectName) {
-        var registryRelativeProjectPath = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectName).toString();
-        return new File(repository.getInternalResourcePath(registryRelativeProjectPath));
-    }
-
-    private Collection<File> getTypeScriptFilesInDir(File projectDir) {
-        return FileUtils.listFiles(projectDir, new String[]{"ts"}, true);
-    }
-
-    void compileTypeScript(String projectName, String entryPath) {
+    public void compileTypeScript(String projectName, String entryPath) {
         var projectDir = getProjectDirFile(projectName);
 
         List<String> tsFilesToCompile;
@@ -86,5 +76,14 @@ public class TypeScriptService {
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException("Could not run esbuild", e);
         }
+    }
+
+    private File getProjectDirFile(String projectName) {
+        var registryRelativeProjectPath = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectName).toString();
+        return new File(repository.getInternalResourcePath(registryRelativeProjectPath));
+    }
+
+    private Collection<File> getTypeScriptFilesInDir(File projectDir) {
+        return FileUtils.listFiles(projectDir, new String[]{"ts"}, true);
     }
 }
