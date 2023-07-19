@@ -9,10 +9,10 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-  <name>Releng - SAP - CF - Base</name>
-	<artifactId>dirigible-sap-cf-base</artifactId>
+    <name>Releng - Server - All - Base</name>
+	<artifactId>dirigible-server-all-base</artifactId>
 	<packaging>jar</packaging>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -36,7 +36,7 @@
 	</build>
 
 	<dependencies>
-	
+
 		<!-- Platform -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -64,13 +64,6 @@
 		 	<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 
-		<!-- Security -->
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-security</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
-		</dependency>
-	
 		<!-- API -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -126,6 +119,7 @@
 		 	<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 
+		<!-- Engines -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine</artifactId>
@@ -141,6 +135,10 @@
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
 					<artifactId>dirigible-cms-managed</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-cms-database</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -192,11 +190,6 @@
 		  <groupId>javax.annotation</groupId>
 		  <artifactId>jsr250-api</artifactId>
 		  <version>${jsr250-api.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>commons-fileupload</groupId>
-		    <artifactId>commons-fileupload</artifactId>
-		    <version>1.4</version>
 		</dependency>
 
 		<!-- External - Jetty -->

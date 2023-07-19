@@ -21,6 +21,7 @@
 		<module>sap-kyma-base</module>
 		<module>sap-kyma-runtime</module>
 		<module>server-all</module>
+		<module>server-all-base</module>
 	</modules>
 
 	<properties>
