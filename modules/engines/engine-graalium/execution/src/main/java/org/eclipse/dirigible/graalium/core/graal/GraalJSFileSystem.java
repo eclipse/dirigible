@@ -29,6 +29,8 @@ import java.util.function.Function;
  */
 public class GraalJSFileSystem implements FileSystem {
 
+    private static final List<String> SUPPORTED_IMPORT_FROM_EXTENSIONS = List.of(".js", ".mjs");
+
     /**
      * The Constant DELEGATE.
      */
@@ -138,7 +140,12 @@ public class GraalJSFileSystem implements FileSystem {
         ) {
             // handle cases like `import { Data } from "./data"` where `./data` does not have an extension
             // mainly found when dealing with TS imports
-            path = Path.of(pathString + ".js");
+            for (String supportedImportFromExtension : SUPPORTED_IMPORT_FROM_EXTENSIONS) {
+                var fileWithExtensionPath = Path.of(pathString + supportedImportFromExtension);
+                if (fileWithExtensionPath.toFile().exists()) {
+                    path = fileWithExtensionPath;
+                }
+            }
         }
 
         if (onRealPathNotFound == null) {

@@ -42,7 +42,7 @@ public class SynchronizationWatcherPublisherHandler implements PublisherHandler 
 	 * @param registryLocation the registry location
 	 */
 	@Override
-	public void afterPublish(String workspaceLocation, String registryLocation) {
+	public void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {
 		synchronizationWatcher.force();
 	}
 

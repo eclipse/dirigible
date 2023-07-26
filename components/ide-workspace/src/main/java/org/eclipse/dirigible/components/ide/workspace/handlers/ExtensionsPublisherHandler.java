@@ -71,7 +71,7 @@ public class ExtensionsPublisherHandler implements PublisherHandler {
 	 * @param registryLocation the registry location
 	 */
 	@Override
-	public void afterPublish(String workspaceLocation, String registryLocation) {
+	public void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {
 		triggerExtensions(workspaceLocation, EXTENSION_POINT_IDE_WORKSPACE_AFTER_PUBLISH, "After Publish");
 	}
 

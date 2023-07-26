@@ -9,11 +9,11 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
+exports.getTemplate = () => ({
     return {
         "name": "cvsim",
         "label": "CSVIM file",
         "extension": "csvim",
         "data": '[]'
     };
-};
+});

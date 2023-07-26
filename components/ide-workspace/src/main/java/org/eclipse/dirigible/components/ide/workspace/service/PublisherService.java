@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.components.ide.workspace.service;
 
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
@@ -35,9 +35,9 @@ public class PublisherService {
 	private static final Logger logger = LoggerFactory.getLogger(PublisherService.class);
 	
 	/** The publisher handlers. */
-	@Autowired
-	public List<PublisherHandler> publisherHandlers;
-	
+	private final List<PublisherHandler> publisherHandlers;
+
+
 	/** The repository. */
 	private final IRepository repository;
 	
@@ -45,10 +45,15 @@ public class PublisherService {
 	 * Instantiates a new publisher service.
 	 *
 	 * @param repository the repository
+	 * @param publisherHandlers the publisher handlers
 	 */
 	@Autowired
-	public PublisherService(IRepository repository) {
+	public PublisherService(
+			IRepository repository,
+			List<PublisherHandler> publisherHandlers
+	) {
 		this.repository = repository;
+		this.publisherHandlers = publisherHandlers;
 	}
 	
 	/**
@@ -64,11 +69,12 @@ public class PublisherService {
 	 * Publish.
 	 *
 	 * @param workspace the workspace
+	 * @param project the project
 	 * @param path the path
 	 */
-	public void publish(String workspace, String path) {
+	public void publish(String workspace, String project, String path) {
 		String user = UserFacade.getName();
-		publish(user, workspace, path);
+		publish(user, workspace, project, path);
 	}
 		
 	/**
@@ -78,22 +84,22 @@ public class PublisherService {
 	 * @param workspace the workspace
 	 * @param path the path
 	 */
-	public void publish(String user, String workspace, String path) {
+	public void publish(String user, String workspace, String project, String path) {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
 		if ("/*".equals(path)) {
 			path = "";
 		}
 		
-		String sourceLocation = new RepositoryPath(workspacePath.toString(), path).toString();
+		String sourceLocation = new RepositoryPath(workspacePath.toString(), project, path).toString();
 		ICollection collection = getRepository().getCollection(sourceLocation);
 		if (collection.exists()) {
-			String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path).toString();
-			publishResource(sourceLocation, targetLocation);
+			String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, project, path).toString();
+			publishResource(sourceLocation, targetLocation, new PublisherHandler.AfterPublishMetadata(workspace, project, path, true));
 		} else {
 			IResource resource = getRepository().getResource(sourceLocation);
 			if (resource.exists()) {
-				String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path).toString();
-				publishResource(sourceLocation, targetLocation);
+				String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, project, path).toString();
+				publishResource(sourceLocation, targetLocation, new PublisherHandler.AfterPublishMetadata(workspace, project, path, false));
 			}
 		}
 	}
@@ -114,7 +120,7 @@ public class PublisherService {
 	 * @param sourceLocation the source location
 	 * @param targetLocation the target location
 	 */
-	private void publishResource(String sourceLocation, String targetLocation) {
+	private void publishResource(String sourceLocation, String targetLocation, PublisherHandler.AfterPublishMetadata afterPublishMetadata) {
 		for (PublisherHandler next : publisherHandlers) {
 			next.beforePublish(sourceLocation);
 		}
@@ -138,7 +144,7 @@ public class PublisherService {
 		}
 		
 		for (PublisherHandler next : publisherHandlers) {
-			next.afterPublish(sourceLocation, targetLocation);
+			next.afterPublish(sourceLocation, targetLocation, afterPublishMetadata);
 		}
 	}
 	

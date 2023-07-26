@@ -42,6 +42,7 @@ public class JavaModuleResolver implements ModuleResolver {
      */
     public JavaModuleResolver(Path cacheDirectoryPath) {
         javaPackageProxyGenerator = new JavaPackageProxyGenerator();
+        cacheDirectoryPath.toFile().mkdirs();
         this.cacheDirectoryPath = cacheDirectoryPath;
     }
 

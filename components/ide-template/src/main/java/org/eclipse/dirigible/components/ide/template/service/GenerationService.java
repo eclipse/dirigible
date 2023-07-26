@@ -125,7 +125,7 @@ public class GenerationService {
 		
 		String wrapper = generateWrapper(parameters);
 		projectObject.createFile(TEMPLATE_WRAPPER, wrapper.getBytes());
-		getPublisherService().publish(workspace, project);
+		getPublisherService().publish(workspace, project, "");
 //		Object metadata = ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, wrapper, null);
 		Object metadata = getWorkspaceService().getJavascriptService()
 				.handleRequest(projectObject.getName(), TEMPLATE_WRAPPER, null, null, false);

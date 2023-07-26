@@ -1,5 +1,14 @@
 declare module "@dirigible/http" {
 
+    const Controller;
+    function Get(path: string);
+    function Post(path: string);
+    function Put(path: string);
+    function Patch(path: string);
+    function Delete(path: string);
+    function Head(path: string);
+    function Options(path: string);
+
     module clientAsync {
         /**
          * Returns HttpAsyncClient instance
@@ -542,11 +551,20 @@ declare module "@dirigible/http" {
         const USE_PROXY = 305;
         let HttpCodesReasons: HttpCodesReasons;
     }
-    
+
     /**
      *
      */
     module rs {
+
+        const Controller;
+        function Get(path: string);
+        function Post(path: string);
+        function Put(path: string);
+        function Patch(path: string);
+        function Delete(path: string);
+        function Head(path: string);
+        function Options(path: string);
         function service(oConfig?: ResourceMappings): HttpController
 
         interface HttpController {
@@ -626,7 +644,7 @@ declare module "@dirigible/http" {
              * @param fServeCallback
              */
 
-           post(fServeCallback?): ResourceMappings;
+            post(fServeCallback?): ResourceMappings;
 
             /**
              * Returns the put method configuration object, optionally configured with fServeCallback for serving requests
