@@ -12,11 +12,10 @@
 			src="/services/js/resources-core/services/loader.js?id=application-view-js"></script>
 		<link type="text/css" rel="stylesheet"
 			href="/services/js/resources-core/services/loader.js?id=application-view-css" />
-
 		<script type="text/javascript" src="controller.js"></script>
 	</head>
 
-	<body class="dg-vbox" dg-contextmenu="contextMenuContent">
+	<body class="dg-vbox">
 		<fd-toolbar has-title="true" class="fd-toolbar">
 			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
@@ -28,7 +27,6 @@
 				state="{{selectedEntity == null || action == 'update'? 'disabled' : ''}}" ng-click="deleteEntity()">
 			</fd-button>
 		</fd-toolbar>
-
 		<fd-scrollbar>
 			<fd-list list-type="navigation-indication" byline="true" state="disabled">
 				<fd-list-item ng-repeat="next in data">
@@ -80,7 +78,6 @@
 				Load More ...
 			</fd-list-action-item>
 		</fd-scrollbar>
-
 	</body>
 
 </html>

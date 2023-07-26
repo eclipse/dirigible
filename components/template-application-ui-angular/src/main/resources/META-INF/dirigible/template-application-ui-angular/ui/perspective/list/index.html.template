@@ -12,11 +12,10 @@
 			src="/services/js/resources-core/services/loader.js?id=application-view-js"></script>
 		<link type="text/css" rel="stylesheet"
 			href="/services/js/resources-core/services/loader.js?id=application-view-css" />
-
 		<script type="text/javascript" src="controller.js"></script>
 	</head>
 
-	<body class="dg-vbox" dg-contextmenu="contextMenuContent">
+	<body class="dg-vbox">
 		<fd-toolbar has-title="true">
 			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
 		</fd-toolbar>
@@ -95,11 +94,11 @@
 							<fd-popover>
 								<fd-popover-control>
 									<fd-button compact="true" glyph="sap-icon--overflow" dg-type="transparent"
-										aria-label="Context Menu" ng-click="setTristate()">
+										aria-label="Table Row Menu Button" ng-click="setTristate()">
 									</fd-button>
 								</fd-popover-control>
 								<fd-popover-body dg-align="bottom-right">
-									<fd-menu no-backdrop="true" no-shadow="true">
+									<fd-menu aria-label="Table Row Menu" no-backdrop="true" no-shadow="true">
 										<fd-menu-item title="View Details" ng-click="openDetails(next)"></fd-menu-item>
 									</fd-menu>
 								</fd-popover-body>
@@ -110,13 +109,11 @@
 			</table>
 		</fd-scrollbar>
 
-		<fd-pagination class="fd-margin-bottom--sm" total-items="dataCount" items-per-page="dataLimit"
+		<fd-pagination total-items="dataCount" items-per-page="dataLimit"
 			items-per-page-options="[10, 20, 50]" page-change="loadPage(pageNumber)"
 			items-per-page-change="loadPage(pageNumber)" items-per-page-placement="top-start" compact="true"
 			display-total-items="true" ng-hide="dataCount == 0">
 		</fd-pagination>
-
-
 	</body>
 
 </html>

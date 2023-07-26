@@ -12,7 +12,7 @@ let tileExtensions = extensions.getExtensions("${projectName}-tile");
 for (let i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
     let tileExtension = require(tileExtensions[i]);
     if (typeof tileExtension.getTile !== "function") {
-      continue;
+        continue;
     }
     let tile = tileExtension.getTile();
     if (!tiles[tile.group]) {
@@ -46,5 +46,5 @@ let sortedTiles = {};
 for (let i = 0; i < sortedGroups.length; i++) {
     sortedTiles[sortedGroups[i].name] = sortedGroups[i].tiles;
 }
-
+response.setContentType("application/json");
 response.println(JSON.stringify(sortedTiles));
