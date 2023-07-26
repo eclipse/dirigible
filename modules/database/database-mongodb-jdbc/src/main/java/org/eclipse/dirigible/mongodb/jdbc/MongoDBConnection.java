@@ -49,6 +49,8 @@ import com.mongodb.client.MongoDatabase;
 
 public class MongoDBConnection implements Connection {
 	
+	private static final String MONGODB_DEFAULT_DB = "db";
+
 	private static final Logger LOG = LoggerFactory.getLogger(MongoDBConnection.class);
 
 	private Properties info;
@@ -70,7 +72,7 @@ public class MongoDBConnection implements Connection {
 		String dbUrl = url.replace("jdbc:", "");
 		MongoClientURI uri = new MongoClientURI(dbUrl);
 		this.uri = uri;
-		this.dbName = this.uri.getDatabase();
+		this.dbName = this.uri.getDatabase() != null ? this.uri.getDatabase() : MONGODB_DEFAULT_DB;
 		this.collectionName = this.uri.getCollection();
 		
 		this.client = new MongoClient(this.uri);
