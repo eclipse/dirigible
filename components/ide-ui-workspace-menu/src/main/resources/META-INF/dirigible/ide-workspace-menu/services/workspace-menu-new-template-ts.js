@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getTemplate = () => ({
-    "name": "html",
-    "label": "HTML5 Page",
-    "extension": "html",
-    "data": '<!DOCTYPE html>\n<head>\n</head>\n<body>\n</body>\n</html>'
+    "name": "typescript",
+    "label": "TypeScript Service",
+    "extension": "ts",
+    "data": 'import {response} from "@dirigible/http";\n\nresponse.println("Hello World!");',
+    "order": 2
 });

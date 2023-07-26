@@ -9,12 +9,10 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
-	return {
-		"name": "javascript-esm",
-		"label": "Javascript ESM Service",
-		"extension": "mjs",
-		"data": 'import {response} from "@dirigible/http";\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();',
-		"order": 1
-	};
-};
+exports.getTemplate = () => ({
+    "name": "javascript-esm",
+    "label": "Javascript ESM Service",
+    "extension": "mjs",
+    "data": 'import {response} from "@dirigible/http";\n\nresponse.println("Hello World!");',
+    "order": 1
+});

@@ -302,7 +302,7 @@ public class WorkspaceEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
         }
         publisherService.unpublish(sourcePath.getPath());
-        publisherService.publish(workspace, targetPath.getPath());
+        publisherService.publish(workspace, targetPath.getPath(), "");
 
         return ResponseEntity.created(workspaceService.getURI(workspace, null, content.getTarget())).build();
     }

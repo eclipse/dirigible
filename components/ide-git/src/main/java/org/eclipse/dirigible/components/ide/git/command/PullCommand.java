@@ -198,7 +198,7 @@ public class PullCommand {
 				for (Project project : projects) {
 					if (project.getName().equals(pulledProject)) {
 						try {
-							publisherService.publish(workspace.getName(), pulledProject);
+							publisherService.publish(workspace.getName(), pulledProject, "");
 							if (logger.isInfoEnabled()) {logger.info(String.format("Project [%s] has been published", project.getName()));}
 						} catch (Exception e) {
 							if (logger.isErrorEnabled()) {logger.error(String.format("An error occurred while publishing the pulled project [%s]", project.getName()), e);}

@@ -64,6 +64,7 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 - [Git](http://git-scm.com/)
 - [Java JDK 11+](https://adoptopenjdk.net/)
 - [Maven 3.5.x](http://maven.apache.org/docs/3.5.3/release-notes.html)
+- [esbuild](https://esbuild.github.io/getting-started/#install-esbuild) - only if going to use TypeScript
 
 
 ##### Steps
@@ -160,7 +161,7 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 - Build it locally
 
-        cd build
+        cd build/application
         docker build -t dirigible-application -f Dockerfile .
 
 2. Start the container

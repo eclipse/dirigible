@@ -21,6 +21,8 @@ import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleContextGlobalObject;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleEngineTypeGlobalObject;
 import org.eclipse.dirigible.graalium.core.graal.GraalJSInterceptor;
+import org.eclipse.dirigible.graalium.core.graal.modules.java.JavaModuleResolver;
+import org.eclipse.dirigible.graalium.core.graal.modules.java.JavaPackageProxyGenerator;
 import org.eclipse.dirigible.graalium.core.javascript.GraalJSCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.JavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleModuleResolver;
@@ -60,6 +62,7 @@ public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Sourc
         Path workingDirectoryPath = getDirigibleWorkingDirectory();
         Path cachePath = workingDirectoryPath.resolve("caches");
         Path coreModulesESMProxiesCachePath = cachePath.resolve("core-modules-proxies-cache");
+        Path javaModulesESMProxiesCachePath = cachePath.resolve("java-modules-proxies-cache");
         
         Consumer<Context.Builder> onBeforeContextCreatedListener = null;
         Consumer<Context> onAfterContextCreatedListener = null;
@@ -78,6 +81,7 @@ public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Sourc
                 .addJSPolyfill(new RequirePolyfill())
                 .addGlobalObject(new DirigibleContextGlobalObject(parameters))
                 .addGlobalObject(new DirigibleEngineTypeGlobalObject())
+                .addModuleResolver(new JavaModuleResolver(javaModulesESMProxiesCachePath))
                 .addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath, sourceProvider))
                 .waitForDebugger(debug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
                 .addOnBeforeContextCreatedListener(onBeforeContextCreatedListener)

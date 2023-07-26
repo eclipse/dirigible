@@ -18,6 +18,12 @@ exports.isValid = function() {
 	return org.eclipse.dirigible.components.api.http.HttpResponseFacade.isValid();
 };
 
+exports.json = function(obj) {
+    this.addHeader("Content-Type", "application/json")
+    const objJson = JSON.stringify(obj);
+    this.print(objJson);
+}
+
 exports.print = function(text) {
 	text = (text && text.toString()) || "";
 	const out = this.getOutputStream().native;

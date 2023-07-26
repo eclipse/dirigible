@@ -131,6 +131,9 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
                 case 'graalvm':
                     url += '/graalvm';
                     break;
+                case 'ts':
+                    url += '/ts';
+                    break;
                 case 'js':
                     url += '/js';
                     break;

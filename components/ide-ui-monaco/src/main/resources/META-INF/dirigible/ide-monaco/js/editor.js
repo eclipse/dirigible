@@ -22,6 +22,7 @@ let parameters = {
     gitName: "",
     file: ""
 };
+let sourceBeingChangedProgramatically = false;
 
 /*eslint-disable no-extend-native */
 String.prototype.replaceAll = function (search, replacement) {
@@ -171,6 +172,9 @@ function FileIO() {
                         messageHub.post({
                             message: `File '${fileName}' saved`
                         }, 'ide.status.message');
+                        if (isTypeScriptFile(fileName)) {
+                            messageHub.post({fileName}, 'ide.ts.reload');
+                        }
                     })
                     .catch(ex => {
                         reject(ex.message);
@@ -185,6 +189,10 @@ function FileIO() {
         });
     };
 };
+
+function isTypeScriptFile(fileName) {
+    return fileName && fileName.endsWith(".ts");
+}
 
 function getViewParameters() {
     if (window.frameElement.hasAttribute("data-parameters")) {
@@ -217,7 +225,7 @@ function closeEditor() {
     messageHub.post({ resourcePath: parameters.file }, 'ide-core.closeEditor');
 }
 
-function createEditorInstance(readOnly = false) {
+function createEditorInstance(fileName, readOnly = false) {
     return new Promise((resolve, reject) => {
         setTimeout(function () {
             try {
@@ -226,11 +234,16 @@ function createEditorInstance(readOnly = false) {
                     for (let i = 0; i < containerEl.childElementCount; i++)
                         containerEl.removeChild(containerEl.children.item(i));
                 }
-                let editor = monaco.editor.create(containerEl, {
-                    value: "let x = 0;",
+                const editorConfig = {
+                    value: '',
                     automaticLayout: true,
                     readOnly: readOnly,
-                });
+                };
+                if (isTypeScriptFile(fileName)) {
+                    editorConfig.language = 'typescript';
+                }
+
+                let editor = monaco.editor.create(containerEl, editorConfig);
                 resolve(editor);
                 window.onresize = function () {
                     editor.layout();
@@ -516,14 +529,16 @@ function loadModuleSuggestions(modulesSuggestions) {
 function loadDTS() {
     let cachedDts = window.sessionStorage.getItem('dtsContent');
     if (cachedDts) {
-        monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "")
+        monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "");
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(cachedDts, "");
     } else {
         let xhrModules = new XMLHttpRequest();
         xhrModules.open('GET', '/services/js/ide-monaco-extensions/api/dts.js');
         xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
         xhrModules.onload = function (xhrModules) {
             let dtsContent = xhrModules.target.responseText;
-            monaco.languages.typescript.javascriptDefaults.addExtraLib(dtsContent, "")
+            monaco.languages.typescript.javascriptDefaults.addExtraLib(dtsContent, "");
+            monaco.languages.typescript.typescriptDefaults.addExtraLib(dtsContent, "");
             window.sessionStorage.setItem('dtsContent', dtsContent);
         };
         xhrModules.onerror = function (error) {
@@ -604,7 +619,7 @@ function isDirty(model) {
     setResourceApiUrl();
     require.config({
         paths: {
-            'vs': '/webjars/monaco-editor/0.33.0/min/vs',
+            'vs': '/webjars/monaco-editor/0.39.0/min/vs',
             'parser': 'js/parser'
         }
     });
@@ -632,7 +647,7 @@ function isDirty(model) {
                 fileIO.loadText(fileName)
                     .then((fileObject) => {
                         _fileObject = fileObject;
-                        return createEditorInstance(readOnly);
+                        return createEditorInstance(fileName, readOnly);
                     })
                     .catch((status) => {
                         console.error(status);
@@ -642,9 +657,11 @@ function isDirty(model) {
                         _editor = editor;
                         return _fileObject.modified;
                     })
-                    .then((fileText) => {
+                    .then((fileTextOrJson) => {
                         if (fileName) {
                             let fileType = _fileType;
+
+                            const fileText = isTypeScriptFile(fileName) ? JSON.parse(fileTextOrJson).sourceCode : fileTextOrJson;
 
                             let moduleImports = getModuleImports(fileText);
                             codeCompletionAssignments = parseAssignments(acornLoose, fileText);
@@ -696,8 +713,46 @@ function isDirty(model) {
                                     );
                                 }
                             });
-                            let model = monaco.editor.createModel(fileText, fileType || 'text');
+
+                            if (isTypeScriptFile(fileName)) {
+                                const importedFiles = JSON.parse(fileTextOrJson).importedFilesNames;
+                                const loadImportedFiles = (isReload) => {
+                                    for (const importedFile of importedFiles) {
+                                        fileIO.loadText(importedFile)
+                                            .then((fileObject) => {
+                                                const importedFile = JSON.parse(fileObject.modified);
+                                                const uri = new monaco.Uri().with({path: `/${importedFile.workspace}/${importedFile.project}/${importedFile.filePath}`});
+                                                if (isReload) {
+                                                    const model = monaco.editor.getModel(uri);
+                                                    model.setValue(importedFile.sourceCode);
+                                                } else {
+                                                    monaco.editor.createModel(importedFile.sourceCode, fileType, uri);
+                                                }
+                                            })
+                                            .catch((status) => {
+                                                console.error(status);
+                                            })
+                                    }
+                                };
+                                loadImportedFiles(false);
+                                messageHub.subscribe(() => {
+                                    loadImportedFiles(true);
+                                }, "ide.ts.reload")
+                            }
+
+                            const mainFileUri = new monaco.Uri().with({path: fileName});
+                            let model = monaco.editor.createModel(fileText, fileType || 'text', mainFileUri);
                             lastSavedVersionId = model.getAlternativeVersionId();
+
+                            messageHub.subscribe((changed) => {
+                                if (changed.fileName === fileName) return;
+                                sourceBeingChangedProgramatically = true;
+                                model.setValue(model.getValue());
+                                lastSavedVersionId = model.getAlternativeVersionId();
+                                sourceBeingChangedProgramatically = false;
+                            }, "ide.ts.reload")
+
+                            
                             _editor.setModel(model);
                             if (!readOnly) {
                                 _editor.addAction(createSaveAction());
@@ -717,6 +772,8 @@ function isDirty(model) {
                             });
                             let to = 0;
                             _editor.onDidChangeModelContent(function (e) {
+                                if (sourceBeingChangedProgramatically) return;
+
                                 if (e.changes && e.changes[0].text === ".") {
                                     codeCompletionAssignments = parseAssignments(acornLoose, _editor.getValue());
                                 }
@@ -909,6 +966,16 @@ function isDirty(model) {
                 7006, // Parameter 'ctx' implicitly has an 'any' type.(7006),
                 7009, // 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.(7009)
                 7034, // Variable 'ctx' implicitly has type 'any' in some locations where its type cannot be determined.(7034)
+            ]
+        });
+
+        monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+            noSemanticValidation: false,
+            noSyntaxValidation: false,
+            noSuggestionDiagnostics: false,
+            diagnosticCodesToIgnore: [
+                6196, // declared but never used - class
+                1219, // Experimental support for decorators
             ]
         });
 

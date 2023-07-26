@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.components.base.publisher;
 
+import javax.annotation.Nullable;
+
 /**
  * The Interface PublisherHandler.
  */
@@ -21,7 +23,8 @@ public interface PublisherHandler {
 	 *
 	 * @param location the location
 	 */
-    void beforePublish(String location);
+    default void beforePublish(String location) {
+    }
 
     /**
      * After publish.
@@ -29,20 +32,25 @@ public interface PublisherHandler {
      * @param workspaceLocation the workspace location
      * @param registryLocation the registry location
      */
-    void afterPublish(String workspaceLocation, String registryLocation);
+    default void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {
+    }
 
     /**
      * Before unpublish.
      *
      * @param location the location
      */
-    void beforeUnpublish(String location);
+    default void beforeUnpublish(String location) {
+    }
 
     /**
      * After unpublish.
      *
      * @param location the location
      */
-    void afterUnpublish(String location);
+    default void afterUnpublish(String location) {
+    }
+
+    record AfterPublishMetadata(String workspace, String projectName, String entryPath, boolean isDirectory) { }
 
 }

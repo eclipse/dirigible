@@ -67,5 +67,24 @@
 			"http/rs"
 		],
 		"pathDefault": "http/rs"
+	},
+	{
+		"name": "http/rs/decorators",
+		"description": "HTTP RS Decorators API",
+		"api": "decorators",
+		"versionedPaths": [
+			"http/rs/decorators"
+		],
+		"pathDefault": "http/rs/decorators",
+		"deconstruct": [
+			"Controller",
+			"Get",
+			"Post",
+			"Put",
+			"Patch",
+			"Delete",
+			"Head",
+			"Options"
+		]
 	}
 ]
