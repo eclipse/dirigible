@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -62,10 +63,11 @@ public class TypeScriptFile {
                         return fileRepositoryPathParentDir
                                 .resolve(Path.of(importedModule))
                                 .toRealPath();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                    } catch (Exception e) {
+                        return null;
                     }
                 })
+                .filter(Objects::nonNull)
                 .map(x -> "/" + projectRepositoryPath.relativize(x))
                 .collect(Collectors.toList());
 

@@ -8,17 +8,26 @@ exports.Controller = function (ctr) {
     router.execute();
 }
 
-function registerRequestHandler(
-    descriptor,
-    path,
-    method,
-) {
-    router[method](
-        path,
-        (ctx, req, res) => {
-            handleRequest(req, res, ctx, descriptor);
-        }
-    );
+exports.Get = createRequestDecorator("get")
+exports.Post = createRequestDecorator("post")
+exports.Put = createRequestDecorator("put")
+exports.Patch = createRequestDecorator("patch")
+exports.Delete = createRequestDecorator("delete")
+exports.Head = createRequestDecorator("head")
+exports.Options = createRequestDecorator("options")
+
+function createRequestDecorator(httpMethod) {
+    return function (path) {
+        return function (target, propertyKey, descriptor) {
+            const handler = descriptor ? descriptor.value : target;
+            router[httpMethod](
+                path,
+                (ctx, req, res) => {
+                    handleRequest(req, res, ctx, handler);
+                }
+            );
+        };
+    }
 }
 
 function handleRequest(req, res, ctx, handler) {
@@ -27,47 +36,4 @@ function handleRequest(req, res, ctx, handler) {
     if (maybeResponseBody) {
         res.json(maybeResponseBody);
     }
-}
-
-exports.Get = function (path) {
-    return function (target, propertyKey, descriptor) {
-        const handler = descriptor ? descriptor.value : target;
-        return registerRequestHandler(handler, path, "get");
-    };
-}
-
-exports.Post = function (path) {
-    return function (target) {
-        return registerRequestHandler(target, path, "post");
-    };
-}
-
-exports.Put = function (path) {
-    return function (target) {
-        return registerRequestHandler(target, path, "put");
-    };
-}
-
-exports.Patch = function (path) {
-    return function (target) {
-        return registerRequestHandler(target, path, "patch");
-    };
-}
-
-exports.Delete = function (path) {
-    return function (target) {
-        return registerRequestHandler(target, path, "delete");
-    };
-}
-
-exports.Head = function (path) {
-    return function (target) {
-        return registerRequestHandler(target, path, "head");
-    };
-}
-
-exports.Options = function (path) {
-    return function (target) {
-        return registerRequestHandler(target, path, "options");
-    };
 }

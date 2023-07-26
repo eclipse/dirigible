@@ -38,24 +38,24 @@ public class TypeScriptService {
 
     public void compileTypeScript(String projectName, String entryPath) {
         var projectDir = getProjectDirFile(projectName);
+        File outDir;
 
-        List<String> tsFilesToCompile;
+        String tsFileToCompile;
         if (entryPath != null && !entryPath.equals("")) {
             var tsFilePathString = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectName, entryPath).toString();
             var tsFilePath = new File(repository.getInternalResourcePath(tsFilePathString)).toPath();
-            tsFilesToCompile = Collections.singletonList(tsFilePath.toString());
+            outDir = tsFilePath.getParent().toFile();
+            tsFileToCompile = tsFilePath.toString();
         } else {
-            tsFilesToCompile = getTypeScriptFilesInDir(projectDir)
-                    .stream()
-                    .map(x -> projectDir.toPath().relativize(x.toPath()).toString())
-                    .collect(Collectors.toList());
+            tsFileToCompile = "**/*.ts";
+            outDir = projectDir;
         }
 
 
         var esbuildCommand = new ArrayList<String>();
         esbuildCommand.add("esbuild");
-        esbuildCommand.addAll(tsFilesToCompile);
-        esbuildCommand.add("--outdir=.");
+        esbuildCommand.add(tsFileToCompile);
+        esbuildCommand.add("--outdir=" + outDir);
         esbuildCommand.add("--out-extension:.js=.mjs");
 
         var processBuilder = new ProcessBuilder(esbuildCommand)

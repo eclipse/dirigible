@@ -225,7 +225,7 @@ function closeEditor() {
     messageHub.post({ resourcePath: parameters.file }, 'ide-core.closeEditor');
 }
 
-function createEditorInstance(readOnly = false) {
+function createEditorInstance(fileName, readOnly = false) {
     return new Promise((resolve, reject) => {
         setTimeout(function () {
             try {
@@ -234,11 +234,16 @@ function createEditorInstance(readOnly = false) {
                     for (let i = 0; i < containerEl.childElementCount; i++)
                         containerEl.removeChild(containerEl.children.item(i));
                 }
-                let editor = monaco.editor.create(containerEl, {
-                    value: "let x = 0;",
+                const editorConfig = {
+                    value: '',
                     automaticLayout: true,
                     readOnly: readOnly,
-                });
+                };
+                if (isTypeScriptFile(fileName)) {
+                    editorConfig.language = 'typescript';
+                }
+
+                let editor = monaco.editor.create(containerEl, editorConfig);
                 resolve(editor);
                 window.onresize = function () {
                     editor.layout();
@@ -614,7 +619,7 @@ function isDirty(model) {
     setResourceApiUrl();
     require.config({
         paths: {
-            'vs': '/webjars/monaco-editor/0.33.0/min/vs',
+            'vs': '/webjars/monaco-editor/0.39.0/min/vs',
             'parser': 'js/parser'
         }
     });
@@ -642,7 +647,7 @@ function isDirty(model) {
                 fileIO.loadText(fileName)
                     .then((fileObject) => {
                         _fileObject = fileObject;
-                        return createEditorInstance(readOnly);
+                        return createEditorInstance(fileName, readOnly);
                     })
                     .catch((status) => {
                         console.error(status);
@@ -971,13 +976,6 @@ function isDirty(model) {
             diagnosticCodesToIgnore: [
                 6196, // declared but never used - class
                 1219, // Experimental support for decorators
-                2307,
-                2304, // Cannot find name 'exports'.(2304)
-                2683, // 'this' implicitly has type 'any' because it does not have a type annotation.(2683)
-                7005, // Variable 'ctx' implicitly has an 'any' type.(7005)
-                7006, // Parameter 'ctx' implicitly has an 'any' type.(7006),
-                7009, // 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.(7009)
-                7034, // Variable 'ctx' implicitly has type 'any' in some locations where its type cannot be determined.(7034)
             ]
         });
 
