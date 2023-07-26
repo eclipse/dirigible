@@ -160,7 +160,7 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 - Build it locally
 
-        cd build
+        cd build/application
         docker build -t dirigible-application -f Dockerfile .
 
 2. Start the container

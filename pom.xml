@@ -565,7 +565,7 @@
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.2.220</h2database.version>
 		<postgresql.version>42.6.0</postgresql.version>
-		<ngdbc.version>2.17.10</ngdbc.version>
+		<ngdbc.version>2.17.12</ngdbc.version>
 		<activemq.version>5.18.2</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<lucene.version>9.7.0</lucene.version>
@@ -582,7 +582,7 @@
 		<kafka.version>3.5.1</kafka.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.14</mongodb.version>
-		<caffeine.version>3.1.6</caffeine.version>
+		<caffeine.version>3.1.7</caffeine.version>
 		<liquibase-core.version>4.23.0</liquibase-core.version>
 		<commons-csv.version>1.10.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
