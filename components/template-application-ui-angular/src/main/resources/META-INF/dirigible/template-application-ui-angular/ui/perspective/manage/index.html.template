@@ -22,8 +22,8 @@
 			<fd-button compact="true" dg-type="transparent" dg-label="Create" ng-click="createEntity()"></fd-button>
 		</fd-toolbar>
 
-		<fd-scrollbar class="dg-full-height">
-			<table fd-table display-mode="compact">
+		<fd-scrollbar class="dg-full-height" ng-hide="data == null">
+			<table fd-table display-mode="compact" inner-borders="top" outer-borders="none">
 				<thead fd-table-header sticky="true">
 					<tr fd-table-row>
 #foreach ($property in $properties)

@@ -17,7 +17,6 @@
     </head>
 
     <body class="dg-vbox" dg-contextmenu="contextMenuContent">
-
         <fd-scrollbar class="dg-full-height">
             <div class="fd-margin--md fd-message-strip fd-message-strip--error fd-message-strip--dismissible"
                 role="alert" ng-show="errorMessage">

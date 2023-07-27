@@ -23,9 +23,8 @@
 		<fd-toolbar has-title="true" ng-hide="data == null">
 			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
 		</fd-toolbar>
-		<fd-scrollbar class="dg-full-height">
-
-			<table fd-table display-mode="compact">
+		<fd-scrollbar class="dg-full-height" ng-hide="data == null">
+			<table fd-table display-mode="compact" inner-borders="top" outer-borders="none">
 				<thead fd-table-header sticky="true">
 					<tr fd-table-row>
 #foreach ($property in $properties)
