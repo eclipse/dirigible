@@ -9,58 +9,44 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Components - IDE - Workspaces</name>
-    <artifactId>dirigible-components-ide-workspace</artifactId>
+    <name>Components - Engine - TypeScript</name>
+    <artifactId>dirigible-components-engine-typescript</artifactId>
     <packaging>jar</packaging>
 
+
     <dependencies>
-    
-    	<!-- Components -->
+
+        <!-- Base -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-base</artifactId>
             <version>9.0.0-SNAPSHOT</version>
         </dependency>
+
+        <!-- Repository -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-repository</artifactId>
             <version>9.0.0-SNAPSHOT</version>
         </dependency>
-        
-        <!-- API -->
+
+        <!-- Graalium -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-api-security</artifactId>
+            <artifactId>dirigible-engine-graalium-execution-core</artifactId>
             <version>9.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-api-utils</artifactId>
+            <artifactId>dirigible-components-engine-javascript</artifactId>
             <version>9.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-api-extensions</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-engine-typescript</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
-        </dependency>
-        
-        <!-- Test -->
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-engine-security</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        
+
     </dependencies>
-    
+
     <properties>
         <license.header.location>../../licensing-header.txt</license.header.location>
     </properties>
-    
+
 </project>

@@ -1,7 +1,6 @@
-package org.eclipse.dirigible.components.ide.workspace.handlers;
+package org.eclipse.dirigible;
 
 import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
-import org.eclipse.dirigible.components.ide.workspace.service.TypeScriptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
