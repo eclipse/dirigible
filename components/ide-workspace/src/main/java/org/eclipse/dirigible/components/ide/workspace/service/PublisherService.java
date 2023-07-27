@@ -86,8 +86,8 @@ public class PublisherService {
 	 */
 	public void publish(String user, String workspace, String project, String path) {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
-		if ("/*".equals(path)) {
-			path = "";
+		if ("*".equals(project)) {
+			project = "";
 		}
 		
 		String sourceLocation = new RepositoryPath(workspacePath.toString(), project, path).toString();
