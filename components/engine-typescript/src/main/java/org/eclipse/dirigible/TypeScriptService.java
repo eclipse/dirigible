@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.components.ide.workspace.service;
+package org.eclipse.dirigible;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -14,47 +14,68 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class TypeScriptService {
 
+    private static final String TS_EXT = ".ts";
+    private static final String DTS_EXT = ".d.ts";
+
+    private final IRepository repository;
+
     @Autowired
-    private IRepository repository;
+    public TypeScriptService(IRepository repository) {
+        this.repository = repository;
+    }
 
     public boolean isTypeScriptFile(String path) {
-        return path.endsWith(".ts");
+        return path.endsWith(TS_EXT);
     }
 
     public boolean shouldCompileTypeScript(String projectName, String entryPath) {
         if (entryPath != null && !entryPath.equals("")) {
-            return entryPath.endsWith(".ts");
+            return isTSButNotDTS(entryPath);
         }
 
         var projectDir = getProjectDirFile(projectName);
-        return projectDir.exists() && !getTypeScriptFilesInDir(projectDir).isEmpty();
+        return shouldCompileTypeScript(projectDir);
+    }
+
+    public boolean shouldCompileTypeScript(File dir) {
+        return dir.exists() && !getTypeScriptFilesInDir(dir).isEmpty();
+    }
+
+    private static boolean isTSButNotDTS(String entryPath) {
+        return entryPath.endsWith(TS_EXT) && !entryPath.endsWith(DTS_EXT);
+    }
+
+    public void compileTypeScript(File dir) {
+        compileTypeScript(dir, dir, getTypeScriptFilesInDir(dir));
     }
 
     public void compileTypeScript(String projectName, String entryPath) {
         var projectDir = getProjectDirFile(projectName);
         File outDir;
+        Collection<File> tsFiles;
 
-        String tsFileToCompile;
         if (entryPath != null && !entryPath.equals("")) {
             var tsFilePathString = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectName, entryPath).toString();
             var tsFilePath = new File(repository.getInternalResourcePath(tsFilePathString)).toPath();
             outDir = tsFilePath.getParent().toFile();
-            tsFileToCompile = tsFilePath.toString();
+            tsFiles = Collections.singletonList(tsFilePath.toFile());
         } else {
-            tsFileToCompile = "**/*.ts";
+            tsFiles = getTypeScriptFilesInDir(projectDir);
             outDir = projectDir;
         }
 
+        compileTypeScript(projectDir, outDir, tsFiles);
+    }
 
+    private static void compileTypeScript(File projectDir, File outDir, Collection<File> filesToCompile) {
         var esbuildCommand = new ArrayList<String>();
         esbuildCommand.add("esbuild");
-        esbuildCommand.add(tsFileToCompile);
+        esbuildCommand.addAll(filesToCompile.stream().map(Object::toString).toList());
         esbuildCommand.add("--outdir=" + outDir);
         esbuildCommand.add("--out-extension:.js=.mjs");
 
@@ -84,6 +105,10 @@ public class TypeScriptService {
     }
 
     private Collection<File> getTypeScriptFilesInDir(File projectDir) {
-        return FileUtils.listFiles(projectDir, new String[]{"ts"}, true);
+        return FileUtils
+                .listFiles(projectDir, new String[]{"ts"}, true)
+                .stream()
+                .filter(x -> isTSButNotDTS(x.toString()))
+                .collect(Collectors.toList());
     }
 }

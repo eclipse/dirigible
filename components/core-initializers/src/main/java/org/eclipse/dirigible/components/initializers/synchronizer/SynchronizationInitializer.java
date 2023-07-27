@@ -11,12 +11,15 @@
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
+import org.eclipse.dirigible.components.base.initializer.Initializer;
 import org.eclipse.dirigible.components.initializers.classpath.ClasspathExpander;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * The Class SynchronizersInitializer.
@@ -29,18 +32,26 @@ public class SynchronizationInitializer {
 	private final SynchronizationProcessor synchronizationProcessor;
 	
 	/** The classpath expander. */
-	private ClasspathExpander classpathExpander;
+	private final ClasspathExpander classpathExpander;
+
+	private final List<Initializer> initializers;
 
 	/**
 	 * Instantiates a new synchronizers initializer.
 	 *
 	 * @param synchronizationProcessor the synchronization processor
-	 * @param classpathExpander the classpath expander
+	 * @param classpathExpander        the classpath expander
+	 * @param initializers			   the initializers
 	 */
 	@Autowired
-	public SynchronizationInitializer(SynchronizationProcessor synchronizationProcessor, ClasspathExpander classpathExpander) {
+	public SynchronizationInitializer(
+			SynchronizationProcessor synchronizationProcessor,
+			ClasspathExpander classpathExpander,
+			List<Initializer> initializers
+	) {
 		this.synchronizationProcessor = synchronizationProcessor;
 		this.classpathExpander = classpathExpander;
+		this.initializers = initializers;
 	}
 
 	/**
@@ -53,6 +64,7 @@ public class SynchronizationInitializer {
 		synchronizationProcessor.prepareSynchronizers();
 		classpathExpander.expandContent();
 		synchronizationProcessor.processSynchronizers();
+		initializers.forEach(Initializer::initialize);
 	}
 
 }
