@@ -49,6 +49,13 @@
             <artifactId>spring-boot-starter-integration</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
+        
+        <!-- Libraries -->
+    	<dependency>
+		    <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		    <version>${commons.codec}</version>
+		</dependency>
     	
     </dependencies>
 

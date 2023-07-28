@@ -12,9 +12,11 @@
 package org.eclipse.dirigible.components.engine.ftp.config;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.ftpserver.ConnectionConfigFactory;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
@@ -27,6 +29,8 @@ import org.apache.ftpserver.listener.Listener;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.eclipse.dirigible.components.engine.ftp.domain.FtpUser;
 import org.eclipse.dirigible.components.engine.ftp.repository.FtpUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +43,9 @@ import org.springframework.util.Assert;
  */
 @Configuration
 public class FtpServerConfiguration {
+	
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(FtpServerConfiguration.class);
 	
 	private static final String REPOSITORY_ROOT = "./target/dirigible/cms/dirigible/repository/root";
 
@@ -62,7 +69,14 @@ public class FtpServerConfiguration {
 	 * @return the listener
 	 */
 	@Bean
-	Listener nioListener(@Value("${ftp.port:8022}") int port) {
+	Listener nioListener() {
+		String portValue = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_FTP_PORT", "8022");
+		int port = 8022;
+		try {
+			port = Integer.parseInt(portValue);
+		} catch (NumberFormatException e) {
+			logger.error("Wrong configuration for FTP port provided: " + portValue);
+		}
 		ListenerFactory listenerFactory = new ListenerFactory();
 		listenerFactory.setPort(port);
 		return listenerFactory.createListener();
@@ -86,7 +100,12 @@ public class FtpServerConfiguration {
 		ftpServerFactory.setUserManager(userManager);
 		ftpServerFactory.setConnectionConfig(new ConnectionConfigFactory().createConnectionConfig());
 		try {
-			userManager.save(new FtpUser("admin", "admin", true, Collections.EMPTY_LIST, -1, REPOSITORY_ROOT, true));
+			String username = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_FTP_USERNAME", "YWRtaW4="); // admin
+			String password = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_FTP_PASSWORD", "YWRtaW4="); // admin
+			userManager.save(new FtpUser(
+					new String(new Base64().decode(username.getBytes()), StandardCharsets.UTF_8).trim(),
+					new String(new Base64().decode(password.getBytes()), StandardCharsets.UTF_8).trim(),
+					true, Collections.EMPTY_LIST, -1, REPOSITORY_ROOT, true));
 		} catch (FtpException e) {
 			throw new RuntimeException(e);
 		}
