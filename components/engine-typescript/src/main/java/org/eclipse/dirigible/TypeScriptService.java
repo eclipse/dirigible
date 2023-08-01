@@ -43,7 +43,15 @@ public class TypeScriptService {
     }
 
     public boolean shouldCompileTypeScript(File dir) {
+        if (isIgnoredForTypeScriptCompilation(dir.getName())) {
+            return false;
+        }
+
         return dir.exists() && !getTypeScriptFilesInDir(dir).isEmpty();
+    }
+
+    private static boolean isIgnoredForTypeScriptCompilation(String projectName) {
+        return "dev-tools".equals(projectName); // ignore dev-tools as it has some .ts files, but it's not necessary for us to compile them
     }
 
     private static boolean isTSButNotDTS(String entryPath) {
