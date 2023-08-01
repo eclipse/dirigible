@@ -20,9 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,7 +33,6 @@ public class JavascriptService implements InitializingBean {
 
     /** The dirigible source provider. */
     private JavascriptSourceProvider sourceProvider;
-
     /** The repository. */
     private IRepository repository;
     
@@ -45,7 +41,6 @@ public class JavascriptService implements InitializingBean {
     
     /** The instance. */
     private static JavascriptService INSTANCE;
-
 
 	/**
      * Instantiates a new javascript service.

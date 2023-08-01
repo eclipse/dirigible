@@ -12,16 +12,9 @@
 package org.eclipse.dirigible.components.engine.camel.processor;
 
 public class CamelProcessorException extends RuntimeException {
-    public CamelProcessorException() {
-        super();
-    }
 
     public CamelProcessorException(String message) {
         super(message);
-    }
-
-    public CamelProcessorException(String message, Throwable cause) {
-        super(message, cause);
     }
 
     public CamelProcessorException(Throwable cause) {
