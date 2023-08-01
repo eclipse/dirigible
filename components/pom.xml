@@ -58,6 +58,7 @@
 		<module>engine-odata</module>
 		<module>engine-camel</module>
 		<module>engine-ftp</module>
+		<module>engine-sftp</module>
 		
 		<!-- IDE -->
 		<module>ide-workspace</module>

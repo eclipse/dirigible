@@ -26,3 +26,4 @@ derby.log
 *.factorypath
 *.log
 dependency-reduced-pom.xml
+host.ser
