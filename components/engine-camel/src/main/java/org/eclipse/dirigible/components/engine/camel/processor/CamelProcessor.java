@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.components.engine.camel.processor;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.FluentProducerTemplate;
 import org.apache.camel.spi.Resource;
 import org.apache.camel.spi.RoutesLoader;
 
@@ -23,16 +24,14 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CamelProcessor {
-
     private final SpringBootCamelContext context;
 
     private final RoutesLoader loader;
@@ -63,7 +62,7 @@ public class CamelProcessor {
             try {
                 loader.loadRoutes(routesResource);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new CamelProcessorException(e);
             }
         });
     }
@@ -73,7 +72,19 @@ public class CamelProcessor {
             context.getRouteController().stopAllRoutes();
             context.getRouteController().removeAllRoutes();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new CamelProcessorException(e);
+        }
+    }
+
+    public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
+        try (FluentProducerTemplate producer = context.createFluentProducerTemplate();) {
+            return producer
+                    .withHeaders(headers)
+                    .withBody(payload)
+                    .to(routeId)
+                    .request();
+        } catch (IOException e) {
+            throw new CamelProcessorException("Could not create fluent producer");
         }
     }
 }

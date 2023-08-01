@@ -12,9 +12,12 @@
 package org.eclipse.dirigible.components.engine.camel.invoke;
 
 import org.apache.camel.Message;
+import org.eclipse.dirigible.components.engine.camel.processor.CamelProcessor;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -23,12 +26,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class Invoker {
     private final JavascriptService javascriptService;
 
+    private final CamelProcessor processor;
+
     @Autowired
-    public Invoker(JavascriptService javascriptService) {
+    public Invoker(JavascriptService javascriptService, CamelProcessor processor) {
         this.javascriptService = javascriptService;
+        this.processor = processor;
     }
 
     public void invoke(Message camelMessage) {
@@ -41,5 +48,9 @@ public class Invoker {
         context.put("camelMessage", messageBody);
 
         javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+    }
+
+    public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
+        return processor.invokeRoute(routeId, payload, headers);
     }
 }
