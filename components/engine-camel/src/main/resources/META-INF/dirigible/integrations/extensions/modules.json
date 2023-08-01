@@ -1,0 +1,14 @@
+[
+  {
+    "name": "@dirigible/camel",
+    "description": "Dirigible Apache Camel module",
+    "isPackageDescription": true,
+    "dtsPath": "integrations/extensions/camel.d.ts"
+  },
+  {
+    "name": "integrations/camel",
+    "description": "Apache Camel API",
+    "api": "camel",
+    "pathDefault": "integrations/camel"
+  }
+]
