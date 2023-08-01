@@ -215,19 +215,23 @@ public class JobEmailProcessor {
         byte[] template = registryAccessor.getRegistryContent(templateLocation, defaultLocation);
 
         TemplateEngine generationEngine = generationEnginesManager.getTemplateEngine("mustache");
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("job.name", job.getName());
-        parameters.put("job.message", job.getMessage());
-        parameters.put("job.scheme", emailUrlScheme);
-        parameters.put("job.host", emailUrlHost);
-        parameters.put("job.port", emailUrlPort);
-        try {
-            byte[] generated = generationEngine.generate(parameters, "~/temp", template);
-            return new String(generated, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            if (logger.isErrorEnabled()) {logger.error("Error on generating the e-mail body: " + e.getMessage(),e);}
-            return null;
+        if (generationEngine != null) {
+	        Map<String, Object> parameters = new HashMap<String, Object>();
+	        parameters.put("job.name", job.getName());
+	        parameters.put("job.message", job.getMessage());
+	        parameters.put("job.scheme", emailUrlScheme);
+	        parameters.put("job.host", emailUrlHost);
+	        parameters.put("job.port", emailUrlPort);
+	        try {
+	            byte[] generated = generationEngine.generate(parameters, "~/temp", template);
+	            return new String(generated, StandardCharsets.UTF_8);
+	        } catch (IOException e) {
+	            if (logger.isErrorEnabled()) {logger.error("Error on generating the e-mail body: " + e.getMessage(),e);}
+	            return null;
+	        }
         }
+        if (logger.isErrorEnabled()) {logger.error("Error on generating the e-mail body, because no template engine has been registered in this instance.");}
+        return null;
     }
 
     /**
