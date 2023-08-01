@@ -43,7 +43,15 @@ public class TypeScriptService {
     }
 
     public boolean shouldCompileTypeScript(File dir) {
+        if (shouldIgnoreProject(dir.getName())) {
+            return false;
+        }
+
         return dir.exists() && !getTypeScriptFilesInDir(dir).isEmpty();
+    }
+
+    private static boolean shouldIgnoreProject(String projectName) {
+        return "dev-tools".equals(projectName);
     }
 
     private static boolean isTSButNotDTS(String entryPath) {
