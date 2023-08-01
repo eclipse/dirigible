@@ -1,4 +1,4 @@
-package org.eclipse.dirigible;
+package org.eclipse.dirigible.components.engine.typescript;
 
 import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -34,37 +34,37 @@ public class SynchronizationInitializer {
 	/** The classpath expander. */
 	private final ClasspathExpander classpathExpander;
 
-	private final List<Initializer> initializers;
+	private final InitializationProcessor initializationProcessor;
 
 	/**
 	 * Instantiates a new synchronizers initializer.
 	 *
 	 * @param synchronizationProcessor the synchronization processor
 	 * @param classpathExpander        the classpath expander
-	 * @param initializers			   the initializers
+	 * @param initializationProcessor  the initialization processor
 	 */
 	@Autowired
 	public SynchronizationInitializer(
 			SynchronizationProcessor synchronizationProcessor,
 			ClasspathExpander classpathExpander,
-			List<Initializer> initializers
+			InitializationProcessor initializationProcessor
 	) {
 		this.synchronizationProcessor = synchronizationProcessor;
 		this.classpathExpander = classpathExpander;
-		this.initializers = initializers;
+		this.initializationProcessor = initializationProcessor;
 	}
 
 	/**
 	 * Handle context start.
 	 *
-	 * @param are the are
+	 * @param applicationReadyEvent the ApplicationReadyEvent
 	 */
 	@EventListener(ApplicationReadyEvent.class)
-	public void handleContextStart(final ApplicationReadyEvent are) {
+	public void handleContextStart(final ApplicationReadyEvent applicationReadyEvent) {
 		synchronizationProcessor.prepareSynchronizers();
 		classpathExpander.expandContent();
 		synchronizationProcessor.processSynchronizers();
-		initializers.forEach(Initializer::initialize);
+		initializationProcessor.processInitializers();
 	}
 
 }

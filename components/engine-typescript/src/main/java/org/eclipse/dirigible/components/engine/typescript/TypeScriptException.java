@@ -1,4 +1,4 @@
-package org.eclipse.dirigible;
+package org.eclipse.dirigible.components.engine.typescript;
 
 public class TypeScriptException extends RuntimeException {
     public TypeScriptException(String message) {

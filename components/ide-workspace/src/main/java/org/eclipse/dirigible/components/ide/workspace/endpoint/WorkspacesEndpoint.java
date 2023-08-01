@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import javax.validation.Valid;
 
 import org.apache.commons.codec.binary.Base64;
-import org.eclipse.dirigible.TypeScriptService;
+import org.eclipse.dirigible.components.engine.typescript.TypeScriptService;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.ide.workspace.domain.*;

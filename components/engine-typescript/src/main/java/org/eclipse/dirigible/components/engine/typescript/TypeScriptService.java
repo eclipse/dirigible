@@ -1,4 +1,4 @@
-package org.eclipse.dirigible;
+package org.eclipse.dirigible.components.engine.typescript;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
