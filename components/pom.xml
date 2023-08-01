@@ -219,6 +219,7 @@
 		<!-- Test -->
 		<module>test-project</module>
         <module>core-spring</module>
+        <module>engine-typescript</module>
     </modules>
 
 	<dependencies>
