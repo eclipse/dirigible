@@ -619,7 +619,7 @@ function isDirty(model) {
     setResourceApiUrl();
     require.config({
         paths: {
-            'vs': '/webjars/monaco-editor/0.40.0/min/vs',
+            'vs': '/webjars/monaco-editor/min/vs',
             'parser': 'js/parser'
         }
     });
