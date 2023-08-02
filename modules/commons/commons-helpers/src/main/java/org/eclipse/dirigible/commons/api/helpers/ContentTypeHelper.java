@@ -97,9 +97,6 @@ public class ContentTypeHelper {
 	/** The Constant APPLICATION_ZIP. */
 	public static final String APPLICATION_ZIP = "application/zip";
 
-	/** The Constant APPLICATION_WASM. */
-	public static final String APPLICATION_WASM = "application/wasm";
-
 	/** The Constant APPLICATION_X_COMPRESS. */
 	public static final String APPLICATION_X_COMPRESS = "application/x-compress";
 
@@ -669,7 +666,6 @@ public class ContentTypeHelper {
 		BINARY_CONTENT_TYPES.put("xwd", IMAGE_X_XWINDOWDUMP); //$NON-NLS-1$
 		BINARY_CONTENT_TYPES.put("z", APPLICATION_X_COMPRESS); //$NON-NLS-1$
 		BINARY_CONTENT_TYPES.put("zip", APPLICATION_ZIP); //$NON-NLS-1$
-		BINARY_CONTENT_TYPES.put("wasm", APPLICATION_WASM); //$NON-NLS-1$
 
 		BINARY_CONTENT_TYPES.put("ttf", APPLICATION_OCTET_STREAM); //$NON-NLS-1$
 		BINARY_CONTENT_TYPES.put("svg", IMAGE_SVG_XML); //$NON-NLS-1$

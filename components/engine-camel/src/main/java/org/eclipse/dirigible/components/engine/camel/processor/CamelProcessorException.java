@@ -20,4 +20,8 @@ public class CamelProcessorException extends RuntimeException {
     public CamelProcessorException(Throwable cause) {
         super(cause);
     }
+
+    public CamelProcessorException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

@@ -84,7 +84,7 @@ public class CamelProcessor {
                     .to(routeId)
                     .request();
         } catch (IOException e) {
-            throw new CamelProcessorException("Could not create fluent producer");
+            throw new CamelProcessorException("Could not invoke route: " + routeId, e);
         }
     }
 }
