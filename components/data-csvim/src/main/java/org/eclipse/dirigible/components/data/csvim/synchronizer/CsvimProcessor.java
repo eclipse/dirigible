@@ -158,8 +158,9 @@ public class CsvimProcessor {
         TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
 
         if (tableMetadata == null || csvParser == null) {
-            logger.error(String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName));
-            CsvimUtils.logProcessorErrors(String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName), ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+            String error = String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName);
+            logger.error(error);
+            CsvimUtils.logProcessorErrors(error, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             return;
         }   
 
