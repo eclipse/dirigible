@@ -66,7 +66,7 @@ function createExecuteAction() {
 
 (function init() {
     setTheme();
-    require.config({ paths: { vs: "/webjars/monaco-editor/0.39.0/min/vs" } });
+    require.config({ paths: { vs: "/webjars/monaco-editor/min/vs" } });
 
     require(["vs/editor/editor.main"], function () {
         messageHub.subscribe(function () {
