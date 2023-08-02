@@ -118,6 +118,8 @@ public class CsvimProcessor {
      */
     private static final String PROBLEM_MESSAGE_INSERT_RECORD = "Error occurred while trying to insert in table [%s] a CSV record [%s].";
 
+    private static final String PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER = "No table metadata found for table [%s] or CSVParser not created";
+
     /**
      * The datasources manager.
      */
@@ -154,9 +156,12 @@ public class CsvimProcessor {
         String tableName = csvFile.getTable();
         CSVParser csvParser = getCsvParser(csvFile, new ByteArrayInputStream(content));
         TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
+
         if (tableMetadata == null || csvParser == null) {
+            logger.error(String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName));
+            CsvimUtils.logProcessorErrors(String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName), ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             return;
-        }
+        }   
 
         List<CSVRecord> recordsToInsert = new ArrayList<>();
         List<CSVRecord> recordsToUpdate = new ArrayList<>();
