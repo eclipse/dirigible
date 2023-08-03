@@ -147,12 +147,13 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
      * @return the string
      */
     protected String createLookupPath(String filePathString) {
-        var lookupPath = "/META-INF/dirigible/" + filePathString;
-        if (filePathString.startsWith("/webjars") || filePathString.startsWith("webjars")) {
-            lookupPath = "/META-INF/resources/" + filePathString;
+        if (filePathString.startsWith("/webjars")) {
+            return "/META-INF/resources" + filePathString;
+        } else if (filePathString.startsWith("webjars")) {
+            return "/META-INF/resources/" + filePathString;
         }
 
-        return lookupPath;
+        return "/META-INF/dirigible/" + filePathString;
     }
 
     /**
