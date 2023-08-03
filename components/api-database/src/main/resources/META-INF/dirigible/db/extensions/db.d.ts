@@ -336,6 +336,14 @@ declare module "@dirigible/db" {
         setClob(index:number, value);
 
         /**
+         * Sets a parameter of type binary strem
+         * @param index
+         * @param inputStream
+         * @param length length of the input stream. If not provided gets all the binary data
+         */
+        setBinaryStream(index: number, inputStream, length?)
+
+        /**
          * Sets a parameter of type blob
          * @param index
          * @param value

@@ -206,6 +206,14 @@ function PreparedStatement(internalStatement) {
 		this.native.setNull(index, sqlType);
 	};
 
+	this.setBinaryStream = function (parameter, inputStream, length) {
+		if (length !== undefined && length !== null) {
+			this.native.setBinaryStream(parameter, inputStream, length);
+		} else {
+			this.native.setBinaryStream(parameter, inputStream);
+		}
+	};
+
 	this.setBoolean = function (index, value) {
 		if (value !== null && value !== undefined) {
 			this.native.setBoolean(index, value);
