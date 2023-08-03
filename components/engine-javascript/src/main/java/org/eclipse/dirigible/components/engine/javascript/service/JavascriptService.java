@@ -33,7 +33,6 @@ public class JavascriptService implements InitializingBean {
 
     /** The dirigible source provider. */
     private JavascriptSourceProvider sourceProvider;
-    
     /** The repository. */
     private IRepository repository;
     
@@ -42,8 +41,8 @@ public class JavascriptService implements InitializingBean {
     
     /** The instance. */
     private static JavascriptService INSTANCE;
-    
-    /**
+
+	/**
      * Instantiates a new javascript service.
      *
      * @param repository the repository
