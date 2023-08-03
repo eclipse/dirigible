@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class Invoker {
     private final JavascriptService javascriptService;
 

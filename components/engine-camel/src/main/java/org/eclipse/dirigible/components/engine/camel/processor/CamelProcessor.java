@@ -30,7 +30,6 @@ import java.util.Map;
 
 
 @Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CamelProcessor {
     private final SpringBootCamelContext context;
 
