@@ -206,6 +206,14 @@ function PreparedStatement(internalStatement) {
 		this.native.setNull(index, sqlType);
 	};
 
+	this.setBinaryStream = function (parameter, inputStream, length) {
+		if (length) {
+			this.native.setBinaryStream(parameter, inputStream, length);
+		} else {
+			this.native.setBinaryStream(parameter, inputStream);
+		}
+	};
+
 	this.setBoolean = function (index, value) {
 		if (value !== null && value !== undefined) {
 			this.native.setBoolean(index, value);
@@ -654,7 +662,7 @@ function CallableStatement() {
 	};
 
 	this.setAsciiStream = function (parameter, inputStream, length) {
-		if (length !== undefined && length !== null) {
+		if (length) {
 			this.native.setAsciiStream(parameter, inputStream, length);
 		} else {
 			this.native.setAsciiStream(parameter, inputStream);
@@ -662,7 +670,7 @@ function CallableStatement() {
 	};
 
 	this.setBinaryStream = function (parameter, inputStream, length) {
-		if (length !== undefined && length !== null) {
+		if (length) {
 			this.native.setBinaryStream(parameter, inputStream, length);
 		} else {
 			this.native.setBinaryStream(parameter, inputStream);
