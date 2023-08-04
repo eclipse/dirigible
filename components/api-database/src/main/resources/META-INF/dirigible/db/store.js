@@ -29,5 +29,5 @@ exports.get = function(name, id) {
 };
 
 exports.delete = function(name, id) {
-	org.eclipse.dirigible.components.api.db.DataStoreFacade.delete(name, id);
+	org.eclipse.dirigible.components.api.db.DataStoreFacade.deleteEntry(name, id);
 };

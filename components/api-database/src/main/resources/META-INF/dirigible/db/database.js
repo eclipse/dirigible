@@ -207,7 +207,7 @@ function PreparedStatement(internalStatement) {
 	};
 
 	this.setBinaryStream = function (parameter, inputStream, length) {
-		if (length !== undefined && length !== null) {
+		if (length) {
 			this.native.setBinaryStream(parameter, inputStream, length);
 		} else {
 			this.native.setBinaryStream(parameter, inputStream);
@@ -662,7 +662,7 @@ function CallableStatement() {
 	};
 
 	this.setAsciiStream = function (parameter, inputStream, length) {
-		if (length !== undefined && length !== null) {
+		if (length) {
 			this.native.setAsciiStream(parameter, inputStream, length);
 		} else {
 			this.native.setAsciiStream(parameter, inputStream);
@@ -670,7 +670,7 @@ function CallableStatement() {
 	};
 
 	this.setBinaryStream = function (parameter, inputStream, length) {
-		if (length !== undefined && length !== null) {
+		if (length) {
 			this.native.setBinaryStream(parameter, inputStream, length);
 		} else {
 			this.native.setBinaryStream(parameter, inputStream);

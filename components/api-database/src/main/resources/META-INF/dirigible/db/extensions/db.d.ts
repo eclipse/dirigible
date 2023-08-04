@@ -1,3 +1,7 @@
+// @ts-ignore
+class byte {
+}
+
 declare module "@dirigible/db" {
     module database {
         /**
@@ -121,6 +125,32 @@ declare module "@dirigible/db" {
          * @param datasourceName
          */
         function execute(sql, parameters?, databaseType?, datasourceName?):number;
+    }
+
+    module store {
+        /**
+         * Save entry in the data store
+         * @param name
+         * @param entry
+         */
+        function save(name: string, entry: object);
+        /**
+         * List all entries from the data store by name
+         * @param name
+         */
+        function list(name: string): [];
+        /**
+         * Get entry from the data store by name and id
+         * @param name
+         * @param id
+         */
+        function get(name: string, id: number): object;
+        /**
+         * Delete entry from the data store by name and id
+         * @param name
+         * @param id
+         */
+        function deleteEntry(name: string, id: number);
     }
 
     interface DAO {
@@ -341,7 +371,7 @@ declare module "@dirigible/db" {
          * @param inputStream
          * @param length length of the input stream. If not provided gets all the binary data
          */
-        setBinaryStream(index: number, inputStream, length?)
+        setBinaryStream(index: number, inputStream: InputStream, length?: number)
 
         /**
          * Sets a parameter of type blob
@@ -1564,30 +1594,33 @@ declare module "@dirigible/db" {
          */
         build():string;
     }
-    module store {
+
+    interface InputStream {
         /**
-         * Save entry in the data store
-         * @param name
-         * @param entry
+         * Reads a single byte from this InputStream
          */
-        function save(name: string, entry: object);
+        read(): byte;
+
         /**
-         * List all entries from the data store by name
-         * @param name
+         * Returns the array of bytes contained in this InputStream
          */
-        function list(name: string): [];
+        readBytes(): byte[];
+
+        readBytesNative(): any;
+
         /**
-         * Get entry from the data store by name and id
-         * @param name
-         * @param id
+         * Returns a string representation of the array of bytes contained in this InputStream
          */
-        function get(name: string, id: number): object;
+        readText(): string;
+
         /**
-         * Delete entry from the data store by name and id
-         * @param name
-         * @param id
+         * Closes this InputStream to release the resources
          */
-        function delete(name: string, id: number);
-        
+        close();
+
+        /**
+         * Returns true if inputstream is valid
+         */
+        isValid(): boolean;
     }
 }

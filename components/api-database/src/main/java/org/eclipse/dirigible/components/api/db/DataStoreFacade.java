@@ -115,7 +115,7 @@ public class DataStoreFacade implements InitializingBean {
 	 * @param name the name
 	 * @param id the id
 	 */
-	public static void delete(String name, Serializable id) {
+	public static void deleteEntry(String name, Serializable id) {
 		DataStoreFacade.get().getDataStore().delete(name, id);
 	}
 
