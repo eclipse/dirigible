@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const response = require("http/v4/response");
+const response = require("http/response");
 const dtsParser = require("ide-monaco-extensions/api/utils/dtsParser");
 const javaDtsData = require("ide-monaco-extensions/api/java-dts-data");
 
