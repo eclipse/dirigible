@@ -21,7 +21,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
-import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
+import org.apache.sshd.sftp.server.SftpSubsystemFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -50,7 +50,7 @@ public class SftpServerConfiguration {
 		}
         SshServer sshd = SshServer.setUpDefaultServer();
         sshd.setPort(port);
-        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(new File("host.ser")));
+        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(new File("host.ser").toPath()));
         sshd.setSubsystemFactories(Collections.singletonList(new SftpSubsystemFactory()));
         String username = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_SFTP_USERNAME", "YWRtaW4="); // admin
 		String password = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_SFTP_PASSWORD", "YWRtaW4="); // admin

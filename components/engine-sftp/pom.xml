@@ -33,6 +33,11 @@
 		   <artifactId>sshd-core</artifactId>
 		   <version>${sshd-core.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.sshd</groupId>
+			<artifactId>sshd-sftp</artifactId>
+			<version>${sshd-core.version}</version>
+		</dependency>
         
         <!-- Libraries -->
     	<dependency>
