@@ -48,6 +48,13 @@
 			<artifactId>dirigible-database-sql-h2</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
     	</dependency>
+
+		<!-- API -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-api-security</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
+		</dependency>
     	
     	<!-- Libraries -->
     	<dependency>

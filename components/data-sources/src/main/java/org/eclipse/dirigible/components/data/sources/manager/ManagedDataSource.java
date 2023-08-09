@@ -18,6 +18,7 @@ import java.sql.SQLFeatureNotSupportedException;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -87,7 +88,12 @@ public class ManagedDataSource implements DataSource {
 
 		if (databaseName.equals(DATABASE_NAME_HDB)) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			String userName = authentication.getName();
+			String userName;
+			if (authentication != null) {
+				userName = authentication.getName();
+			} else {
+				userName = UserFacade.getName();
+			}
 			if (logger.isDebugEnabled()) {logger.debug("Setting APPLICATIONUSER:{} for connection: {}", userName, connection);}
 			connection.setClientInfo("APPLICATIONUSER", userName);
 
