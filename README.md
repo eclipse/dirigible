@@ -129,11 +129,11 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 1. From the project root directory run command:
 
-        java -jar build/application/target/dirigible-application-XXX.jar
+        java -jar build/application/target/dirigible-application-*.jar
 
 2. In case you want to debug the application run:
 
-        java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar build/application/target/dirigible-application-XXX.jar
+        java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar build/application/target/dirigible-application-*.jar
 
 3. Open a web browser and go to:
 
