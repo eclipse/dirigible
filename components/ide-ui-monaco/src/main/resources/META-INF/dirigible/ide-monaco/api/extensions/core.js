@@ -26,6 +26,6 @@ exports.getFileTypes = function () {
         ".md": "markdown",
         ".yml": "yaml",
         ".yaml": "yaml",
-        ".openapi": "json"
+        ".openapi": "yaml"
     }
 };
