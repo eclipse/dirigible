@@ -1,73 +1,80 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.1",
   "info": {
     "title": "Eclipse Dirigible",
-      "description": "Eclipse Dirigible API of the REST services provided by the applications.",
-      "termsOfService": "https://www.dirigible.io/",
-      "contact": {
-        "name": "Eclipse/Dirigible Support",
-        "url": "https://www.dirigible.io/",
-        "email": "dirigible-dev@eclipse.org"
-      },
-      "license": {
-        "name": "Eclipse Public License - v 2.0",
-        "url": "https://www.eclipse.org/legal/epl-v20.html"
-      },
-      "version": "6.0.0"
+    "description": "Eclipse Dirigible API of the REST services provided by the applications.",
+    "termsOfService": "https://www.dirigible.io/",
+    "contact": {
+      "name": "Eclipse/Dirigible Support",
+      "url": "https://www.dirigible.io/",
+      "email": "dirigible-dev@eclipse.org"
+    },
+    "license": {
+      "name": "Eclipse Public License - v 2.0",
+      "url": "https://www.eclipse.org/legal/epl-v20.html"
+    },
+    "version": "6.0.0"
   },
-  "host": "dirigible.swagger.io",
-  "basePath": "/api",
-  "schemes": [
-    "http"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
+  "servers": [
+    {
+      "url": "http://dirigible.swagger.io/api"
+    }
   ],
   "paths": {
     "/healthcheck": {
       "get": {
         "description": "Returns dirigible status",
         "operationId": "getHealthcheck",
-        "produces": [
-          "application/json",
-          "application/xml",
-          "text/xml",
-          "text/html"
-        ],
-        "parameters": [
-
-        ],
         "responses": {
           "200": {
-            "description": "healthcheck response"
+            "description": "healthcheck response",
+            "content": {}
           },
           "default": {
             "description": "unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ErrorModel"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
             }
           }
         }
       }
     }
   },
-  "definitions": {
-    "ErrorModel": {
-      "type": "object",
-      "required": [
-        "code",
-        "message"
-      ],
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
+  "components": {
+    "schemas": {
+      "ErrorModel": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
         }
       }
     }
