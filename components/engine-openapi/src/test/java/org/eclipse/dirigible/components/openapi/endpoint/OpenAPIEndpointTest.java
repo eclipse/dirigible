@@ -95,22 +95,7 @@ class OpenAPIEndpointTest {
         mockMvc.perform(get("/services/openapi"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("{\"swagger\":\"2.0\",\"info\":{\"description\":\"Eclipse " +
-                        "Dirigible API of the REST services provided by the applications\",\"version\":\"0.0.1\"," +
-                        "\"title\":\"Eclipse Dirigible - Applications REST Services API\"," +
-                        "\"contact\":{\"email\":\"dirigible-dev@eclipse.org\"},\"license\":{\"name\":\"Eclipse Public" +
-                        " License - v 2.0\",\"url\":\"https://www.eclipse.org/legal/epl-v20.html\"}}," +
-                        "\"basePath\":\"/services\",\"tags\":[],\"schemes\":[\"http\"]," +
-                        "\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"security\":[]," +
-                        "\"paths\":{\"/healthcheck\":{\"get\":{\"description\":\"Returns dirigible status\"," +
-                        "\"operationId\":\"getHealthcheck\",\"produces\":[\"application/json\",\"application/xml\"," +
-                        "\"text/xml\",\"text/html\"],\"parameters\":[]," +
-                        "\"responses\":{\"200\":{\"description\":\"healthcheck response\"}," +
-                        "\"default\":{\"description\":\"unexpected error\"," +
-                        "\"schema\":{\"$ref\":\"#/definitions/ErrorModel\"}}}}}},\"securityDefinitions\":{}," +
-                        "\"definitions\":{\"ErrorModel\":{\"type\":\"object\",\"required\":[\"code\",\"message\"]," +
-                        "\"properties\":{\"code\":{\"type\":\"integer\",\"format\":\"int32\"}," +
-                        "\"message\":{\"type\":\"string\"}}}},\"parameters\":{},\"responses\":{}}")));
+                .andExpect(content().string(containsString("{\"openapi\":\"3.0.1\",\"info\":{\"title\":\"Eclipse Dirigible - Applications REST Services API\",\"description\":\"Eclipse Dirigible API of the REST services provided by the applications\",\"contact\":{\"name\":\"Eclipse Dirigible\",\"url\":\"https://www.dirigible.io\",\"email\":\"dirigible-dev@eclipse.org\"},\"license\":{\"name\":\"Eclipse Public License - v 2.0\",\"url\":\"https://www.eclipse.org/legal/epl-v20.html\"},\"version\":\"0.0.1\"},\"servers\":[{\"url\":\"/services/js\"}],\"security\":[],\"tags\":[],\"paths\":{\"/test/openapi/api.mjs/hello-world\":{\"get\":{\"description\":\"Returns Hello World message\",\"responses\":{\"200\":{\"description\":\"Hello World response\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HelloWorldModel\"}}}}}}}},\"components\":{\"schemas\":{\"HelloWorldModel\":{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"string\"}}}},\"responses\":{},\"parameters\":{},\"examples\":{},\"requestBodies\":{},\"headers\":{},\"securitySchemes\":{},\"links\":{},\"callbacks\":{}}}")));
     }
 
     @SpringBootApplication

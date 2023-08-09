@@ -39,7 +39,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const openapi = urlParams.get('openapi');
 
-            const url = openapi ?? '../../../openapi';
+            const url = openapi ?? '/services/openapi';
 
             const ui = SwaggerUIBundle({
                 url: url,
