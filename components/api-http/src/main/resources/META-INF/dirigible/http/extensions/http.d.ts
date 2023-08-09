@@ -9,6 +9,9 @@ declare module "@dirigible/http" {
     function Head(path: string);
     function Options(path: string);
 
+    function Produces(mimeTypes: string | string[]);
+    function Consumes(mimeTypes: string | string[]);
+
     module clientAsync {
         /**
          * Returns HttpAsyncClient instance

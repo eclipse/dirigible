@@ -84,7 +84,9 @@
 			"Patch",
 			"Delete",
 			"Head",
-			"Options"
+			"Options",
+			"Consumes",
+			"Produces"
 		]
 	}
 ]

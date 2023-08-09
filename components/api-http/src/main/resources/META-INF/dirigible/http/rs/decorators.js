@@ -19,6 +19,10 @@ exports.Controller = function (ctr) {
     router.execute();
 }
 
+const registeredHandlers = new Map();
+const registeredConsumes = new Map();
+const registeredProduces = new Map();
+
 exports.Get = createRequestDecorator("get")
 exports.Post = createRequestDecorator("post")
 exports.Put = createRequestDecorator("put")
@@ -31,12 +35,24 @@ function createRequestDecorator(httpMethod) {
     return function (path) {
         return function (target, propertyKey, descriptor) {
             const handler = descriptor ? descriptor.value : target;
-            router[httpMethod](
-                path,
+            const resourceMethod = router.resource(path)[httpMethod](
                 (ctx, req, res) => {
                     handleRequest(req, res, ctx, handler);
                 }
             );
+
+            const maybeConsumes = registeredConsumes.get(target);
+            if (maybeConsumes) {
+                resourceMethod.consumes(maybeConsumes);
+            }
+
+            const maybeProduces = registeredProduces.get(target);
+            if (maybeProduces) {
+                resourceMethod.produces(maybeProduces);
+            }
+
+            registeredHandlers.set(target, resourceMethod);
+            return target;
         };
     }
 }
@@ -47,4 +63,32 @@ function handleRequest(req, res, ctx, handler) {
     if (maybeResponseBody) {
         res.json(maybeResponseBody);
     }
+}
+
+exports.Consumes = function(consumesMimeTypes) {
+    return function (target, propertyKey, descriptor) {
+        const mimeTypes = consumesMimeTypes.length ? consumesMimeTypes : [consumesMimeTypes];
+        const maybeAlreadyRegisteredHandler = registeredHandlers.get(target);
+        if (maybeAlreadyRegisteredHandler) {
+            maybeAlreadyRegisteredHandler.consumes(mimeTypes);
+        } else {
+            registeredConsumes.set(target, mimeTypes);
+        }
+
+        return target;
+    };
+}
+
+exports.Produces = function(producesMimeTypes) {
+    return function (target, propertyKey, descriptor) {
+        const mimeTypes = producesMimeTypes.length ? producesMimeTypes : [producesMimeTypes];
+        const maybeAlreadyRegisteredHandler = registeredHandlers.get(target);
+        if (maybeAlreadyRegisteredHandler) {
+            maybeAlreadyRegisteredHandler.produces(mimeTypes);
+        } else {
+            registeredProduces.set(target, mimeTypes);
+        }
+
+        return target;
+    };
 }
