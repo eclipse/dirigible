@@ -623,7 +623,7 @@
 		<spring.boot.slf4j.version>1.7.36</spring.boot.slf4j.version>
 		<spring.boot.logback.version>1.2.11</spring.boot.logback.version>
 		<spring-context-support.version>5.3.24</spring-context-support.version>
-		<spring-security.version>5.8.0</spring-security.version>
+		<spring-security.version>6.1.2</spring-security.version>
 
 		<keycloak.keycloak-spring-boot-starter>22.0.1</keycloak.keycloak-spring-boot-starter>
 		<hikaricp.version>5.0.1</hikaricp.version>
