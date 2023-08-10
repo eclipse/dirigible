@@ -583,7 +583,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             scope: {
-                dgInline: '@',
+                dgInline: '<?',
                 dgHeader: '@',
                 compact: '<?',
             },
@@ -3626,6 +3626,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 scope.filteredDropdownItems = scope.dropdownItems;
                 scope.bodyId = `cb-body-${uuid.generate()}`;
                 scope.checkboxIds = {};
+                scope.bodyExpanded = false;
 
                 scope.onControllClick = function () {
                     scope.bodyExpanded = !scope.bodyExpanded;
@@ -4391,8 +4392,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             scope: {
-                small: '<',
-                selection: '<'
+                small: '<?',
+                selection: '<?'
             },
             link: function (scope) {
                 scope.getClassNames = () => classNames('fd-list', 'fd-list--byline', 'fd-upload-collection', {
@@ -4409,17 +4410,19 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * extension: Boolean - The file type extension.
          * fileNameChanged: Function - Event emitted when the user changes a file name. Args: (fileName : String)
          * deleteClicked: Function - Event emitted when presses the delete button.
+         * editable: Boolean - Whether or not this upload collection item supports filename editing.
          */
         return {
             restrict: 'EA',
             transclude: true,
             replace: true,
             scope: {
-                dgSelected: '<',
+                dgSelected: '<?',
                 fileName: '@',
-                extension: '@',
-                fileNameChanged: '&',
-                deleteClicked: '&'
+                extension: '@?',
+                fileNameChanged: '&?',
+                deleteClicked: '&',
+                editable: '<?'
             },
             controller: ['$scope', function ($scope) {
                 $scope.editing = false;
@@ -4434,6 +4437,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
                 this.isEditing = function () {
                     return $scope.editing;
+                }
+                this.isEditable = function () {
+                    return $scope.editable || false;
                 }
                 this.setEditing = function (editing) {
                     $scope.editing = editing;
@@ -4482,7 +4488,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             require: '^^fdUploadCollectionItem',
             link: function (scope, element, attr, itemCtrl) {
-                scope.getTitle = () => `${itemCtrl.getFileName()}.${itemCtrl.getExtension()}`;
+                scope.getTitle = () => {
+                    const ext = itemCtrl.getExtension();
+                    if (ext) return `${itemCtrl.getFileName()}.${ext}`;
+                    return itemCtrl.getFileName();
+                };
                 scope.isEditing = () => itemCtrl.isEditing();
             },
             template: `<span ng-if="!isEditing()" class="fd-list__title fd-upload-collection__title">{{ getTitle() }}</span>`
@@ -4546,30 +4556,27 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             require: '^fdUploadCollectionItem',
             link: function (scope, element, attr, itemCtrl) {
                 scope.isEditing = () => itemCtrl.isEditing();
+                scope.isEditable = () => itemCtrl.isEditable();
                 scope.editClick = (e) => {
                     e.stopPropagation();
-
                     itemCtrl.setEditing(true);
                 }
                 scope.cancelClick = (e) => {
                     e.stopPropagation();
-
                     itemCtrl.setEditing(false);
                 }
                 scope.deleteClick = (e) => {
                     e.stopPropagation();
-
                     itemCtrl.deleteItem();
                 }
                 scope.okClick = (e) => {
                     e.stopPropagation();
-
                     itemCtrl.applyFilenameChange();
                 }
                 scope.getOkButtonState = () => itemCtrl.getEditedFileName() ? undefined : 'disabled';
             },
             template: `<div class="fd-upload-collection__button-group">
-                <fd-button ng-if="!isEditing()" aria-label="Edit" dg-type="transparent" glyph="sap-icon--edit" ng-click="editClick($event)"></fd-button>
+                <fd-button ng-if="isEditable() && !isEditing()" aria-label="Edit" dg-type="transparent" glyph="sap-icon--edit" ng-click="editClick($event)"></fd-button>
 				<fd-button ng-if="!isEditing()" aria-label="Delete" dg-type="transparent" glyph="sap-icon--decline" ng-click="deleteClick($event)"></fd-button>
                 <fd-button ng-if="isEditing()" dg-label="Ok" state="{{ getOkButtonState() }}" dg-type="transparent" ng-click="okClick($event)"></fd-button>
 				<fd-button ng-if="isEditing()" dg-label="Cancel" dg-type="transparent" ng-click="cancelClick($event)"></fd-button>

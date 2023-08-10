@@ -1022,7 +1022,7 @@
 
 				<h4>Compact pagination</h4>
 				<fd-pagination total-items="80" items-per-page="20" items-per-page-options="[10, 20, 50]" compact="true"
-					display-total-items="true"></fd-pagination>
+					display-total-items="true" items-per-page-placement="top-start"></fd-pagination>
 
 				<h4>Table with pagination</h4>
 				<table fd-table>
@@ -1988,7 +1988,7 @@
 			<fd-panel-content aria-label="Upload collection Panel Content">
 				<fd-upload-collection selection="true">
 					<fd-upload-collection-item ng-repeat="file in filesToUpload" file-name="{{file.fileName}}"
-						extension="{{file.extension}}" dg-selected="file.selected"
+						editable="true" extension="{{file.extension}}" dg-selected="file.selected"
 						ng-click="file.selected=!file.selected" file-name-changed="file.fileName=fileName"
 						delete-clicked="removeFileToUpload(file)">
 						<fd-list-form-item>
@@ -2341,29 +2341,29 @@
 						<fd-bar bar-design="header-with-subheader" cozy="true" in-page="true" size="m_l">
 							<fd-bar-left>
 								<fd-bar-element>
-									<h1 fd-title header-size="3">Live Migration</h1>
+									<h1 fd-title header-size="3">Wizard with steps</h1>
 								</fd-bar-element>
 							</fd-bar-left>
 						</fd-bar>
 						<fd-wizard-navigation></fd-wizard-navigation>
 					</header>
 					<fd-wizard-content dg-size="md" style="min-height: 300px;">
-						<fd-wizard-step dg-size="md" dg-label="BTP Neo Credentials" indicator-label="1"
+						<fd-wizard-step dg-size="md" dg-label="Step 1" indicator-label="1"
 							indicator-glyph="{{ getIndicatorGlyph(1) }}" step-click="gotoStep(step)">
 							<div>Step 1 content</div>
 							<fd-button dg-label="Revert" dg-type="emphasized" ng-click="revert(0)"></fd-button>
 						</fd-wizard-step>
-						<fd-wizard-step dg-label="HANA Credentials" indicator-label="2"
+						<fd-wizard-step dg-label="Step 2" indicator-label="2"
 							indicator-glyph="{{ getIndicatorGlyph(2) }}" step-click="gotoStep(step)">
 							<div>Step 2 content</div>
 							<fd-button dg-label="Revert" dg-type="emphasized" ng-click="revert(1)"></fd-button>
 						</fd-wizard-step>
-						<fd-wizard-step dg-label="Delivery Units" indicator-label="3"
+						<fd-wizard-step dg-label="Step 3" indicator-label="3"
 							indicator-glyph="{{ getIndicatorGlyph(3) }}" step-click="gotoStep(step)">
 							<div>Step 3 content</div>
 							<fd-button dg-label="Revert" dg-type="emphasized" ng-click="revert(2)"></fd-button>
 						</fd-wizard-step>
-						<fd-wizard-step dg-label="Changes" indicator-label="4"
+						<fd-wizard-step dg-label="Step 4" indicator-label="4"
 							indicator-glyph="{{ getIndicatorGlyph(4) }}" step-click="gotoStep(step)">
 							<div>Step 4 content</div>
 						</fd-wizard-step>
