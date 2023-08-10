@@ -14,7 +14,7 @@ info:
 servers:
 - url: /services/js
 paths:
-  /test/openapi/api.mjs/hello-world:
+  /test-project/openapi/api.mjs/hello-world:
     get:
       description: Returns Hello World message
       responses:
@@ -30,5 +30,5 @@ components:
     HelloWorldModel:
       type: object
       properties:
-        status:
+        message:
           type: string

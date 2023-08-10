@@ -115,8 +115,11 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
         let url = window.location.protocol + '//' + window.location.host + window.location.pathname.substring(window.location.pathname.indexOf('/web/'), 0);
         let type = resourcePath.substring(resourcePath.lastIndexOf('.') + 1);
         let isOData = resourcePath.endsWith(".odata");
+        let isOpenAPI = resourcePath.endsWith(".openapi");
         if (isOData) {
             url = window.location.protocol + '//' + window.location.host + "/odata/v2/";
+        } else if (isOpenAPI) {
+            url = `${window.location.protocol}//${window.location.host}/services/web/ide-swagger/ui/index.html?openapi=/services/web${resourcePath}`;
         } else {
             switch (type) {
                 case 'rhino':

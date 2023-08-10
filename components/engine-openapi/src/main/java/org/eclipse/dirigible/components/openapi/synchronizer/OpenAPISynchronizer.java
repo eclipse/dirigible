@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.components.openapi.synchronizer;
 
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
@@ -23,9 +22,7 @@ import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
-import org.eclipse.dirigible.components.base.artefact.topology.TopologicalDepleter;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
-import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
@@ -110,7 +107,8 @@ public class OpenAPISynchronizer<A extends Artefact> implements Synchronizer<Ope
      */
     @Override
     public List<OpenAPI> parse(String location, byte[] content) throws ParseException {
-        OpenAPI openAPI = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), OpenAPI.class);
+        OpenAPI openAPI = new OpenAPI();
+        // JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), OpenAPI.class);
         Configuration.configureObject(openAPI);
         openAPI.setLocation(location);
         openAPI.setName(FilenameUtils.getBaseName(location));
