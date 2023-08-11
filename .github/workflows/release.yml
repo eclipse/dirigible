@@ -170,7 +170,7 @@ jobs:
     - name: "Git: Push Changes"
       run: |
         git push --set-upstream origin ${{ github.event.inputs.releaseVersion }}
-        git push
+        git push --set-upstream origin master
 
 #----------------Publish Helm Release------------------#
 
