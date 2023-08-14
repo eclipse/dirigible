@@ -366,6 +366,10 @@ body {
   padding-right: .25rem;
 }
 
+.fd-container.fd-form-layout-grid-container .fd-row .fd-col-md--2>.fd-form-label.fd-form-label--required.fd-form-label--colon {
+  padding-right: .75rem;
+}
+
 /* fd-form-layout-grid-container fixes */
 .fd-container.fd-form-layout-grid-container .fd-row .fd-col {
   overflow: visible;
@@ -380,6 +384,10 @@ body {
 }
 
 .fd-form-group.fd-container.fd-form-layout-grid-container ng-transclude {
+  width: 100%;
+}
+
+.fd-container.fd-form-layout-grid-container .fd-row .fd-col .fd-popover {
   width: 100%;
 }
 
