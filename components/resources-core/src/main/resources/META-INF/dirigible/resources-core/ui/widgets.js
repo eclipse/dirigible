@@ -3896,7 +3896,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 const avatarEl = element.find('.fd-avatar');
                 avatarEl.addClass('fd-card__avatar');
 
-                scope.isSubtitleFilled = () => { return $transclude.isSlotFilled('fdCardSubtitle') };
+                scope.isSubtitleFilled = () => { return $transclude.isSlotFilled('subtitle') };
 
                 scope.getClasses = () => classNames('fd-card__header', {
                     'fd-card__header--non-interactive': !scope.interactive
