@@ -8,6 +8,7 @@ log/
 .idea
 .history
 .vscode
+node_modules
 
 # Ignore log/ folder rule, for logs API
 !components/api-log/src/**/
@@ -27,3 +28,5 @@ derby.log
 *.log
 dependency-reduced-pom.xml
 host.ser
+package.json
+package-lock.json
