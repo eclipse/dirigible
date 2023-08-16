@@ -44,8 +44,16 @@ public interface SynchronizerCallback {
 	 * @param remained the remained
 	 * @param lifecycle the lifecycle
 	 */
-	void registerErrors(Synchronizer<? extends Artefact> synchronizer, List<TopologyWrapper<? extends Artefact>> remained, 
-			ArtefactLifecycle lifecycle);
+	void registerErrors(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle);
+	
+	/**
+	 * Register errors.
+	 *
+	 * @param synchronizer the synchronizer
+	 * @param remained the remained
+	 * @param lifecycle the lifecycle
+	 */
+	void registerFatals(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle);
 
 	/**
 	 * Register errors.
@@ -55,8 +63,7 @@ public interface SynchronizerCallback {
 	 * @param lifecycle the lifecycle
 	 * @param message the message
 	 */
-	void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
-			ArtefactLifecycle lifecycle, String message);
+	void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper, ArtefactLifecycle lifecycle, String message);
 	
 	/**
 	 * Register errors.
@@ -66,7 +73,6 @@ public interface SynchronizerCallback {
 	 * @param lifecycle the lifecycle
 	 * @param message the message
 	 */
-	void registerState(Synchronizer<? extends Artefact> synchronizer, Artefact artefact,
-			ArtefactLifecycle lifecycle, String message);
+	void registerState(Synchronizer<? extends Artefact> synchronizer, Artefact artefact, ArtefactLifecycle lifecycle, String message);
 
 }

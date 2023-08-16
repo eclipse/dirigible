@@ -213,7 +213,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 					try {
 			            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(unmodifiable, ArtefactPhase.PREPARE);
 						undepleted.addAll(results);
-			            registerErrors(synchronizer, results, ArtefactLifecycle.PREPARED);
+			            registerErrors(results, ArtefactLifecycle.PREPARED);
 			        } catch (Exception e) {
 			            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			            addError(e.getMessage());
@@ -235,17 +235,17 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 						// phase create
 			            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(unmodifiable, ArtefactPhase.CREATE);
 						undepleted.addAll(results);
-			            registerErrors(synchronizer, results, ArtefactLifecycle.CREATED);
+			            registerErrors(results, ArtefactLifecycle.CREATED);
 			            
 			            // phase update
 			            results = depleter.deplete(unmodifiable, ArtefactPhase.UPDATE);
 						undepleted.addAll(results);
-			            registerErrors(synchronizer, results, ArtefactLifecycle.UPDATED);
+			            registerErrors(results, ArtefactLifecycle.UPDATED);
 			            
 			            // phase start
 			            results = depleter.deplete(unmodifiable, ArtefactPhase.START);
 						undepleted.addAll(results);
-			            registerErrors(synchronizer, results, ArtefactLifecycle.STARTED);
+			            registerErrors(results, ArtefactLifecycle.STARTED);
 			            
 					} catch (Exception e) {
 						if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
@@ -256,24 +256,33 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 				}
 				
 				// Processing of cross-synchronizer artefacts once again due to eventual dependency issues
-				try {
-					List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(undepleted, ArtefactPhase.PREPARE);
-					// TODO:
-					// registerErrors(synchronizer, results, ArtefactLifecycle.PREPARED);
-					
-					results = depleter.deplete(undepleted, ArtefactPhase.CREATE);
-					// TODO:
-					// registerErrors(synchronizer, results, ArtefactLifecycle.CREATED);
-					
-					results = depleter.deplete(undepleted, ArtefactPhase.UPDATE);
-					// TODO:
-					// registerErrors(synchronizer, results, ArtefactLifecycle.UPDATED);
-					
-					results = depleter.deplete(undepleted, ArtefactPhase.START);
-					// TODO:
-					// registerErrors(synchronizer, results, ArtefactLifecycle.STARTED);
-				} catch (Exception e) {
-					if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+				if (undepleted.size() > 0) {
+					if (logger.isWarnEnabled()) {logger.warn("Cross-processing of undepleated artefacts...");}
+					try {
+						List<TopologyWrapper<? extends Artefact>> cross = new ArrayList<>();
+						List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(undepleted, ArtefactPhase.PREPARE);
+						cross.addAll(results);
+						registerErrors(results, ArtefactLifecycle.PREPARED);
+						
+						results = depleter.deplete(undepleted, ArtefactPhase.CREATE);
+						cross.addAll(results);
+						registerErrors(results, ArtefactLifecycle.CREATED);
+						
+						results = depleter.deplete(undepleted, ArtefactPhase.UPDATE);
+						cross.addAll(results);
+						registerErrors(results, ArtefactLifecycle.UPDATED);
+						
+						results = depleter.deplete(undepleted, ArtefactPhase.START);
+						cross.addAll(results);
+						registerErrors(results, ArtefactLifecycle.STARTED);
+						
+						if (cross.size() > 0) {
+							
+						}
+					} catch (Exception e) {
+						if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+					}
+					if (logger.isWarnEnabled()) {logger.warn("Cross-processing of undepleated artefacts done.");}
 				}
 				
 				if (logger.isTraceEnabled()) {logger.trace("Processing of artefacts done.");}
@@ -648,14 +657,34 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	 * @param lifecycle the lifecycle
 	 */
 	@Override
-	public void registerErrors(Synchronizer<? extends Artefact> synchronizer, List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle) {
+	public void registerErrors(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle) {
 		if (remained.size() > 0) {
 			for (TopologyWrapper<? extends Artefact> wrapper : remained) {
 				String errorMessage = String.format("Undepleted Artefact of type: [%s] with key: [%s] in phase: [%s]", 
 						wrapper.getArtefact().getType(), wrapper.getId(), lifecycle);
 				if (logger.isErrorEnabled()) {logger.error(errorMessage);}
 				errors.add(errorMessage);
-				synchronizer.setStatus(wrapper.getArtefact(), lifecycle, errorMessage);
+				wrapper.getSynchronizer().setStatus(wrapper.getArtefact(), lifecycle, errorMessage);
+			}
+		}		
+	}
+	
+	/**
+	 * Register fatal errors.
+	 *
+	 * @param synchronizer the synchronizer
+	 * @param remained the remained
+	 * @param lifecycle the lifecycle
+	 */
+	@Override
+	public void registerFatals(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle) {
+		if (remained.size() > 0) {
+			for (TopologyWrapper<? extends Artefact> wrapper : remained) {
+				String errorMessage = String.format("Fatal undepleted Artefact of type: [%s] with key: [%s] in phase: [%s]", 
+						wrapper.getArtefact().getType(), wrapper.getId(), lifecycle);
+				if (logger.isErrorEnabled()) {logger.error(errorMessage);}
+				errors.add(errorMessage);
+				wrapper.getSynchronizer().setStatus(wrapper.getArtefact(), lifecycle, errorMessage);
 			}
 		}		
 	}
