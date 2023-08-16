@@ -204,12 +204,15 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 				
 				if (logger.isTraceEnabled()) {logger.trace("Preparing for processing...");}
 				
+				List<TopologyWrapper<? extends Artefact>> undepleted = new ArrayList<>();
+
 				// preparing and depleting
 				for (Synchronizer<? extends Artefact> synchronizer : synchronizers) {
 					List<TopologyWrapper<? extends Artefact>> unmodifiable = 
 							wrappers.stream().filter(w -> w.getSynchronizer().equals(synchronizer)).collect(Collectors.toUnmodifiableList());
 					try {
 			            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(unmodifiable, ArtefactPhase.PREPARE);
+						undepleted.addAll(results);
 			            registerErrors(synchronizer, results, ArtefactLifecycle.PREPARED);
 			        } catch (Exception e) {
 			            if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
@@ -231,14 +234,17 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 						
 						// phase create
 			            List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(unmodifiable, ArtefactPhase.CREATE);
+						undepleted.addAll(results);
 			            registerErrors(synchronizer, results, ArtefactLifecycle.CREATED);
 			            
 			            // phase update
 			            results = depleter.deplete(unmodifiable, ArtefactPhase.UPDATE);
+						undepleted.addAll(results);
 			            registerErrors(synchronizer, results, ArtefactLifecycle.UPDATED);
 			            
 			            // phase start
 			            results = depleter.deplete(unmodifiable, ArtefactPhase.START);
+						undepleted.addAll(results);
 			            registerErrors(synchronizer, results, ArtefactLifecycle.STARTED);
 			            
 					} catch (Exception e) {
@@ -247,6 +253,27 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 						HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Failed);
 					}
 					HealthCheckStatus.getInstance().getJobs().setStatus(synchronizer.getClass().getSimpleName(), JobStatus.Succeeded);
+				}
+				
+				// Processing of cross-synchronizer artefacts once again due to eventual dependency issues
+				try {
+					List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(undepleted, ArtefactPhase.PREPARE);
+					// TODO:
+					// registerErrors(synchronizer, results, ArtefactLifecycle.PREPARED);
+					
+					results = depleter.deplete(undepleted, ArtefactPhase.CREATE);
+					// TODO:
+					// registerErrors(synchronizer, results, ArtefactLifecycle.CREATED);
+					
+					results = depleter.deplete(undepleted, ArtefactPhase.UPDATE);
+					// TODO:
+					// registerErrors(synchronizer, results, ArtefactLifecycle.UPDATED);
+					
+					results = depleter.deplete(undepleted, ArtefactPhase.START);
+					// TODO:
+					// registerErrors(synchronizer, results, ArtefactLifecycle.STARTED);
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
 				}
 				
 				if (logger.isTraceEnabled()) {logger.trace("Processing of artefacts done.");}
