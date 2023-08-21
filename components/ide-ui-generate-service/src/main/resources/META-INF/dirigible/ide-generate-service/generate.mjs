@@ -63,6 +63,7 @@ function onGenerateModel(context, request, response) {
     parameters.projectName = project;
     parameters.workspaceName = workspace;
     parameters.filePath = path;
+    parameters.templateId = templatePayload.template;
 
     let generatedFiles = template.generate(model, parameters);
 
