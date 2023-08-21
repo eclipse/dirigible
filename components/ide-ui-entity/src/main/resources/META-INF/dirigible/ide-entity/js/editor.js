@@ -9,14 +9,14 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "ideGenerate"])
-	.controller('ModelerCtrl', function ($scope, messageHub, $window, workspaceApi, generateApi, ViewParameters) {
+angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "ideGenerate", "ideTemplates"])
+	.controller('ModelerCtrl', function ($scope, messageHub, $window, workspaceApi, generateApi, templatesApi, ViewParameters) {
 		let contents;
 		let csrfToken;
 		let modelFile = '';
 		let genFile = '';
 		$scope.canRegenerate = false;
-		$scope.errorMessage = 'Аn unknown error was encountered. Please see console for more information.';
+		$scope.errorMessage = 'An unknown error was encountered. Please see console for more information.';
 		$scope.forms = {
 			editor: {},
 		};
@@ -154,44 +154,102 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			// saveContents(modelJson, modelFile);
 		};
 
+		$scope.chooseTemplate = function (workspace, project, filePath, params) {
+			const templateItems = [];
+			templatesApi.listTemplates().then(function (response) {
+				if (response.status === 200) {
+					for (let i = 0; i < response.data.length; i++) {
+						if (response.data[i].hasOwnProperty('extension') && response.data[i].extension === 'model') {
+							templateItems.push({
+								label: response.data[i].name,
+								value: response.data[i].id,
+							});
+						}
+					}
+					messageHub.hideLoadingDialog('edmRegenerateModel');
+					messageHub.showFormDialog(
+						'edmRegenerateChooseTemplate',
+						'Choose template',
+						[{
+							id: 'pgfd1',
+							type: 'dropdown',
+							label: 'Choose template',
+							required: true,
+							value: '',
+							items: templateItems,
+						}],
+						[{
+							id: 'b1',
+							type: 'emphasized',
+							label: 'OK',
+							whenValid: true,
+						}, {
+							id: 'b2',
+							type: 'transparent',
+							label: 'Cancel',
+						}],
+						'edm.regenerate.template',
+						'Setting template...',
+					);
+					messageHub.onDidReceiveMessage(
+						'edm.regenerate.template',
+						function (msg) {
+							if (msg.data.buttonId === "b1") {
+								messageHub.hideFormDialog('edmRegenerateChooseTemplate');
+								messageHub.showLoadingDialog('edmRegenerateModel', 'Regenerating', 'Regenerating from model');
+								$scope.generateFromModel(workspace, project, filePath, msg.data.formData[0].value, params);
+							} else messageHub.hideFormDialog('projectRegenerateChooseTemplate');
+						},
+						true
+					);
+				} else {
+					messageHub.hideLoadingDialog('edmRegenerateModel');
+					messageHub.setStatusError('Unable to load template list');
+				}
+			});
+		};
+
+		$scope.generateFromModel = function (workspace, project, filePath, templateId, params) {
+			generateApi.generateFromModel(
+				workspace,
+				project,
+				filePath,
+				templateId,
+				params
+			).then(function (response) {
+				messageHub.hideLoadingDialog('edmRegenerateModel');
+				if (response.status !== 201) {
+					messageHub.showAlertError(
+						'Failed to generate from model',
+						`An unexpected error has occurred while trying generate from model '${response.data.filePath}'`
+					);
+					messageHub.setStatusError(`Unable to generate from model '${response.data.filePath}'`);
+				} else {
+					messageHub.setStatusMessage(`Generated from model '${response.data.filePath}'`);
+				}
+				messageHub.postMessage('projects.tree.refresh', workspace, true);
+			});
+		};
+
 		$scope.regenerate = function () {
-			messageHub.showLoadingDialog('entityEditorRegenerateModel', 'Regenerating', 'Loading data');
+			messageHub.showLoadingDialog('edmRegenerateModel', 'Regenerating', 'Loading data');
 			const workspace = workspaceApi.getCurrentWorkspace();
 			workspaceApi.loadContent('', genFile).then(function (response) {
 				if (response.status === 200) {
 					let { models, perspectives, templateId, filePath, workspaceName, projectName, ...params } = response.data;
 					if (!response.data.templateId) {
-						messageHub.hideLoadingDialog('entityEditorRegenerateModel');
-						messageHub.showAlertError('Missing template ID', 'The gen file is missing the template ID key. Please regenerate from the project explorer.');
+						$scope.chooseTemplate(workspace.name, response.data.projectName, response.data.filePath, params);
 					} else {
-						messageHub.updateLoadingDialog('entityEditorRegenerateModel', 'Regenerating from model');
-						generateApi.generateFromModel(
-							workspace.name,
-							response.data.projectName,
-							response.data.filePath,
-							response.data.templateId,
-							params
-						).then(function (response) {
-							messageHub.hideLoadingDialog('entityEditorRegenerateModel');
-							if (response.status !== 201) {
-								messageHub.showAlertError(
-									'Failed to generate from model',
-									`An unexpected error has occurred while trying generate from model '${response.data.filePath}'`
-								);
-								messageHub.setStatusError(`Unable to generate from model '${response.data.filePath}'`);
-							} else {
-								messageHub.setStatusMessage(`Generated from model '${response.data.filePath}'`);
-							}
-							messageHub.postMessage('projects.tree.refresh', workspace, true);
-						});
+						messageHub.updateLoadingDialog('edmRegenerateModel', 'Regenerating from model');
+						$scope.generateFromModel(workspace.name, response.data.projectName, response.data.filePath, response.data.templateId, params);
 					}
 				} else {
-					messageHub.hideLoadingDialog('entityEditorRegenerateModel');
+					messageHub.hideLoadingDialog('edmRegenerateModel');
 					messageHub.showAlertError('Unable to load model file', 'There was an error while loading the model file. See the log for more information.');
 					console.error(response);
 				}
 			});
-		}
+		};
 
 		messageHub.onEditorFocusGain(function (msg) {
 			if (msg.resourcePath === $scope.dataParameters.file) messageHub.setStatusCaret('');
