@@ -435,7 +435,7 @@ projectsView.controller('ProjectsViewController', [
                     let generateObj = {
                         id: "generateGeneric",
                         label: "Generate",
-                        icon: "sap-icon--create-form",
+                        icon: "sap-icon-TNT--operations",
                         divider: true,
                         data: node,
                     };
@@ -549,7 +549,7 @@ projectsView.controller('ProjectsViewController', [
                             let genObj = {
                                 id: "generateModel",
                                 label: "Generate",
-                                icon: "sap-icon--create-form",
+                                icon: "sap-icon-TNT--operations",
                                 divider: true,
                                 data: undefined,
                                 isDisabled: false,
