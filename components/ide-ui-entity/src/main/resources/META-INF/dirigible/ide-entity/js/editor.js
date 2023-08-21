@@ -9,10 +9,13 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
-	.controller('ModelerCtrl', function ($scope, messageHub, $window, ViewParameters) {
+angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "ideGenerate"])
+	.controller('ModelerCtrl', function ($scope, messageHub, $window, workspaceApi, generateApi, ViewParameters) {
 		let contents;
 		let csrfToken;
+		let modelFile = '';
+		let genFile = '';
+		$scope.canRegenerate = false;
 		$scope.errorMessage = 'Аn unknown error was encountered. Please see console for more information.';
 		$scope.forms = {
 			editor: {},
@@ -66,8 +69,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 
 		$scope.checkModel = function () {
 			let xhr = new XMLHttpRequest();
-			let resourcePath = $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.model';
-			xhr.open('HEAD', `/services/ide/workspaces${resourcePath}`, false);
+			xhr.open('HEAD', `/services/ide/workspaces${modelFile}`, false);
 			xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
 			xhr.send();
 			if (xhr.status === 200) {
@@ -76,6 +78,13 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 			} else {
 				return false;
 			}
+		};
+
+		$scope.checkGenFile = function () {
+			workspaceApi.resourceExists(genFile).then(function (response) {
+				if (response.status === 200) $scope.canRegenerate = true;
+				else $scope.canRegenerate = false;
+			})
 		};
 
 		function saveContents(text, resourcePath) {
@@ -112,8 +121,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 		function initializeModelJson() {
 			if (!$scope.checkModel()) {
 				let xhr = new XMLHttpRequest();
-				let resourcePath = $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.model';
-				xhr.open('POST', '/services/ide/workspaces' + resourcePath);
+				xhr.open('POST', '/services/ide/workspaces' + modelFile);
 				xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
 				xhr.onreadystatechange = function () {
 					if (xhr.readyState === 4) {
@@ -124,6 +132,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 							workspace: resourcePath.substring(1, resourcePath.indexOf('/', 1)),
 						});
 						messageHub.setStatusMessage(`File '${resourcePath}' created`);
+						$scope.checkGenFile();
 					}
 				};
 				xhr.onerror = function (error) {
@@ -135,15 +144,54 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 					});
 				};
 				xhr.send('');
-			}
+			} else $scope.checkGenFile();
 		}
 
 		$scope.saveModel = function () {
 			let schema = createModel($scope.graph);
 			saveContents(schema, $scope.dataParameters.file);
 			// let modelJson = createModelJson($scope.graph);
-			// saveContents(modelJson, $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.model');
+			// saveContents(modelJson, modelFile);
 		};
+
+		$scope.regenerate = function () {
+			messageHub.showLoadingDialog('entityEditorRegenerateModel', 'Regenerating', 'Loading data');
+			const workspace = workspaceApi.getCurrentWorkspace();
+			workspaceApi.loadContent('', genFile).then(function (response) {
+				if (response.status === 200) {
+					let { models, perspectives, templateId, filePath, workspaceName, projectName, ...params } = response.data;
+					if (!response.data.templateId) {
+						messageHub.hideLoadingDialog('entityEditorRegenerateModel');
+						messageHub.showAlertError('Missing template ID', 'The gen file is missing the template ID key. Please regenerate from the project explorer.');
+					} else {
+						messageHub.updateLoadingDialog('entityEditorRegenerateModel', 'Regenerating from model');
+						generateApi.generateFromModel(
+							workspace.name,
+							response.data.projectName,
+							response.data.filePath,
+							response.data.templateId,
+							params
+						).then(function (response) {
+							messageHub.hideLoadingDialog('entityEditorRegenerateModel');
+							if (response.status !== 201) {
+								messageHub.showAlertError(
+									'Failed to generate from model',
+									`An unexpected error has occurred while trying generate from model '${response.data.filePath}'`
+								);
+								messageHub.setStatusError(`Unable to generate from model '${response.data.filePath}'`);
+							} else {
+								messageHub.setStatusMessage(`Generated from model '${response.data.filePath}'`);
+							}
+							messageHub.postMessage('projects.tree.refresh', workspace, true);
+						});
+					}
+				} else {
+					messageHub.hideLoadingDialog('entityEditorRegenerateModel');
+					messageHub.showAlertError('Unable to load model file', 'There was an error while loading the model file. See the log for more information.');
+					console.error(response);
+				}
+			});
+		}
 
 		messageHub.onEditorFocusGain(function (msg) {
 			if (msg.resourcePath === $scope.dataParameters.file) messageHub.setStatusCaret('');
@@ -1094,6 +1142,8 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView"])
 			$scope.state.error = true;
 			$scope.errorMessage = "The 'contentType' data parameter is missing.";
 		} else {
+			modelFile = $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.model';
+			genFile = $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.gen';
 			$scope.load();
 			main(document.getElementById('graphContainer'),
 				document.getElementById('outlineContainer'),

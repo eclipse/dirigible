@@ -50,6 +50,29 @@ angular.module('ideWorkspace', [])
                     });
             }.bind(this);
 
+            let resourceExists = function (resourcePath) {
+                let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
+                return $http.head(url)
+                    .then(function successCallback(response) {
+                        return { status: response.status };
+                    }, function errorCallback(response) {
+                        if (response.status !== 404)
+                            console.error('Workspace service:', response);
+                        return { status: response.status };
+                    });
+            }.bind(this);
+
+            let loadContent = async function (workspace, filePath) {
+                let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(filePath.split('/')).build();
+                return $http.get(url)
+                    .then(function successCallback(response) {
+                        return { status: response.status, data: response.data };
+                    }, function errorCallback(response) {
+                        console.error('Workspace service:', response);
+                        return { status: response.status };
+                    });
+            }.bind(this);
+
             let getMetadata = function (resourceUrl) {
                 return $http.get(resourceUrl, { headers: { 'describe': 'application/json' } })
                     .then(function successCallback(response) {
@@ -215,6 +238,8 @@ angular.module('ideWorkspace', [])
                 getCurrentWorkspace: getCurrentWorkspace,
                 listWorkspaceNames: listWorkspaceNames,
                 load: load,
+                resourceExists: resourceExists,
+                loadContent: loadContent,
                 getMetadata: getMetadata,
                 getMetadataByPath: getMetadataByPath,
                 rename: rename,

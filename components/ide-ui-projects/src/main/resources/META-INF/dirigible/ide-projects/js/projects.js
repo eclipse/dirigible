@@ -328,30 +328,25 @@ projectsView.controller('ProjectsViewController', [
                     if (closest) id = closest.id;
                     else return {
                         callbackTopic: "projects.tree.contextmenu",
-                        items: [
-                            {
-                                id: "newProject",
-                                label: "New Project",
-                                icon: "sap-icon--create",
-                            },
-                            {
-                                id: "publishAll",
-                                label: "Publish All",
-                                icon: "sap-icon--arrow-top",
-                                divider: true,
-                            },
-                            {
-                                id: "unpublishAll",
-                                label: "Unpublish All",
-                                icon: "sap-icon--arrow-bottom",
-                            },
-                            {
-                                id: "exportProjects",
-                                label: "Export all",
-                                icon: "sap-icon--download-from-cloud",
-                                divider: true,
-                            }
-                        ]
+                        items: [{
+                            id: "newProject",
+                            label: "New Project",
+                            icon: "sap-icon--create",
+                        }, {
+                            id: "publishAll",
+                            label: "Publish All",
+                            icon: "sap-icon--arrow-top",
+                            divider: true,
+                        }, {
+                            id: "unpublishAll",
+                            label: "Unpublish All",
+                            icon: "sap-icon--arrow-bottom",
+                        }, {
+                            id: "exportProjects",
+                            label: "Export all",
+                            icon: "sap-icon--download-from-cloud",
+                            divider: true,
+                        }]
                     }
                 } else {
                     id = element.id;
@@ -368,26 +363,23 @@ projectsView.controller('ProjectsViewController', [
                         id: "new",
                         label: "New",
                         icon: "sap-icon--create",
-                        items: [
-                            {
-                                id: "file",
-                                label: "File",
-                                data: {
-                                    workspace: node.data.workspace,
-                                    path: node.data.path,
-                                    parent: node.id
-                                },
+                        items: [{
+                            id: "file",
+                            label: "File",
+                            data: {
+                                workspace: node.data.workspace,
+                                path: node.data.path,
+                                parent: node.id
                             },
-                            {
-                                id: "folder",
-                                label: "Folder",
-                                data: {
-                                    workspace: node.data.workspace,
-                                    path: node.data.path,
-                                    parent: node.id
-                                },
-                            }
-                        ]
+                        }, {
+                            id: "folder",
+                            label: "Folder",
+                            data: {
+                                workspace: node.data.workspace,
+                                path: node.data.path,
+                                parent: node.id
+                            },
+                        }]
                     };
                     let cutObj = {
                         id: "cut",
@@ -443,7 +435,7 @@ projectsView.controller('ProjectsViewController', [
                     let generateObj = {
                         id: "generateGeneric",
                         label: "Generate",
-                        icon: "sap-icon--create",
+                        icon: "sap-icon--create-form",
                         divider: true,
                         data: node,
                     };
@@ -536,11 +528,28 @@ projectsView.controller('ProjectsViewController', [
                                 unpublishObj,
                             ]
                         };
-                        if ($scope.modelTemplates.length && $scope.modelTemplateExtensions.includes(getFileExtension(node.text))) {
+                        const fileExt = getFileExtension(node.text);
+                        if (fileExt === 'gen') {
+                            let regenObj = {
+                                id: "regenerateModel",
+                                label: "Regenerate",
+                                icon: "sap-icon--refresh",
+                                divider: true,
+                                data: undefined,
+                                isDisabled: false,
+                            };
+                            if (node.parents.length > 2) {
+                                regenObj.isDisabled = true;
+                            } else {
+                                regenObj.data = node;
+                            }
+                            menuObj.items.push(regenObj);
+                        }
+                        else if ($scope.modelTemplates.length && $scope.modelTemplateExtensions.includes(fileExt)) {
                             let genObj = {
                                 id: "generateModel",
                                 label: "Generate",
-                                icon: "sap-icon--create",
+                                icon: "sap-icon--create-form",
                                 divider: true,
                                 data: undefined,
                                 isDisabled: false,
@@ -743,33 +752,29 @@ projectsView.controller('ProjectsViewController', [
             messageHub.showFormDialog(
                 'linkProjectForm',
                 'Link project',
-                [
-                    {
-                        id: "pgfi1",
-                        type: "input",
-                        label: "Name",
-                        required: true,
-                        placeholder: "project name",
-                        inputRules: {
-                            excluded: getChildrenNames('#'),
-                            patterns: ['^[^/:]*$'],
-                        },
+                [{
+                    id: "pgfi1",
+                    type: "input",
+                    label: "Name",
+                    required: true,
+                    placeholder: "project name",
+                    inputRules: {
+                        excluded: getChildrenNames('#'),
+                        patterns: ['^[^/:]*$'],
                     },
-                    {
-                        id: "pgfi2",
-                        type: "input",
-                        label: "Path",
-                        required: true,
-                        placeholder: "/absolute/path/to/project",
-                    },
-                ],
+                }, {
+                    id: "pgfi2",
+                    type: "input",
+                    label: "Path",
+                    required: true,
+                    placeholder: "/absolute/path/to/project",
+                }],
                 [{
                     id: 'b1',
                     type: 'emphasized',
                     label: 'Create',
                     whenValid: true,
-                },
-                {
+                }, {
                     id: 'b2',
                     type: 'transparent',
                     label: 'Cancel',
@@ -877,8 +882,7 @@ projectsView.controller('ProjectsViewController', [
                     type: 'emphasized',
                     label: 'Duplicate',
                     whenValid: true,
-                },
-                {
+                }, {
                     id: 'b2',
                     type: 'transparent',
                     label: 'Cancel',
@@ -892,27 +896,24 @@ projectsView.controller('ProjectsViewController', [
             messageHub.showFormDialog(
                 'createWorkspaceForm',
                 'Create workspace',
-                [
-                    {
-                        id: "pgfi1",
-                        type: "input",
-                        submitOnEnterId: "b1",
-                        label: "Name",
-                        required: true,
-                        placeholder: "workspace name",
-                        inputRules: {
-                            excluded: $scope.workspaceNames,
-                            patterns: ['^[^/:]*$'],
-                        },
+                [{
+                    id: "pgfi1",
+                    type: "input",
+                    submitOnEnterId: "b1",
+                    label: "Name",
+                    required: true,
+                    placeholder: "workspace name",
+                    inputRules: {
+                        excluded: $scope.workspaceNames,
+                        patterns: ['^[^/:]*$'],
                     },
-                ],
+                }],
                 [{
                     id: 'b1',
                     type: 'emphasized',
                     label: 'Create',
                     whenValid: true,
-                },
-                {
+                }, {
                     id: 'b2',
                     type: 'transparent',
                     label: 'Cancel',
@@ -931,8 +932,7 @@ projectsView.controller('ProjectsViewController', [
                         id: "b1",
                         type: "emphasized",
                         label: "Yes",
-                    },
-                    {
+                    }, {
                         id: "b3",
                         type: "normal",
                         label: "No",
@@ -1151,8 +1151,7 @@ projectsView.controller('ProjectsViewController', [
                     type: "emphasized",
                     label: "Create",
                     whenValid: true
-                },
-                {
+                }, {
                     id: "b2",
                     type: "transparent",
                     label: "Cancel",
@@ -1183,8 +1182,7 @@ projectsView.controller('ProjectsViewController', [
                     type: "emphasized",
                     label: "Rename",
                     whenValid: true
-                },
-                {
+                }, {
                     id: "b2",
                     type: "transparent",
                     label: "Cancel",
@@ -1203,13 +1201,11 @@ projectsView.controller('ProjectsViewController', [
                     id: 'b1',
                     type: 'negative',
                     label: 'Delete',
-                },
-                {
+                }, {
                     id: 'b2',
                     type: 'emphasized',
                     label: 'Delete & Unpublish',
-                },
-                {
+                }, {
                     id: 'b3',
                     type: 'transparent',
                     label: 'Cancel',
@@ -1245,6 +1241,59 @@ projectsView.controller('ProjectsViewController', [
                         });
                     }
                 }
+            });
+        }
+
+        function getGenericTemplates() {
+            const templateItems = [];
+            for (let i = 0; i < $scope.genericTemplates.length; i++) {
+                templateItems.push({
+                    label: $scope.genericTemplates[i].name,
+                    value: $scope.genericTemplates[i].id,
+                });
+            }
+            return templateItems;
+        }
+
+        function getModelTemplates(extension) {
+            const templateItems = [];
+            for (let i = 0; i < $scope.modelTemplates.length; i++) {
+                if ($scope.modelTemplates[i].extension === extension) {
+                    templateItems.push({
+                        label: $scope.modelTemplates[i].name,
+                        value: $scope.modelTemplates[i].id,
+                    });
+                }
+            }
+            return templateItems;
+        }
+
+        function generateModel(isRegenerating = false) {
+            generateApi.generateFromModel(
+                $scope.selectedWorkspace.name,
+                $scope.gmodel.project,
+                $scope.gmodel.model,
+                $scope.gmodel.templateId,
+                $scope.gmodel.parameters
+            ).then(function (response) {
+                if (isRegenerating) messageHub.hideLoadingDialog('projectsRegenerateModel');
+                else messageHub.hideFormDialog("projectGenerateForm2");
+                if (response.status !== 201) {
+                    messageHub.showAlertError(
+                        'Failed to generate from model',
+                        `An unexpected error has occurred while trying generate from model '${$scope.gmodel.model}'`
+                    );
+                    messageHub.setStatusError(`Unable to generate from model '${$scope.gmodel.model}'`);
+                } else {
+                    messageHub.setStatusMessage(`Generated from model '${$scope.gmodel.model}'`);
+                }
+                $scope.reloadWorkspace();
+                for (let key in $scope.gmodel.parameters) {
+                    delete $scope.gmodel.parameters[key];
+                }
+                $scope.gmodel.model = '';
+                $scope.gmodel.project = '';
+                $scope.gmodel.templateId = '';
             });
         }
 
@@ -1295,6 +1344,16 @@ projectsView.controller('ProjectsViewController', [
                 }
             }
         });
+
+        messageHub.onDidReceiveMessage(
+            'projects.tree.refresh',
+            function (msg) {
+                if (msg.data.name === $scope.selectedWorkspace.name) {
+                    $scope.reloadWorkspace();
+                }
+            },
+            true
+        );
 
         messageHub.onDidReceiveMessage(
             'projects.export.all',
@@ -1452,6 +1511,7 @@ projectsView.controller('ProjectsViewController', [
                     for (let i = 0; i < $scope.genericTemplates.length; i++) {
                         if ($scope.genericTemplates[i].id === msg.data.formData[0].value) {
                             template = $scope.genericTemplates[i];
+                            break;
                         }
                     }
                     generateApi.generateFromTemplate(
@@ -1539,31 +1599,18 @@ projectsView.controller('ProjectsViewController', [
             true
         );
 
-        function generateModel() {
-            generateApi.generateFromModel(
-                $scope.selectedWorkspace.name,
-                $scope.gmodel.project,
-                $scope.gmodel.model,
-                $scope.gmodel.templateId,
-                $scope.gmodel.parameters
-            ).then(function (response) {
-                messageHub.hideFormDialog("projectGenerateForm2");
-                if (response.status !== 201) {
-                    messageHub.showAlertError(
-                        'Failed to generate from model',
-                        `An unexpected error has occurred while trying generate from model '${$scope.gmodel.model}'`
-                    );
-                    messageHub.setStatusError(`Unable to generate from model '${$scope.gmodel.model}'`);
-                } else {
-                    messageHub.setStatusMessage(`Generated from model '${$scope.gmodel.model}'`);
-                }
-                $scope.reloadWorkspace();
-                for (let key in $scope.gmodel.parameters) {
-                    delete $scope.gmodel.parameters[key];
-                }
-                $scope.gmodel.model = '';
-            });
-        }
+        messageHub.onDidReceiveMessage(
+            'projects.regenerate.template',
+            function (msg) {
+                if (msg.data.buttonId === "b1") {
+                    $scope.gmodel.templateId = msg.data.formData[0].value;
+                    messageHub.hideFormDialog('projectRegenerateChooseTemplate');
+                    messageHub.showLoadingDialog('projectsRegenerateModel', 'Regenerating', 'Regenerating from model');
+                    generateModel(true);
+                } else messageHub.hideFormDialog('projectRegenerateChooseTemplate');
+            },
+            true
+        );
 
         messageHub.onDidReceiveMessage(
             "projects.formDialog.create.file",
@@ -1747,10 +1794,54 @@ projectsView.controller('ProjectsViewController', [
                     });
                 } else if (msg.data.itemId === 'unpublishAll') {
                     $scope.unpublishAll();
+                } else if (msg.data.itemId === 'regenerateModel') {
+                    messageHub.showLoadingDialog('projectsRegenerateModel', 'Regenerating', 'Loading data');
+                    workspaceApi.loadContent(msg.data.data.data.workspace, msg.data.data.data.path).then(function (response) {
+                        if (response.status === 200) {
+                            $scope.gmodel.project = response.data.projectName;
+                            $scope.gmodel.model = response.data.filePath;
+                            let { models, perspectives, templateId, filePath, workspaceName, projectName, ...params } = response.data;
+                            $scope.gmodel.parameters = params;
+                            if (!response.data.templateId) {
+                                messageHub.hideLoadingDialog('projectsRegenerateModel');
+                                messageHub.showFormDialog(
+                                    'projectRegenerateChooseTemplate',
+                                    'Choose template',
+                                    [{
+                                        id: 'pgfd1',
+                                        type: 'dropdown',
+                                        label: 'Choose template',
+                                        required: true,
+                                        value: '',
+                                        items: getModelTemplates('model'),
+                                    }],
+                                    [{
+                                        id: 'b1',
+                                        type: 'emphasized',
+                                        label: 'OK',
+                                        whenValid: true,
+                                    }, {
+                                        id: 'b2',
+                                        type: 'transparent',
+                                        label: 'Cancel',
+                                    }],
+                                    'projects.regenerate.template',
+                                    'Setting template...',
+                                );
+                            } else {
+                                $scope.gmodel.templateId = response.data.templateId;
+                                messageHub.updateLoadingDialog('projectsRegenerateModel', 'Regenerating from model');
+                                generateModel(true);
+                            }
+                        } else {
+                            messageHub.hideLoadingDialog('projectsRegenerateModel');
+                            messageHub.showAlertError('Unable to load file', 'There was an error while loading the file. See the log for more information.');
+                            console.error(response);
+                        }
+                    });
                 } else if (msg.data.itemId.startsWith('generate')) {
                     let project;
                     let projectNames = [];
-                    let templateItems = [];
                     let root = $scope.jstreeWidget.jstree(true).get_node('#');
                     for (let i = 0; i < root.children.length; i++) {
                         let name = $scope.jstreeWidget.jstree(true).get_text(root.children[i])
@@ -1761,12 +1852,7 @@ projectsView.controller('ProjectsViewController', [
                     }
                     if (msg.data.itemId === 'generateGeneric') {
                         let generatePath;
-                        for (let i = 0; i < $scope.genericTemplates.length; i++) {
-                            templateItems.push({
-                                label: $scope.genericTemplates[i].name,
-                                value: $scope.genericTemplates[i].id,
-                            });
-                        }
+                        const templateItems = getGenericTemplates();
                         if (msg.data.data.type !== 'project') {
                             let pnode = getProjectNode(msg.data.data.parents);
                             project = pnode.text;
@@ -1780,40 +1866,35 @@ projectsView.controller('ProjectsViewController', [
                         messageHub.showFormDialog(
                             'projectGenerateForm1',
                             'Generate from template',
-                            [
-                                {
-                                    id: 'pgfd1',
-                                    type: 'dropdown',
-                                    label: 'Choose template',
-                                    required: true,
-                                    value: '',
-                                    items: templateItems,
-                                },
-                                {
-                                    id: 'pgfd2',
-                                    type: 'dropdown',
-                                    label: 'Choose project',
-                                    required: true,
-                                    value: project,
-                                    items: projectNames,
-                                },
-                                {
-                                    id: "pgfi1",
-                                    type: "input",
-                                    submitOnEnterId: "b1",
-                                    label: "File path in project",
-                                    required: true,
-                                    placeholder: "/path/file",
-                                    value: generatePath,
-                                },
-                            ],
+                            [{
+                                id: 'pgfd1',
+                                type: 'dropdown',
+                                label: 'Choose template',
+                                required: true,
+                                value: '',
+                                items: templateItems,
+                            }, {
+                                id: 'pgfd2',
+                                type: 'dropdown',
+                                label: 'Choose project',
+                                required: true,
+                                value: project,
+                                items: projectNames,
+                            }, {
+                                id: "pgfi1",
+                                type: "input",
+                                submitOnEnterId: "b1",
+                                label: "File path in project",
+                                required: true,
+                                placeholder: "/path/file",
+                                value: generatePath,
+                            }],
                             [{
                                 id: 'b1',
                                 type: 'emphasized',
                                 label: 'OK',
                                 whenValid: true,
-                            },
-                            {
+                            }, {
                                 id: 'b2',
                                 type: 'transparent',
                                 label: 'Cancel',
@@ -1824,56 +1905,43 @@ projectsView.controller('ProjectsViewController', [
                     } else if (msg.data.itemId === 'generateModel') {
                         let pnode = getProjectNode(msg.data.data.parents);
                         project = pnode.text;
-                        let ext = getFileExtension(msg.data.data.text);
-                        for (let i = 0; i < $scope.modelTemplates.length; i++) {
-                            if ($scope.modelTemplates[i].extension === ext) {
-                                templateItems.push({
-                                    label: $scope.modelTemplates[i].name,
-                                    value: $scope.modelTemplates[i].id,
-                                });
-                            }
-                        }
+                        const templateItems = getModelTemplates(getFileExtension(msg.data.data.text))
                         messageHub.showFormDialog(
                             'projectGenerateForm2',
                             'Generate from template',
-                            [
-                                {
-                                    id: 'pgfd1',
-                                    type: 'dropdown',
-                                    label: 'Choose template',
-                                    required: true,
-                                    value: '',
-                                    items: templateItems,
+                            [{
+                                id: 'pgfd1',
+                                type: 'dropdown',
+                                label: 'Choose template',
+                                required: true,
+                                value: '',
+                                items: templateItems,
+                            }, {
+                                id: 'pgfd2',
+                                type: 'dropdown',
+                                label: 'Choose project',
+                                required: true,
+                                value: project,
+                                items: projectNames,
+                            }, {
+                                id: "pgfi1",
+                                type: "input",
+                                submitOnEnterId: "b1",
+                                label: "Model (must be in the root of the project)",
+                                required: true,
+                                inputRules: {
+                                    // excluded: [], //TODO
+                                    patterns: ['^[^/:]*$'],
                                 },
-                                {
-                                    id: 'pgfd2',
-                                    type: 'dropdown',
-                                    label: 'Choose project',
-                                    required: true,
-                                    value: project,
-                                    items: projectNames,
-                                },
-                                {
-                                    id: "pgfi1",
-                                    type: "input",
-                                    submitOnEnterId: "b1",
-                                    label: "Model (must be in the root of the project)",
-                                    required: true,
-                                    inputRules: {
-                                        // excluded: [], //TODO
-                                        patterns: ['^[^/:]*$'],
-                                    },
-                                    placeholder: "file.model",
-                                    value: msg.data.data.data.path.substring(project.length + 2),
-                                },
-                            ],
+                                placeholder: "file.model",
+                                value: msg.data.data.data.path.substring(project.length + 2),
+                            }],
                             [{
                                 id: 'b1',
                                 type: 'emphasized',
                                 label: 'OK',
                                 whenValid: true,
-                            },
-                            {
+                            }, {
                                 id: 'b2',
                                 type: 'transparent',
                                 label: 'Cancel',
@@ -1939,8 +2007,7 @@ projectsView.controller('ProjectsViewController', [
                                     type: "emphasized",
                                     label: "Create",
                                     whenValid: true
-                                },
-                                {
+                                }, {
                                     id: "b2",
                                     type: "transparent",
                                     label: "Cancel",
