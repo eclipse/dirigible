@@ -221,11 +221,11 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				if (response.status !== 201) {
 					messageHub.showAlertError(
 						'Failed to generate from model',
-						`An unexpected error has occurred while trying generate from model '${response.data.filePath}'`
+						`An unexpected error has occurred while trying generate from model '${filePath}'`
 					);
-					messageHub.setStatusError(`Unable to generate from model '${response.data.filePath}'`);
+					messageHub.setStatusError(`Unable to generate from model '${filePath}'`);
 				} else {
-					messageHub.setStatusMessage(`Generated from model '${response.data.filePath}'`);
+					messageHub.setStatusMessage(`Generated from model '${filePath}'`);
 				}
 				messageHub.postMessage('projects.tree.refresh', workspace, true);
 			});
