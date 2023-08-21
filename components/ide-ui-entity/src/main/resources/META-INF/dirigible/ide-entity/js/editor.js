@@ -15,6 +15,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 		let csrfToken;
 		let modelFile = '';
 		let genFile = '';
+		let fileWorkspace = '';
 		$scope.canRegenerate = false;
 		$scope.errorMessage = 'An unknown error was encountered. Please see console for more information.';
 		$scope.forms = {
@@ -154,7 +155,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			// saveContents(modelJson, modelFile);
 		};
 
-		$scope.chooseTemplate = function (workspace, project, filePath, params) {
+		$scope.chooseTemplate = function (project, filePath, params) {
 			const templateItems = [];
 			templatesApi.listTemplates().then(function (response) {
 				if (response.status === 200) {
@@ -197,7 +198,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 							if (msg.data.buttonId === "b1") {
 								messageHub.hideFormDialog('edmRegenerateChooseTemplate');
 								messageHub.showLoadingDialog('edmRegenerateModel', 'Regenerating', 'Regenerating from model');
-								$scope.generateFromModel(workspace, project, filePath, msg.data.formData[0].value, params);
+								$scope.generateFromModel(project, filePath, msg.data.formData[0].value, params);
 							} else messageHub.hideFormDialog('projectRegenerateChooseTemplate');
 						},
 						true
@@ -209,9 +210,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			});
 		};
 
-		$scope.generateFromModel = function (workspace, project, filePath, templateId, params) {
+		$scope.generateFromModel = function (project, filePath, templateId, params) {
 			generateApi.generateFromModel(
-				workspace,
+				fileWorkspace,
 				project,
 				filePath,
 				templateId,
@@ -227,21 +228,20 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				} else {
 					messageHub.setStatusMessage(`Generated from model '${filePath}'`);
 				}
-				messageHub.postMessage('projects.tree.refresh', workspace, true);
+				messageHub.postMessage('projects.tree.refresh', { name: fileWorkspace }, true);
 			});
 		};
 
 		$scope.regenerate = function () {
 			messageHub.showLoadingDialog('edmRegenerateModel', 'Regenerating', 'Loading data');
-			const workspace = workspaceApi.getCurrentWorkspace();
 			workspaceApi.loadContent('', genFile).then(function (response) {
 				if (response.status === 200) {
 					let { models, perspectives, templateId, filePath, workspaceName, projectName, ...params } = response.data;
 					if (!response.data.templateId) {
-						$scope.chooseTemplate(workspace.name, response.data.projectName, response.data.filePath, params);
+						$scope.chooseTemplate(response.data.projectName, response.data.filePath, params);
 					} else {
 						messageHub.updateLoadingDialog('edmRegenerateModel', 'Regenerating from model');
-						$scope.generateFromModel(workspace.name, response.data.projectName, response.data.filePath, response.data.templateId, params);
+						$scope.generateFromModel(response.data.projectName, response.data.filePath, response.data.templateId, params);
 					}
 				} else {
 					messageHub.hideLoadingDialog('edmRegenerateModel');
@@ -1202,6 +1202,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 		} else {
 			modelFile = $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.model';
 			genFile = $scope.dataParameters.file.substring(0, $scope.dataParameters.file.lastIndexOf('.')) + '.gen';
+			fileWorkspace = $scope.dataParameters.workspaceName || workspaceApi.getCurrentWorkspace();
 			$scope.load();
 			main(document.getElementById('graphContainer'),
 				document.getElementById('outlineContainer'),
