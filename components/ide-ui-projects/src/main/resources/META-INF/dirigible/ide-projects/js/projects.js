@@ -1053,12 +1053,12 @@ projectsView.controller('ProjectsViewController', [
 
         function openFile(node, editor = undefined) {
             let parent = node;
-            let extraArgs;
+            let extraArgs = { gitName: undefined, workspaceName: node.data.workspace };
             for (let i = 0; i < node.parents.length - 1; i++) {
                 parent = $scope.jstreeWidget.jstree(true).get_node(parent.parent);
             }
             if (parent.data.git) {
-                extraArgs = { gitName: parent.data.gitName };
+                extraArgs.gitName = parent.data.gitName;
             }
             messageHub.openEditor(
                 `/${node.data.workspace}${node.data.path}`,
