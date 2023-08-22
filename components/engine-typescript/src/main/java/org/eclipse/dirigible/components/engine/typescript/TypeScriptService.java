@@ -62,7 +62,7 @@ public class TypeScriptService {
     }
 
     private static boolean shouldIgnoreProject(String projectName) {
-        return "dev-tools".equals(projectName);
+        return "dev-tools".equals(projectName) || "modules".equals(projectName);
     }
 
     private static boolean isTSButNotDTS(String entryPath) {

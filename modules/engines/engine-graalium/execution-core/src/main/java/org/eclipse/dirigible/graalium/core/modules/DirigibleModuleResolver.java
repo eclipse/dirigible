@@ -59,7 +59,7 @@ public class DirigibleModuleResolver implements ModuleResolver {
      */
     @Override
     public boolean isResolvable(String moduleToResolve) {
-        return moduleToResolve.contains(DIRIGIBLE_CORE_MODULE_SIGNATURE);
+        return moduleToResolve.contains(DIRIGIBLE_CORE_MODULE_SIGNATURE) && !DirigibleModulesMetadata.isPureEsmModule(moduleToResolve);
     }
 
     /**

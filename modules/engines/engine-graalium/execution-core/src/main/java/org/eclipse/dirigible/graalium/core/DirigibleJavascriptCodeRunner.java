@@ -25,6 +25,7 @@ import org.eclipse.dirigible.graalium.core.graal.modules.java.JavaModuleResolver
 import org.eclipse.dirigible.graalium.core.graal.modules.java.JavaPackageProxyGenerator;
 import org.eclipse.dirigible.graalium.core.javascript.GraalJSCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.JavascriptCodeRunner;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleEsmModuleResolver;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleModuleResolver;
 import org.eclipse.dirigible.graalium.core.polyfills.RequirePolyfill;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -83,6 +84,7 @@ public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Sourc
                 .addGlobalObject(new DirigibleEngineTypeGlobalObject())
                 .addModuleResolver(new JavaModuleResolver(javaModulesESMProxiesCachePath))
                 .addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath, sourceProvider))
+                .addModuleResolver(new DirigibleEsmModuleResolver(sourceProvider))
                 .waitForDebugger(debug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
                 .addOnBeforeContextCreatedListener(onBeforeContextCreatedListener)
                 .addOnAfterContextCreatedListener(onAfterContextCreatedListener)
