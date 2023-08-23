@@ -11,12 +11,13 @@
  */
 "use strict";
 
-var globals = dirigibleRequire("core/globals");
-var mongodb = dirigibleRequire("mongodb/client");
-const dirigibleOrm = dirigibleRequire("db/orm")
+import * as globals from "@dirigible/core/globals";
+import * as mongodb from "./client"
+import * as dirigibleOrm from "@dirigible/db/orm";
+import * as logging from "@dirigible/log/logging";
 
-var mongoClient = mongodb.getClient();
-var db = mongoClient.getDB();
+const mongoClient = mongodb.getClient();
+const db = mongoClient.getDB();
 
 export class DAO {
     $log;
@@ -35,7 +36,7 @@ export class DAO {
             if (this.orm.table)
                 loggerName = 'mongodb.dao.' + (this.orm.table.toLowerCase());
         }
-        this.$log = dirigibleRequire('log/logging').getLogger(loggerName);
+        this.$log = logging.getLogger(loggerName);
     }
 
     notify(event, ...a) {
@@ -293,9 +294,9 @@ export class DAO {
     
             var collection = db.getCollection(this.orm.table);
             if (select !== undefined) {
-                var entity = collection.find(params, select);
+                entity = collection.find(params, select);
             } else {
-                var entity = collection.findOneById(id);
+                entity = collection.findOneById(id);
             }
     
     

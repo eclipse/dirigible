@@ -12,7 +12,7 @@
 
 const MongoDBFacade = Java.type("org.eclipse.dirigible.components.api.mongodb.MongoDBFacade");
 const TimeUnit = Java.type("java.util.concurrent.TimeUnit");
-const uuid = dirigibleRequire("utils/v4/uuid");
+import * as uuid from "@dirigible/utils/uuid";
 
 export function getClient() {
     var native = MongoDBFacade.getClient();
@@ -33,7 +33,7 @@ class Client {
 
     constructor(private native) { }
 
-    getDB(name) {
+    getDB(name?) {
 
         var native = null;
         if (name) {
@@ -74,7 +74,7 @@ class DBCollection {
         this.native.insert(dbObject.native);
     };
 
-    find(query, projection) {
+    find(query?, projection?) {
         query = implicit(query);
         projection = implicit(projection);
 
@@ -115,7 +115,7 @@ class DBCollection {
         return dbObject;
     };
 
-    findOneById(id, projection) {
+    findOneById(id, projection?) {
         projection = implicit(projection);
         var dbObject = createBasicDBObject();
         var native = null;
@@ -133,7 +133,7 @@ class DBCollection {
         return dbObject;
     };
 
-    count(query) {
+    count(query?) {
         query = implicit(query);
         if (query) {
             return this.native.count(query.native);
@@ -218,7 +218,7 @@ class DBCollection {
         this.native.save(dbObject.native);
     };
 
-    update(query, update, upsert, multi) {
+    update(query, update, upsert?, multi?) {
         query = implicit(query);
         update = implicit(update);
         if (query) {

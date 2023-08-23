@@ -9,5 +9,4 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const onMessageHandler = dirigibleRequire(__context.get("handler"));
-onMessageHandler.onMessage(__context.get("message"), __context.get("from"));
+dirigibleRequire(__context.get("handler")).onMessage(__context.get("message"), __context.get("from"));

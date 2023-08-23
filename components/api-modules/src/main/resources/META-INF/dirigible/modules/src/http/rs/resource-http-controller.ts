@@ -1,13 +1,16 @@
+import * as response from "../response";
+import * as request from "../request";
 import { ResourceMappings } from "./resource-mappings";
-
+import * as logging from "@dirigible/log/logging";
 const { match } = dirigibleRequire("http/path-to-regexp/6.2.1/index.js");
-const logger = dirigibleRequire('log/logging').getLogger('http.rs.controller');
+
+const logger = logging.getLogger('http.rs.controller');
 
 function getRequest() {
-    return dirigibleRequire("http/request");
+    return request;
 }
 function getResponse() {
-    return dirigibleRequire("http/response");
+    return response;
 }
 
 /**
@@ -152,12 +155,10 @@ export class HttpController {
     };
 
     sendError(httpErrorCode, applicationErrorCode, errorName, errorDetails) {
-        const request = dirigibleRequire("http/request");
         const clientAcceptMediaTypes = normalizeMediaTypeHeaderValue(request.getHeader('Accept')) || ['application/json'];
         const isHtml = clientAcceptMediaTypes.some(function (acceptMediaType) {
             return this.isMimeTypeCompatible('*/html', acceptMediaType);
         }.bind(this));
-        const response = dirigibleRequire("http/response");
         response.setStatus(httpErrorCode || response.INTERNAL_SERVER_ERROR);
         if (isHtml) {
             const message = errorName + (applicationErrorCode !== undefined ? '[' + applicationErrorCode + ']' : '') + (errorDetails ? ': ' + errorDetails : '');
@@ -175,7 +176,6 @@ export class HttpController {
     };
 
     closeResponse() {
-        const response = dirigibleRequire("http/response");
         response.flush();
         response.close();
     };

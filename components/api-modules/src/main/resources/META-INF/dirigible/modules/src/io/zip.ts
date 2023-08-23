@@ -12,8 +12,7 @@
 /**
  * API Zip
  */
-const streams = dirigibleRequire("io/streams");
-const bytes = dirigibleRequire("io/bytes");
+import * as bytes from "@dirigible/io/bytes";
 const ZipFacade = Java.type("org.eclipse.dirigible.components.api.io.ZipFacade");
 
 export function zip(sourcePath, zipTargetPath) {

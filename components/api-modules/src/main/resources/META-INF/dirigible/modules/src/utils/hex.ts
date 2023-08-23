@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const streams = dirigibleRequire('io/streams');
-const bytes = dirigibleRequire("io/bytes");
+import * as streams from "@dirigible/io/streams";
+import * as bytes from "@dirigible/io/bytes";
 
 const HexFacade = Java.type("org.eclipse.dirigible.components.api.utils.HexFacade");
 

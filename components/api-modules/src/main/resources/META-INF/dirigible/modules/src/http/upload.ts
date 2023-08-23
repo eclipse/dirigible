@@ -13,8 +13,8 @@
  * HTTP API Upload
  *
  */
-const streams = dirigibleRequire("io/streams");
-const bytes = dirigibleRequire("io/bytes");
+import * as streams from "@dirigible/io/streams"
+import * as bytes from "@dirigible/io/bytes"
 const HttpUploadFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpUploadFacade");
 
 export function isMultipartContent() {
@@ -55,9 +55,8 @@ class FileItem {
     ) { }
 
     getInputStream() {
-        const inputStream = new streams.InputStream();
-        inputStream.native = this.native.getInputStream();
-        return inputStream;
+        const native = this.native.getInputStream();
+        return new streams.InputStream(native);
     }
 
     getContentType() {

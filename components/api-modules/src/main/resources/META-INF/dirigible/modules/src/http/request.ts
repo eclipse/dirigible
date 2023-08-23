@@ -1,4 +1,4 @@
-const streams = dirigibleRequire("io/streams");
+import * as streams from "@dirigible/io/streams"
 const HttpRequestFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpRequestFacade");
 
 export function isValid() {

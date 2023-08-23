@@ -15,7 +15,7 @@
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-const streams = dirigibleRequire("io/streams");
+import * as streams from "@dirigible/io/streams"
 const CMIS_METHOD_READ = "READ";
 const CMIS_METHOD_WRITE = "WRITE";
 const CmisFacade = Java.type("org.eclipse.dirigible.components.api.cms.CmisFacade");
@@ -285,10 +285,8 @@ class ContentStream {
     constructor(private native) {}
 
 	getStream() {
-		var inputStream = new streams.InputStream();
-		var native = this.native.getStream();
-		inputStream.native = native;
-		return inputStream;
+		const native = this.native.getStream();
+		return new streams.InputStream(native);
 	};
 
 	getMimeType() {

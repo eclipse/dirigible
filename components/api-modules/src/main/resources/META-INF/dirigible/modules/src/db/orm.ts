@@ -39,7 +39,8 @@
  *
  *
  */
-const isCaseSensitive = dirigibleRequire("core/configurations").get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
+ import * as configurations from "@dirigible/core/configurations";
+const isCaseSensitive = configurations.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
 
 export function ORM(orm) {
 	this.orm = orm;

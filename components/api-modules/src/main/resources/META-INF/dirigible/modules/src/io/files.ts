@@ -12,8 +12,8 @@
 /**
  * API Files
  */
-const streams = dirigibleRequire("io/streams");
-const bytes = dirigibleRequire("io/bytes");
+import * as streams from "@dirigible/io/streams";
+import * as bytes from "@dirigible/io/bytes";
 const FilesFacade = Java.type("org.eclipse.dirigible.components.api.io.FilesFacade");
 
 export function exists(path){
@@ -148,16 +148,13 @@ export function createTempDirectory(prefix) {
 };
 
 export function createInputStream(path) {
-	const inputStream = new streams.InputStream();
-	inputStream.native = FilesFacade.createInputStream(path);
-	return inputStream;
+	const native = FilesFacade.createInputStream(path);
+	return new streams.InputStream(native);
 };
 
 export function createOutputStream(path) {
-	var outputStream = new streams.OutputStream();
-	var native = FilesFacade.createOutputStream(path);
-	outputStream.native = native;
-	return outputStream;
+	const native = FilesFacade.createOutputStream(path);
+	return new streams.OutputStream(native);
 };
 
 export function traverse(path) {

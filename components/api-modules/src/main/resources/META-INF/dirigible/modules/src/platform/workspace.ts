@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const bytes = dirigibleRequire("io/bytes");
+import * as bytes from "@dirigible/io/bytes";
 const WorkspaceFacade = Java.type("org.eclipse.dirigible.components.api.platform.WorkspaceFacade");
 
 export function createWorkspace(name) {

@@ -15,7 +15,7 @@
 
 const Configuration = Java.type("org.eclipse.dirigible.commons.config.Configuration");
 
-export function get(key, defaultValue) {
+export function get(key, defaultValue?) {
 	if (defaultValue) {
 		return Configuration.get(key, defaultValue);
 	}

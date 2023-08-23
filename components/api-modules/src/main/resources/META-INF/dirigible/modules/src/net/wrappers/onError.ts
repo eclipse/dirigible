@@ -9,5 +9,4 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const onErrorHandler = dirigibleRequire(__context.get("handler"));
-onErrorHandler.onError(__context.get("error"));
+dirigibleRequire(__context.get("handler")).onError(__context.get("error"));

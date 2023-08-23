@@ -11,15 +11,16 @@
  */
 "use strict";
 
-const database = dirigibleRequire("db/database");
-const globals = dirigibleRequire("core/globals");
-const dirigibleOrm = dirigibleRequire("db/orm");
-const sequences = dirigibleRequire("db/sequence");
-const dirigibleOrmStatements = dirigibleRequire('db/ormstatements');
-const execQuery = dirigibleRequire('db/query');
-const execUpdate = dirigibleRequire('db/update');
-const logging = dirigibleRequire('log/logging');
-const configurations = dirigibleRequire("core/configurations");
+import * as dirigibleOrm from "./orm";
+import * as dirigibleOrmStatements from "./ormstatements";
+import * as sequences from "./sequence";
+import * as database from "./database";
+import { execute as execQuery } from "./query";
+import { execute as execUpdate } from "./update";
+import * as logging from "@dirigible/log/logging";
+import * as globals from "@dirigible/core/globals";
+import * as configurations from "@dirigible/core/configurations";
+
 
 export function DAO(orm, logCtxName, dataSourceName){
 	if(orm === undefined)
@@ -84,9 +85,9 @@ export function DAO(orm, logCtxName, dataSourceName){
 		let result;
 
 		if(sql.toLowerCase().startsWith('select')){
-	 		result = execQuery.execute(sql, _parameterBindings, dataSourceName);
+	 		result = execQuery(sql, _parameterBindings, dataSourceName);
 	 	} else {
-	 		result = execUpdate.execute(sql, _parameterBindings, dataSourceName);
+	 		result = execUpdate(sql, _parameterBindings, dataSourceName);
 	 	}
 
 	 	return result !== null ? result : [];

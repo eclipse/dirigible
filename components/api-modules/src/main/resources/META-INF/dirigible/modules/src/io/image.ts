@@ -12,13 +12,11 @@
 /**
  * API Image
  */
-const streams = dirigibleRequire("io/streams");
+import * as streams from "@dirigible/io/streams";
 
 const ImageFacade = Java.type("org.eclipse.dirigible.components.api.io.ImageFacade");
 
 export function resize(original, type, width, height) {
-	const native = ImageFacade(original, type, width, height);
-	const inputStream = new streams.InputStream();
-	inputStream.native = native;
-	return inputStream;
+	const native = ImageFacade.resize(original, type, width, height);
+	return new streams.InputStream(native);
 };

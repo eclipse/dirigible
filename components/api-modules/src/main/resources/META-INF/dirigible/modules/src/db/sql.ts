@@ -13,10 +13,9 @@
  * API SQL
  *
  */
-const database = dirigibleRequire('db/database');
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
 
-export function getDialect(connection) {
+export function getDialect(connection?) {
 	/**
 	 * Dialect object
 	 */

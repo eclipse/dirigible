@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-const bytes = dirigibleRequire("io/bytes");
+import * as bytes from "@dirigible/io/bytes";
 const QRCodeFacade = Java.type("org.eclipse.dirigible.components.api.utils.QRCodeFacade");
 
 export function generateQRCode(text){

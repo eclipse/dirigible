@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const bytes = dirigibleRequire('io/bytes');
+import * as bytes from "@dirigible/io/bytes";
 const StreamsFacade = Java.type("org.eclipse.dirigible.components.api.io.StreamsFacade");
 
 /**
@@ -51,7 +51,7 @@ export class InputStream {
  */
 export class OutputStream {
 
-	constructor(private native) {}
+	constructor(public readonly native) {}
 
 	write(byte) {
 		StreamsFacade.write(this.native, byte);

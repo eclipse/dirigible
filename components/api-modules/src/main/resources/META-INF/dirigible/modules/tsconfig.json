@@ -15,8 +15,80 @@
             "./types"
         ],
         "paths": {
+            "@dirigible/bpm/*": [
+                "./src/bpm/*"
+            ],
+            "@dirigible/cms/*": [
+                "./src/cms/*"
+            ],
+            "@dirigible/core/*": [
+                "./src/core/*"
+            ],
+            "@dirigible/db/*": [
+                "./src/db/*"
+            ],
+            "@dirigible/etcd/*": [
+                "./src/etcd/*"
+            ],
+            "@dirigible/extensions/*": [
+                "./src/extensions/*"
+            ],
+            "@dirigible/git/*": [
+                "./src/git/*"
+            ],
             "@dirigible/http/*": [
                 "./src/http/*"
+            ],
+            "@dirigible/indexing/*": [
+                "./src/indexing/*"
+            ],
+            "@dirigible/io/*": [
+                "./src/io/*"
+            ],
+            "@dirigible/job/*": [
+                "./src/job/*"
+            ],
+            "@dirigible/kafka/*": [
+                "./src/kafka/*"
+            ],
+            "@dirigible/log/*": [
+                "./src/log/*"
+            ],
+            "@dirigible/mail/*": [
+                "./src/mail/*"
+            ],
+            "@dirigible/messaging/*": [
+                "./src/messaging/*"
+            ],
+            "@dirigible/mongodb/*": [
+                "./src/mongodb/*"
+            ],
+            "@dirigible/net/*": [
+                "./src/net/*"
+            ],
+            "@dirigible/pdf/*": [
+                "./src/pdf/*"
+            ],
+            "@dirigible/platform/*": [
+                "./src/platform/*"
+            ],
+            "@dirigible/qldb/*": [
+                "./src/qldb/*"
+            ],
+            "@dirigible/rabbitmq/*": [
+                "./src/rabbitmq/*"
+            ],
+            "@dirigible/redis/*": [
+                "./src/redis/*"
+            ],
+            "@dirigible/security/*": [
+                "./src/security/*"
+            ],
+            "@dirigible/template/*": [
+                "./src/template/*"
+            ],
+            "@dirigible/utils/*": [
+                "./src/utils/*"
             ]
         }
     },

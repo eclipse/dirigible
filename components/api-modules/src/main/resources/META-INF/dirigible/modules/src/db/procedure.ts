@@ -13,8 +13,8 @@
  * API Procedure
  *
  */
-const update = dirigibleRequire("db/update");
-const database = dirigibleRequire("db/database");
+import * as update from "./update";
+import * as database from "./database";
 
 export function create(sql, datasourceName) {
     let parameters = [];

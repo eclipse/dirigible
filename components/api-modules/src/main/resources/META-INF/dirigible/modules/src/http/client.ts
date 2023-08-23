@@ -15,7 +15,6 @@
  */
 
 const HttpClientFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpClientFacade");
-const httpClient = new HttpClientFacade();
 
 export class HttpClient {
     get(_url, options) {
@@ -104,3 +103,5 @@ function buildUrl(url, options) {
     }
     return url;
 }
+
+export const httpClient = new HttpClient();

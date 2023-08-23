@@ -14,9 +14,10 @@
  *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-let config = dirigibleRequire("core/configurations");
-let httpClient = dirigibleRequire("http/client");
-let oauth = dirigibleRequire("security/oauth");
+
+import * as config from "./configurations";
+import { httpClient } from "@dirigible/http/client";
+let oauth = dirigibleRequire("security/oauth"); // TODO: check this API
 
 const JClass = Java.type("java.lang.Class");
 const DestinationsFacade = Java.type("org.eclipse.dirigible.components.api.core.DestinationsFacade");

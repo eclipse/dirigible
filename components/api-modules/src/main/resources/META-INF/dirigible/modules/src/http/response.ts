@@ -14,10 +14,10 @@
  *
  */
 
+import * as streams from "@dirigible/io/streams"
 const HttpResponseFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpResponseFacade");
 const OutputStreamWriter = Java.type("java.io.OutputStreamWriter");
 const StandardCharsets = Java.type("java.nio.charset.StandardCharsets");
-const streams = dirigibleRequire("io/streams");
 
 export function isValid() {
     return HttpResponseFacade.isValid();
@@ -151,9 +151,8 @@ export function getLocale() {
 };
 
 export function getOutputStream() {
-    const outputStream = new streams.OutputStream();
-    outputStream.native = HttpResponseFacade.getOutputStream();
-    return outputStream;
+    const native = HttpResponseFacade.getOutputStream();
+    return new streams.OutputStream(native);
 };
 
 /**

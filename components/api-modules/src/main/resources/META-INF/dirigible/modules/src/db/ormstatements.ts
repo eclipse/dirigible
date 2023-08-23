@@ -11,8 +11,8 @@
  */
 "use strict";
 
-const logging = dirigibleRequire("log/logging");
-const sql = dirigibleRequire('db/sql');
+import * as logging from "@dirigible/log/logging";
+import * as sql from "./sql";
 
 export function ORMStatements(orm, dialect){
 	this.$log = logging.getLogger('db.dao.ormstatements');

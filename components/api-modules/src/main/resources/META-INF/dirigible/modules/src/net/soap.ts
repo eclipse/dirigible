@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const streams = dirigibleRequire("io/streams");
-const request = dirigibleRequire('http/request');
-const base64 = dirigibleRequire("utils/base64");
+import * as streams from "@dirigible/io/streams";
+import * as request from "@dirigible/http/request";
+import * as base64 from "@dirigible/utils/base64";
 const MessageFactory = Java.type("javax.xml.soap.MessageFactory");
 const MimeHeadersInternal = Java.type("javax.xml.soap.MimeHeaders");
 const SOAPConnectionFactory = Java.type("javax.xml.soap.SOAPConnectionFactory");

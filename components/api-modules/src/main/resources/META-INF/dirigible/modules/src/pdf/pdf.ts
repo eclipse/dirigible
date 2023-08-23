@@ -10,9 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-const registry = dirigibleRequire("platform/registry");
-const xml = dirigibleRequire("utils/xml");
-const templateEngine = dirigibleRequire("template/engines");
+import * as registry from "@dirigible/platform/registry";
+import * as xml from "@dirigible/utils/xml";
+import * as templateEngine from "@dirigible/template/engines";
 const PDFFacade = Java.type("org.eclipse.dirigible.components.api.pdf.PDFFacade");
 
 const TEMPLATE_PATH_TABLE = "pdf/templates/table.xml";

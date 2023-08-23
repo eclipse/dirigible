@@ -13,7 +13,7 @@
  * API Job
  */
 
-const configurations = dirigibleRequire("core/configurations");
+import * as configurations from "@dirigible/core/configurations";
 const JobFacade = Java.type("org.eclipse.dirigible.components.api.job.JobFacade");
 
 export function getJobs() {
