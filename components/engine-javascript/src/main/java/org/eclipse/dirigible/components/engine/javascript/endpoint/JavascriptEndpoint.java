@@ -371,12 +371,13 @@ public class JavascriptEndpoint extends BaseEndpoint {
 		return path;
 	}
 
-	record Dts(String content, String filePath) {
+	record Dts(String content, String moduleName, String filePath) {
 		static Dts fromDtsPath(Path dtsDirRoot, Path dtsPath) {
 			String content = readAllText(dtsPath);
 			Path relativePath = dtsDirRoot.relativize(dtsPath);
 			String filePath = "file:///node_modules/@dirigible/" + relativePath;
-			return new Dts(content, filePath);
+			String moduleName = ("@dirigible/" + relativePath).replace("index.d.ts", "").replace(".d.ts", "");
+			return new Dts(content, moduleName, filePath);
 		}
 
 		private static String readAllText(Path path) {

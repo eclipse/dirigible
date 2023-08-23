@@ -532,6 +532,7 @@ async function loadDTS() {
     for (const dts of allDts) {
         monaco.languages.typescript.javascriptDefaults.addExtraLib(dts.content, dts.filePath);
         monaco.languages.typescript.typescriptDefaults.addExtraLib(dts.content, dts.filePath);
+        modulesSuggestions.push({ name: dts.moduleName});
     }
 
     let cachedDts = window.sessionStorage.getItem('dtsContent');
