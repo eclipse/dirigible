@@ -3,8 +3,8 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-var generator = require("template-form-builder-angularjs/template/generate-form-angularjs");
-var workspaceManager = require("platform/workspace");
+var generator = dirigibleRequire("template-form-builder-angularjs/template/generate-form-angularjs");
+var workspaceManager = dirigibleRequire("platform/workspace");
 
 var workspace = __context.get('workspace');
 var project = __context.get('project');
@@ -12,7 +12,7 @@ var path = __context.get('path');
 
 var saveFile = function(workspace, project, path, content) {
     if (content !== null) {
-        var bytes = require("io/bytes");
+        var bytes = dirigibleRequire("io/bytes");
         input = bytes.textToByteArray(content);
 
         if (workspaceManager.getWorkspace(workspace)

@@ -9,10 +9,10 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let repository = require("platform/repository");
-let config = require("core/configurations");
-let modulesParser = require("ide-monaco-extensions/api/utils/modulesParser");
-let suggestionsParser = require("ide-monaco-extensions/api/utils/suggestionsParser");
+let repository = dirigibleRequire("platform/repository");
+let config = dirigibleRequire("core/configurations");
+let modulesParser = dirigibleRequire("ide-monaco-extensions/api/utils/modulesParser");
+let suggestionsParser = dirigibleRequire("ide-monaco-extensions/api/utils/suggestionsParser");
 
 const PATH_REGISTRY_PUBLIC = "/registry/public";
 const MODULE_INFO_PREFIX = "MODULE_INFO_";

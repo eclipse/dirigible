@@ -49,7 +49,7 @@ const defaultMenuItems = [
     }
 ];
 
-let config = require("core/configurations");
+let config = dirigibleRequire("core/configurations");
 
 exports.getMenu = function () {
     let menu = {

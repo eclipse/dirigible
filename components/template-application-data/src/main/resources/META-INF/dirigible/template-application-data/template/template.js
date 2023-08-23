@@ -3,10 +3,10 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const schemaTemplateManager = require("template-application-schema/template/template");
-const daoTemplateManager = require("template-application-dao/template/template");
-const generateUtils = require("ide-generate-service/template/generateUtils");
-const parameterUtils = require("ide-generate-service/template/parameterUtils");
+const schemaTemplateManager = dirigibleRequire("template-application-schema/template/template");
+const daoTemplateManager = dirigibleRequire("template-application-dao/template/template");
+const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
+const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
 
 exports.generate = function (model, parameters) {
     model = JSON.parse(model).model;
