@@ -1,9 +1,11 @@
 :root {
   --dg-status-bar-height: 1.625rem;
 }
+
 html {
   height: 100%;
 }
+
 body {
   height: 100%;
   display: -webkit-box;
@@ -15,27 +17,33 @@ body {
   flex-direction: column;
   overflow: hidden;
 }
+
 /* header */
 .dg-main-header {
   width: 100%;
   height: auto;
 }
+
 @media only screen and (max-width: 1280px) {
   .dg-menubar {
     display: none;
   }
+
   .dg-header-logo {
     display: none;
   }
 }
+
 @media only screen and (min-width: 1281px) {
   .dg-hamburger-menu {
     display: none;
   }
+
   .dg-header-logo {
     padding-left: .5rem;
   }
 }
+
 /* Main container */
 .dg-main-container {
   display: -webkit-box;
@@ -49,47 +57,52 @@ body {
   box-sizing: border-box;
   height: 100%;
 }
+
 /* Perspective view */
 .dg-perspective-container {
   display: block;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
-  z-index: 1;
   -webkit-box-flex: 3;
   -ms-flex-positive: 3;
   flex-grow: 3;
   width: 0;
 }
+
 .dg-perspective-view {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
 }
+
 /* Sidebar */
 .dg-sidebar {
   width: auto;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  z-index: 2;
   border-right: .0625rem solid var(--sapGroup_TitleBorderColor, #d9d9d9);
 }
-.dg-sidebar > .fd-vertical-nav {
+
+.dg-sidebar>.fd-vertical-nav {
   overflow: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.dg-sidebar > .fd-vertical-nav::-webkit-scrollbar {
+
+.dg-sidebar>.fd-vertical-nav::-webkit-scrollbar {
   display: none;
 }
-.fd-list__navigation-item--indicated .dg-perspective-icon > svg {
+
+.fd-list__navigation-item--indicated .dg-perspective-icon>svg {
   fill: var(--sapSelectedColor, #0854a0);
   color: var(--sapSelectedColor, #0854a0);
 }
-.dg-perspective-icon > svg {
+
+.dg-perspective-icon>svg {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   color: var(--sapContent_NonInteractiveIconColor, #6a6d70);
@@ -98,6 +111,7 @@ body {
   height: 100%;
   padding: 0.75rem;
 }
+
 /* Statusbar */
 .dg-statusbar {
   background-color: var(--sapButton_Information_Background, #0a6ed1);
@@ -124,10 +138,12 @@ body {
   align-items: center;
   line-height: 1;
 }
-.dg-statusbar > * {
+
+.dg-statusbar>* {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 .dg-statusbar-busy,
 .dg-statusbar-message,
 .dg-statusbar-error {
@@ -146,18 +162,21 @@ body {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 .dg-statusbar-message,
 .dg-statusbar-error {
   flex: 2;
   max-width: 40%;
 }
-.dg-statusbar-busy > *,
-.dg-statusbar-message > *,
-.dg-statusbar-error > * {
+
+.dg-statusbar-busy>*,
+.dg-statusbar-message>*,
+.dg-statusbar-error>* {
   padding: 0 4px 0 4px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 .dg-statusbar .dg-statusbar__text {
   white-space: nowrap;
   overflow: hidden;
@@ -175,6 +194,7 @@ body {
   font-family: inherit;
   line-height: 1;
 }
+
 .dg-statusbar .dg-statusbar__icon,
 .fd-busy-indicator {
   background: inherit;
@@ -199,29 +219,36 @@ body {
   font-style: normal;
   color: var(--sapButton_Information_TextColor);
 }
+
 .dg-statusbar .dg-statusbar--link {
   cursor: pointer;
   margin-left: .375rem;
 }
+
 .dg-statusbar .dg-statusbar--link {
   width: var(--dg-status-bar-height);
   height: var(--dg-status-bar-height);
 }
-.dg-statusbar > .dg-statusbar-message .dg-statusbar--link:hover {
+
+.dg-statusbar>.dg-statusbar-message .dg-statusbar--link:hover {
   background-color: var(--sapIndicationColor_5_Hover_Background, #0961b9);
 }
-.dg-statusbar > .dg-statusbar-error .dg-statusbar--link:hover {
+
+.dg-statusbar>.dg-statusbar-error .dg-statusbar--link:hover {
   background-color: var(--sapIndicationColor_1_Hover_Background, #6f0000);
 }
+
 .dg-statusbar-busy {
   flex: 1;
   color: var(--sapButton_Critical_TextColor, #fff);
   background-color: var(--sapButton_Critical_Background, #df6e0c);
 }
+
 .dg-statusbar-error {
   color: var(--sapButton_Negative_TextColor, #fff);
   background-color: var(--sapButton_Negative_Background, #bb0000);
 }
+
 .dg-statusbar-caret {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -233,6 +260,7 @@ body {
   text-overflow: ellipsis;
   text-align: end;
 }
+
 /* Context menu */
 .dg-contextmenu-overlay {
   background-color: transparent;
@@ -246,20 +274,25 @@ body {
   /* Just below the dialogs, just above the backdrop elements */
   z-index: 220;
 }
-.dg-contextmenu-overlay > .fd-menu {
+
+.dg-contextmenu-overlay>.fd-menu {
   position: fixed;
 }
+
 /* Dialogs and Windows */
 #dgIdeFormDialog .fd-form-group .fd-form-item {
   margin-bottom: 1rem;
 }
-#dgIdeFormDialog .fd-form-group .dg-fd-repeat:last-child > .fd-form-item {
+
+#dgIdeFormDialog .fd-form-group .dg-fd-repeat:last-child>.fd-form-item {
   margin-bottom: 0;
 }
+
 .dg-window-body {
   padding: 0 !important;
 }
-.dg-window-body > iframe {
+
+.dg-window-body>iframe {
   border: 0;
   box-sizing: border-box;
   position: absolute;
@@ -270,6 +303,7 @@ body {
   width: 100%;
   height: 100%;
 }
+
 .dg-window__content {
   padding: 0;
   height: 70%;

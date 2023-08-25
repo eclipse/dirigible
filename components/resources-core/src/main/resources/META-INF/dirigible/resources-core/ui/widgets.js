@@ -403,17 +403,17 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             scope: {
                 size: '@',
-                minSize: '@',
-                maxSize: '@',
-                snapOffset: '@',
+                minSize: '<?',
+                maxSize: '<?',
+                snapOffset: '<?',
             },
             link: function (scope, element, attrs, bgSplitCtrl) {
                 let paneData = scope.paneData = {
                     element: element,
                     size: scope.size,
-                    minSize: Number(scope.minSize),
-                    maxSize: Number(scope.maxSize),
-                    snapOffset: Number(scope.snapOffset)
+                    minSize: scope.minSize,
+                    maxSize: scope.maxSize,
+                    snapOffset: Number(scope.snapOffset || 0)
                 };
 
                 bgSplitCtrl.addPane(paneData);
@@ -1589,6 +1589,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * hasSeparator: Boolean - The menu item will have a separating line on the bottom side.
          * isActive: Boolean - Set the menu item as active.
          * isSelected: Boolean - Set the menu item as selected.
+         * isDisabled: Boolean - Set the menu item as disabled.
          * iconBefore: String - Icon class. Displays the icon before the title. Use 'none' to display a transparent icon.
          * iconAfter: String - Icon class. Displays the icon at the end of the menu item.
          */
@@ -1601,6 +1602,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 hasSeparator: '<?',
                 isActive: '<?',
                 isSelected: '<?',
+                isDisabled: '<?',
                 iconBefore: '@?',
                 iconAfter: '@?',
             },
@@ -1608,6 +1610,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 scope.getClasses = function () {
                     let classList = [];
                     if (scope.isActive) classList.push('is-active');
+                    if (scope.isDisabled) classList.push('is-disabled');
                     if (scope.hasSeparator) classList.push('has-separator');
                     if (scope.isSelected) classList.push('is-selected');
                     return classList.join(' ');
@@ -1618,7 +1621,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 };
             },
             template: `<li class="fd-menu__item" ng-class="getItemClasses()" role="presentation">
-                <span class="fd-menu__link" ng-class="getClasses()" role="menuitem">
+                <span class="fd-menu__link" ng-class="getClasses()" role="menuitem" tabindex="{{ isDisabled ? -1 : 0 }}">
                     <span ng-if="iconBefore" class="fd-menu__addon-before">
                         <i class="{{ iconBefore }}" ng-if="iconBefore !== 'none'" role="presentation"></i>
                     </span>

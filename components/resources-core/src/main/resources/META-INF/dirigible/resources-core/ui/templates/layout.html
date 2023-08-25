@@ -1,27 +1,45 @@
 <div class="dg-perspective-view">
-    <split direction="horizontal" ng-transclude>
-        <split-pane ng-if="explorerTabs.length > 0" size="{{ layoutSettings.explorerPaneSize }}" min-size="0"
-            snap-offset="100" class="pane-left" ng-transclude>
-            <explorer-toolbar items="explorerTabs"></explorer-toolbar>
+    <split direction="horizontal" state="splitPanesState.side">
+        <split-pane ng-if="leftTabs.length > 0" size="{{ layoutSettings.leftPaneSize }}"
+            min-size="layoutSettings.leftPaneMinSize" max-size="layoutSettings.leftPaneMaxSize" snap-offset="0"
+            class="pane-left">
+            <fd-toolbar>
+                <span>{{ perspectiveName }}</span>
+                <fd-toolbar__spacer></fd-toolbar__spacer>
+                <fd-popover close-innerclick="false">
+                    <fd-popover-control>
+                        <fd-button compact="true" glyph="sap-icon--overflow" aria-label="More" dg-type="transparent">
+                        </fd-button>
+                    </fd-popover-control>
+                    <fd-popover-body no-arrow="true" dg-align="bottom-right">
+                        <fd-menu aria-label="left panel options">
+                            <fd-menu-item title="{{ tabs.label }}" aria-label="hide {{ tabs.label }}"
+                                ng-repeat="tabs in leftTabs track by $index" is-disabled="isLastVisiblePaneTab($index)"
+                                icon-before="{{ tabs.hidden ? 'none' : 'sap-icon--accept' }}"
+                                ng-click="togglePaneView($index)">
+                            </fd-menu-item>
+                        </fd-menu>
+                    </fd-popover-body>
+                </fd-popover>
+            </fd-toolbar>
             <accordion>
-                <accordion-pane ng-repeat="view in explorerTabs | filter:{hidden:'!true'}" view="view"
+                <accordion-pane ng-repeat="view in leftTabs | filter:{hidden:'!true'}" view="view"
                     state-changed="sideViewStateChanged()"></accordion-pane>
             </accordion>
         </split-pane>
-        <split-pane size="auto" min-size="100" snap-offset="0" ng-transclude>
-            <split direction="vertical" state="splitPanesState.main" ng-transclude>
+        <split-pane size="auto" min-size="100" snap-offset="0">
+            <split direction="vertical" state="splitPanesState.main">
                 <split-pane ng-if="!layoutSettings.hideEditorsPane" size="auto" min-size="0" snap-offset="0"
-                    class="pane-center" ng-transclude>
+                    class="pane-center">
 
                     <splitted-tabs direction="centerSplittedTabViews.direction" panes="centerSplittedTabViews.panes"
                         focused-pane="focusedTabView" remove-tab="closeCenterTab(pane)"
-                        split-tabs="splitCenterTabs(direction, pane)" hide-tabs="layoutSettings.hideCenterTabs"
-                        ng-transclude>
+                        split-tabs="splitCenterTabs(direction, pane)" hide-tabs="layoutSettings.hideCenterTabs">
                     </splitted-tabs>
 
                 </split-pane>
                 <split-pane ng-if="bottomTabs.length > 0" size="{{ layoutSettings.bottomPaneSize }}" min-size="0"
-                    snap-offset="100" class="pane-bottom" ng-transclude>
+                    snap-offset="100" class="pane-bottom">
                     <tabs selected-pane="selection.selectedBottomTab" hide-tabs="layoutSettings.hideBottomTabs">
                         <buttons ng-if="!layoutSettings.hideEditorsPane" class="dg-split-pane-buttons">
                             <button class="fd-button fd-button--compact fd-button--transparent"
@@ -42,8 +60,9 @@
                 </split-pane>
             </split>
         </split-pane>
-        <split-pane ng-if="rightTabs.length > 0" size="{{ layoutSettings.rightPaneSize }}" min-size="0"
-            snap-offset="100" class="pane-right" ng-transclude>
+        <split-pane ng-if="rightTabs.length > 0" size="{{ layoutSettings.rightPaneSize }}"
+            min-size="layoutSettings.rightPaneMinSize" max-size="layoutSettings.rightPaneMaxSize" snap-offset="0"
+            class="pane-right">
             <accordion>
                 <accordion-pane ng-repeat="view in rightTabs | filter:{hidden:'!true'}" view="view"
                     state-changed="sideViewStateChanged()"></accordion-pane>
