@@ -23,8 +23,12 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * The Class CsvimUtils.
+ */
 public class CsvimUtils {
 
+    /** The Constant PROGRAM_DEFAULT. */
     public static final String PROGRAM_DEFAULT = "Eclipse Dirigible";
 
     /** The Constant logger. */
@@ -37,6 +41,7 @@ public class CsvimUtils {
      * @param errorType    the error type
      * @param location     the location
      * @param artifactType the artifact type
+     * @param module the module
      */
     public static void logProcessorErrors(String errorMessage, String errorType, String location, String
             artifactType, String module) {
@@ -56,11 +61,11 @@ public class CsvimUtils {
      * Gets the table metadata.
      *
      * @param tableName the table name
+     * @param connection the connection
      * @return the table metadata
      */
-    public static TableMetadata getTableMetadata(String tableName, DataSourcesManager datasourcesManager) {
-        try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()) {
-            //return databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(datasourcesManager.getDefaultDataSource(), tableName));
+    public static TableMetadata getTableMetadata(String tableName, Connection connection) {
+        try {
             return DatabaseMetadataHelper.describeTable(connection, null, DatabaseMetadataHelper.getTableSchema(connection, tableName), tableName);
         } catch (SQLException sqlException) {
             if (logger.isErrorEnabled()) {
