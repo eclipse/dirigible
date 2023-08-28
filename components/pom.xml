@@ -36,6 +36,7 @@
 		<module>data-store</module>
 		<module>data-csvim</module>
 		<module>data-export</module>
+		<module>data-import</module>
 
 		<!-- Engines -->
 		<module>engine-javascript</module>

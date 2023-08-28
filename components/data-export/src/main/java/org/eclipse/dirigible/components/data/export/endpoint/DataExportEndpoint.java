@@ -38,11 +38,6 @@ import static java.text.MessageFormat.format;
 public class DataExportEndpoint {
 
     /**
-     * The database export service.
-     */
-    private final DatabaseExportService databaseExportService;
-
-    /**
      * The database metadata service.
      */
     private final DatabaseMetadataService databaseMetadataService;
@@ -52,17 +47,13 @@ public class DataExportEndpoint {
      */
     private final DataExportService dataExportService;
 
-    //private final TransportService transportService;
-
     /**
      * Instantiates a new data export endpoint.
      *
-     * @param databaseExportService   the database export service
      * @param databaseMetadataService the database metadata service
      * @param dataExportService       the data export service
      */
-    public DataExportEndpoint(DatabaseExportService databaseExportService, DatabaseMetadataService databaseMetadataService, DataExportService dataExportService) {
-        this.databaseExportService = databaseExportService;
+    public DataExportEndpoint(DatabaseMetadataService databaseMetadataService, DataExportService dataExportService) {
         this.databaseMetadataService = databaseMetadataService;
         this.dataExportService = dataExportService;
     }
@@ -74,6 +65,7 @@ public class DataExportEndpoint {
      * @param schema the schema name
      * @return the response
      * @throws SQLException the SQL exception
+     * @throws URISyntaxException the URI syntax exception
      */
     @PutMapping(value = "/metadata/{datasource}/{schema}")
     public ResponseEntity<URI> exportMetadataAsProject(
@@ -96,6 +88,8 @@ public class DataExportEndpoint {
      * @param datasource the datasource
      * @param schema     the schema name
      * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     * @throws SQLException the SQL exception
      */
     @PutMapping(value = "/csv/{datasource}/{schema}")
     public ResponseEntity<URI> exportDataAsProject(

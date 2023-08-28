@@ -287,6 +287,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						};
 					}
 
+					// Export data
 					ctxmenu.exportData = {
 						"separator_before": true,
 						"label": "Export Data",
@@ -298,8 +299,25 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.data.export.artifact', sqlCommand);
 						}.bind(this)
 					};
+					
+					// Import data to table
+					if (node.original.type === 'table' || node.original.type === 'base table') {
+						ctxmenu.importScript = {
+							"separator_before": false,
+							"label": "Import Data",
+							"action": function (data) {
+								let tree = $.jstree.reference(data.reference);
+								let node = tree.get_node(data.reference);
+								let parentNodeName = tree.get_text(node.parent);
+								let sqlCommand = parentNodeName + "." + node.original.text;
+								messageHub.postMessage('database.data.import.artifact', sqlCommand);
+							}.bind(this)
+						};
+					}
+					
+					// Export metadata
 					ctxmenu.exportMetadata = {
-						"separator_before": false,
+						"separator_before": true,
 						"label": "Export Metadata",
 						"action": function (data) {
 							let tree = $.jstree.reference(data.reference);
