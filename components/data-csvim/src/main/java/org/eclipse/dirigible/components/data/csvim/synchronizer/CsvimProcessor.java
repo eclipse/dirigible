@@ -50,6 +50,9 @@ import java.util.stream.Collectors;
 
 import static org.eclipse.dirigible.components.api.platform.RepositoryFacade.getResource;
 
+/**
+ * The Class CsvimProcessor.
+ */
 @Component
 public class CsvimProcessor {
 
@@ -118,6 +121,7 @@ public class CsvimProcessor {
      */
     private static final String PROBLEM_MESSAGE_INSERT_RECORD = "Error occurred while trying to insert in table [%s] a CSV record [%s].";
 
+    /** The Constant PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER. */
     private static final String PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER = "No table metadata found for table [%s] or CSVParser not created";
 
     /**
@@ -149,13 +153,12 @@ public class CsvimProcessor {
      * @param csvFile    the csv file
      * @param content    the content
      * @param connection the connection
-     * @throws SQLException the SQL exception
-     * @throws IOException  Signals that an I/O exception has occurred.
+     * @throws Exception the exception
      */
     public void process(CsvFile csvFile, byte[] content, Connection connection) throws Exception {
         String tableName = csvFile.getTable();
         CSVParser csvParser = getCsvParser(csvFile, new ByteArrayInputStream(content));
-        TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
+        TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, connection);
 
         if (tableMetadata == null || csvParser == null) {
             String error = String.format(PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER, tableName);
@@ -167,7 +170,7 @@ public class CsvimProcessor {
         List<CSVRecord> recordsToInsert = new ArrayList<>();
         List<CSVRecord> recordsToUpdate = new ArrayList<>();
 
-        String pkNameForCSVRecord = getPkNameForCSVRecord(tableName, csvParser.getHeaderNames());
+        String pkNameForCSVRecord = getPkNameForCSVRecord(connection, tableName, csvParser.getHeaderNames());
 
         List<CSVRecord> csvRecords = csvParser.getRecords();
         int maxCompareSize = DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE_DEFAULT;
@@ -183,7 +186,7 @@ public class CsvimProcessor {
             }
         } else {
             for (CSVRecord csvRecord : csvRecords) {
-                String pkValueForCSVRecord = getPkValueForCSVRecord(csvRecord, tableName, csvParser.getHeaderNames());
+                String pkValueForCSVRecord = getPkValueForCSVRecord(connection, csvRecord, tableName, csvParser.getHeaderNames());
 
                 if (pkValueForCSVRecord == null) {
                     CsvimUtils.logProcessorErrors(PROBLEM_MESSAGE_NO_PRIMARY_KEY, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
@@ -203,8 +206,8 @@ public class CsvimProcessor {
             }
         }
 
-        insertCsvRecords(recordsToInsert, csvParser.getHeaderNames(), csvFile);
-        updateCsvRecords(recordsToUpdate, csvParser.getHeaderNames(), csvFile);
+        insertCsvRecords(connection, recordsToInsert, csvParser.getHeaderNames(), csvFile);
+        updateCsvRecords(connection, recordsToUpdate, csvParser.getHeaderNames(), csvFile);
 
         if ((recordsToInsert.size() > 0 || recordsToUpdate.size() > 0) && csvFile.getSequence() != null) {
             int sequenceStart = csvRecords.size() + 1;
@@ -273,6 +276,7 @@ public class CsvimProcessor {
      * Gets the csv parser.
      *
      * @param csvFile the csv file
+     * @param contentAsInputStream the content as input stream
      * @return the csv parser
      */
     private CSVParser getCsvParser(CsvFile csvFile, InputStream contentAsInputStream) {
@@ -295,6 +299,7 @@ public class CsvimProcessor {
      *
      * @param csvFile the csv file
      * @return the CSV format
+     * @throws Exception the exception
      */
     private CSVFormat createCSVFormat(CsvFile csvFile) throws Exception {
         if (csvFile.getDelimField() != null && (!csvFile.getDelimField().equals(",") && !csvFile.getDelimField().equals(";"))) {
@@ -322,12 +327,13 @@ public class CsvimProcessor {
     /**
      * Gets the pk name for CSV record.
      *
+     * @param connection the connection
      * @param tableName   the table name
      * @param headerNames the header names
      * @return the pk name for CSV record
      */
-    private String getPkNameForCSVRecord(String tableName, List<String> headerNames) {
-        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
+    private String getPkNameForCSVRecord(Connection connection, String tableName, List<String> headerNames) {
+        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, connection);
         if (tableModel != null) {
             List<ColumnMetadata> columnModels = tableModel.getColumns();
             if (headerNames.size() > 0) {
@@ -363,13 +369,14 @@ public class CsvimProcessor {
     /**
      * Insert csv records.
      *
+     * @param connection the connection
      * @param recordsToProcess the records to process
      * @param headerNames      the header names
      * @param csvFile          the csv file
      */
-    private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFile) {
+    private void insertCsvRecords(Connection connection, List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFile) {
         String tableName = csvFile.getTable();
-        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
+        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, connection);
 
         try {
             for (List<CSVRecord> csvBatch : Lists.partition(recordsToProcess, getCsvDataBatchSize())) {
@@ -377,7 +384,7 @@ public class CsvimProcessor {
                                 e -> new CsvRecord(e, tableModel, headerNames, csvFile.getDistinguishEmptyFromNull()))
                         .collect(Collectors.toList()
                         );
-                csvProcessor.insert(csvRecords, csvFile);
+                csvProcessor.insert(connection, csvRecords, csvFile);
             }
         } catch (Exception e) {
             String csvRecordValue = e.getMessage();
@@ -391,13 +398,14 @@ public class CsvimProcessor {
     /**
      * Update csv records.
      *
+     * @param connection the connection
      * @param recordsToProcess the records to process
      * @param headerNames      the header names
      * @param csvFile          the csv file
      */
-    private void updateCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFile) {
+    private void updateCsvRecords(Connection connection, List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFile csvFile) {
         String tableName = csvFile.getTable();
-        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
+        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, connection);
 
         try {
             for (List<CSVRecord> csvBatch : Lists.partition(recordsToProcess, getCsvDataBatchSize())) {
@@ -405,7 +413,7 @@ public class CsvimProcessor {
                                 e -> new CsvRecord(e, tableModel, headerNames, csvFile.getDistinguishEmptyFromNull()))
                         .collect(Collectors.toList()
                         );
-                csvProcessor.update(csvRecords, csvFile);
+                csvProcessor.update(connection, csvRecords, csvFile);
             }
         } catch (SQLException e) {
             String csvRecordValue = e.getMessage();
@@ -419,13 +427,14 @@ public class CsvimProcessor {
     /**
      * Gets the pk value for CSV record.
      *
+     * @param connection the connection
      * @param csvRecord   the csv record
      * @param tableName   the table name
      * @param headerNames the header names
      * @return the pk value for CSV record
      */
-    private String getPkValueForCSVRecord(CSVRecord csvRecord, String tableName, List<String> headerNames) {
-        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, datasourcesManager);
+    private String getPkValueForCSVRecord(Connection connection, CSVRecord csvRecord, String tableName, List<String> headerNames) {
+        TableMetadata tableModel = CsvimUtils.getTableMetadata(tableName, connection);
         if (tableModel != null) {
             List<ColumnMetadata> columnModels = tableModel.getColumns();
             if (headerNames.size() > 0) {

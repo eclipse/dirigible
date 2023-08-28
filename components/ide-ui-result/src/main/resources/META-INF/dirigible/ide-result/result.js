@@ -208,6 +208,19 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         }
     }, true);
 
+	messageHub.onDidReceiveMessage("database.data.import.artifact", function (command) {
+        let artifact = command.data.split('.');
+        let url = "/services/data/import/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
+        messageHub.showDialogWindow(
+            "import",
+            {
+                importType: 'data',
+                uploadPath: url,
+                workspace: "", 
+                table: $scope.datasource + " -> " + artifact[0] + " -> " + artifact[1],
+            }
+        );
+    }, true);
 
     messageHub.onDidReceiveMessage("database.data.export.artifact", function (command) {
         let artifact = command.data.split('.');

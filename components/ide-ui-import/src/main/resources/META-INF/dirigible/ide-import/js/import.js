@@ -62,6 +62,12 @@ importView.controller('ImportViewController', [
                         $scope.dropAreaTitle = 'Import files';
                         $scope.dropAreaSubtitle = 'Drop file(s) here, or use the "+" button.';
                         $scope.dropAreaMore = `Files will be imported in "${params.uploadPath}"`;
+                    } if (params.importType === 'data') {
+                        $scope.inputAccept = 'csv';
+                        $scope.importType = params.importType;
+                        $scope.dropAreaTitle = 'Import CSV files';
+                        $scope.dropAreaSubtitle = 'Drop file(s) here, or use the "+" button.';
+                        $scope.dropAreaMore = `Files will be imported in "${params.table}"`;
                     } else {
                         $scope.dropAreaTitle = 'Import files from zip';
                         $scope.dropAreaMore = `Files will be extracted in "${params.uploadPath}"`;
@@ -77,7 +83,7 @@ importView.controller('ImportViewController', [
             name: 'customFilter',
             fn: function (item /*{File|FileLikeObject}*/, options) {
                 let type = item.type.slice(item.type.lastIndexOf('/') + 1);
-                if ($scope.importType !== 'file')
+                if ($scope.importType !== 'file' && $scope.importType !== 'data')
                     if (type != 'zip' && type != 'x-zip' && type != 'x-zip-compressed') {
                         return false;
                     }
@@ -94,6 +100,11 @@ importView.controller('ImportViewController', [
                         'Dirigible-Editor': 'Editor'
                     };
                     item.url = new UriBuilder().path(transportApi.getFileImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).path('/').build();
+                } else if ($scope.inDialog && $scope.importType === 'data') {
+                    item.headers = {
+                        'Dirigible-Editor': 'Editor'
+                    };
+                    item.url = new UriBuilder().path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).path('/').build();
                 } else {
                     item.url = new UriBuilder().path(transportApi.getZipImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path('/').build();
                 }
