@@ -105,3 +105,10 @@ function buildUrl(url, options) {
 }
 
 export const httpClient = new HttpClient();
+export const get = httpClient.get;
+export const post = httpClient.post;
+export const put = httpClient.put;
+export const patch = httpClient.patch;
+export const head = httpClient.head;
+export const trace = httpClient.trace;
+export const del = httpClient.delete;
