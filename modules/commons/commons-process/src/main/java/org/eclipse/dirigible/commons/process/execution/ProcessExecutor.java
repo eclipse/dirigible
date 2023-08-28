@@ -12,11 +12,13 @@
 package org.eclipse.dirigible.commons.process.execution;
 
 import org.apache.commons.exec.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.dirigible.commons.process.Commandline;
 import org.eclipse.dirigible.commons.process.execution.output.OutputsPair;
 import org.eclipse.dirigible.commons.process.execution.output.ProcessResult;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
@@ -54,12 +56,19 @@ public abstract class ProcessExecutor<TOut> {
      * @param environmentVariables the environment variables
      * @return the future
      */
-    public Future<ProcessResult<TOut>> executeProcess(String path, Map<String, String> environmentVariables) {
+    public Future<ProcessResult<TOut>> executeProcess(String path, Map<String, String> environmentVariables, ProcessExecutionOptions options) {
         try {
             Pair<String, String[]> executableAndArgs = toExecutableAndArgs(path);
             CommandLine commandLine = new CommandLine(executableAndArgs.getLeft());
             commandLine.addArguments(executableAndArgs.getRight(), false);
             DefaultExecutor executor = new DefaultExecutor();
+
+            String maybeWorkingDirectory = options.getWorkingDirectory();
+            if (!StringUtils.isEmpty(maybeWorkingDirectory)) {
+                File workingDirectory = new File(maybeWorkingDirectory);
+                executor.setWorkingDirectory(workingDirectory);
+            }
+
             return executeProcess(commandLine, executor, environmentVariables);
         } catch (Throwable t) {
             throw new ProcessExecutionException(t);

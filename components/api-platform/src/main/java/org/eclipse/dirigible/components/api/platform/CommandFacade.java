@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.process.execution.ProcessExecutionOptions;
 import org.eclipse.dirigible.commons.process.execution.ProcessExecutor;
 import org.eclipse.dirigible.commons.process.execution.output.OutputsPair;
 import org.eclipse.dirigible.commons.process.execution.output.ProcessResult;
@@ -27,6 +29,24 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CommandFacade {
+
+    /**
+     * Execute service module.
+     *
+     * @param command the command line code
+     * @param add the add
+     * @param remove the remove
+     * @return the output of the command
+     * @throws ExecutionException the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+    public static String execute(
+            String command,
+            Map<String, String> add,
+            List<String> remove
+    ) throws ExecutionException, InterruptedException {
+        return execute(command, add, remove, new ProcessExecutionOptions());
+    }
 	
 	/**
 	 * Execute service module.
@@ -34,15 +54,41 @@ public class CommandFacade {
 	 * @param command the command line code
 	 * @param add the add
 	 * @param remove the remove
+     * @param processExecutionOptionsJson options for the process execution
 	 * @return the output of the command
 	 * @throws ExecutionException the execution exception
 	 * @throws InterruptedException the interrupted exception
 	 */
+    public static String execute(
+            String command,
+            Map<String, String> add,
+            List<String> remove,
+            String processExecutionOptionsJson
+    ) throws ExecutionException, InterruptedException {
+        ProcessExecutionOptions options = GsonHelper.fromJson(processExecutionOptionsJson, ProcessExecutionOptions.class);
+        return execute(command, add, remove, options);
+    }
 
-    public static String execute(String command, Map<String, String> add, List<String> remove) throws ExecutionException, InterruptedException {
+    /**
+     * Execute service module.
+     *
+     * @param command the command line code
+     * @param add the add
+     * @param remove the remove
+     * @param processExecutionOptions options for the process execution
+     * @return the output of the command
+     * @throws ExecutionException the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+    public static String execute(
+            String command,
+            Map<String, String> add,
+            List<String> remove,
+            ProcessExecutionOptions processExecutionOptions
+    ) throws ExecutionException, InterruptedException {
         Map<String, String> environmentVariablesToUse = createEnvironmentVariables(add, remove);
         ProcessExecutor<OutputsPair> processExecutor = ProcessExecutor.create();
-        Future<ProcessResult<OutputsPair>> outputFuture = processExecutor.executeProcess(command, environmentVariablesToUse);
+        Future<ProcessResult<OutputsPair>> outputFuture = processExecutor.executeProcess(command, environmentVariablesToUse, processExecutionOptions);
         ProcessResult<OutputsPair> output = outputFuture.get();
         return output.getProcessOutputs().getStandardOutput();
     }
