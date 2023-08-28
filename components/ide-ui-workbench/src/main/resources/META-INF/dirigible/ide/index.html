@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2010-2022 SAP and others.
+  ~ Copyright (c) 2010-2023 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -8,7 +8,6 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-
 <html lang="en" ng-app="workbench" ng-controller="WorkbenchController" xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
@@ -19,7 +18,8 @@
         <title dg-brand-title></title>
         <script type="text/javascript" src="/services/web/ide/services/workbench.js"></script>
         <theme></theme>
-        <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-perspective-js"></script>
+        <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-perspective-js">
+        </script>
         <link type="text/css" rel="stylesheet"
             href="/services/js/resources-core/services/loader.js?id=ide-perspective-css" />
     </head>
@@ -28,7 +28,7 @@
         <ide-header menu-ext-id="ide-menu"></ide-header>
         <ide-contextmenu></ide-contextmenu>
         <ide-container>
-            <ide-layout views-layout-model="layoutModel"></ide-layout>
+            <ide-layout views-layout-model="layoutModel" layout-config="layoutConfig"></ide-layout>
         </ide-container>
         <ide-dialogs></ide-dialogs>
         <ide-status-bar></ide-status-bar>
@@ -38,11 +38,12 @@
                     messageHubProvider.eventIdPrefix = 'workbench';
                 }])
                 .controller('WorkbenchController', ["$scope", "messageHub", function ($scope, messageHub) {
-
                     $scope.layoutModel = {
                         views: ['welcome', 'projects', 'import', 'search', 'properties', 'console', 'preview', 'problems'],
                     };
-
+                    $scope.layoutConfig = {
+						leftPaneMinSize: 348,
+					};
                 }]);
         </script>
     </body>

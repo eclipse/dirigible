@@ -95,7 +95,7 @@
         </fd-toolbar>
         <div class="dg-stretch">
             <split direction="horizontal">
-                <split-pane size="50" min-size="0" snap-offset="100">
+                <split-pane size="50" min-size="340">
                     <div ng-show="showDropZone" class="drop-zone-backdrop"></div>
                     <fd-scrollbar class="dg-fill-parent dg-file-drop" nv-file-drop="" uploader="uploader"
                         filters="queueLimit, customFilter">
@@ -162,7 +162,7 @@
                         </div>
                     </fd-scrollbar>
                 </split-pane>
-                <split-pane size="50" min-size="0" snap-offset="100">
+                <split-pane size="50">
                     <iframe id="preview-iframe" ng-show="selectedFile" src="about:blank"></iframe>
                     <fd-message-page ng-if="!selectedFile" glyph="sap-icon--detail-view">
                         <fd-message-page-title>File Preview</fd-message-page-title>
