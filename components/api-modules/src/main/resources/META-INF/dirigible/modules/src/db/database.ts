@@ -15,7 +15,7 @@
  */
 import * as bytes from "@dirigible/io/bytes";
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
-const DatabaseResultSetHelper = Java.type("org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper");
+const DatabaseResultSetHelper = Java.type("org.eclipse.dirigible.components.data.management.helpers.DatabaseResultSetHelper");
 const JSqlDate = Java.type("java.sql.Date");
 const JSqlTimestamp = Java.type("java.sql.Timestamp");
 const JSqlTime = Java.type("java.sql.Time");

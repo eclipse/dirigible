@@ -28,7 +28,7 @@
                 </executions>
                 <configuration>
                     <executable>${basedir}/src/main/resources/META-INF/dirigible/modules/build.sh</executable>
-                    <workingDirectory>${basedir}/src/main/resources/META-INF/dirigible/modules</workingDirectory>
+                    <workingDirectory>src/main/resources/META-INF/dirigible/modules</workingDirectory>
                 </configuration>
             </plugin>
         </plugins>
