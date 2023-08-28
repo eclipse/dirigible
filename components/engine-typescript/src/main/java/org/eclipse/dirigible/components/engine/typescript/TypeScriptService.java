@@ -97,6 +97,7 @@ public class TypeScriptService {
         esbuildCommand.addAll(filesToCompile.stream().map(Object::toString).toList());
         esbuildCommand.add("--outdir=" + outDir);
         esbuildCommand.add("--out-extension:.js=.mjs");
+        esbuildCommand.add("--sourcemap=inline");
 
         var processBuilder = new ProcessBuilder(esbuildCommand)
                 .directory(projectDir)
