@@ -31,9 +31,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -315,7 +317,7 @@ public class CsvProcessor {
 
         if (value == null) {
             preparedStatement.setNull(i, DataTypeUtils.getSqlTypeByDataType(dataType));
-        } else if ("CHARACTER VARYING".equals(dataType) || Types.VARCHAR == DataTypeUtils.getSqlTypeByDataType(dataType)) {
+        } else if (Types.VARCHAR == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setString(i, sanitize(value));
         } else if (Types.NVARCHAR == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setString(i, sanitize(value));
@@ -345,16 +347,25 @@ public class CsvProcessor {
         } else if (Types.DOUBLE == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setDouble(i, Double.parseDouble(value));
-        } else if (Types.BOOLEAN == DataTypeUtils.getSqlTypeByDataType(dataType) || Types.BIT == DataTypeUtils.getSqlTypeByDataType(dataType)) {
+        } else if (Types.BOOLEAN == DataTypeUtils.getSqlTypeByDataType(dataType) 
+        		|| Types.BIT == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setBoolean(i, Boolean.parseBoolean(value));
         } else if (Types.DECIMAL == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setBigDecimal(i, new BigDecimal(value));
         } else if (Types.NCLOB == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setString(i, sanitize(value));
+        } else if (Types.BLOB == DataTypeUtils.getSqlTypeByDataType(dataType)
+        		|| Types.BINARY == DataTypeUtils.getSqlTypeByDataType(dataType)
+        		|| Types.LONGVARBINARY == DataTypeUtils.getSqlTypeByDataType(dataType)) {
+        	byte[] bytes = Base64.getDecoder().decode(value);
+        	preparedStatement.setBinaryStream(i, new ByteArrayInputStream(bytes), bytes.length);
+        } else if (Types.CLOB == DataTypeUtils.getSqlTypeByDataType(dataType) 
+        		|| Types.LONGVARCHAR == DataTypeUtils.getSqlTypeByDataType(dataType)) {
+        	byte[] bytes = Base64.getDecoder().decode(value);
+        	preparedStatement.setAsciiStream(i, new ByteArrayInputStream(bytes), bytes.length);
         } else {
-            throw new PersistenceException(
-                    String.format("Database type [%s] not supported", JDBCType.valueOf(dataType).getName()));
+            throw new PersistenceException(String.format("Database type [%s] not supported", dataType));
         }
     }
 
