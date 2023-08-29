@@ -259,25 +259,42 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 				if (undepleted.size() > 0) {
 					if (logger.isWarnEnabled()) {logger.warn("Cross-processing of undepleated artefacts...");}
 					try {
-						List<TopologyWrapper<? extends Artefact>> cross = new ArrayList<>();
-						List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(undepleted, ArtefactPhase.PREPARE);
-						cross.addAll(results);
-						registerErrors(results, ArtefactLifecycle.PREPARED);
-						
-						results = depleter.deplete(undepleted, ArtefactPhase.CREATE);
-						cross.addAll(results);
-						registerErrors(results, ArtefactLifecycle.CREATED);
-						
-						results = depleter.deplete(undepleted, ArtefactPhase.UPDATE);
-						cross.addAll(results);
-						registerErrors(results, ArtefactLifecycle.UPDATED);
-						
-						results = depleter.deplete(undepleted, ArtefactPhase.START);
-						cross.addAll(results);
-						registerErrors(results, ArtefactLifecycle.STARTED);
-						
-						if (cross.size() > 0) {
-							
+						while(undepleted.size() > 0) {
+							List<TopologyWrapper<? extends Artefact>> cross = new ArrayList<>();
+							List<TopologyWrapper<? extends Artefact>> results = depleter.deplete(undepleted, ArtefactPhase.PREPARE);
+							cross.addAll(results);
+							registerErrors(results, ArtefactLifecycle.PREPARED);
+
+							results = depleter.deplete(undepleted, ArtefactPhase.CREATE);
+							cross.addAll(results);
+							registerErrors(results, ArtefactLifecycle.CREATED);
+
+							results = depleter.deplete(undepleted, ArtefactPhase.UPDATE);
+							cross.addAll(results);
+							registerErrors(results, ArtefactLifecycle.UPDATED);
+
+							results = depleter.deplete(undepleted, ArtefactPhase.START);
+							cross.addAll(results);
+							registerErrors(results, ArtefactLifecycle.STARTED);
+
+							undepleted.clear();
+
+							if (cross.size() == undepleted.size()) {
+								// No artefacts were depleted, exiting an infinite loop
+								if (logger.isErrorEnabled()) {
+									String crossArtefactsLeft = cross.stream().map(e -> e.getArtefact().getKey()).collect(Collectors.joining(", "));
+									String errorMessage = "Undepleted artefacts left after cross-processing: " + crossArtefactsLeft;
+									logger.error(errorMessage);
+								}
+								break;
+							} else if (cross.size() > 0) {
+								undepleted.addAll(cross);
+								if (logger.isWarnEnabled()) {
+									String crossArtefactsLeft = cross.stream().map(e -> e.getArtefact().getKey()).collect(Collectors.joining(", "));
+									String warnMessage = "Retring to deplete artefacts left after cross-processing: " + crossArtefactsLeft;
+									logger.warn(warnMessage);
+								}
+							}
 						}
 					} catch (Exception e) {
 						if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
@@ -664,7 +681,10 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 						wrapper.getArtefact().getType(), wrapper.getId(), lifecycle);
 				if (logger.isErrorEnabled()) {logger.error(errorMessage);}
 				errors.add(errorMessage);
-				wrapper.getSynchronizer().setStatus(wrapper.getArtefact(), lifecycle, errorMessage);
+				if (wrapper.getArtefact().getError() != null) {
+					errorMessage += " | " + wrapper.getArtefact().getError();
+				}
+				wrapper.getSynchronizer().setStatus(wrapper.getArtefact(), ArtefactLifecycle.FAILED, errorMessage);
 			}
 		}		
 	}
