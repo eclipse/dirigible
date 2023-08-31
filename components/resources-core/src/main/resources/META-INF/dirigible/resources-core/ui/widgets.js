@@ -1437,6 +1437,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * noArrow: Boolean - If the popup should have an arrow.
          * dropdownFill: Boolean - The dropdown body will be adjusted to match the text length.
          * canScroll: Boolean - Enable/disable scroll popover support. Default is true.
+         * inIconTabBar: Boolean - Enable when the popover is inside an icon tab bar.
          */
         return {
             restrict: 'E',
@@ -1449,6 +1450,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 noArrow: '<?',
                 dropdownFill: '<?',
                 canScroll: '<?',
+                inIconTabBar: '<?',
             },
             controller: function PopoverBodyController() {
                 this.widgetId = "popoverBody";
@@ -1484,6 +1486,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         'fd-popover__body--after fd-popover__body--arrow-left': scope.dgAlign === 'right-top',
                         'fd-popover__body--after fd-popover__body--middle fd-popover__body--arrow-left fd-popover__body--arrow-y-center': scope.dgAlign === 'right',
                         'fd-popover__body--after fd-popover__body--bottom fd-popover__body--arrow-left fd-popover__body--arrow-y-bottom': scope.dgAlign === 'right-bottom',
+                        'fd-icon-tab-bar__popover-body': scope.inIconTabBar,
                     });
                     function cleanUp() {
                         $window.removeEventListener('resize', resizeEvent);
@@ -5075,4 +5078,147 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 </div>
             </li>`
         }
-    }]);
+    }]).directive('fdIconTabBar', ['classNames', function (classNames) {
+        /**
+         * iconOnly: Boolean - When true, tabs can have icons but no text.
+         * hasIcons: Boolean - When true, tabs can have both icons and text.
+         * isProcess: Boolean - When the tabs are used as steps for a wizard, set this to true.
+         * isNav: Boolean - When the tabs are used as a main navigation, inside a Shell Navigation.
+         * flatNav: Boolean - Use with flat navigation.
+         * sidePadding: String - Size of the side padding. Supported options are 'sm', 'md', 'lg', 'xl', 'xxl' and 'responsive'.
+         */
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            scope: {
+                iconOnly: '<?',
+                hasIcons: '<?',
+                isProcess: '<?',
+                isNav: '<?',
+                flatNav: '<?',
+                sidePadding: '@?',
+            },
+            controller: function ($scope) {
+                $scope.getClasses = () => classNames({
+                    'fd-icon-tab-bar--icon-only': $scope.iconOnly && !$scope.hasIcons,
+                    'fd-icon-tab-bar--icon': $scope.hasIcons && !$scope.iconOnly,
+                    'fd-icon-tab-bar--process': $scope.isProcess,
+                    'fd-icon-tab-bar--navigation': $scope.isNav,
+                    'fd-icon-tab-bar--navigation-flat': $scope.isNav && $scope.flatNav,
+                    'fd-icon-tab-bar--sm': $scope.sidePadding === 'sm',
+                    'fd-icon-tab-bar--md': $scope.sidePadding === 'md',
+                    'fd-icon-tab-bar--lg': $scope.sidePadding === 'lg',
+                    'fd-icon-tab-bar--xl': $scope.sidePadding === 'xl',
+                    'fd-icon-tab-bar--xxl': $scope.sidePadding === 'xxl',
+                    'fd-icon-tab-bar--responsive-paddings': $scope.sidePadding === 'responsive',
+                });
+            },
+            template: `<div class="fd-icon-tab-bar" ng-class="getClasses()"><ul role="tablist" class="fd-icon-tab-bar__header" ng-transclude></ul></div>`
+        }
+    }]).directive('fdIconTabBarItem', ['classNames', function (classNames) {
+        /**
+         * label: String - Tab label.
+         * description: String - Description label next to the icon.
+         * counter: String - Counter label shown next to or above the label.
+         * hasBadge: Boolean - If the tab has a badge indicator.
+         * dgIcon: String - Icon class.
+         * dgHref: String - Link.
+         * tabId: String - The id of the tab.
+         * isSelected: Boolean - If the tab is selected.
+         * dgState: String - State of the tab. Possible options are 'positive', 'negative', 'critical' and 'informative'.
+         * isLastStep: Boolean - If the tabs is the last step of a process.
+         */
+        return {
+            restrict: 'E',
+            transclude: true,
+            require: '^^fdIconTabBar',
+            replace: true,
+            scope: {
+                label: '@?',
+                description: '@?',
+                counter: '@?',
+                hasBadge: '<?',
+                dgIcon: '@?',
+                dgHref: '@?',
+                tabId: '@',
+                isSelected: '<?',
+                dgState: '@?',
+                isLastStep: '<?',
+            },
+            link: function (scope, element, attr, tabBarCtrl) {
+                scope.isProcess = function () {
+                    if (tabBarCtrl.isProcess && !scope.isLastStep) return true;
+                    return false;
+                };
+            },
+            template: `<li role="presentation" class="fd-icon-tab-bar__item">
+                <a role="tab" class="fd-icon-tab-bar__tab" ng-attr-href="{{dgHref || undefined}}" aria-selected="{{isSelected || false}}"  id="{{tabId}}">
+                    <div ng-if="dgIcon" class="fd-icon-tab-bar__container">
+                        <span class="fd-icon-tab-bar__icon">
+                            <span  class="fd-icon-tab-bar__icon"><i class="{{dgIcon}}" role="presentation"></i></span>
+                        </span>
+                        <span ng-if="!description" class="fd-icon-tab-bar__counter">{{counter}}</span>
+                        <span ng-if="hasBadge" class="fd-icon-tab-bar__badge"></span>
+                    </div>
+                    <span ng-if="counter && !dgIcon" class="fd-icon-tab-bar__counter">{{counter}}</span>
+                    <span ng-if="hasBadge && !dgIcon" class="fd-icon-tab-bar__badge"></span>
+                    <span class="fd-icon-tab-bar__tag">{{label}}</span>
+                    <div ng-if="dgIcon && description" class="fd-icon-tab-bar__details">
+                        <span class="fd-icon-tab-bar__counter">{{counter}}</span>
+                        <span class="fd-icon-tab-bar__label">{{description}}</span>
+                    </div>
+                </a>
+                <span ng-if="isProcess()" class="fd-icon-tab-bar__separator"><i class="sap-icon--process" role="presentation"></i></span>
+            </li>`
+        }
+    }]).directive('fdIconTabBarOverflow', function (classNames) {
+        /**
+         * label: String - Button label.
+         * isHover: Boolean - Button is in hover state.
+         * isActive: Boolean - Button is in active state.
+         * isFocus: Boolean - Button is in focus state.
+         */
+        return {
+            restrict: 'E',
+            transclude: false,
+            replace: true,
+            scope: {
+                label: '@',
+                isHover: '<?',
+                isActive: '<?',
+                isFocus: '<?',
+            },
+            link: function (scope) {
+                scope.getClasses = () => classNames({
+                    'is-hover': scope.isHover,
+                    'is-active': scope.isActive,
+                    'is-focus': scope.isFocus,
+                });
+            },
+            template: `<fd-popover>
+				<fd-popover-control>
+					<button class="fd-icon-tab-bar__overflow" ng-class="getClasses()">
+                        <span class="fd-icon-tab-bar__overflow-text">{{label}}</span>
+                        <i class="sap-icon--slim-arrow-down" role="presentation"></i>
+                    </button>
+				</fd-popover-control>
+				<fd-popover-body dg-align="bottom-right">
+					<div class="fd-toolbar__overflow" ng-transclude></div>
+				</fd-popover-body>
+			</fd-popover>`
+        }
+    }).directive('fdIconTabBarPanel', function () {
+        /**
+         * 
+         */
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            scope: {
+                tabId: '@',
+            },
+            template: `<section role="tabpanel" class="fd-icon-tab-bar__panel" aria-labelledby="{{tabId}}" ng-transclude></section>`
+        }
+    });

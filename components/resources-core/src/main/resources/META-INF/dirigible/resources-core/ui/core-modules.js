@@ -31,7 +31,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
     .service('User', ['$http', function ($http) {
         return {
             get: function () {
-                let user = {};
+                let user = { name: undefined };
                 $http({
                     url: '/services/js/resources-core/services/user-name.js',
                     method: 'GET'
@@ -239,7 +239,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             templateUrl: '/services/web/resources-core/ui/templates/contextmenuSubmenu.html'
         };
     }])
-    .directive('ideHeader', ['$window', '$cookies', '$resource', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($window, $cookies, $resource, branding, theming, User, Menu, messageHub) {
+    .directive('ideHeader', ['$cookies', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($cookies, branding, theming, User, Menu, messageHub) {
         return {
             restrict: 'E',
             replace: true,
@@ -261,7 +261,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                             messageHub.postMessage(item.event, item.data, true);
                         }
                     };
-                }, post: function (scope, element) {
+                }, post: function (scope) {
                     scope.themes = [];
                     scope.currentTheme = theming.getCurrentTheme();
                     scope.user = User.get();
