@@ -26,6 +26,9 @@ import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
+import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
+import org.eclipse.dirigible.database.sql.dialects.postgres.PostgresSqlDialect;
+import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -364,6 +367,17 @@ public class CsvProcessor {
         		|| Types.LONGVARCHAR == DataTypeUtils.getSqlTypeByDataType(dataType)) {
         	byte[] bytes = Base64.getDecoder().decode(value);
         	preparedStatement.setAsciiStream(i, new ByteArrayInputStream(bytes), bytes.length);
+        } else if (Types.OTHER == DataTypeUtils.getSqlTypeByDataType(dataType)) {
+        	if (SqlDialectFactory.getDialect(preparedStatement.getConnection()) instanceof PostgresSqlDialect) {
+        		if (!value.trim().isEmpty()) {
+	        		PGobject pgobject = new PGobject();
+	        		pgobject.setType(dataType);
+	        		pgobject.setValue(value);
+	        		preparedStatement.setObject(i, pgobject);
+        		} else {
+        			preparedStatement.setNull(i, DataTypeUtils.getSqlTypeByDataType(dataType));
+        		}
+        	}
         } else {
             throw new PersistenceException(String.format("Database type [%s] not supported", dataType));
         }
