@@ -59,6 +59,7 @@ public interface Synchronizer<A extends Artefact> {
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
+	 * @throws ParseException the parse exception
 	 */
 	List<A> parse(String location, byte[] content) throws ParseException;
 	

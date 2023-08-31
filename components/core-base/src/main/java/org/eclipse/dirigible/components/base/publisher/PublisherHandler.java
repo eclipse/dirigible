@@ -31,6 +31,7 @@ public interface PublisherHandler {
      *
      * @param workspaceLocation the workspace location
      * @param registryLocation the registry location
+     * @param metadata the metadata
      */
     default void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {
     }
@@ -51,6 +52,9 @@ public interface PublisherHandler {
     default void afterUnpublish(String location) {
     }
 
+    /**
+     * The  AfterPublishMetadata.
+     */
     record AfterPublishMetadata(String workspace, String projectName, String entryPath, boolean isDirectory) { }
 
 }
