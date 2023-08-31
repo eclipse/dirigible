@@ -11,29 +11,7 @@
  */
 package org.eclipse.dirigible.components.data.csvim.synchronizer;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.data.management.domain.ColumnMetadata;
-import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
-import org.eclipse.dirigible.components.data.csvim.domain.Csv;
-import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
-import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
-import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
-import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.repository.api.RepositoryReadException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import static org.eclipse.dirigible.components.api.platform.RepositoryFacade.getResource;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -46,9 +24,33 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.eclipse.dirigible.components.api.platform.RepositoryFacade.getResource;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.data.csvim.domain.Csv;
+import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
+import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
+import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
+import org.eclipse.dirigible.components.data.management.domain.ColumnMetadata;
+import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
+import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.api.RepositoryReadException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.google.common.collect.Lists;
 
 /**
  * The Class CsvimProcessor.
@@ -187,21 +189,22 @@ public class CsvimProcessor {
         } else {
             for (CSVRecord csvRecord : csvRecords) {
                 String pkValueForCSVRecord = getPkValueForCSVRecord(connection, csvRecord, tableName, csvParser.getHeaderNames());
-
-                if (pkValueForCSVRecord == null) {
-                    CsvimUtils.logProcessorErrors(PROBLEM_MESSAGE_NO_PRIMARY_KEY, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
-                    throw new Exception(String.format(ERROR_MESSAGE_NO_PRIMARY_KEY, csvFile.getFile()));
-                }
-
+                
                 if (csvRecord.size() != tableColumns.size()) {
                     CsvimUtils.logProcessorErrors(String.format(PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE, pkValueForCSVRecord), ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
                     throw new Exception(String.format(ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE, pkValueForCSVRecord, csvFile.getFile()));
                 }
 
-                if (!recordExists(tableName, pkNameForCSVRecord, pkValueForCSVRecord, connection)) {
-                    recordsToInsert.add(csvRecord);
+                if (pkValueForCSVRecord == null) {
+//                    CsvimUtils.logProcessorErrors(PROBLEM_MESSAGE_NO_PRIMARY_KEY, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
+//                    throw new Exception(String.format(ERROR_MESSAGE_NO_PRIMARY_KEY, csvFile.getFile()));
+                	recordsToInsert.add(csvRecord);
                 } else {
-                    recordsToUpdate.add(csvRecord);
+	                if (!recordExists(tableName, pkNameForCSVRecord, pkValueForCSVRecord, connection)) {
+	                    recordsToInsert.add(csvRecord);
+	                } else {
+	                    recordsToUpdate.add(csvRecord);
+	                }
                 }
             }
         }
@@ -337,7 +340,8 @@ public class CsvimProcessor {
         if (tableModel != null) {
             List<ColumnMetadata> columnModels = tableModel.getColumns();
             if (headerNames.size() > 0) {
-                return columnModels.stream().filter(ColumnMetadata::isKey).findFirst().get().getName();
+            	ColumnMetadata found = columnModels.stream().filter(ColumnMetadata::isKey).findFirst().orElse(null);
+                return found != null ? found.getName() : null;
             }
 
             for (int i = 0; i < columnModels.size(); i++) {
@@ -380,10 +384,9 @@ public class CsvimProcessor {
 
         try {
             for (List<CSVRecord> csvBatch : Lists.partition(recordsToProcess, getCsvDataBatchSize())) {
-                List<CsvRecord> csvRecords = csvBatch.stream().map(
-                                e -> new CsvRecord(e, tableModel, headerNames, csvFile.getDistinguishEmptyFromNull()))
-                        .collect(Collectors.toList()
-                        );
+                List<CsvRecord> csvRecords = csvBatch.stream()
+                		.map(e -> new CsvRecord(e, tableModel, headerNames, csvFile.getDistinguishEmptyFromNull()))
+                		.collect(Collectors.toList());
                 csvProcessor.insert(connection, csvRecords, csvFile);
             }
         } catch (Exception e) {
@@ -438,9 +441,14 @@ public class CsvimProcessor {
         if (tableModel != null) {
             List<ColumnMetadata> columnModels = tableModel.getColumns();
             if (headerNames.size() > 0) {
-                String pkColumnName = columnModels.stream().filter(ColumnMetadata::isKey).findFirst().get().getName();
-                int csvRecordPkValueIndex = headerNames.indexOf(pkColumnName);
-                return csvRecordPkValueIndex >= 0 ? csvRecord.get(csvRecordPkValueIndex) : null;
+                ColumnMetadata found = columnModels.stream().filter(ColumnMetadata::isKey).findFirst().orElse(null);
+                String pkColumnName	= found != null ? found.getName() : null;
+                if (pkColumnName != null) {
+	                int csvRecordPkValueIndex = headerNames.indexOf(pkColumnName);
+	                return csvRecordPkValueIndex >= 0 ? csvRecord.get(csvRecordPkValueIndex) : null;
+                } else {
+                	return null;
+                }
             }
 
             for (int i = 0; i < csvRecord.size(); i++) {
