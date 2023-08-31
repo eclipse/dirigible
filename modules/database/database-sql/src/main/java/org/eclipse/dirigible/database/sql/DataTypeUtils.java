@@ -107,8 +107,8 @@ public class DataTypeUtils {
 		
 		STRING_TO_DATABASE_TYPE.put("ARRAY", Types.ARRAY);
 		
-		STRING_TO_DATABASE_TYPE.put("JSON", Types.CLOB);
-		STRING_TO_DATABASE_TYPE.put("JSONB", Types.BLOB);
+		STRING_TO_DATABASE_TYPE.put("JSON", Types.OTHER);
+		STRING_TO_DATABASE_TYPE.put("JSONB", Types.OTHER);
 
 		JAVA_TYPE_TO_DATABASE_TYPE.put(String.class, Types.VARCHAR);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(String.class, Types.NVARCHAR);
