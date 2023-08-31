@@ -40,7 +40,6 @@ public interface SynchronizerCallback {
 	/**
 	 * Register errors.
 	 *
-	 * @param synchronizer the synchronizer
 	 * @param remained the remained
 	 * @param lifecycle the lifecycle
 	 */
@@ -49,7 +48,6 @@ public interface SynchronizerCallback {
 	/**
 	 * Register errors.
 	 *
-	 * @param synchronizer the synchronizer
 	 * @param remained the remained
 	 * @param lifecycle the lifecycle
 	 */
