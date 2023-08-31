@@ -135,9 +135,9 @@ public class ProblemsFacade implements InitializingBean {
         try {
             Problem problem = ProblemsFacade.getArtefactSynchronizationProblem(artefact);
             if (problem != null) {
-                ProblemsFacade.updateArtefactSynchronizationProblem(artefact, (problem.getCause() + " | " + errorMessage).substring(0, 2000));
-            } else {
                 ProblemsFacade.updateArtefactSynchronizationProblem(artefact, errorMessage);
+            } else {
+                ProblemsFacade.saveArtefactSynchronizationProblem(artefact, errorMessage);
             }
         } catch (Exception e) {
             if (logger.isErrorEnabled()) { logger.error("Error occurred while upserting artefact synchronization problem", e); }
