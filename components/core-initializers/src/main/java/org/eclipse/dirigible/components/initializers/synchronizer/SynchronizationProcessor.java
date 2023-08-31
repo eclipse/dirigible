@@ -670,7 +670,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	/**
 	 * Register errors.
 	 *
-	 * @param synchronizer the synchronizer
 	 * @param remained the remained
 	 * @param lifecycle the lifecycle
 	 */
@@ -699,7 +698,6 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 	/**
 	 * Register fatal errors.
 	 *
-	 * @param synchronizer the synchronizer
 	 * @param remained the remained
 	 * @param lifecycle the lifecycle
 	 */
