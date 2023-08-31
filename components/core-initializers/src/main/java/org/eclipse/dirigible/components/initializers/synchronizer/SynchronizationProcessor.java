@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
+import org.eclipse.dirigible.components.api.platform.ProblemsFacade;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -39,6 +40,7 @@ import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatu
 import org.eclipse.dirigible.components.base.healthcheck.status.HealthCheckStatus.Jobs.JobStatus;
 import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
+import org.eclipse.dirigible.components.ide.problems.domain.Problem;
 import org.eclipse.dirigible.components.initializers.definition.Definition;
 import org.eclipse.dirigible.components.initializers.definition.DefinitionService;
 import org.eclipse.dirigible.components.initializers.definition.DefinitionState;
@@ -277,9 +279,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 							cross.addAll(results);
 							registerErrors(results, ArtefactLifecycle.STARTED);
 
-							undepleted.clear();
-
-							if (cross.size() == undepleted.size()) {
+							if (cross.size() > 0 && cross.size() == undepleted.size()) {
 								// No artefacts were depleted, exiting an infinite loop
 								if (logger.isErrorEnabled()) {
 									String crossArtefactsLeft = cross.stream().map(e -> e.getArtefact().getKey()).collect(Collectors.joining(", "));
@@ -288,6 +288,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 								}
 								break;
 							} else if (cross.size() > 0) {
+								undepleted.clear();
 								undepleted.addAll(cross);
 								if (logger.isWarnEnabled()) {
 									String crossArtefactsLeft = cross.stream().map(e -> e.getArtefact().getKey()).collect(Collectors.joining(", "));
@@ -297,7 +298,7 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 							}
 						}
 					} catch (Exception e) {
-						if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+						if (logger.isErrorEnabled()) {logger.error("Error occurred while cross-processing of undepleated artefacts", e);}
 					}
 					if (logger.isWarnEnabled()) {logger.warn("Cross-processing of undepleated artefacts done.");}
 				}
@@ -681,10 +682,16 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
 						wrapper.getArtefact().getType(), wrapper.getId(), lifecycle);
 				if (logger.isErrorEnabled()) {logger.error(errorMessage);}
 				errors.add(errorMessage);
-				if (wrapper.getArtefact().getError() != null) {
+				if (wrapper.getArtefact().getError() != null && !wrapper.getArtefact().getError().equals("")) {
 					errorMessage += " | " + wrapper.getArtefact().getError();
 				}
 				wrapper.getSynchronizer().setStatus(wrapper.getArtefact(), ArtefactLifecycle.FAILED, errorMessage);
+				Problem problem = ProblemsFacade.getArtefactSynchronizationProblem(wrapper.getArtefact());
+				if (problem != null) {
+					ProblemsFacade.updateArtefactSynchronizationProblem(wrapper.getArtefact(), errorMessage);
+				} else {
+					ProblemsFacade.saveArtefactSynchronizationProblem(wrapper.getArtefact(), errorMessage);
+				}
 			}
 		}		
 	}

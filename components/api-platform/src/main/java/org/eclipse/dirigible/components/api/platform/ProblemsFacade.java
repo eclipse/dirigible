@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.api.platform;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.ide.problems.domain.Problem;
 import org.eclipse.dirigible.components.ide.problems.service.ProblemService;
 import org.springframework.beans.factory.InitializingBean;
@@ -44,11 +45,9 @@ public class ProblemsFacade implements InitializingBean {
 	
 	/**
 	 * After properties set.
-	 *
-	 * @throws Exception the exception
 	 */
 	@Override
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		INSTANCE = this;		
 	}
 	
@@ -83,12 +82,52 @@ public class ProblemsFacade implements InitializingBean {
      * @param module the module
      * @param source the source
      * @param program the program
-     * @throws Exception the exception
      */
     public static final void save(String location, String type, String line, String column, String cause, String expected,
-                                  String category, String module, String source, String program) throws Exception {
+                                  String category, String module, String source, String program) {
     	Problem problem = new Problem(location, type, line, column, cause, expected, category, module, source, program);
     	ProblemsFacade.get().getProblemService().save(problem);
+    }
+
+    /**
+     * Get Artefact Synchronization Problem.
+     *
+     * @param artefact the artefact
+     * 
+     * @return the problem if any
+     */
+    public static final Problem getArtefactSynchronizationProblem(Artefact artefact) {
+        List<Problem> results = ProblemsFacade.get().getProblemService().findByLocationAndTypeAndCategory(artefact.getLocation(), artefact.getType(), "Synchronization");
+        return results.size() > 0 ? results.get(0) : null;
+    }
+
+    /**
+     * Save Artefact Synchronization Problem.
+     *
+     * @param artefact the artefact
+     * @param errorMessage the errorMessage
+     */
+    public static final void saveArtefactSynchronizationProblem(Artefact artefact, String errorMessage) {
+        save(artefact.getLocation(), artefact.getType(), "", "", errorMessage, "", "Synchronization", "", "", "");
+    }
+
+    /**
+     * Update Artefact Synchronization Problem.
+     *
+     * @param artefact the artefact
+     * @param errorMessage the errorMessage
+     */
+    public static final void updateArtefactSynchronizationProblem(Artefact artefact, String errorMessage) {
+        ProblemsFacade.get().getProblemService().updateCauseByLocationAndTypeAndCategory(errorMessage, artefact.getLocation(), artefact.getType(), "Synchronization");
+    }
+
+    /**
+     * Delete Artefact Synchronization Problem.
+     *
+     * @param artefact the artefact
+     */
+    public static final void deleteArtefactSynchronizationProblem(Artefact artefact) {
+        ProblemsFacade.get().getProblemService().deleteByLocationAndTypeAndCategory(artefact.getLocation(), artefact.getType(), "Synchronization");
     }
 
     /**
@@ -96,9 +135,8 @@ public class ProblemsFacade implements InitializingBean {
      *
      * @param id the id
      * @return the string
-     * @throws Exception the exception
      */
-    public static final String findProblem(Long id) throws Exception {
+    public static final String findProblem(Long id) {
         return GsonHelper.toJson(ProblemsFacade.get().getProblemService().findById(id));
     }
 
@@ -106,9 +144,8 @@ public class ProblemsFacade implements InitializingBean {
      * Fetch all problems.
      *
      * @return the string
-     * @throws Exception the exception
      */
-    public static final String fetchAllProblems() throws Exception {
+    public static final String fetchAllProblems() {
         return GsonHelper.toJson(ProblemsFacade.get().getProblemService().getAll());
     }
 
@@ -118,9 +155,8 @@ public class ProblemsFacade implements InitializingBean {
      * @param condition the condition
      * @param limit the limit
      * @return the string
-     * @throws Exception the exception
      */
-    public static final String fetchProblemsBatch(String condition, int limit) throws Exception {
+    public static final String fetchProblemsBatch(String condition, int limit) {
         return GsonHelper.toJson(ProblemsFacade.get().getProblemService().fetchProblemsBatch(condition, limit));
     }
 
@@ -128,9 +164,8 @@ public class ProblemsFacade implements InitializingBean {
      * Delete problem.
      *
      * @param id the id
-     * @throws Exception the exception
      */
-    public static final void deleteProblem(Long id) throws Exception {
+    public static final void deleteProblem(Long id) {
     	ProblemsFacade.get().getProblemService().deleteById(id);
     }
 
@@ -138,9 +173,8 @@ public class ProblemsFacade implements InitializingBean {
      * Delete multiple problems by id.
      *
      * @param ids the ids
-     * @throws Exception the exception
      */
-    public static final void deleteMultipleProblemsById(List<Long> ids) throws Exception {
+    public static final void deleteMultipleProblemsById(List<Long> ids) {
     	ProblemsFacade.get().getProblemService().deleteAllByIds(ids);
     }
 
@@ -148,18 +182,15 @@ public class ProblemsFacade implements InitializingBean {
      * Delete all by status.
      *
      * @param status the status
-     * @throws Exception the exception
      */
-    public static final void deleteAllByStatus(String status) throws Exception {
+    public static final void deleteAllByStatus(String status) {
     	ProblemsFacade.get().getProblemService().deleteAllByStatus(status);
     }
 
     /**
      * Clear all problems.
-     *
-     * @throws Exception the exception
      */
-    public static final void clearAllProblems() throws Exception {
+    public static final void clearAllProblems() {
     	ProblemsFacade.get().getProblemService().deleteAll();
     }
 
@@ -168,9 +199,8 @@ public class ProblemsFacade implements InitializingBean {
      *
      * @param id the id
      * @param status the status
-     * @throws Exception the exception
      */
-    public static final void updateStatus(Long id, String status) throws Exception {
+    public static final void updateStatus(Long id, String status) {
     	ProblemsFacade.get().getProblemService().updateStatusById(id, status);
     }
 
@@ -179,9 +209,8 @@ public class ProblemsFacade implements InitializingBean {
      *
      * @param ids the ids
      * @param status the status
-     * @throws Exception the exception
      */
-    public static final void updateStatusMultiple(List<Long> ids, String status) throws Exception {
+    public static final void updateStatusMultiple(List<Long> ids, String status) {
     	ProblemsFacade.get().getProblemService().updateStatusByIds(ids, status);
     }
 }
