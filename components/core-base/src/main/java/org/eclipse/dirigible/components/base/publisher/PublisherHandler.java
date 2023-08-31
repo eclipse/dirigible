@@ -54,6 +54,11 @@ public interface PublisherHandler {
 
     /**
      * The  AfterPublishMetadata.
+     * 
+     * @param workspace the workspace location
+     * @param projectName the project name
+     * @param entryPath the entry path
+     * @param isDirectory whether is a directory
      */
     record AfterPublishMetadata(String workspace, String projectName, String entryPath, boolean isDirectory) { }
 
