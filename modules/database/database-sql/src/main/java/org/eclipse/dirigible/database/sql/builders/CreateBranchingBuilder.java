@@ -97,6 +97,16 @@ public class CreateBranchingBuilder extends AbstractSqlBuilder {
     }
 
     /**
+     * Public synonym branch.
+     *
+     * @param synonym the synonym
+     * @return the creates the synonym builder
+     */
+    public CreateSynonymBuilder publicSynonym(String synonym) {
+        return synonym(synonym);
+    }
+
+    /**
      * Schema branch.
      *
      * @param schema the schema

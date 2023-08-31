@@ -86,6 +86,16 @@ public class DropBranchingBuilder extends AbstractSqlBuilder {
     }
 
     /**
+     * Public synonym branch.
+     *
+     * @param synonym the synonym
+     * @return the drop synonym builder
+     */
+    public DropSynonymBuilder publicSynonym(String synonym) {
+        return synonym(synonym);
+    }
+
+    /**
      * Schema branch.
      *
      * @param schema the schema
