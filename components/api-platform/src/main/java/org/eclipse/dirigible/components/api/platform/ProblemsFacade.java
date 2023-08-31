@@ -17,6 +17,8 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.ide.problems.domain.Problem;
 import org.eclipse.dirigible.components.ide.problems.service.ProblemService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +31,9 @@ public class ProblemsFacade implements InitializingBean {
 	
 	/** The instance. */
 	private static ProblemsFacade INSTANCE;
-	
+
+    private static final Logger logger = LoggerFactory.getLogger(ProblemsFacade.class);
+
 	/** The problem service. */
 	private ProblemService problemService;
 	
@@ -119,6 +123,25 @@ public class ProblemsFacade implements InitializingBean {
      */
     public static final void updateArtefactSynchronizationProblem(Artefact artefact, String errorMessage) {
         ProblemsFacade.get().getProblemService().updateCauseByLocationAndTypeAndCategory(errorMessage, artefact.getLocation(), artefact.getType(), "Synchronization");
+    }
+
+    /**
+     * Upsert Artefact Synchronization Problem.
+     *
+     * @param artefact the artefact
+     * @param errorMessage the errorMessage
+     */
+    public static final void upsertArtefactSynchronizationProblem(Artefact artefact, String errorMessage) {
+        try {
+            Problem problem = ProblemsFacade.getArtefactSynchronizationProblem(artefact);
+            if (problem != null) {
+                ProblemsFacade.updateArtefactSynchronizationProblem(artefact, (problem.getCause() + " | " + errorMessage).substring(0, 2000));
+            } else {
+                ProblemsFacade.updateArtefactSynchronizationProblem(artefact, errorMessage);
+            }
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) { logger.error("Error occurred while upserting artefact synchronization problem", e); }
+        }
     }
 
     /**
