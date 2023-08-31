@@ -11,10 +11,11 @@
  */
 package org.eclipse.dirigible.components.data.csvim.domain;
 
-import org.apache.commons.csv.CSVRecord;
-import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
-
 import java.util.List;
+
+import org.apache.commons.csv.CSVRecord;
+import org.eclipse.dirigible.components.data.management.domain.ColumnMetadata;
+import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
 
 /**
  * The Class CsvRecord.
@@ -89,8 +90,8 @@ public class CsvRecord {
      */
     public String getPkColumnName() {
         if (pkColumnName == null) {
-            pkColumnName = table.getColumns().stream().filter(c -> c.isKey()).findFirst().get()
-                    .getName();
+        	ColumnMetadata found = table.getColumns().stream().filter(c -> c.isKey()).findFirst().orElse(null);
+            pkColumnName = found != null ? found.getName() : null;
         }
 
         return pkColumnName;
