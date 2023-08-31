@@ -27,6 +27,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ClassUtils;
+import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,6 +155,15 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 		    						value = Base64.getEncoder().encodeToString(ba);
 		    					}
 		    				}
+	    				} else if (dbt == Types.OTHER) {
+	    					Object dataObject = resultSet.getObject(i);
+	    					if (dataObject instanceof PGobject) {
+	    						if (value == null
+			    						&& stringify) {
+			    					value = "[NULL]";
+			    				}
+	    						value = ((PGobject) dataObject).getValue();
+	    					}
 	    				} else {
 		    				value = resultSet.getObject(i);
 		    				if (value == null
