@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.sql.dialects.hana;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
+import org.eclipse.dirigible.database.sql.builders.synonym.CreateSynonymBuilder;
 
 /**
  * The HANA Create Branching Builder.
@@ -112,5 +113,10 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 */
 	public HanaCreateTableTypeBuilder tableType(String tableType){
 		return new HanaCreateTableTypeBuilder(this.getDialect(), tableType);
+	}
+
+	@Override
+	public CreateSynonymBuilder publicSynonym(String synonym) {
+		return new HanaCreatePublicSynonymBuilder(getDialect(), synonym);
 	}
 }
