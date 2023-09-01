@@ -167,7 +167,9 @@ jobs:
 
     - name: "Git: Push Changes"
       run: |
+        git checkout -B ${{ github.event.inputs.releaseVersion }}
         git push --set-upstream origin ${{ github.event.inputs.releaseVersion }}
+        git checkout -B master
         git push --set-upstream origin master
 
 #----------------Publish Helm Release------------------#
