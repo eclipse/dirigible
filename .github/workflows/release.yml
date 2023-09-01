@@ -92,8 +92,6 @@ jobs:
       run: |
         git add **/pom.xml
         git commit -m "version set to ${{ github.event.inputs.releaseVersion }} for release"
-        git checkout -b ${{ github.event.inputs.releaseVersion }}
-        git checkout ${{ github.event.inputs.branch }}
 
     - name: "Maven: Set Snapshot Version"
       run: mvn versions:set -DnewVersion=${{ github.event.inputs.snapshotVersion }}
