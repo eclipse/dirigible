@@ -90,7 +90,7 @@ jobs:
 
     - name: "Git: Commit Release Version"
       run: |
-        git add **/pom.xml
+        git add '**pom.xml'
         git commit -m "version set to ${{ github.event.inputs.releaseVersion }} for release"
 
     - name: "Maven: Set Snapshot Version"
@@ -98,7 +98,7 @@ jobs:
 
     - name: "Git: Commit Snapshot Version"
       run: |
-        git add **/pom.xml
+        git add '**pom.xml'
         git commit -m "version set to ${{ github.event.inputs.snapshotVersion }} for development"
 
 #---------------Publish to Maven Central-----------------#
