@@ -21,7 +21,6 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableIndexModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
@@ -41,9 +40,6 @@ public class DatabaseMetadataUtil {
 
     /** The Constant IS_CASE_SENSETIVE. */
     private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
-
-    /** The data source. */
-    private DataSource dataSource = null;
 
     /** The Constant JDBC_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_COLUMN_NAME_PROPERTY = "COLUMN_NAME";
@@ -79,25 +75,13 @@ public class DatabaseMetadataUtil {
     public static final String JDBC_PK_COLUMN_NAME_PROPERTY = "PKCOLUMN_NAME";
     
     /**
-     * Gets the data source.
-     *
-     * @return the data source
-     */
-    protected synchronized DataSource getDataSource() {
-		if (dataSource == null) {
-			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
-		}
-		return dataSource;
-	}
-    
-    /**
      * Gets the table metadata.
      *
      * @param tableName the table name
      * @return the table metadata
      * @throws SQLException the SQL exception
      */
-    public PersistenceTableModel getTableMetadata(String tableName) throws SQLException {
+    public static PersistenceTableModel getTableMetadata(String tableName) throws SQLException {
         return getTableMetadata(tableName, null);
     }
     
@@ -109,7 +93,7 @@ public class DatabaseMetadataUtil {
      * @return the table metadata
      * @throws SQLException the SQL exception
      */
-    public PersistenceTableModel getTableMetadata(String tableName, String schemaName) throws SQLException {
+    public static PersistenceTableModel getTableMetadata(String tableName, String schemaName) throws SQLException {
     	return getTableMetadata(tableName, schemaName, null);
     }
 
@@ -122,10 +106,7 @@ public class DatabaseMetadataUtil {
      * @return the table metadata
      * @throws SQLException the SQL exception
      */
-    public PersistenceTableModel getTableMetadata(String tableName, String schemaName, DataSource dataSource) throws SQLException {
-    	if (dataSource == null) {
-    		dataSource = getDataSource();
-    	}
+    public static PersistenceTableModel getTableMetadata(String tableName, String schemaName, DataSource dataSource) throws SQLException {
         PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();

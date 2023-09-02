@@ -12,23 +12,26 @@
 
 package org.eclipse.dirigible.components.data.export.endpoint;
 
+import static java.text.MessageFormat.format;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.export.service.DataExportService;
-import org.eclipse.dirigible.components.data.management.service.DatabaseExportService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseMetadataService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-
-import static java.text.MessageFormat.format;
 
 /**
  * Front facing REST service serving export data.
@@ -46,7 +49,7 @@ public class DataExportEndpoint {
      * The database metadata service.
      */
     private final DataExportService dataExportService;
-
+    
     /**
      * Instantiates a new data export endpoint.
      *
@@ -104,5 +107,32 @@ public class DataExportEndpoint {
          dataExportService.exportSchemaInCsvs(datasource, schema);
 
         return ResponseEntity.ok(new URI("/" + BaseEndpoint.PREFIX_ENDPOINT_IDE + "workspaces" + "/" + schema));
+    }
+    
+    /**
+     * Export metadata in project as *.schema file.
+     *
+     * @param datasource the datasource
+     * @param schema the schema name
+     * @return the response
+     * @throws SQLException the SQL exception
+     * @throws URISyntaxException the URI syntax exception
+     */
+    @GetMapping(value = "/topology/{datasource}/{schema}")
+    public ResponseEntity<byte[]> exportSchemaTopology(
+            @PathVariable("datasource") String datasource,
+            @PathVariable("schema") String schema) throws SQLException, URISyntaxException {
+
+        if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
+            String error = format("Datasource {0} does not exist.", datasource);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+        }
+
+        
+        String result = dataExportService.exportSchemaTopology(datasource, schema);
+        
+        final HttpHeaders httpHeaders= new HttpHeaders();
+	    httpHeaders.add("Content-Disposition", "attachment; filename=\"" + schema + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".topology\"");
+		return new ResponseEntity<byte[]>(result.getBytes(), httpHeaders, HttpStatus.OK);
     }
 }

@@ -415,6 +415,16 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.project.export.schema', sqlCommand);
 						}.bind(this)
 					};
+					ctxmenu.exportMetadataInProject = {
+						"separator_before": false,
+						"label": "Export Topological Order",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = node.original.text;
+							messageHub.postMessage('database.metadata.project.export.topology', sqlCommand);
+						}.bind(this)
+					};
 					ctxmenu.dropScript = {
 							"separator_before": true,
 							"label": "Drop",

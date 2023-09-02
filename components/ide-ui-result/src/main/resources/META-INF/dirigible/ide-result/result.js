@@ -289,6 +289,12 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
             console.error("Error in exporting metadata in project", err);
         });
     }, true);
+    
+    messageHub.onDidReceiveMessage("database.metadata.project.export.topology", function (command) {
+        let schema = command.data;
+        let url = "/services/data/project/topology/" + $scope.datasource + "/" + schema;
+        window.open(url);
+    }, true);
 
     function cleanScope() {
         $scope.result = null;

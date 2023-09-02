@@ -11,7 +11,13 @@
  */
 package org.eclipse.dirigible.components.data.export.service;
 
-import com.google.gson.*;
+import static java.text.MessageFormat.format;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.api.platform.WorkspaceFacade;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
@@ -20,6 +26,7 @@ import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadata
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExecutionService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.data.transfer.service.DataTransferSchemaTopologyService;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
@@ -29,11 +36,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-import static java.text.MessageFormat.format;
-
+/**
+ * The Class DataExportService.
+ */
 @Service
 public class DataExportService {
 
@@ -61,6 +70,11 @@ public class DataExportService {
      * The database execution service.
      */
     private final DatabaseDefinitionService databaseDefinitionService;
+    
+    /**
+     * The data transfer schema topology service.
+     */
+    private final DataTransferSchemaTopologyService dataTransferSchemaTopologyService;
 
     /**
      * Instantiates a new data export service.
@@ -69,16 +83,21 @@ public class DataExportService {
      * @param workspaceService          the workspace service
      * @param databaseExecutionService  the database execution service
      * @param databaseDefinitionService the database definition service
+     * @param dataTransferSchemaTopologyService the data transfer schema topology service
      */
     @Autowired
-    public DataExportService(DataSourcesManager datasourceManager, WorkspaceService workspaceService, DatabaseExecutionService databaseExecutionService, DatabaseDefinitionService databaseDefinitionService) {
+    public DataExportService(DataSourcesManager datasourceManager, WorkspaceService workspaceService, DatabaseExecutionService databaseExecutionService,
+    		DatabaseDefinitionService databaseDefinitionService, DataTransferSchemaTopologyService dataTransferSchemaTopologyService) {
         this.datasourceManager = datasourceManager;
         this.workspaceService = workspaceService;
         this.databaseExecutionService = databaseExecutionService;
         this.databaseDefinitionService = databaseDefinitionService;
+        this.dataTransferSchemaTopologyService = dataTransferSchemaTopologyService;
     }
 
     /**
+     * Export schema in csvs.
+     *
      * @param datasource the datasource
      * @param schema     the schema
      */
@@ -131,6 +150,8 @@ public class DataExportService {
     }
 
     /**
+     * Export metadata as project.
+     *
      * @param datasource the datasource
      * @param schema     the schema
      * @return the workspace path of the file
@@ -155,6 +176,8 @@ public class DataExportService {
     }
 
     /**
+     * Transform csv files to json.
+     *
      * @param csvFiles the csvFiles
      * @return the transformed csvFiles to Json
      */
@@ -166,6 +189,8 @@ public class DataExportService {
     }
 
     /**
+     * Sets the csv file fields.
+     *
      * @param csvFile  the csvFile
      * @param schema   the schema
      * @param artefact the artefact
@@ -181,5 +206,22 @@ public class DataExportService {
         csvFile.setDelimEnclosing("\"");
         csvFile.setDistinguishEmptyFromNull(true);
 
+    }
+    
+    /**
+     * Export metadata as project.
+     *
+     * @param datasource the datasource
+     * @param schema     the schema
+     * @return the workspace path of the file
+     * @throws SQLException the SQL exception
+     */
+    public String exportSchemaTopology(String datasource, String schema) throws SQLException {
+    	javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
+        if (dataSource != null) {
+        	List<String> sorted = dataTransferSchemaTopologyService.sortTopologically(dataSource, schema);
+        	return sorted.stream().collect(Collectors.joining("\n"));
+        }
+        return "DataSource does not exist: " + datasource;
     }
 }

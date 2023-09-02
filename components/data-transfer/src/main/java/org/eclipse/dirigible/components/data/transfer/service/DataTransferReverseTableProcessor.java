@@ -31,9 +31,6 @@ public class DataTransferReverseTableProcessor {
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataTransferReverseTableProcessor.class);
 	
-	/** The database metadata util. */
-	private static DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
-	
 	/**
 	 * Reverse tables.
 	 *
@@ -83,7 +80,7 @@ public class DataTransferReverseTableProcessor {
 	 */
 	public static PersistenceTableModel reverseTable(DataSource dataSource, String schemaName,
 			String tableName) throws SQLException {
-		return databaseMetadataUtil.getTableMetadata(tableName, schemaName, dataSource);
+		return DatabaseMetadataUtil.getTableMetadata(tableName, schemaName, dataSource);
 	}
 
 }

@@ -28,7 +28,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public String getIdentifier() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -39,7 +38,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void setIdentifier(String identifier) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -50,7 +48,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void transferStarted(DataTransferConfiguration configuration) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -61,8 +58,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void transferFinished(int count) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -72,8 +67,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void transferFailed(String error) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -81,8 +74,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void metadataLoadingStarted() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	/**
@@ -92,8 +83,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void metadataLoadingError(String error) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -103,8 +92,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void metadataLoadingFinished(int count) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -114,8 +101,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void sortingStarted(List<PersistenceTableModel> tables) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -125,8 +110,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void sortingFinished(List<PersistenceTableModel> result) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -134,8 +117,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void dataTransferStarted() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -143,8 +124,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void dataTransferFinished() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -154,8 +133,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void tableTransferStarted(String table) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -166,8 +143,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void tableTransferFinished(String table, int transferedRecords) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -178,8 +153,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void tableTransferFailed(String table, String error) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -190,8 +163,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void recordTransferFinished(String tableName, int i) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -201,8 +172,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void tableSelectSQL(String selectSQL) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -212,8 +181,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void tableInsertSQL(String insertSQL) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -224,8 +191,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void tableSkipped(String table, String reason) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -233,8 +198,6 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 */
 	@Override
 	public void stopTransfer() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
