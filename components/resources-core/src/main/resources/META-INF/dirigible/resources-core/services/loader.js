@@ -121,14 +121,14 @@ function getLocations(scriptId) {
         case "application-view-css":
         case "ide-view-css":
             return [
-                "/fundamental-styles/0.29.4/dist/fundamental-styles.css",
+                "/fundamental-styles/0.30.1/dist/fundamental-styles.css",
                 "/resources/styles/core.css",
                 "/resources/styles/widgets.css",
             ];
         case "application-perspective-css":
         case "ide-perspective-css":
             return [
-                "/fundamental-styles/0.29.4/dist/fundamental-styles.css",
+                "/fundamental-styles/0.30.1/dist/fundamental-styles.css",
                 "/resources/styles/core.css",
                 "/resources/styles/layout.css",
                 "/resources/styles/widgets.css",
