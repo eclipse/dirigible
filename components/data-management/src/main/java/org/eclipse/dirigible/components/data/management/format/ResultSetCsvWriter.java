@@ -13,6 +13,8 @@ package org.eclipse.dirigible.components.data.management.format;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.sql.Clob;
 import java.sql.ResultSet;
@@ -78,8 +80,7 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 	/**
 	 * Sets the stringified.
 	 *
-	 * @param stringify
-	 *            the new stringified
+	 * @param stringify the new stringified
 	 */
 	public void setStringified(boolean stringify) {
 		this.stringify = stringify;
@@ -89,21 +90,16 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 	 * Write.
 	 *
 	 * @param resultSet the result set
-	 * @return the string
-	 * @throws SQLException the SQL exception
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.databases.processor.format.ResultSetWriter#write(java.sql.ResultSet)
+	 * @param output the output
+	 * @throws Exception the exception
 	 */
 	@Override
-	public String write(ResultSet resultSet) throws SQLException {
+	public void write(ResultSet resultSet, OutputStream output) throws Exception {
 		
-		StringWriter sw = new StringWriter();
+		OutputStreamWriter sw = new OutputStreamWriter(output);
 
 		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
-		List<String> records = new ArrayList<String>();
 		int count = 0;
 		List<String> names = new ArrayList<>();
 		if (resultSet.next()) {
@@ -111,8 +107,6 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 				String name = resultSetMetaData.getColumnName(i);
 				names.add(name);
 			}
-		} else {
-			return "";
 		}
 		
 		CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
@@ -191,14 +185,11 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 	    				break;
 	    			}
 	    		} while (resultSet.next());
-	            
-	            
+	    		
 	        }
 		} catch(Exception e) {
-			return e.getMessage();
+			logger.error(e.getMessage(), e);
 		}
-		
-		return sw.toString().trim();
 	}
 
 }

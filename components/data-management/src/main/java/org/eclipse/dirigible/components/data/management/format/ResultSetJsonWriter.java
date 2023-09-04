@@ -11,16 +11,20 @@
  */
 package org.eclipse.dirigible.components.data.management.format;
 
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.ClassUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
-import com.google.gson.JsonArray;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -72,25 +76,30 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 	public void setStringified(boolean stringify) {
 		this.stringify = stringify;
 	}
-
+	
+	/** The object mapper. */
+	private ObjectMapper objectMapper = new ObjectMapper();
+	
 	/**
 	 * Write.
 	 *
 	 * @param resultSet the result set
-	 * @return the string
-	 * @throws SQLException the SQL exception
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.databases.processor.format.ResultSetWriter#write(java.sql.ResultSet)
+	 * @param output the output
+	 * @throws Exception the exception
 	 */
 	@Override
-	public String write(ResultSet resultSet) throws SQLException {
-		JsonArray records = new JsonArray();
+	public void write(ResultSet resultSet, OutputStream output) throws Exception {
+
+		JsonGenerator jsonGenerator = objectMapper.getFactory().createGenerator(output);
+		
+		jsonGenerator.writeStartArray();
+		
 		int count = 0;
 		while (resultSet.next()) {
 			ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-			JsonObject record = new JsonObject();
+			
+			jsonGenerator.writeStartObject();
+			
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 				String name = resultSetMetaData.getColumnName(i);
 				Object value = resultSet.getObject(i);
@@ -106,41 +115,44 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 					}
 				}
 
+				jsonGenerator.writeFieldName(name);
+				
 				if (value instanceof String) {
-					record.add(name, value == null ? null : new JsonPrimitive((String) value));
+					jsonGenerator.writeString((String) value);
 				} else if (value instanceof Character) {
-					record.add(name, value == null ? null : new JsonPrimitive(new String(new char[] { (char) value })));
+					jsonGenerator.writeString(new String(new char[] { (char) value }));
 				} else if (value instanceof Float) {
-					record.add(name, value == null ? null : new JsonPrimitive((Float) value));
+					jsonGenerator.writeNumber((Float) value);
 				} else if (value instanceof Double) {
-					record.add(name, value == null ? null : new JsonPrimitive((Double) value));
+					jsonGenerator.writeNumber((Double) value);
 				} else if (value instanceof BigDecimal) {
-					record.add(name, value == null ? null : new JsonPrimitive((BigDecimal) value));
+					jsonGenerator.writeNumber((BigDecimal) value);
 				} else if (value instanceof Long) {
-					record.add(name, value == null ? null : new JsonPrimitive((Long) value));
+					jsonGenerator.writeNumber((Long) value);
 				} else if (value instanceof BigInteger) {
-					record.add(name, value == null ? null : new JsonPrimitive((BigInteger) value));
+					jsonGenerator.writeNumber((BigInteger) value);
 				} else if (value instanceof Integer) {
-					record.add(name, value == null ? null : new JsonPrimitive((Integer) value));
+					jsonGenerator.writeNumber((Integer) value);
 				} else if (value instanceof Byte) {
-					record.add(name, value == null ? null : new JsonPrimitive((Byte) value));
+					jsonGenerator.writeNumber((Byte) value);
 				} else if (value instanceof Short) {
-					record.add(name, value == null ? null : new JsonPrimitive((Short) value));
+					jsonGenerator.writeNumber((Short) value);
 				} else if (value instanceof Boolean) {
-					record.add(name, value == null ? null : new JsonPrimitive((Boolean) value));
+					jsonGenerator.writeBoolean((Boolean) value);
 				} else {
-					record.add(name, value == null ? null : new JsonPrimitive(value.toString()));
+					jsonGenerator.writeString(value == null ? null : value.toString());
 				}
 			}
-
-			records.add(record);
+			
+			jsonGenerator.writeEndObject();
 
 			if (this.isLimited() && (++count > getLimit())) {
 				break;
 			}
 		}
-
-		return GsonHelper.toJson(records);
+		
+		jsonGenerator.writeEndArray();
+		jsonGenerator.flush();
 	}
 
 }

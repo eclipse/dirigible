@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * The String Row Formatter.
  */
-public class StringRowFormatter implements RowFormatter<String> {
+public class StringRowFormatter implements RowFormatter {
 
 	/** The Constant VALUE_NULL. */
 	private static final String VALUE_NULL = "[NULL]";
@@ -41,11 +41,6 @@ public class StringRowFormatter implements RowFormatter<String> {
 	 * @param resultSet the result set
 	 * @return the string
 	 * @throws SQLException the SQL exception
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.databases.processor.format.RowFormatter#write(java.util.List,
-	 * java.sql.ResultSetMetaData, java.sql.ResultSet)
 	 */
 	@Override
 	public String write(List<ColumnDescriptor> columnDescriptors, ResultSetMetaData resultSetMetaData, ResultSet resultSet) throws SQLException {

@@ -13,16 +13,22 @@ package org.eclipse.dirigible.components.data.export.service;
 
 import static java.text.MessageFormat.format;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.output.WriterOutputStream;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.api.platform.WorkspaceFacade;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.data.csvim.domain.CsvFile;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.components.data.management.helpers.DatabaseResultSetHelper;
 import org.eclipse.dirigible.components.data.management.service.DatabaseDefinitionService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExecutionService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -129,7 +135,16 @@ public class DataExportService {
                         JsonObject table = tables.get(j).getAsJsonObject();
                         String artifact = table.get("name").getAsString();
                         String sql = "SELECT * FROM \"" + schema + "\".\"" + artifact + "\"";
-                        String tableExport = databaseExecutionService.executeStatement(dataSource, sql, true, false, true, false);
+                        
+                        StringWriter sw = new StringWriter();
+        				OutputStream output;
+        				try {
+        					output = WriterOutputStream.builder().setWriter(sw).setCharset(StandardCharsets.UTF_8).get();
+        				} catch (IOException e) {
+        					throw new SQLException(e);
+        				}
+        				databaseExecutionService.executeStatement(dataSource, sql, true, false, true, false, output);
+                        String tableExport = sw.toString();
 
                         file = project.createFile(schema + "." + artifact + ".csv", tableExport.getBytes());
 

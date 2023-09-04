@@ -12,11 +12,14 @@
 
 package org.eclipse.dirigible.components.data.export.endpoint;
 
+import static java.text.MessageFormat.format;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.export.service.DataImportService;
-import org.eclipse.dirigible.components.data.management.service.DatabaseExportService;
 import org.eclipse.dirigible.components.data.management.service.DatabaseMetadataService;
-import org.eclipse.dirigible.components.ide.workspace.endpoint.TransportEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,23 +27,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-
-import static java.text.MessageFormat.format;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Front facing REST service serving import data.

@@ -16,17 +16,14 @@ import java.util.List;
 /**
  * The Interface HeaderFormatter.
  *
- * @param <T>
- *            the generic type
  */
-public interface HeaderFormatter<T> {
+public interface HeaderFormatter {
 
 	/**
 	 * Write the header for the provided ResultSet.
 	 *
-	 * @param columns
-	 *            the columns
-	 * @return the t
+	 * @param columns the columns
+	 * @return the result
 	 */
-	T write(List<ColumnDescriptor> columns);
+	String write(List<ColumnDescriptor> columns);
 }

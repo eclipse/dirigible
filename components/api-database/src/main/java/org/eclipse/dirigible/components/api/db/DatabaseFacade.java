@@ -14,6 +14,10 @@ package org.eclipse.dirigible.components.api.db;
 import static java.text.MessageFormat.format;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -25,6 +29,7 @@ import java.util.Iterator;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.io.output.WriterOutputStream;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
@@ -220,9 +225,9 @@ public class DatabaseFacade implements InitializingBean {
 	 * @param parameters the parameters
 	 * @param datasourceName the datasource name
 	 * @return the result of the query as JSON
-	 * @throws SQLException the SQL exception
+	 * @throws Exception the exception
 	 */
-	public static final String query(String sql, String parameters, String datasourceName) throws SQLException {
+	public static final String query(String sql, String parameters, String datasourceName) throws Exception {
 		DataSource dataSource = getDataSource(datasourceName);
 		if (dataSource == null) {
 			String error = format("DataSource {0} not known.", datasourceName);
@@ -237,7 +242,15 @@ public class DatabaseFacade implements InitializingBean {
 					setParameters(parameters, preparedStatement);
 				}
 				ResultSet resultSet = preparedStatement.executeQuery();
-				return DatabaseResultSetHelper.toJson(resultSet, false, false);
+				StringWriter sw = new StringWriter();
+				OutputStream output;
+				try {
+					output = WriterOutputStream.builder().setWriter(sw).setCharset(StandardCharsets.UTF_8).get();
+				} catch (IOException e) {
+					throw new Exception(e);
+				}
+				DatabaseResultSetHelper.toJson(resultSet, false, false, output);
+				return sw.toString();
 			} finally {
 				if (preparedStatement != null) {
 					preparedStatement.close();
@@ -256,9 +269,9 @@ public class DatabaseFacade implements InitializingBean {
 	 * @param sql the sql
 	 * @param parameters the parameters
 	 * @return the result of the query as JSON
-	 * @throws SQLException the SQL exception
+	 * @throws Exception the exception
 	 */
-	public static final String query(String sql, String parameters) throws SQLException {
+	public static final String query(String sql, String parameters) throws Exception {
 		return query(sql, parameters, null);
 	}
 
@@ -267,9 +280,9 @@ public class DatabaseFacade implements InitializingBean {
 	 *
 	 * @param sql the sql
 	 * @return the result of the query as JSON
-	 * @throws SQLException the SQL exception
+	 * @throws Exception the exception
 	 */
-	public static final String query(String sql) throws SQLException {
+	public static final String query(String sql) throws Exception {
 		return query(sql, null, null);
 	}
 
@@ -282,9 +295,9 @@ public class DatabaseFacade implements InitializingBean {
 	 * @param parameters the parameters
 	 * @param datasourceName the datasource name
 	 * @return the number of the rows that has been changed
-	 * @throws SQLException the SQL exception
+	 * @throws Exception the exception
 	 */
-	public static final int update(String sql, String parameters, String datasourceName) throws SQLException {
+	public static final int update(String sql, String parameters, String datasourceName) throws Exception {
 		DataSource dataSource = getDataSource(datasourceName);
 		if (dataSource == null) {
 			String error = format("DataSource {0} not known.", datasourceName);
@@ -317,9 +330,9 @@ public class DatabaseFacade implements InitializingBean {
 	 * @param sql the sql
 	 * @param parameters the parameters
 	 * @return the number of the rows that has been changed
-	 * @throws SQLException the SQL exception
+	 * @throws Exception the exception
 	 */
-	public static final int update(String sql, String parameters) throws SQLException {
+	public static final int update(String sql, String parameters) throws Exception {
 		return update(sql, parameters, null);
 	}
 
@@ -328,9 +341,9 @@ public class DatabaseFacade implements InitializingBean {
 	 *
 	 * @param sql the sql
 	 * @return the number of the rows that has been changed
-	 * @throws SQLException the SQL exception
+	 * @throws Exception the exception
 	 */
-	public static final int update(String sql) throws SQLException {
+	public static final int update(String sql) throws Exception {
 		return update(sql, null, null);
 	}
 

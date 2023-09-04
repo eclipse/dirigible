@@ -29,6 +29,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class DatabaseSuiteTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -37,24 +40,36 @@ import org.springframework.web.context.WebApplicationContext;
 @TestInstance(Lifecycle.PER_CLASS)
 public class DatabaseSuiteTest {
 	
+	/** The datasource repository. */
 	@Autowired
 	private DataSourceRepository datasourceRepository;
 	
+	/** The javascript service. */
 	@Autowired
 	private JavascriptService javascriptService;
 	
+	/** The mock mvc. */
 	@Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
     
+    /**
+     * Setup.
+     */
     @BeforeAll
     public void setup() {
 		DataSource datasource = new DataSource("/test/DefaultDB.datasource", "DefaultDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
 		datasourceRepository.save(datasource);
     }
 
+	/**
+	 * Execute database test.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void executeDatabaseTest() throws Exception {
 		javascriptService.handleRequest("db-tests", "database-get-connection.js", null, null, false);
@@ -62,22 +77,40 @@ public class DatabaseSuiteTest {
 		javascriptService.handleRequest("db-tests", "database-get-metadata.js", null, null, false);
 	}
 	
+	/**
+	 * Execute query test.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void executeQueryTest() throws Exception {
 		javascriptService.handleRequest("db-tests", "query-execute.js", null, null, false);
 	}
 	
+	/**
+	 * Execute update test.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void executeUpdateTest() throws Exception {
 		javascriptService.handleRequest("db-tests", "update-execute.js", null, null, false);
 	}
 	
+	/**
+	 * Execute sequence test.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void executeSequenceTest() throws Exception {
 		javascriptService.handleRequest("db-tests", "sequence-nextval.js", null, null, false);
 	}
 
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

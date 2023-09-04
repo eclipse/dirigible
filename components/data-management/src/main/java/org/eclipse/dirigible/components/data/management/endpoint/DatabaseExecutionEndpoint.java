@@ -12,7 +12,9 @@
 package org.eclipse.dirigible.components.data.management.endpoint;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -20,6 +22,7 @@ import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExecutionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 /**
  * The Class DatabaseExecutionEndpoint.
@@ -67,21 +72,34 @@ public class DatabaseExecutionEndpoint {
 	 * @param sql the sql
 	 * @param accept the accept
 	 * @return the data sources
-	 * @throws SQLException the SQL exception
+	 * @throws Exception the exception
 	 */
 	@PostMapping(value = "/{datasource}/query", consumes = "text/plain")
-	public ResponseEntity<String> executeQuery(
+	public ResponseEntity<StreamingResponseBody> executeQuery(
 			@PathVariable("datasource") String datasource,
-			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws SQLException {
+			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws Exception {
+		
+		StreamingResponseBody responseBody = output -> {
+			try {
+				if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
+					databaseExecutionService.executeQuery(datasource, sql, false, false, output);
+				}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
+					databaseExecutionService.executeQuery(datasource, sql, false, true, output);
+				} else {
+					databaseExecutionService.executeQuery(datasource, sql, true, false, output);
+				}
+			} catch (Exception e) {
+				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+			}
+		};
+		
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = databaseExecutionService.executeQuery(datasource, sql, false, false);
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(result);
+			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
 		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = databaseExecutionService.executeQuery(datasource, sql, false, true);
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(result);
+			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+		} else {
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseBody);
 		}
-		String result = databaseExecutionService.executeQuery(datasource, sql, true, false);
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(result);
 	}
 	
 	/**
@@ -91,21 +109,34 @@ public class DatabaseExecutionEndpoint {
 	 * @param sql the sql
 	 * @param accept the accept
 	 * @return the data sources
-	 * @throws SQLException the SQL exception
+	 * @throws Exception the exception
 	 */
 	@PostMapping(value = "/{datasource}/update", consumes = "text/plain")
-	public ResponseEntity<String> executeUpdate(
+	public ResponseEntity<StreamingResponseBody> executeUpdate(
 			@PathVariable("datasource") String datasource,
-			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws SQLException {
+			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws Exception {
+		
+		StreamingResponseBody responseBody = output -> {
+			try {
+				if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
+					databaseExecutionService.executeUpdate(datasource, sql, false, false, output);
+				}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
+					databaseExecutionService.executeUpdate(datasource, sql, false, true, output);
+				} else {
+					databaseExecutionService.executeUpdate(datasource, sql, true, false, output);
+				}
+			} catch (Exception e) {
+				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+			}
+		};
+		
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = databaseExecutionService.executeUpdate(datasource, sql, false, false);
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(result);
+			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
 		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = databaseExecutionService.executeUpdate(datasource, sql, false, true);
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(result);
+			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+		} else {
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseBody);
 		}
-		String result = databaseExecutionService.executeUpdate(datasource, sql, true, false);
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(result);
 	}
 	
 	/**
@@ -115,21 +146,34 @@ public class DatabaseExecutionEndpoint {
 	 * @param sql the sql
 	 * @param accept the accept
 	 * @return the data sources
-	 * @throws SQLException the SQL exception
+	 * @throws Exception the exception
 	 */
 	@PostMapping(value = "/{datasource}/procedure", consumes = "text/plain")
-	public ResponseEntity<String> executeProcedure(
+	public ResponseEntity<StreamingResponseBody> executeProcedure(
 			@PathVariable("datasource") String datasource,
-			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws SQLException {
+			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws Exception {
+		
+		StreamingResponseBody responseBody = output -> {
+			try {
+				if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
+					databaseExecutionService.executeProcedure(datasource, sql, false, false, output);
+				}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
+					databaseExecutionService.executeProcedure(datasource, sql, false, true, output);
+				} else {
+					databaseExecutionService.executeProcedure(datasource, sql, true, false, output);
+				}
+			} catch (Exception e) {
+				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+			}
+		};
+		
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = databaseExecutionService.executeProcedure(datasource, sql, false, false);
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(result);
+			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
 		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = databaseExecutionService.executeProcedure(datasource, sql, false, true);
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(result);
+			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+		} else {
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseBody);
 		}
-		String result = databaseExecutionService.executeProcedure(datasource, sql, true, false);
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(result);
 	}
 	
 	/**
@@ -139,21 +183,34 @@ public class DatabaseExecutionEndpoint {
 	 * @param sql the sql
 	 * @param accept the accept
 	 * @return the data sources
-	 * @throws SQLException the SQL exception
+	 * @throws Exception the exception
 	 */
 	@PostMapping(value = "/{datasource}/execute", consumes = "text/plain")
-	public ResponseEntity<String> execute(
+	public ResponseEntity<StreamingResponseBody> execute(
 			@PathVariable("datasource") String datasource,
-			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws SQLException {
+			@RequestBody String sql, @RequestHeader(HttpHeaders.ACCEPT) String accept) throws Exception {
+		
+		StreamingResponseBody responseBody = output -> {
+			try {
+				if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
+					databaseExecutionService.execute(datasource, sql, false, false, output);
+				}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
+					databaseExecutionService.execute(datasource, sql, false, true, output);
+				} else {
+					databaseExecutionService.execute(datasource, sql, true, false, output);
+				}
+			} catch (Exception e) {
+				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+			}
+		};
+		
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = databaseExecutionService.execute(datasource, sql, false, false);
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(result);
+			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
 		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = databaseExecutionService.execute(datasource, sql, false, true);
-			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(result);
+			return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(responseBody);
+		} else {
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseBody);
 		}
-		String result = databaseExecutionService.execute(datasource, sql, true, false);
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(result);
 	}
 	
 }

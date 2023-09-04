@@ -11,26 +11,24 @@
  */
 package org.eclipse.dirigible.components.data.management.format;
 
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * The ResultSet Writer.
  *
- * @param <T>
- *            the generic type
+ * @param <T> the generic type
  */
 public interface ResultSetWriter<T> {
 
 	/**
 	 * Write the provided ResultSet.
 	 *
-	 * @param rs
-	 *            the rs
-	 * @return the t
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @param rs the rs
+	 * @param output the output
+	 * @throws Exception the exception
 	 */
-	T write(ResultSet rs) throws SQLException;
+	void write(ResultSet rs, OutputStream output) throws Exception;
 
 }

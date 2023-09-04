@@ -34,6 +34,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class DatabaseMetadataEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -43,27 +46,41 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class DatabaseMetadataEndpointTest {
 	
+	/** The datasource repository. */
 	@Autowired
 	private DataSourceRepository datasourceRepository;
 	
+	/** The datasources manager. */
 	@Autowired
     private DataSourcesManager datasourcesManager;
 	
+	/** The mock mvc. */
 	@Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 	
+	/**
+	 * Setup.
+	 */
 	@BeforeEach
     public void setup() {
 		DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
 		datasourceRepository.save(datasource);
     }
 	
+	/**
+	 * Gets the data source by name.
+	 *
+	 * @return the data source by name
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getDataSourceByName() throws Exception {
 
@@ -74,6 +91,9 @@ public class DatabaseMetadataEndpointTest {
 		;
 	}
 
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

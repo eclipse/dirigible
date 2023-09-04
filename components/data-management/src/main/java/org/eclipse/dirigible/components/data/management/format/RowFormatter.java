@@ -19,23 +19,17 @@ import java.util.List;
 /**
  * The Row Formatter.
  *
- * @param <T>
- *            the generic type
  */
-public interface RowFormatter<T> {
+public interface RowFormatter {
 
 	/**
 	 * Write formatted row.
 	 *
-	 * @param columnDescriptors
-	 *            the column descriptors
-	 * @param resultSetMetaData
-	 *            the result set meta data
-	 * @param resultSet
-	 *            the result set
-	 * @return the t
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @param columnDescriptors the column descriptors
+	 * @param resultSetMetaData the result set meta data
+	 * @param resultSet the result set
+	 * @return the result
+	 * @throws SQLException the SQL exception
 	 */
-	T write(List<ColumnDescriptor> columnDescriptors, ResultSetMetaData resultSetMetaData, ResultSet resultSet) throws SQLException;
+	String write(List<ColumnDescriptor> columnDescriptors, ResultSetMetaData resultSetMetaData, ResultSet resultSet) throws SQLException;
 }

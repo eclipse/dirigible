@@ -9,18 +9,18 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.data.management.service;
+package org.eclipse.dirigible.components.data.export.service;
 
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.components.data.management.service.DatabaseExecutionService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,32 +43,18 @@ public class DatabaseExportService {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseExportService.class);
 
     /**
-     * The Constant CREATE_PROCEDURE.
-     */
-    private static final String CREATE_PROCEDURE = "CREATE PROCEDURE";
-
-    /**
-     * The Constant SCRIPT_DELIMITER.
-     */
-    private static final String SCRIPT_DELIMITER = ";";
-
-    /**
-     * The Constant PROCEDURE_DELIMITER.
-     */
-    private static final String PROCEDURE_DELIMITER = "--";
-
-    /**
      * The data sources manager.
      */
     private final DataSourcesManager datasourceManager;
 
+    /** The database execution service. */
     private final DatabaseExecutionService databaseExecutionService;
 
     /**
      * Instantiates a new data source endpoint.
      *
      * @param datasourceManager        the datasource manager
-     * @param databaseExecutionService
+     * @param databaseExecutionService the database execution service
      */
     @Autowired
     public DatabaseExportService(DataSourcesManager datasourceManager, DatabaseExecutionService databaseExecutionService) {
@@ -82,15 +68,15 @@ public class DatabaseExportService {
      * @param datasource the datasource
      * @param schema     the schema
      * @param structure  the structure
+     * @param output the output
      * @return the string
      */
-    public String exportStructure(String datasource, String schema, String structure) {
+    public void exportStructure(String datasource, String schema, String structure, OutputStream output) {
         javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
         if (dataSource != null) {
             String sql = "SELECT * FROM \"" + schema + "\".\"" + structure + "\"";
-            return databaseExecutionService.executeStatement(dataSource, sql, true, false, true, true);
+            databaseExecutionService.executeStatement(dataSource, sql, true, false, true, true, output);
         }
-        return null;
     }
 
     /**
@@ -98,14 +84,14 @@ public class DatabaseExportService {
      *
      * @param datasource the datasource
      * @param schema     the schema
+     * @param output the output
      * @return the string
      */
-    public byte[] exportSchema(String datasource, String schema) {
+    public void exportSchema(String datasource, String schema, OutputStream output) {
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ZipOutputStream zipOutputStream = null;
             try {
-                zipOutputStream = new ZipOutputStream(baos);
+                zipOutputStream = new ZipOutputStream(output);
 
                 javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
                 if (dataSource != null) {
@@ -122,11 +108,10 @@ public class DatabaseExportService {
                             JsonObject table = tables.get(j).getAsJsonObject();
                             String artifact = table.get("name").getAsString();
                             String sql = "SELECT * FROM \"" + schema + "\".\"" + artifact + "\"";
-                            String tableExport = databaseExecutionService.executeStatement(dataSource, sql, true, false, true, true);
 
                             ZipEntry zipEntry = new ZipEntry(schema + "." + artifact + ".csv");
                             zipOutputStream.putNextEntry(zipEntry);
-                            zipOutputStream.write((tableExport.getBytes() == null ? new byte[]{} : tableExport.getBytes()));
+                            databaseExecutionService.executeStatement(dataSource, sql, true, false, true, true, zipOutputStream);
                             zipOutputStream.closeEntry();
                         }
                     }
@@ -140,27 +125,11 @@ public class DatabaseExportService {
                 }
             }
 
-            byte[] result = baos.toByteArray();
-            return result;
         } catch (IOException | SQLException e) {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage());
             }
-            return e.getMessage().getBytes();
         }
-    }
-
-    /**
-     * Gets the delimiter.
-     *
-     * @param sql the sql
-     * @return the delimiter
-     */
-    private String getDelimiter(String sql) {
-        if (StringUtils.containsIgnoreCase(sql, CREATE_PROCEDURE)) {
-            return PROCEDURE_DELIMITER;
-        }
-        return SCRIPT_DELIMITER;
     }
 
 }
