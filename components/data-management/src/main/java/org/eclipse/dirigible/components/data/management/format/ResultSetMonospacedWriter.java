@@ -67,7 +67,6 @@ public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 	 *
 	 * @param resultSet the result set
 	 * @param output the output
-	 * @return the string
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
