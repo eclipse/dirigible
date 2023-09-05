@@ -37,7 +37,6 @@ import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
 import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
 import org.eclipse.dirigible.components.data.management.domain.ColumnMetadata;
 import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
-import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -124,11 +123,6 @@ public class CsvimProcessor {
     private static final String PROBLEM_WITH_TABLE_METADATA_OR_CSVPARSER = "No table metadata found for table [%s] or CSVParser not created";
 
     /**
-     * The datasources manager.
-     */
-    private DataSourcesManager datasourcesManager;
-
-    /**
      * The csv processor.
      */
     private CsvProcessor csvProcessor;
@@ -137,13 +131,11 @@ public class CsvimProcessor {
     /**
      * Instantiates a new csvim processor.
      *
-     * @param csvProcessor       the csvprocessor service
-     * @param datasourcesManager the datasources manager
+     * @param csvProcessor the csvprocessor service
      */
     @Autowired
-    public CsvimProcessor(CsvProcessor csvProcessor, DataSourcesManager datasourcesManager) {
+    public CsvimProcessor(CsvProcessor csvProcessor) {
         this.csvProcessor = csvProcessor;
-        this.datasourcesManager = datasourcesManager;
     }
 
     /**

@@ -99,7 +99,7 @@ public class DataImportService {
 	 * @throws Exception the exception
 	 */
 	public void importData(String datasource, String schema, String table, InputStream is) throws IOException, Exception {
-		importData(datasource, schema, table, true, true, ",", "\"", null, true, is);
+		importData(datasource, schema, table, true, true, ",", "\"", null, false, is);
 	}
 
 }
