@@ -69,7 +69,6 @@ public class DatabaseExportService {
      * @param schema     the schema
      * @param structure  the structure
      * @param output the output
-     * @return the string
      */
     public void exportStructure(String datasource, String schema, String structure, OutputStream output) {
         javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
@@ -85,7 +84,6 @@ public class DatabaseExportService {
      * @param datasource the datasource
      * @param schema     the schema
      * @param output the output
-     * @return the string
      */
     public void exportSchema(String datasource, String schema, OutputStream output) {
         try {
