@@ -84,7 +84,7 @@ public class DataImportService {
 		CsvFile csvFile = new CsvFile(null, table, schema, "import", header, useHeaderNames, delimField, delimEnclosing,
 	    		sequence, distinguishEmptyFromNull, null);
 		try (Connection connection = datasourceManager.getDataSource(datasource).getConnection()) {
-			csvimProcessor.process(csvFile, IOUtils.toByteArray(is), connection);
+			csvimProcessor.process(csvFile, is, connection);
 		}
 	}
 	

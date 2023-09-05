@@ -11,6 +11,17 @@
  */
 package org.eclipse.dirigible.components.data.csvim.synchronizer;
 
+import java.io.ByteArrayInputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.api.helpers.DateTimeUtils;
@@ -20,7 +31,6 @@ import org.eclipse.dirigible.components.data.csvim.domain.CsvRecord;
 import org.eclipse.dirigible.components.data.csvim.utils.CsvimUtils;
 import org.eclipse.dirigible.components.data.management.domain.ColumnMetadata;
 import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
-import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -31,16 +41,7 @@ import org.eclipse.dirigible.database.sql.dialects.postgres.PostgresSqlDialect;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.ByteArrayInputStream;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.*;
-import java.util.Base64;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The Class CsvProcessor.
@@ -64,40 +65,24 @@ public class CsvProcessor {
     private static final Logger logger = LoggerFactory.getLogger(CsvProcessor.class);
 
     /**
-     * The datasources manager.
-     */
-    private DataSourcesManager datasourcesManager;
-
-    /**
-     * Instantiates a new csv processor.
-     *
-     * @param datasourcesManager the datasources manager
-     */
-    @Autowired
-    public CsvProcessor(DataSourcesManager datasourcesManager) {
-        this.datasourcesManager = datasourcesManager;
-    }
-
-    /**
      * Insert.
      *
      * @param connection the connection
+     * @param tableMetadata the table metadata
      * @param csvRecords the csv records
-     * @param csvFile    the csv file
+     * @param headerNames the header names
+     * @param csvFile the csv file
      * @throws SQLException the SQL exception
      */
-    public void insert(Connection connection, List<CsvRecord> csvRecords, CsvFile csvFile) throws SQLException {
-        String tableName = csvRecords.get(0).getTableMetadataModel().getName();
-        TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, connection);
+    public void insert(Connection connection, TableMetadata tableMetadata, List<CsvRecord> csvRecords, List<String> headerNames, CsvFile csvFile) throws SQLException {
         if (tableMetadata == null) {
             return;
         }
         List<ColumnMetadata> availableTableColumns = tableMetadata.getColumns();
         InsertBuilder insertBuilder = new InsertBuilder(SqlFactory.deriveDialect(connection));
-        insertBuilder.into(tableName);
+        insertBuilder.into(tableMetadata.getName());
 
-        for (int i = 0; i < csvRecords.get(0).getCsvRecord().size(); i++) {
-            String columnName = availableTableColumns.get(i).getName();
+        for (String columnName : headerNames) {
             insertBuilder.column("\"" + columnName + "\"").value("?");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertBuilder.generate())) {
@@ -106,11 +91,13 @@ public class CsvProcessor {
                 preparedStatement.addBatch();
             }
             if (logger.isInfoEnabled()) {
-                logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH INSERT for table [%s].", csvRecords.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));
+                logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH INSERT for table [%s].",
+                		csvRecords.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableMetadata.getName()));
             }
             preparedStatement.executeBatch();
         } catch (Throwable t) {
-            String errorMessage = String.format("Error occurred while trying to BATCH INSERT CSV records [%s] into table [%s].", csvRecords.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName);
+            String errorMessage = String.format("Error occurred while trying to BATCH INSERT CSV records [%s] into table [%s].",
+            		csvRecords.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableMetadata.getName());
             CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             if (logger.isErrorEnabled()) {
                 logger.error(errorMessage, t);
@@ -122,32 +109,31 @@ public class CsvProcessor {
      * Update.
      *
      * @param connection the connection
+     * @param tableMetadata the table metadata
      * @param csvRecords the csv records
-     * @param csvFile    the csv file
+     * @param headerNames the header names
+     * @param pkName the pk name
+     * @param csvFile the csv file
      * @throws SQLException the SQL exception
      */
-    public void update(Connection connection, List<CsvRecord> csvRecords, CsvFile csvFile) throws SQLException {
-        String tableName = csvRecords.get(0).getTableMetadataModel().getName();
-        TableMetadata tableMetadata = CsvimUtils.getTableMetadata(tableName, connection);
+    public void update(Connection connection, TableMetadata tableMetadata, List<CsvRecord> csvRecords, List<String> headerNames, String pkName, CsvFile csvFile) throws SQLException {
         if (tableMetadata == null) {
             return;
         }
         List<ColumnMetadata> availableTableColumns = tableMetadata.getColumns();
         UpdateBuilder updateBuilder = new UpdateBuilder(SqlFactory.deriveDialect(connection));
-        updateBuilder.table(tableName);
+        updateBuilder.table(tableMetadata.getName());
 
-        CSVRecord csvRecord = csvRecords.get(0).getCsvRecord();
-        for (int i = 0; i < csvRecord.size(); i++) {
-            String columnName = availableTableColumns.get(i).getName();
-            if (columnName.equals(csvRecords.get(0).getPkColumnName())) {
+        for (String columnName : headerNames) {
+            if (columnName.equals(pkName)) {
                 continue;
             }
 
             updateBuilder.set("\"" + columnName + "\"", "?");
         }
 
-        if (csvRecords.get(0).getHeaderNames().size() > 0) {
-            updateBuilder.where(String.format("%s = ?", csvRecords.get(0).getPkColumnName()));
+        if (pkName != null) {
+            updateBuilder.where(String.format("%s = ?", pkName));
         } else {
             updateBuilder.where(String.format("%s = ?", availableTableColumns.get(0).getName()));
         }
@@ -158,11 +144,13 @@ public class CsvProcessor {
                 preparedStatement.addBatch();
             }
             if (logger.isInfoEnabled()) {
-                logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH UPDATED for table [%s].", csvRecords.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));
+                logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH UPDATED for table [%s].",
+                		csvRecords.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableMetadata.getName()));
             }
             preparedStatement.executeBatch();
         } catch (Throwable t) {
-            String errorMessage = String.format("Error occurred while trying to BATCH UPDATE CSV records [%s] into table [%s].", csvRecords.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName);
+            String errorMessage = String.format("Error occurred while trying to BATCH UPDATE CSV records [%s] into table [%s].",
+            		csvRecords.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableMetadata.getName());
             CsvimUtils.logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFile.getFile(), Csv.ARTEFACT_TYPE, MODULE);
             if (logger.isErrorEnabled()) {
                 logger.error(errorMessage, t);

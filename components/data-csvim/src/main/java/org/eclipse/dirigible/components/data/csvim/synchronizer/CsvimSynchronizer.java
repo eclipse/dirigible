@@ -12,6 +12,7 @@
 
 package org.eclipse.dirigible.components.data.csvim.synchronizer;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -19,7 +20,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -74,14 +77,10 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      */
     private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
-    /**
-     * The csvimsynchronizer service
-     */
+    /** The csvimsynchronizer service. */
     private final CsvimService csvimService;
 
-    /**
-     * The csvimsynchronizer service
-     */
+    /** The csvimsynchronizer service. */
     private final CsvService csvService;
 
     /**
@@ -105,6 +104,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      * @param csvimService       the csvimsyncrhonizer service
      * @param csvService         the csvsyncrhonizer service
      * @param datasourcesManager the datasources manager
+     * @param csvimProcessor the csvim processor
      */
     @Autowired
     public CsvimSynchronizer(CsvimService csvimService, CsvService csvService, DataSourcesManager datasourcesManager, CsvimProcessor csvimProcessor) {
@@ -114,6 +114,11 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
         this.csvimProcessor = csvimProcessor;
     }
 
+    /**
+     * Gets the service.
+     *
+     * @return the service
+     */
     @Override
     public ArtefactService<Csvim> getService() {
         return csvimService;
@@ -148,7 +153,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      * @param location the location
      * @param content  the content
      * @return the csvim
-     * @throws ParseException 
+     * @throws ParseException the parse exception
      */
     @Override
     public List<Csvim> parse(String location, byte[] content) throws ParseException {
@@ -337,6 +342,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      *
      * @param csvim      the csvim
      * @param connection the connection
+     * @throws Exception the exception
      */
     private void importCsvim(Csvim csvim, Connection connection) throws Exception {
         List<CsvFile> files = csvim.getFiles();
@@ -366,7 +372,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                     csv.updateKey();
 
                     csv = csvService.save(csv);
-                    csvimProcessor.process(file, content, connection);
+                    csvimProcessor.process(file, new ByteArrayInputStream(content), connection);
 
                     csv.setImported(true);
 
@@ -385,6 +391,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
      *
      * @param csvim      the csvim
      * @param connection the connection
+     * @throws Exception the exception
      */
 
     private void updateCsvim(Csvim csvim, Connection connection) throws Exception {
@@ -400,7 +407,7 @@ public class CsvimSynchronizer<A extends Artefact> implements Synchronizer<Csvim
                     } else {
                         throw new Exception("CSV does not exist: " + fileLocation);
                     }
-                    csvimProcessor.process(file, content, connection);
+                    csvimProcessor.process(file, new ByteArrayInputStream(content), connection);
                 } catch (SQLException | IOException e) {
                     if (logger.isErrorEnabled()) {
                         logger.error(String.format("An error occurred while trying to execute the data import: %s", e.getMessage()), e);

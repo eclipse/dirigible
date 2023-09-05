@@ -98,6 +98,7 @@ public class CsvFile extends Artefact {
     @Expose
     private String delimEnclosing;
 
+    /** The sequence. */
     @Column(name = "CSV_FILE_SEQUENCE", columnDefinition = "VARCHAR")
     @Expose
     private String sequence;
@@ -117,6 +118,26 @@ public class CsvFile extends Artefact {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Csvim csvim;
 
+    /**
+     * Instantiates a new csv file.
+     *
+     * @param location the location
+     * @param name the name
+     * @param type the type
+     * @param description the description
+     * @param dependencies the dependencies
+     * @param id the id
+     * @param table the table
+     * @param schema the schema
+     * @param file the file
+     * @param header the header
+     * @param useHeaderNames the use header names
+     * @param delimField the delim field
+     * @param delimEnclosing the delim enclosing
+     * @param sequence the sequence
+     * @param distinguishEmptyFromNull the distinguish empty from null
+     * @param csvim the csvim
+     */
     public CsvFile(String location, String name, String type, String description, Set<String> dependencies, Long id, String table, String schema,
     		String file, Boolean header, Boolean useHeaderNames, String delimField, String delimEnclosing, String sequence,
     		Boolean distinguishEmptyFromNull, Csvim csvim) {
@@ -134,6 +155,21 @@ public class CsvFile extends Artefact {
         this.csvim = csvim;
     }
 
+    /**
+     * Instantiates a new csv file.
+     *
+     * @param id the id
+     * @param table the table
+     * @param schema the schema
+     * @param file the file
+     * @param header the header
+     * @param useHeaderNames the use header names
+     * @param delimField the delim field
+     * @param delimEnclosing the delim enclosing
+     * @param sequence the sequence
+     * @param distinguishEmptyFromNull the distinguish empty from null
+     * @param csvim the csvim
+     */
     public CsvFile(Long id, String table, String schema, String file, Boolean header, Boolean useHeaderNames, String delimField, String delimEnclosing,
     		String sequence, Boolean distinguishEmptyFromNull, Csvim csvim) {
         this.id = id;
@@ -149,6 +185,9 @@ public class CsvFile extends Artefact {
         this.csvim = csvim;
     }
 
+    /**
+     * Instantiates a new csv file.
+     */
     public CsvFile() {
 
     }
@@ -299,6 +338,8 @@ public class CsvFile extends Artefact {
 
 
     /**
+     * Gets the sequence.
+     *
      * @return sequence
      */
     public String getSequence() {
@@ -332,10 +373,20 @@ public class CsvFile extends Artefact {
         this.distinguishEmptyFromNull = distinguishEmptyFromNull;
     }
 
+    /**
+     * Gets the csvim.
+     *
+     * @return the csvim
+     */
     public Csvim getCsvim() {
         return csvim;
     }
 
+    /**
+     * Sets the csvim.
+     *
+     * @param csvim the new csvim
+     */
     public void setCsvim(Csvim csvim) {
         this.csvim = csvim;
     }

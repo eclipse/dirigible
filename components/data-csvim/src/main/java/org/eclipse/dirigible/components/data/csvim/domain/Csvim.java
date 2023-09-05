@@ -57,17 +57,29 @@ public class Csvim extends Artefact {
     @Expose
     private List<CsvFile> files = new ArrayList<CsvFile>();
 
+    /**
+     * Instantiates a new csvim.
+     *
+     * @param id the id
+     * @param version the version
+     * @param files the files
+     */
     public Csvim(Long id, String version, List<CsvFile> files) {
         this.id = id;
         this.version = version;
         this.files = files;
     }
 
+    /**
+     * Instantiates a new csvim.
+     */
     public Csvim() {
 
     }
 
     /**
+     * Gets the id.
+     *
      * @return get the id of csvim
      */
     public Long getId() {
@@ -75,6 +87,8 @@ public class Csvim extends Artefact {
     }
 
     /**
+     * Sets the id.
+     *
      * @param id the id of the csvim
      */
     public void setId(Long id) {
@@ -82,6 +96,8 @@ public class Csvim extends Artefact {
     }
 
     /**
+     * Gets the version.
+     *
      * @return get the version of csvim
      */
     public String getVersion() {
@@ -89,6 +105,8 @@ public class Csvim extends Artefact {
     }
 
     /**
+     * Sets the version.
+     *
      * @param version the version of the csvim
      */
     public void setVersion(String version) {
@@ -96,6 +114,8 @@ public class Csvim extends Artefact {
     }
 
     /**
+     * Gets the files.
+     *
      * @return get list of csvFiles
      */
     @Nullable
@@ -104,6 +124,8 @@ public class Csvim extends Artefact {
     }
 
     /**
+     * Sets the files.
+     *
      * @param csvFile set list of csvFiles
      */
     public void setFiles(@Nullable List<CsvFile> csvFile) {
@@ -111,6 +133,8 @@ public class Csvim extends Artefact {
     }
 
     /**
+     * Gets the file by location.
+     *
      * @param location the location of the file
      * @return the file
      */
