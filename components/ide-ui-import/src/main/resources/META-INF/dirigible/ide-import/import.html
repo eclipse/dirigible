@@ -30,7 +30,7 @@
     <body class="dg-vbox">
         <input id="input" style="display: none" type="file" nv-file-select="" uploader="uploader" multiple
             accept="{{ inputAccept }}" />
-        <fd-toolbar dg-size="cozy">
+        <fd-toolbar>
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button ng-show="uploader.queue.length > 0 && uploader.isUploading" dg-label="Cancel" title="Cancel"
                 dg-type="transparent" glyph="sap-icon--cancel" ng-click="uploader.cancelAll()">

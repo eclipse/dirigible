@@ -28,7 +28,7 @@
         <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
             {{state.busyText}}
         </fd-busy-indicator-extended>
-        <fd-toolbar class="dg-full-width" has-title="true" dg-size="cozy" ng-show="!state.error && !state.isBusy">
+        <fd-toolbar class="dg-full-width" has-title="true" ng-show="!state.error && !state.isBusy">
             <fd-toolbar-title>Table:</fd-toolbar-title>
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button compact="true" dg-label="Save" ng-click="save()"

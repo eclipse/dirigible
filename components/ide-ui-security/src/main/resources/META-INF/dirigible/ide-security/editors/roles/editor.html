@@ -28,7 +28,7 @@
         <fd-busy-indicator-extended class="dg-full-height" ng-hide="state.error || !state.isBusy" dg-size="l">
             {{state.busyText}}
         </fd-busy-indicator-extended>
-        <fd-toolbar has-title="true" dg-size="cozy" ng-show="!state.error && !state.isBusy">
+        <fd-toolbar has-title="true" ng-show="!state.error && !state.isBusy">
             <fd-toolbar-title>Role definitions:</fd-toolbar-title>
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button compact="true" dg-label="Add" ng-click="addRole()"></fd-button>

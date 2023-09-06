@@ -21,8 +21,7 @@
 		<script type="text/javascript" src="view.js"></script>
 		<!-- IDE Core UI -->
 		<script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js"></script>
-		<link type="text/css" rel="stylesheet"
-			href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+		<link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
 		<theme></theme>
 		<!-- Project-specific stuff -->
 		<script type="text/javascript" src="controller.js"></script>
@@ -78,6 +77,38 @@
 				<fd-bar>
 					<fd-bar-left>
 						<fd-bar-element>
+							<fd-button glyph="sap-icon--navigation-left-arrow" aria-label="button"
+								dg-type="transparent">
+							</fd-button>
+						</fd-bar-element>
+						<fd-bar-element>
+							<fd-button glyph="sap-icon--home" aria-label="button" dg-type="transparent"></fd-button>
+						</fd-bar-element>
+						<fd-bar-element>
+							<fd-button glyph="sap-icon--account" aria-label="button" dg-type="transparent"></fd-button>
+						</fd-bar-element>
+					</fd-bar-left>
+					<fd-bar-middle>
+						<fd-bar-element>
+							<fd-segmented-button aria-label="Test group">
+								<fd-button glyph="sap-icon--email" aria-label="button" dg-toggled="true"></fd-button>
+								<fd-button glyph="sap-icon--iphone" aria-label="button"></fd-button>
+								<fd-button glyph="sap-icon--notification-2" aria-label="button"></fd-button>
+							</fd-segmented-button>
+						</fd-bar-element>
+					</fd-bar-middle>
+					<fd-bar-right>
+						<fd-bar-element>
+							<fd-button glyph="sap-icon--grid" aria-label="button" dg-type="transparent">
+							</fd-button>
+						</fd-bar-element>
+					</fd-bar-right>
+				</fd-bar>
+
+				<h4>Bar (compact)</h4>
+				<fd-bar compact="true">
+					<fd-bar-left>
+						<fd-bar-element>
 							<fd-button glyph="sap-icon--navigation-left-arrow" compact="true" aria-label="button"
 								dg-type="transparent">
 							</fd-button>
@@ -110,34 +141,52 @@
 					</fd-bar-right>
 				</fd-bar>
 
-				<h4>Bar cozy</h4>
-				<fd-bar cozy="true">
+				<h4>Bar side paddings</h4>
+				<fd-bar padding="s">
 					<fd-bar-left>
 						<fd-bar-element>
-							<fd-button glyph="sap-icon--navigation-left-arrow" aria-label="button"
-								dg-type="transparent">
-							</fd-button>
-						</fd-bar-element>
-						<fd-bar-element>
-							<fd-button glyph="sap-icon--home" aria-label="button" dg-type="transparent"></fd-button>
-						</fd-bar-element>
-						<fd-bar-element>
-							<fd-button glyph="sap-icon--account" aria-label="button" dg-type="transparent"></fd-button>
+							<span>Size "s"</span>
 						</fd-bar-element>
 					</fd-bar-left>
-					<fd-bar-middle>
-						<fd-bar-element>
-							<fd-segmented-button aria-label="Test group">
-								<fd-button glyph="sap-icon--email" aria-label="button" dg-toggled="true"></fd-button>
-								<fd-button glyph="sap-icon--iphone" aria-label="button"></fd-button>
-								<fd-button glyph="sap-icon--notification-2" aria-label="button"></fd-button>
-							</fd-segmented-button>
-						</fd-bar-element>
-					</fd-bar-middle>
 					<fd-bar-right>
 						<fd-bar-element>
-							<fd-button glyph="sap-icon--grid" aria-label="button" dg-type="transparent">
-							</fd-button>
+							<span>Size "s"</span>
+						</fd-bar-element>
+					</fd-bar-right>
+				</fd-bar>
+				<fd-bar padding="m_l">
+					<fd-bar-left>
+						<fd-bar-element>
+							<span>Size "m_l"</span>
+						</fd-bar-element>
+					</fd-bar-left>
+					<fd-bar-right>
+						<fd-bar-element>
+							<span>Size "m_l"</span>
+						</fd-bar-element>
+					</fd-bar-right>
+				</fd-bar>
+				<fd-bar padding="xl">
+					<fd-bar-left>
+						<fd-bar-element>
+							<span>Size "xl"</span>
+						</fd-bar-element>
+					</fd-bar-left>
+					<fd-bar-right>
+						<fd-bar-element>
+							<span>Size "xl"</span>
+						</fd-bar-element>
+					</fd-bar-right>
+				</fd-bar>
+				<fd-bar padding="responsive">
+					<fd-bar-left>
+						<fd-bar-element>
+							<span>Responsive</span>
+						</fd-bar-element>
+					</fd-bar-left>
+					<fd-bar-right>
+						<fd-bar-element>
+							<span>Responsive</span>
 						</fd-bar-element>
 					</fd-bar-right>
 				</fd-bar>
@@ -146,7 +195,7 @@
 				<fd-bar bar-design="header-with-subheader">
 					<fd-bar-left>
 						<fd-bar-element is-title="true">
-							<h6 fd-title dg-wrap="true" aria-label="title">TEXT</h6>
+							<h6 fd-title dg-wrap="true" header-size="6" aria-label="title">TEXT</h6>
 						</fd-bar-element>
 					</fd-bar-left>
 					<fd-bar-middle>
@@ -382,49 +431,64 @@
 							<fd-checkbox-label for="cbid1">Default</fd-checkbox-label>
 						</fd-form-item>
 						<fd-form-item>
-							<fd-checkbox id="cbid10" compact="false" ng-model="fdCheckboxModel" readonly>
+							<fd-checkbox id="cbid2" compact="false" ng-model="fdCheckboxModel">
 							</fd-checkbox>
-							<fd-checkbox-label for="cbid10">Checked</fd-checkbox-label>
+							<fd-checkbox-label for="cbid2">Checked</fd-checkbox-label>
 						</fd-form-item>
 						<fd-form-item>
-							<fd-checkbox id="cbid2" compact="false" ng-required="true" ng-checked="true">
+							<fd-checkbox id="cbid3" compact="false" ng-required="true" ng-checked="true">
 							</fd-checkbox>
-							<fd-checkbox-label for="cbid2" dg-required="true">Required</fd-checkbox-label>
+							<fd-checkbox-label for="cbid3" dg-required="true">Required</fd-checkbox-label>
 						</fd-form-item>
 						<fd-form-item>
-							<fd-checkbox id="cbid3" compact="false" state="error">
+							<fd-checkbox id="cbid4" compact="false" state="error">
 							</fd-checkbox>
-							<fd-checkbox-label for="cbid3">Error</fd-checkbox-label>
+							<fd-checkbox-label for="cbid4">Error</fd-checkbox-label>
 						</fd-form-item>
 						<fd-form-item>
-							<fd-checkbox id="cbid4" compact="false" state="success">
+							<fd-checkbox id="cbid5" compact="false" state="success">
 							</fd-checkbox>
-							<fd-checkbox-label for="cbid4">Success</fd-checkbox-label>
+							<fd-checkbox-label for="cbid5">Success</fd-checkbox-label>
 						</fd-form-item>
 						<fd-form-item>
-							<fd-checkbox id="cbid5" compact="false" state="warning">
+							<fd-checkbox id="cbid6" compact="false" state="warning">
 							</fd-checkbox>
-							<fd-checkbox-label for="cbid5">Warning</fd-checkbox-label>
+							<fd-checkbox-label for="cbid6">Warning</fd-checkbox-label>
 						</fd-form-item>
 						<fd-form-item>
-							<fd-checkbox id="cbid6" compact="false" state="information">
+							<fd-checkbox id="cbid7" compact="false" state="information">
 							</fd-checkbox>
-							<fd-checkbox-label for="cbid6">Information</fd-checkbox-label>
+							<fd-checkbox-label for="cbid7">Information</fd-checkbox-label>
 						</fd-form-item>
 						<fd-form-item>
-							<fd-checkbox id="cbid7" compact="false">
+							<fd-checkbox id="cbid8" compact="false">
 							</fd-checkbox>
-							<fd-checkbox-label for="cbid7" is-hover="true">Hover</fd-checkbox-label>
+							<fd-checkbox-label for="cbid8" is-hover="true">Hover</fd-checkbox-label>
 						</fd-form-item>
 						<fd-form-item>
-							<fd-checkbox id="cbid8" compact="false" disabled>
+							<fd-checkbox id="cbid9" compact="false" disabled>
 							</fd-checkbox>
-							<fd-checkbox-label for="cbid8" is-hover="true">Disabled</fd-checkbox-label>
+							<fd-checkbox-label for="cbid9" is-hover="true">Disabled</fd-checkbox-label>
 						</fd-form-item>
 						<fd-form-item>
-							<fd-checkbox id="cbid9" compact="false" dg-indeterminate="true">
+							<fd-checkbox id="cbid10" compact="false" dg-indeterminate="true">
 							</fd-checkbox>
-							<fd-checkbox-label for="cbid9">Indeterminate</fd-checkbox-label>
+							<fd-checkbox-label for="cbid10">Indeterminate</fd-checkbox-label>
+						</fd-form-item>
+						<fd-form-item>
+							<fd-checkbox id="cbid11" compact="false" readonly>
+							</fd-checkbox>
+							<fd-checkbox-label for="cbid11">Default (readonly)</fd-checkbox-label>
+						</fd-form-item>
+						<fd-form-item>
+							<fd-checkbox id="cbid12" compact="false" ng-checked="true" readonly>
+							</fd-checkbox>
+							<fd-checkbox-label for="cbid12">Checked (readonly)</fd-checkbox-label>
+						</fd-form-item>
+						<fd-form-item>
+							<fd-checkbox id="cbid13" compact="false" dg-indeterminate="true" readonly>
+							</fd-checkbox>
+							<fd-checkbox-label for="cbid13">Indeterminate (readonly)</fd-checkbox-label>
 						</fd-form-item>
 					</fd-form-group>
 				</fd-fieldset>
@@ -432,6 +496,30 @@
 				<fd-checkbox id="cbid11" compact="true">
 				</fd-checkbox>
 				<fd-checkbox-label for="cbid11">Compact</fd-checkbox-label>
+				<h4>No label</h4>
+				<fd-form-item>
+					<fd-checkbox id="cbide" compact="false">
+					</fd-checkbox>
+					<fd-checkbox-label empty="true" for="cbide"></fd-checkbox-label>
+				</fd-form-item>
+				<h4>Display-only mode</h4>
+				<p>In display-only Mode, the checkbox is replaced by two icons to represent the checked and unchecked
+					states. The control becomes a simple icon.</p>
+				<fd-form-item>
+					<fd-checkbox id="cbiddo1" display-mode="true" compact="false">
+					</fd-checkbox>
+					<fd-checkbox-label for="cbiddo1">Unchecked Icon</fd-checkbox-label>
+				</fd-form-item>
+				<fd-form-item>
+					<fd-checkbox id="cbiddo2" display-mode="true" compact="false" ng-checked="true">
+					</fd-checkbox>
+					<fd-checkbox-label for="cbiddo2">Checked Icon</fd-checkbox-label>
+				</fd-form-item>
+				<fd-form-item>
+					<fd-checkbox id="cbiddo3" display-mode="true" compact="false" dg-indeterminate="true">
+					</fd-checkbox>
+					<fd-checkbox-label for="cbiddo3">Indeterminate</fd-checkbox-label>
+				</fd-form-item>
 			</fd-panel-content>
 		</fd-panel>
 		<fd-panel expanded="false">
@@ -622,8 +710,10 @@
 				<h4 fd-panel-title>Radio</h4>
 			</fd-panel-header>
 			<fd-panel-content aria-label="Radio Panel Content">
-				<fd-radio id="rid4" ng-checked="true"></fd-radio>
-				<fd-radio-label for="rid4">Group Radio 1</fd-radio-label>
+				<fd-radio id="ridc" ng-checked="true"></fd-radio>
+				<fd-radio-label for="ridc">Checked</fd-radio-label>
+				<fd-radio id="riduc" ng-checked="false"></fd-radio>
+				<fd-radio-label for="riduc">Unchecked</fd-radio-label>
 			</fd-panel-content>
 		</fd-panel>
 		<fd-panel expanded="false">
@@ -1008,6 +1098,17 @@
 						inverted="true" clickable="true"></span>
 					<span fd-object-status glyph="sap-icon--message-information" text="Neutral" inverted="true"
 						clickable="true"></span>
+				</div>
+				<h4>Single line text with ellipsis</h4>
+				<div style="display:flex; justify-content: space-around">
+					<span fd-object-status truncate="true" status="negative" glyph="sap-icon--message-error"
+						text="Object Status with text truncation with ellipsis" style="max-width: 15rem;"></span>
+					<span fd-object-status truncate="true" status="critical" glyph="sap-icon--message-warning"
+						text="Object Status with text truncation with ellipsis" style="max-width: 15rem;"></span>
+					<span fd-object-status truncate="true" status="positive" glyph="sap-icon--message-success"
+						text="Object Status with text truncation with ellipsis" style="max-width: 15rem;"></span>
+					<span fd-object-status truncate="true" status="informative" glyph="sap-icon--message-information"
+						text="Object Status with text truncation with ellipsis" style="max-width: 15rem;"></span>
 				</div>
 			</fd-panel-content>
 		</fd-panel>
@@ -1907,14 +2008,14 @@
 			</fd-panel-header>
 			<fd-panel-content aria-label="Toolbar Panel Content">
 				<h4>Toolbar with title</h4>
-				<fd-toolbar dg-size="cozy" has-title="true">
+				<fd-toolbar has-title="true">
 					<fd-toolbar-title>Producs (35)</fd-toolbar-title>
 					<fd-button dg-type="transparent" dg-label="Create"></fd-button>
 					<fd-toolbar-spacer></fd-toolbar-spacer>
 					<fd-button dg-type="transparent" dg-label="Save"></fd-button>
 					<fd-button dg-type="transparent" dg-label="Copy"></fd-button>
 					<fd-toolbar-separator></fd-toolbar-separator>
-					<fd-toolbar-overflow compact="false">
+					<fd-toolbar-overflow>
 						<fd-toolbar-overflow-label>Label</fd-toolbar-overflow-label>
 						<fd-button is-overflow="true" dg-type="transparent" dg-label="Edit"></fd-button>
 						<fd-button is-overflow="true" dg-type="transparent" dg-label="Delete">
@@ -1928,12 +2029,15 @@
 					</fd-toolbar-overflow>
 				</fd-toolbar>
 				<h4>Compact toolbar</h4>
-				<fd-toolbar dg-size="compact" has-title="true">
-					<fd-toolbar-title>Producs (104)</fd-toolbar-title>
+				<span fd-object-status status="informative" glyph="sap-icon--message-information" inverted="true"
+					text="Compact toolbars cannot have a title but you can use a simple 'span' element as a replacement."></span>
+				<p></p>
+				<fd-toolbar compact="true" has-title="false">
+					<span>Producs (35)</span>
 					<fd-toolbar-spacer></fd-toolbar-spacer>
-					<fd-button compact="true" dg-type="transparent" dg-label="Save"></fd-button>
+					<fd-button dg-type="transparent" dg-label="Save"></fd-button>
 					<fd-toolbar-separator></fd-toolbar-separator>
-					<fd-button compact="true" dg-type="transparent" dg-label="Delete"></fd-button>
+					<fd-button dg-type="transparent" dg-label="Delete"></fd-button>
 					<fd-toolbar-overflow>
 						<fd-button is-overflow="true" dg-type="transparent" dg-label="Edit"></fd-button>
 					</fd-toolbar-overflow>
@@ -1941,40 +2045,36 @@
 				<h4>Toolbar with no border</h4>
 				<fd-toolbar no-bottom-border="true">
 					<fd-toolbar-spacer></fd-toolbar-spacer>
-					<fd-button compact="true" dg-type="transparent" dg-label="Save"></fd-button>
+					<fd-button dg-type="transparent" dg-label="Save"></fd-button>
 					<fd-toolbar-separator></fd-toolbar-separator>
-					<fd-button compact="true" dg-type="transparent" dg-label="Delete"></fd-button>
+					<fd-button dg-type="transparent" dg-label="Delete"></fd-button>
 				</fd-toolbar>
 				<h4>Toolbar types</h4>
-				<fd-toolbar has-title="true" dg-type="transparent">
-					<fd-toolbar-title>Transparent</fd-toolbar-title>
+				<fd-toolbar dg-type="transparent">
+					<span>Clear/Transparent</span>
 					<fd-toolbar-spacer></fd-toolbar-spacer>
-					<fd-button compact="true" dg-type="transparent" dg-label="Save"></fd-button>
+					<fd-button dg-type="transparent" dg-label="Save"></fd-button>
 					<fd-toolbar-separator></fd-toolbar-separator>
-					<fd-button compact="true" dg-type="transparent" dg-label="Delete"></fd-button>
+					<fd-button dg-type="transparent" dg-label="Delete"></fd-button>
 				</fd-toolbar>
-				<fd-toolbar has-title="true" dg-type="auto">
-					<fd-toolbar-title>Auto</fd-toolbar-title>
+				<fd-toolbar dg-type="auto">
+					<span>Auto</span>
 					<fd-toolbar-spacer></fd-toolbar-spacer>
-					<fd-button compact="true" dg-type="transparent" dg-label="Save"></fd-button>
+					<fd-button dg-type="transparent" dg-label="Save"></fd-button>
 					<fd-toolbar-separator></fd-toolbar-separator>
-					<fd-button compact="true" dg-type="transparent" dg-label="Delete"></fd-button>
+					<fd-button dg-type="transparent" dg-label="Delete"></fd-button>
 				</fd-toolbar>
-				<fd-toolbar has-title="true" dg-type="info">
-					<fd-toolbar-title>Info</fd-toolbar-title>
+				<fd-toolbar dg-type="info">
+					<span>Info</span>
+				</fd-toolbar>
+				<fd-toolbar dg-type="solid">
+					<span>Solid</span>
 					<fd-toolbar-spacer></fd-toolbar-spacer>
-					<fd-button compact="true" dg-type="transparent" dg-label="Save"></fd-button>
+					<fd-button dg-type="transparent" dg-label="Save"></fd-button>
 					<fd-toolbar-separator></fd-toolbar-separator>
-					<fd-button compact="true" dg-type="transparent" dg-label="Delete"></fd-button>
+					<fd-button dg-type="transparent" dg-label="Delete"></fd-button>
 				</fd-toolbar>
-				<fd-toolbar has-title="true" dg-type="solid">
-					<fd-toolbar-title>Solid</fd-toolbar-title>
-					<fd-toolbar-spacer></fd-toolbar-spacer>
-					<fd-button compact="true" dg-type="transparent" dg-label="Save"></fd-button>
-					<fd-toolbar-separator></fd-toolbar-separator>
-					<fd-button compact="true" dg-type="transparent" dg-label="Delete"></fd-button>
-				</fd-toolbar>
-				<h4>Active</h4>
+				<h4>Active state</h4>
 				<fd-toolbar dg-type="info" active="true">
 					3 item selected
 				</fd-toolbar>
@@ -2075,7 +2175,8 @@
 									<span fd-list-navigation-item-text>Home</span>
 								</fd-list-navigation-item>
 								<fd-list-navigation-item condensed="isCondensed">
-									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg" icon-size="lg">
+									<fd-list-navigation-item-icon svg-path="/services/web/resources/images/unknown.svg"
+										icon-size="lg">
 									</fd-list-navigation-item-icon>
 									<span fd-list-navigation-item-text>Sample</span>
 								</fd-list-navigation-item>

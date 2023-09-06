@@ -615,20 +615,28 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: `<div class="fd-form-group__header" ng-class="{'true': 'fd-form-group__header--compact'}[compact]"><h1 id="{{ headerId }}" class="fd-form-group__header-text" ng-transclude></h1></div>`,
         }
-    }]).directive('fdFormItem', [function () {
+    }]).directive('fdFormItem', function (classNames) {
         /**
          * horizontal: Boolean - If true, items will be displayed horizontally.
+         * inList: Boolean - Set to true if the form item is in an fd-list-item element.
          */
         return {
             restrict: 'E',
             transclude: true,
             replace: true,
             scope: {
-                horizontal: '@',
+                horizontal: '<?',
+                inList: '<?',
             },
-            template: `<div class="fd-form-item" ng-class="{'true':'fd-form-item--horizontal'}[horizontal]" ng-transclude></div>`,
+            link: function (scope) {
+                scope.getClasses = () => classNames({
+                    'fd-form-item--horizontal': scope.horizontal,
+                    'fd-list__form-item': scope.inList,
+                });
+            },
+            template: `<div class="fd-form-item" ng-class="getClasses()" ng-transclude></div>`,
         }
-    }]).directive('fdFormLabel', [function () {
+    }).directive('fdFormLabel', [function () {
         /**
          * dgColon: Boolean - Puts a colon at the end of the label.
          * dgRequired: Boolean - If the checkbox is required.
@@ -936,6 +944,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * compact: Boolean - Checkbox size.
          * state: String - You have five options - 'error', 'success', 'warning' and 'information'.
          * dgIndeterminate: Boolean - Indeterminate/tri-state.
+         * displayMode: Boolean - In Display Mode, the checkbox is replaced by two icons to represent the checked and unchecked states.
          */
         return {
             restrict: 'E',
@@ -945,6 +954,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 compact: '<?',
                 state: '@?',
                 dgIndeterminate: '<?',
+                displayMode: '<?',
             },
             link: {
                 pre: function (scope, elem, attrs) {
@@ -953,6 +963,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (scope.compact === true) classList.push('fd-checkbox--compact');
                         if (scope.state) classList.push(`is-${scope.state}`);
                         if (attrs.disabled) classList.push('is-disabled');
+                        if (scope.displayMode) classList.push('is-display');
                         if (scope.dgIndeterminate === true) elem[0].indeterminate = true;
                         else elem[0].indeterminate = false;
                         return classList.join(' ');
@@ -966,7 +977,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * compact: Boolean - Checkbox label size.
          * dgRequired: Boolean - If the checkbox is required.
          * isHover: Boolean - If the checkbox is in hover state.
-         * empty: Boolean - If the label has text
+         * empty: Boolean - If the label has text.
+         * wrap: Boolean - By default, the label text will be truncated. Set this to true if you want it to wrap instead.
          */
         return {
             restrict: 'E',
@@ -976,7 +988,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 compact: '<?',
                 dgRequired: '<?',
                 isHover: '<?',
-                empty: '@'
+                empty: '<?',
+                wrap: '<?',
             },
             link: {
                 pre: function (scope) {
@@ -985,11 +998,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (scope.compact === true) classList.push('fd-checkbox__label--compact');
                         if (scope.dgRequired === true) classList.push('fd-checkbox__label--required');
                         if (scope.isHover === true) classList.push('is-hover');
+                        if (scope.wrap === true) classList.push('fd-checkbox__label--wrap');
                         return classList.join(' ');
                     };
                 },
             },
             template: `<label class="fd-checkbox__label" ng-class="getClasses()">
+                <span class="fd-checkbox__checkmark" aria-hidden="true"></span>
                 <div ng-if="empty!=='true'" class="fd-checkbox__label-container"><span class="fd-checkbox__text" ng-transclude></span></div>
             </label>`,
         }
@@ -1775,9 +1790,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             scope: {
-                innerBorders: '@',
-                outerBorders: '@',
-                displayMode: '@'
+                innerBorders: '@?',
+                outerBorders: '@?',
+                displayMode: '@?'
             },
             controller: ['$scope', '$element', function ($scope, $element) {
 
@@ -2196,8 +2211,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdToolbar', [function () {
         /**
          * dgType: String - The type of the toolbar. One of 'transparent', 'auto', 'info' or 'solid' (default value)
-         * dgSize: String - The size of the toolbar. One of 'cozy' or 'compact' (default value)
-         * hasTitle: Boolean - Should be used whenever a title is required.
+         * compact: Boolean - Applies compact style to the toolbar and all elements inside it.
+         * hasTitle: Boolean - Should be used whenever a title is required. This is incompatible iwht "compact" size.
          * noBottomBorder: Boolean - Removes the bottom border of the toolbar
          * active: Boolean - Enables active and hover states
          */
@@ -2207,7 +2222,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 dgType: '@?',
-                dgSize: '@?',
+                compact: '<?',
                 hasTitle: '<?',
                 noBottomBorder: '<?',
                 active: '<?'
@@ -2232,7 +2247,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     if (scope.hasTitle) classList.push('fd-toolbar--title');
                     if (scope.noBottomBorder) classList.push('fd-toolbar--clear');
                     if (scope.active) classList.push('fd-toolbar--active');
-                    if (scope.dgSize === 'cozy') classList.push('fd-toolbar--cozy');
+                    if (scope.compact) classList.push('is-compact');
+                    if (scope.hasTitle && scope.compact) console.error("fd-toolbar: There cannot be a title in compact mode!");
                     return classList.join(' ');
                 };
             },
@@ -2287,12 +2303,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         return {
             restrict: 'EA',
             transclude: true,
-            scope: {
-                compact: '<?'
-            },
             template: `<fd-popover>
 				<fd-popover-control>
-					<fd-button compact="compact === undefined ? true : compact" glyph="sap-icon--overflow" dg-type="transparent" aria-label="Toolbar overflow"></fd-button>
+					<fd-button glyph="sap-icon--overflow" dg-type="transparent" aria-label="Toolbar overflow"></fd-button>
 				</fd-popover-control>
 				<fd-popover-body dg-align="bottom-right">
 					<div class="fd-toolbar__overflow" ng-transclude></div>
@@ -2726,18 +2739,20 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * inverted: Boolean - Inverts the background color
          * indication: Boolean - Applies generic indication color. Must be a number between 1 and 8 inclusive
          * large: Boolean - Increases the size
+         * truncate: Boolean - By default, Object Status text goes on multiple lines. For a single line text with ellipsis, set this to true.
          */
         return {
             restrict: 'A',
             replace: false,
             scope: {
-                status: '@',
-                glyph: '@',
-                text: '@',
-                clickable: '<',
-                inverted: '<',
-                indication: '<',
-                large: '<'
+                status: '@?',
+                glyph: '@?',
+                text: '@?',
+                clickable: '<?',
+                inverted: '<?',
+                indication: '<?',
+                large: '<?',
+                truncate: '<?',
             },
             controller: ['$scope', '$element', function (scope, element) {
                 const statuses = ['negative', 'critical', 'positive', 'informative'];
@@ -2747,7 +2762,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     element.addClass('fd-upload-collection__status-group-item');
                 }
 
-                scope.getIconClasses = () => classNames('fd-object-status__icon', scope.glyph);
+                scope.getIconClasses = () => {
+                    if (!scope.text) element.addClass('fd-object-status--icon-only');
+                    else element.removeClass('fd-object-status--icon-only');
+                    return classNames('fd-object-status__icon', scope.glyph);
+                };
                 scope.getTextClasses = () => classNames('fd-object-status__text', {
                     'fd-upload-collection__status-group-item-text': scope.isUploadCollection
                 })
@@ -2758,11 +2777,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     if (newStatus && !statuses.includes(newStatus)) {
                         console.error(`fd-object-status error: 'status' must be one of: ${statuses.join(', ')}`);
                     }
-
                     if (oldStatus) {
                         element.removeClass(`fd-object-status--${oldStatus}`);
                     }
-
                     if (statuses.includes(newStatus)) {
                         element.addClass(`fd-object-status--${newStatus}`);
                     }
@@ -2793,6 +2810,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         element.addClass('fd-object-status--large');
                     } else {
                         element.removeClass('fd-object-status--large');
+                    }
+                });
+
+                scope.$watch('truncate', function () {
+                    if (scope.truncate) {
+                        element.addClass('fd-object-status--truncate');
+                    } else {
+                        element.removeClass('fd-object-status--truncate');
                     }
                 });
 
@@ -3399,25 +3424,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     </fd-select>
                 </div>
                 <nav class="fd-pagination__nav" role="navigation">
-                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" class="fd-pagination__button--mobile" aria-label="First page" aria-disabled="{{ !isPrevButtonEnabled() }}" ng-click="gotoFirstPage()">
-                        <i class="sap-icon sap-icon--media-rewind"></i>
-                    </a>
-                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" aria-label="Previous page" aria-disabled="{{ !isPrevButtonEnabled() }}" ng-click="gotoPrevPage()">
-                        <i class="sap-icon sap-icon--navigation-left-arrow"></i>
-                    </a>
-
+                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" class="fd-pagination__button--mobile" aria-label="First page" aria-disabled="{{ !isPrevButtonEnabled() }}" ng-click="gotoFirstPage()"><i class="sap-icon sap-icon--media-rewind"></i></a>
+                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" aria-label="Previous page" aria-disabled="{{ !isPrevButtonEnabled() }}" ng-click="gotoPrevPage()"><i class="sap-icon sap-icon--navigation-left-arrow"></i></a>
                     <a ng-if="pageNumber !== currentPage || isShortMode()" ng-repeat-start="pageNumber in pageNumbers = getPageNumbers()" href="javascript:void(0)" ng-class="getNumberButtonClasses(pageNumber)" aria-label="{{ getNumberButtonAriaLabel(pageNumber) }}" aria-current="{{ currentPage === pageNumber }}" ng-click="gotoPage(pageNumber)">{{ pageNumber }}</a>
                     <label ng-if="pageNumber === currentPage" id="{{ currentPageLabelId }}" class="fd-form-label fd-pagination__label" aria-label="Page input, Current page, Page {currentPage}">Page:</label>
                     <fd-input ng-if="pageNumber === currentPage" aria-labelledby="{{ getCurrentPageInputAriaLabelledBy() }}" class="fd-pagination__input" type="number" min="1" max="{{ getPageCount() }}" compact="compact" ng-required state="{{ currentPageInputState }}" ng-model="$parent.$parent.currentPageInput" ng-keydown="$event.keyCode === 13 && changePage()" ng-blur="onCurrentPageInputBlur()" ng-change="onCurrentPageInputChange()"></fd-input>
                     <label ng-if="pageNumber === currentPage" id="{{ currentPageOfLabelId }}" class="fd-form-label fd-pagination__label">of {{ getPageCount() }}</label>
                     <span ng-if="showEllipsys($index, pageNumbers.length)" ng-repeat-end class="fd-pagination__more" role="presentation"></span>
-
-                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" aria-label="Next page" aria-disabled="{{ !isNextButtonEnabled() }}" ng-click="gotoNextPage()">
-                        <i class="sap-icon sap-icon--navigation-right-arrow"></i>
-                    </a>
-                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" class="fd-pagination__button--mobile" aria-label="Last page" aria-disabled="{{ !isNextButtonEnabled() }}" ng-click="gotoLastPage()">
-                        <i class="sap-icon sap-icon--media-forward"></i>
-                    </a>
+                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" aria-label="Next page" aria-disabled="{{ !isNextButtonEnabled() }}" ng-click="gotoNextPage()"><i class="sap-icon sap-icon--navigation-right-arrow"></i></a>
+                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" class="fd-pagination__button--mobile" aria-label="Last page" aria-disabled="{{ !isNextButtonEnabled() }}" ng-click="gotoLastPage()"><i class="sap-icon sap-icon--media-forward"></i></a>
                 </nav>
                 <div ng-if="displayTotalItems" class="fd-pagination__total">
                     <span class="fd-form-label fd-pagination__total-label">{{ getTotal() }}</span>
@@ -3427,9 +3442,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdBar', ['classNames', function (classNames) {
         /**
          * barDesign: String - Whether the Bar component is used as a header, subheader, header-with-subheader, footer or floating-footer. Types available: 'header','subheader','header-with-subheader','footer','floating-footer'
-         * cozy: Boolean - Whether to apply cozy mode to the Bar.
+         * compact: Boolean - Applies compact style to the bar and all elements inside the bar.
          * inPage: Boolean - Whether the Bar component is used in Page Layout.
-         * size: String - The size of the Page in Page responsive design. Available sizes: 's' | 'm_l' | 'xl'
+         * padding: String - The size of the side paddings. Available sizes: 's', 'm_l', 'xl' and 'responsive'. This is incompatible with compact mode.
          */
         return {
             restrict: 'EA',
@@ -3437,27 +3452,34 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             scope: {
                 barDesign: '@?',
-                cozy: '<?',
+                compact: '<?',
                 inPage: '<?',
-                size: '@?'
+                padding: '@?'
             },
             link: function (scope) {
                 const barDesigns = ['header', 'subheader', 'header-with-subheader', 'footer', 'floating-footer'];
-                const sizes = ['s', 'm_l', 'xl'];
+                const paddings = ['s', 'm_l', 'xl', 'responsive'];
 
                 if (scope.barDesign && !barDesigns.includes(scope.barDesign)) {
                     console.error(`fd-bar error: 'bar-design' must be one of: ${barDesigns.join(', ')}`);
                 }
 
-                if (scope.size && !sizes.includes(scope.size)) {
-                    console.error(`fd-bar error: 'size' must be one of: ${sizes.join(', ')}`);
+                if (scope.padding && scope.compact) {
+                    console.error("fd-bar error: 'padding' and 'compact' attributes are incompatible.");
+                }
+
+                if (scope.padding && !paddings.includes(scope.padding)) {
+                    console.error(`fd-bar error: 'padding' must be one of: ${paddings.join(', ')}`);
                 }
 
                 scope.getClasses = () => classNames('fd-bar', {
                     [`fd-bar--${scope.barDesign}`]: barDesigns.includes(scope.barDesign),
-                    'fd-bar--cozy': scope.cozy,
+                    'fd-bar--compact': scope.compact,
                     'fd-bar--page': scope.inPage,
-                    [`fd-bar--page-${scope.size}`]: sizes.includes(scope.size)
+                    'fd-bar--page-s': scope.padding === 's',
+                    'fd-bar--page-m_l': scope.padding === 'm_l',
+                    'fd-bar--page-xl': scope.padding === 'xl',
+                    'fd-bar--responsive-paddings': scope.padding === 'responsive',
                 });
             },
             template: `<div ng-class="getClasses()" ng-transclude></div>`
@@ -3522,7 +3544,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'A',
             scope: {
                 headerSize: '<',
-                dgWrap: '<'
+                dgWrap: '<?'
             },
             link: function (scope, element) {
                 element.addClass('fd-title');

@@ -3,12 +3,12 @@
         <split-pane ng-if="leftTabs.length > 0" size="{{ layoutSettings.leftPaneSize }}"
             min-size="layoutSettings.leftPaneMinSize" max-size="layoutSettings.leftPaneMaxSize" snap-offset="0"
             class="pane-left">
-            <fd-toolbar>
+            <fd-toolbar compact="true">
                 <span>{{ perspectiveName }}</span>
                 <fd-toolbar__spacer></fd-toolbar__spacer>
                 <fd-popover close-innerclick="false">
                     <fd-popover-control>
-                        <fd-button compact="true" glyph="sap-icon--overflow" aria-label="More" dg-type="transparent">
+                        <fd-button glyph="sap-icon--overflow" aria-label="More" dg-type="transparent">
                         </fd-button>
                     </fd-popover-control>
                     <fd-popover-body no-arrow="true" dg-align="bottom-right">

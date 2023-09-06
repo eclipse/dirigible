@@ -69,10 +69,10 @@
             </table>
         </fd-scrollbar>
         <div class="dg-list-border-top dg-vbox dg-stretch">
-            <fd-toolbar>
+            <fd-toolbar compact="true">
                 <h4>Result</h4>
                 <fd-toolbar-spacer></fd-toolbar-spacer>
-                <fd-button compact="true" glyph="sap-icon--delete" dg-type="transparent" aria-label="Clear results"
+                <fd-button glyph="sap-icon--delete" dg-type="transparent" aria-label="Clear results"
                     ng-click="triggerResults.length = 0"
                     state="{{ triggerResults.length === 0 ? 'disabled' : undefined }}">
                 </fd-button>

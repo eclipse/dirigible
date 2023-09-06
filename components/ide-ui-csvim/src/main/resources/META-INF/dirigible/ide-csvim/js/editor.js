@@ -46,7 +46,7 @@ editorView.controller('CsvimViewController', ['$scope', '$http', 'messageHub', '
         busyText: "Loading...",
     };
     $scope.searchVisible = false;
-    $scope.searchField = {text: ''};
+    $scope.searchField = { text: '' };
     $scope.schemaError = 'Schema can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), and dollar signs ("$")';
     $scope.sequenceError = 'Sequence can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), and dollar signs ("$")';
     $scope.tableError = 'Table can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), dollar signs ("$") and two consecutive colons ("::")';
@@ -56,7 +56,7 @@ editorView.controller('CsvimViewController', ['$scope', '$http', 'messageHub', '
     $scope.fileExists = true;
     $scope.editEnabled = false;
     $scope.dataEmpty = true;
-    $scope.csvimData = {files: []};
+    $scope.csvimData = { files: [] };
     $scope.activeItemId = 0;
     $scope.delimiterList = [',', '\\t', '|', ';', '#'];
     $scope.quoteCharList = ["'", "\"", "#"];
@@ -185,11 +185,11 @@ editorView.controller('CsvimViewController', ['$scope', '$http', 'messageHub', '
                 type: "emphasized",
                 label: "Yes",
             },
-                {
-                    id: "b2",
-                    type: "normal",
-                    label: "No",
-                }],
+            {
+                id: "b2",
+                type: "normal",
+                label: "No",
+            }],
         ).then(function (msg) {
             if (msg.data === "b1") {
                 $scope.$apply(function () {
@@ -275,21 +275,29 @@ editorView.controller('CsvimViewController', ['$scope', '$http', 'messageHub', '
         return value;
     }
 
+    function isObject(value) {
+        return (
+            typeof value === 'object' &&
+            value !== null &&
+            !Array.isArray(value)
+        );
+    }
+
     function loadFileContents() {
         $http.get('/services/ide/workspaces' + $scope.dataParameters.file)
             .then(function (response) {
                 let contents = response.data;
-                if (!contents || !Array.isArray(contents.files)) {
-                    contents = [];
+                if (!contents || !isObject(contents)) {
+                    contents = { files: [] };
                 }
                 $scope.csvimData = contents;
-                for (let i = 0; i < $scope.csvimData.files.length; i++) {
-                    $scope.csvimData.files[i]["name"] = $scope.getFileName($scope.csvimData.files[i].file, false);
-                    $scope.csvimData.files[i]["visible"] = true;
-                }
                 $scope.activeItemId = 0;
-                if ($scope.csvimData.files.length > 0) {
+                if ($scope.csvimData.files && $scope.csvimData.files.length > 0) {
                     $scope.dataEmpty = false;
+                    for (let i = 0; i < $scope.csvimData.files.length; i++) {
+                        $scope.csvimData.files[i]["name"] = $scope.getFileName($scope.csvimData.files[i].file, false);
+                        $scope.csvimData.files[i]["visible"] = true;
+                    }
                 } else {
                     $scope.dataEmpty = true;
                 }

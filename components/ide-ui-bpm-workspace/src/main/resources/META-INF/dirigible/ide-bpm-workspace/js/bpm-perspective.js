@@ -28,4 +28,7 @@ IDEBPMWorkspacePerspective.controller("BpmWorkspaceViewController", ["$scope", f
             hideCenterTabs: true,
         },
     };
+    $scope.layoutConfig = {
+        leftPaneMinSize: 360,
+    };
 }]);

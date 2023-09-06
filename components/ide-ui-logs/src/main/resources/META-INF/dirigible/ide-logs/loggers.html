@@ -25,12 +25,13 @@
     </head>
 
     <body class="dg-vbox">
-        <fd-toolbar has-title="true" dg-type="solid">
-            <fd-input compact="true" type="text" placeholder="Enter filter" ng-model="search.name" required="required"
+        <fd-toolbar compact="true" dg-type="solid">
+            <fd-toolbar-spacer></fd-toolbar-spacer>
+            <fd-input type="text" placeholder="Enter filter" ng-model="search.name" required="required"
                 style="max-width: 30%">
             </fd-input>
-            <fd-button compact="true" dg-type="transparent" glyph="sap-icon--clear-all" title="Reset filter"
-                aria-label="Reset filter" ng-click="search.name = ''">
+            <fd-button dg-type="transparent" glyph="sap-icon--clear-all" title="Reset filter" aria-label="Reset filter"
+                ng-click="search.name = ''">
             </fd-button>
         </fd-toolbar>
         <fd-scrollbar class="dg-stretch">
@@ -48,8 +49,8 @@
                     </tr>
                 </thead>
                 <tbody fd-table-body>
-                    <tr fd-table-row ng-repeat="logger in loggers | filter: {name: search.name}"
-                        hoverable="true" activable="false">
+                    <tr fd-table-row ng-repeat="logger in loggers | filter: {name: search.name}" hoverable="true"
+                        activable="false">
                         <td fd-table-cell>{{$index + 1}}</td>
                         <td fd-table-cell>
                             <div class="tdSingleLine">{{logger.name}}</div>

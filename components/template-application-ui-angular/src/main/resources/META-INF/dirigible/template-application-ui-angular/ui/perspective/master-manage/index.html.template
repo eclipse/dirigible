@@ -16,7 +16,7 @@
 	</head>
 
 	<body class="dg-vbox">
-		<fd-toolbar has-title="true" class="fd-toolbar">
+		<fd-toolbar has-title="true">
 			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
 			<fd-button compact="true" dg-type="transparent" dg-label="Create"

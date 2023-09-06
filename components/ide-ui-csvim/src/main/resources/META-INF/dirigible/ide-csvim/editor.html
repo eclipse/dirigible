@@ -30,47 +30,45 @@
             {{state.busyText}}
         </fd-busy-indicator-extended>
         <split direction="horizontal" ng-show="!state.error && !state.isBusy">
-            <split-pane size="30">
+            <split-pane size="20" min-size="240">
                 <div class="dg-vbox dg-fill-parent">
-                    <fd-toolbar class="dg-full-width" dg-size="cozy">
+                    <fd-toolbar compact="true">
                         <fd-toolbar-spacer></fd-toolbar-spacer>
-                        <fd-button compact="true" dg-type="transparent" dg-toggled="searchVisible"
-                            glyph="sap-icon--search" title="Toggle search" aria-label="Toggle search"
-                            ng-click="toggleSearch()">
+                        <fd-button dg-type="transparent" dg-toggled="searchVisible" glyph="sap-icon--search"
+                            title="Toggle search" aria-label="Toggle search" ng-click="toggleSearch()">
                         </fd-button>
                         <fd-toolbar-separator></fd-toolbar-separator>
-                        <fd-button compact="true" glyph="sap-icon--add" dg-label="Add File" dg-type="transparent"
-                            ng-click="addNew()">
+                        <fd-button glyph="sap-icon--add" dg-label="Add File" dg-type="transparent" ng-click="addNew()">
                         </fd-button>
-                        <fd-button compact="true" glyph="sap-icon--save" dg-label="Save" dg-type="transparent"
-                            ng-click="save()" state="{{ forms.editor.$valid && isFileChanged ? '' : 'disabled'  }}">
+                        <fd-button glyph="sap-icon--save" dg-label="Save" dg-type="transparent" ng-click="save()"
+                            state="{{ forms.editor.$valid && isFileChanged ? '' : 'disabled'  }}">
                         </fd-button>
                     </fd-toolbar>
-                    <fd-toolbar dg-size="cozy" ng-show="searchVisible">
+                    <fd-toolbar ng-show="searchVisible">
                         <fd-input type="search" placeholder="Search" ng-keyup="filterFiles()"
                             ng-model="searchField.text">
                         </fd-input>
                     </fd-toolbar>
-                    <fd-list fd-scrollbar>
+                    <fd-list compact="true" fd-scrollbar>
                         <fd-list-item interactive="true" dg-selected="activeItemId==$index"
                             ng-repeat="csv in csvimData.files track by $index" ng-click="fileSelected($index)"
                             ng-show="csv.visible">
                             <fd-list-title>{{csv.name}}</fd-list-title>
-                            <fd-button fd-list-button compact="true" dg-type="transparent" glyph="sap-icon--delete"
-                                aria-label="delete" ng-click="deleteFile($index)">
+                            <fd-button fd-list-button dg-type="transparent" glyph="sap-icon--delete" aria-label="delete"
+                                ng-click="deleteFile($index)">
                             </fd-button>
                         </fd-list-item>
                     </fd-list>
                 </div>
             </split-pane>
-            <split-pane size="70">
+            <split-pane size="80">
                 <div class="dg-vbox dg-fill-parent" ng-if="!dataEmpty">
-                    <fd-toolbar class="dg-full-width" dg-size="cozy">
-                        <fd-button compact="true" glyph="sap-icon--action" dg-label="Open" dg-type="transparent"
-                            ng-click="openFile()" state="{{ fileExists ? '' : 'disabled'  }}">
+                    <fd-toolbar compact="true">
+                        <fd-button glyph="sap-icon--action" dg-label="Open" dg-type="transparent" ng-click="openFile()"
+                            state="{{ fileExists ? '' : 'disabled'  }}">
                         </fd-button>
-                        <fd-button compact="true" glyph="sap-icon--edit" dg-label="Edit" dg-type="transparent"
-                            dg-toggled="editEnabled" ng-click="setEditEnabled()">
+                        <fd-button glyph="sap-icon--edit" dg-label="Edit" dg-type="transparent" dg-toggled="editEnabled"
+                            ng-click="setEditEnabled()">
                         </fd-button>
                         <fd-toolbar-spacer></fd-toolbar-spacer>
                     </fd-toolbar>

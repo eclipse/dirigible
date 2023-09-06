@@ -28,7 +28,7 @@
         <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
             {{state.busyText}}
         </fd-busy-indicator-extended>
-        <fd-toolbar class="dg-full-width" dg-size="cozy" ng-show="!state.error && !state.isBusy">
+        <fd-toolbar class="dg-full-width" ng-show="!state.error && !state.isBusy">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button compact="true" dg-label="Save" ng-click="save()"
                 state="{{ forms.editor.$valid ? '' : 'disabled'  }}">

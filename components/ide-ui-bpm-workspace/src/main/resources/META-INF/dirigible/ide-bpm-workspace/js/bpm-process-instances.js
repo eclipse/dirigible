@@ -32,24 +32,24 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
             clearInterval(this.currentFetchDataInstance);
         }
 
-    	this.currentFetchDatadInstance = setInterval(() => {
-	        const pageNumber = (args && args.pageNumber) || this.currentPage;
-	        const pageSize = (args && args.pageSize) || this.pageSize;
-	        const limit = pageNumber * pageSize;
-	        const startIndex = (pageNumber - 1) * pageSize;
-	        if (startIndex >= this.totalRows) {
-	            return;
-	        }
-	
-	        $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'condition': this.filterBy, 'limit': limit } })
-	            .then((response) => {
-	                if (this.instancesList.length < response.data.length) {
-	                    //messageHub.showAlertInfo("User instances", "A new user task has been added");
-	                }
-	
-	                this.instancesList = response.data;
-	            });
-    	}, 5000);
+        this.currentFetchDatadInstance = setInterval(() => {
+            const pageNumber = (args && args.pageNumber) || this.currentPage;
+            const pageSize = (args && args.pageSize) || this.pageSize;
+            const limit = pageNumber * pageSize;
+            const startIndex = (pageNumber - 1) * pageSize;
+            if (startIndex >= this.totalRows) {
+                return;
+            }
+
+            $http.get('/services/ide/bpm/bpm-processes/instances', { params: { 'condition': this.filterBy, 'limit': limit } })
+                .then((response) => {
+                    if (this.instancesList.length < response.data.length) {
+                        //messageHub.showAlertInfo("User instances", "A new user task has been added");
+                    }
+
+                    this.instancesList = response.data;
+                });
+        }, 5000);
 
     }
 
@@ -74,7 +74,7 @@ ideBpmProcessInstancesView.controller('IDEBpmProcessInstancesViewController', ['
         messageHub.postMessage('diagram.instance', { instance: instance.id });
         messageHub.postMessage('instance.selected', { instance: instance.id });
         instance.selected = true;
-        
+
     }
 
     this.clearSearch = function () {

@@ -9,7 +9,7 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="historyApp" ng-controller="HistoryContoller as history">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="historyApp" ng-controller="HistoryContoller">
 
     <head>
         <meta charset="utf-8" />
@@ -24,7 +24,7 @@
     </head>
 
     <body class="dg-vbox">
-        <fd-toolbar dg-type="solid" dg-size="cozy">
+        <fd-toolbar dg-type="solid">
             <fd-toolbar-title ng-if="selectedProject">{{selectedProject}}</fd-toolbar-title>
             <span ng-if="selectedFile">/{{selectedFile}}</span>
             <fd-toolbar-spacer></fd-toolbar-spacer>
