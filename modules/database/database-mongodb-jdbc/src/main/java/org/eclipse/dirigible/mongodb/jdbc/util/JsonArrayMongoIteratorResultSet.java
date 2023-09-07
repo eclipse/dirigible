@@ -46,8 +46,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	
+	/** The array iterable. */
 	ArrayNode arrayIterable;
 	
+	/** The cursor. */
 	Iterator<JsonNode> cursor;
 	
 	/** The current record. */
@@ -59,12 +61,13 @@ public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	/** The is closed. */
 	boolean isClosed = false;
 	
+	/** The mapper. */
 	private static ObjectMapper MAPPER = new ObjectMapper();
 	
 	/**
 	 * Instantiates a new single column mongo iterator result set.
 	 *
-	 * @param stringsIterable the strings iterable
+	 * @param array the array
 	 */
 	public JsonArrayMongoIteratorResultSet(ArrayNode array){
 		this.cursor =  array.iterator();
