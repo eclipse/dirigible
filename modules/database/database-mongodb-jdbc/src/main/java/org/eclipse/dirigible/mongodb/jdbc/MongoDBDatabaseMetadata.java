@@ -21,13 +21,11 @@ import java.util.Map.Entry;
 
 import org.bson.Document;
 import org.eclipse.dirigible.mongodb.jdbc.util.JsonArrayMongoIteratorResultSet;
-import org.eclipse.dirigible.mongodb.jdbc.util.SingleColumnMongoIteratorResultSet;
 import org.eclipse.dirigible.mongodb.jdbc.util.SingleColumnStaticResultSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mongodb.client.ListCollectionsIterable;
 import com.mongodb.client.MongoIterable;
 
 /**
@@ -2320,7 +2318,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 */
 	@Override
 	public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-		ResultSet schemas = new SingleColumnStaticResultSet(Arrays.asList(new String[]{"default"}).iterator());
+		ResultSet schemas = new SingleColumnStaticResultSet(Arrays.asList(new String[]{connection.mongoDatabase.getName()}).iterator());
 		return schemas;
 	}
 	
