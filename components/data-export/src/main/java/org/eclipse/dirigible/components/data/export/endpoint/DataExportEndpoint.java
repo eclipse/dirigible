@@ -58,7 +58,7 @@ public class DataExportEndpoint {
 	 * Instantiates a new data export endpoint.
 	 *
 	 * @param databaseMetadataService the database metadata service
-	 * @param dataExportService       the data export service
+	 * @param dataExportService the data export service
 	 */
 	public DataExportEndpoint(DatabaseMetadataService databaseMetadataService, DataExportService dataExportService) {
 		this.databaseMetadataService = databaseMetadataService;
@@ -134,6 +134,7 @@ public class DataExportEndpoint {
 				String result = dataExportService.exportSchemaTopology(datasource, schema);
 				OutputStreamWriter sw = new OutputStreamWriter(output);
 				sw.write(result);
+				sw.flush();
 			} catch (SQLException e) {
 				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 			}

@@ -104,6 +104,7 @@ public class DatabaseExportEndpoint {
 		StreamingResponseBody responseBody = output -> {
 			try {
 				databaseExportService.exportStructure(datasource, schema, structure, output);
+				output.flush();
 			} catch (Exception e) {
 				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 			}
@@ -136,6 +137,7 @@ public class DatabaseExportEndpoint {
 		StreamingResponseBody responseBody = output -> {
 			try {
 				databaseExportService.exportSchema(datasource, schema, output);
+				output.flush();
 			} catch (Exception e) {
 				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 			}
