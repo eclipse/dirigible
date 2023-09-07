@@ -102,7 +102,7 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 			
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 				String name = resultSetMetaData.getColumnName(i);
-				Object value = resultSet.getObject(i);
+				Object value = resultSet.getObject(name);
 				if (value == null
 						&& stringify) {
 					value = "[NULL]";

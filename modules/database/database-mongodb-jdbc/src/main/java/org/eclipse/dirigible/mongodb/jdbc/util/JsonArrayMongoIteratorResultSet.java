@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.mongodb.jdbc.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -34,29 +35,41 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 /**
- * The Class SingleColumnStaticResultSet.
+ * The Class SingleColumnMongoIteratorResultSet.
  */
-public class SingleColumnStaticResultSet implements ResultSet {
+public class JsonArrayMongoIteratorResultSet implements ResultSet {
 	
-	/** The iterable. */
-	private Iterator<String> iterable;
+	ArrayNode arrayIterable;
 	
-	/** The current record index. */
-	private int currentRecordIndex;
+	Iterator<JsonNode> cursor;
 	
 	/** The current record. */
-	private String currentRecord;
-
-	/**
-	 * Instantiates a new single column static result set.
-	 *
-	 * @param iterable the iterable
-	 */
-	public SingleColumnStaticResultSet(Iterator<String> iterable) {
-		this.iterable = iterable;
-	}
+	ObjectNode currentRecord;
 	
+	/** The current record index. */
+	int currentRecordIndex;
+	
+	/** The is closed. */
+	boolean isClosed = false;
+	
+	private static ObjectMapper MAPPER = new ObjectMapper();
+	
+	/**
+	 * Instantiates a new single column mongo iterator result set.
+	 *
+	 * @param stringsIterable the strings iterable
+	 */
+	public JsonArrayMongoIteratorResultSet(ArrayNode array){
+		this.cursor =  array.iterator();
+	}
+
 	/**
 	 * Unwrap.
 	 *
@@ -92,10 +105,12 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean next() throws SQLException {
-		boolean hasNext = this.iterable.hasNext();
-		if(hasNext){
-			this.currentRecord = this.iterable.next();
+		boolean hasNext = this.cursor.hasNext(); 
+		if (hasNext){
+			this.currentRecord = (ObjectNode) this.cursor.next();
 			this.currentRecordIndex++;
+		} else {
+			currentRecordIndex = -1;
 		}
 		return hasNext;
 	}
@@ -107,8 +122,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public void close() throws SQLException {
-		while(this.iterable.hasNext())
-			this.iterable.next();
+		isClosed = true;
 	}
 
 	/**
@@ -132,7 +146,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public String getString(int columnIndex) throws SQLException {
-		return this.getString(null);
+		return this.currentRecord.get(columnIndex).textValue();
 	}
 
 	/**
@@ -144,8 +158,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean getBoolean(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return this.currentRecord.get(columnIndex).booleanValue();
 	}
 
 	/**
@@ -157,8 +170,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public byte getByte(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return (byte) this.currentRecord.get(columnIndex).intValue();
 	}
 
 	/**
@@ -170,8 +182,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public short getShort(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.currentRecord.get(columnIndex).shortValue();
 	}
 
 	/**
@@ -183,8 +194,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public int getInt(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.currentRecord.get(columnIndex).intValue();
 	}
 
 	/**
@@ -196,8 +206,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public long getLong(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.currentRecord.get(columnIndex).longValue();
 	}
 
 	/**
@@ -209,8 +218,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public float getFloat(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.currentRecord.get(columnIndex).floatValue();
 	}
 
 	/**
@@ -222,8 +230,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public double getDouble(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return (byte) this.currentRecord.get(columnIndex).doubleValue();
 	}
 
 	/**
@@ -235,10 +242,8 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public BigDecimal getBigDecimal(int columnIndex, int scale)
-			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
+		return this.currentRecord.get(columnIndex).decimalValue();
 	}
 
 	/**
@@ -250,8 +255,11 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public byte[] getBytes(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return this.currentRecord.get(columnIndex).binaryValue();
+		} catch (IOException e) {
+			throw new SQLException(e);
+		}
 	}
 
 	/**
@@ -263,8 +271,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Date getDate(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new Date(this.currentRecord.get(columnIndex).longValue());
 	}
 
 	/**
@@ -276,8 +283,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Time getTime(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new Time(this.currentRecord.get(columnIndex).longValue());
 	}
 
 	/**
@@ -289,8 +295,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Timestamp getTimestamp(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new Timestamp(this.currentRecord.get(columnIndex).longValue());
 	}
 
 	/**
@@ -302,8 +307,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public InputStream getAsciiStream(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -315,8 +319,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public InputStream getUnicodeStream(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -328,8 +331,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public InputStream getBinaryStream(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -341,7 +343,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public String getString(String columnLabel) throws SQLException {
-		return this.currentRecord;
+		return this.currentRecord.get(columnLabel).textValue();
 	}
 
 	/**
@@ -353,8 +355,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean getBoolean(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return this.currentRecord.get(columnLabel).booleanValue();
 	}
 
 	/**
@@ -366,8 +367,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public byte getByte(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return (byte) this.currentRecord.get(columnLabel).intValue();
 	}
 
 	/**
@@ -379,8 +379,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public short getShort(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.currentRecord.get(columnLabel).shortValue();
 	}
 
 	/**
@@ -392,8 +391,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public int getInt(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.currentRecord.get(columnLabel).intValue();
 	}
 
 	/**
@@ -405,8 +403,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public long getLong(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.currentRecord.get(columnLabel).longValue();
 	}
 
 	/**
@@ -418,8 +415,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public float getFloat(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.currentRecord.get(columnLabel).floatValue();
 	}
 
 	/**
@@ -431,8 +427,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public double getDouble(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.currentRecord.get(columnLabel).doubleValue();
 	}
 
 	/**
@@ -444,10 +439,8 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public BigDecimal getBigDecimal(String columnLabel, int scale)
-			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
+		return this.currentRecord.get(columnLabel).decimalValue();
 	}
 
 	/**
@@ -459,8 +452,11 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public byte[] getBytes(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return this.currentRecord.get(columnLabel).binaryValue();
+		} catch (IOException e) {
+			throw new SQLException(e);
+		}
 	}
 
 	/**
@@ -472,8 +468,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Date getDate(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new Date(this.currentRecord.get(columnLabel).longValue());
 	}
 
 	/**
@@ -485,8 +480,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Time getTime(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new Time(this.currentRecord.get(columnLabel).longValue());
 	}
 
 	/**
@@ -498,8 +492,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Timestamp getTimestamp(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new Timestamp(this.currentRecord.get(columnLabel).longValue());
 	}
 
 	/**
@@ -511,8 +504,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public InputStream getAsciiStream(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -524,8 +516,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public InputStream getUnicodeStream(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -537,8 +528,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public InputStream getBinaryStream(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -549,7 +539,6 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public SQLWarning getWarnings() throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -560,8 +549,6 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public void clearWarnings() throws SQLException {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -572,8 +559,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public String getCursorName() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -584,8 +570,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -597,8 +582,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Object getObject(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.currentRecord.get(columnIndex);
 	}
 
 	/**
@@ -610,8 +594,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Object getObject(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.currentRecord.get(columnLabel);
 	}
 
 	/**
@@ -623,8 +606,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public int findColumn(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -636,8 +618,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Reader getCharacterStream(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -649,8 +630,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Reader getCharacterStream(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -662,8 +642,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.currentRecord.get(columnIndex).decimalValue();
 	}
 
 	/**
@@ -675,8 +654,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.currentRecord.get(columnLabel).decimalValue();
 	}
 
 	/**
@@ -687,8 +665,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean isBeforeFirst() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return currentRecordIndex == 0;
 	}
 
 	/**
@@ -699,8 +676,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean isAfterLast() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return currentRecordIndex == -1;
 	}
 
 	/**
@@ -711,8 +687,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean isFirst() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return currentRecordIndex == 1;
 	}
 
 	/**
@@ -723,8 +698,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean isLast() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return this.cursor.hasNext();
 	}
 
 	/**
@@ -734,8 +708,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public void beforeFirst() throws SQLException {
-		// TODO Auto-generated method stub
-
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -745,8 +718,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public void afterLast() throws SQLException {
-		// TODO Auto-generated method stub
-
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -757,8 +729,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean first() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -769,8 +740,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean last() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -793,8 +763,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean absolute(int row) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -806,8 +775,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean relative(int rows) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -818,8 +786,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean previous() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -830,8 +797,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public void setFetchDirection(int direction) throws SQLException {
-		// TODO Auto-generated method stub
-
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -842,8 +808,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public int getFetchDirection() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -854,8 +819,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public void setFetchSize(int rows) throws SQLException {
-		// TODO Auto-generated method stub
-
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -866,8 +830,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public int getFetchSize() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1543,8 +1506,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	@Override
 	public Object getObject(int columnIndex, Map<String, Class<?>> map)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1556,8 +1518,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Ref getRef(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1569,8 +1530,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Blob getBlob(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1582,8 +1542,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Clob getClob(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1595,8 +1554,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Array getArray(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1610,8 +1568,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	@Override
 	public Object getObject(String columnLabel, Map<String, Class<?>> map)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1623,8 +1580,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Ref getRef(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1636,8 +1592,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Blob getBlob(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1649,8 +1604,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Clob getClob(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1662,8 +1616,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Array getArray(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1676,8 +1629,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Date getDate(int columnIndex, Calendar cal) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1690,8 +1642,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Date getDate(String columnLabel, Calendar cal) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1704,8 +1655,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Time getTime(int columnIndex, Calendar cal) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1718,8 +1668,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public Time getTime(String columnLabel, Calendar cal) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1733,8 +1682,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	@Override
 	public Timestamp getTimestamp(int columnIndex, Calendar cal)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1748,8 +1696,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	@Override
 	public Timestamp getTimestamp(String columnLabel, Calendar cal)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1761,8 +1708,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public URL getURL(int columnIndex) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1774,8 +1720,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public URL getURL(String columnLabel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1787,8 +1732,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateRef(int columnIndex, Ref x) throws SQLException {
-		// TODO Auto-generated method stub
-
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1800,8 +1744,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateRef(String columnLabel, Ref x) throws SQLException {
-		// TODO Auto-generated method stub
-
+		throw new SQLException("Not supported");
 	}
 
 	/**
@@ -1954,8 +1897,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean isClosed() throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return this.isClosed;
 	}
 
 	/**
@@ -2579,5 +2521,4 @@ public class SingleColumnStaticResultSet implements ResultSet {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

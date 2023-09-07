@@ -64,6 +64,9 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			tableView: {
 				icon: "sap-icon--grid",
 			},
+			tableCollection: {
+				icon: "sap-icon--list",
+			},
 			tableLock: {
 				icon: "sap-icon--locked",
 			},
@@ -116,13 +119,13 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 				icon: "sap-icon--numbered-text",
 			},
 			float: {
-				icon: "sap-icon--measuring-point",
+				icon: "sap-icon--numbered-text",
 			},
 			double: {
-				icon: "sap-icon--measuring-point",
+				icon: "sap-icon--numbered-text",
 			},
 			decimal: {
-				icon: "sap-icon--measuring-point",
+				icon: "sap-icon--numbered-text",
 			},
 			bigint: {
 				icon: "sap-icon--trend-up",
@@ -436,6 +439,21 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							}.bind(this)
 					};
 				}
+				
+				// Collection related actions
+				if (node.original.kind === 'table' && node.original.type === 'collection') {
+					ctxmenu.dropProcedure = {
+						"separator_before": false,
+						"label": "Show Contents",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = "query: {'find': '" + node.original.text + "'}";
+							messageHub.postMessage('database.sql.execute', sqlCommand);
+						}.bind(this)
+					};
+				}
+				
 				return ctxmenu;
 			}
 		}
@@ -522,7 +540,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							case "double":
 							case "double precision":
 							case "decimal":
-								icon = "sap-icon--measuring-point"
+								icon = "sap-icon--numbered-text"
 								break;
 							case "boolean":
 								icon = "sap-icon--sys-enter";
@@ -533,7 +551,12 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 								break;
 						}
 					}
-					let nodeText = column.name + ' - <i style="font-size: smaller;">' + column.type + "(" + (column.size !== undefined ? column.size : (column.length !== undefined ? column.length : "N/A")) + ")</i>";
+					let nodeText = column.name + ' - <i style="font-size: smaller;">' + column.type;
+					if ((column.size !== undefined && column.size !== 0)
+						|| (column.length !== undefined && column.size !== 0)) {
+						nodeText += "(" + (column.size !== undefined ? column.size : (column.length !== undefined ? column.length : "N/A")) + ")";
+					}
+					nodeText += "</i>";
 					let newNode = {
 						id: parent.id + "$" + column.name,
 						state: "open",
@@ -617,6 +640,12 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 				{ text: "Indices", "icon": "sap-icon--table-row", children: [$scope.spinnerIndices] },
 			];
 			icon = 'sap-icon--grid';
+		} else if (f.kind == 'table' && f.type === 'COLLECTION') {
+			children = [
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] }
+				// , { text: "Indices", "icon": "sap-icon--table-row", children: [$scope.spinnerIndices] },
+			];
+			icon = 'sap-icon--list';
 		} else if (f.kind == 'table' && f.type !== 'TABLE' && f.type !== 'VIEW') {
 			children = [
 				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },

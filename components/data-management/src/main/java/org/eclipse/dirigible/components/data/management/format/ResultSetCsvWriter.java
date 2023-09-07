@@ -119,11 +119,12 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 	    			List<Object> values = new ArrayList<>();
 	    			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 	    				Object value = null;
+	    				String name = resultSetMetaData.getColumnName(i);
 	    				int dbt = resultSetMetaData.getColumnType(i);
 	    				if (dbt == Types.BLOB
 	    						|| dbt == Types.BINARY
 	    						|| dbt == Types.LONGVARBINARY) {
-	    					InputStream is = resultSet.getBinaryStream(i);
+	    					InputStream is = resultSet.getBinaryStream(name);
 	    					if (is == null
 		    						&& stringify) {
 		    					value = "[NULL]";
@@ -137,7 +138,7 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 		    				}
 	    				} else if (dbt == Types.CLOB
 	    						|| dbt == Types.LONGVARCHAR) {
-	    					Clob clob = resultSet.getClob(i);
+	    					Clob clob = resultSet.getClob(name);
 	    					if (clob == null
 		    						&& stringify) {
 		    					value = "[NULL]";
@@ -150,7 +151,7 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 		    					}
 		    				}
 	    				} else if (dbt == Types.OTHER) {
-	    					Object dataObject = resultSet.getObject(i);
+	    					Object dataObject = resultSet.getObject(name);
 	    					if (dataObject instanceof PGobject) {
 	    						if (value == null
 			    						&& stringify) {
@@ -159,7 +160,7 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 	    						value = ((PGobject) dataObject).getValue();
 	    					}
 	    				} else {
-		    				value = resultSet.getObject(i);
+		    				value = resultSet.getObject(name);
 		    				if (value == null
 		    						&& stringify) {
 		    					value = "[NULL]";

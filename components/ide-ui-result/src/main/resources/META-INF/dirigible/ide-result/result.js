@@ -136,7 +136,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
             $http({
                 method: 'POST',
                 url: url + "/query",
-                data: command.data.substring(6).trim(),
+                data: command.data.substring(7).trim(),
                 headers: {
                     'Content-Type': 'text/plain',
                     'X-Requested-With': 'Fetch',
@@ -165,7 +165,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
             $http({
                 method: 'POST',
                 url: url + "/update",
-                data: command.data.substring(7).trim(),
+                data: command.data.substring(8).trim(),
                 headers: {
                     'Content-Type': 'text/plain',
                     'X-Requested-With': 'Fetch',
