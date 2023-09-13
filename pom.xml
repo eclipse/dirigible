@@ -625,7 +625,7 @@
 		<spring-context-support.version>5.3.24</spring-context-support.version>
 		<spring-security.version>5.8.0</spring-security.version>
 
-		<keycloak.keycloak-spring-boot-starter>22.0.2</keycloak.keycloak-spring-boot-starter>
+		<keycloak.keycloak-spring-boot-starter>22.0.3</keycloak.keycloak-spring-boot-starter>
 		<hikaricp.version>5.0.1</hikaricp.version>
 		<validator.version>1.7</validator.version>
 		<quartz.version>2.3.2</quartz.version>
@@ -639,7 +639,7 @@
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.548</qldb.sdk.version>
+		<qldb.sdk.version>1.12.549</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>5.0.0</jedis.version>
