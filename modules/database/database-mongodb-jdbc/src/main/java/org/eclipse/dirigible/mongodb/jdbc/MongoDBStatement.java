@@ -133,6 +133,24 @@ public class MongoDBStatement implements Statement {
 			}
 			ResultSet result = new SingleColumnStaticResultSet(Arrays.asList(new String[]{count + ""}).iterator());
 			return result;
+		} else if (filterDocument.containsKey("create")) {
+			String collectionName = filterDocument.getString("create").getValue();
+			if(collectionName==null) {
+				throw new IllegalArgumentException("Specifying a collection is mandatory for create operations");
+			}
+			
+			db.createCollection(collectionName);
+			ResultSet result = new SingleColumnStaticResultSet(Arrays.asList(new String[]{collectionName + " created."}).iterator());
+			return result;
+		} else if (filterDocument.containsKey("drop")) {
+			String collectionName = filterDocument.getString("drop").getValue();
+			if(collectionName==null) {
+				throw new IllegalArgumentException("Specifying a collection is mandatory for drop operations");
+			}
+			
+			db.getCollection(collectionName).drop();
+			ResultSet result = new SingleColumnStaticResultSet(Arrays.asList(new String[]{collectionName + " dropped."}).iterator());
+			return result;
 		}
 		
 		throw new IllegalArgumentException("Specifying a collection is mandatory for query operations");
