@@ -274,7 +274,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 			switch (flow) {
 			case CREATE:
 				if (ArtefactLifecycle.NEW.equals(table.getLifecycle())) {
-					if (!SqlFactory.getNative(connection).exists(connection, table.getName())) {
+					if (!SqlFactory.getNative(connection).existsTable(connection, table.getName())) {
 						try {
 							executeTableCreate(connection, table);
 						} catch (Exception e) {
@@ -291,7 +291,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 				break;
 			case UPDATE:
 				if (ArtefactLifecycle.CREATED.equals(table.getLifecycle())) {
-					if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
+					if (SqlFactory.getNative(connection).existsTable(connection, table.getName())) {
 						try {
 							executeTableForeignKeysCreate(connection, table);
 						} catch (SQLException e) {
@@ -307,7 +307,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 			case DELETE:
 				if (ArtefactLifecycle.CREATED.equals(table.getLifecycle())
 						|| ArtefactLifecycle.UPDATED.equals(table.getLifecycle())) { 
-					if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
+					if (SqlFactory.getNative(connection).existsTable(connection, table.getName())) {
 						if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
 							executeTableDrop(connection, table);
 							callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
@@ -347,7 +347,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	@Override
 	public void cleanup(Table table) {
 		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()){
-			if (SqlFactory.getNative(connection).exists(connection, table.getName())) {
+			if (SqlFactory.getNative(connection).existsTable(connection, table.getName())) {
 				if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
 					executeTableDrop(connection, table);
 					getService().delete(table);
@@ -385,7 +385,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	 */
 	public void executeTableUpdate(Connection connection, Table tableModel) throws SQLException {
 		if (logger.isInfoEnabled()) {logger.info("Processing Update Table: " + tableModel.getName());}
-		if (SqlFactory.getNative(connection).exists(connection, tableModel.getName())) {
+		if (SqlFactory.getNative(connection).existsTable(connection, tableModel.getName())) {
 //			if (SqlFactory.getNative(connection).count(connection, tableModel.getName()) == 0) {
 //				executeTableDrop(connection, tableModel);
 //				executeTableCreate(connection, tableModel);

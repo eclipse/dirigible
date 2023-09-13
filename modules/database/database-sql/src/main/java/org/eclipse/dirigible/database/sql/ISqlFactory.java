@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.database.sql;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
@@ -28,24 +29,15 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
 /**
  * A factory for creating ISql objects.
  *
- * @param <SELECT>
- *            the generic type
- * @param <INSERT>
- *            the generic type
- * @param <UPDATE>
- *            the generic type
- * @param <DELETE>
- *            the generic type
- * @param <CREATE>
- *            the generic type
- * @param <ALTER>
- *            the generic type
- * @param <DROP>
- *            the generic type
- * @param <NEXT>
- *            the generic type
- * @param <LAST>
- *            the generic type
+ * @param <SELECT> the generic type
+ * @param <INSERT> the generic type
+ * @param <UPDATE> the generic type
+ * @param <DELETE> the generic type
+ * @param <CREATE> the generic type
+ * @param <ALTER> the generic type
+ * @param <DROP> the generic type
+ * @param <NEXT> the generic type
+ * @param <LAST> the generic type
  */
 public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder> {
 
@@ -108,28 +100,21 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	/**
 	 * Exists.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param table
-	 *            the table
+	 * @param connection the connection
+	 * @param table the table
 	 * @return true, if successful
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @throws SQLException the SQL exception
 	 */
-	public boolean exists(Connection connection, String table) throws SQLException;
+	public boolean existsTable(Connection connection, String table) throws SQLException;
 	
 	/**
 	 * Check existence of an artifacts.
 	 *
-	 * @param connection
-	 *            the current connection
-	 * @param name
-	 *            the artifact name
-	 * @param type
-	 *            the artifact type
+	 * @param connection the current connection
+	 * @param name the artifact name
+	 * @param type the artifact type
 	 * @return true if the table exists and false otherwise
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @throws SQLException the SQL exception
 	 */
 	public boolean exists(Connection connection, String name, int type) throws SQLException;
 
@@ -158,15 +143,40 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	/**
 	 * Count.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param table
-	 *            the table
-	 * @return the int
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the count
+	 * @throws SQLException the SQL exception
 	 */
 	public int count(Connection connection, String table) throws SQLException;
+	
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the result set
+	 * @throws SQLException the SQL exception
+	 */
+	public ResultSet all(Connection connection, String table) throws SQLException;
+	
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the count query
+	 */
+	public String countQuery(Connection connection, String table);
+	
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the all queery
+	 */
+	public String allQuery(Connection connection, String table);
 
 	/**
 	 * Nextval.

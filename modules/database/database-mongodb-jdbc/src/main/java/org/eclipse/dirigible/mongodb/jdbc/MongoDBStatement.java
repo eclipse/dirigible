@@ -17,9 +17,11 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import org.bson.BsonDocument;
 import org.bson.Document;
+import org.eclipse.dirigible.mongodb.jdbc.util.SingleColumnStaticResultSet;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
@@ -81,36 +83,60 @@ public class MongoDBStatement implements Statement {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
+
 	public ResultSet executeQuery(String sql) throws SQLException {
 		MongoDatabase db = this.conn.getMongoDatabase();
 		BsonDocument filterDocument = null;
-		if(sql==null || sql.length()<1)//that is a call to find() in terms of mongodb queries
+		if(sql==null || sql.length()<1) {
 			filterDocument = new BsonDocument();
-		else
-			filterDocument = BsonDocument.parse(sql);	
-		/*
-		 *  TODO: With 3.2 use https://docs.mongodb.org/manual/reference/command/find/#dbcmd.find instead
-		 * 	Document response = this.conn.getMongoDb().runCommand(filterDocument); //MongoDB 3.2 only. Won't work on 3.0
-		 */
-		String collectionName = filterDocument.containsKey("find")? filterDocument.getString("find").getValue():null;
-		if(collectionName==null)
-			collectionName = this.conn.getCollectionName();//fallback if any
-		if(collectionName==null)
-			throw new IllegalArgumentException("Specifying a collection is mandatory for query operations");
-		BsonDocument filter = filterDocument.containsKey("filter")? filterDocument.getDocument("filter"): null;
+		} else {
+			filterDocument = BsonDocument.parse(sql);
+		}
 		
-		FindIterable<Document> searchHits = null;
-		if(filter==null)
-			searchHits = db.getCollection(collectionName).find();
-		else 
-			searchHits = db.getCollection(collectionName).find(filter);
-		if(filterDocument.containsKey("batchSize"))
-			searchHits.batchSize(filterDocument.getInt32("batchSize").getValue());
-		if(filterDocument.containsKey("limit"))
-			searchHits.limit(filterDocument.getInt32("limit").getValue());
-		if(filterDocument.containsKey("sort"))
-			searchHits.sort(filterDocument.getDocument("sort"));
-		return new MongoDBResultSet(this, searchHits);
+		if (filterDocument.containsKey("find")) {
+			String collectionName = filterDocument.getString("find").getValue();
+			if(collectionName==null) {
+				collectionName = this.conn.getCollectionName();//fallback if any
+			}
+			if(collectionName==null) {
+				throw new IllegalArgumentException("Specifying a collection is mandatory for query operations");
+			}
+			
+			BsonDocument filter = filterDocument.containsKey("filter")? filterDocument.getDocument("filter"): null;
+			FindIterable<Document> searchHits = null;
+			if(filter==null) {
+				searchHits = db.getCollection(collectionName).find();
+			} else {
+				searchHits = db.getCollection(collectionName).find(filter);
+			}
+			if(filterDocument.containsKey("batchSize"))
+				searchHits.batchSize(filterDocument.getInt32("batchSize").getValue());
+			if(filterDocument.containsKey("limit"))
+				searchHits.limit(filterDocument.getInt32("limit").getValue());
+			if(filterDocument.containsKey("sort"))
+				searchHits.sort(filterDocument.getDocument("sort"));
+			return new MongoDBResultSet(this, searchHits);
+		} else if (filterDocument.containsKey("count")) {
+			String collectionName = filterDocument.getString("count").getValue();
+			if(collectionName==null) {
+				collectionName = this.conn.getCollectionName();//fallback if any
+			}
+			if(collectionName==null) {
+				throw new IllegalArgumentException("Specifying a collection is mandatory for query operations");
+			}
+			
+			BsonDocument filter = filterDocument.containsKey("filter")? filterDocument.getDocument("filter"): null;
+			long count = -1;
+			if(filter==null) {
+				count = db.getCollection(collectionName).countDocuments();
+			} else {
+				count = db.getCollection(collectionName).countDocuments(filter);
+			}
+			ResultSet result = new SingleColumnStaticResultSet(Arrays.asList(new String[]{count + ""}).iterator());
+			return result;
+		}
+		
+		throw new IllegalArgumentException("Specifying a collection is mandatory for query operations");
 	}
 
 	/**

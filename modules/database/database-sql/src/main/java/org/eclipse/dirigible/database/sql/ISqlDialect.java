@@ -244,7 +244,7 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 *             the SQL exception
 	 */
 	@Override
-	public boolean exists(Connection connection, String table) throws SQLException;
+	public boolean existsTable(Connection connection, String table) throws SQLException;
 	
 	/**
 	 * Check existence of an artifacts.

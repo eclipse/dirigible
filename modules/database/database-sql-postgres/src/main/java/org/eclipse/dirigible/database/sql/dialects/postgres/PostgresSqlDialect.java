@@ -383,7 +383,7 @@ public class PostgresSqlDialect extends
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
 	 */
 	@Override
-	public boolean exists(Connection connection, String table) throws SQLException {
+	public boolean existsTable(Connection connection, String table) throws SQLException {
 		boolean exists = false;
 		ResultSet resultSet = null;
 

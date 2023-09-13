@@ -102,7 +102,7 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	 *
 	 * @param count the new column count
 	 */
-	void setColumnCount(int count){
+	public void setColumnCount(int count){
 		this.columnCount = count;
 	}
 

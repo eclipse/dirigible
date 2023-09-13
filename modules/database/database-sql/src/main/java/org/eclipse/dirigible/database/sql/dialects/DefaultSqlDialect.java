@@ -424,7 +424,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
 	 */
 	@Override
-	public boolean exists(Connection connection, String table) throws SQLException {
+	public boolean existsTable(Connection connection, String table) throws SQLException {
 		return exists(connection, table, DatabaseArtifactTypes.TABLE);
 	}
 	
@@ -464,7 +464,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		ResultSet resultSet = metadata.getTables(null, schema, normalizeTableName(table), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
 		exists = resultSet != null && resultSet.next();
 		if (!exists) {
-			resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table.toUpperCase()), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+			resultSet = metadata.getTables(null, null, normalizeTableName(table.toUpperCase()), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
 			exists = resultSet != null && resultSet.next();
 		}
 		return exists;
@@ -479,6 +479,46 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	public static String normalizeTableName(String table) {
 		if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
 			table = table.substring(1, table.length()-1);
+		}
+		if (table.indexOf("\".\"") > 0) {
+			table = table.replace("\".\"", ".");
+		}
+		return table;
+	}
+	
+	/**
+	 * Normalize table name.
+	 *
+	 * @param table the table
+	 * @return the string
+	 */
+	public static String normalizeTableNameOnly(String table) {
+		if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
+			table = table.substring(1, table.length()-1);
+		}
+		if (table.indexOf("\".\"") > 0) {
+			table = table.replace("\".\"", ".");
+		}
+		String[] tokens = table.split(".");
+		if (tokens.length == 2) {
+			return tokens[1];
+		}
+		return table;
+	}
+	
+	/**
+	 * Quote table name.
+	 *
+	 * @param table the table
+	 * @return the string
+	 */
+	public static String quoteTableName(String table) {
+		table = normalizeTableName(table);
+		String[] tokens = table.split(".");
+		if (tokens.length == 1) {
+			return "\"" + table + "\"";
+		} else if (tokens.length == 2) {
+			return "\"" + tokens[0] + "\".\"" + tokens[1] + "\"";
 		}
 		return table;
 	}
@@ -501,29 +541,6 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Count.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the int
-	 * @throws SQLException the SQL exception
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#count(java.sql.Connection, java.lang.String)
-	 */
-	@Override
-	public int count(Connection connection, String table) throws SQLException {
-		String sql = new SelectBuilder(this).column("COUNT(*)").from(table).build();
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultSet = statement.executeQuery();
-		if (resultSet.next()) {
-			return resultSet.getInt(1);
-		}
-		throw new SQLException("Cannot calculate the count of records of table: " + table);
 	}
 
 	/**
@@ -688,5 +705,73 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	public String getEscapeSymbol() {
 		return "\"";
 	}
+
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#count(java.sql.Connection, java.lang.String)
+	 */
+	@Override
+	public int count(Connection connection, String table) throws SQLException {
+		String sql = countQuery(connection, table);
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultSet = statement.executeQuery();
+		if (resultSet.next()) {
+			return resultSet.getInt(1);
+		}
+		throw new SQLException("Cannot calculate the count of records of table: " + table);
+	}
+	
+	/**
+	 * All.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the result set
+	 * @throws SQLException the SQL exception
+	 */
+	@Override
+	public ResultSet all(Connection connection, String table) throws SQLException {
+		String sql = allQuery(connection, table);
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultSet = statement.executeQuery();
+		return resultSet;
+	}
+
+	/**
+	 * Count query.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the string
+	 */
+	@Override
+	public String countQuery(Connection connection, String table) {
+		table = normalizeTableName(table);
+		String sql = new SelectBuilder(this).column("COUNT(*)").from(quoteTableName(table)).build();
+		return sql;
+	}
+
+	/**
+	 * All query.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the string
+	 */
+	@Override
+	public String allQuery(Connection connection, String table) {
+		String sql = new SelectBuilder(this).column("*").from(quoteTableName(table)).build();
+		return sql;
+	}
+	
+	
 
 }

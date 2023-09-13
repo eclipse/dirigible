@@ -77,7 +77,7 @@ public class MongoDBResultSet implements ResultSet {
 	private SQLWarning warning;
 	
 	/** The rs metadata. */
-	private MongoDBResultSetMetaData rsMetadata;
+	private MongoDBResultSetMetaData metadata;
 			
 	/**
 	 * Instantiates a new mongo DB result set.
@@ -98,15 +98,11 @@ public class MongoDBResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	private void buildMetadata() throws SQLException{
-//		if(this.rsMetadata==null)
-			this.rsMetadata = new MongoDBResultSetMetaData(this.stmnt.getConnection().unwrap(MongoDBConnection.class).getCollectionName());
-//		if(this.rsMetadata.getColumnCount() < this.currentDoc.size())
-		this.rsMetadata.setColumnCount(this.currentDoc.size());
+		this.metadata = new MongoDBResultSetMetaData(this.stmnt.getConnection().unwrap(MongoDBConnection.class).getCollectionName());
+		this.metadata.setColumnCount(this.currentDoc.size());
 		Set<Entry<String,BsonValue>> docEntries = this.currentDoc.toBsonDocument(this.currentDoc.getClass(), MongoClient.getDefaultCodecRegistry()).entrySet();
 		for (Entry<String, BsonValue> docEntry : docEntries) {
-//			if(!this.rsMetadata.keys().containsKey(docEntry.getKey())){
-				this.rsMetadata.keys().put(docEntry.getKey(), docEntry.getValue().getBsonType());
-//			}
+			this.metadata.keys().put(docEntry.getKey(), docEntry.getValue().getBsonType());
 		}
 	}
 	
@@ -191,7 +187,7 @@ public class MongoDBResultSet implements ResultSet {
 		if(columnIndex == RAW_DOCUMENT_INDEX){
 			return this.currentDoc.toJson();
 		}
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return this.currentDoc.getString(name);
 	}
 
@@ -204,7 +200,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean getBoolean(int columnIndex) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return this.currentDoc.getBoolean(name);
 	}
 
@@ -217,7 +213,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public byte getByte(int columnIndex) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return this.currentDoc.getInteger(name).byteValue();
 	}
 
@@ -230,7 +226,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public short getShort(int columnIndex) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return this.currentDoc.getInteger(name).shortValue();
 	}
 
@@ -243,7 +239,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public int getInt(int columnIndex) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return this.currentDoc.getInteger(name);
 	}
 
@@ -256,7 +252,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public long getLong(int columnIndex) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return this.currentDoc.getLong(name);
 	}
 
@@ -269,7 +265,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public float getFloat(int columnIndex) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return this.currentDoc.getDouble(name).floatValue();
 	}
 
@@ -282,7 +278,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public double getDouble(int columnIndex) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return this.currentDoc.getDouble(name);
 	}
 
@@ -296,7 +292,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return new BigDecimal(this.currentDoc.getDouble(name));
 	}
 
@@ -321,7 +317,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Date getDate(int columnIndex) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return new Date(this.currentDoc.getDate(name).getTime());
 	}
 
@@ -334,7 +330,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Time getTime(int columnIndex) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return new Time(this.currentDoc.getDate(name).getTime());
 	}
 
@@ -347,7 +343,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Timestamp getTimestamp(int columnIndex) throws SQLException {
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return new Timestamp(this.currentDoc.getDate(name).getTime());
 	}
 
@@ -627,7 +623,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
-		return this.rsMetadata;
+		return this.metadata;
 	}
 
 	/**
@@ -642,7 +638,7 @@ public class MongoDBResultSet implements ResultSet {
 		if(columnIndex == RAW_DOCUMENT_INDEX){
 			return this.currentDoc.toJson();
 		}
-		String name = this.rsMetadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex-1);
 		return this.currentDoc.get(name);
 	}
 

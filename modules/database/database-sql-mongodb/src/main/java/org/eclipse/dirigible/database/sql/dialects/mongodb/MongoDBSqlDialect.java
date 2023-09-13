@@ -12,6 +12,8 @@
 package org.eclipse.dirigible.database.sql.dialects.mongodb;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -79,5 +81,63 @@ public class MongoDBSqlDialect extends
 	public boolean existsSchema(Connection connection, String schema) throws SQLException {
 		return false;
 	}
+	
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
+	@Override
+	public int count(Connection connection, String table) throws SQLException {
+		// TODO Auto-generated method stub
+		return super.count(connection, table);
+	}
+	
+	/**
+	 * All.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the result set
+	 * @throws SQLException the SQL exception
+	 */
+	@Override
+	public ResultSet all(Connection connection, String table) throws SQLException {
+		String sql = allQuery(connection, table);
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultSet = statement.executeQuery();
+		return resultSet;
+	}
+
+	/**
+	 * Count query.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the string
+	 */
+	@Override
+	public String countQuery(Connection connection, String table) {
+		String sql = "{ 'count': '" + normalizeTableNameOnly(table) + "'}";
+		return sql;
+	}
+
+	/**
+	 * All query.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the string
+	 */
+	@Override
+	public String allQuery(Connection connection, String table) {
+		String sql = "{ 'find': '" + normalizeTableNameOnly(table) + "'}";
+		return sql;
+	}
+	
+	
 
 }
