@@ -615,7 +615,7 @@
 		<logcaptor.version>2.9.0</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.15.2</jackson.databind.version>
-		<mina-core.version>2.2.2</mina-core.version>
+		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.10.0</sshd-core.version>
 
 		<spring.version>5.5.18</spring.version>
