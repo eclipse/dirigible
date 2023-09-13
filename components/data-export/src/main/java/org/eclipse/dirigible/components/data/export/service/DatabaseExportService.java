@@ -101,7 +101,6 @@ public class DatabaseExportService {
      * @param datasource the datasource
      * @param schema     the schema
      * @param structure  the structure
-     * @param output the output
      * @return the string
      */
     public String structureExportType(String datasource, String schema, String structure) {
