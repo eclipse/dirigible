@@ -137,7 +137,7 @@ public class DataExportService {
                         String artifact = table.get("name").getAsString();
                         String sql = "SELECT * FROM \"" + schema + "\".\"" + artifact + "\"";
                         try(Connection connection = dataSource.getConnection()) {
-                        	sql = SqlDialectFactory.getDialect(connection).allQuery(connection,  "\"" + schema + "\".\"" + artifact + "\"");
+                        	sql = SqlDialectFactory.getDialect(connection).allQuery("\"" + schema + "\".\"" + artifact + "\"");
                         } catch (Exception e) {
                         	logger.error(e.getMessage(), e);
             			}

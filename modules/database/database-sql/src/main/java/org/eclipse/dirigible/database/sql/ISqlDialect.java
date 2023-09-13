@@ -11,7 +11,10 @@
  */
 package org.eclipse.dirigible.database.sql;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -278,20 +281,6 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	public boolean existsSchema(Connection connection, String schema) throws SQLException;
 
 	/**
-	 * Returns the count of rows in the given table.
-	 *
-	 * @param connection
-	 *            the current connection
-	 * @param table
-	 *            the table name
-	 * @return count of rows
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	@Override
-	public int count(Connection connection, String table) throws SQLException;
-
-	/**
 	 * Checks if the database is capable of schema-level filtering statements
 	 * (e.g. to reduce the provisioned schemas down to those that the current
 	 * user is entitled to see).
@@ -379,6 +368,63 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @return the string for escape symbol
 	 */
 	public String getEscapeSymbol();
+	
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the count
+	 * @throws SQLException the SQL exception
+	 */
+	public int count(Connection connection, String table) throws SQLException;
+	
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the result set
+	 * @throws SQLException the SQL exception
+	 */
+	public ResultSet all(Connection connection, String table) throws SQLException;
+	
+	/**
+	 * Count.
+	 *
+	 * @param table the table
+	 * @return the count query
+	 */
+	public String countQuery(String table);
+	
+	/**
+	 * All.
+	 *
+	 * @param table the table
+	 * @return the all query
+	 */
+	public String allQuery(String table);
+	
+	
+	/**
+	 * Export data.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @param output the output
+	 * @throws Exception Signals that an I/O or SQL exception has occurred.
+	 */
+	public void exportData(Connection connection, String table, OutputStream output) throws Exception;
+	
+	/**
+	 * Import data.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @param input the input
+	 * @throws Exception Signals that an I/O or SQL exception has occurred.
+	 */
+	public void importData(Connection connection, String table, InputStream input) throws Exception;
 	
 	
 }

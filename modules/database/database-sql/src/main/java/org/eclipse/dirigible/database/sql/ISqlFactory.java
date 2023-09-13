@@ -141,44 +141,6 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	public boolean existsSchema(Connection connection, String schema) throws SQLException;
 
 	/**
-	 * Count.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the count
-	 * @throws SQLException the SQL exception
-	 */
-	public int count(Connection connection, String table) throws SQLException;
-	
-	/**
-	 * Count.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the result set
-	 * @throws SQLException the SQL exception
-	 */
-	public ResultSet all(Connection connection, String table) throws SQLException;
-	
-	/**
-	 * Count.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the count query
-	 */
-	public String countQuery(Connection connection, String table);
-	
-	/**
-	 * Count.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the all query
-	 */
-	public String allQuery(Connection connection, String table);
-
-	/**
 	 * Nextval.
 	 *
 	 * @param sequence the sequence

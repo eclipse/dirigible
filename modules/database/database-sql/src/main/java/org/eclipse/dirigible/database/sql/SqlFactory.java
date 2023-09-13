@@ -334,19 +334,6 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	}
 
 	/**
-	 * Count.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the int
-	 * @throws SQLException the SQL exception
-	 */
-	@Override
-	public int count(Connection connection, String table) throws SQLException {
-		return this.dialect.count(connection, table);
-	}
-
-	/**
 	 * Lastval.
 	 *
 	 * @param args the args
@@ -355,43 +342,6 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	@Override
 	public LAST lastval(String... args) {
 		return this.dialect.lastval(args);
-	}
-
-	/**
-	 * All.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the result set
-	 * @throws SQLException the SQL exception
-	 */
-	@Override
-	public ResultSet all(Connection connection, String table) throws SQLException {
-		return this.dialect.all(connection, table);
-	}
-
-	/**
-	 * Count query.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the string
-	 */
-	@Override
-	public String countQuery(Connection connection, String table) {
-		return this.dialect.countQuery(connection, table);
-	}
-
-	/**
-	 * All query.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the string
-	 */
-	@Override
-	public String allQuery(Connection connection, String table) {
-		return this.dialect.allQuery(connection, table);
 	}
 
 	@Override

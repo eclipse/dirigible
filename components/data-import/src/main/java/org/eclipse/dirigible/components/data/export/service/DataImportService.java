@@ -27,6 +27,8 @@ import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,8 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.sql.DataSource;
 
 import static java.text.MessageFormat.format;
 
@@ -81,9 +85,18 @@ public class DataImportService {
 	public void importData(String datasource, String schema, String table, Boolean header, Boolean useHeaderNames, String delimField, String delimEnclosing,
     		String sequence, Boolean distinguishEmptyFromNull, InputStream is) throws IOException, Exception {
 		
-		CsvFile csvFile = new CsvFile(null, table, schema, "import", header, useHeaderNames, delimField, delimEnclosing,
-	    		sequence, distinguishEmptyFromNull, null);
-		try (Connection connection = datasourceManager.getDataSource(datasource).getConnection()) {
+		
+		
+		DataSource dataSource = datasourceManager.getDataSource(datasource);
+		try (Connection connection = dataSource.getConnection()) {
+			ISqlDialect dialect = SqlDialectFactory.getDialect(connection);
+        	String productName = connection.getMetaData().getDatabaseProductName();
+        	if ("MongoDB".equals(productName)) {
+        		dialect.importData(connection, table, is);
+        		return;
+            }
+        	CsvFile csvFile = new CsvFile(null, table, schema, "import", header, useHeaderNames, delimField, delimEnclosing,
+    	    		sequence, distinguishEmptyFromNull, null);
 			csvimProcessor.process(csvFile, is, connection);
 		}
 	}

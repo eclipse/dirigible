@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mongodb;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,6 +33,8 @@ import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
+import org.eclipse.dirigible.mongodb.jdbc.MongoDBConnection;
+import org.eclipse.dirigible.mongodb.jdbc.util.ExportImportUtil;
 
 /**
  * The MongoDB SQL Dialect.
@@ -93,8 +97,13 @@ public class MongoDBSqlDialect extends
 	 */
 	@Override
 	public int count(Connection connection, String table) throws SQLException {
-		// TODO Auto-generated method stub
-		return super.count(connection, table);
+		String sql = countQuery(table);
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultSet = statement.executeQuery();
+		if (resultSet.next()) {
+			return resultSet.getInt(null);
+		}
+		return -1;
 	}
 	
 	/**
@@ -107,7 +116,7 @@ public class MongoDBSqlDialect extends
 	 */
 	@Override
 	public ResultSet all(Connection connection, String table) throws SQLException {
-		String sql = allQuery(connection, table);
+		String sql = allQuery(table);
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultSet = statement.executeQuery();
 		return resultSet;
@@ -116,12 +125,11 @@ public class MongoDBSqlDialect extends
 	/**
 	 * Count query.
 	 *
-	 * @param connection the connection
 	 * @param table the table
 	 * @return the string
 	 */
 	@Override
-	public String countQuery(Connection connection, String table) {
+	public String countQuery(String table) {
 		String sql = "{ 'count': '" + normalizeTableNameOnly(table) + "'}";
 		return sql;
 	}
@@ -129,12 +137,11 @@ public class MongoDBSqlDialect extends
 	/**
 	 * All query.
 	 *
-	 * @param connection the connection
 	 * @param table the table
 	 * @return the string
 	 */
 	@Override
-	public String allQuery(Connection connection, String table) {
+	public String allQuery(String table) {
 		String sql = "{ 'find': '" + normalizeTableNameOnly(table) + "'}";
 		return sql;
 	}
@@ -148,6 +155,32 @@ public class MongoDBSqlDialect extends
 	@Override
 	public String getDatabaseType(Connection connection) {
 		return DatabaseType.NOSQL.getName();
+	}
+	
+	/**
+	 * Export data.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @param output the output
+	 * @throws Exception the exception
+	 */
+	@Override
+	public void exportData(Connection connection, String table, OutputStream output) throws Exception {
+		ExportImportUtil.exportCollection(connection.unwrap(MongoDBConnection.class), table, output);
+	}
+	
+	/**
+	 * Import data.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @param input the input
+	 * @throws Exception the exception
+	 */
+	@Override
+	public void importData(Connection connection, String table, InputStream input) throws Exception {
+		ExportImportUtil.importCollection(connection.unwrap(MongoDBConnection.class), table, input);
 	}
 
 }

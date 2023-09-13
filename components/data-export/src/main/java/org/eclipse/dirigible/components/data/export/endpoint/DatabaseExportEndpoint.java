@@ -104,15 +104,16 @@ public class DatabaseExportEndpoint {
 		StreamingResponseBody responseBody = output -> {
 			try {
 				databaseExportService.exportStructure(datasource, schema, structure, output);
-				output.flush();
 			} catch (Exception e) {
 				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 			}
 		};
+		
+		String type = databaseExportService.structureExportType(datasource, schema, structure);
 
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION,
-						"attachment; filename=\"" + schema + "." + structure + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".csv\"")
+						"attachment; filename=\"" + schema + "." + structure + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + "." + type + "\"")
 				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(responseBody);
 	}
 	
@@ -137,7 +138,6 @@ public class DatabaseExportEndpoint {
 		StreamingResponseBody responseBody = output -> {
 			try {
 				databaseExportService.exportSchema(datasource, schema, output);
-				output.flush();
 			} catch (Exception e) {
 				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 			}

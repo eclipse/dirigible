@@ -463,6 +463,18 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.data.export.artifact', sqlCommand);
 						}.bind(this)
 					};
+					// Import data to table
+					ctxmenu.importScript = {
+						"separator_before": false,
+						"label": "Import Data",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let parentNodeName = tree.get_text(node.parent);
+							let sqlCommand = parentNodeName + "." + node.original.text;
+							messageHub.postMessage('database.data.import.artifact', sqlCommand);
+						}.bind(this)
+					};
 				}
 				
 				return ctxmenu;

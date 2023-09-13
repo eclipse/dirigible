@@ -308,7 +308,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 				if (ArtefactLifecycle.CREATED.equals(table.getLifecycle())
 						|| ArtefactLifecycle.UPDATED.equals(table.getLifecycle())) { 
 					if (SqlFactory.getNative(connection).existsTable(connection, table.getName())) {
-						if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
+						if (SqlFactory.deriveDialect(connection).count(connection, table.getName()) == 0) {
 							executeTableDrop(connection, table);
 							callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
 						} else {
@@ -348,7 +348,7 @@ public class TablesSynchronizer<A extends Artefact> implements Synchronizer<Tabl
 	public void cleanup(Table table) {
 		try (Connection connection = datasourcesManager.getDefaultDataSource().getConnection()){
 			if (SqlFactory.getNative(connection).existsTable(connection, table.getName())) {
-				if (SqlFactory.getNative(connection).count(connection, table.getName()) == 0) {
+				if (SqlFactory.deriveDialect(connection).count(connection, table.getName()) == 0) {
 					executeTableDrop(connection, table);
 					getService().delete(table);
 				} else {

@@ -124,7 +124,7 @@ public class MongoDBConnection implements Connection {
 	 *
 	 * @return the mongo db
 	 */
-	MongoDatabase getMongoDatabase() {
+	public MongoDatabase getMongoDatabase() {
 		return this.mongoDatabase;
 	}
 	
@@ -133,7 +133,7 @@ public class MongoDBConnection implements Connection {
 	 *
 	 * @return the collection name
 	 */
-	String getCollectionName(){
+	public String getCollectionName(){
 		return this.collectionName;
 	}
 
@@ -853,6 +853,10 @@ public class MongoDBConnection implements Connection {
 	@Override
 	public int getNetworkTimeout() throws SQLException {
 		return this.clientOptions.getConnectTimeout();
+	}
+	
+	public MongoClient getClient() {
+		return client;
 	}
 
 }

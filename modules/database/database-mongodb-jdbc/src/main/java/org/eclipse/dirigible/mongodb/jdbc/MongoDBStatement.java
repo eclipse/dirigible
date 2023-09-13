@@ -83,7 +83,6 @@ public class MongoDBStatement implements Statement {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-
 	public ResultSet executeQuery(String sql) throws SQLException {
 		MongoDatabase db = this.conn.getMongoDatabase();
 		BsonDocument filterDocument = null;

@@ -36,6 +36,7 @@ public class DatabaseResultSetHelper {
 		ResultSetMonospacedWriter writer = new ResultSetMonospacedWriter();
 		writer.setLimited(limited);
 		writer.write(resultSet, output);
+		output.flush();
 	}
 
 	/**
@@ -52,6 +53,7 @@ public class DatabaseResultSetHelper {
 		writer.setLimited(limited);
 		writer.setStringified(stringify);
 		writer.write(resultSet, output);
+		output.flush();
 	}
 	
 	/**
@@ -68,6 +70,7 @@ public class DatabaseResultSetHelper {
 		writer.setLimited(limited);
 		writer.setStringified(stringify);
 		writer.write(resultSet, output);
+		output.flush();
 	}
 
 }
