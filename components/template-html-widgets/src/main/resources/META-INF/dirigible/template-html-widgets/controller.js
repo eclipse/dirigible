@@ -40,12 +40,26 @@ widgetsView.controller('WidgetsViewController', ['$scope', 'messageHub', functio
         });
     }
 
+    $scope.selectedTab = 'ti1pan';
+
     $scope.lastInputValue = "";
 
     function isText(keycode) {
         if (keycode >= 48 && keycode <= 90 || keycode >= 96 && keycode <= 111 || keycode >= 186 && keycode <= 222 || [8, 46, 173].includes(keycode)) return true;
         return false;
     }
+
+    $scope.onTabClose = function (tabId) {
+        console.log(tabId);
+    };
+
+    $scope.onTabClick = function () {
+        console.log('tab click');
+    };
+
+    $scope.switchTab = function (tabId) {
+        $scope.selectedTab = tabId;
+    };
 
     $scope.onComboInputChange = function (event) {
         if (isText(event.which)) {
