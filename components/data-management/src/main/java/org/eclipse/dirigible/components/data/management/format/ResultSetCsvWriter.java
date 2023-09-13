@@ -103,6 +103,9 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 		int count = 0;
 		List<String> names = new ArrayList<>();
 		if (resultSet.next()) {
+			if (resultSetMetaData == null) {
+				resultSetMetaData = resultSet.getMetaData(); // dynamic result set metadata
+			}
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 				String name = resultSetMetaData.getColumnName(i);
 				names.add(name);

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
+import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +136,11 @@ public class DataExportService {
                         JsonObject table = tables.get(j).getAsJsonObject();
                         String artifact = table.get("name").getAsString();
                         String sql = "SELECT * FROM \"" + schema + "\".\"" + artifact + "\"";
+                        try(Connection connection = dataSource.getConnection()) {
+                        	sql = SqlDialectFactory.getDialect(connection).allQuery(connection,  "\"" + schema + "\".\"" + artifact + "\"");
+                        } catch (Exception e) {
+                        	logger.error(e.getMessage(), e);
+            			}
                         
                         StringWriter sw = new StringWriter();
         				OutputStream output;

@@ -14,6 +14,7 @@ package org.eclipse.dirigible.components.data.export.service;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -22,6 +23,7 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.data.management.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.components.data.management.service.DatabaseExecutionService;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +76,11 @@ public class DatabaseExportService {
         javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
         if (dataSource != null) {
             String sql = "SELECT * FROM \"" + schema + "\".\"" + structure + "\"";
+            try(Connection connection = dataSource.getConnection()) {
+            	sql = SqlDialectFactory.getDialect(connection).allQuery(connection,  "\"" + schema + "\".\"" + structure + "\"");
+            } catch (Exception e) {
+            	logger.error(e.getMessage(), e);
+			}
             databaseExecutionService.executeStatement(dataSource, sql, true, false, true, true, output);
         }
     }
@@ -106,7 +113,11 @@ public class DatabaseExportService {
                             JsonObject table = tables.get(j).getAsJsonObject();
                             String artifact = table.get("name").getAsString();
                             String sql = "SELECT * FROM \"" + schema + "\".\"" + artifact + "\"";
-
+                            try(Connection connection = dataSource.getConnection()) {
+                            	sql = SqlDialectFactory.getDialect(connection).allQuery(connection,  "\"" + schema + "\".\"" + artifact + "\"");
+                            } catch (Exception e) {
+                            	logger.error(e.getMessage(), e);
+                			}
                             ZipEntry zipEntry = new ZipEntry(schema + "." + artifact + ".csv");
                             zipOutputStream.putNextEntry(zipEntry);
                             databaseExecutionService.executeStatement(dataSource, sql, true, false, true, true, zipOutputStream);

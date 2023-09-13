@@ -499,7 +499,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		if (table.indexOf("\".\"") > 0) {
 			table = table.replace("\".\"", ".");
 		}
-		String[] tokens = table.split(".");
+		String[] tokens = table.split("\\.");
 		if (tokens.length == 2) {
 			return tokens[1];
 		}
@@ -514,7 +514,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	 */
 	public static String quoteTableName(String table) {
 		table = normalizeTableName(table);
-		String[] tokens = table.split(".");
+		String[] tokens = table.split("\\.");
 		if (tokens.length == 1) {
 			return "\"" + table + "\"";
 		} else if (tokens.length == 2) {
