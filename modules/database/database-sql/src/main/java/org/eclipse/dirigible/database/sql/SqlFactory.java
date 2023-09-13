@@ -394,4 +394,11 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.allQuery(connection, table);
 	}
 
+	@Override
+	public String getDatabaseType(Connection connection) {
+		return this.dialect.getDatabaseType(connection);
+	}
+	
+	
+
 }

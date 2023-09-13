@@ -478,7 +478,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		}
 	});
 
-	function getDatabases() {
+	$scope.getDatabases = function () {
 		$http.get(databasesSvcUrl)
 			.then(function (data) {
 				$scope.databases = data.data;
@@ -509,7 +509,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 				}
 			});
 	}
-	setTimeout(getDatabases, 500);
+	setTimeout($scope.getDatabases(), 500);
 
 	let expandColumns = function (evt, data) {
 		let parent = $scope.jstreeWidget.jstree(true).get_node(data.node);
@@ -676,6 +676,12 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		} else if (f.kind == 'column') {
 			icon = 'sap-icon--grid';
 			name += ` [<i>${data.type}</i>(<i>${data.size}</i>)]`;
+		} else if (f.kind == 'nosql') {
+			let tablesChildren = f.tables.map(function (_table) {
+				return build(_table)
+			});
+			children = children.concat(tablesChildren);
+			icon = 'sap-icon--grid';
 		}
 		f.label = f.name;
 		return {

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.dirigible.database.sql.DatabaseType;
 import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
@@ -138,6 +139,15 @@ public class MongoDBSqlDialect extends
 		return sql;
 	}
 	
-	
+	/**
+	 * Gets the database type.
+	 *
+	 * @param connection the connection
+	 * @return the database type
+	 */
+	@Override
+	public String getDatabaseType(Connection connection) {
+		return DatabaseType.NOSQL.getName();
+	}
 
 }

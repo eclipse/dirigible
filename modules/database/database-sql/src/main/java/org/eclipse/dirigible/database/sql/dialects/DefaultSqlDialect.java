@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
+import org.eclipse.dirigible.database.sql.DatabaseType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlException;
@@ -771,7 +772,16 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		String sql = new SelectBuilder(this).column("*").from(quoteTableName(table)).build();
 		return sql;
 	}
-	
-	
+
+	/**
+	 * Gets the database type.
+	 *
+	 * @param connection the connection
+	 * @return the database type
+	 */
+	@Override
+	public String getDatabaseType(Connection connection) {
+		return DatabaseType.RDBMS.getName();
+	}
 
 }

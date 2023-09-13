@@ -449,7 +449,7 @@ public class MongoDBConnection implements Connection {
 			Document response = mongoDatabase.runCommand(BsonDocument.parse("{ buildInfo: 1 }"));
 			metadata.setDatabaseProductName("MongoDB");
 			metadata.setDatabaseProductVersion(response.getString("version"));
-			metadata.setDriverName("Java Driver");
+			metadata.setDriverName("MongoDB JDBC Driver");
 			metadata.setURL(this.uri.getURI());
 		}
 		metadata.setIsReadOnly(client.isLocked());

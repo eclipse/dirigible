@@ -174,15 +174,14 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	 *
 	 * @param connection the connection
 	 * @param table the table
-	 * @return the all queery
+	 * @return the all query
 	 */
 	public String allQuery(Connection connection, String table);
 
 	/**
 	 * Nextval.
 	 *
-	 * @param sequence
-	 *            the sequence
+	 * @param sequence the sequence
 	 * @return the next
 	 */
 	public NEXT nextval(String sequence);
@@ -190,10 +189,17 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	/**
 	 * Lastval.
 	 * 
-	 * @param args
-	 *            the arguments
+	 * @param args the arguments
 	 * @return the last
 	 */
 	public LAST lastval(String... args);
+	
+	/**
+	 * Database type.
+	 *
+	 * @param connection the connection
+	 * @return the database type
+	 */
+	public String getDatabaseType(Connection connection);
 
 }
