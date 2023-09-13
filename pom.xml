@@ -583,7 +583,7 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.14</mongodb.version>
 		<caffeine.version>3.1.8</caffeine.version>
-		<liquibase-core.version>4.23.1</liquibase-core.version>
+		<liquibase-core.version>4.23.2</liquibase-core.version>
 		<commons-csv.version>1.10.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<sap-theming__theming-base-content.version>11.4.2</sap-theming__theming-base-content.version>
@@ -615,7 +615,7 @@
 		<logcaptor.version>2.9.0</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.15.2</jackson.databind.version>
-		<mina-core.version>2.2.2</mina-core.version>
+		<mina-core.version>2.2.3</mina-core.version>
 		<sshd-core.version>2.10.0</sshd-core.version>
 
 		<spring.version>5.5.18</spring.version>
@@ -625,7 +625,7 @@
 		<spring-context-support.version>5.3.24</spring-context-support.version>
 		<spring-security.version>5.8.0</spring-security.version>
 
-		<keycloak.keycloak-spring-boot-starter>22.0.1</keycloak.keycloak-spring-boot-starter>
+		<keycloak.keycloak-spring-boot-starter>22.0.2</keycloak.keycloak-spring-boot-starter>
 		<hikaricp.version>5.0.1</hikaricp.version>
 		<validator.version>1.7</validator.version>
 		<quartz.version>2.3.2</quartz.version>
@@ -639,7 +639,7 @@
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.546</qldb.sdk.version>
+		<qldb.sdk.version>1.12.548</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>5.0.0</jedis.version>
