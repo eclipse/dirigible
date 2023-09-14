@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-odata-parent</artifactId>
-		<version>8.11.4</version>
+		<version>9.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
-			<version>8.11.4</version>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Apache Olingo Library dependencies -->
