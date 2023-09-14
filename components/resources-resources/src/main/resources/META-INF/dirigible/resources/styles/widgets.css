@@ -96,6 +96,10 @@ body {
 }
 
 /* General helper classes */
+.dg-opacity-7 {
+  opacity: .7;
+}
+
 .dg-scroll-hidden {
   overflow: hidden;
 }

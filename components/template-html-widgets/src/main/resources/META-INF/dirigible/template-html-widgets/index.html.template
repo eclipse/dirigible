@@ -909,8 +909,18 @@
 							</fd-icon-tab-bar-overflow-item>
 						</fd-icon-tab-bar-overflow>
 						<dg-icon-tab-bar-buttons dg-align="right">
-							<fd-button compact="true" dg-type="transparent" glyph="sap-icon--add" aria-label="add"></fd-button>
+							<fd-button compact="true" dg-type="transparent" glyph="sap-icon--add" aria-label="add">
+							</fd-button>
 						</dg-icon-tab-bar-buttons>
+					</fd-icon-tab-bar-tablist>
+				</fd-icon-tab-bar>
+
+				<h4>Unfocused tabs mode</h4>
+				<fd-icon-tab-bar unfocused="true">
+					<fd-icon-tab-bar-tablist>
+						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1uf"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2uf" is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 3" tab-id="ti3uf"></fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
 

@@ -5110,6 +5110,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * sidePadding: String - Size of the side padding. Supported options are 'sm', 'md', 'lg', 'xl', 'xxl' and 'responsive'.
          * transparent: Boolean - Transparent background.
          * translucent: Boolean - In translucent mode the header gets "--sapObjectHeader_Background" background color and the panel "--sapGroup_ContentBackground" background color.
+         * unfocused: Boolean - Tabs will be in an unfocused state.
          */
         return {
             restrict: 'E',
@@ -5129,6 +5130,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 sidePadding: '@?',
                 transparent: '<?',
                 translucent: '<?',
+                unfocused: '<?',
             },
             controller: ['$scope', function ($scope) {
                 this.getIsProgress = function () {
@@ -5136,6 +5138,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
                 this.getIsFilter = function () {
                     return $scope.hasFilter;
+                }
+                this.getIsUnfocused = function () {
+                    return $scope.unfocused;
                 }
                 $scope.getClasses = () => classNames({
                     'fd-icon-tab-bar--icon-only': $scope.iconOnly && !$scope.hasIcons,
@@ -5206,6 +5211,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         'fd-icon-tab-bar__item--critical': scope.dgState === 'critical',
                         'fd-icon-tab-bar__item--informative': scope.dgState === 'informative',
                         'fd-icon-tab-bar__item--closable': scope.onClose,
+                        'dg-opacity-7': tabBarCtrl.getIsUnfocused(),
                     });
                     scope.close = function (event) {
                         event.stopPropagation();
