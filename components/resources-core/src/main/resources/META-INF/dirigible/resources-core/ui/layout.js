@@ -1392,7 +1392,6 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
     .directive('tabPane', ['perspective', function (perspective) {
         return {
             restrict: 'E',
-            transclude: true,
             replace: true,
             require: '^tabs',
             scope: {
@@ -1422,7 +1421,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     tabsCtrl.removePane(scope.tab);
                 });
             },
-            template: `<div aria-expanded="{{isPaneSelected()}}" class="fd-tabs__panel" role="tabpanel" ng-transclude>
+            template: `<div aria-expanded="{{isPaneSelected()}}" class="fd-tabs__panel" role="tabpanel">
                 <iframe loading="{{tab.loadType}}" ng-src="{{tab.path}}" data-parameters="{{getParams()}}"></iframe>
             </div>`
         };

@@ -909,7 +909,7 @@
 							</fd-icon-tab-bar-overflow-item>
 						</fd-icon-tab-bar-overflow>
 						<dg-icon-tab-bar-buttons dg-align="right">
-							<fd-button compact="true" dg-type="transparent" glyph="sap-icon--add" aria-label="add">
+							<fd-button compact="true" dg-type="transparent" glyph="sap-icon--add" aria-label="add"></fd-button>
 						</dg-icon-tab-bar-buttons>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
