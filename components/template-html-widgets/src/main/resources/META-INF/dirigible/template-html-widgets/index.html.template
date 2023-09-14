@@ -980,7 +980,6 @@
 							</fd-icon-tab-bar-overflow-item>
 						</fd-icon-tab-bar-overflow>
 					</fd-icon-tab-bar-tablist>
-					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
 				<fd-icon-tab-bar side-padding="sm" has-icons="true">
 					<fd-icon-tab-bar-tablist>
