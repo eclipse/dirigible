@@ -3,10 +3,10 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const restTemplateManager = require("template-application-rest/template/template");
-const uiTemplate = require("template-application-ui-angular/template/ui/template");
-const generateUtils = require("ide-generate-service/template/generateUtils");
-const parameterUtils = require("ide-generate-service/template/parameterUtils");
+const restTemplateManager = dirigibleRequire("template-application-rest/template/template");
+const uiTemplate = dirigibleRequire("template-application-ui-angular/template/ui/template");
+const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
+const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
 
 exports.generate = function (model, parameters) {
     model = JSON.parse(model).model;

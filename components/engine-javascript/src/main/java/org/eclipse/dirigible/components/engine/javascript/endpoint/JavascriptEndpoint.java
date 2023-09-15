@@ -13,6 +13,9 @@ package org.eclipse.dirigible.components.engine.javascript.endpoint;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +23,8 @@ import java.util.Map;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
@@ -62,6 +67,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	
 	/** The repository. */
 	private final IRepository repository;
+
+	private final JavascriptSourceProvider sourceProvider = new DirigibleSourceProvider();
 	
 	/**
 	 * Instantiates a new javascript endpoint.
@@ -70,9 +77,25 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param repository the repository
 	 */
 	@Autowired
-	public JavascriptEndpoint(JavascriptService javascriptService, IRepository repository) {
+	public JavascriptEndpoint(
+			JavascriptService javascriptService,
+			IRepository repository
+	) {
 		this.javascriptService = javascriptService;
 		this.repository = repository;
+	}
+
+	@GetMapping("/all-dts")
+	public List<Dts> getDTS() throws IOException {
+		Path dtsRoot = sourceProvider
+				.getAbsoluteProjectPath("modules")
+				.resolve("dist")
+				.resolve("dts");
+
+		try (var dtsTree = Files.walk(dtsRoot)) {
+			List<Dts> allDtsFilesContent = dtsTree.filter(Files::isRegularFile).map(dts -> Dts.fromDtsPath(dtsRoot, dts)).toList();
+			return allDtsFilesContent;
+		}
 	}
 
 	/**
@@ -348,4 +371,22 @@ public class JavascriptEndpoint extends BaseEndpoint {
 		return path;
 	}
 
+	record Dts(String content, String moduleName, String filePath) {
+		static Dts fromDtsPath(Path dtsDirRoot, Path dtsPath) {
+			String content = readAllText(dtsPath);
+			Path relativePath = dtsDirRoot.relativize(dtsPath);
+			String filePath = "file:///node_modules/@dirigible/" + relativePath;
+			String moduleName = ("@dirigible/" + relativePath).replace("index.d.ts", "").replace(".d.ts", "");
+			return new Dts(content, moduleName, filePath);
+		}
+
+		private static String readAllText(Path path) {
+			try {
+				byte[] bytes = Files.readAllBytes(path);
+				return new String(bytes, StandardCharsets.UTF_8);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
 }

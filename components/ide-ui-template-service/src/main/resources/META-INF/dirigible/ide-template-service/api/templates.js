@@ -9,10 +9,10 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let extensions = require('extensions/extensions');
-let response = require('http/response');
+let extensions = dirigibleRequire('extensions/extensions');
+let response = dirigibleRequire('http/response');
 
-let rs = require("http/rs");
+let rs = dirigibleRequire("http/rs");
 
 rs.service()
 	.resource("")
@@ -47,7 +47,7 @@ function getTemplates(forMenu = false) {
 	for (let i = 0; i < templateExtensions.length; i++) {
 		let module = templateExtensions[i];
 		try {
-			let templateExtension = require(module);
+			let templateExtension = dirigibleRequire(module);
 			let template = templateExtension.getTemplate();
 			template.id = module;
 			templates.push(template);

@@ -45,8 +45,55 @@ function _require (path) {
 };
 
 function require(path) {
-    const module = _require(path);
+    const module = _require(fixPath(path));
     return module.exports;
+}
+
+function fixPath(path, mod) {
+    const mods = [
+        "http",
+        "io",
+        "bpm",
+        "cms",
+        "core",
+        "db",
+        "etcd",
+        "extensions",
+        "git",
+        "indexing",
+        "job",
+        "kafka",
+        "log",
+        "mail",
+        "messaging",
+        "mongodb",
+        "net",
+        "pdf",
+        "platform",
+        "qldb",
+        "rabbitmq",
+        "redis",
+        "user",
+        "template",
+        "utils"
+    ];
+
+    let fixedPath = path;
+    if (fixedPath.startsWith("@dirigible")) {
+        fixedPath = fixedPath.substring("@dirigible".length)
+    }
+
+    for (const mod of mods) {
+        if (fixedPath.startsWith(mod + "/") && !fixedPath.includes("path-to-regexp")) {
+            fixedPath = `modules/dist/cjs/${mod}/${fixedPath.substring(mod.length + 1)}`;
+            break;
+        } else if (fixedPath.startsWith("/" + mod + "/") && !fixedPath.includes("path-to-regexp")) {
+            fixedPath = `modules/dist/cjs/${mod}/${fixedPath.substring(mod.length + 2)}`;
+            break;
+        }
+    }
+
+    return fixedPath;
 }
 
 globalThis.require = require;

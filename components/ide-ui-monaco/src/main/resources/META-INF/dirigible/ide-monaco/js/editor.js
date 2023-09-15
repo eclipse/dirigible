@@ -526,7 +526,15 @@ function loadModuleSuggestions(modulesSuggestions) {
     xhrModules.send();
 }
 
-function loadDTS() {
+async function loadDTS() {
+    const res = await fetch('/services/js/all-dts');
+    const allDts = await res.json();
+    for (const dts of allDts) {
+        monaco.languages.typescript.javascriptDefaults.addExtraLib(dts.content, dts.filePath);
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(dts.content, dts.filePath);
+        modulesSuggestions.push({ name: dts.moduleName});
+    }
+
     let cachedDts = window.sessionStorage.getItem('dtsContent');
     if (cachedDts) {
         monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "");
@@ -994,6 +1002,9 @@ function isDirty(model) {
             noFallthroughCasesInSwitch: true,
             module: (fileName?.endsWith(".mjs") === true) ? monaco.languages.typescript.ModuleKind.ESNext : monaco.languages.typescript.ModuleKind.CommonJS
         });
+        monaco.languages.typescript.javascriptDefaults.getCompilerOptions().moduleResolution = monaco.languages.typescript.ModuleResolutionKind.NodeJs
+        monaco.languages.typescript.typescriptDefaults.getCompilerOptions().moduleResolution = monaco.languages.typescript.ModuleResolutionKind.NodeJs
+
         monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
         monaco.languages.html.htmlDefaults.setOptions({
             format: {

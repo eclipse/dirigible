@@ -3,9 +3,9 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const daoTemplateManager = require("template-application-dao/template/template");
-const generateUtils = require("ide-generate-service/template/generateUtils");
-const parameterUtils = require("ide-generate-service/template/parameterUtils");
+const daoTemplateManager = dirigibleRequire("template-application-dao/template/template");
+const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
+const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
 
 exports.generate = function (model, parameters) {
     model = JSON.parse(model).model;

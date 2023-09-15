@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const registry = require("platform/registry");
-const templateEngines = require("template/engines");
+const registry = dirigibleRequire("platform/registry");
+const templateEngines = dirigibleRequire("template/engines");
 
 exports.generateFiles = function (model, parameters, templateSources) {
     let generatedFiles = [];

@@ -22,9 +22,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Component
@@ -62,15 +66,11 @@ public class TypeScriptService {
     }
 
     private static boolean shouldIgnoreProject(String projectName) {
-        return "dev-tools".equals(projectName);
+        return "dev-tools".equals(projectName) || "modules".equals(projectName);
     }
 
     private static boolean isTSButNotDTS(String entryPath) {
         return entryPath.endsWith(TS_EXT) && !entryPath.endsWith(DTS_EXT);
-    }
-
-    public void compileTypeScript(File dir) {
-        compileTypeScript(dir, dir, getTypeScriptFilesInDir(dir));
     }
 
     public void compileTypeScript(String projectName, String entryPath) {
@@ -88,15 +88,16 @@ public class TypeScriptService {
             outDir = projectDir;
         }
 
-        compileTypeScript(projectDir, outDir, tsFiles);
+        esbuild(projectDir, outDir, tsFiles);
     }
 
-    private static void compileTypeScript(File projectDir, File outDir, Collection<File> filesToCompile) {
+    private static void esbuild(File projectDir, File outDir, Collection<File> filesToCompile) {
         var esbuildCommand = new ArrayList<String>();
         esbuildCommand.add("esbuild");
         esbuildCommand.addAll(filesToCompile.stream().map(Object::toString).toList());
         esbuildCommand.add("--outdir=" + outDir);
         esbuildCommand.add("--out-extension:.js=.mjs");
+        esbuildCommand.add("--sourcemap=inline");
 
         var processBuilder = new ProcessBuilder(esbuildCommand)
                 .directory(projectDir)
