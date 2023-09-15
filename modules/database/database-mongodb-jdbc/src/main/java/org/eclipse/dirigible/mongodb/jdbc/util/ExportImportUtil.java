@@ -7,8 +7,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.bson.Document;
-import org.bson.json.JsonWriter;
 import org.eclipse.dirigible.mongodb.jdbc.MongoDBConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -21,6 +22,9 @@ import com.mongodb.client.MongoCursor;
  * The Class ExportImportUtil.
  */
 public class ExportImportUtil {
+	
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(ExportImportUtil.class);
 	
 	/**
 	 * Export collection.
@@ -63,8 +67,12 @@ public class ExportImportUtil {
 	        }
 
 	        while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
-	            Document document = mapper.readValue(jsonParser, Document.class);
-	            connection.getMongoDatabase().getCollection(collection).insertOne(document);
+	            try {
+					Document document = Document.parse(jsonParser.readValueAsTree().toString());
+					connection.getMongoDatabase().getCollection(collection).insertOne(document);
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+				}
 	        }
 	    }
 	    
