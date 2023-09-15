@@ -17,9 +17,9 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /**
  * The Class All Data Types.

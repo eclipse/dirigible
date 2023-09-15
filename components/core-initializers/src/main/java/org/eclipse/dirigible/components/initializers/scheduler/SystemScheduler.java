@@ -18,7 +18,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 import java.io.IOException;
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.eclipse.dirigible.components.initializers.synchronizer.SynchronizationJob;
 import org.quartz.JobDetail;

@@ -15,9 +15,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import javax.servlet.Filter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,8 +46,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -193,7 +191,7 @@ public class HttpSuiteTest {
 
     	@Bean
     	public WebMvcConfigurer contentNegotiatorConfigurer() {
-    		return new WebMvcConfigurerAdapter() {
+    		return new WebMvcConfigurer() {
     			@Override
     			public void addInterceptors(InterceptorRegistry registry) {
     				registry.addInterceptor(httpResponsHeaderHandlerInterceptor);
@@ -202,7 +200,7 @@ public class HttpSuiteTest {
     	}
     }
 	
-	static class HttpResponseHeaderHandlerInterceptor extends HandlerInterceptorAdapter implements HandlerInterceptor {
+	static class HttpResponseHeaderHandlerInterceptor implements HandlerInterceptor {
 		
 		@Override
 		public final boolean preHandle(
@@ -211,8 +209,7 @@ public class HttpSuiteTest {
 				final Object handler) throws Exception {
 			
 			this.assignHttpResponseHeaders(request, response, handler);
-			
-			return super.preHandle(request, response, handler);
+			return true; // from default implementation of this method in HandlerInterceptor
 		}
 		
 		protected final void assignHttpResponseHeaders(

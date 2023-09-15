@@ -11,15 +11,15 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
-import javax.annotation.Nullable;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OrderColumn;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OrderColumn;
 
 import org.eclipse.dirigible.components.base.converters.ArrayOfStringsToCsvConverter;
 
@@ -29,7 +29,7 @@ import com.google.gson.annotations.Expose;
  * The Class TableConstraintForeignKey.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_FOREIGNKEYS")
+@jakarta.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_FOREIGNKEYS")
 public class TableConstraintForeignKey extends TableConstraint {
 	
 	/** The id. */

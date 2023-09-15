@@ -26,40 +26,40 @@ public class HttpSecurityURIConfigurator {
 	 */
 	public static void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-	        .antMatchers("/").permitAll()
-	        .antMatchers("/home").permitAll()
-	        .antMatchers("/logout").permitAll()
-	        .antMatchers("/index-busy.html").permitAll()
+	        .requestMatchers("/").permitAll()
+	        .requestMatchers("/home").permitAll()
+	        .requestMatchers("/logout").permitAll()
+	        .requestMatchers("/index-busy.html").permitAll()
 	        
-	        .antMatchers("/stomp").permitAll()
+	        .requestMatchers("/stomp").permitAll()
 	
-	        .antMatchers("/error/**").permitAll()
-	        .antMatchers("/error.html").permitAll()
+	        .requestMatchers("/error/**").permitAll()
+	        .requestMatchers("/error.html").permitAll()
 	
 	        // Public
-	        .antMatchers("/favicon.ico").permitAll()
-	        .antMatchers("/public/**").permitAll()
-	        .antMatchers("/webjars/**").permitAll()
+	        .requestMatchers("/favicon.ico").permitAll()
+	        .requestMatchers("/public/**").permitAll()
+	        .requestMatchers("/webjars/**").permitAll()
 	        
-	        .antMatchers("/services/core/theme/**").permitAll()
-	        .antMatchers("/services/core/version/**").permitAll()
-	        .antMatchers("/services/core/healthcheck/**").permitAll()
-	        .antMatchers("/services/web/resources/**").permitAll()
-	        .antMatchers("/services/web/resources-core/**").permitAll()
-	        .antMatchers("/services/js/resources-core/**").permitAll()
-			.antMatchers("/camel/*").permitAll()
+	        .requestMatchers("/services/core/theme/**").permitAll()
+	        .requestMatchers("/services/core/version/**").permitAll()
+	        .requestMatchers("/services/core/healthcheck/**").permitAll()
+	        .requestMatchers("/services/web/resources/**").permitAll()
+	        .requestMatchers("/services/web/resources-core/**").permitAll()
+	        .requestMatchers("/services/js/resources-core/**").permitAll()
+			.requestMatchers("/camel/*").permitAll()
 	        
-	        .antMatchers("/actuator/**").permitAll()
+	        .requestMatchers("/actuator/**").permitAll()
 	
 	        // Authenticated
-	        .antMatchers("/services/**").authenticated()
-	        .antMatchers("/websockets/**").authenticated()
-	        .antMatchers("/odata/**").authenticated()
-	        .antMatchers("/swagger-ui/**").authenticated()
+	        .requestMatchers("/services/**").authenticated()
+	        .requestMatchers("/websockets/**").authenticated()
+	        .requestMatchers("/odata/**").authenticated()
+	        .requestMatchers("/swagger-ui/**").authenticated()
 	
 	        // "Developer" role required
-	        .antMatchers("/services/ide/**").hasRole("Developer")
-	        .antMatchers("/websockets/ide/**").hasRole("Developer")
+	        .requestMatchers("/services/ide/**").hasRole("Developer")
+	        .requestMatchers("/websockets/ide/**").hasRole("Developer")
 	
 	        // "Operator" role required
 	//        .antMatchers("/services/ops/**").hasRole("Operator")

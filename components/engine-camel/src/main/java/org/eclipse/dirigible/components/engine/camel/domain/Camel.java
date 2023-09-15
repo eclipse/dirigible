@@ -14,7 +14,7 @@ package org.eclipse.dirigible.components.engine.camel.domain;
 import com.google.gson.annotations.Expose;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "DIRIGIBLE_CAMEL")

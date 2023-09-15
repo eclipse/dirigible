@@ -13,7 +13,7 @@ package org.eclipse.dirigible.components.security.domain;
 
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * The Class SecurityRole.

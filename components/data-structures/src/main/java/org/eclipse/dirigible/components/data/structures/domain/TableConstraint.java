@@ -13,15 +13,15 @@ package org.eclipse.dirigible.components.data.structures.domain;
 
 import java.util.Arrays;
 
-import javax.annotation.Nullable;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.ElementCollection;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderColumn;
 
 import org.eclipse.dirigible.components.base.converters.ArrayOfStringsToCsvConverter;
 import org.hibernate.annotations.OnDelete;

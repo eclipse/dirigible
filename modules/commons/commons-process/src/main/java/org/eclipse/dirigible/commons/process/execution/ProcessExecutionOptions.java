@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.commons.process.execution;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class ProcessExecutionOptions {
     private String workingDirectory;

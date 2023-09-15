@@ -14,7 +14,7 @@ package org.eclipse.dirigible.components.base.converters;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 /**
  * The Class ArrayOfStringsToCsvConverter.

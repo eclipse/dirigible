@@ -11,12 +11,12 @@
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
-import javax.annotation.Nullable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import com.google.gson.annotations.Expose;
 
@@ -24,7 +24,7 @@ import com.google.gson.annotations.Expose;
  * The Class TableConstraintUnique.
  */
 @Entity
-@javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_UNIQUES")
+@jakarta.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_UNIQUES")
 public class TableConstraintUnique extends TableConstraint {
 	
 	/** The id. */

@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.List;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.extensions.domain.ExtensionPoint;
 import org.eclipse.dirigible.components.extensions.repository.ExtensionPointRepository;

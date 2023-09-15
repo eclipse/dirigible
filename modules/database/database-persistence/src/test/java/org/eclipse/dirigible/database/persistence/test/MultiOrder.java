@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.database.persistence.test;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 
 /**
  * The Class MultiOrder.

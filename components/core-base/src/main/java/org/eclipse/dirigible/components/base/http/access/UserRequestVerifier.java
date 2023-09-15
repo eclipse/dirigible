@@ -13,7 +13,7 @@ package org.eclipse.dirigible.components.base.http.access;
 
 import java.util.ServiceLoader;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.context.ContextException;

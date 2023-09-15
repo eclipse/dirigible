@@ -14,7 +14,7 @@ package org.eclipse.dirigible.components.api.cms;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.http.HttpRequestFacade;

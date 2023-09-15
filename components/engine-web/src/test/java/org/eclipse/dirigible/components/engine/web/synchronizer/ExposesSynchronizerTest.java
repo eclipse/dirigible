@@ -23,7 +23,7 @@ import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.util.List;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.eclipse.dirigible.components.engine.web.domain.Expose;
 import org.eclipse.dirigible.components.engine.web.exposure.ExposeManager;

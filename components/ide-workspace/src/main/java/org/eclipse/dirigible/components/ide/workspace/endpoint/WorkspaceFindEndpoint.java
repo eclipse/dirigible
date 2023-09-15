@@ -15,7 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.apache.commons.codec.DecoderException;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;

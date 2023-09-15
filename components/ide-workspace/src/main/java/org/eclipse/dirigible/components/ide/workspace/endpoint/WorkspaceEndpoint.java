@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.apache.commons.codec.DecoderException;
 import org.eclipse.dirigible.components.api.utils.UrlFacade;
