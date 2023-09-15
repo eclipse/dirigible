@@ -48,11 +48,11 @@ import com.mongodb.client.MongoDatabase;
  */
 public class MongoDBConnection implements Connection {
 	
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(MongoDBConnection.class);
+	
 	/** The Constant MONGODB_DEFAULT_DB. */
 	private static final String MONGODB_DEFAULT_DB = "db";
-
-	/** The Constant LOG. */
-	private static final Logger LOG = LoggerFactory.getLogger(MongoDBConnection.class);
 
 	/** The info. */
 	private Properties info;
@@ -116,7 +116,7 @@ public class MongoDBConnection implements Connection {
 		if(this.collectionName!=null)
 			this.collection = this.mongoDatabase.getCollection(this.collectionName);
 		
-		LOG.debug("Connected with client properties: "+this.info.toString());
+		logger.debug("Connected with client properties: "+this.info.toString());
 	}
 	
 	/**
