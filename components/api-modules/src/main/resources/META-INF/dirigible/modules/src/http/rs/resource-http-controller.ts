@@ -103,9 +103,9 @@ export class HttpController {
                 "req": request
             };
             if (matches[0].pathParams) {
-                ctx.pathParameters = request.params = matches[0].pathParams;
+                ctx.pathParameters = matches[0].pathParams;
             }
-            ctx.queryParameters = request.query = queryParams;
+            ctx.queryParameters = queryParams;
 
             const noop = function () {
             };
