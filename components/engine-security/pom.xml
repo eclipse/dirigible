@@ -8,7 +8,7 @@
     <parent>
         <artifactId>dirigible-components-parent</artifactId>
         <groupId>org.eclipse.dirigible</groupId>
-        <version>9.0.0-SNAPSHOT</version>
+        <version>8.13.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -20,12 +20,12 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-base</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.13.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-repository</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.13.0</version>
         </dependency>
     </dependencies>
 
