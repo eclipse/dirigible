@@ -1,5 +1,6 @@
 exports.getFileTypes = function () {
     return {
+        ".abap": "abap",
         ".js": "javascript",
         ".mjs": "javascript",
         ".ts": "typescript",
