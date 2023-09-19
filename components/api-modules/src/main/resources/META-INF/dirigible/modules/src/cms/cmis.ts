@@ -15,7 +15,7 @@
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-import * as streams from "@dirigible/io/streams"
+import * as streams from "@dirigible/io/streams";
 const CMIS_METHOD_READ = "READ";
 const CMIS_METHOD_WRITE = "WRITE";
 const CmisFacade = Java.type("org.eclipse.dirigible.components.api.cms.CmisFacade");
