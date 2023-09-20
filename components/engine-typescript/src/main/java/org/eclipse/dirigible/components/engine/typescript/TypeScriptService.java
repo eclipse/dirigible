@@ -31,23 +31,48 @@ import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * The Class TypeScriptService.
+ */
 @Component
 public class TypeScriptService {
 
+    /** The Constant TS_EXT. */
     private static final String TS_EXT = ".ts";
+    
+    /** The Constant DTS_EXT. */
     private static final String DTS_EXT = ".d.ts";
 
+    /** The repository. */
     private final IRepository repository;
 
+    /**
+     * Instantiates a new type script service.
+     *
+     * @param repository the repository
+     */
     @Autowired
     public TypeScriptService(IRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Checks if is type script file.
+     *
+     * @param path the path
+     * @return true, if is type script file
+     */
     public boolean isTypeScriptFile(String path) {
         return path.endsWith(TS_EXT);
     }
 
+    /**
+     * Should compile type script.
+     *
+     * @param projectName the project name
+     * @param entryPath the entry path
+     * @return true, if successful
+     */
     public boolean shouldCompileTypeScript(String projectName, String entryPath) {
         if (entryPath != null && !entryPath.equals("")) {
             return isTSButNotDTS(entryPath);
@@ -57,6 +82,12 @@ public class TypeScriptService {
         return shouldCompileTypeScript(projectDir);
     }
 
+    /**
+     * Should compile type script.
+     *
+     * @param dir the dir
+     * @return true, if successful
+     */
     public boolean shouldCompileTypeScript(File dir) {
         if (shouldIgnoreProject(dir.getName())) {
             return false;
@@ -65,14 +96,32 @@ public class TypeScriptService {
         return dir.exists() && !getTypeScriptFilesInDir(dir).isEmpty();
     }
 
+    /**
+     * Should ignore project.
+     *
+     * @param projectName the project name
+     * @return true, if successful
+     */
     private static boolean shouldIgnoreProject(String projectName) {
         return "dev-tools".equals(projectName) || "modules".equals(projectName);
     }
 
+    /**
+     * Checks if is TS but not DTS.
+     *
+     * @param entryPath the entry path
+     * @return true, if is TS but not DTS
+     */
     private static boolean isTSButNotDTS(String entryPath) {
         return entryPath.endsWith(TS_EXT) && !entryPath.endsWith(DTS_EXT);
     }
 
+    /**
+     * Compile type script.
+     *
+     * @param projectName the project name
+     * @param entryPath the entry path
+     */
     public void compileTypeScript(String projectName, String entryPath) {
         var projectDir = getProjectDirFile(projectName);
         File outDir;
@@ -91,6 +140,13 @@ public class TypeScriptService {
         esbuild(projectDir, outDir, tsFiles);
     }
 
+    /**
+     * Esbuild.
+     *
+     * @param projectDir the project dir
+     * @param outDir the out dir
+     * @param filesToCompile the files to compile
+     */
     private static void esbuild(File projectDir, File outDir, Collection<File> filesToCompile) {
         var esbuildCommand = new ArrayList<String>();
         esbuildCommand.add("esbuild");
@@ -119,11 +175,23 @@ public class TypeScriptService {
         }
     }
 
+    /**
+     * Gets the project dir file.
+     *
+     * @param projectName the project name
+     * @return the project dir file
+     */
     private File getProjectDirFile(String projectName) {
         var registryRelativeProjectPath = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, projectName).toString();
         return new File(repository.getInternalResourcePath(registryRelativeProjectPath));
     }
 
+    /**
+     * Gets the type script files in dir.
+     *
+     * @param projectDir the project dir
+     * @return the type script files in dir
+     */
     private Collection<File> getTypeScriptFilesInDir(File projectDir) {
         return FileUtils
                 .listFiles(projectDir, new String[]{"ts"}, true)
