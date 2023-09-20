@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>dirigible-engine-graalium</artifactId>
 		<groupId>org.eclipse.dirigible</groupId>
-		<version>8.14.1</version>
+		<version>9.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -17,12 +17,12 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-api</artifactId>
-			<version>8.14.1</version>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-graalium-execution</artifactId>
-			<version>8.14.1</version>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

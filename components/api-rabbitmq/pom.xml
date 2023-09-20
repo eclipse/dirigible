@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-components-parent</artifactId>
-        <version>8.14.1</version>
+        <version>9.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -24,43 +24,43 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-modules</artifactId>
-            <version>8.14.1</version>
+            <version>9.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Components -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-repository</artifactId>
-            <version>8.14.1</version>
+            <version>9.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Engine -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-engine-javascript</artifactId>
-            <version>8.14.1</version>
+            <version>9.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Test -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-test</artifactId>
-            <version>8.14.1</version>
+            <version>9.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-io</artifactId>
-            <version>8.14.1</version>
+            <version>9.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-http</artifactId>
-            <version>8.14.1</version>
+            <version>9.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-engine-security</artifactId>
-            <version>8.14.1</version>
+            <version>9.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
