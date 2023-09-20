@@ -31,6 +31,11 @@ import org.eclipse.dirigible.repository.api.IResource;
 @CalledFromJS
 public class DirigibleSourceProvider implements JavascriptSourceProvider {
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	static IRepository getRepository() {
     	return (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
     }
@@ -50,6 +55,12 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
         return Path.of(absoluteSourcePathString);
     }
 
+    /**
+     * Gets the absolute project path.
+     *
+     * @param projectName the project name
+     * @return the absolute project path
+     */
     @Override
     public Path getAbsoluteProjectPath(String projectName) {
         String projectFilePath = Path.of(projectName).toString();

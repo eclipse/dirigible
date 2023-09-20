@@ -13,7 +13,12 @@ package org.eclipse.dirigible.graalium.core.modules;
 
 import java.util.List;
 
+/**
+ * The Class DirigibleModulesMetadata.
+ */
 public class DirigibleModulesMetadata {
+    
+    /** The Constant PURE_ESM_MODULES. */
     private static final List<String> PURE_ESM_MODULES = List.of(
             "@dirigible/http",
             "@dirigible/io",
@@ -42,6 +47,12 @@ public class DirigibleModulesMetadata {
             "@dirigible/utils"
     );
 
+    /**
+     * Checks if is pure esm module.
+     *
+     * @param module the module
+     * @return true, if is pure esm module
+     */
     static boolean isPureEsmModule(String module) {
         return PURE_ESM_MODULES.stream().anyMatch(module::startsWith);
     }
