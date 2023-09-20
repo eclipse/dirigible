@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-components-parent</artifactId>
-		<version>9.0.0-SNAPSHOT</version>
+		<version>8.14.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -21,47 +21,47 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-modules</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.14.0</version>
 		</dependency>
 	
 		<!-- Components -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-repository</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.14.0</version>
 		</dependency>
 
 		<!-- Engine -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-javascript</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.14.0</version>
 		</dependency>
 		
 		<!-- IDE -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-ide-workspace</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.14.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-ide-problems</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.14.0</version>
 		</dependency>
 		
 		<!-- Modules -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-process</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.14.0</version>
 		</dependency>
 		
 		<!-- Test -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-ide-git</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.14.0</version>
 			<scope>test</scope>
 		</dependency>
 		
