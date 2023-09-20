@@ -11,11 +11,26 @@
  */
 package org.eclipse.dirigible.components.engine.typescript;
 
+/**
+ * The Class TypeScriptException.
+ */
 public class TypeScriptException extends RuntimeException {
+    
+    /**
+     * Instantiates a new type script exception.
+     *
+     * @param message the message
+     */
     public TypeScriptException(String message) {
         super(message);
     }
 
+    /**
+     * Instantiates a new type script exception.
+     *
+     * @param message the message
+     * @param cause the cause
+     */
     public TypeScriptException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -21,19 +21,37 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * The Class TypeScriptEndpoint.
+ */
 @RestController
 @RequestMapping({BaseEndpoint.PREFIX_ENDPOINT_SECURED + "ts", BaseEndpoint.PREFIX_ENDPOINT_PUBLIC + "ts"})
 public class TypeScriptEndpoint extends BaseEndpoint {
 
+    /** The Constant HTTP_PATH_MATCHER. */
     private static final String HTTP_PATH_MATCHER = "/{projectName}/{*projectFilePath}";
 
+    /** The javascript endpoint. */
     private final JavascriptEndpoint javascriptEndpoint;
 
+    /**
+     * Instantiates a new type script endpoint.
+     *
+     * @param javascriptEndpoint the javascript endpoint
+     */
     @Autowired
     public TypeScriptEndpoint(JavascriptEndpoint javascriptEndpoint) {
         this.javascriptEndpoint = javascriptEndpoint;
     }
 
+    /**
+     * Gets the.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param params the params
+     * @return the response entity
+     */
     @GetMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> get(
             @PathVariable("projectName") String projectName,
@@ -43,6 +61,14 @@ public class TypeScriptEndpoint extends BaseEndpoint {
         return javascriptEndpoint.get(projectName, replaceTSWithMJSExtension(projectFilePath), params);
     }
 
+    /**
+     * Post.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param params the params
+     * @return the response entity
+     */
     @PostMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> post(
             @PathVariable("projectName") String projectName,
@@ -52,6 +78,15 @@ public class TypeScriptEndpoint extends BaseEndpoint {
         return javascriptEndpoint.post(projectName, replaceTSWithMJSExtension(projectFilePath), params);
     }
 
+    /**
+     * Post file.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param params the params
+     * @param file the file
+     * @return the response entity
+     */
     @PostMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
     public ResponseEntity<?> postFile(
             @PathVariable("projectName") String projectName,
@@ -62,6 +97,14 @@ public class TypeScriptEndpoint extends BaseEndpoint {
         return javascriptEndpoint.postFile(projectName, replaceTSWithMJSExtension(projectFilePath), params, file);
     }
 
+    /**
+     * Put.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param params the params
+     * @return the response entity
+     */
     @PutMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> put(
             @PathVariable("projectName") String projectName,
@@ -71,6 +114,15 @@ public class TypeScriptEndpoint extends BaseEndpoint {
         return javascriptEndpoint.put(projectName, replaceTSWithMJSExtension(projectFilePath), params);
     }
 
+    /**
+     * Put file.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param params the params
+     * @param file the file
+     * @return the response entity
+     */
     @PutMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
     public ResponseEntity<?> putFile(
             @PathVariable("projectName") String projectName,
@@ -81,6 +133,14 @@ public class TypeScriptEndpoint extends BaseEndpoint {
         return javascriptEndpoint.putFile(projectName, replaceTSWithMJSExtension(projectFilePath), params, file);
     }
 
+    /**
+     * Patch.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param params the params
+     * @return the response entity
+     */
     @PatchMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> patch(
             @PathVariable("projectName") String projectName,
@@ -90,6 +150,14 @@ public class TypeScriptEndpoint extends BaseEndpoint {
         return javascriptEndpoint.patch(projectName, replaceTSWithMJSExtension(projectFilePath), params);
     }
 
+    /**
+     * Delete.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param params the params
+     * @return the response entity
+     */
     @DeleteMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> delete(
             @PathVariable("projectName") String projectName,
@@ -99,6 +167,12 @@ public class TypeScriptEndpoint extends BaseEndpoint {
         return javascriptEndpoint.delete(projectName, replaceTSWithMJSExtension(projectFilePath), params);
     }
 
+    /**
+     * Replace TS with MJS extension.
+     *
+     * @param projectFilePath the project file path
+     * @return the string
+     */
     private String replaceTSWithMJSExtension(String projectFilePath) {
         int indexOfExtensionStart = projectFilePath.lastIndexOf(".ts");
         if (indexOfExtensionStart == -1) {
