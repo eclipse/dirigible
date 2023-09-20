@@ -237,6 +237,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
     $scope.drivers.push({ "text": "PostgreSQL - org.postgresql.Driver", "value": "org.postgresql.Driver" });
     $scope.drivers.push({ "text": "MySQL - com.mysql.jdbc.Driver", "value": "com.mysql.jdbc.Driver" });
     $scope.drivers.push({ "text": "SAP HANA - com.sap.db.jdbc.Driver", "value": "com.sap.db.jdbc.Driver" });
+    $scope.drivers.push({ "text": "Snowflake - net.snowflake.client.jdbc.SnowflakeDriver", "value": "net.snowflake.client.jdbc.SnowflakeDriver" });
     $scope.drivers.push({ "text": "MongoDB - org.eclipse.dirigible.mongodb.jdbc.Driver", "value": "org.eclipse.dirigible.mongodb.jdbc.Driver" });
 
     $scope.urls = {};
@@ -244,6 +245,7 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
     $scope.urls["org.postgresql.Driver"] = "jdbc:postgresql://host:port/database";
     $scope.urls["com.mysql.jdbc.Driver"] = "jdbc:mysql://host:port/database";
     $scope.urls["com.sap.db.jdbc.Driver"] = "jdbc:sap://host:port/?encrypt=true&validateCertificate=false";
+    $scope.urls["net.snowflake.client.jdbc.SnowflakeDriver"] = "jdbc:snowflake://account_identifier.snowflakecomputing.com/?db=SNOWFLAKE_SAMPLE_DATA&schema=TPCH_SF1000";
     $scope.urls["org.eclipse.dirigible.mongodb.jdbc.Driver"] = "jdbc:mongodb://host:port/database";
 
     $scope.driverChanged = function () {
