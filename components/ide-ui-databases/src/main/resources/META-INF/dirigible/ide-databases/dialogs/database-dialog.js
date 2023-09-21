@@ -18,6 +18,14 @@ dbdialog.controller('DBDialogController', ['$scope', 'messageHub', 'ViewParamete
         busyText: "Loading...",
     };
 
+    $scope.forms = {
+        dbForm: {},
+    };
+
+    $scope.inputRules = {
+        patterns: ['^(?! ).*(?<! )$']
+    };
+
     $scope.editMode = false;
 
     $scope.urls = {
