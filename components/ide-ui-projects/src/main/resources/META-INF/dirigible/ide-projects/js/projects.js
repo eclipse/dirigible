@@ -230,11 +230,13 @@ projectsView.controller('ProjectsViewController', [
                     }
                 }
                 $scope.jstreeWidget.jstree(true).hide_node(moveObj.node);
+                let workspace = parent.data.workspace;
                 let spinnerId = showSpinner(parent);
                 workspaceApi.move(
                     moveObj.node.data.path,
                     (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + moveObj.node.text,
                     moveObj.node.data.workspace,
+                    workspace
                 ).then(function (response) {
                     if (response.status === 201) {
                         moveObj.node.data.path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + moveObj.node.text;
