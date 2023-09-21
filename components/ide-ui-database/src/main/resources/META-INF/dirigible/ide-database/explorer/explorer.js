@@ -9,10 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-// messageHub.fireFileOpen = function (fileDescriptor) {
-// 	messageHub.post({ data: fileDescriptor }, 'fileselected');
-// }
-let database = angular.module('database', ['ideUI', 'ideView']);
+const database = angular.module('database', ['ideUI', 'ideView']);
 database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	let databasesSvcUrl = "/services/data/";
 	$scope.selectedDatabase;
@@ -302,7 +299,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.data.export.artifact', sqlCommand);
 						}.bind(this)
 					};
-					
+
 					// Import data to table
 					if (node.original.type === 'table' || node.original.type === 'base table') {
 						ctxmenu.importScript = {
@@ -317,7 +314,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							}.bind(this)
 						};
 					}
-					
+
 					// Export metadata
 					ctxmenu.exportMetadata = {
 						"separator_before": true,
@@ -330,7 +327,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.export.artifact', sqlCommand);
 						}.bind(this)
 					};
-					
+
 					// Drop table
 					if (node.original.type === 'table' || node.original.type === 'base table') {
 						ctxmenu.dropScript = {
@@ -398,7 +395,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.export.schema', sqlCommand);
 						}.bind(this)
 					};
-					ctxmenu.exportDataInProject= {
+					ctxmenu.exportDataInProject = {
 						"separator_before": true,
 						"label": "Export Data in Project",
 						"action": function (data) {
@@ -429,17 +426,17 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						}.bind(this)
 					};
 					ctxmenu.dropScript = {
-							"separator_before": true,
-							"label": "Drop",
-							"action": function (data) {
-								let tree = $.jstree.reference(data.reference);
-								let node = tree.get_node(data.reference);
-								let sqlCommand = "DROP SCHEMA \"" + node.original.text + "\" CASCADE;\n";
-								messageHub.postMessage('database.sql.script', sqlCommand);
-							}.bind(this)
+						"separator_before": true,
+						"label": "Drop",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = "DROP SCHEMA \"" + node.original.text + "\" CASCADE;\n";
+							messageHub.postMessage('database.sql.script', sqlCommand);
+						}.bind(this)
 					};
 				}
-				
+
 				// Collection related actions
 				if (node.original.kind === 'table' && node.original.type === 'collection') {
 					ctxmenu.showContents = {
@@ -476,7 +473,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						}.bind(this)
 					};
 				}
-				
+
 				return ctxmenu;
 			}
 		}
@@ -614,7 +611,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	$scope.refreshDatabase = function () {
 		if ($scope.jstreeWidget.jstree(true).settings === undefined) $scope.jstreeWidget.jstree($scope.jstreeConfig);
 		if ($scope.selectedDatabase && $scope.selectedDatasource) {
-			$http.get(databasesSvcUrl  + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
+			$http.get(databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
 				.then(function (data) {
 					$scope.datasource = data.data;
 					this.baseUrl = databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource;
@@ -744,8 +741,14 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		messageHub.postMessage('database.sql.run', {});
 	};
 
-});
+	messageHub.onDidReceiveMessage(
+		'ide-databases.explorer.refresh',
+		function () {
+			$scope.$apply(function () {
+				$scope.getDatabases();
+			});
+		},
+		true
+	);
 
-function confirmRemove(type, name) {
-	return confirm("Do you really want to delete the " + type + ": " + name);
-}
+});
