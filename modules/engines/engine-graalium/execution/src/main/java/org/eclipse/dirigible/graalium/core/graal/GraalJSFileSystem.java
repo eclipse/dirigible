@@ -23,13 +23,19 @@ import java.nio.file.attribute.FileAttribute;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.*;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The Class GraalJSFileSystem.
  */
 public class GraalJSFileSystem implements FileSystem {
+	
+	/** The Constant logger. */
+	private static final Logger logger = Logger.getLogger(GraalJSFileSystem.class.getName());
 
-    private static final List<String> SUPPORTED_IMPORT_FROM_EXTENSIONS = List.of(".js", ".mjs");
+    /** The Constant SUPPORTED_IMPORT_FROM_EXTENSIONS. */
+    private static final List<String> SUPPORTED_IMPORT_FROM_EXTENSIONS = List.of(".js", ".mjs", "/build/src/index.js");
 
     /**
      * The Constant DELEGATE.
@@ -51,6 +57,8 @@ public class GraalJSFileSystem implements FileSystem {
      * The downloadable module resolver.
      */
     private final DownloadableModuleResolver downloadableModuleResolver;
+    
+    /** The on real path not found. */
     private final Function<Path, Path> onRealPathNotFound;
 
     /**
@@ -131,6 +139,8 @@ public class GraalJSFileSystem implements FileSystem {
     public Path toRealPath(Path path, LinkOption... linkOptions) throws IOException {
         if (path.isAbsolute() && !path.startsWith(currentWorkingDirectoryPath)) {
             path = currentWorkingDirectoryPath.resolve(path.toString().substring(1));
+        } else if (currentWorkingDirectoryPath.resolve(path.toString()).toFile().exists()) {
+        	path = currentWorkingDirectoryPath.resolve(path.toString());
         }
 
         String pathString = path.toString();
@@ -157,7 +167,8 @@ public class GraalJSFileSystem implements FileSystem {
         } catch (IOException initial) {
             try {
                 return onRealPathNotFound.apply(path).toRealPath(linkOptions);
-            } catch (IOException e) {
+            } catch (Exception e) {
+            	logger.log(Level.SEVERE, path.toString(), e);
                 e.addSuppressed(initial);
                 throw e;
             }
