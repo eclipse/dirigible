@@ -74,6 +74,7 @@ public class GraalJSEngineCreator {
                 .option("js.ecmascript-version", "staging")
                 .option("engine.WarnInterpreterOnly", "false")
                 .option("js.esm-eval-returns-exports", "true")
+                .option("js.intl-402", "true")
                 .out(new PrintStream(new GraalJSLogging(sysOutLogger, false), true))
                 .err(new PrintStream(new GraalJSLogging(sysErrLogger, true), true));
     }
