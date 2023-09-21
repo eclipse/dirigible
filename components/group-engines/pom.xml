@@ -23,11 +23,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-engine-javascript</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-typescript</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
@@ -126,6 +121,11 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-sftp</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-command</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 		
