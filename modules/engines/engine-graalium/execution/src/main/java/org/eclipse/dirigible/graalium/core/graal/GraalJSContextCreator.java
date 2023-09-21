@@ -139,6 +139,8 @@ public class GraalJSContextCreator {
             contextBuilder.option("js.operator-overloading", "true");
         }
 
+        contextBuilder.option("js.intl-402", "true");
+
         contextBuilder.allowIO(ioAccessBuilder.build());
         Context context = contextBuilder.build();
         
