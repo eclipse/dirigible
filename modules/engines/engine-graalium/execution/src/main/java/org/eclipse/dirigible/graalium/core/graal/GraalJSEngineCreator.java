@@ -69,6 +69,7 @@ public class GraalJSEngineCreator {
      * @return the default engine builder
      */
     private static Engine.Builder getDefaultEngineBuilder() {
+        System.setProperty("polyglotimpl.DisableClassPathIsolation", "true");
         return Engine.newBuilder()
                 .allowExperimentalOptions(true)
                 .option("js.ecmascript-version", "staging")
