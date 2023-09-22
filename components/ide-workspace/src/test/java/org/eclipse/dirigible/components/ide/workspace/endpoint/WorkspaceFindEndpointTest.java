@@ -35,6 +35,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class WorkspaceFindEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -43,25 +46,43 @@ import org.springframework.web.context.WebApplicationContext;
 @EntityScan("org.eclipse.dirigible.components")
 public class WorkspaceFindEndpointTest {
 	
+	/** The mock mvc. */
 	@Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 	
+	/**
+	 * Setup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeEach
     public void setup() throws Exception {
 		cleanup();
 
     }
 	
+	/**
+	 * Cleanup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@AfterEach
     public void cleanup() throws Exception {
     }
 	
+	/**
+	 * Find all.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void findAll() throws Exception {
 		mockMvc.perform(post("/services/ide/workspace-find")
@@ -71,6 +92,11 @@ public class WorkspaceFindEndpointTest {
 			.andExpect(status().is2xxSuccessful());
 	}
 	
+	/**
+	 * Find in workspace.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void findInWorkspace() throws Exception {
 		mockMvc.perform(post("/services/ide/workspace-find/workspace1")
@@ -80,6 +106,9 @@ public class WorkspaceFindEndpointTest {
 			.andExpect(status().is2xxSuccessful());
 	}
 
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

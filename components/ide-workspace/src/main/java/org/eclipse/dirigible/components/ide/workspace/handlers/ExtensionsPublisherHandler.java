@@ -69,6 +69,7 @@ public class ExtensionsPublisherHandler implements PublisherHandler {
 	 *
 	 * @param workspaceLocation the workspace location
 	 * @param registryLocation the registry location
+	 * @param metadata the metadata
 	 */
 	@Override
 	public void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {

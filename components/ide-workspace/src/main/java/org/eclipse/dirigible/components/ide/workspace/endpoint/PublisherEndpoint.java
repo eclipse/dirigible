@@ -50,13 +50,14 @@ public class PublisherEndpoint {
     
     
     /**
-	 * Publish.
-	 *
-	 * @param workspace the workspace
-	 * @param path the path
-	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
-	 */
+     * Publish.
+     *
+     * @param workspace the workspace
+     * @param project the project
+     * @param path the path
+     * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     */
 	@PostMapping("{workspace}/{project}/{*path}")
 	public ResponseEntity<?> publish(
 			@PathVariable("workspace") String workspace,

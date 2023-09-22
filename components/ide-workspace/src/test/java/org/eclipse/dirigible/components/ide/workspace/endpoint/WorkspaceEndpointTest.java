@@ -46,6 +46,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class WorkspaceEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -54,18 +57,27 @@ import org.springframework.web.context.WebApplicationContext;
 @EntityScan("org.eclipse.dirigible.components")
 public class WorkspaceEndpointTest {
 	
+	/** The workspace service. */
 	@Autowired
 	private WorkspaceService workspaceService; 
 	
+	/** The mock mvc. */
 	@Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 	
+	/**
+	 * Setup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeEach
     public void setup() throws Exception {
 		
@@ -73,10 +85,20 @@ public class WorkspaceEndpointTest {
     	
     }
 	
+	/**
+	 * Cleanup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@AfterEach
     public void cleanup() throws Exception {
     }
 	
+	/**
+	 * Copy.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void copy() throws Exception {
 		Workspace workspace = workspaceService.createWorkspace("workspace1");
@@ -104,6 +126,11 @@ public class WorkspaceEndpointTest {
 			.andExpect(status().is2xxSuccessful());
 	}
 	
+	/**
+	 * Move.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void move() throws Exception {
 		Workspace workspace = workspaceService.createWorkspace("workspace1");
@@ -131,9 +158,17 @@ public class WorkspaceEndpointTest {
 			.andExpect(status().is2xxSuccessful());
 	}
 
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 
+		/**
+		 * Creates the project status provider.
+		 *
+		 * @return the project status provider
+		 */
 		@Bean
 		public ProjectStatusProvider createProjectStatusProvider() {
 			return new DummyProjectStatusProvider();

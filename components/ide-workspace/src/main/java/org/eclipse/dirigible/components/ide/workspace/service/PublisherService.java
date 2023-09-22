@@ -82,6 +82,7 @@ public class PublisherService {
 	 *
 	 * @param user the user
 	 * @param workspace the workspace
+	 * @param project the project
 	 * @param path the path
 	 */
 	public void publish(String user, String workspace, String project, String path) {
@@ -119,6 +120,7 @@ public class PublisherService {
 	 *
 	 * @param sourceLocation the source location
 	 * @param targetLocation the target location
+	 * @param afterPublishMetadata the after publish metadata
 	 */
 	private void publishResource(String sourceLocation, String targetLocation, PublisherHandler.AfterPublishMetadata afterPublishMetadata) {
 		for (PublisherHandler next : publisherHandlers) {
