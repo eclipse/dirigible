@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.components.base.publisher;
 
-import javax.annotation.Nullable;
-
 /**
  * The Interface PublisherHandler.
  */
