@@ -14,6 +14,7 @@ angular.module('ideWorkspace', [])
         this.workspacesServiceUrl = '/services/ide/workspaces/';
         this.workspaceManagerServiceUrl = '/services/ide/workspace';
         this.workspaceSearchServiceUrl = '/services/ide/workspace-search';
+        this.workspaceActionsServiceUrl = '/services/ide/workspace-actions';
         this.$get = ['$http', function workspaceApiFactory($http) {
             let setWorkspace = function (workspaceName) {
                 if (workspaceName !== undefined && !(typeof workspaceName === 'string'))
@@ -232,6 +233,17 @@ angular.module('ideWorkspace', [])
                         return { status: response.status };
                     });
             }.bind(this);
+            
+            let executeAction = function (workspace, project, action) {
+                let url = new UriBuilder().path(this.workspaceActionsServiceUrl.split('/')).path(workspace).path(project).path(action).build();
+                return $http.post(url, {})
+                    .then(function successCallback(response) {
+                        return { status: response.status, data: response.data };
+                    }, function errorCallback(response) {
+                        console.error('Workspace service:', response);
+                        return { status: response.status };
+                    });
+            }.bind(this);
 
             return {
                 setWorkspace: setWorkspace,
@@ -253,6 +265,7 @@ angular.module('ideWorkspace', [])
                 linkProject: linkProject,
                 deleteProject: deleteProject,
                 search: search,
+                executeAction: executeAction
             };
         }];
     });

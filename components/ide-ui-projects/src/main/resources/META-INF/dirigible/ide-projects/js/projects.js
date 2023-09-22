@@ -54,6 +54,11 @@ projectsView.controller('ProjectsViewController', [
             path: '',
             content: '',
         };
+        $scope.actionData = {
+            workspace: '',
+            project: '',
+            action: '',
+        };
         $scope.renameNodeData;
         $scope.duplicateProjectData = {};
         $scope.imageFileExts = ['ico', 'bmp', 'png', 'jpg', 'jpeg', 'gif', 'svg'];
@@ -483,6 +488,13 @@ projectsView.controller('ProjectsViewController', [
                             id: "exportProject",
                             label: "Export",
                             icon: "sap-icon--download-from-cloud",
+                            divider: true,
+                            data: node,
+                        });
+                        menuObj.items.push({
+                            id: "actionsProject",
+                            label: "Actions",
+                            icon: "sap-icon--media-play",
                             divider: true,
                             data: node,
                         });
@@ -1131,6 +1143,16 @@ projectsView.controller('ProjectsViewController', [
                 }
             });
         }
+        
+        function executeAction(workspace, project, name) {
+            workspaceApi.executeAction(workspace, project, name).then(function (response) {
+                if (response.status === 200) {
+                    messageHub.showAlertInfo('Execute action', `Action '${name}' executed successfully`);
+                } else {
+                    messageHub.showAlertError('Execute action', `There was an error while executing action '${name}'`);
+                }
+            });
+        }
 
         function openNewFileDialog() {
             messageHub.showFormDialog(
@@ -1636,6 +1658,17 @@ projectsView.controller('ProjectsViewController', [
             },
             true
         );
+        
+        messageHub.onDidReceiveMessage(
+            "projects.formDialog.action.execute",
+            function (msg) {
+                if (msg.data.buttonId === "b1") {
+                    executeAction($scope.actionData.workspace, $scope.actionData.project, msg.data.formData[0].value);
+                }
+                messageHub.hideFormDialog("projectsExecuteActionForm");
+            },
+            true
+        );
 
         messageHub.onDidReceiveMessage(
             "projects.formDialog.rename",
@@ -1759,6 +1792,35 @@ projectsView.controller('ProjectsViewController', [
                     $scope.exportProjects();
                 } else if (msg.data.itemId === 'exportProject') {
                     transportApi.exportProject(msg.data.data.data.workspace, msg.data.data.text);
+                } else if (msg.data.itemId === 'actionsProject') {
+                    $scope.actionData.workspace = msg.data.data.data.workspace;
+                    $scope.actionData.project = msg.data.data.text;
+                    messageHub.showFormDialog(
+                        "projectsExecuteActionForm",
+                        "Enter the action to execute",
+                        [{
+                            id: "fdti1",
+                            type: "input",
+                            submitOnEnterId: "b1",
+                            label: "Name",
+                            required: true,
+                            inputRules: '',
+                            value: '',
+                        }],
+                        [{
+                            id: "b1",
+                            type: "emphasized",
+                            label: "Execute",
+                            whenValid: true
+                        },
+                        {
+                            id: "b2",
+                            type: "transparent",
+                            label: "Cancel",
+                        }],
+                        "projects.formDialog.action.execute",
+                        "Executing..."
+                    );
                 } else if (msg.data.itemId === 'import') {
                     messageHub.showDialogWindow(
                         "import",
