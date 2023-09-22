@@ -15,6 +15,7 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.process.Piper;
 import org.eclipse.dirigible.commons.process.ProcessUtils;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
+import org.eclipse.dirigible.components.base.helpers.logging.LoggingOutputStream;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
@@ -85,8 +86,8 @@ public class WorkspaceActionsEndpoint {
 			Optional<ProjectAction> actionCommand = actions.stream().filter(a -> a.name.equals(action)).findFirst();
 			if (actionCommand.isPresent()) {
 				String workingDirectory = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectObject.getRepository(), projectObject.getPath());
-				String result = executeCommandLine(workingDirectory, actionCommand.get().command);
-				logger.info(result);
+				executeCommandLine(workingDirectory, actionCommand.get().command);
+				logger.debug("Executed project action: " + action);
 				return ResponseEntity.ok().build();
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Action not found: " + action);
@@ -152,7 +153,7 @@ public class WorkspaceActionsEndpoint {
 	 * @return the string
 	 * @throws Exception the exception
 	 */
-	public String executeCommandLine(String workingDirectory, String commandLine) throws Exception {
+	public void executeCommandLine(String workingDirectory, String commandLine) throws Exception {
 		String result;
 
 		String[] args;
@@ -163,7 +164,6 @@ public class WorkspaceActionsEndpoint {
 			throw new Exception(e);
 		}
 
-		ByteArrayOutputStream out;
 		try {
 			ProcessBuilder processBuilder = ProcessUtils.createProcess(args);
 
@@ -171,9 +171,8 @@ public class WorkspaceActionsEndpoint {
 
 			processBuilder.redirectErrorStream(true);
 
-			out = new ByteArrayOutputStream();
 			Process process = ProcessUtils.startProcess(args, processBuilder);
-			Piper pipe = new Piper(process.getInputStream(), out);
+			Piper pipe = new Piper(process.getInputStream(), new LoggingOutputStream(logger, LoggingOutputStream.LogLevel.INFO));
 			new Thread(pipe).start();
 			try {
 				int i = 0;
@@ -200,8 +199,6 @@ public class WorkspaceActionsEndpoint {
 			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
 			throw new Exception(e);
 		}
-		result = out.toString(StandardCharsets.UTF_8);
-		return result;
 	}
 	
 	/**
