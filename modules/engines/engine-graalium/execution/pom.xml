@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>dirigible-engine-graalium</artifactId>
 		<groupId>org.eclipse.dirigible</groupId>
-		<version>8.15.2</version>
+		<version>9.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>dirigible-engine-graalium-execution</artifactId>
