@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.components.ide.workspace.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,8 @@ public class ActionsService {
 		Project projectObject = workspaceService.getProject(workspace, project);
 		File fileObject = projectObject.getFile("project.json");
 		if (!fileObject.exists()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, workspace + "/" + project + "/" + "project.json does not exist");
+			// no project.json file, hence no action to be executed
+			return 0;
 		}
 		try {
 			ProjectMetadata projectJson = GsonHelper.fromJson(new String(fileObject.getContent()), ProjectMetadata.class);
@@ -94,7 +96,7 @@ public class ActionsService {
 		Project projectObject = workspaceService.getProject(workspace, project);
 		File fileObject = projectObject.getFile("project.json");
 		if (!fileObject.exists()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, workspace + "/" + project + "/" + "project.json does not exist");
+			return new ArrayList<ProjectAction>();
 		}
 		try {
 			ProjectMetadata projectJson = GsonHelper.fromJson(new String(fileObject.getContent()), ProjectMetadata.class);
