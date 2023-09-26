@@ -45,7 +45,6 @@ public class InitializationProcessor {
      * Process initializers.
      */
     void processInitializers() {
-        initializers.forEach(Initializer::initialize);
         for (var initializer : initializers) {
             try {
                 initializer.initialize();

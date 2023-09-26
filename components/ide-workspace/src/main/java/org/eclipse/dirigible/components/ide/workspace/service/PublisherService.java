@@ -124,7 +124,12 @@ public class PublisherService {
 	 */
 	private void publishResource(String sourceLocation, String targetLocation, PublisherHandler.AfterPublishMetadata afterPublishMetadata) {
 		for (PublisherHandler next : publisherHandlers) {
-			next.beforePublish(sourceLocation);
+			try {
+				next.beforePublish(sourceLocation);
+			} catch (Exception e) {
+				logger.error("{} failed on before publish.", next.getClass().getCanonicalName());
+				logger.error(e.getMessage(), e);
+			}
 		}
 		
 		ICollection sourceCollection = getRepository().getCollection(sourceLocation);
@@ -146,7 +151,12 @@ public class PublisherService {
 		}
 		
 		for (PublisherHandler next : publisherHandlers) {
-			next.afterPublish(sourceLocation, targetLocation, afterPublishMetadata);
+			try {
+				next.afterPublish(sourceLocation, targetLocation, afterPublishMetadata);
+			} catch (Exception e) {
+				logger.error("{} failed on after publish.", next.getClass().getCanonicalName());
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 	
@@ -158,7 +168,12 @@ public class PublisherService {
 	private void unpublishResource(String targetLocation) {
 		
 		for (PublisherHandler next : publisherHandlers) {
-			next.beforeUnpublish(targetLocation);
+			try {
+				next.beforeUnpublish(targetLocation);
+			} catch (Exception e) {
+				logger.error("{} failed on before unpublish.", next.getClass().getCanonicalName());
+				logger.error(e.getMessage(), e);
+			}
 		}
 		
 		ICollection targetCollection = getRepository().getCollection(targetLocation);
@@ -176,7 +191,12 @@ public class PublisherService {
 		}
 		
 		for (PublisherHandler next : publisherHandlers) {
-			next.afterUnpublish(targetLocation);
+			try {
+				next.afterUnpublish(targetLocation);
+			} catch (Exception e) {
+				logger.error("{} failed on after unpublish.", next.getClass().getCanonicalName());
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 	
