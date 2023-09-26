@@ -16,6 +16,8 @@ import org.eclipse.dirigible.components.base.initializer.Initializer;
 import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,9 @@ import java.util.function.Consumer;
  */
 @Component
 public class ProjectBuildCallback implements PublisherHandler, Initializer {
+	
+	/** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectBuildCallback.class);
 
     /** The project build service. */
     private final ProjectBuildService projectBuildService;
@@ -59,12 +64,16 @@ public class ProjectBuildCallback implements PublisherHandler, Initializer {
      */
     @Override
     public void afterPublish(String workspaceLocation, String registryLocation, AfterPublishMetadata metadata) {
-        String project = metadata.projectName();
-        if (StringUtils.isEmpty(project)) {
-            initialize();
-        } else {
-            projectBuildService.build(metadata.projectName(), metadata.entryPath());
-        }
+        try {
+			String project = metadata.projectName();
+			if (StringUtils.isEmpty(project)) {
+			    initialize();
+			} else {
+			    projectBuildService.build(metadata.projectName(), metadata.entryPath());
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
     }
 
     /**
@@ -72,7 +81,11 @@ public class ProjectBuildCallback implements PublisherHandler, Initializer {
      */
     @Override
     public void initialize() {
-        onEachRegistryProject(dir -> projectBuildService.build(dir.getName()));
+        try {
+			onEachRegistryProject(dir -> projectBuildService.build(dir.getName()));
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
     }
 
     /**

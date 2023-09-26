@@ -48,18 +48,22 @@ public class ProjectActionsPublisherHandler implements PublisherHandler {
 	 */
 	@Override
 	public void beforePublish(String location) {
-		RepositoryPath path = new RepositoryPath(location);
-		String[] segments = path.getSegments();
-		if (segments.length == 4) {
-			String workspace = path.getSegments()[2];
-			String project = path.getSegments()[3];
-			beforePublishProject(workspace, project);
-		} else if (segments.length == 3) {
-			String workspace = path.getSegments()[2];
-			List<Project> projects = workspaceService.getWorkspace(workspace).getProjects();
-			for (Project project : projects) {
-				beforePublishProject(workspace, project.getName());
+		try {
+			RepositoryPath path = new RepositoryPath(location);
+			String[] segments = path.getSegments();
+			if (segments.length == 4) {
+				String workspace = path.getSegments()[2];
+				String project = path.getSegments()[3];
+				beforePublishProject(workspace, project);
+			} else if (segments.length == 3) {
+				String workspace = path.getSegments()[2];
+				List<Project> projects = workspaceService.getWorkspace(workspace).getProjects();
+				for (Project project : projects) {
+					beforePublishProject(workspace, project.getName());
+				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -70,15 +74,19 @@ public class ProjectActionsPublisherHandler implements PublisherHandler {
 	 * @param project the project
 	 */
 	public void beforePublishProject(String workspace, String project) {
-		List<ProjectAction> actions = actionsService.listRegisteredActions(workspace, project);
-		for (ProjectAction action : actions) {
-			if (action.isPublish()) {
-				try {
-					actionsService.executeAction(workspace, project, action.getName());
-				} catch (Exception e) {
-					logger.error("Failed in executing the action: {} of project: {} under workspace: {} with: {}", action, project, workspace, e);
+		try {
+			List<ProjectAction> actions = actionsService.listRegisteredActions(workspace, project);
+			for (ProjectAction action : actions) {
+				if (action.isPublish()) {
+					try {
+						actionsService.executeAction(workspace, project, action.getName());
+					} catch (Exception e) {
+						logger.error("Failed in executing the action: {} of project: {} under workspace: {} with: {}", action, project, workspace, e);
+					}
 				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 	}
 	
