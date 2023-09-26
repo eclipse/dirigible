@@ -76,12 +76,16 @@ public class ProjectBuildService {
      * @param projectEntryPath the project entry path
      */
     public void build(String project, String projectEntryPath) {
-        ProjectJson projectJson = maybeProjectJson(project);
-        if (projectJson != null && projectJson.getBuild() != null) {
-            buildWithCommand(project, projectJson.getBuild());
-        } else {
-            maybeBuildTypeScript(project, projectEntryPath);
-        }
+        try {
+			ProjectJson projectJson = maybeProjectJson(project);
+			if (projectJson != null && projectJson.getBuild() != null) {
+			    buildWithCommand(project, projectJson.getBuild());
+			} else {
+			    maybeBuildTypeScript(project, projectEntryPath);
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
     }
 
     /**

@@ -81,25 +81,16 @@ public class ProjectBuildCallback implements PublisherHandler, Initializer {
      */
     @Override
     public void initialize() {
-        try {
-			onEachRegistryProject(dir -> projectBuildService.build(dir.getName()));
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-		}
-    }
-
-    /**
-     * On each registry project.
-     *
-     * @param callback the callback
-     */
-    private void onEachRegistryProject(Consumer<File> callback) {
-        var registryPath = registryPath();
-        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(registryPath)) {
+    	Path registryPath = registryPath();
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(registryPath)) {
             for (Path projectPath : directoryStream) {
                 File projectDir = projectPath.toFile();
                 if (projectDir.isDirectory()) {
-                    callback.accept(projectDir);
+                	try {
+						projectBuildService.build(projectDir.getName());
+					} catch (Exception e) {
+						LOGGER.error(e.getMessage());
+					}
                 }
             }
         } catch (IOException e) {
