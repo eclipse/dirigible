@@ -45,7 +45,6 @@ public class EngineCreator {
     }
 
     private static Engine.Builder getDefaultEngineBuilder() {
-        System.setProperty("polyglotimpl.DisableClassPathIsolation", "true");
         return Engine.newBuilder()
                 .allowExperimentalOptions(true)
                 .out(outputStream())

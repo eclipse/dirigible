@@ -8,4 +8,6 @@ RUN npm i -g esbuild
 RUN npm i -g typescript
 
 COPY target/*.jar dirigible.jar
-ENTRYPOINT ["java","-jar","/dirigible.jar"]
+RUN jar -xf dirigible.jar
+RUN rm -rf dirigible.jar
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
