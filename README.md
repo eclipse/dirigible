@@ -158,7 +158,7 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 - Pull the official image from Docker Hub:
 
-        docker pull dirigiblelabs/dirigible-application
+        docker pull dirigiblelabs/dirigible:latest
 
 - Build it locally
 
@@ -167,7 +167,7 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 2. Start the container
 
-        docker run -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible-application <&- &
+        docker run --name dirigible --rm -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible:latest
 
 3. Open a web browser and go to:
 
