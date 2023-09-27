@@ -163,7 +163,7 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 - Build it locally
 
         cd build/application
-        docker build -t dirigible-application -f Dockerfile .
+        docker build -t dirigiblelabs/dirigible:latest -f Dockerfile .
 
 2. Start the container
 
@@ -171,7 +171,7 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 3. Open a web browser and go to:
 
-        http://localhost:8080/
+        http://localhost:8080
 
 4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/build/application/)
 
