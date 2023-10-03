@@ -73,7 +73,7 @@
     </dependencies>
 
     <properties>
-        <camel.version>3.21.0</camel.version>
+        <camel.version>3.21.1</camel.version>
         <license.header.location>../../licensing-header.txt</license.header.location>
     </properties>
 
