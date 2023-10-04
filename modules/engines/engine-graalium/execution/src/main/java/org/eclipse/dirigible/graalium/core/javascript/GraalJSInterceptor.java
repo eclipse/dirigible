@@ -9,28 +9,18 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.graalium.core.graal.modules;
+package org.eclipse.dirigible.graalium.core.javascript;
 
 import java.nio.file.Path;
 
-/**
- * The Interface ModuleResolver.
- */
-public interface ModuleResolver {
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
 
-    /**
-     * Checks if is resolvable.
-     *
-     * @param moduleToResolve the module to resolve
-     * @return true, if is resolvable
-     */
-    boolean isResolvable(String moduleToResolve);
+public interface GraalJSInterceptor {
 
-    /**
-     * Resolve.
-     *
-     * @param moduleToResolve the module to resolve
-     * @return the path
-     */
-    Path resolve(String moduleToResolve);
+	void onBeforeRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context);
+	
+	void onAfterRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context, Value value);
+
 }

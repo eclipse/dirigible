@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.graalium.core.graal.modules.java;
+package org.eclipse.dirigible.graalium.core.javascript.modules.java;
 
-import org.eclipse.dirigible.graalium.core.graal.modules.ModuleResolver;
+import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleResolver;
 
 import java.io.File;
 import java.io.IOException;

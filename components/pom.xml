@@ -40,6 +40,8 @@
 
 		<!-- Engines -->
 		<module>engine-javascript</module>
+		<module>engine-typescript</module>
+		<module>engine-python</module>
 		<module>engine-web</module>
 		<module>engine-template</module>
 		<module>engine-template-velocity</module>
@@ -221,7 +223,7 @@
 		<!-- Test -->
 		<module>test-project</module>
         <module>core-spring</module>
-        <module>engine-typescript</module>
+        <module>api-modules-python</module>
     </modules>
 
 	<dependencies>

@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
-import org.eclipse.dirigible.graalium.core.graal.modules.ModuleResolver;
+import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleResolver;
 
 /**
  * The Class DirigibleModuleResolver.

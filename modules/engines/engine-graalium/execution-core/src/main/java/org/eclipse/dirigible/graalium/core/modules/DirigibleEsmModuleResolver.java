@@ -13,7 +13,7 @@ package org.eclipse.dirigible.graalium.core.modules;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
-import org.eclipse.dirigible.graalium.core.graal.modules.ModuleResolver;
+import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleResolver;
 
 import java.nio.file.Path;
 import java.util.regex.Matcher;

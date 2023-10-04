@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.graalium.core.polyfills;
 
-import org.eclipse.dirigible.graalium.core.graal.polyfills.JavascriptPolyfill;
+import org.eclipse.dirigible.graalium.core.javascript.polyfills.JavascriptPolyfill;
 
 /**
  * The Class RequirePolyfill.

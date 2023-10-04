@@ -14,7 +14,7 @@ package org.eclipse.dirigible.graalium.core.graal.globals;
 /**
  * The Interface JSGlobalObject.
  */
-public interface JSGlobalObject {
+public interface GlobalObject {
     
     /**
      * Gets the name.

@@ -9,27 +9,28 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.graalium.core.javascript;
+package org.eclipse.dirigible.graalium.core.javascript.modules;
 
 import java.nio.file.Path;
 
-import org.eclipse.dirigible.graalium.core.CodeRunner;
-import org.graalvm.polyglot.Source;
-
 /**
- * The Interface JavascriptCodeRunner.
- *
- * @param <TSource> the generic type
- * @param <TResult> the generic type
+ * The Interface ModuleResolver.
  */
-public interface JavascriptCodeRunner<TSource, TResult> extends CodeRunner<TSource, TResult> {
+public interface ModuleResolver {
 
-	/**
-	 * Prepare the source.
-	 *
-	 * @param codeFilePath the code file path
-	 * @return the source
-	 */
-	Source prepareSource(Path codeFilePath);
+    /**
+     * Checks if is resolvable.
+     *
+     * @param moduleToResolve the module to resolve
+     * @return true, if is resolvable
+     */
+    boolean isResolvable(String moduleToResolve);
 
+    /**
+     * Resolve.
+     *
+     * @param moduleToResolve the module to resolve
+     * @return the path
+     */
+    Path resolve(String moduleToResolve);
 }

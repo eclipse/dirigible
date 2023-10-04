@@ -9,18 +9,10 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.graalium.core.graal;
-
-import java.nio.file.Path;
-
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Source;
-import org.graalvm.polyglot.Value;
-
-public interface GraalJSInterceptor {
-
-	void onBeforeRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context);
-	
-	void onAfterRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context, Value value);
-
-}
+exports.getTemplate = () => ({
+    "name": "python",
+    "label": "Python Service",
+    "extension": "py",
+    "data": 'from dirigible.http import response\n\nresponse.println("Hello World!");',
+    "order": 1
+});
