@@ -134,7 +134,13 @@ public class PythonEndpoint extends BaseEndpoint {
     ) {
         String projectFilePathParam = extractPathParam(projectFilePath);
         projectFilePath = extractProjectFilePath(projectFilePath);
-        return executePython(projectName, projectFilePath, projectFilePathParam, params, files);
+        return executePython(
+                projectName,
+                projectFilePath,
+                projectFilePathParam,
+                params,
+                files
+        );
     }
 
     protected ResponseEntity<?> executePython(
@@ -152,7 +158,8 @@ public class PythonEndpoint extends BaseEndpoint {
             Object result = handleRequest(
                     projectName,
                     normalizePath(projectFilePath),
-                    normalizePath(projectFilePathParam)
+                    normalizePath(projectFilePathParam),
+                    params.get("debug") != null
             );
             return ResponseEntity.ok(result);
         } catch (RepositoryNotFoundException e) {
@@ -164,14 +171,15 @@ public class PythonEndpoint extends BaseEndpoint {
     private Object handleRequest(
             String projectName,
             String projectFilePath,
-            String projectFilePathParam
+            String projectFilePathParam,
+            boolean debug
     ) {
         Path absoluteSourcePath = getAbsolutePathIfValidProjectFile(projectName, projectFilePath);
         Path workingDir = getDirigibleWorkingDirectory();
         Path projectDir = workingDir.resolve(projectName);
         Path pythonMods = getDirigiblePythonModulesDirectory();
 
-        try (var runner = new GraalPyCodeRunner(workingDir, projectDir, pythonMods)) {
+        try (var runner = new GraalPyCodeRunner(workingDir, projectDir, pythonMods, debug)) {
             Source source = runner.prepareSource(absoluteSourcePath);
             Value value = runner.run(source);
             return transformValue(value);

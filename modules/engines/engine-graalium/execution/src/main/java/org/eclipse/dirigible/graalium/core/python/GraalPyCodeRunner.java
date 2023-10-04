@@ -18,9 +18,10 @@ public class GraalPyCodeRunner implements CodeRunner<Source, Value> {
     public GraalPyCodeRunner(
             Path workingDirectoryPath,
             Path projectDirectoryPath,
-            Path pythonModulesPath
+            Path pythonModulesPath,
+            boolean debug
     ) {
-        var engine = EngineCreator.getOrCreateEngine();
+        var engine = debug ? EngineCreator.getOrCreateDebuggableEngine() : EngineCreator.getOrCreateEngine();
         var fs = new GraalPyFileSystem(workingDirectoryPath, FileSystems.getDefault());
         context = new ContextCreator(engine, workingDirectoryPath, projectDirectoryPath, pythonModulesPath, fs).createContext();
     }
