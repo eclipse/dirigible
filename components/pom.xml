@@ -142,7 +142,7 @@
 		<module>ide-ui-workspace-service</module>
 		
 		<!-- API -->
-		<module>api-modules</module>
+		<module>api-modules-javascript</module>
 		<module>api-core</module>
 		<module>api-test</module>
 		<module>api-qunit</module>

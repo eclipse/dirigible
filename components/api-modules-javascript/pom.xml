@@ -9,7 +9,7 @@
     </parent>
 
     <name>Components - API - Modules</name>
-    <artifactId>dirigible-components-api-modules</artifactId>
+    <artifactId>dirigible-components-api-modules-javascript</artifactId>
     <packaging>jar</packaging>
 
     <build>

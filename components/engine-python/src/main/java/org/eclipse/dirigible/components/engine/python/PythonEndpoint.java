@@ -47,11 +47,6 @@ public class PythonEndpoint extends BaseEndpoint {
         this.repository = repository;
     }
 
-    @GetMapping("/test")
-    public Object test() {
-        return "test";
-    }
-
     @GetMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> get(
             @PathVariable("projectName") String projectName,
