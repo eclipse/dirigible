@@ -40,6 +40,8 @@
 
 		<!-- Engines -->
 		<module>engine-javascript</module>
+		<module>engine-typescript</module>
+		<module>engine-python</module>
 		<module>engine-web</module>
 		<module>engine-template</module>
 		<module>engine-template-velocity</module>
@@ -140,7 +142,7 @@
 		<module>ide-ui-workspace-service</module>
 		
 		<!-- API -->
-		<module>api-modules</module>
+		<module>api-modules-javascript</module>
 		<module>api-core</module>
 		<module>api-test</module>
 		<module>api-qunit</module>
@@ -221,7 +223,7 @@
 		<!-- Test -->
 		<module>test-project</module>
         <module>core-spring</module>
-        <module>engine-typescript</module>
+        <module>api-modules-python</module>
     </modules>
 
 	<dependencies>

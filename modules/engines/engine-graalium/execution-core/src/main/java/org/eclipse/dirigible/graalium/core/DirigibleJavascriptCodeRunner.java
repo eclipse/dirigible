@@ -20,11 +20,9 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleContextGlobalObject;
 import org.eclipse.dirigible.graalium.core.globals.DirigibleEngineTypeGlobalObject;
-import org.eclipse.dirigible.graalium.core.graal.GraalJSInterceptor;
-import org.eclipse.dirigible.graalium.core.graal.modules.java.JavaModuleResolver;
-import org.eclipse.dirigible.graalium.core.graal.modules.java.JavaPackageProxyGenerator;
+import org.eclipse.dirigible.graalium.core.javascript.GraalJSInterceptor;
+import org.eclipse.dirigible.graalium.core.javascript.modules.java.JavaModuleResolver;
 import org.eclipse.dirigible.graalium.core.javascript.GraalJSCodeRunner;
-import org.eclipse.dirigible.graalium.core.javascript.JavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleEsmModuleResolver;
 import org.eclipse.dirigible.graalium.core.modules.DirigibleModuleResolver;
 import org.eclipse.dirigible.graalium.core.polyfills.RequirePolyfill;
@@ -37,7 +35,7 @@ import org.graalvm.polyglot.Value;
 /**
  * The Class DirigibleJavascriptCodeRunner.
  */
-public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Source, Value> {
+public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> {
 
     /** The code runner. */
     private final GraalJSCodeRunner codeRunner;

@@ -20,6 +20,14 @@ import java.nio.file.Path;
  * @param <TResult> the generic type
  */
 public interface CodeRunner<TSource, TResult> extends AutoCloseable {
+
+    /**
+     * Prepare the source.
+     *
+     * @param codeFilePath the code file path
+     * @return the source
+     */
+    TSource prepareSource(Path codeFilePath);
 	
     /**
      * Run.

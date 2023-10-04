@@ -115,7 +115,9 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
                 || filePath.endsWith(".json")
                 || filePath.endsWith(".mjs")
                 || filePath.endsWith(".xsjs")
-                || filePath.endsWith(".ts")) {
+                || filePath.endsWith(".ts")
+                || filePath.endsWith(".py")
+        ) {
             return filePath;
         }
 

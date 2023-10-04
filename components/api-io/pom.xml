@@ -38,7 +38,7 @@
 		<!-- JS sources -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-api-modules</artifactId>
+			<artifactId>dirigible-components-api-modules-javascript</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 
