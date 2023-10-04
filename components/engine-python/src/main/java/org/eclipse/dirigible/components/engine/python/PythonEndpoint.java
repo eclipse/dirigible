@@ -47,6 +47,14 @@ public class PythonEndpoint extends BaseEndpoint {
         this.repository = repository;
     }
 
+<<<<<<< HEAD
+=======
+    @GetMapping("/test")
+    public Object test() {
+        return "test";
+    }
+
+>>>>>>> 47ad2a6b2d (feat: initial python support)
     @GetMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> get(
             @PathVariable("projectName") String projectName,
@@ -134,6 +142,7 @@ public class PythonEndpoint extends BaseEndpoint {
     ) {
         String projectFilePathParam = extractPathParam(projectFilePath);
         projectFilePath = extractProjectFilePath(projectFilePath);
+<<<<<<< HEAD
         return executePython(
                 projectName,
                 projectFilePath,
@@ -141,6 +150,9 @@ public class PythonEndpoint extends BaseEndpoint {
                 params,
                 files
         );
+=======
+        return executePython(projectName, projectFilePath, projectFilePathParam, params, files);
+>>>>>>> 47ad2a6b2d (feat: initial python support)
     }
 
     protected ResponseEntity<?> executePython(
@@ -158,8 +170,12 @@ public class PythonEndpoint extends BaseEndpoint {
             Object result = handleRequest(
                     projectName,
                     normalizePath(projectFilePath),
+<<<<<<< HEAD
                     normalizePath(projectFilePathParam),
                     params.get("debug") != null
+=======
+                    normalizePath(projectFilePathParam)
+>>>>>>> 47ad2a6b2d (feat: initial python support)
             );
             return ResponseEntity.ok(result);
         } catch (RepositoryNotFoundException e) {
@@ -171,15 +187,23 @@ public class PythonEndpoint extends BaseEndpoint {
     private Object handleRequest(
             String projectName,
             String projectFilePath,
+<<<<<<< HEAD
             String projectFilePathParam,
             boolean debug
+=======
+            String projectFilePathParam
+>>>>>>> 47ad2a6b2d (feat: initial python support)
     ) {
         Path absoluteSourcePath = getAbsolutePathIfValidProjectFile(projectName, projectFilePath);
         Path workingDir = getDirigibleWorkingDirectory();
         Path projectDir = workingDir.resolve(projectName);
         Path pythonMods = getDirigiblePythonModulesDirectory();
 
+<<<<<<< HEAD
         try (var runner = new GraalPyCodeRunner(workingDir, projectDir, pythonMods, debug)) {
+=======
+        try (var runner = new GraalPyCodeRunner(workingDir, projectDir, pythonMods)) {
+>>>>>>> 47ad2a6b2d (feat: initial python support)
             Source source = runner.prepareSource(absoluteSourcePath);
             Value value = runner.run(source);
             return transformValue(value);
@@ -202,8 +226,13 @@ public class PythonEndpoint extends BaseEndpoint {
         String normalizedInputPath = Path.of(inputPath).normalize().toString();
         File file = new File(registryPath, normalizedInputPath);
         try {
+<<<<<<< HEAD
             return !file.toPath().normalize().startsWith(registryPath);
         } catch (Exception e) {
+=======
+            return !file.getCanonicalPath().startsWith(registryPath);
+        } catch (IOException e) {
+>>>>>>> 47ad2a6b2d (feat: initial python support)
             return true;
         }
     }
