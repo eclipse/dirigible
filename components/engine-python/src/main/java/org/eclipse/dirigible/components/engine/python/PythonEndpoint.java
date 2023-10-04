@@ -202,8 +202,8 @@ public class PythonEndpoint extends BaseEndpoint {
         String normalizedInputPath = Path.of(inputPath).normalize().toString();
         File file = new File(registryPath, normalizedInputPath);
         try {
-            return !file.getCanonicalPath().startsWith(registryPath);
-        } catch (IOException e) {
+            return !file.toPath().normalize().startsWith(registryPath);
+        } catch (Exception e) {
             return true;
         }
     }
