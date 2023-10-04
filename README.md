@@ -64,8 +64,8 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 - [Git](http://git-scm.com/)
 - [Java JDK 11+](https://adoptopenjdk.net/)
 - [Maven 3.5.x](http://maven.apache.org/docs/3.5.3/release-notes.html)
-- [esbuild](https://esbuild.github.io/getting-started/#install-esbuild)
-- [tsc](https://www.npmjs.com/package/typescript)
+- [esbuild](https://esbuild.github.io/getting-started/#install-esbuild)  - `npm i -g esbuild`
+- [tsc](https://www.npmjs.com/package/typescript) - `npm i -g typescript`
 
 
 ##### Steps
