@@ -43,11 +43,14 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-modules-javascript</artifactId>
+<<<<<<< Upstream, based on f530b92c25bd5140f1917d1397dc6fd7ea035287
 			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-modules-python</artifactId>
+=======
+>>>>>>> 8eba9ca chore: rename api-modules to api-modules-javascript
 			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
