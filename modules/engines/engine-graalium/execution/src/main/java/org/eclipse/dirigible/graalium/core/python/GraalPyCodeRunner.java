@@ -18,12 +18,16 @@ public class GraalPyCodeRunner implements CodeRunner<Source, Value> {
     public GraalPyCodeRunner(
             Path workingDirectoryPath,
             Path projectDirectoryPath,
+<<<<<<< HEAD
 <<<<<<< Upstream, based on f530b92c25bd5140f1917d1397dc6fd7ea035287
 <<<<<<< HEAD
+=======
+>>>>>>> 943f21dcc743d4917a07a779fbb85d19b8d6986f
             Path pythonModulesPath,
             boolean debug
     ) {
         var engine = debug ? EngineCreator.getOrCreateDebuggableEngine() : EngineCreator.getOrCreateEngine();
+<<<<<<< HEAD
 =======
             Path pythonModulesPath
 =======
@@ -37,6 +41,8 @@ public class GraalPyCodeRunner implements CodeRunner<Source, Value> {
 =======
         var engine = debug ? EngineCreator.getOrCreateDebuggableEngine() : EngineCreator.getOrCreateEngine();
 >>>>>>> c30d33d feat: enable python debugging
+=======
+>>>>>>> 943f21dcc743d4917a07a779fbb85d19b8d6986f
         var fs = new GraalPyFileSystem(workingDirectoryPath, FileSystems.getDefault());
         context = new ContextCreator(engine, workingDirectoryPath, projectDirectoryPath, pythonModulesPath, fs).createContext();
     }
