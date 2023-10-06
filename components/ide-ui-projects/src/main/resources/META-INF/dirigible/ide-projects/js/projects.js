@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let projectsView = angular.module('projects', ['ideUI', 'ideView', 'ideEditors', 'ideWorkspace', 'idePublisher', 'ideTemplates', 'ideGenerate', 'ideTransport']);
+let projectsView = angular.module('projects', ['ideUI', 'ideView', 'ideEditors', 'ideWorkspace', 'idePublisher', 'ideTemplates', 'ideGenerate', 'ideTransport', 'ideActions']);
 
 projectsView.controller('ProjectsViewController', [
     '$scope',
@@ -20,6 +20,7 @@ projectsView.controller('ProjectsViewController', [
     'templatesApi',
     'generateApi',
     'transportApi',
+    'actionsApi',
     function (
         $scope,
         messageHub,
@@ -29,6 +30,7 @@ projectsView.controller('ProjectsViewController', [
         templatesApi,
         generateApi,
         transportApi,
+        actionsApi,
     ) {
         $scope.state = {
             isBusy: true,
@@ -511,13 +513,15 @@ projectsView.controller('ProjectsViewController', [
                             divider: true,
                             data: node,
                         });
-                        menuObj.items.push({
-                            id: "actionsProject",
-                            label: "Actions",
-                            icon: "sap-icon--media-play",
-                            divider: true,
-                            data: node,
-                        });
+                        if (actionsApi.isEnabled()) {
+	                        menuObj.items.push({
+	                            id: "actionsProject",
+	                            label: "Actions",
+	                            icon: "sap-icon--media-play",
+	                            divider: true,
+	                            data: node,
+	                        });
+                        }
                         return menuObj;
                     } else if (node.type === "folder") {
 						let items = [
@@ -1173,7 +1177,7 @@ projectsView.controller('ProjectsViewController', [
         }
         
         function executeAction(workspace, project, name) {
-            workspaceApi.executeAction(workspace, project, name).then(function (response) {
+            actionsApi.executeAction(workspace, project, name).then(function (response) {
                 if (response.status === 200) {
                     messageHub.showAlertInfo('Execute action', `Action '${name}' executed successfully`);
                 } else {

@@ -74,6 +74,7 @@
 		
 		<!-- IDE UI -->
 		<module>ide-ui-about</module>
+		<module>ide-ui-actions-service</module>
 		<module>ide-ui-bpm</module>
 		<module>ide-ui-bpm-menu</module>
 		<module>ide-ui-bpm-workspace</module>
