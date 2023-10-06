@@ -1,16 +1,15 @@
 package org.eclipse.dirigible.graalium.core.python;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+
 import org.eclipse.dirigible.graalium.core.CodeRunner;
 import org.eclipse.dirigible.graalium.core.graal.ContextCreator;
 import org.eclipse.dirigible.graalium.core.graal.EngineCreator;
-import org.graalvm.polyglot.*;
-
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
 
 public class GraalPyCodeRunner implements CodeRunner<Source, Value> {
     private final Context context;

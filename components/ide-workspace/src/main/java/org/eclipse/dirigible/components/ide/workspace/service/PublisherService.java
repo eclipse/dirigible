@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.ide.workspace.service;
 
 import java.util.*;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -31,6 +32,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PublisherService {
 	
+	public static final String DIRIGIBLE_PUBLISH_DISABLED = "DIRIGIBLE_PUBLISH_DISABLED";
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PublisherService.class);
 	
@@ -86,6 +89,9 @@ public class PublisherService {
 	 * @param path the path
 	 */
 	public void publish(String user, String workspace, String project, String path) {
+		if (Boolean.parseBoolean(Configuration.get(DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
+			return;
+		}
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
 		if ("*".equals(project)) {
 			project = "";
@@ -111,6 +117,9 @@ public class PublisherService {
 	 * @param path the path
 	 */
 	public void unpublish(String path) {
+		if (Boolean.parseBoolean(Configuration.get(DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
+			return;
+		}
 		String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path).toString();
 		unpublishResource(targetLocation);
 	}
