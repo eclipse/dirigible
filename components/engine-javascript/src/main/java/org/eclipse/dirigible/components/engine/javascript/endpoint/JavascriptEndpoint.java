@@ -91,10 +91,15 @@ public class JavascriptEndpoint extends BaseEndpoint {
 				.getAbsoluteProjectPath("modules")
 				.resolve("dist")
 				.resolve("dts");
-
-		try (var dtsTree = Files.walk(dtsRoot)) {
-			List<Dts> allDtsFilesContent = dtsTree.filter(Files::isRegularFile).map(dts -> Dts.fromDtsPath(dtsRoot, dts)).toList();
-			return allDtsFilesContent;
+		
+		if (dtsRoot.toFile().exists()) {
+			try (var dtsTree = Files.walk(dtsRoot)) {
+				List<Dts> allDtsFilesContent = dtsTree.filter(Files::isRegularFile).map(dts -> Dts.fromDtsPath(dtsRoot, dts)).toList();
+				return allDtsFilesContent;
+			}
+		} else {
+			logger.warn("DTS files not avalilable or still not loaded");
+			return new ArrayList<Dts>();
 		}
 	}
 
