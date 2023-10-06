@@ -47,10 +47,15 @@ angular.module('idePublisher', [])
                     return { status: response.status };
                 });
             }.bind(this);
+            
+            let isEnabled = function() {
+				return true;
+			}.bind(this);
 
             return {
                 publish: publish,
                 unpublish: unpublish,
+                isEnabled: isEnabled
             };
         }];
     });

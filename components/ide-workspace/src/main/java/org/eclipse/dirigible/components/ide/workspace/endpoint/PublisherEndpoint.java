@@ -15,6 +15,7 @@ import static java.text.MessageFormat.format;
 
 import java.net.URISyntaxException;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.ide.workspace.service.PublisherService;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
@@ -64,6 +65,10 @@ public class PublisherEndpoint {
 			@PathVariable("project") String project,
 			@PathVariable("path") String path
 	) throws URISyntaxException {
+		
+		if (Boolean.parseBoolean(Configuration.get(PublisherService.DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
+			return ResponseEntity.ok().build();
+		}
 
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
@@ -87,6 +92,10 @@ public class PublisherEndpoint {
 	public ResponseEntity<?> unpublish(@PathVariable("workspace") String workspace,
 			@PathVariable("path") String path)
 			throws URISyntaxException {
+		
+		if (Boolean.parseBoolean(Configuration.get(PublisherService.DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
+			return ResponseEntity.ok().build();
+		}
 
 		if (!workspaceService.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);

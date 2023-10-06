@@ -332,28 +332,38 @@ projectsView.controller('ProjectsViewController', [
                 let id;
                 if (element.tagName !== "LI") {
                     let closest = element.closest("li");
-                    if (closest) id = closest.id;
-                    else return {
-                        callbackTopic: "projects.tree.contextmenu",
-                        items: [{
-                            id: "newProject",
-                            label: "New Project",
-                            icon: "sap-icon--create",
-                        }, {
-                            id: "publishAll",
-                            label: "Publish All",
-                            icon: "sap-icon--arrow-top",
-                            divider: true,
-                        }, {
-                            id: "unpublishAll",
-                            label: "Unpublish All",
-                            icon: "sap-icon--arrow-bottom",
-                        }, {
-                            id: "exportProjects",
-                            label: "Export all",
-                            icon: "sap-icon--download-from-cloud",
-                            divider: true,
-                        }]
+                    if (closest) {
+						id = closest.id;
+					} else {
+						let items = [];
+						items.push({
+	                            id: "newProject",
+	                            label: "New Project",
+	                            icon: "sap-icon--create",
+	                        });
+	                    if (publisherApi.isEnabled()) {
+		                    items.push({
+		                            id: "publishAll",
+		                            label: "Publish All",
+		                            icon: "sap-icon--arrow-top",
+		                            divider: true,
+		                        });
+		                    items.push({
+		                            id: "unpublishAll",
+		                            label: "Unpublish All",
+		                            icon: "sap-icon--arrow-bottom",
+		                        });
+	                    }
+	                    items.push({
+	                            id: "exportProjects",
+	                            label: "Export all",
+	                            icon: "sap-icon--download-from-cloud",
+	                            divider: true,
+	                        });
+						return {
+	                        callbackTopic: "projects.tree.contextmenu",
+	                        items: items
+	                    }
                     }
                 } else {
                     id = element.id;
@@ -426,19 +436,23 @@ projectsView.controller('ProjectsViewController', [
                         icon: "sap-icon--delete",
                         data: (nodes.length) ? nodes : node,
                     };
-                    let publishObj = {
-                        id: "publish",
-                        label: "Publish",
-                        divider: true,
-                        icon: "sap-icon--arrow-top",
-                        data: `/${node.data.workspace}${node.data.path}`,
-                    };
-                    let unpublishObj = {
-                        id: "unpublish",
-                        label: "Unpublish",
-                        icon: "sap-icon--arrow-bottom",
-                        data: `/${node.data.workspace}${node.data.path}`,
-                    };
+                    let publishObj;
+                    let unpublishObj;
+                    if (publisherApi.isEnabled()) {
+	                    publishObj = {
+	                        id: "publish",
+	                        label: "Publish",
+	                        divider: true,
+	                        icon: "sap-icon--arrow-top",
+	                        data: `/${node.data.workspace}${node.data.path}`,
+	                    };
+	                    unpublishObj = {
+	                        id: "unpublish",
+	                        label: "Unpublish",
+	                        icon: "sap-icon--arrow-bottom",
+	                        data: `/${node.data.workspace}${node.data.path}`,
+	                    };
+                    }
                     let generateObj;
                     if (generateApi.isEnabled()) {
 	                    generateObj = {
@@ -463,9 +477,7 @@ projectsView.controller('ProjectsViewController', [
                         data: node,
                     };
                     if (node.type === 'project') {
-                        let menuObj = {
-                            callbackTopic: 'projects.tree.contextmenu',
-                            items: [
+						let items = [
                                 newSubmenu,
                                 {
                                     id: "duplicateProject",
@@ -477,9 +489,14 @@ projectsView.controller('ProjectsViewController', [
                                 pasteObj,
                                 renameObj,
                                 deleteObj,
-                                publishObj,
-                                unpublishObj,
                             ]
+						if (publisherApi.isEnabled()) {
+							items.push(publishObj);
+							items.push(unpublishObj);
+						}
+                        let menuObj = {
+                            callbackTopic: 'projects.tree.contextmenu',
+                            items: items
                         };
                         if ($scope.menuTemplates.length && generateApi.isEnabled()) {
                             menuObj.items.push(generateObj);
@@ -503,28 +520,29 @@ projectsView.controller('ProjectsViewController', [
                         });
                         return menuObj;
                     } else if (node.type === "folder") {
-                        let menuObj = {
-                            callbackTopic: "projects.tree.contextmenu",
-                            items: [
+						let items = [
                                 newSubmenu,
                                 cutObj,
                                 copyObj,
                                 pasteObj,
                                 renameObj,
                                 deleteObj,
-                                publishObj,
-                                unpublishObj,
                                 generateObj,
                                 importObj,
                                 importZipObj,
                             ]
+						if (publisherApi.isEnabled()) {
+							items.push(publishObj);
+							items.push(unpublishObj);
+						}
+                        let menuObj = {
+                            callbackTopic: "projects.tree.contextmenu",
+                            items: items
                         };
                         setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path);
                         return menuObj;
                     } else if (node.type === "file") {
-                        let menuObj = {
-                            callbackTopic: "projects.tree.contextmenu",
-                            items: [
+						let items = [
                                 {
                                     id: "open",
                                     label: "Open",
@@ -541,9 +559,14 @@ projectsView.controller('ProjectsViewController', [
                                 copyObj,
                                 renameObj,
                                 deleteObj,
-                                publishObj,
-                                unpublishObj,
                             ]
+						if (publisherApi.isEnabled()) {
+							items.push(publishObj);
+							items.push(unpublishObj);
+						}
+                        let menuObj = {
+                            callbackTopic: "projects.tree.contextmenu",
+                            items: items
                         };
                         if (generateApi.isEnabled()) {
 	                        const fileExt = getFileExtension(node.text);
