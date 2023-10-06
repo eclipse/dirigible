@@ -439,13 +439,16 @@ projectsView.controller('ProjectsViewController', [
                         icon: "sap-icon--arrow-bottom",
                         data: `/${node.data.workspace}${node.data.path}`,
                     };
-                    let generateObj = {
-                        id: "generateGeneric",
-                        label: "Generate",
-                        icon: "sap-icon-TNT--operations",
-                        divider: true,
-                        data: node,
-                    };
+                    let generateObj;
+                    if (generateApi.isEnabled()) {
+	                    generateObj = {
+	                        id: "generateGeneric",
+	                        label: "Generate",
+	                        icon: "sap-icon-TNT--operations",
+	                        divider: true,
+	                        data: node,
+	                    };
+                    }
                     let importObj = {
                         id: "import",
                         label: "Import",
@@ -478,7 +481,7 @@ projectsView.controller('ProjectsViewController', [
                                 unpublishObj,
                             ]
                         };
-                        if ($scope.menuTemplates.length) {
+                        if ($scope.menuTemplates.length && generateApi.isEnabled()) {
                             menuObj.items.push(generateObj);
                             setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path);
                         }
@@ -542,40 +545,42 @@ projectsView.controller('ProjectsViewController', [
                                 unpublishObj,
                             ]
                         };
-                        const fileExt = getFileExtension(node.text);
-                        if (fileExt === 'gen') {
-                            let regenObj = {
-                                id: "regenerateModel",
-                                label: "Regenerate",
-                                icon: "sap-icon--refresh",
-                                divider: true,
-                                data: undefined,
-                                isDisabled: false,
-                            };
-                            if (node.parents.length > 2) {
-                                regenObj.isDisabled = true;
-                            } else {
-                                regenObj.data = node;
-                            }
-                            menuObj.items.push(regenObj);
+                        if (generateApi.isEnabled()) {
+	                        const fileExt = getFileExtension(node.text);
+	                        if (fileExt === 'gen') {
+	                            let regenObj = {
+	                                id: "regenerateModel",
+	                                label: "Regenerate",
+	                                icon: "sap-icon--refresh",
+	                                divider: true,
+	                                data: undefined,
+	                                isDisabled: false,
+	                            };
+	                            if (node.parents.length > 2) {
+	                                regenObj.isDisabled = true;
+	                            } else {
+	                                regenObj.data = node;
+	                            }
+	                            menuObj.items.push(regenObj);
+	                        }
+	                        else if ($scope.modelTemplates.length && $scope.modelTemplateExtensions.includes(fileExt)) {
+	                            let genObj = {
+	                                id: "generateModel",
+	                                label: "Generate",
+	                                icon: "sap-icon-TNT--operations",
+	                                divider: true,
+	                                data: undefined,
+	                                isDisabled: false,
+	                            };
+	                            if (node.parents.length > 2) {
+	                                genObj.isDisabled = true;
+	                            } else {
+	                                genObj.data = node;
+	                            }
+	                            menuObj.items.push(genObj);
+	                        }
+	                        return menuObj;
                         }
-                        else if ($scope.modelTemplates.length && $scope.modelTemplateExtensions.includes(fileExt)) {
-                            let genObj = {
-                                id: "generateModel",
-                                label: "Generate",
-                                icon: "sap-icon-TNT--operations",
-                                divider: true,
-                                data: undefined,
-                                isDisabled: false,
-                            };
-                            if (node.parents.length > 2) {
-                                genObj.isDisabled = true;
-                            } else {
-                                genObj.data = node;
-                            }
-                            menuObj.items.push(genObj);
-                        }
-                        return menuObj;
                     }
                 }
                 return;
