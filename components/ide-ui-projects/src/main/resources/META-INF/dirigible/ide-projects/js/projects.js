@@ -763,6 +763,10 @@ projectsView.controller('ProjectsViewController', [
                 $scope.reloadWorkspace();
             }
         };
+        
+        $scope.isPublishEnabled = function () {
+            return publisherApi.isEnabled();
+        };
 
         $scope.saveAll = function () {
             messageHub.triggerEvent('editor.file.save.all', true);
