@@ -18,6 +18,13 @@ let perspectives = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-perspective';
 let perspectiveExtensions = extensions.getExtensions(extensionPoint);
 
+function setETag() {
+	let maxAge = 30 * 24 * 60 * 60;
+	let etag = uuid.random();
+	response.setHeader("ETag", etag);
+	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
+}
+
 for (let i = 0; i < perspectiveExtensions.length; i++) {
 	let module = perspectiveExtensions[i];
 	try {
@@ -55,10 +62,3 @@ perspectives.sort(function (p, n) {
 response.setContentType("application/json");
 setETag();
 response.println(JSON.stringify(perspectives));
-
-function setETag() {
-	let maxAge = 30 * 24 * 60 * 60;
-	let etag = uuid.random();
-	response.setHeader("ETag", etag);
-	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
-}
