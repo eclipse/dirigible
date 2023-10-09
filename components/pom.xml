@@ -37,6 +37,7 @@
 		<module>data-csvim</module>
 		<module>data-export</module>
 		<module>data-import</module>
+		<module>data-anonymize</module>
 
 		<!-- Engines -->
 		<module>engine-javascript</module>

@@ -295,6 +295,37 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         let url = "/services/data/project/topology/" + $scope.datasource + "/" + schema;
         window.open(url);
     }, true);
+    
+    messageHub.onDidReceiveMessage("database.data.anonymize.columns", function (command) {
+        debugger
+        let url = "/services/data/anonymize/";
+        $http({
+                method: 'POST',
+                url: url,
+                data: command.data,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'Fetch',
+                    'X-CSRF-Token': csrfToken
+                }
+            }).then(function (result) {
+                cleanScope();
+                if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                    $scope.state.error = true;
+                    $scope.errorMessage = result.data.errorMessage;
+                } else {
+                    $scope.result = 'Data anonymized.';
+                }
+                $scope.state.isBusy = false;
+            }, function (result) {
+                
+                $scope.state.error = true;
+                $scope.errorMessage = result.data.errorMessage;
+                
+                $scope.state.isBusy = false;
+            });
+        
+    }, true);
 
     function cleanScope() {
         $scope.result = null;

@@ -473,11 +473,127 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						}.bind(this)
 					};
 				}
+				
+				// Column related actions
+				if (node.original.kind === 'column') {
+					ctxmenu.anonymizeFullName = {
+						"separator_before": false,
+						"label": "Anonymize Full Name",
+						"action": function (data) {
+							anonymizeMenu(node, data, "FULL_NAME");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeFirstName = {
+						"separator_before": false,
+						"label": "Anonymize First Name",
+						"action": function (data) {
+							anonymizeMenu(node, data, "FIRST_NAME");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeLastName = {
+						"separator_before": false,
+						"label": "Anonymize Last Name",
+						"action": function (data) {
+							anonymizeMenu(node, data, "LAST_NAME");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeUserName = {
+						"separator_before": false,
+						"label": "Anonymize User Name",
+						"action": function (data) {
+							anonymizeMenu(node, data, "USER_NAME");
+						}.bind(this)
+					};
+					ctxmenu.anonymizePhone = {
+						"separator_before": false,
+						"label": "Anonymize Phone",
+						"action": function (data) {
+							anonymizeMenu(node, data, "PHONE");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeEmail = {
+						"separator_before": false,
+						"label": "Anonymize e-mail",
+						"action": function (data) {
+							anonymizeMenu(node, data, "EMAIL");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeAddress = {
+						"separator_before": false,
+						"label": "Anonymize Address",
+						"action": function (data) {
+							anonymizeMenu(node, data, "ADDRESS");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeCity = {
+						"separator_before": false,
+						"label": "Anonymize City",
+						"action": function (data) {
+							anonymizeMenu(node, data, "CITY");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeCountry = {
+						"separator_before": false,
+						"label": "Anonymize Country",
+						"action": function (data) {
+							anonymizeMenu(node, data, "COUNTRY");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeCountry = {
+						"separator_before": false,
+						"label": "Anonymize Country",
+						"action": function (data) {
+							anonymizeMenu(node, data, "COUNTRY");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeDate = {
+						"separator_before": false,
+						"label": "Anonymize Date",
+						"action": function (data) {
+							anonymizeMenu(node, data, "DATE");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeRandom = {
+						"separator_before": false,
+						"label": "Randomize Value",
+						"action": function (data) {
+							anonymizeMenu(node, data, "RANDOM");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeMask = {
+						"separator_before": false,
+						"label": "Mask Value",
+						"action": function (data) {
+							anonymizeMenu(node, data, "MASK");
+						}.bind(this)
+					};
+				}
 
 				return ctxmenu;
 			}
 		}
 	};
+	
+	let anonymizeMenu = function (node, data, type) {
+		let tree = $.jstree.reference(data.reference);
+		let columnNode = tree.get_node(data.reference);
+		let tableNode = tree.get_node(tree.get_node(node.parent).parent);
+		let schemaNode = tree.get_node(tree.get_node(tree.get_node(node.parent).parent).parent);
+							
+		let primaryKeyName = tree.get_node(tree.get_node(node.parent).children[0]).original.name;
+		tree.get_node(node.parent).children.forEach(c => {if (tree.get_node(c).original.key) {
+			primaryKeyName = tree.get_node(c).original.name;
+		}});
+							
+		let parameters = {};
+		parameters.datasource = $scope.selectedDatasource;
+		parameters.schema = schemaNode.original.text;
+		parameters.table = tableNode.original.text;
+		parameters.column = columnNode.original.name;
+		parameters.primaryKey = primaryKeyName;
+		parameters.type = type;
+							messageHub.postMessage('database.data.anonymize.columns', parameters);
+	}
 
 	$scope.jstreeWidget.on('open_node.jstree', function (event, data) {
 		if (data.node.children.length === 1 && $scope.jstreeWidget.jstree(true).get_text(data.node.children[0]) === "Loading Columns...") {
@@ -582,7 +698,11 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 						state: "open",
 						text: nodeText,
 						column: column,
-						icon: icon
+						icon: icon,
+						kind: column.kind,
+						name: column.name,
+						key: column.key
+						
 					};
 					$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
 				})
