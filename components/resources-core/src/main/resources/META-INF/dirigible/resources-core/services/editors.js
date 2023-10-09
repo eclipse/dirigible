@@ -16,6 +16,13 @@ let uuid = require('utils/uuid');
 let editors = [];
 let editorExtensions = extensions.getExtensions('ide-editor');
 
+function setETag() {
+	let maxAge = 30 * 24 * 60 * 60;
+	let etag = uuid.random();
+	response.setHeader("ETag", etag);
+	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
+}
+
 for (let i = 0; editorExtensions != null && i < editorExtensions.length; i++) {
 	let module = editorExtensions[i];
 	try {
@@ -65,10 +72,3 @@ editors = editors.sort(function (a, b) {
 response.setContentType("application/json");
 setETag();
 response.println(JSON.stringify(editors));
-
-function setETag() {
-	let maxAge = 30 * 24 * 60 * 60;
-	let etag = uuid.random();
-	response.setHeader("ETag", etag);
-	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
-}
