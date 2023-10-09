@@ -18,6 +18,13 @@ let views = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-view';
 let viewExtensions = extensions.getExtensions(extensionPoint);
 
+function setETag() {
+	let maxAge = 30 * 24 * 60 * 60;
+	let etag = uuid.random();
+	response.setHeader("ETag", etag);
+	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
+}
+
 for (let i = 0; i < viewExtensions.length; i++) {
 	let module = viewExtensions[i];
 	try {
@@ -51,10 +58,3 @@ for (let i = 0; i < viewExtensions.length; i++) {
 response.setContentType("application/json");
 setETag();
 response.println(JSON.stringify(views));
-
-function setETag() {
-	let maxAge = 30 * 24 * 60 * 60;
-	let etag = uuid.random();
-	response.setHeader("ETag", etag);
-	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
-}

@@ -3960,6 +3960,30 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             template: `<div class="fd-card__content" role="group" ng-transclude></div>`
         }
+    }]).directive('fdTileContainer', ['classNames', function (classNames) {
+        /**
+         * noPadding: Boolean - Removes the default padding.
+         * noWrap: Boolean - Do not flex wrap inner elements.
+         * isList: Boolean - Contains list-like items.
+         */
+        return {
+            restrict: 'EA',
+            replace: true,
+            transclude: true,
+            scope: {
+                noPadding: '<?',
+                noWrap: '<?',
+                isList: '<?'
+            },
+            link: function (scope) {
+                scope.getClasses = () => classNames('fd-tile-container', {
+                    'fd-tile-container--list': scope.isList,
+                    'dg-flex--nowrap': scope.noWrap,
+                    'fd-padding--none': scope.noPadding,
+                });
+            },
+            template: `<div ng-class="getClasses()" ng-transclude></div>`
+        }
     }]).directive('fdBadge', [function () {
         return {
             restrict: 'EA',
