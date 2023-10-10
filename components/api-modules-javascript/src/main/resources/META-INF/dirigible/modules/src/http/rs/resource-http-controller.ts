@@ -156,9 +156,7 @@ export class HttpController {
 
     sendError(httpErrorCode, applicationErrorCode, errorName, errorDetails) {
         const clientAcceptMediaTypes = normalizeMediaTypeHeaderValue(request.getHeader('Accept')) || ['application/json'];
-        const isHtml = clientAcceptMediaTypes.some(function (acceptMediaType) {
-            return this.isMimeTypeCompatible('*/html', acceptMediaType);
-        }.bind(this));
+        const isHtml = clientAcceptMediaTypes.some((acceptMediaType) => isMimeTypeCompatible('*/html', acceptMediaType));
         response.setStatus(httpErrorCode || response.INTERNAL_SERVER_ERROR);
         if (isHtml) {
             const message = errorName + (applicationErrorCode !== undefined ? '[' + applicationErrorCode + ']' : '') + (errorDetails ? ': ' + errorDetails : '');
