@@ -26,12 +26,12 @@ function getMaster(parameters) {
             rename: "gen/ui/{{perspectiveName}}/perspective.extension",
             collection: "uiListMasterModels"
         },
-		{
-			location: "/template-application-ui-angular/ui/perspective/perspective-portal.extension",
-			action: "generate",
-			rename: "gen/ui/{{perspectiveName}}/perspective-portal.extension",
-			collection: "uiListMasterModels"
-		},
+        {
+            location: "/template-application-ui-angular/ui/perspective/perspective-portal.extension",
+            action: "generate",
+            rename: "gen/ui/{{perspectiveName}}/perspective-portal.extension",
+            collection: "uiListMasterModels"
+        },
         {
             location: "/template-application-ui-angular/ui/perspective/perspective.js",
             action: "generate",
@@ -130,6 +130,7 @@ function getDetails(parameters) {
         {
             location: "/template-application-ui-angular/ui/perspective/master-list/detail/view.extension",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/view.extension",
             collection: "uiListDetailsModels"
         },
@@ -156,6 +157,7 @@ function getDetails(parameters) {
         {
             location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-window/view.extension",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-window/view.extension",
             collection: "uiListDetailsModels"
         },

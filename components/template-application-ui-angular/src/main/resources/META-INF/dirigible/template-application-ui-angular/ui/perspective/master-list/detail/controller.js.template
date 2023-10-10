@@ -16,13 +16,13 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 		resetPagination();
 
 		//-----------------Events-------------------//
-		messageHub.onDidReceiveMessage("${projectName}.${perspectiveName}.${masterEntity}.entitySelected", function (msg) {
+		messageHub.onDidReceiveMessage("#if($hasReferencedProjection)${referencedProjectionProjectName}.${referencedProjectionPerspectiveName}#else${projectName}.${perspectiveName}#end.${masterEntity}.entitySelected", function (msg) {
 			resetPagination();
 			$scope.selectedMainEntityId = msg.data.selectedMainEntityId;
 			$scope.loadPage($scope.dataPage);
 		}, true);
 
-		messageHub.onDidReceiveMessage("${projectName}.${perspectiveName}.${masterEntity}.clearDetails", function (msg) {
+		messageHub.onDidReceiveMessage("#if($hasReferencedProjection)${referencedProjectionProjectName}.${referencedProjectionPerspectiveName}#else${projectName}.${perspectiveName}#end.${masterEntity}.clearDetails", function (msg) {
 			$scope.$apply(function () {
 				resetPagination();
 				$scope.selectedMainEntityId = null;
