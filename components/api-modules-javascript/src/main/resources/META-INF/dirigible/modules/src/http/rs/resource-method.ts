@@ -83,23 +83,23 @@ export class ResourceMethod {
     }
 
     post() {
-        return this._resource?.["get"]?.(...arguments)
+        return this._resource?.["post"]?.(...arguments)
     }
 
     put() {
-        return this._resource?.["get"]?.(...arguments)
+        return this._resource?.["put"]?.(...arguments)
     }
 
     delete() {
-        return this._resource?.["get"]?.(...arguments)
+        return this._resource?.["delete"]?.(...arguments)
     }
 
     remove() {
-        return this._resource?.["get"]?.(...arguments)
+        return this._resource?.["remove"]?.(...arguments)
     }
 
     method() {
-        return this._resource?.["get"]?.(...arguments)
+        return this._resource?.["method"]?.(...arguments)
     }
 
     /**
