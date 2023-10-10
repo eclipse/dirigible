@@ -14,6 +14,9 @@ exports.process = function (model, parameters) {
         if (e.dataCount && parameters.tablePrefix) {
             e.dataCount = e.dataCount.replaceAll("${tablePrefix}", parameters.tablePrefix);
         }
+        if (e.referencedProjectionProjectName && e.referencedProjectionPerspectiveName) {
+            e.hasReferencedProjection = true;
+        }
         e.properties.forEach(p => {
             p.dataNotNull = p.dataNullable === "false";
             p.dataAutoIncrement = p.dataAutoIncrement === "true";
