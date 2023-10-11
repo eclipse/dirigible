@@ -627,8 +627,8 @@
 							<fd-input id="iid8" type="text" placeholder="Placeholder text" state="warning"></fd-input>
 						</fd-form-item>
 						<fd-form-item horizontal="false">
-							<fd-form-label for="iid8" dg-colon="true">Information input</fd-form-label>
-							<fd-input id="iid8" type="text" placeholder="Placeholder text" state="information">
+							<fd-form-label for="iid9" dg-colon="true">Information input</fd-form-label>
+							<fd-input id="iid9" type="text" placeholder="Placeholder text" state="information">
 							</fd-input>
 						</fd-form-item>
 						<fd-form-item>
@@ -725,7 +725,7 @@
 				<fd-icon-tab-bar>
 					<fd-icon-tab-bar-tablist>
 						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1"></fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2" is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab label="Tab 3" tab-id="ti3"></fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
@@ -733,14 +733,13 @@
 				<h4>Text only with semantic colors</h4>
 				<fd-icon-tab-bar>
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="Positive" tab-id="ti1sc" is-selected="true" dg-state="positive">
+						<fd-icon-tab-bar-tab label="Positive" tab-id="ti1sc" dg-state="positive">
 						</fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab label="Negative" tab-id="ti2sc" is-selected="true" dg-state="negative">
+						<fd-icon-tab-bar-tab label="Negative" tab-id="ti2sc" dg-state="negative">
 						</fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab label="Critical" tab-id="ti3sc" is-selected="true" dg-state="critical">
+						<fd-icon-tab-bar-tab label="Critical" tab-id="ti3sc" dg-state="critical">
 						</fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab label="Informative" tab-id="ti4sc" is-selected="true"
-							dg-state="informative">
+						<fd-icon-tab-bar-tab label="Informative" tab-id="ti4sc" dg-state="informative">
 						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
@@ -749,7 +748,7 @@
 				<fd-icon-tab-bar>
 					<fd-icon-tab-bar-tablist>
 						<fd-icon-tab-bar-tab label="Info" tab-id="ti1c"></fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab label="Attachments" tab-id="ti2c" counter="16" is-selected="true">
+						<fd-icon-tab-bar-tab label="Attachments" tab-id="ti2c" counter="16">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab label="Approvals" tab-id="ti3c" counter="42"></fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
@@ -762,7 +761,7 @@
 							tab-id="ti1ic">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 2" title="Tab 2" counter="23" dg-icon="sap-icon--product"
-							tab-id="ti2ic" is-selected="true">
+							tab-id="ti2ic">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 3" title="Tab 3" counter="10" dg-icon="sap-icon--present"
 							tab-id="ti3ic">
@@ -777,7 +776,7 @@
 							dg-icon="sap-icon--status-positive" tab-id="ti1isc">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 2" title="Tab 2" dg-state="negative"
-							dg-icon="sap-icon--status-negative" tab-id="ti2isc" is-selected="true">
+							dg-icon="sap-icon--status-negative" tab-id="ti2isc">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 3" title="Tab 3" dg-state="critical"
 							dg-icon="sap-icon--status-critical" tab-id="ti3isc">
@@ -795,7 +794,7 @@
 							dg-icon="sap-icon--account" tab-id="ti1dc">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 2" description="Description" title="Tab 2" counter="23"
-							dg-icon="sap-icon--product" tab-id="ti2dc" is-selected="true">
+							dg-icon="sap-icon--product" tab-id="ti2dc">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 3" description="Description" title="Tab 3" counter="10"
 							dg-icon="sap-icon--present" tab-id="ti3dc">
@@ -810,7 +809,7 @@
 							dg-icon="sap-icon--account" tab-id="ti1ip">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 2" description="Description" title="Tab 2" counter="23"
-							dg-icon="sap-icon--product" tab-id="ti2ip" is-selected="true">
+							dg-icon="sap-icon--product" tab-id="ti2ip">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 3" description="Description" title="Tab 3" counter="10"
 							dg-icon="sap-icon--present" tab-id="ti3ip" is-last-step="true">
@@ -820,7 +819,7 @@
 				<fd-icon-tab-bar is-process="true">
 					<fd-icon-tab-bar-tablist>
 						<fd-icon-tab-bar-tab label="Step 1" tab-id="ti1tp"></fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab label="Step 2" tab-id="ti2tp" is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Step 2" tab-id="ti2tp"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab label="Step 3" tab-id="ti3tp" is-last-step="true"></fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
@@ -829,7 +828,7 @@
 				<fd-icon-tab-bar>
 					<fd-icon-tab-bar-tablist>
 						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1b" has-badge="true"></fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2b" is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2b"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab label="Tab 3" tab-id="ti3b"></fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
@@ -838,8 +837,8 @@
 						<fd-icon-tab-bar-tab aria-label="Tab 1" title="Tab 1" dg-icon="sap-icon--account" tab-id="ti1ib"
 							has-badge="true">
 						</fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab aria-label="Tab 2" title="Tab 2" dg-icon="sap-icon--product" tab-id="ti2ib"
-							is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab aria-label="Tab 2" title="Tab 2" dg-icon="sap-icon--product"
+							tab-id="ti2ib"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 3" title="Tab 3" dg-icon="sap-icon--present"
 							tab-id="ti3ib">
 						</fd-icon-tab-bar-tab>
@@ -849,13 +848,13 @@
 				<h4>Filter</h4>
 				<fd-icon-tab-bar has-filter="true">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-filter-item label="Filter tab" counter="12" tab-id="ti1f" is-selected="true">
+						<fd-icon-tab-bar-filter-item label="Filter tab" counter="12" tab-id="ti1f">
 						</fd-icon-tab-bar-filter-item>
 						<fd-icon-tab-bar-tab aria-label="Tab 1" label="Tab 1" title="Tab 1" dg-icon="sap-icon--account"
 							tab-id="ti2f">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 2" label="Tab 2" title="Tab 2" dg-icon="sap-icon--product"
-							tab-id="ti3f" is-selected="true"></fd-icon-tab-bar-tab>
+							tab-id="ti3f"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab aria-label="Tab 3" label="Tab 3" title="Tab 3" dg-icon="sap-icon--present"
 							tab-id="ti4f">
 						</fd-icon-tab-bar-tab>
@@ -865,7 +864,7 @@
 				<h4>Overflow</h4>
 				<fd-icon-tab-bar>
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1o" is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1o"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-overflow label="More">
 							<fd-icon-tab-bar-overflow-item label="Tab 2" tab-id="ti2b" has-badge="true">
 							</fd-icon-tab-bar-overflow-item>
@@ -875,8 +874,8 @@
 				</fd-icon-tab-bar>
 				<fd-icon-tab-bar>
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab aria-label="Tab 1" title="Tab 1" dg-icon="sap-icon--account" tab-id="ti1oi"
-							is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab aria-label="Tab 1" title="Tab 1" dg-icon="sap-icon--account"
+							tab-id="ti1oi"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-overflow label="More">
 							<fd-icon-tab-bar-overflow-item dg-icon="sap-icon--product" label="Tab 2" tab-id="ti2oi"
 								has-badge="true"></fd-icon-tab-bar-overflow-item>
@@ -889,7 +888,7 @@
 				<h4>Extra button group</h4>
 				<fd-icon-tab-bar>
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1btn1" is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1btn1"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2btn1"></fd-icon-tab-bar-tab>
 						<dg-icon-tab-bar-buttons>
 							<fd-button compact="true" dg-type="transparent" glyph="sap-icon--add" aria-label="add">
@@ -902,7 +901,7 @@
 				</fd-icon-tab-bar>
 				<fd-icon-tab-bar>
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1btn2" is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1btn2"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2btn2"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-overflow label="More">
 							<fd-icon-tab-bar-overflow-item label="Tab 3" tab-id="ti3btn2">
@@ -919,7 +918,7 @@
 				<fd-icon-tab-bar unfocused="true">
 					<fd-icon-tab-bar-tablist>
 						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1uf"></fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2uf" is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2uf"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab label="Tab 3" tab-id="ti3uf"></fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
@@ -927,44 +926,44 @@
 				<h4>Side paddings</h4>
 				<fd-icon-tab-bar side-padding="sm">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="SM (1rem) paddings" tab-id="ti1psm" is-selected="true">
+						<fd-icon-tab-bar-tab label="SM (1rem) paddings" tab-id="ti1psm">
 						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
 				<fd-icon-tab-bar side-padding="md">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="MD (2rem) paddings" tab-id="ti1pmd" is-selected="true">
+						<fd-icon-tab-bar-tab label="MD (2rem) paddings" tab-id="ti1pmd">
 						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
 				<fd-icon-tab-bar side-padding="lg">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="LG (2rem) paddings" tab-id="ti1plg" is-selected="true">
+						<fd-icon-tab-bar-tab label="LG (2rem) paddings" tab-id="ti1plg">
 						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
 				<fd-icon-tab-bar side-padding="xl">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="XL (3rem) paddings" tab-id="ti1pxl" is-selected="true">
+						<fd-icon-tab-bar-tab label="XL (3rem) paddings" tab-id="ti1pxl">
 						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
 				<fd-icon-tab-bar side-padding="xxl">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="XXL (3rem) paddings" tab-id="ti1pxxl" is-selected="true">
+						<fd-icon-tab-bar-tab label="XXL (3rem) paddings" tab-id="ti1pxxl">
 						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
 				<fd-icon-tab-bar side-padding="responsive">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="Responsive" tab-id="ti1pr" is-selected="true"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Responsive" tab-id="ti1pr"></fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
 
 				<h4>Navigation tab bar</h4>
 				<fd-icon-tab-bar side-padding="sm" is-nav="true">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="nav" tab-id="ti1nav" is-selected="true">
+						<fd-icon-tab-bar-tab label="nav" tab-id="ti1nav">
 						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
@@ -972,11 +971,11 @@
 				<h4>Closable tabs</h4>
 				<fd-icon-tab-bar side-padding="sm">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="Closable" tab-id="ti1close" is-selected="true"
-							on-close="onTabClose">
+						<fd-icon-tab-bar-tab label="Closable" tab-id="ti1close" on-close="onTabClose(tabId)">
 						</fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-overflow label="More">
-							<fd-icon-tab-bar-overflow-item label="Closable 2" tab-id="ti2close" on-close="onTabClose">
+							<fd-icon-tab-bar-overflow-item label="Closable 2" tab-id="ti2close"
+								on-close="onTabClose(tabId)">
 							</fd-icon-tab-bar-overflow-item>
 						</fd-icon-tab-bar-overflow>
 					</fd-icon-tab-bar-tablist>
@@ -984,20 +983,20 @@
 				<fd-icon-tab-bar side-padding="sm" has-icons="true">
 					<fd-icon-tab-bar-tablist>
 						<fd-icon-tab-bar-tab aria-label="Closable" description="Closable" title="Closable"
-							dg-icon="sap-icon--account" tab-id="ti1iclose" is-selected="true" on-close="onTabClose">
+							dg-icon="sap-icon--account" tab-id="ti1iclose" on-close="onTabClose(tabId)">
 						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 				</fd-icon-tab-bar>
 
 				<h4>Tab panels</h4>
-				<fd-icon-tab-bar>
+				<fd-icon-tab-bar selected-tab-id="selectedTab">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1pan" is-selected="selectedTab === 'ti1pan'"
-							ng-click="switchTab('ti1pan')"></fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2pan" is-selected="selectedTab === 'ti2pan'"
-							ng-click="switchTab('ti2pan')"></fd-icon-tab-bar-tab>
-						<fd-icon-tab-bar-tab label="Tab 3" tab-id="ti3pan" is-selected="selectedTab === 'ti3pan'"
-							ng-click="switchTab('ti3pan')"></fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 1" tab-id="ti1pan" ng-click="switchTab('ti1pan')">
+						</fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 2" tab-id="ti2pan" ng-click="switchTab('ti2pan')">
+						</fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-tab label="Tab 3" tab-id="ti3pan" ng-click="switchTab('ti3pan')">
+						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 					<fd-icon-tab-bar-panel tab-id="ti1pan" ng-show="selectedTab === 'ti1pan'">
 						Panel content for the first tab
@@ -1013,7 +1012,7 @@
 				<h4>Translucent mode</h4>
 				<fd-icon-tab-bar translucent="true">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="Tab" tab-id="ti1translucent" is-selected="true">
+						<fd-icon-tab-bar-tab label="Tab" tab-id="ti1translucent">
 						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 					<fd-icon-tab-bar-panel tab-id="ti1translucent">
@@ -1024,7 +1023,7 @@
 				<h4>Transparent mode</h4>
 				<fd-icon-tab-bar transparent="true">
 					<fd-icon-tab-bar-tablist>
-						<fd-icon-tab-bar-tab label="Tab" tab-id="ti1transparent" is-selected="true">
+						<fd-icon-tab-bar-tab label="Tab" tab-id="ti1transparent">
 						</fd-icon-tab-bar-tab>
 					</fd-icon-tab-bar-tablist>
 					<fd-icon-tab-bar-panel tab-id="ti1transparent">
@@ -1033,7 +1032,7 @@
 				</fd-icon-tab-bar>
 
 			</fd-panel-content>
-		</fd-panel>
+		</fd-panel>		
 		<fd-panel expanded="false">
 			<fd-panel-header>
 				<fd-panel-expand></fd-panel-expand>

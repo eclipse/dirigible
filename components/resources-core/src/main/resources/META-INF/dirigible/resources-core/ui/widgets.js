@@ -5131,8 +5131,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 transparent: '<?',
                 translucent: '<?',
                 unfocused: '<?',
+                selectedTabId: '=?'
             },
             controller: ['$scope', function ($scope) {
+                $scope.lastSelectedTabId;
+                $scope.updateLastSelectedTabId = true;
+                $scope.tabList = [];
+
                 this.getIsProgress = function () {
                     return $scope.isProcess;
                 }
@@ -5158,8 +5163,61 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     'fd-icon-tab-bar--transparent': $scope.transparent,
                     'fd-icon-tab-bar--translucent': $scope.translucent,
                 });
+
+                this.addIconTab = function (tabId) {
+                    if (!angular.isDefined($scope.selectedTabId) && $scope.tabList.length === 0) {
+                        $scope.selectedTabId = tabId;
+                    }
+
+                    $scope.tabList.push(tabId);
+                };
+
+                this.removeIconTab = function (tabId) {
+                    const tabIndex = $scope.tabList.indexOf(tabId);
+                    if (tabIndex >= 0) {
+                        $scope.tabList.splice(tabIndex, 1);
+                    }
+                };
+
+                this.onTabClose = function (tabId) {
+                    let nextSelectedTabId;
+                    if (tabId === $scope.selectedTabId) {
+                        if ($scope.lastSelectedTabId)
+                            nextSelectedTabId = $scope.lastSelectedTabId;
+
+                        if (!nextSelectedTabId && $scope.tabList.length > 1) {
+                            let tabIndex = $scope.tabList.indexOf(tabId) + 1;
+
+                            nextSelectedTabId = $scope.tabList[tabIndex];
+                            if (!nextSelectedTabId) {
+                                const tabList = $scope.tabList.filter(x => x !== tabId);
+                                nextSelectedTabId = tabList[tabList.length - 1];
+                            }
+                        }
+                    } else if ($scope.lastSelectedTabId === tabId) {
+                        $scope.lastSelectedTabId = null;
+                    }
+
+                    if (nextSelectedTabId) {
+                        $scope.updateLastSelectedTabId = false;
+                        $scope.selectedTabId = nextSelectedTabId;
+                    }
+                }
+
+                this.getIsSelected = function (tabId) {
+                    return tabId === $scope.selectedTabId;
+                };
+
+                $scope.$watch('selectedTabId', function (newSelectedTabId, oldSelectedTabId) {
+                    if ($scope.updateLastSelectedTabId) {
+                        $scope.lastSelectedTabId = oldSelectedTabId;
+                    } else {
+                        $scope.lastSelectedTabId = null;
+                        $scope.updateLastSelectedTabId = true;
+                    }
+                });
             }],
-            template: `<div class="fd-icon-tab-bar" ng-class="getClasses()"><ng-transclude ng-transclude-slot="tabs"></ng-transclude><ng-transclude ng-transclude-slot="panels"></ng-transclude><ng-transclude ng-transclude-slot="buttons"></ng-transclude></div>`
+            template: `<div class="fd-icon-tab-bar dg-icon-tab-bar" ng-class="getClasses()"><ng-transclude ng-transclude-slot="tabs"></ng-transclude><ng-transclude ng-transclude-slot="panels" class="dg-icon-tab-bar-panels"></ng-transclude><ng-transclude ng-transclude-slot="buttons"></ng-transclude></div>`
         }
     }]).directive('fdIconTabBarTablist', function () {
         return {
@@ -5177,7 +5235,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * dgIcon: String - Icon class.
          * dgHref: String - Link.
          * tabId: String - The id of the tab.
-         * isSelected: Boolean - If the tab is selected.
          * dgState: String - State of the tab. Possible options are 'positive', 'negative', 'critical' and 'informative'.
          * isLastStep: Boolean - If the tabs is the last step of a process.
          * onClose: Function - Function that will be called when the tab close button is clicked. The tab will have an "X" button and on click, the tab ID will be passed as a parameter.
@@ -5195,16 +5252,17 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 dgIcon: '@?',
                 dgHref: '@?',
                 tabId: '@',
-                isSelected: '<?',
                 dgState: '@?',
                 isLastStep: '<?',
                 onClose: '&?',
             },
             link: {
                 pre: function (scope, element, attr, tabBarCtrl) {
-                    if (scope.onClose) scope.onClose = scope.onClose();
+                    tabBarCtrl.addIconTab(scope.tabId);
+
                     scope.isProcess = tabBarCtrl.getIsProgress;
                     scope.isFilter = tabBarCtrl.getIsFilter;
+                    scope.isSelected = tabBarCtrl.getIsSelected;
                     scope.getClasses = () => classNames({
                         'fd-icon-tab-bar__item--positive': scope.dgState === 'positive',
                         'fd-icon-tab-bar__item--negative': scope.dgState === 'negative',
@@ -5215,12 +5273,18 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     });
                     scope.close = function (event) {
                         event.stopPropagation();
-                        if (scope.onClose) scope.onClose(scope.tabId);
+                        tabBarCtrl.onTabClose(scope.tabId);
+
+                        if (scope.onClose) scope.onClose({ tabId: scope.tabId });
                     };
+
+                    scope.$on('$destroy', function () {
+                        tabBarCtrl.removeIconTab(scope.tabId);
+                    });
                 }
             },
             template: `<li role="presentation" class="fd-icon-tab-bar__item" ng-class="getClasses()">
-                <a role="tab" class="fd-icon-tab-bar__tab" ng-attr-href="{{dgHref || undefined}}" aria-selected="{{isSelected || false}}" id="{{tabId}}">
+                <a role="tab" class="fd-icon-tab-bar__tab" ng-attr-href="{{dgHref || undefined}}" aria-selected="{{isSelected(tabId)}}" id="{{tabId}}">
                     <div ng-if="dgIcon" class="fd-icon-tab-bar__container">
                         <span class="fd-icon-tab-bar__icon"><i class="{{dgIcon}}" role="presentation"></i></span>
                         <span ng-if="!description" class="fd-icon-tab-bar__counter">{{counter}}</span>
@@ -5387,6 +5451,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             scope: {
                 tabId: '@',
             },
-            template: `<section role="tabpanel" class="fd-icon-tab-bar__panel" aria-labelledby="{{tabId}}" ng-transclude></section>`
+            template: `<section role="tabpanel" class="fd-icon-tab-bar__panel " aria-labelledby="{{tabId}}" ng-transclude></section>`
         }
     });
