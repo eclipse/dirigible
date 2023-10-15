@@ -9,6 +9,7 @@ const viewData = {
     factory: "frame",
     region: "center",
     link: "/services/web/${projectName}/gen/ui/launchpad/Home/index.html",
+    isLaunchpad: true,
 };
 
 if (typeof exports !== 'undefined') {
