@@ -400,6 +400,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					cell.value.entityType = "PROJECTION";
 					cell.value.projectionReferencedModel = msg.data.model;
 					cell.value.projectionReferencedEntity = msg.data.entity;
+					cell.value.perspectiveName = msg.data.perspectiveName;
+					cell.value.perspectiveIcon = msg.data.perspectiveIcon;
+					cell.value.perspectiveOrder = msg.data.perspectiveOrder;
 					$scope.graph.model.setValue(cell, cell.value);
 
 					let propertyObject = new Property('propertyName');
@@ -438,6 +441,9 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 					cell.value.entityType = "COPIED";
 					cell.value.projectionReferencedModel = msg.data.model;
 					cell.value.projectionReferencedEntity = msg.data.entity;
+					cell.value.perspectiveName = msg.data.perspectiveName;
+					cell.value.perspectiveIcon = msg.data.perspectiveIcon;
+					cell.value.perspectiveOrder = msg.data.perspectiveOrder;
 					$scope.graph.model.setValue(cell, cell.value);
 
 					let propertyObject = new Property('propertyName');

@@ -137,6 +137,7 @@ function getDetails(parameters) {
         {
             location: "/template-application-ui-angular/ui/perspective/master-list/detail/view.js",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/view.js",
             collection: "uiListDetailsModels"
         },
@@ -164,6 +165,7 @@ function getDetails(parameters) {
         {
             location: "/template-application-ui-angular/ui/perspective/master-list/detail/dialog-window/view.js",
             action: "generate",
+            engine: "velocity",
             rename: "gen/ui/{{perspectiveName}}/{{masterEntity}}/{{name}}/dialog-window/view.js",
             collection: "uiListDetailsModels"
         }
