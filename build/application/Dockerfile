@@ -3,8 +3,7 @@ FROM amazoncorretto:21-alpine
 
 VOLUME /tmp
 
-RUN curl -sL https://rpm.nodesource.com/setup_18.x | bash - 
-RUN yum install -y nodejs 
+RUN apk add nodejs npm
 RUN npm i -g esbuild
 RUN npm i -g typescript
 
