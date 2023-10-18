@@ -173,6 +173,11 @@
 			<artifactId>dirigible-components-security-keycloak</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-security-oauth2</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
+		</dependency>
 		
 		<!-- Data -->
 		<dependency>

@@ -27,6 +27,7 @@
 		<!-- Security -->
 		<module>security-basic</module>
 		<module>security-keycloak</module>
+		<module>security-oauth2</module>
 
 		<!-- Data -->
 		<module>data-structures</module>
