@@ -5137,6 +5137,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 $scope.lastSelectedTabId;
                 $scope.updateLastSelectedTabId = true;
                 $scope.tabList = [];
+                $scope.eventCallbacks = [];
+
+                const fireEvent = function (c) {
+                    $scope.eventCallbacks.forEach(c);
+                }
 
                 this.getIsProgress = function () {
                     return $scope.isProcess;
@@ -5164,19 +5169,25 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     'fd-icon-tab-bar--translucent': $scope.translucent,
                 });
 
-                this.addIconTab = function (tabId) {
+                this.addIconTab = function (tabId, tabCallbacks) {
                     if (!angular.isDefined($scope.selectedTabId) && $scope.tabList.length === 0) {
                         $scope.selectedTabId = tabId;
                     }
 
                     $scope.tabList.push(tabId);
+
+                    fireEvent(c => c.tabAdded(tabId, tabCallbacks));
                 };
 
                 this.removeIconTab = function (tabId) {
+                    this.onTabClose(tabId);
+
                     const tabIndex = $scope.tabList.indexOf(tabId);
                     if (tabIndex >= 0) {
                         $scope.tabList.splice(tabIndex, 1);
                     }
+
+                    fireEvent(c => c.tabRemoved(tabId));
                 };
 
                 this.onTabClose = function (tabId) {
@@ -5208,12 +5219,38 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     return tabId === $scope.selectedTabId;
                 };
 
+                this.getSelectedTabId = function () {
+                    return $scope.selectedTabId;
+                }
+
+                this.getTabList = function () {
+                    return $scope.tabList;
+                }
+
+                this.subscribe = function (eventCallback) {
+                    const index = $scope.eventCallbacks.indexOf(eventCallback);
+                    if (index === -1) {
+                        $scope.eventCallbacks.push(eventCallback);
+                    }
+                }
+
+                this.unsubscribe = function (eventCallback) {
+                    const index = $scope.eventCallbacks.indexOf(eventCallback);
+                    if (index >= 0) {
+                        $scope.eventCallbacks.splice(index, 1);
+                    }
+                }
+
                 $scope.$watch('selectedTabId', function (newSelectedTabId, oldSelectedTabId) {
-                    if ($scope.updateLastSelectedTabId) {
-                        $scope.lastSelectedTabId = oldSelectedTabId;
-                    } else {
-                        $scope.lastSelectedTabId = null;
-                        $scope.updateLastSelectedTabId = true;
+                    if (newSelectedTabId !== oldSelectedTabId) {
+                        if ($scope.updateLastSelectedTabId) {
+                            $scope.lastSelectedTabId = oldSelectedTabId;
+                        } else {
+                            $scope.lastSelectedTabId = null;
+                            $scope.updateLastSelectedTabId = true;
+                        }
+
+                        fireEvent(c => c.tabSelected(newSelectedTabId));
                     }
                 });
             }],
@@ -5226,7 +5263,83 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             template: `<ul role="tablist" class="fd-icon-tab-bar__header" style="overflow-x: visible" ng-transclude></ul>`
         }
-    }).directive('fdIconTabBarTab', ['classNames', function (classNames) {
+    }).directive('dgTabsOverflowable', ['$timeout', function ($timeout) {
+        return {
+            restrict: 'A',
+            require: '^fdIconTabBar',
+            link: function (scope, element, attr, tabBarCtrl) {
+
+                scope.tabCallbacks = {};
+                scope.tabsListener = {
+                    tabAdded: (tabId, tabCallbacks) => {
+                        scope.tabCallbacks[tabId] = tabCallbacks;
+                        scope.updateTabsVisibility();
+                    },
+                    tabRemoved: (tabId) => {
+                        delete scope.tabCallbacks[tabId];
+                        scope.updateTabsVisibility();
+                    },
+                    tabSelected: () => {
+                        $timeout(scope.updateTabsVisibility);
+                    },
+                };
+
+                tabBarCtrl.subscribe(scope.tabsListener);
+
+                scope.updateTabsVisibility = (containerWidth = -1) => {
+                    const tabsListEl = element;
+
+                    if (containerWidth === -1)
+                        containerWidth = tabsListEl.width();
+
+                    const selectedTabId = tabBarCtrl.getSelectedTabId()
+
+                    const moreButtonEl = tabsListEl.find('button.fd-icon-tab-bar__overflow');
+                    const tabsButtonsEl = tabsListEl.find('.dg-icon-tab-bar__item--buttons');
+                    const selectedTabEl = tabsListEl.find(`[tab-id="${selectedTabId}"]`);
+
+                    let width = selectedTabEl.length > 0 ? selectedTabEl.outerWidth(true) : 0;
+                    let moreBtnWidth = moreButtonEl.length ? moreButtonEl.outerWidth(true) : 0;
+                    let tabsButtonsWidth = tabsButtonsEl.length ? tabsButtonsEl.outerWidth(false) : 0;
+
+                    const selectedTab = scope.tabCallbacks[selectedTabId];
+                    if (selectedTab)
+                        selectedTab.setTabHidden(false);
+
+                    const tabList = tabBarCtrl.getTabList();
+                    for (let i = 0; i < tabList.length; i++) {
+                        let tabId = tabList[i];
+                        if (tabId === selectedTabId) continue;
+
+                        const tabEl = tabsListEl.find(`[tab-id="${tabId}"]`);
+
+                        let availableWidth = containerWidth - tabsButtonsWidth - moreBtnWidth;
+
+                        width += tabEl.outerWidth(true);
+
+                        if (width < availableWidth) {
+                            scope.tabCallbacks[tabId].setTabHidden(false);
+                        } else {
+                            scope.tabCallbacks[tabId].setTabHidden(true);
+                        }
+                    }
+
+                }
+
+                const ro = new ResizeObserver(entries => {
+                    const width = entries[0].contentRect.width;
+                    $timeout(() => scope.updateTabsVisibility(width));
+                });
+
+                ro.observe(element[0]);
+
+                scope.$on('$destroy', function () {
+                    ro.unobserve(element[0]);
+                    tabBarCtrl.unsubscribe(scope.tabsListener);
+                });
+            }
+        }
+    }]).directive('fdIconTabBarTab', ['classNames', function (classNames) {
         /**
          * label: String - Tab label.
          * description: String - Description label next to the icon.
@@ -5238,6 +5351,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * dgState: String - State of the tab. Possible options are 'positive', 'negative', 'critical' and 'informative'.
          * isLastStep: Boolean - If the tabs is the last step of a process.
          * onClose: Function - Function that will be called when the tab close button is clicked. The tab will have an "X" button and on click, the tab ID will be passed as a parameter.
+         * isHidden: Boolean - Whether the tab shuold be visible or not
          */
         return {
             restrict: 'E',
@@ -5255,10 +5369,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 dgState: '@?',
                 isLastStep: '<?',
                 onClose: '&?',
+                isHidden: '=?'
             },
             link: {
                 pre: function (scope, element, attr, tabBarCtrl) {
-                    tabBarCtrl.addIconTab(scope.tabId);
+                    tabBarCtrl.addIconTab(scope.tabId, {
+                        setTabHidden: (isHidden) => {
+                            scope.isHidden = isHidden;
+                        }
+                    });
 
                     scope.isProcess = tabBarCtrl.getIsProgress;
                     scope.isFilter = tabBarCtrl.getIsFilter;
@@ -5270,10 +5389,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         'fd-icon-tab-bar__item--informative': scope.dgState === 'informative',
                         'fd-icon-tab-bar__item--closable': scope.onClose,
                         'dg-opacity-7': tabBarCtrl.getIsUnfocused(),
+                        'dg-icon-tab-bar-tab-hidden': scope.isHidden
                     });
                     scope.close = function (event) {
                         event.stopPropagation();
-                        tabBarCtrl.onTabClose(scope.tabId);
 
                         if (scope.onClose) scope.onClose({ tabId: scope.tabId });
                     };

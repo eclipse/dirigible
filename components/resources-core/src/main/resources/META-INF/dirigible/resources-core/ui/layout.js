@@ -324,6 +324,10 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     return $scope.splitPanesState.main.length < 2 || $scope.splitPanesState.main[1] == SplitPaneState.COLLAPSED;
                 };
 
+                $scope.isMoreTabsButtonVisible = function (tabs) {
+                    return tabs.some(x => x.isHidden);
+                }
+
                 $scope.sideViewStateChanged = function () {
                     saveLayoutState();
                 };
@@ -1200,210 +1204,14 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
             templateUrl: '/services/web/resources-core/ui/templates/accordionPane.html'
         };
     }])
-    .directive('tabs', function () {
-        return {
-            restrict: 'E',
-            transclude: {
-                'buttons': '?buttons',
-                'panes': 'panes'
-            },
-            replace: true,
-            scope: {
-                selectedPane: '=',
-                focused: '<',
-                closable: '<',
-                hideTabs: '<',
-                removeTab: '&',
-            },
-            controller: ['$scope', '$element', 'messageHub', function ($scope, $element, messageHub) {
-                let panes = $scope.panes = [];
-
-                $scope.isPaneSelected = function (pane) {
-                    return pane.id === $scope.selectedPane;
-                }
-
-                $scope.isPaneClosable = function (pane) {
-                    return $scope.closable && (pane.closable === undefined || pane.closable);
-                }
-
-                $scope.select = function (pane) {
-                    if (this.isPaneSelected(pane)) {
-                        requestFocus();
-                        return;
-                    }
-
-                    $scope.selectedPane = pane.id;
-                }
-
-                $scope.tabClick = function (pane, $event) {
-                    if ($event.target.classList.contains('fd-button')) {
-                        $scope.removeTab({ pane: pane });
-                        return;
-                    }
-
-                    this.select(pane);
-                };
-
-                $scope.moreTabsItemClick = function (pane) {
-                    this.select(pane);
-                    $scope.moreTabsExpanded = false;
-                }
-
-                $scope.moreTabsExpanded = false;
-
-                this.addPane = function (pane) {
-                    if (!$scope.selectedPane && panes.length == 0) {
-                        $scope.select(pane);
-                    }
-                    panes.push(pane);
-                    updateTabsVisibilityDelayed();
-                }
-
-                this.removePane = function (pane) {
-                    let index = panes.indexOf(pane);
-                    if (index >= 0)
-                        panes.splice(index, 1);
-
-                    let nextSelectedPane;
-                    if ($scope.isPaneSelected(pane)) {
-                        if ($scope.lastSelectedPane)
-                            nextSelectedPane = panes.find(p => p.id === $scope.lastSelectedPane);
-
-                        if (!nextSelectedPane && panes.length > 0) {
-                            if (index < 0)
-                                index = 0
-                            else if (index >= panes.length)
-                                index = panes.length - 1;
-
-                            nextSelectedPane = panes[index];
-                        }
-                    }
-
-                    if (nextSelectedPane) {
-                        $scope.select(nextSelectedPane);
-                        $scope.lastSelectedPane = null;
-                    }
-
-                    updateTabsVisibilityDelayed();
-                }
-
-                this.getSelectedPane = function () {
-                    return $scope.selectedPane;
-                }
-
-                const requestFocus = function () {
-                    messageHub.setEditorFocusGain($scope.selectedPane);
-                }
-
-                const updateTabsVisibility = (containerWidth = -1) => {
-                    if (containerWidth === -1)
-                        containerWidth = tabsListEl[0].clientWidth;
-
-                    const tabElements = $element.find('li.fd-tabs__item[role="tab"]');
-                    const selectedTabEl = $element.find('li.fd-tabs__item[aria-selected="true"]');
-                    const moreButtonEl = $element.find('li.fd-tabs__item[role="button"]');
-                    const moreTabsPopoverBody = $element.find('li.fd-tabs__item[role="button"] .fd-popover__body');
-                    const moreTabsBtnElements = moreTabsPopoverBody.find('.fd-button');
-
-                    selectedTabEl.removeClass('dg-hidden');
-                    moreButtonEl.removeClass('dg-hidden');
-
-                    let width = selectedTabEl.length > 0 ? selectedTabEl.outerWidth(true) : 0;
-                    let moreBtnWidth = moreButtonEl.outerWidth(true);
-
-                    let tabVisible = true;
-                    let selectedTabVisibile = true;
-
-                    if (width > containerWidth - moreBtnWidth) {
-                        tabVisible = false;
-                        selectedTabVisibile = false;
-                        moreTabsPopoverBody.removeClass('fd-popover__body--right').addClass('fd-popover__body--left');
-                    } else {
-                        moreTabsPopoverBody.removeClass('fd-popover__body--left').addClass('fd-popover__body--right');
-                    }
-
-                    let nonSelectedTabsIndex = 0;
-                    for (let i = 0; i < tabElements.length; i++) {
-                        const tabEl = tabElements[i];
-                        const moreTabEl = moreTabsBtnElements[i];
-                        const $tabEl = $(tabEl);
-                        const $moreTabEl = $(moreTabEl);
-
-                        if (selectedTabVisibile && $tabEl.attr('aria-selected') === 'true') {
-                            $moreTabEl.addClass('dg-hidden');
-                            continue;
-                        }
-
-                        if (!tabVisible) {
-                            $tabEl.addClass('dg-hidden');
-                            $moreTabEl.removeClass('dg-hidden');
-                            continue;
-                        }
-
-                        $tabEl.removeClass('dg-hidden');
-
-                        width += $tabEl.outerWidth(true);
-
-                        let availableWidth = containerWidth;
-                        if (nonSelectedTabsIndex < tabElements.length - 2)
-                            availableWidth -= moreBtnWidth;
-
-                        if (width > availableWidth) {
-                            tabVisible = false;
-                            $tabEl.addClass('dg-hidden');
-                            $moreTabEl.removeClass('dg-hidden');
-                        } else {
-                            $moreTabEl.addClass('dg-hidden');
-                        }
-
-                        nonSelectedTabsIndex++;
-                    }
-
-                    if (tabVisible) {
-                        moreButtonEl.addClass('dg-hidden');
-                    }
-                }
-
-                const updateTabsVisibilityDelayed = () => {
-                    setTimeout(updateTabsVisibility, 0);
-                }
-
-                const ro = new ResizeObserver(entries => {
-                    const width = entries[0].contentRect.width;
-                    updateTabsVisibility(width);
-                });
-
-                const tabsListEl = $element.find('ul.fd-tabs');
-                ro.observe(tabsListEl[0]);
-
-                $scope.$watch('selectedPane', function (newValue, oldValue) {
-                    $scope.lastSelectedPane = oldValue;
-                    requestFocus();
-                    updateTabsVisibilityDelayed();
-                });
-
-                $scope.$on('$destroy', function () {
-                    ro.unobserve(tabsListEl[0]);
-                });
-            }],
-            templateUrl: '/services/web/resources-core/ui/templates/tabs.html'
-        };
-    })
-    .directive('tabPane', ['perspective', function (perspective) {
+    .directive('layoutTabContent', ['perspective', function (perspective) {
         return {
             restrict: 'E',
             replace: true,
-            require: '^tabs',
             scope: {
                 tab: '='
             },
-            link: function (scope, element, attrs, tabsCtrl) {
-                tabsCtrl.addPane(scope.tab);
-
-                scope.isPaneSelected = function () {
-                    return scope.tab.id === tabsCtrl.getSelectedPane();
-                };
-
+            link: function (scope) {
                 scope.getParams = function () {
                     if (!scope.tab.params) {
                         scope.tab.params = {
@@ -1416,17 +1224,11 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                     }
                     return JSON.stringify(scope.tab.params);
                 };
-
-                scope.$on('$destroy', function () {
-                    tabsCtrl.removePane(scope.tab);
-                });
             },
-            template: `<div aria-expanded="{{isPaneSelected()}}" class="fd-tabs__panel" role="tabpanel">
-                <iframe loading="{{tab.loadType}}" ng-src="{{tab.path}}" data-parameters="{{getParams()}}"></iframe>
-            </div>`
-        };
+            template: `<iframe loading="{{tab.loadType}}" ng-src="{{tab.path}}" data-parameters="{{getParams()}}"></iframe>`
+        }
     }])
-    .directive('splittedTabs', function () {
+    .directive('splittedTabs', ['messageHub', function (messageHub) {
         return {
             restrict: 'E',
             transclude: true,
@@ -1468,7 +1270,16 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 scope.isFocused = function (pane) {
                     return pane === scope.focusedPane;
                 }
+
+                scope.isMoreTabsButtonVisible = function (pane) {
+                    return pane.tabs.some(x => x.isHidden);
+                }
+
+                scope.onTabClick = function (pane, tabId) {
+                    pane.selectedTab = tabId;
+                    messageHub.setEditorFocusGain(tabId);
+                }
             },
             templateUrl: '/services/web/resources-core/ui/templates/splittedTabs.html'
         };
-    });
+    }]);

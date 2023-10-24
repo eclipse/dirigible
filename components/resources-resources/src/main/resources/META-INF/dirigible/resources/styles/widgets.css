@@ -353,6 +353,10 @@ body {
   margin: 0 0 0 .5rem;
 }
 
+.dg-icon-tab-bar__item--buttons {
+  white-space: nowrap;
+}
+
 :not(.fd-icon-tab-bar__item--overflow)+.dg-icon-tab-bar__item--buttons-right {
   margin-left: auto;
 }
@@ -366,6 +370,11 @@ body {
 .dg-icon-tab-bar>.dg-icon-tab-bar-panels,
 .dg-icon-tab-bar>.dg-icon-tab-bar-panels>section {
   height: 100%;
+}
+
+.dg-icon-tab-bar-tab-hidden {
+  visibility: hidden !important;
+  position: absolute !important;
 }
 
 /* Menu fixes and additions */
