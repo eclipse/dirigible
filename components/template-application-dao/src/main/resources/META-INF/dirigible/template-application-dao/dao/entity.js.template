@@ -221,7 +221,7 @@ exports.update = function(entity) {
 #end
 #foreach ($property in $properties)
 #if($property.isCalculatedProperty)
-	entity["${property.name}"] = ${property.calculatedPropertyExpression}
+	entity["${property.name}"] = ${property.calculatedPropertyExpression};
 #end
 #end
 	dao.update(entity);
