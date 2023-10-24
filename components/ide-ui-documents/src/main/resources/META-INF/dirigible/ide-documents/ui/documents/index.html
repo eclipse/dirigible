@@ -163,10 +163,12 @@
                     </fd-scrollbar>
                 </split-pane>
                 <split-pane size="50">
-                    <iframe id="preview-iframe" ng-show="selectedFile" src="about:blank"></iframe>
-                    <fd-message-page ng-if="!selectedFile" glyph="sap-icon--detail-view">
+                    <iframe id="preview-iframe" ng-show="selectedFile && canPreview" src="about:blank"></iframe>
+                    <fd-message-page ng-if="!selectedFile || !canPreview" glyph="sap-icon--detail-view">
                         <fd-message-page-title>File Preview</fd-message-page-title>
-                        <fd-message-page-subtitle>Click on a file to see its preview</fd-message-page-subtitle>
+                        <fd-message-page-subtitle>
+                            {{ canPreview ? "Click on a file to see its preview" : "This file cannot be previewed" }}
+                        </fd-message-page-subtitle>
                     </fd-message-page>
                 </split-pane>
             </split>

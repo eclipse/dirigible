@@ -45,6 +45,7 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 	let iframe;
 	const getIFrame = () => iframe || (iframe = $element.find('#preview-iframe')[0]);
 
+	$scope.canPreview = true;
 	$scope.downloadPath = '/services/js/ide-documents/api/documents.js/download'
 	$scope.previewPath = '/services/js/ide-documents/api/documents.js/preview';
 	$scope.downloadZipPath = zipApi;
@@ -298,6 +299,51 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 		);
 	};
 
+	$scope.canPreviewFile = function (fileName) {
+		let type = fileName.substring(fileName.lastIndexOf('.') + 1);
+		switch (type) {
+			case 'edm':
+			case 'dsm':
+			case 'bpmn':
+			case 'job':
+			case 'xsjob':
+			case 'calculationview':
+			case 'websocket':
+			case 'hdi':
+			case 'hdbtable':
+			case 'hdbstructurе':
+			case 'hdbview':
+			case 'hdbtablefunction':
+			case 'hdbprocedure':
+			case 'hdbschema':
+			case 'hdbsynonym':
+			case 'hdbdd':
+			case 'hdbsequence':
+			case 'hdbcalculationview':
+			case 'xsaccess':
+			case 'xsprivileges':
+			case 'xshttpdest':
+			case 'listener':
+			case 'extensionpoint':
+			case 'extension':
+			case 'table':
+			case 'view':
+			case 'access':
+			case 'roles':
+			case 'sh':
+			case 'csv':
+			case 'csvim':
+			case 'hdbti':
+			case 'camel':
+			case 'form':
+				$scope.canPreview = false;
+				return false;
+			default:
+				$scope.canPreview = true;
+				return true;
+		}
+	};
+
 	messageHub.onDidReceiveMessage(
 		'ide-documents.documents.delete',
 		function (msg) {
@@ -362,11 +408,14 @@ documentsApp.controller('DocServiceCtrl', ['$scope', '$http', '$timeout', '$elem
 	};
 
 	function setSelectedFile(selectedFile) {
-		$scope.selectedFile = selectedFile;
+		if (selectedFile === null) $scope.selectedFile = selectedFile;
+		else if ($scope.canPreviewFile(selectedFile.name)) {
+			$scope.selectedFile = selectedFile;
 
-		const iframe = getIFrame();
-		if (iframe) {
-			iframe.contentWindow.location.replace($scope.getFilePreviewUrl($scope.selectedFile));
+			const iframe = getIFrame();
+			if (iframe) {
+				iframe.contentWindow.location.replace($scope.getFilePreviewUrl($scope.selectedFile));
+			}
 		}
 	};
 
