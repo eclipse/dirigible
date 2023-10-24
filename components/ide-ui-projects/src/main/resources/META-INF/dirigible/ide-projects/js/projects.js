@@ -335,37 +335,37 @@ projectsView.controller('ProjectsViewController', [
                 if (element.tagName !== "LI") {
                     let closest = element.closest("li");
                     if (closest) {
-						id = closest.id;
-					} else {
-						let items = [];
-						items.push({
-	                            id: "newProject",
-	                            label: "New Project",
-	                            icon: "sap-icon--create",
-	                        });
-	                    if (publisherApi.isEnabled()) {
-		                    items.push({
-		                            id: "publishAll",
-		                            label: "Publish All",
-		                            icon: "sap-icon--arrow-top",
-		                            divider: true,
-		                        });
-		                    items.push({
-		                            id: "unpublishAll",
-		                            label: "Unpublish All",
-		                            icon: "sap-icon--arrow-bottom",
-		                        });
-	                    }
-	                    items.push({
-	                            id: "exportProjects",
-	                            label: "Export all",
-	                            icon: "sap-icon--download-from-cloud",
-	                            divider: true,
-	                        });
-						return {
-	                        callbackTopic: "projects.tree.contextmenu",
-	                        items: items
-	                    }
+                        id = closest.id;
+                    } else {
+                        let items = [];
+                        items.push({
+                            id: "newProject",
+                            label: "New Project",
+                            icon: "sap-icon--create",
+                        });
+                        if (publisherApi.isEnabled()) {
+                            items.push({
+                                id: "publishAll",
+                                label: "Publish All",
+                                icon: "sap-icon--arrow-top",
+                                divider: true,
+                            });
+                            items.push({
+                                id: "unpublishAll",
+                                label: "Unpublish All",
+                                icon: "sap-icon--arrow-bottom",
+                            });
+                        }
+                        items.push({
+                            id: "exportProjects",
+                            label: "Export all",
+                            icon: "sap-icon--download-from-cloud",
+                            divider: true,
+                        });
+                        return {
+                            callbackTopic: "projects.tree.contextmenu",
+                            items: items
+                        }
                     }
                 } else {
                     id = element.id;
@@ -441,29 +441,39 @@ projectsView.controller('ProjectsViewController', [
                     let publishObj;
                     let unpublishObj;
                     if (publisherApi.isEnabled()) {
-	                    publishObj = {
-	                        id: "publish",
-	                        label: "Publish",
-	                        divider: true,
-	                        icon: "sap-icon--arrow-top",
-	                        data: `/${node.data.workspace}${node.data.path}`,
-	                    };
-	                    unpublishObj = {
-	                        id: "unpublish",
-	                        label: "Unpublish",
-	                        icon: "sap-icon--arrow-bottom",
-	                        data: `/${node.data.workspace}${node.data.path}`,
-	                    };
+                        publishObj = {
+                            id: "publish",
+                            label: "Publish",
+                            divider: true,
+                            icon: "sap-icon--arrow-top",
+                            data: {
+                                name: node.text,
+                                path: node.data.path,
+                                type: node.type,
+                                workspace: node.data.workspace
+                            },
+                        };
+                        unpublishObj = {
+                            id: "unpublish",
+                            label: "Unpublish",
+                            icon: "sap-icon--arrow-bottom",
+                            data: {
+                                name: node.text,
+                                path: node.data.path,
+                                type: node.type,
+                                workspace: node.data.workspace
+                            },
+                        };
                     }
                     let generateObj;
                     if (generateApi.isEnabled()) {
-	                    generateObj = {
-	                        id: "generateGeneric",
-	                        label: "Generate",
-	                        icon: "sap-icon-TNT--operations",
-	                        divider: true,
-	                        data: node,
-	                    };
+                        generateObj = {
+                            id: "generateGeneric",
+                            label: "Generate",
+                            icon: "sap-icon-TNT--operations",
+                            divider: true,
+                            data: node,
+                        };
                     }
                     let importObj = {
                         id: "import",
@@ -479,23 +489,23 @@ projectsView.controller('ProjectsViewController', [
                         data: node,
                     };
                     if (node.type === 'project') {
-						let items = [
-                                newSubmenu,
-                                {
-                                    id: "duplicateProject",
-                                    label: "Duplicate",
-                                    divider: true,
-                                    icon: "sap-icon--duplicate",
-                                    data: node,
-                                },
-                                pasteObj,
-                                renameObj,
-                                deleteObj,
-                            ]
-						if (publisherApi.isEnabled()) {
-							items.push(publishObj);
-							items.push(unpublishObj);
-						}
+                        let items = [
+                            newSubmenu,
+                            {
+                                id: "duplicateProject",
+                                label: "Duplicate",
+                                divider: true,
+                                icon: "sap-icon--duplicate",
+                                data: node,
+                            },
+                            pasteObj,
+                            renameObj,
+                            deleteObj,
+                        ]
+                        if (publisherApi.isEnabled()) {
+                            items.push(publishObj);
+                            items.push(unpublishObj);
+                        }
                         let menuObj = {
                             callbackTopic: 'projects.tree.contextmenu',
                             items: items
@@ -514,31 +524,31 @@ projectsView.controller('ProjectsViewController', [
                             data: node,
                         });
                         if (actionsApi.isEnabled()) {
-	                        menuObj.items.push({
-	                            id: "actionsProject",
-	                            label: "Actions",
-	                            icon: "sap-icon--media-play",
-	                            divider: true,
-	                            data: node,
-	                        });
+                            menuObj.items.push({
+                                id: "actionsProject",
+                                label: "Actions",
+                                icon: "sap-icon--media-play",
+                                divider: true,
+                                data: node,
+                            });
                         }
                         return menuObj;
                     } else if (node.type === "folder") {
-						let items = [
-                                newSubmenu,
-                                cutObj,
-                                copyObj,
-                                pasteObj,
-                                renameObj,
-                                deleteObj,
-                                generateObj,
-                                importObj,
-                                importZipObj,
-                            ]
-						if (publisherApi.isEnabled()) {
-							items.push(publishObj);
-							items.push(unpublishObj);
-						}
+                        let items = [
+                            newSubmenu,
+                            cutObj,
+                            copyObj,
+                            pasteObj,
+                            renameObj,
+                            deleteObj,
+                            generateObj,
+                            importObj,
+                            importZipObj,
+                        ]
+                        if (publisherApi.isEnabled()) {
+                            items.push(publishObj);
+                            items.push(unpublishObj);
+                        }
                         let menuObj = {
                             callbackTopic: "projects.tree.contextmenu",
                             items: items
@@ -546,67 +556,67 @@ projectsView.controller('ProjectsViewController', [
                         setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path);
                         return menuObj;
                     } else if (node.type === "file") {
-						let items = [
-                                {
-                                    id: "open",
-                                    label: "Open",
-                                    icon: "sap-icon--action",
-                                    data: node,
-                                },
-                                {
-                                    id: "openWith",
-                                    label: "Open With",
-                                    icon: "sap-icon--action",
-                                    items: getEditorsForType(node)
-                                },
-                                cutObj,
-                                copyObj,
-                                renameObj,
-                                deleteObj,
-                            ]
-						if (publisherApi.isEnabled()) {
-							items.push(publishObj);
-							items.push(unpublishObj);
-						}
+                        let items = [
+                            {
+                                id: "open",
+                                label: "Open",
+                                icon: "sap-icon--action",
+                                data: node,
+                            },
+                            {
+                                id: "openWith",
+                                label: "Open With",
+                                icon: "sap-icon--action",
+                                items: getEditorsForType(node)
+                            },
+                            cutObj,
+                            copyObj,
+                            renameObj,
+                            deleteObj,
+                        ]
+                        if (publisherApi.isEnabled()) {
+                            items.push(publishObj);
+                            items.push(unpublishObj);
+                        }
                         let menuObj = {
                             callbackTopic: "projects.tree.contextmenu",
                             items: items
                         };
                         if (generateApi.isEnabled()) {
-	                        const fileExt = getFileExtension(node.text);
-	                        if (fileExt === 'gen') {
-	                            let regenObj = {
-	                                id: "regenerateModel",
-	                                label: "Regenerate",
-	                                icon: "sap-icon--refresh",
-	                                divider: true,
-	                                data: undefined,
-	                                isDisabled: false,
-	                            };
-	                            if (node.parents.length > 2) {
-	                                regenObj.isDisabled = true;
-	                            } else {
-	                                regenObj.data = node;
-	                            }
-	                            menuObj.items.push(regenObj);
-	                        }
-	                        else if ($scope.modelTemplates.length && $scope.modelTemplateExtensions.includes(fileExt)) {
-	                            let genObj = {
-	                                id: "generateModel",
-	                                label: "Generate",
-	                                icon: "sap-icon-TNT--operations",
-	                                divider: true,
-	                                data: undefined,
-	                                isDisabled: false,
-	                            };
-	                            if (node.parents.length > 2) {
-	                                genObj.isDisabled = true;
-	                            } else {
-	                                genObj.data = node;
-	                            }
-	                            menuObj.items.push(genObj);
-	                        }
-	                        return menuObj;
+                            const fileExt = getFileExtension(node.text);
+                            if (fileExt === 'gen') {
+                                let regenObj = {
+                                    id: "regenerateModel",
+                                    label: "Regenerate",
+                                    icon: "sap-icon--refresh",
+                                    divider: true,
+                                    data: undefined,
+                                    isDisabled: false,
+                                };
+                                if (node.parents.length > 2) {
+                                    regenObj.isDisabled = true;
+                                } else {
+                                    regenObj.data = node;
+                                }
+                                menuObj.items.push(regenObj);
+                            }
+                            else if ($scope.modelTemplates.length && $scope.modelTemplateExtensions.includes(fileExt)) {
+                                let genObj = {
+                                    id: "generateModel",
+                                    label: "Generate",
+                                    icon: "sap-icon-TNT--operations",
+                                    divider: true,
+                                    data: undefined,
+                                    isDisabled: false,
+                                };
+                                if (node.parents.length > 2) {
+                                    genObj.isDisabled = true;
+                                } else {
+                                    genObj.data = node;
+                                }
+                                menuObj.items.push(genObj);
+                            }
+                            return menuObj;
                         }
                     }
                 }
@@ -710,10 +720,10 @@ projectsView.controller('ProjectsViewController', [
         $scope.publishAll = function () {
             messageHub.showStatusBusy("Publishing projects...");
             publisherApi.publish(`/${$scope.selectedWorkspace.name}/*`).then(function (response) {
-                messageHub.hideStatusBusy();
                 if (response.status !== 200)
                     messageHub.setStatusError(`Unable to publish projects in '${$scope.selectedWorkspace.name}'`);
                 else messageHub.setStatusMessage(`Published all projects in '${$scope.selectedWorkspace.name}'`);
+                messageHub.hideStatusBusy();
                 messageHub.announcePublish();
             });
 
@@ -722,37 +732,39 @@ projectsView.controller('ProjectsViewController', [
         $scope.unpublishAll = function () {
             messageHub.showStatusBusy("Unpublishing projects...");
             publisherApi.unpublish(`/${$scope.selectedWorkspace.name}/*`).then(function (response) {
-                messageHub.hideStatusBusy();
                 if (response.status !== 200)
                     messageHub.setStatusError(`Unable to unpublish projects in '${$scope.selectedWorkspace.name}'`);
                 else messageHub.setStatusMessage(`Unpublished all projects in '${$scope.selectedWorkspace.name}'`);
+                messageHub.hideStatusBusy();
                 messageHub.announceUnpublish();
             });
         };
 
-        $scope.publish = function (path, workspace, callback) {
+        $scope.publish = function (path, workspace, fileDescriptor, callback) {
             messageHub.showStatusBusy(`Publishing '${path}'...`);
             publisherApi.publish(path, workspace).then(function (response) {
-                messageHub.hideStatusBusy();
                 if (response.status !== 200) {
                     messageHub.setStatusError(`Unable to publish '${path}'`);
                 } else {
                     messageHub.setStatusMessage(`Published '${path}'`);
                     if (callback) callback();
                 }
+                messageHub.hideStatusBusy();
+                if (fileDescriptor) messageHub.announcePublish(fileDescriptor);
             });
         };
 
-        $scope.unpublish = function (path, workspace, callback) {
+        $scope.unpublish = function (path, workspace, fileDescriptor, callback) {
             messageHub.showStatusBusy(`Unpublishing '${path}'...`);
             publisherApi.unpublish(path, workspace).then(function (response) {
-                messageHub.hideStatusBusy();
                 if (response.status !== 200) {
                     messageHub.setStatusError(`Unable to unpublish '${path}'`);
                 } else {
                     messageHub.setStatusMessage(`Unpublished '${path}'`);
                     if (callback) callback();
                 }
+                messageHub.hideStatusBusy();
+                if (fileDescriptor) messageHub.announceUnpublish(fileDescriptor);
             });
         };
 
@@ -763,7 +775,7 @@ projectsView.controller('ProjectsViewController', [
                 $scope.reloadWorkspace();
             }
         };
-        
+
         $scope.isPublishEnabled = function () {
             return publisherApi.isEnabled();
         };
@@ -1179,7 +1191,7 @@ projectsView.controller('ProjectsViewController', [
                 }
             });
         }
-        
+
         function executeAction(workspace, project, name) {
             actionsApi.executeAction(workspace, project, name).then(function (response) {
                 if (response.status === 200) {
@@ -1364,12 +1376,7 @@ projectsView.controller('ProjectsViewController', [
 
         messageHub.onFileSaved(function (data) {
             const { topic, ...fileDescriptor } = data;
-            publisherApi.publish(`/${fileDescriptor.workspace}${fileDescriptor.path}`).then(function (response) {
-                if (response.status !== 200)
-                    messageHub.setStatusError(`Unable to publish '${fileDescriptor.path}'`);
-                else
-                    messageHub.announcePublish(fileDescriptor);
-            });
+            $scope.publish(fileDescriptor.path, fileDescriptor.workspace, fileDescriptor);
             // Temp solution until we fix the back-end API
             if (data.status) {
                 let objects = $scope.jstreeWidget.jstree(true).get_json(
@@ -1694,7 +1701,7 @@ projectsView.controller('ProjectsViewController', [
             },
             true
         );
-        
+
         messageHub.onDidReceiveMessage(
             "projects.formDialog.action.execute",
             function (msg) {
@@ -1879,19 +1886,9 @@ projectsView.controller('ProjectsViewController', [
                 } else if (msg.data.itemId === 'publishAll') {
                     $scope.publishAll();
                 } else if (msg.data.itemId === 'publish') {
-                    publisherApi.publish(msg.data.data).then(function (response) {
-                        if (response.status !== 200)
-                            messageHub.setStatusError(`Unable to publish '${msg.data.data}'`);
-                        else
-                            messageHub.announcePublish();
-                    });
+                    $scope.publish(msg.data.data.path, msg.data.data.workspace, msg.data.data);
                 } else if (msg.data.itemId === 'unpublish') {
-                    publisherApi.unpublish(msg.data.data).then(function (response) {
-                        if (response.status !== 200)
-                            messageHub.setStatusError(`Unable to unpublish '${msg.data.data}'`);
-                        else
-                            messageHub.announceUnpublish();
-                    });
+                    $scope.unpublish(msg.data.data.path, msg.data.data.workspace, msg.data.data);
                 } else if (msg.data.itemId === 'unpublishAll') {
                     $scope.unpublishAll();
                 } else if (msg.data.itemId === 'regenerateModel') {
