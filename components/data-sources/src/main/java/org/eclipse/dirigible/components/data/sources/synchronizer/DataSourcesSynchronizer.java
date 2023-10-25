@@ -216,7 +216,8 @@ public class DataSourcesSynchronizer<A extends Artefact> implements Synchronizer
 	@Override
 	public void cleanup(DataSource datasource) {
 		try {
-			if (!"_".equals(datasource.getLocation())) {
+			if (!datasource.getLocation().startsWith("API_")
+					&& !datasource.getLocation().startsWith("ENV_")) {
 				getService().delete(datasource);
 			}
 		} catch (Exception e) {

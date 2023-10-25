@@ -14,9 +14,12 @@ angular.module('ideGenerate', [])
         this.generateServiceUrl = '/services/ide/generate';
         this.generateModelServiceUrl = '/services/js/ide-generate-service/generate.mjs';
         this.$get = ['$http', function generateApiFactory($http) {
-
+	
             let generateFromTemplate = function (workspace, project, file, template, parameters = []) {
                 let url = new UriBuilder().path(this.generateServiceUrl.split('/')).path('file').path(workspace).path(project).path(file.split('/')).build();
+                if (parameters.length === 0) {
+					parameters = {"__empty": ""};
+				}
                 return $http.post(url, { "template": template, "parameters": parameters })
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
@@ -29,6 +32,9 @@ angular.module('ideGenerate', [])
             let generateFromModel = function (workspace, project, file, template, parameters = []) {
                 let url = new UriBuilder().path(this.generateModelServiceUrl.split('/')).path('model').path(workspace).path(project).build();
                 url = `${url}?path=${file.split('/')}`;
+                if (parameters.length === 0) {
+					parameters = {"__empty": ""};
+				}
                 return $http.post(url, { "template": template, "parameters": parameters, "model": file })
                     .then(function successCallback(response) {
                         return { status: response.status, data: response.data };
@@ -37,10 +43,15 @@ angular.module('ideGenerate', [])
                         return { status: response.status };
                     });
             }.bind(this);
+            
+            let isEnabled = function() {
+				return true;
+			}.bind(this);
 
             return {
                 generateFromTemplate: generateFromTemplate,
                 generateFromModel: generateFromModel,
+                isEnabled: isEnabled
             };
         }];
     });

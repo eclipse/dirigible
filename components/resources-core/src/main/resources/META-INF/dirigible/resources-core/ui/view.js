@@ -3,6 +3,7 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
     .constant('extensionPoint', {})
     .factory('Views', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
         let cachedViews;
+        let cachedSubviews;
         let get = function () {
             if (cachedViews) {
                 return cachedViews;
@@ -39,9 +40,43 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
                     });
             }
         };
-
+        let getSubviews = function () {
+            if (cachedSubviews) {
+                return cachedSubviews;
+            } else {
+                let url = '/services/js/resources-core/services/views.js?extensionPoint=ide-subview';
+                if (extensionPoint && extensionPoint.views) {
+                    url = `${url}?extensionPoint=${extensionPoint.views}`;
+                }
+                return $resource(url).query().$promise
+                    .then(function (data) {
+                        data = data.map(function (v) {
+                            if (!v.id) {
+                                console.error(`Subviews: view '${v.label || 'undefined'}' does not have an id`);
+                                return;
+                            }
+                            if (!v.label) {
+                                console.error(`Subviews: view '${v.id}' does not have a label`);
+                                return;
+                            }
+                            if (!v.link) {
+                                console.error(`Subviews: view '${v.id}' does not have a link`);
+                                return;
+                            }
+                            v.settings = {
+                                path: v.link,
+                                loadType: (v.lazyLoad ? 'lazy' : 'eager'),
+                            };
+                            return v;
+                        });
+                        cachedSubviews = data;
+                        return data;
+                    });
+            }
+        };
         return {
-            get: get
+            get: get,
+            getSubviews: getSubviews
         };
     }])
     .factory('baseHttpInterceptor', function () {
@@ -77,7 +112,39 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
             }
         };
     }])
+    .service('Subviews', ['Views', function (Views) {
+        return {
+            getIdList: function (startsWith) {
+                return new Promise((resolve, reject) => {
+                    Views.getSubviews().then(
+                        function (subviews) {
+                            let idList = [];
+                            if (startsWith) {
+                                for (let i = 0; i < subviews.length; i++) {
+                                    if (subviews[i].id.startsWith(startsWith)) idList.push(subviews[i].id);
+                                }
+                            } else {
+                                for (let i = 0; i < subviews.length; i++) {
+                                    idList.push(subviews[i].id);
+                                }
+                            }
+                            resolve(idList);
+                        },
+                        function (error) {
+                            console.error(error);
+                            reject(error);
+                        }
+                    );
+                });
+            }
+        };
+    }])
     .directive('embeddedView', ['Views', 'view', function (Views, view) {
+        /**
+         * viewId: String - ID of the view you want to show.
+         * params: JSON - JSON object containing extra parameters/data.
+         * dgType: String - Type of the view. Available options - 'view' (default) and 'subview'.
+         */
         return {
             restrict: 'E',
             transclude: false,
@@ -85,12 +152,14 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
             scope: {
                 viewId: '@',
                 params: '<',
+                dgType: '@?',
             },
             link: {
                 pre: function (scope) {
                     if (scope.params !== undefined && !(typeof scope.params === 'object' && !Array.isArray(scope.params) && scope.params !== null))
                         throw Error("embeddedView: view-parameters must be an object");
-                    Views.get().then(function (views) {
+
+                    function getView(views) {
                         const embeddedView = views.find(v => v.id === scope.viewId);
                         if (embeddedView) {
                             scope.path = embeddedView.settings.path;
@@ -112,9 +181,14 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
                                 }
                             }
                         } else {
-                            throw Error(`embeddedView: view with id '${scope.viewId}' not found`);
+                            if (scope.dgType === 'subview')
+                                throw Error(`embeddedView: subview with id '${scope.viewId}' not found`);
+                            else throw Error(`embeddedView: view with id '${scope.viewId}' not found`);
                         }
-                    });
+                    }
+
+                    if (scope.dgType === 'subview') Views.getSubviews().then((views) => (getView(views)));
+                    else Views.get().then((views) => (getView(views)));
 
                     scope.getParams = function () {
                         return JSON.stringify(scope.parameters);

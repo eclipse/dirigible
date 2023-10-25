@@ -116,6 +116,9 @@ public class WorkspacesServiceTest {
 		assertEquals(false, workspace2.exists());
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

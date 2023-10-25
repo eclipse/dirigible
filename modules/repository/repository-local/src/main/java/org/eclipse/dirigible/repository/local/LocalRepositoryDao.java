@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.repository.local;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -266,7 +267,13 @@ public class LocalRepositoryDao {
 		try {
 			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
-			FileSystemUtils.copyFolder(workspacePathOld, workspacePathNew);
+			FileSystemUtils.copyFolder(workspacePathOld, workspacePathNew, new FileFilter() {
+				
+				@Override
+				public boolean accept(File pathname) {
+					return !".git".equals(pathname.getName());
+				}
+			});
 			cache.clear();
 			((LocalRepository) getRepository()).setLastModified(System.currentTimeMillis());
 		} catch (IOException e) {

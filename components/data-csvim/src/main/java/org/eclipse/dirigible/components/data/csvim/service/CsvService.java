@@ -24,6 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class CsvService.
+ */
 @Service
 @Transactional
 public class CsvService implements ArtefactService<Csv> {
@@ -36,6 +39,8 @@ public class CsvService implements ArtefactService<Csv> {
 
 
     /**
+     * Gets the all.
+     *
      * @return all csvs
      */
     @Override
@@ -44,6 +49,8 @@ public class CsvService implements ArtefactService<Csv> {
     }
 
     /**
+     * Gets the pages.
+     *
      * @param pageable the pageable
      * @return the page
      */
@@ -53,6 +60,8 @@ public class CsvService implements ArtefactService<Csv> {
     }
 
     /**
+     * Find by id.
+     *
      * @param id the id
      * @return the csv
      */
@@ -67,6 +76,8 @@ public class CsvService implements ArtefactService<Csv> {
     }
 
     /**
+     * Find by name.
+     *
      * @param name the name
      * @return the csv
      */
@@ -84,6 +95,8 @@ public class CsvService implements ArtefactService<Csv> {
     }
 
     /**
+     * Find by location.
+     *
      * @param location the location
      * @return the list of csv's
      */
@@ -96,6 +109,8 @@ public class CsvService implements ArtefactService<Csv> {
     }
 
     /**
+     * Find by key.
+     *
      * @param key the key
      * @return the csv
      */
@@ -109,6 +124,8 @@ public class CsvService implements ArtefactService<Csv> {
     }
 
     /**
+     * Save.
+     *
      * @param csv the csv
      * @return the csv
      */
@@ -118,6 +135,8 @@ public class CsvService implements ArtefactService<Csv> {
     }
 
     /**
+     * Delete.
+     *
      * @param csv the csv
      */
     @Override

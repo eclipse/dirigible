@@ -192,7 +192,7 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
 			switch (flow) {
 			case CREATE:
 				if (ArtefactLifecycle.NEW.equals(view.getLifecycle())) {
-					if (!SqlFactory.getNative(connection).exists(connection, view.getName())) {
+					if (!SqlFactory.getNative(connection).existsTable(connection, view.getName())) {
 						try {
 							executeViewCreate(connection, view);
 							callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
@@ -216,7 +216,7 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
 				break;
 			case DELETE:
 				if (ArtefactLifecycle.CREATED.equals(view.getLifecycle())) {
-					if (SqlFactory.getNative(connection).exists(connection, view.getName())) {
+					if (SqlFactory.getNative(connection).existsTable(connection, view.getName())) {
 						executeViewDrop(connection, view);
 						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
 					}
@@ -274,7 +274,7 @@ public class ViewsSynchronizer<A extends Artefact> implements Synchronizer<View>
 	 */
 	public void executeViewUpdate(Connection connection, View viewModel) throws SQLException {
 		if (logger.isInfoEnabled()) {logger.info("Processing Update View: " + viewModel.getName());}
-		if (SqlFactory.getNative(connection).exists(connection, viewModel.getName())) {
+		if (SqlFactory.getNative(connection).existsTable(connection, viewModel.getName())) {
 			executeViewDrop(connection, viewModel);
 			executeViewCreate(connection, viewModel);
 		} else {

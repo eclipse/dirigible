@@ -430,6 +430,9 @@ public class WorkspaceTest {
 		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

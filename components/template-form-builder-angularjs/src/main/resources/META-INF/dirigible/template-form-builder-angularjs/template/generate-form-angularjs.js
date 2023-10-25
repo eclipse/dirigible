@@ -3,10 +3,10 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-var workspaceManager = require("platform/workspace");
-var bytes = require("io/bytes");
-var templateEngines = require("template/engines");
-var repositoryContent = require("platform/registry");
+var workspaceManager = dirigibleRequire("platform/workspace");
+var bytes = dirigibleRequire("io/bytes");
+var templateEngines = dirigibleRequire("template/engines");
+var repositoryContent = dirigibleRequire("platform/registry");
 
 exports.generateView = function(workspaceName, projectName, filePath) {
 

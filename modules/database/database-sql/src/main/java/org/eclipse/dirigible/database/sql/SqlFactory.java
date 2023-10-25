@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.database.sql;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
@@ -278,8 +279,8 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String)
 	 */
 	@Override
-	public boolean exists(Connection connection, String table) throws SQLException {
-		return this.dialect.exists(connection, table);
+	public boolean existsTable(Connection connection, String table) throws SQLException {
+		return this.dialect.existsTable(connection, table);
 	}
 	
 	/**
@@ -333,23 +334,6 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	}
 
 	/**
-	 * Count.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the int
-	 * @throws SQLException the SQL exception
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#count(java.sql.Connection, java.lang.String)
-	 */
-	@Override
-	public int count(Connection connection, String table) throws SQLException {
-		return this.dialect.count(connection, table);
-	}
-
-	/**
 	 * Lastval.
 	 *
 	 * @param args the args
@@ -359,5 +343,12 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	public LAST lastval(String... args) {
 		return this.dialect.lastval(args);
 	}
+
+	@Override
+	public String getDatabaseType(Connection connection) {
+		return this.dialect.getDatabaseType(connection);
+	}
+	
+	
 
 }

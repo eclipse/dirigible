@@ -4,6 +4,6 @@
  * Do not modify the content as it may be re-generated again.
  */
 (function() {
-    var generator = require("template-form-builder-angularjs/template/generate-form-angularjs");
+    var generator = dirigibleRequire("template-form-builder-angularjs/template/generate-form-angularjs");
     return generator.generateView(__context.get('workspaceName'), __context.get('projectName'), __context.get('filePath'));
 })();

@@ -44,6 +44,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * The Class WorkspacesEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -52,23 +55,37 @@ import org.springframework.web.context.WebApplicationContext;
 @EntityScan("org.eclipse.dirigible.components")
 public class WorkspacesEndpointTest {
 	
+	/** The workspace service. */
 	@Autowired
 	private WorkspaceService workspaceService; 
 	
+	/** The mock mvc. */
 	@Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /** The spring security filter chain. */
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 	
+	/**
+	 * Setup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeEach
     public void setup() throws Exception {
 		cleanup();
     }
 	
+	/**
+	 * Cleanup.
+	 *
+	 * @throws Exception the exception
+	 */
 	@AfterEach
     public void cleanup() throws Exception {
 		mockMvc.perform(delete("/services/ide/workspaces/workspace1")
@@ -76,6 +93,12 @@ public class WorkspacesEndpointTest {
 			.andDo(print());
     }
 	
+	/**
+	 * Gets the all workspaces.
+	 *
+	 * @return the all workspaces
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void getAllWorkspaces() throws Exception {
 		mockMvc.perform(get("/services/ide/workspaces"))
@@ -83,6 +106,11 @@ public class WorkspacesEndpointTest {
 				.andExpect(status().is2xxSuccessful());
 	}
 	
+	/**
+	 * Creates the get delete workspace.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void createGetDeleteWorkspace() throws Exception {
 		mockMvc.perform(post("/services/ide/workspaces/workspace1")
@@ -102,6 +130,11 @@ public class WorkspacesEndpointTest {
 			.andExpect(status().is2xxSuccessful());
 	}
 	
+	/**
+	 * Creates the get delete project.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void createGetDeleteProject() throws Exception {
 		mockMvc.perform(post("/services/ide/workspaces/workspace1")
@@ -134,6 +167,11 @@ public class WorkspacesEndpointTest {
 			.andExpect(status().is2xxSuccessful());
 	}
 	
+	/**
+	 * Creates the get delete file.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void createGetDeleteFile() throws Exception {
 		mockMvc.perform(post("/services/ide/workspaces/workspace1")
@@ -179,6 +217,9 @@ public class WorkspacesEndpointTest {
 			.andExpect(status().is2xxSuccessful());
 	}
 
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

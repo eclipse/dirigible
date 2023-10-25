@@ -132,6 +132,9 @@ previewView.controller('DebugPreviewController', ['$scope', 'messageHub', functi
 				case 'graalvm':
 					url += '/graalvm';
 					break;
+                case 'ts':
+                    url += '/ts';
+                    break;
 				case 'js':
 					url += '/js';
 					break;
@@ -140,6 +143,9 @@ previewView.controller('DebugPreviewController', ['$scope', 'messageHub', functi
 					break;
 				case 'ts':
 					url += '/js';
+					break;
+				case 'py':
+					url += '/py';
 					break;
 				case 'xsjs':
 					url += '/xsk';

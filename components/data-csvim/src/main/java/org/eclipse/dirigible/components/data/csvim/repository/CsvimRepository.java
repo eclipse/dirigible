@@ -15,6 +15,9 @@ import org.eclipse.dirigible.components.data.csvim.domain.Csvim;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Interface CsvimRepository.
+ */
 @Repository("csvimRepository")
 public interface CsvimRepository extends JpaRepository<Csvim, Long> {
 }

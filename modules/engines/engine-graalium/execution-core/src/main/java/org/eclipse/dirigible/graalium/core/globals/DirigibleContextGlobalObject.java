@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.graalium.core.globals;
 
-import org.eclipse.dirigible.graalium.core.graal.globals.JSGlobalObject;
+import org.eclipse.dirigible.graalium.core.graal.globals.GlobalObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * The Class DirigibleContextGlobalObject.
  */
-public class DirigibleContextGlobalObject implements JSGlobalObject {
+public class DirigibleContextGlobalObject implements GlobalObject {
 
     /** The dirigible context value. */
     private final Map<Object, Object> dirigibleContextValue;

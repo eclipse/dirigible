@@ -14,6 +14,7 @@ package org.eclipse.dirigible.database.sql.dialects.hana;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
+import org.eclipse.dirigible.database.sql.builders.synonym.DropSynonymBuilder;
 import org.eclipse.dirigible.database.sql.builders.tableType.DropTableTypeBuilder;
 
 /**
@@ -56,4 +57,8 @@ public class HanaDropBranchingBuilder extends DropBranchingBuilder {
         return new HanaDropTableTypeBuilder(this.getDialect(), tableType);
     }
 
+    @Override
+    public DropSynonymBuilder publicSynonym(String synonym) {
+        return new HanaDropPublicSynonymBuilder(getDialect(), synonym);
+    }
 }

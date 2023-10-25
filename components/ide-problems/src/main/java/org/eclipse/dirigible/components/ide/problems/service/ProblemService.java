@@ -71,7 +71,46 @@ public class ProblemService {
 			throw new IllegalArgumentException("Problem with id does not exist: " + id);
 		}
 	}
-	
+
+	/**
+	 * Find by location, type and category.
+	 *
+	 * @param location the location
+	 * @param type the type
+	 * @param category the category
+	 * 
+	 * @return the problems
+	 */
+	@Transactional(readOnly = true)
+	public List<Problem> findByLocationAndTypeAndCategory(String location, String type, String category) {
+		return problemRepository.findProblemsByLocationAndTypeAndCategory(location, type, category);
+	}
+
+	/**
+	 * Update cause by location, type and category.
+	 *
+	 * @param cause the cause
+	 * @param location the location
+	 * @param type the type
+	 * @param category the category
+	 */
+	@Transactional(readOnly = false)
+	public void updateCauseByLocationAndTypeAndCategory(String cause, String location, String type, String category) {
+		problemRepository.updateProblemsCauseByLocationAndTypeAndCategory(cause, location, type, category);
+	}
+
+	/**
+	 * Delete by location, type and category.
+	 *
+	 * @param location the location
+	 * @param type the type
+	 * @param category the category
+	 */
+	@Transactional(readOnly = false)
+	public void deleteByLocationAndTypeAndCategory(String location, String type, String category) {
+		problemRepository.deleteProblemsByLocationAndTypeAndCategory(location, type, category);
+	}
+
 	/**
 	 * Save.
 	 *
@@ -176,5 +215,4 @@ public class ProblemService {
 		List<Problem> result = problemRepository.findProblemsByConditionAndLimit(condition, limit);
 		return new Problems(result, result.size(), (int) problemRepository.count());
 	}
-
 }

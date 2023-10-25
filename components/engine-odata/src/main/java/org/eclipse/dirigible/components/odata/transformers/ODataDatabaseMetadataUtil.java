@@ -17,8 +17,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -261,12 +263,15 @@ public class ODataDatabaseMetadataUtil {
 
         List<String> primaryKeys = getPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaPattern);
 
+        Set<String> uniqueColumns = new HashSet<>();
         while (columns.next()) {
         	String columnName = columns.getString(JDBC_COLUMN_NAME_PROPERTY);
-        	String columnType = convertSqlTypeToOdataEdmType(columns.getString(JDBC_COLUMN_TYPE_PROPERTY));
-    		new TableColumn(
-    				columnName,
-    				columnType,
+            if (!uniqueColumns.contains(columnName)) {
+                uniqueColumns.add(columnName);
+                String columnType = convertSqlTypeToOdataEdmType(columns.getString(JDBC_COLUMN_TYPE_PROPERTY));
+                new TableColumn(
+                    columnName,
+                    columnType,
                     columns.getInt(JDBC_COLUMN_SIZE_PROPERTY) + "",
                     columns.getBoolean(JDBC_COLUMN_NULLABLE_PROPERTY),
                     primaryKeys.contains(columnName),
@@ -274,7 +279,8 @@ public class ODataDatabaseMetadataUtil {
                     columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY) + "",
                     false,
                     tableMetadata
-                    );
+                );
+            }
         }
     }
 

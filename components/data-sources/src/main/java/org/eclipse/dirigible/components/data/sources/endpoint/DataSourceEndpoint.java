@@ -123,7 +123,7 @@ public class DataSourceEndpoint extends BaseEndpoint {
 	public ResponseEntity<URI> createDataSource(
 			@Valid @RequestBody DataSourceParameter datasourceParameter) throws URISyntaxException {
 		DataSource datasource = new DataSource(
-				"_", datasourceParameter.getName(), "",
+				"API_" + datasourceParameter.getName(), datasourceParameter.getName(), "",
 				datasourceParameter.getDriver(), datasourceParameter.getUrl(),
 				datasourceParameter.getUsername(), datasourceParameter.getPassword());
 		

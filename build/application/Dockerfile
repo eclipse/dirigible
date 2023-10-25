@@ -1,11 +1,11 @@
 ARG DIRIGIBLE_VERSION=latest
-FROM amazoncorretto:20
+FROM amazoncorretto:21-alpine
 
 VOLUME /tmp
 
-RUN curl -sL https://rpm.nodesource.com/setup_16.x | bash - 
-RUN yum install -y nodejs 
+RUN apk add nodejs npm
 RUN npm i -g esbuild
+RUN npm i -g typescript
 
 COPY target/*.jar dirigible.jar
 ENTRYPOINT ["java","-jar","/dirigible.jar"]

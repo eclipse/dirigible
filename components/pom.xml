@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>8.10.0</version>
+		<version>9.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -27,6 +27,7 @@
 		<!-- Security -->
 		<module>security-basic</module>
 		<module>security-keycloak</module>
+		<module>security-oauth2</module>
 
 		<!-- Data -->
 		<module>data-structures</module>
@@ -37,9 +38,12 @@
 		<module>data-csvim</module>
 		<module>data-export</module>
 		<module>data-import</module>
+		<module>data-anonymize</module>
 
 		<!-- Engines -->
 		<module>engine-javascript</module>
+		<module>engine-typescript</module>
+		<module>engine-python</module>
 		<module>engine-web</module>
 		<module>engine-template</module>
 		<module>engine-template-velocity</module>
@@ -72,6 +76,7 @@
 		
 		<!-- IDE UI -->
 		<module>ide-ui-about</module>
+		<module>ide-ui-actions-service</module>
 		<module>ide-ui-bpm</module>
 		<module>ide-ui-bpm-menu</module>
 		<module>ide-ui-bpm-workspace</module>
@@ -140,6 +145,7 @@
 		<module>ide-ui-workspace-service</module>
 		
 		<!-- API -->
+		<module>api-modules-javascript</module>
 		<module>api-core</module>
 		<module>api-test</module>
 		<module>api-qunit</module>
@@ -220,7 +226,7 @@
 		<!-- Test -->
 		<module>test-project</module>
         <module>core-spring</module>
-        <module>engine-typescript</module>
+        <module>api-modules-python</module>
     </modules>
 
 	<dependencies>
@@ -249,7 +255,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
-			<version>8.10.0</version>
+			<version>9.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Spring Boot -->

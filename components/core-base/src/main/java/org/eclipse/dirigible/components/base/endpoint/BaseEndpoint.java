@@ -36,5 +36,12 @@ public abstract class BaseEndpoint {
 	
 	/** The Constant PREFIX_ENDPOINT_WEBSOCKETS. */
 	public static final String PREFIX_ENDPOINT_WEBSOCKETS = "/websockets/";
+
+	/**
+	 * Instantiates a new base endpoint.
+	 */
+	public BaseEndpoint() {
+		super();
+	}
 	
 }

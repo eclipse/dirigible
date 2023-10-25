@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.components.jobs.service;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +28,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.ibm.icu.text.SimpleDateFormat;
 
 /**
  * The Class JobLogService.

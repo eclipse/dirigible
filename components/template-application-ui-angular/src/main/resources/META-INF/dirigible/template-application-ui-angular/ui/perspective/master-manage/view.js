@@ -9,6 +9,7 @@ const viewData = {
     factory: "frame",
     region: "left",
     link: "/services/web/{{projectName}}/gen/ui/{{perspectiveName}}/{{name}}/index.html",
+    perspectiveName: "{{perspectiveName}}"
 };
 
 if (typeof exports !== 'undefined') {

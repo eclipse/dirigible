@@ -232,7 +232,7 @@ angular.module('ideWorkspace', [])
                         return { status: response.status };
                     });
             }.bind(this);
-
+            
             return {
                 setWorkspace: setWorkspace,
                 getCurrentWorkspace: getCurrentWorkspace,

@@ -65,9 +65,11 @@ public class WorkspacesEndpoint {
     @Autowired
     private WorkspaceService workspaceService;
 
+	/** The repository. */
 	@Autowired
 	private IRepository repository;
 
+	/** The type script service. */
 	@Autowired
 	private TypeScriptService typeScriptService;
 

@@ -34,6 +34,7 @@ import com.google.gson.annotations.Expose;
 @Table(name = "DIRIGIBLE_CSV")
 public class Csv extends Artefact {
 
+    /** The Constant ARTEFACT_TYPE. */
     public static final String ARTEFACT_TYPE = "csv";
 
     /**
@@ -57,6 +58,18 @@ public class Csv extends Artefact {
     @Expose
     private byte[] content;
 
+    /**
+     * Instantiates a new csv.
+     *
+     * @param location the location
+     * @param name the name
+     * @param type the type
+     * @param description the description
+     * @param dependencies the dependencies
+     * @param id the id
+     * @param imported the imported
+     * @param content the content
+     */
     public Csv(String location, String name, String type, String description, Set<String> dependencies, Long id, boolean imported, byte[] content) {
         super(location, name, type, description, dependencies);
         this.id = id;
@@ -64,12 +77,22 @@ public class Csv extends Artefact {
         this.content = content;
     }
 
+    /**
+     * Instantiates a new csv.
+     *
+     * @param id the id
+     * @param imported the imported
+     * @param content the content
+     */
     public Csv(Long id, boolean imported, byte[] content) {
         this.id = id;
         this.imported = imported;
         this.content = content;
     }
 
+    /**
+     * Instantiates a new csv.
+     */
     public Csv() {
 
     }
@@ -181,6 +204,8 @@ public class Csv extends Artefact {
     }
 
     /**
+     * Equals.
+     *
      * @param o object
      * @return true/false if the content is matching
      */
@@ -196,6 +221,11 @@ public class Csv extends Artefact {
         return Arrays.equals(content, csv.content);
     }
 
+    /**
+     * Hash code.
+     *
+     * @return the int
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, getLocation());

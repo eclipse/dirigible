@@ -26,6 +26,14 @@ public interface JavascriptSourceProvider {
      * @return the absolute source path
      */
     public Path getAbsoluteSourcePath(String projectName, String projectFileName);
+
+    /**
+     * Gets the absolute project path.
+     *
+     * @param projectName the project name
+     * @return the absolute project path
+     */
+    public Path getAbsoluteProjectPath(String projectName);
     
     /**
      * Gets the source.

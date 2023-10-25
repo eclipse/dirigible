@@ -14,6 +14,19 @@ exports.process = function (model, parameters) {
         if (e.dataCount && parameters.tablePrefix) {
             e.dataCount = e.dataCount.replaceAll("${tablePrefix}", parameters.tablePrefix);
         }
+
+        if (e.type === "DEPENDENT" && (e.layoutType === "LIST_DETAILS" || e.layoutType === "MANAGE_DETAILS")) {
+            const relationshipEntityName = e.properties.filter(p => p.relationshipType === "COMPOSITION" && p.relationshipCardinality === "1_n").map(p => p.relationshipEntityName)[0];
+            if (relationshipEntityName) {
+                const projectionEntity = model.entities.filter(entity => entity.name === relationshipEntityName && entity.type === "PROJECTION")[0];
+                if (projectionEntity) {
+                    e.hasReferencedProjection = true;
+                    e.referencedProjectionProjectName = projectionEntity.projectionReferencedModel.split('/')[2];
+                    e.referencedProjectionPerspectiveName = projectionEntity.perspectiveName;
+                }
+            }
+        }
+
         e.properties.forEach(p => {
             p.dataNotNull = p.dataNullable === "false";
             p.dataAutoIncrement = p.dataAutoIncrement === "true";

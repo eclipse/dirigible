@@ -145,7 +145,7 @@ public class PersistenceManager<T> {
 		if (logger.isTraceEnabled()) {logger.trace("tableExists -> connection: " + connection.hashCode() + ", class: " + clazz.getCanonicalName());}
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		try {
-			return SqlFactory.getNative(connection).exists(connection, tableModel.getTableName());
+			return SqlFactory.getNative(connection).existsTable(connection, tableModel.getTableName());
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		}

@@ -11,11 +11,15 @@
  */
 package org.eclipse.dirigible.database.sql.dialects;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,6 +27,7 @@ import java.util.Set;
 
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
+import org.eclipse.dirigible.database.sql.DatabaseType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlException;
@@ -424,7 +429,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
 	 */
 	@Override
-	public boolean exists(Connection connection, String table) throws SQLException {
+	public boolean existsTable(Connection connection, String table) throws SQLException {
 		return exists(connection, table, DatabaseArtifactTypes.TABLE);
 	}
 	
@@ -464,7 +469,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		ResultSet resultSet = metadata.getTables(null, schema, normalizeTableName(table), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
 		exists = resultSet != null && resultSet.next();
 		if (!exists) {
-			resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table.toUpperCase()), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+			resultSet = metadata.getTables(null, null, normalizeTableName(table.toUpperCase()), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
 			exists = resultSet != null && resultSet.next();
 		}
 		return exists;
@@ -479,6 +484,46 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	public static String normalizeTableName(String table) {
 		if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
 			table = table.substring(1, table.length()-1);
+		}
+		if (table.indexOf("\".\"") > 0) {
+			table = table.replace("\".\"", ".");
+		}
+		return table;
+	}
+	
+	/**
+	 * Normalize table name.
+	 *
+	 * @param table the table
+	 * @return the string
+	 */
+	public static String normalizeTableNameOnly(String table) {
+		if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
+			table = table.substring(1, table.length()-1);
+		}
+		if (table.indexOf("\".\"") > 0) {
+			table = table.replace("\".\"", ".");
+		}
+		String[] tokens = table.split("\\.");
+		if (tokens.length == 2) {
+			return tokens[1];
+		}
+		return table;
+	}
+	
+	/**
+	 * Quote table name.
+	 *
+	 * @param table the table
+	 * @return the string
+	 */
+	public static String quoteTableName(String table) {
+		table = normalizeTableName(table);
+		String[] tokens = table.split("\\.");
+		if (tokens.length == 1) {
+			return "\"" + table + "\"";
+		} else if (tokens.length == 2) {
+			return "\"" + tokens[0] + "\".\"" + tokens[1] + "\"";
 		}
 		return table;
 	}
@@ -501,29 +546,6 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Count.
-	 *
-	 * @param connection the connection
-	 * @param table the table
-	 * @return the int
-	 * @throws SQLException the SQL exception
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#count(java.sql.Connection, java.lang.String)
-	 */
-	@Override
-	public int count(Connection connection, String table) throws SQLException {
-		String sql = new SelectBuilder(this).column("COUNT(*)").from(table).build();
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultSet = statement.executeQuery();
-		if (resultSet.next()) {
-			return resultSet.getInt(1);
-		}
-		throw new SQLException("Cannot calculate the count of records of table: " + table);
 	}
 
 	/**
@@ -688,5 +710,108 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	public String getEscapeSymbol() {
 		return "\"";
 	}
+
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#count(java.sql.Connection, java.lang.String)
+	 */
+	@Override
+	public int count(Connection connection, String table) throws SQLException {
+		String sql = countQuery(table);
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultSet = statement.executeQuery();
+		if (resultSet.next()) {
+			return resultSet.getInt(1);
+		}
+		throw new SQLException("Cannot calculate the count of records of table: " + table);
+	}
+	
+	/**
+	 * All.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the result set
+	 * @throws SQLException the SQL exception
+	 */
+	@Override
+	public ResultSet all(Connection connection, String table) throws SQLException {
+		String sql = allQuery(table);
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultSet = statement.executeQuery();
+		return resultSet;
+	}
+
+	/**
+	 * Count query.
+	 *
+	 * @param table the table
+	 * @return the string
+	 */
+	@Override
+	public String countQuery(String table) {
+		table = normalizeTableName(table);
+		String sql = new SelectBuilder(this).column("COUNT(*)").from(quoteTableName(table)).build();
+		return sql;
+	}
+
+	/**
+	 * All query.
+	 *
+	 * @param table the table
+	 * @return the string
+	 */
+	@Override
+	public String allQuery(String table) {
+		String sql = new SelectBuilder(this).column("*").from(quoteTableName(table)).build();
+		return sql;
+	}
+
+	/**
+	 * Gets the database type.
+	 *
+	 * @param connection the connection
+	 * @return the database type
+	 */
+	@Override
+	public String getDatabaseType(Connection connection) {
+		return DatabaseType.RDBMS.getName();
+	}
+
+	/**
+	 * Export data.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @param output the output
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@Override
+	public void exportData(Connection connection, String table, OutputStream output) throws Exception {
+		throw new SQLFeatureNotSupportedException();		
+	}
+	
+	/**
+	 * Import data.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @param input the input
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@Override
+	public void importData(Connection connection, String table, InputStream input) throws Exception {
+		throw new SQLFeatureNotSupportedException();		
+	}
+	
+	
 
 }

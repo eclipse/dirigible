@@ -747,11 +747,19 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 };
 
                 scope.hideWindow = function () {
-                    if (scope.window.callbackTopic) messageHub.triggerEvent(scope.window.callbackTopic, true);
+                    if (scope.window.callbackTopic) {
+                        messageHub.triggerEvent(scope.window.callbackTopic, true);
+                        scope.window.callbackTopic = null;
+                    }
                     ideDialogWindow.classList.remove("fd-dialog--active");
                     windows.shift();
                     scope.window.link = "";
                     scope.window.parameters = "";
+                    scope.window.title = "";
+                    scope.window.dialogWindowId = "";
+                    scope.window.link = "";
+                    scope.window.parameters = "";
+                    scope.window.closable = true;
                     checkForDialogs();
                 };
 

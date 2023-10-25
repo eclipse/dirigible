@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.components.base.project;
 
+import java.util.List;
+
 /**
  * The ProjectMetadata representation of the project.json file.
  */
@@ -45,6 +47,9 @@ public class ProjectMetadata {
 	
 	/** The exposes. */
 	private String[] exposes;
+	
+	/** The actions. */
+    private List<ProjectAction> actions;
 
 	/**
 	 * Gets the guid.
@@ -203,6 +208,24 @@ public class ProjectMetadata {
 	 */
 	public void setExposes(String[] exposes) {
 		this.exposes = exposes;
+	}
+	
+	/**
+	 * Gets the actions.
+	 *
+	 * @return the actions
+	 */
+	public List<ProjectAction> getActions() {
+		return actions;
+	}
+	
+	/**
+	 * Sets the actions.
+	 *
+	 * @param actions the new actions
+	 */
+	public void setActions(List<ProjectAction> actions) {
+		this.actions = actions;
 	}
 
 }

@@ -13,6 +13,7 @@ package org.eclipse.dirigible.components.ide.workspace.service;
 
 import java.util.*;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -31,6 +32,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PublisherService {
 	
+	public static final String DIRIGIBLE_PUBLISH_DISABLED = "DIRIGIBLE_PUBLISH_DISABLED";
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PublisherService.class);
 	
@@ -82,9 +85,13 @@ public class PublisherService {
 	 *
 	 * @param user the user
 	 * @param workspace the workspace
+	 * @param project the project
 	 * @param path the path
 	 */
 	public void publish(String user, String workspace, String project, String path) {
+		if (Boolean.parseBoolean(Configuration.get(DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
+			return;
+		}
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
 		if ("*".equals(project)) {
 			project = "";
@@ -110,6 +117,9 @@ public class PublisherService {
 	 * @param path the path
 	 */
 	public void unpublish(String path) {
+		if (Boolean.parseBoolean(Configuration.get(DIRIGIBLE_PUBLISH_DISABLED, Boolean.FALSE.toString()))) {
+			return;
+		}
 		String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path).toString();
 		unpublishResource(targetLocation);
 	}
@@ -119,10 +129,16 @@ public class PublisherService {
 	 *
 	 * @param sourceLocation the source location
 	 * @param targetLocation the target location
+	 * @param afterPublishMetadata the after publish metadata
 	 */
 	private void publishResource(String sourceLocation, String targetLocation, PublisherHandler.AfterPublishMetadata afterPublishMetadata) {
 		for (PublisherHandler next : publisherHandlers) {
-			next.beforePublish(sourceLocation);
+			try {
+				next.beforePublish(sourceLocation);
+			} catch (Exception e) {
+				logger.error("{} failed on before publish.", next.getClass().getCanonicalName());
+				logger.error(e.getMessage(), e);
+			}
 		}
 		
 		ICollection sourceCollection = getRepository().getCollection(sourceLocation);
@@ -144,7 +160,12 @@ public class PublisherService {
 		}
 		
 		for (PublisherHandler next : publisherHandlers) {
-			next.afterPublish(sourceLocation, targetLocation, afterPublishMetadata);
+			try {
+				next.afterPublish(sourceLocation, targetLocation, afterPublishMetadata);
+			} catch (Exception e) {
+				logger.error("{} failed on after publish.", next.getClass().getCanonicalName());
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 	
@@ -156,7 +177,12 @@ public class PublisherService {
 	private void unpublishResource(String targetLocation) {
 		
 		for (PublisherHandler next : publisherHandlers) {
-			next.beforeUnpublish(targetLocation);
+			try {
+				next.beforeUnpublish(targetLocation);
+			} catch (Exception e) {
+				logger.error("{} failed on before unpublish.", next.getClass().getCanonicalName());
+				logger.error(e.getMessage(), e);
+			}
 		}
 		
 		ICollection targetCollection = getRepository().getCollection(targetLocation);
@@ -174,7 +200,12 @@ public class PublisherService {
 		}
 		
 		for (PublisherHandler next : publisherHandlers) {
-			next.afterUnpublish(targetLocation);
+			try {
+				next.afterUnpublish(targetLocation);
+			} catch (Exception e) {
+				logger.error("{} failed on after unpublish.", next.getClass().getCanonicalName());
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 	

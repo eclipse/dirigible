@@ -3,8 +3,8 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const generateUtils = require("ide-generate-service/template/generateUtils");
-const parameterUtils = require("ide-generate-service/template/parameterUtils");
+const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
+const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
 
 exports.generate = function (model, parameters) {
     model = JSON.parse(model).model;

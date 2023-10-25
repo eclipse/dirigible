@@ -51,7 +51,7 @@ public class TableDropProcessor {
 			tableName = "\"" + tableName + "\"";
 		}
 		if (logger.isInfoEnabled()) {logger.info("Processing Drop Table: " + tableName);}
-		if (SqlFactory.getNative(connection).exists(connection, tableName)) {
+		if (SqlFactory.getNative(connection).existsTable(connection, tableName)) {
 			String sql = SqlFactory.getNative(connection).select().column("COUNT(*)").from(tableName)
 					.build();
 			PreparedStatement statement = connection.prepareStatement(sql);

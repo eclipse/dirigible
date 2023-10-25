@@ -31,6 +31,11 @@ import org.eclipse.dirigible.repository.api.IResource;
 @CalledFromJS
 public class DirigibleSourceProvider implements JavascriptSourceProvider {
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	static IRepository getRepository() {
     	return (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
     }
@@ -45,6 +50,20 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
     @Override
     public Path getAbsoluteSourcePath(String projectName, String projectFileName) {
         String projectFilePath = Path.of(projectName, projectFileName).toString();
+        String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
+        String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
+        return Path.of(absoluteSourcePathString);
+    }
+
+    /**
+     * Gets the absolute project path.
+     *
+     * @param projectName the project name
+     * @return the absolute project path
+     */
+    @Override
+    public Path getAbsoluteProjectPath(String projectName) {
+        String projectFilePath = Path.of(projectName).toString();
         String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
         String absoluteSourcePathString = getRepository().getInternalResourcePath(internalRepositoryRelativeSourcePath.toString());
         return Path.of(absoluteSourcePathString);
@@ -96,7 +115,9 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
                 || filePath.endsWith(".json")
                 || filePath.endsWith(".mjs")
                 || filePath.endsWith(".xsjs")
-                || filePath.endsWith(".ts")) {
+                || filePath.endsWith(".ts")
+                || filePath.endsWith(".py")
+        ) {
             return filePath;
         }
 

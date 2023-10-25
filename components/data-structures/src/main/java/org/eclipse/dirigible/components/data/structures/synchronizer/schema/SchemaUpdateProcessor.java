@@ -46,7 +46,7 @@ public class SchemaUpdateProcessor {
 		
 		for (Table tableModel : schemaModel.getTables()) {
 			try {
-				if (!SqlFactory.getNative(connection).exists(connection, tableModel.getName())) {
+				if (!SqlFactory.getNative(connection).existsTable(connection, tableModel.getName())) {
 					try {
 						TableCreateProcessor.execute(connection, tableModel, true);
 					} catch (Exception e) {

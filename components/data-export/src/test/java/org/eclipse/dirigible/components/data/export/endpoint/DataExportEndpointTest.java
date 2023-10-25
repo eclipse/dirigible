@@ -41,6 +41,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * The Class DataExportEndpointTest.
+ */
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -49,24 +52,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class DataExportEndpointTest {
+    
+    /** The datasource repository. */
     @Autowired
     private DataSourceRepository datasourceRepository;
 
+    /** The workspace service. */
     @Autowired
     private WorkspaceService workspaceService;
 
+    /** The mock mvc. */
     @Autowired
     private MockMvc mockMvc;
 
+    /** The wac. */
     @Autowired
     protected WebApplicationContext wac;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
         DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
         datasourceRepository.save(datasource);
     }
 
+    /**
+     * Export data as project test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void exportDataAsProjectTest() throws Exception {
         mockMvc.perform(put("/services/data/project/csv/{datasource}/{schema}",
@@ -80,6 +96,11 @@ public class DataExportEndpointTest {
         assertNotNull(project);
     }
 
+    /**
+     * Export metadata as project test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void exportMetadataAsProjectTest() throws Exception {
         mockMvc.perform(put("/services/data/project/metadata/{datasource}/{schema}",
@@ -93,6 +114,9 @@ public class DataExportEndpointTest {
         assertNotNull(project);
     }
 
+    /**
+     * The Class TestConfiguration.
+     */
     @SpringBootApplication
     static class TestConfiguration {
     }

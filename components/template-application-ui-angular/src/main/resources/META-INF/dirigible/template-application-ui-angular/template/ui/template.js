@@ -3,16 +3,16 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const listTemplate = require("template-application-ui-angular/template/ui/list");
-const manageTemplate = require("template-application-ui-angular/template/ui/manage");
-const masterDetailsListTemplate = require("template-application-ui-angular/template/ui/masterDetailsList");
-const masterDetailsManageTemplate = require("template-application-ui-angular/template/ui/masterDetailsManage");
+const listTemplate = dirigibleRequire("template-application-ui-angular/template/ui/list");
+const manageTemplate = dirigibleRequire("template-application-ui-angular/template/ui/manage");
+const masterDetailsListTemplate = dirigibleRequire("template-application-ui-angular/template/ui/masterDetailsList");
+const masterDetailsManageTemplate = dirigibleRequire("template-application-ui-angular/template/ui/masterDetailsManage");
 // const reportBarTemplate = require("template-application-ui-angular/template/ui/reportBar");
 // const reportLineTemplate = require("template-application-ui-angular/template/ui/reportLine");
 // const reportPieTemplate = require("template-application-ui-angular/template/ui/reportPie");
 // const reportTableTemplate = require("template-application-ui-angular/template/ui/reportTable");
 // const perspective = require("template-application-ui-angular/template/ui/perspective");
-const launchpad = require("template-application-ui-angular/template/ui/launchpad");
+const launchpad = dirigibleRequire("template-application-ui-angular/template/ui/launchpad");
 // const tiles = require("template-application-ui-angular/template/ui/tiles");
 // const menu = require("template-application-ui-angular/template/ui/menu");
 

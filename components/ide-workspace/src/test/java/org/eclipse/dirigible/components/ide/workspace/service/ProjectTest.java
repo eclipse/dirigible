@@ -154,6 +154,9 @@ public class ProjectTest {
 		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 	
+	/**
+	 * The Class TestConfiguration.
+	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

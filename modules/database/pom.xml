@@ -24,6 +24,7 @@
 		<module>database-sql-sybase</module>
 		<module>database-sql-mongodb</module>
 		<module>database-mongodb-jdbc</module>
+		<module>database-sql-snowflake</module>
 	</modules>
 
 	<properties>

@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * The String Header Formatter.
  */
-public class StringHeaderFormatter implements HeaderFormatter<String> {
+public class StringHeaderFormatter implements HeaderFormatter {
 
 	/**
 	 * Write.

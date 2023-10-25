@@ -64,7 +64,8 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 - [Git](http://git-scm.com/)
 - [Java JDK 11+](https://adoptopenjdk.net/)
 - [Maven 3.5.x](http://maven.apache.org/docs/3.5.3/release-notes.html)
-- [esbuild](https://esbuild.github.io/getting-started/#install-esbuild) - only if going to use TypeScript
+- [esbuild](https://esbuild.github.io/getting-started/#install-esbuild)  - `npm i -g esbuild`
+- [tsc](https://www.npmjs.com/package/typescript) - `npm i -g typescript`
 
 
 ##### Steps
@@ -157,20 +158,20 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
 - Pull the official image from Docker Hub:
 
-        docker pull dirigiblelabs/dirigible-application
+        docker pull dirigiblelabs/dirigible:latest
 
 - Build it locally
 
         cd build/application
-        docker build -t dirigible-application -f Dockerfile .
+        docker build -t dirigiblelabs/dirigible:latest -f Dockerfile .
 
 2. Start the container
 
-        docker run -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible-application <&- &
+        docker run --name dirigible --rm -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible:latest
 
 3. Open a web browser and go to:
 
-        http://localhost:8080/
+        http://localhost:8080
 
 4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/build/application/)
 

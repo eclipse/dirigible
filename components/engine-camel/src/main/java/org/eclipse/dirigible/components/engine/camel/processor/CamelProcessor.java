@@ -20,26 +20,32 @@ import org.apache.camel.spring.boot.SpringBootCamelContext;
 import org.apache.camel.support.ResourceHelper;
 import org.eclipse.dirigible.components.engine.camel.domain.Camel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 
 @Component
 public class CamelProcessor {
     private final SpringBootCamelContext context;
+
+    private final RequestMappingHandlerMapping camelMapping;
 
     private final RoutesLoader loader;
 
     private final Map<Long, Resource> camels = new HashMap<>();
 
     @Autowired
-    public CamelProcessor(CamelContext context) {
+    public CamelProcessor(CamelContext context,
+                          @Qualifier("platformHttpEngineRequestMapping") RequestMappingHandlerMapping camelMapping) {
         this.context = context.adapt(SpringBootCamelContext.class);
+        this.camelMapping = camelMapping;
         loader = this.context.getRoutesLoader();
     }
 
@@ -68,11 +74,19 @@ public class CamelProcessor {
 
     private void removeAllRoutes() {
         try {
-            context.getRouteController().stopAllRoutes();
-            context.getRouteController().removeAllRoutes();
+            context.stopAllRoutes();
+            context.removeAllRoutes();
+            unregisterEndpoints();
+
         } catch (Exception e) {
             throw new CamelProcessorException(e);
         }
+    }
+
+    private void unregisterEndpoints() {
+        List<RequestMappingInfo> mappingsToRemove = new ArrayList<>();
+        camelMapping.getHandlerMethods().forEach((info, method) -> mappingsToRemove.add(info));
+        mappingsToRemove.forEach(info -> camelMapping.unregisterMapping(info));
     }
 
     public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {

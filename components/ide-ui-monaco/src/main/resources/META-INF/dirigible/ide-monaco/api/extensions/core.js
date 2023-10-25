@@ -1,5 +1,6 @@
 exports.getFileTypes = function () {
     return {
+        ".abap": "abap",
         ".js": "javascript",
         ".mjs": "javascript",
         ".ts": "typescript",
@@ -26,6 +27,7 @@ exports.getFileTypes = function () {
         ".md": "markdown",
         ".yml": "yaml",
         ".yaml": "yaml",
-        ".openapi": "yaml"
+        ".openapi": "yaml",
+        ".py": "python"
     }
 };

@@ -34,6 +34,7 @@ public class SynchronizationInitializer {
 	/** The classpath expander. */
 	private final ClasspathExpander classpathExpander;
 
+	/** The initialization processor. */
 	private final InitializationProcessor initializationProcessor;
 
 	/**

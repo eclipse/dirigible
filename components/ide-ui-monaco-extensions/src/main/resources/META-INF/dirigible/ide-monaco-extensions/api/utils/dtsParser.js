@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const registry = require("platform/registry");
-const extensions = require("extensions/extensions");
+const registry = dirigibleRequire("platform/registry");
+const extensions = dirigibleRequire("extensions/extensions");
 
 // Returns the path to d.ts foreach modules.json entry where isPackageDescription = true
 exports.getDtsPaths = function () {
@@ -21,7 +21,7 @@ exports.getDtsPaths = function () {
     let apis = apiModulesExtensions.concat(extModulesExtensions);
 
     apis.forEach(function (apiModule) {
-        let module = require(apiModule);
+        let module = dirigibleRequire(apiModule);
         let content = module.getContent();
 
         for (let [property, value] of Object.entries(content)) {

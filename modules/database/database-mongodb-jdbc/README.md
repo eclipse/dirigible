@@ -35,4 +35,16 @@ Example:
 #### Specify a collection to query
 
 	stmt.executeQuery(‘{find:"testCollection"}’);
+
+#### Specify a count of a collection
+
+	stmt.executeQuery(‘{count:"testCollection"}’);
+	
+#### Specify a create collection
+
+	stmt.executeQuery(‘{create:"testCollection"}’);
+	
+#### Specify a drop of a collection
+
+	stmt.executeQuery(‘{drop:"testCollection"}’);
 	

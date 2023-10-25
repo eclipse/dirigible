@@ -13,7 +13,7 @@ package org.eclipse.dirigible.graalium.core;
 
 import java.nio.file.Path;
 
-import org.eclipse.dirigible.graalium.core.graal.GraalJSInterceptor;
+import org.eclipse.dirigible.graalium.core.javascript.GraalJSInterceptor;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;

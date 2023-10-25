@@ -3,14 +3,14 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const response = require("http/response");
-const extensions = require("extensions/extensions");
+const response = dirigibleRequire("http/response");
+const extensions = dirigibleRequire("extensions/extensions");
 
 let tiles = {};
 
 let tileExtensions = extensions.getExtensions("${projectName}-tile");
 for (let i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
-    let tileExtension = require(tileExtensions[i]);
+    let tileExtension = dirigibleRequire(tileExtensions[i]);
     if (typeof tileExtension.getTile !== "function") {
         continue;
     }

@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
-import org.eclipse.dirigible.graalium.core.graal.modules.ModuleResolver;
+import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleResolver;
 
 /**
  * The Class DirigibleModuleResolver.
@@ -59,7 +59,7 @@ public class DirigibleModuleResolver implements ModuleResolver {
      */
     @Override
     public boolean isResolvable(String moduleToResolve) {
-        return moduleToResolve.contains(DIRIGIBLE_CORE_MODULE_SIGNATURE);
+        return moduleToResolve.contains(DIRIGIBLE_CORE_MODULE_SIGNATURE) && !DirigibleModulesMetadata.isPureEsmModule(moduleToResolve);
     }
 
     /**

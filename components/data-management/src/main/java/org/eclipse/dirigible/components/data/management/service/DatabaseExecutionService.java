@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.components.data.management.service;
 
 
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -87,109 +88,84 @@ public class DatabaseExecutionService {
 	/**
 	 * Execute query.
 	 *
-	 * @param datasource
-	 *            the datasource
-	 * @param sql
-	 *            the sql
-	 * @param isJson
-	 *            the is json
-	 * @param isCsv
-	 *            the is csv
-	 * @return the string
+	 * @param datasource the datasource
+	 * @param sql the sql
+	 * @param isJson the is json
+	 * @param isCsv the is csv
+	 * @param output the output
 	 */
-	public String executeQuery(String datasource, String sql, boolean isJson, boolean isCsv) {
+	public void executeQuery(String datasource, String sql, boolean isJson, boolean isCsv, OutputStream output) {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		if (dataSource != null) {
-			return executeStatement(dataSource, sql, true, isJson, isCsv, true);
+			executeStatement(dataSource, sql, true, isJson, isCsv, true, output);
 		}
-		return null;
 	}
 
 	/**
 	 * Execute update.
 	 *
-	 * @param datasource
-	 *            the datasource
-	 * @param sql
-	 *            the sql
-	 * @param isJson
-	 *            the is json
-	 * @param isCsv
-	 *            the is csv
-	 * @return the string
+	 * @param datasource the datasource
+	 * @param sql the sql
+	 * @param isJson the is json
+	 * @param isCsv the is csv
+	 * @param output the output
 	 */
-	public String executeUpdate(String datasource, String sql, boolean isJson, boolean isCsv) {
+	public void executeUpdate(String datasource, String sql, boolean isJson, boolean isCsv, OutputStream output) {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		if (dataSource != null) {
-			return executeStatement(dataSource, sql, false, isJson, isCsv, true);
+			executeStatement(dataSource, sql, false, isJson, isCsv, true, output);
 		}
-		return null;
 	}
 
 	/**
 	 * Execute update.
 	 *
-	 * @param datasource
-	 *            the datasource
-	 * @param sql
-	 *            the sql
-	 * @param isJson
-	 *            the is json
-	 * @param isCsv
-	 *            the is csv
-	 * @return the string
+	 * @param datasource the datasource
+	 * @param sql the sql
+	 * @param isJson the is json
+	 * @param isCsv the is csv
+	 * @param output the output
 	 */
-	public String executeProcedure(String datasource, String sql, boolean isJson, boolean isCsv) {
+	public void executeProcedure(String datasource, String sql, boolean isJson, boolean isCsv, OutputStream output) {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		if (dataSource != null) {
-			return executeProcedure(dataSource, sql, isJson, isCsv);
+			executeProcedure(dataSource, sql, isJson, isCsv, output);
 		}
-		return null;
 	}
 
 	/**
 	 * Execute.
 	 *
-	 * @param datasource
-	 *            the datasource
-	 * @param sql
-	 *            the sql
-	 * @param isJson
-	 *            the is json
-	 * @param isCsv
-	 *            the is csv
-	 * @return the string
+	 * @param datasource the datasource
+	 * @param sql the sql
+	 * @param isJson the is json
+	 * @param isCsv the is csv
+	 * @param output the output
 	 */
-	public String execute(String datasource, String sql, boolean isJson, boolean isCsv) {
+	public void execute(String datasource, String sql, boolean isJson, boolean isCsv, OutputStream output) {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		if (dataSource != null) {
-			return executeStatement(dataSource, sql, true, isJson, isCsv, true);
+			executeStatement(dataSource, sql, true, isJson, isCsv, true, output);
 		}
-		return null;
 	}
 
 	/**
 	 * Execute statement.
 	 *
-	 * @param dataSource
-	 *            the data source
-	 * @param sql
-	 *            the sql
-	 * @param isQuery
-	 *            the is query
-	 * @param isJson
-	 *            the is json
-	 * @param isCsv
-	 *            the is csv
-	 * @return the string
+	 * @param dataSource the data source
+	 * @param sql the sql
+	 * @param isQuery the is query
+	 * @param isJson the is json
+	 * @param isCsv the is csv
+	 * @param limited the limited
+	 * @param output the output
 	 */
-	public String executeStatement(javax.sql.DataSource dataSource, String sql, boolean isQuery, boolean isJson, boolean isCsv, boolean limited) {
+	public void executeStatement(javax.sql.DataSource dataSource, String sql, boolean isQuery, boolean isJson, boolean isCsv, boolean limited, OutputStream output) {
 
 		if ((sql == null) || (sql.length() == 0)) {
-			return "";
+			return;
 		}
 
-		List<String> results = new ArrayList<String>();
 		List<String> errors = new ArrayList<String>();
 
 		StringTokenizer tokenizer = new StringTokenizer(sql, getDelimiter(sql));
@@ -203,20 +179,19 @@ public class DatabaseExecutionService {
 				DatabaseQueryHelper.executeSingleStatement(connection, line, isQuery, new RequestExecutionCallback() {
 					@Override
 					public void updateDone(int recordsCount) {
-						results.add(recordsCount + "");
 					}
 
 					@Override
 					public void queryDone(ResultSet rs) {
 						try {
 							if (isJson) {
-								results.add(DatabaseResultSetHelper.toJson(rs, limited, true));
+								DatabaseResultSetHelper.toJson(rs, limited, true, output);
 							} else if (isCsv) {
-								results.add(DatabaseResultSetHelper.toCsv(rs, limited, false));
+								DatabaseResultSetHelper.toCsv(rs, limited, false, output);
 							} else {
-								results.add(DatabaseResultSetHelper.print(rs, limited));
+								DatabaseResultSetHelper.print(rs, limited, output);
 							}
-						} catch (SQLException e) {
+						} catch (Exception e) {
 							if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 							errors.add(e.getMessage());
 						}
@@ -235,32 +210,23 @@ public class DatabaseExecutionService {
 		}
 
 		if (!errors.isEmpty()) {
-			if (isJson) {
-				return DatabaseErrorHelper.toJson(String.join("\n", errors));
-			}
-			return DatabaseErrorHelper.print(String.join("\n", errors));
+			throw new RuntimeException(DatabaseErrorHelper.print(String.join("\n", errors)));
 		}
-
-		return String.join("\n", results);
 	}
 
 	/**
 	 * Execute procedure.
 	 *
-	 * @param dataSource
-	 *            the data source
-	 * @param sql
-	 *            the sql
-	 * @param isJson
-	 *            the is json
-	 * @param isCsv
-	 *            the is csv
-	 * @return the string
+	 * @param dataSource the data source
+	 * @param sql the sql
+	 * @param isJson the is json
+	 * @param isCsv the is csv
+	 * @param output the output
 	 */
-	private String executeProcedure(javax.sql.DataSource dataSource, String sql, boolean isJson, boolean isCsv) {
+	private void executeProcedure(javax.sql.DataSource dataSource, String sql, boolean isJson, boolean isCsv, OutputStream output) {
 
 		if ((sql == null) || (sql.length() == 0)) {
-			return "";
+			return;
 		}
 
 		List<String> results = new ArrayList<String>();
@@ -278,20 +244,19 @@ public class DatabaseExecutionService {
 
 					@Override
 					public void updateDone(int recordsCount) {
-						results.add(recordsCount + "");
 					}
 
 					@Override
 					public void queryDone(ResultSet rs) {
 						try {
 							if (isJson) {
-								results.add(DatabaseResultSetHelper.toJson(rs, LIMITED, true));
+								DatabaseResultSetHelper.toJson(rs, LIMITED, true, output);
 							} else if (isCsv) {
-								results.add(DatabaseResultSetHelper.toCsv(rs, LIMITED, false));
+								DatabaseResultSetHelper.toCsv(rs, LIMITED, false, output);
 							} else {
-								results.add(DatabaseResultSetHelper.print(rs, LIMITED));
+								DatabaseResultSetHelper.print(rs, LIMITED, output);
 							}
-						} catch (SQLException e) {
+						} catch (Exception e) {
 							if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
 							errors.add(e.getMessage());
 						}
@@ -310,16 +275,8 @@ public class DatabaseExecutionService {
 		}
 
 		if (!errors.isEmpty()) {
-			if (isJson) {
-				return DatabaseErrorHelper.toJson(String.join("\n", errors));
-			}
-			return DatabaseErrorHelper.print(String.join("\n", errors));
+			throw new RuntimeException(DatabaseErrorHelper.print(String.join("\n", errors)));
 		}
-
-		if (isJson) {
-			return GsonHelper.toJson(results);
-		}
-		return String.join("\n", results);
 	}
 	
 	/**

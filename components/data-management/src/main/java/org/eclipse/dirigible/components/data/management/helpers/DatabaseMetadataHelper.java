@@ -29,6 +29,7 @@ import org.eclipse.dirigible.components.data.management.domain.SchemaMetadata;
 import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.eclipse.dirigible.components.database.DatabaseNameNormalizer;
+import org.eclipse.dirigible.database.sql.DatabaseType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -115,6 +116,9 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
             }
         }
 
+        if (sqlDialect.getDatabaseType(connection).equals(DatabaseType.NOSQL.getName())) {
+        	result.forEach(s -> s.setKind(DatabaseType.NOSQL.getName().toLowerCase()));
+        }
         return result;
     }
 

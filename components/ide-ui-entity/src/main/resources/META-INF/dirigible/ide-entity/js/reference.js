@@ -85,10 +85,10 @@ angular.module('edmReference', ['ideUI', 'ideView'])
         };
 
         $scope.save = function () {
-            let entityProperties;
+            let referencedEntity;
             for (let i = 0; i < $scope.availableEntities.length; i++) {
                 if ($scope.dropdowns.entity === $scope.availableEntities[i].name) {
-                    entityProperties = $scope.availableEntities[i].properties;
+                    referencedEntity = $scope.availableEntities[i];
                     break;
                 }
             }
@@ -97,13 +97,19 @@ angular.module('edmReference', ['ideUI', 'ideView'])
                     cellId: $scope.dataParameters.cellId,
                     model: $scope.dropdowns.model,
                     entity: $scope.dropdowns.entity,
-                    entityProperties: entityProperties,
+                    perspectiveName: referencedEntity.perspectiveName,
+                    perspectiveIcon: referencedEntity.perspectiveIcon,
+                perspectiveOrder: referencedEntity.perspectiveOrder,
+                    entityProperties: referencedEntity.properties,
                 }, true);
             else messageHub.postMessage('edm.editor.copiedEntity', {
                 cellId: $scope.dataParameters.cellId,
                 model: $scope.dropdowns.model,
                 entity: $scope.dropdowns.entity,
-                entityProperties: entityProperties,
+                perspectiveName: referencedEntity.perspectiveName,
+                perspectiveIcon: referencedEntity.perspectiveIcon,
+                perspectiveOrder: referencedEntity.perspectiveOrder,
+                entityProperties: referencedEntity.properties,
             }, true);
         };
 

@@ -111,6 +111,8 @@ public class CommandService {
 		String result;
 		
 		String commandSource = new String(getResourceContent(module), StandardCharsets.UTF_8);
+		String root = registryAccessor.getRepository().getParameter("REPOSITORY_ROOT_FOLDER");
+		String workingDirectory = root + getResource(module).getParent().getPath();
 		
 		Command commandDefinition;
 		try {
@@ -124,7 +126,7 @@ public class CommandService {
 		
 		String commandLine = commandDefinition.getTargetCommand().getCommand();
 
-		result = executeCommandLine(commandLine, commandDefinition.getSet(), commandDefinition.getUnset(), params);
+		result = executeCommandLine(workingDirectory, commandLine, commandDefinition.getSet(), commandDefinition.getUnset(), params);
 
 		try {
 			HttpResponseFacade.setContentType(commandDefinition.getContentType());
@@ -139,6 +141,7 @@ public class CommandService {
 	/**
 	 * Execute command line.
 	 *
+	 * @param workingDirectory the working directory
 	 * @param commandLine the command line
 	 * @param forAdding the for adding
 	 * @param forRemoving the for removing
@@ -146,7 +149,7 @@ public class CommandService {
 	 * @return the string
 	 * @throws Exception the exception
 	 */
-	public String executeCommandLine(String commandLine, Map<String, String> forAdding, List<String> forRemoving, Map<String, String> params) throws Exception {
+	public String executeCommandLine(String workingDirectory, String commandLine, Map<String, String> forAdding, List<String> forRemoving, Map<String, String> params) throws Exception {
 		String result;
 
 		String[] args;
@@ -169,8 +172,7 @@ public class CommandService {
 			ProcessUtils.addEnvironmentVariables(processBuilder, params);
 			ProcessUtils.removeEnvironmentVariables(processBuilder, forRemoving);
 
-			String root = registryAccessor.getRepository().getParameter("REPOSITORY_ROOT_FOLDER");
-			processBuilder.directory(new File(root + IRepositoryStructure.PATH_REGISTRY_PUBLIC));
+			processBuilder.directory(new File(workingDirectory));
 
 			processBuilder.redirectErrorStream(true);
 

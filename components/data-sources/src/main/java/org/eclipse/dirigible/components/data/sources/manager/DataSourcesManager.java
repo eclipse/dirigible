@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ import java.util.Properties;
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.domain.DataSource;
+import org.eclipse.dirigible.components.data.sources.service.CustomDataSourcesService;
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.eclipse.dirigible.components.database.DatabaseParameters;
 import org.slf4j.Logger;
@@ -54,14 +56,20 @@ public class DataSourcesManager implements InitializingBean {
 	/** The datasource service. */
 	private DataSourceService datasourceService;
 	
+	/** The custom data sources service. */
+	private CustomDataSourcesService customDataSourcesService;
+	
 	/**
 	 * Instantiates a new data sources manager.
 	 *
 	 * @param datasourceService the datasource service
+	 * @param customDataSourcesService the custom data sources service
 	 */
 	@Autowired
-	public DataSourcesManager(DataSourceService datasourceService) {
+	public DataSourcesManager(DataSourceService datasourceService, CustomDataSourcesService customDataSourcesService) {
 		this.datasourceService = datasourceService;
+		this.customDataSourcesService = customDataSourcesService;
+		this.customDataSourcesService.initialize();
 	}
 	
 	/**
@@ -128,7 +136,7 @@ public class DataSourcesManager implements InitializingBean {
 		datasource = getDataSourceDefinition(name);
 		if (datasource.getDriver().equals("org.h2.Driver")) {
 			try {
-					prepareRootFolder(name);
+				prepareRootFolder(name);
 			} catch (IOException e) {
 				logger.error("Invalid configuration for the datasource: " + name);
 			}
@@ -141,16 +149,37 @@ public class DataSourcesManager implements InitializingBean {
 		properties.put("dataSource.password", datasource.getPassword());
 		properties.put("dataSource.logWriter", new PrintWriter(System.out));
 		
+		Map<String, String> hikariProperties = getHikariProperties(name);
+		hikariProperties.forEach(properties::setProperty);
+		
 		HikariConfig config = new HikariConfig(properties);
 		config.setPoolName(name);
 		config.setAutoCommit(true);
 		datasource.getProperties().forEach(dsp -> config.addDataSourceProperty(dsp.getName(), dsp.getValue()));
 		HikariDataSource hds = new HikariDataSource(config);
 		
-		ManagedDataSource wrappedDataSource = new ManagedDataSource(hds);
-		DATASOURCES.put(name, wrappedDataSource);
+		ManagedDataSource managedDataSource = new ManagedDataSource(hds);
+		DATASOURCES.put(name, managedDataSource);
 		if (logger.isInfoEnabled()) {logger.info("Initialized a datasource with name: " + name);}
-		return wrappedDataSource;	
+		return managedDataSource;	
+	}
+	
+	/**
+	 * Gets the hikari properties.
+	 *
+	 * @param databaseName the database name
+	 * @return the hikari properties
+	 */
+	private Map<String, String> getHikariProperties(String databaseName) {
+		Map<String, String> properties = new HashMap<>();
+		String hikariDelimiter = "_HIKARI_";
+		String databaseKeyPrefix = databaseName + hikariDelimiter;
+		int hikariDelimiterLength = hikariDelimiter.length();
+		Arrays.stream(Configuration.getKeys()).filter(key -> key.startsWith(databaseKeyPrefix))//
+			.map(key -> key.substring(key.lastIndexOf(hikariDelimiter) + hikariDelimiterLength)).forEach(
+					key -> properties.put(key, Configuration.get(databaseKeyPrefix + key)));
+
+		return properties;
 	}
 
 	/**

@@ -4,14 +4,10 @@ dist/
 target/
 dirigible_local/
 bin/
-log/
 .idea
 .history
 .vscode
 node_modules
-
-# Ignore log/ folder rule, for logs API
-!components/api-log/src/**/
 
 # files
 .DS_Store

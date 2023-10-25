@@ -47,9 +47,12 @@
                     dialogWindows: "${projectName}-dialog-window"
                 })
                 .controller('ApplicationController', ["$scope", "messageHub", function ($scope, messageHub) {
+                    const httpRequest = new XMLHttpRequest();
+                    httpRequest.open("GET", "/services/js/resources-core/services/views.js?extensionPoint=${projectName}-view", false);
+                    httpRequest.send();
 
                     $scope.layoutModel = {
-                        views: [#foreach ($view in $perspectiveViews)'${view}'#if($foreach.hasNext), #end#end]
+                        views: JSON.parse(httpRequest.responseText).filter(e => !e.isLaunchpad && e.perspectiveName === "${perspectiveName}").map(e => e.id)
                     };
 
                 }]);

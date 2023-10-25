@@ -215,6 +215,10 @@ body {
   min-height: 0;
 }
 
+.dg-flex--nowrap {
+  flex-wrap: nowrap;
+}
+
 .dg-no-border {
   border: none;
 }
@@ -324,6 +328,15 @@ body {
 
 .dg-restrict-width--xl {
   max-width: 1600px;
+}
+
+/* fd-tile-container additions */
+.fd-tile-container--buttons>.fd-button {
+  margin-right: .5rem;
+}
+
+.fd-tile-container--buttons>.fd-button:last-child {
+  margin-right: 0;
 }
 
 /* fd-page helper classes */

@@ -192,7 +192,7 @@ public class DataTransferService {
 			handler.tableTransferStarted(tableModel.getTableName());
 			try {
 				
-				if (!SqlFactory.getNative(sourceConnection).exists(targetConnection, tableModel.getTableName())) {
+				if (!SqlFactory.getNative(sourceConnection).existsTable(targetConnection, tableModel.getTableName())) {
 					PersistenceCreateTableProcessor createTableProcessor = new PersistenceCreateTableProcessor(null);
 					createTableProcessor.create(targetConnection, tableModel);
 				} else {

@@ -3,12 +3,12 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const schemaTemplateManager = require("template-application-schema/template/template");
-const feedTemplateManager = require("template-application-feed/template/template");
-const uiAngularjsTemplateManager = require("template-application-ui-angular/template/template");
-const odataTemplateManager = require("template-application-odata/template/template");
-const generateUtils = require("ide-generate-service/template/generateUtils");
-const parameterUtils = require("ide-generate-service/template/parameterUtils");
+const schemaTemplateManager = dirigibleRequire("template-application-schema/template/template");
+const feedTemplateManager = dirigibleRequire("template-application-feed/template/template");
+const uiAngularjsTemplateManager = dirigibleRequire("template-application-ui-angular/template/template");
+const odataTemplateManager = dirigibleRequire("template-application-odata/template/template");
+const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
+const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
 
 exports.generate = function (model, parameters) {
     model = JSON.parse(model).model;

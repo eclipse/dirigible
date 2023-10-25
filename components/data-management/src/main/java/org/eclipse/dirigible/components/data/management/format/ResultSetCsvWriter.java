@@ -13,6 +13,8 @@ package org.eclipse.dirigible.components.data.management.format;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.sql.Clob;
 import java.sql.ResultSet;
@@ -27,6 +29,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ClassUtils;
+import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,8 +80,7 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 	/**
 	 * Sets the stringified.
 	 *
-	 * @param stringify
-	 *            the new stringified
+	 * @param stringify the new stringified
 	 */
 	public void setStringified(boolean stringify) {
 		this.stringify = stringify;
@@ -88,30 +90,26 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 	 * Write.
 	 *
 	 * @param resultSet the result set
-	 * @return the string
-	 * @throws SQLException the SQL exception
-	 */
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.databases.processor.format.ResultSetWriter#write(java.sql.ResultSet)
+	 * @param output the output
+	 * @throws Exception the exception
 	 */
 	@Override
-	public String write(ResultSet resultSet) throws SQLException {
+	public void write(ResultSet resultSet, OutputStream output) throws Exception {
 		
-		StringWriter sw = new StringWriter();
+		OutputStreamWriter sw = new OutputStreamWriter(output);
 
 		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
-		List<String> records = new ArrayList<String>();
 		int count = 0;
 		List<String> names = new ArrayList<>();
 		if (resultSet.next()) {
+			if (resultSetMetaData == null) {
+				resultSetMetaData = resultSet.getMetaData(); // dynamic result set metadata
+			}
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 				String name = resultSetMetaData.getColumnName(i);
 				names.add(name);
 			}
-		} else {
-			return "";
 		}
 		
 		CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
@@ -124,11 +122,12 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 	    			List<Object> values = new ArrayList<>();
 	    			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 	    				Object value = null;
+	    				String name = resultSetMetaData.getColumnName(i);
 	    				int dbt = resultSetMetaData.getColumnType(i);
 	    				if (dbt == Types.BLOB
 	    						|| dbt == Types.BINARY
 	    						|| dbt == Types.LONGVARBINARY) {
-	    					InputStream is = resultSet.getBinaryStream(i);
+	    					InputStream is = resultSet.getBinaryStream(name);
 	    					if (is == null
 		    						&& stringify) {
 		    					value = "[NULL]";
@@ -142,7 +141,7 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 		    				}
 	    				} else if (dbt == Types.CLOB
 	    						|| dbt == Types.LONGVARCHAR) {
-	    					Clob clob = resultSet.getClob(i);
+	    					Clob clob = resultSet.getClob(name);
 	    					if (clob == null
 		    						&& stringify) {
 		    					value = "[NULL]";
@@ -154,8 +153,17 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 		    						value = Base64.getEncoder().encodeToString(ba);
 		    					}
 		    				}
+	    				} else if (dbt == Types.OTHER) {
+	    					Object dataObject = resultSet.getObject(name);
+	    					if (dataObject instanceof PGobject) {
+	    						if (value == null
+			    						&& stringify) {
+			    					value = "[NULL]";
+			    				}
+	    						value = ((PGobject) dataObject).getValue();
+	    					}
 	    				} else {
-		    				value = resultSet.getObject(i);
+		    				value = resultSet.getObject(name);
 		    				if (value == null
 		    						&& stringify) {
 		    					value = "[NULL]";
@@ -181,14 +189,11 @@ public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 	    				break;
 	    			}
 	    		} while (resultSet.next());
-	            
-	            
+	    		
 	        }
 		} catch(Exception e) {
-			return e.getMessage();
+			logger.error(e.getMessage(), e);
 		}
-		
-		return sw.toString().trim();
 	}
 
 }

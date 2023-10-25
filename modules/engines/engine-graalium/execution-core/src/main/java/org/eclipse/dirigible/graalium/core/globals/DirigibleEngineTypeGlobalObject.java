@@ -11,12 +11,12 @@
  */
 package org.eclipse.dirigible.graalium.core.globals;
 
-import org.eclipse.dirigible.graalium.core.graal.globals.JSGlobalObject;
+import org.eclipse.dirigible.graalium.core.graal.globals.GlobalObject;
 
 /**
  * The Class DirigibleEngineTypeGlobalObject.
  */
-public class DirigibleEngineTypeGlobalObject implements JSGlobalObject {
+public class DirigibleEngineTypeGlobalObject implements GlobalObject {
     
     /**
      * Gets the name.

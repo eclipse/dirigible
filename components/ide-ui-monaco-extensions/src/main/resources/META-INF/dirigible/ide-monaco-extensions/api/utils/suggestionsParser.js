@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let contentManager = require("platform/registry");
-let acorn = require("acornjs/acorn");
+let contentManager = dirigibleRequire("platform/registry");
+let acorn = dirigibleRequire("acornjs/acorn");
 
 const COMMENTS_OFFSET_LENGTH = 12;
 

@@ -14,6 +14,7 @@ package org.eclipse.dirigible.commons.api.helpers;
 import static java.nio.file.FileVisitResult.CONTINUE;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -96,14 +97,10 @@ public class FileSystemUtils {
 	/**
 	 * Save file.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
-	 * @param content
-	 *            the content
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param workspacePath the workspace path
+	 * @param content the content
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void saveFile(String workspacePath, byte[] content) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(workspacePath);
@@ -117,13 +114,10 @@ public class FileSystemUtils {
 	/**
 	 * Load file.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
-	 * @return the byte[]
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param workspacePath the workspace path
+	 * @return the byte[] 
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static byte[] loadFile(String workspacePath) throws FileNotFoundException, IOException {
 		String normalizedPath = FilenameUtils.normalize(workspacePath);
@@ -138,14 +132,10 @@ public class FileSystemUtils {
 	/**
 	 * Move file.
 	 *
-	 * @param workspacePathOld
-	 *            the workspace path old
-	 * @param workspacePathNew
-	 *            the workspace path new
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param workspacePathOld the workspace path old
+	 * @param workspacePathNew the workspace path new
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void moveFile(String workspacePathOld, String workspacePathNew) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(workspacePathNew);
@@ -157,14 +147,10 @@ public class FileSystemUtils {
 	/**
 	 * Copy file.
 	 *
-	 * @param srcPath
-	 *            the src path
-	 * @param destPath
-	 *            the dest path
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param srcPath the src path
+	 * @param destPath the dest path
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void copyFile(String srcPath, String destPath) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(destPath);
@@ -195,14 +181,10 @@ public class FileSystemUtils {
 	/**
 	 * Copy folder.
 	 *
-	 * @param srcPath
-	 *            the src path
-	 * @param destPath
-	 *            the dest path
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param srcPath the src path
+	 * @param destPath the dest path
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void copyFolder(String srcPath, String destPath) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(destPath);
@@ -211,16 +193,30 @@ public class FileSystemUtils {
 		Path destDir = fileSystem.getPath(destPath);
 		FileUtils.copyDirectory(srcDir.toFile(), destDir.toFile(), true);
 	}
+	
+	/**
+	 * Copy folder.
+	 *
+	 * @param srcPath the src path
+	 * @param destPath the dest path
+	 * @param filter the filter
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static void copyFolder(String srcPath, String destPath, FileFilter filter) throws FileNotFoundException, IOException {
+		createFoldersIfNecessary(destPath);
+		FileSystem fileSystem = FileSystems.getDefault();
+		Path srcDir = fileSystem.getPath(srcPath);
+		Path destDir = fileSystem.getPath(destPath);
+		FileUtils.copyDirectory(srcDir.toFile(), destDir.toFile(), filter, true);
+	}
 
 	/**
 	 * Removes the file.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param workspacePath the workspace path
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void removeFile(String workspacePath) throws FileNotFoundException, IOException {
 		Path path = FileSystems.getDefault().getPath(workspacePath);
@@ -275,8 +271,7 @@ public class FileSystemUtils {
 	/**
 	 * Creates the folder.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
+	 * @param workspacePath the workspace path
 	 * @return true, if successful
 	 */
 	public static boolean createFolder(String workspacePath) {
@@ -296,11 +291,9 @@ public class FileSystemUtils {
 	/**
 	 * Creates the file.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
+	 * @param workspacePath the workspace path
 	 * @return true, if successful
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static boolean createFile(String workspacePath) throws IOException {
 		createFoldersIfNecessary(workspacePath);
@@ -314,11 +307,9 @@ public class FileSystemUtils {
 	/**
 	 * Gets the extension.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
-	 * @return the extension
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param workspacePath the workspace path
+	 * @return the extension 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static String getExtension(String workspacePath) throws IOException {
 		File f = new File(workspacePath);
@@ -335,11 +326,9 @@ public class FileSystemUtils {
 	/**
 	 * Gets the owner.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
+	 * @param workspacePath the workspace path
 	 * @return the owner
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static String getOwner(String workspacePath) throws IOException {
 		String convertedPath = convertToWorkspacePath(workspacePath);
@@ -354,11 +343,9 @@ public class FileSystemUtils {
 	/**
 	 * Gets the modified at.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
-	 * @return the modified at
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param workspacePath the workspace path
+	 * @return the modified at 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static Date getModifiedAt(String workspacePath) throws IOException {
 		String convertedPath = convertToWorkspacePath(workspacePath);
@@ -373,8 +360,7 @@ public class FileSystemUtils {
 	/**
 	 * Creates the folders if necessary.
 	 *
-	 * @param workspacePath
-	 *            the workspace path
+	 * @param workspacePath the workspace path
 	 */
 	public static void createFoldersIfNecessary(String workspacePath) {
 		String normalizedPath = FilenameUtils.normalize(workspacePath);
@@ -390,8 +376,7 @@ public class FileSystemUtils {
 	/**
 	 * Convert to workspace path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the string
 	 */
 	private static String convertToWorkspacePath(String path) {
@@ -409,8 +394,7 @@ public class FileSystemUtils {
 	/**
 	 * Exists.
 	 *
-	 * @param location
-	 *            the location
+	 * @param location the location
 	 * @return true, if successful
 	 */
 	public static boolean exists(String location) {
@@ -434,8 +418,7 @@ public class FileSystemUtils {
 	/**
 	 * Directory exists.
 	 *
-	 * @param location
-	 *            the location
+	 * @param location the location
 	 * @return true, if successful
 	 */
 	public static boolean directoryExists(String location) {
@@ -445,8 +428,7 @@ public class FileSystemUtils {
 	/**
 	 * File exists.
 	 *
-	 * @param location
-	 *            the location
+	 * @param location the location
 	 * @return true, if successful
 	 */
 	public static boolean fileExists(String location) {
@@ -456,8 +438,7 @@ public class FileSystemUtils {
 	/**
 	 * Checks if is directory.
 	 *
-	 * @param location
-	 *            the location
+	 * @param location the location
 	 * @return true, if is directory
 	 */
 	public static boolean isDirectory(String location) {

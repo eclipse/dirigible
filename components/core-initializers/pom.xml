@@ -16,7 +16,12 @@
     <dependencies>
     
     	<!-- Components -->
-    	<dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-api-platform</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-base</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
@@ -54,6 +59,12 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-extensions</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-ide-git</artifactId>
 			<version>9.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>

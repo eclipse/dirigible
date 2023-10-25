@@ -9,10 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-// messageHub.fireFileOpen = function (fileDescriptor) {
-// 	messageHub.post({ data: fileDescriptor }, 'fileselected');
-// }
-let database = angular.module('database', ['ideUI', 'ideView']);
+const database = angular.module('database', ['ideUI', 'ideView']);
 database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	let databasesSvcUrl = "/services/data/";
 	$scope.selectedDatabase;
@@ -63,6 +60,9 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			},
 			tableView: {
 				icon: "sap-icon--grid",
+			},
+			tableCollection: {
+				icon: "sap-icon--list",
 			},
 			tableLock: {
 				icon: "sap-icon--locked",
@@ -116,13 +116,13 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 				icon: "sap-icon--numbered-text",
 			},
 			float: {
-				icon: "sap-icon--measuring-point",
+				icon: "sap-icon--numbered-text",
 			},
 			double: {
-				icon: "sap-icon--measuring-point",
+				icon: "sap-icon--numbered-text",
 			},
 			decimal: {
-				icon: "sap-icon--measuring-point",
+				icon: "sap-icon--numbered-text",
 			},
 			bigint: {
 				icon: "sap-icon--trend-up",
@@ -299,7 +299,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.data.export.artifact', sqlCommand);
 						}.bind(this)
 					};
-					
+
 					// Import data to table
 					if (node.original.type === 'table' || node.original.type === 'base table') {
 						ctxmenu.importScript = {
@@ -314,7 +314,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							}.bind(this)
 						};
 					}
-					
+
 					// Export metadata
 					ctxmenu.exportMetadata = {
 						"separator_before": true,
@@ -327,7 +327,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.export.artifact', sqlCommand);
 						}.bind(this)
 					};
-					
+
 					// Drop table
 					if (node.original.type === 'table' || node.original.type === 'base table') {
 						ctxmenu.dropScript = {
@@ -395,7 +395,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.export.schema', sqlCommand);
 						}.bind(this)
 					};
-					ctxmenu.exportDataInProject= {
+					ctxmenu.exportDataInProject = {
 						"separator_before": true,
 						"label": "Export Data in Project",
 						"action": function (data) {
@@ -415,21 +415,185 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							messageHub.postMessage('database.metadata.project.export.schema', sqlCommand);
 						}.bind(this)
 					};
+					ctxmenu.exportMetadataInProject = {
+						"separator_before": false,
+						"label": "Export Topological Order",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = node.original.text;
+							messageHub.postMessage('database.metadata.project.export.topology', sqlCommand);
+						}.bind(this)
+					};
 					ctxmenu.dropScript = {
-							"separator_before": true,
-							"label": "Drop",
-							"action": function (data) {
-								let tree = $.jstree.reference(data.reference);
-								let node = tree.get_node(data.reference);
-								let sqlCommand = "DROP SCHEMA \"" + node.original.text + "\" CASCADE;\n";
-								messageHub.postMessage('database.sql.script', sqlCommand);
-							}.bind(this)
+						"separator_before": true,
+						"label": "Drop",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = "DROP SCHEMA \"" + node.original.text + "\" CASCADE;\n";
+							messageHub.postMessage('database.sql.script', sqlCommand);
+						}.bind(this)
 					};
 				}
+
+				// Collection related actions
+				if (node.original.kind === 'table' && node.original.type === 'collection') {
+					ctxmenu.showContents = {
+						"separator_before": false,
+						"label": "Show Contents",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let sqlCommand = "query: {'find': '" + node.original.text + "'}";
+							messageHub.postMessage('database.sql.execute', sqlCommand);
+						}.bind(this)
+					};
+					ctxmenu.exportData = {
+						"separator_before": true,
+						"label": "Export Data",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let parentNodeName = tree.get_text(node.parent);
+							let sqlCommand = parentNodeName + "." + node.original.text;
+							messageHub.postMessage('database.data.export.artifact', sqlCommand);
+						}.bind(this)
+					};
+					// Import data to table
+					ctxmenu.importScript = {
+						"separator_before": false,
+						"label": "Import Data",
+						"action": function (data) {
+							let tree = $.jstree.reference(data.reference);
+							let node = tree.get_node(data.reference);
+							let parentNodeName = tree.get_text(node.parent);
+							let sqlCommand = parentNodeName + "." + node.original.text;
+							messageHub.postMessage('database.data.import.artifact', sqlCommand);
+						}.bind(this)
+					};
+				}
+				
+				// Column related actions
+				if (node.original.kind === 'column') {
+					ctxmenu.anonymizeFullName = {
+						"separator_before": false,
+						"label": "Anonymize Full Name",
+						"action": function (data) {
+							anonymizeMenu(node, data, "FULL_NAME");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeFirstName = {
+						"separator_before": false,
+						"label": "Anonymize First Name",
+						"action": function (data) {
+							anonymizeMenu(node, data, "FIRST_NAME");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeLastName = {
+						"separator_before": false,
+						"label": "Anonymize Last Name",
+						"action": function (data) {
+							anonymizeMenu(node, data, "LAST_NAME");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeUserName = {
+						"separator_before": false,
+						"label": "Anonymize User Name",
+						"action": function (data) {
+							anonymizeMenu(node, data, "USER_NAME");
+						}.bind(this)
+					};
+					ctxmenu.anonymizePhone = {
+						"separator_before": false,
+						"label": "Anonymize Phone",
+						"action": function (data) {
+							anonymizeMenu(node, data, "PHONE");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeEmail = {
+						"separator_before": false,
+						"label": "Anonymize e-mail",
+						"action": function (data) {
+							anonymizeMenu(node, data, "EMAIL");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeAddress = {
+						"separator_before": false,
+						"label": "Anonymize Address",
+						"action": function (data) {
+							anonymizeMenu(node, data, "ADDRESS");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeCity = {
+						"separator_before": false,
+						"label": "Anonymize City",
+						"action": function (data) {
+							anonymizeMenu(node, data, "CITY");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeCountry = {
+						"separator_before": false,
+						"label": "Anonymize Country",
+						"action": function (data) {
+							anonymizeMenu(node, data, "COUNTRY");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeCountry = {
+						"separator_before": false,
+						"label": "Anonymize Country",
+						"action": function (data) {
+							anonymizeMenu(node, data, "COUNTRY");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeDate = {
+						"separator_before": false,
+						"label": "Anonymize Date",
+						"action": function (data) {
+							anonymizeMenu(node, data, "DATE");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeRandom = {
+						"separator_before": false,
+						"label": "Randomize Value",
+						"action": function (data) {
+							anonymizeMenu(node, data, "RANDOM");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeMask = {
+						"separator_before": false,
+						"label": "Mask Value",
+						"action": function (data) {
+							anonymizeMenu(node, data, "MASK");
+						}.bind(this)
+					};
+				}
+
 				return ctxmenu;
 			}
 		}
 	};
+	
+	let anonymizeMenu = function (node, data, type) {
+		let tree = $.jstree.reference(data.reference);
+		let columnNode = tree.get_node(data.reference);
+		let tableNode = tree.get_node(tree.get_node(node.parent).parent);
+		let schemaNode = tree.get_node(tree.get_node(tree.get_node(node.parent).parent).parent);
+							
+		let primaryKeyName = tree.get_node(tree.get_node(node.parent).children[0]).original.name;
+		tree.get_node(node.parent).children.forEach(c => {if (tree.get_node(c).original.key) {
+			primaryKeyName = tree.get_node(c).original.name;
+		}});
+							
+		let parameters = {};
+		parameters.datasource = $scope.selectedDatasource;
+		parameters.schema = schemaNode.original.text;
+		parameters.table = tableNode.original.text;
+		parameters.column = columnNode.original.name;
+		parameters.primaryKey = primaryKeyName;
+		parameters.type = type;
+							messageHub.postMessage('database.data.anonymize.columns', parameters);
+	}
 
 	$scope.jstreeWidget.on('open_node.jstree', function (event, data) {
 		if (data.node.children.length === 1 && $scope.jstreeWidget.jstree(true).get_text(data.node.children[0]) === "Loading Columns...") {
@@ -439,7 +603,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		}
 	});
 
-	function getDatabases() {
+	$scope.getDatabases = function () {
 		$http.get(databasesSvcUrl)
 			.then(function (data) {
 				$scope.databases = data.data;
@@ -470,7 +634,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 				}
 			});
 	}
-	setTimeout(getDatabases, 500);
+	setTimeout($scope.getDatabases(), 500);
 
 	let expandColumns = function (evt, data) {
 		let parent = $scope.jstreeWidget.jstree(true).get_node(data.node);
@@ -512,7 +676,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							case "double":
 							case "double precision":
 							case "decimal":
-								icon = "sap-icon--measuring-point"
+								icon = "sap-icon--numbered-text"
 								break;
 							case "boolean":
 								icon = "sap-icon--sys-enter";
@@ -523,13 +687,22 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 								break;
 						}
 					}
-					let nodeText = column.name + ' - <i style="font-size: smaller;">' + column.type + "(" + (column.size !== undefined ? column.size : (column.length !== undefined ? column.length : "N/A")) + ")</i>";
+					let nodeText = column.name + ' - <i style="font-size: smaller;">' + column.type;
+					if ((column.size !== undefined && column.size !== 0)
+						|| (column.length !== undefined && column.size !== 0)) {
+						nodeText += "(" + (column.size !== undefined ? column.size : (column.length !== undefined ? column.length : "N/A")) + ")";
+					}
+					nodeText += "</i>";
 					let newNode = {
 						id: parent.id + "$" + column.name,
 						state: "open",
 						text: nodeText,
 						column: column,
-						icon: icon
+						icon: icon,
+						kind: column.kind,
+						name: column.name,
+						key: column.key
+						
 					};
 					$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
 				})
@@ -558,7 +731,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 	$scope.refreshDatabase = function () {
 		if ($scope.jstreeWidget.jstree(true).settings === undefined) $scope.jstreeWidget.jstree($scope.jstreeConfig);
 		if ($scope.selectedDatabase && $scope.selectedDatasource) {
-			$http.get(databasesSvcUrl  + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
+			$http.get(databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
 				.then(function (data) {
 					$scope.datasource = data.data;
 					this.baseUrl = databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource;
@@ -607,6 +780,12 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 				{ text: "Indices", "icon": "sap-icon--table-row", children: [$scope.spinnerIndices] },
 			];
 			icon = 'sap-icon--grid';
+		} else if (f.kind == 'table' && f.type === 'COLLECTION') {
+			children = [
+				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] }
+				// , { text: "Indices", "icon": "sap-icon--table-row", children: [$scope.spinnerIndices] },
+			];
+			icon = 'sap-icon--list';
 		} else if (f.kind == 'table' && f.type !== 'TABLE' && f.type !== 'VIEW') {
 			children = [
 				{ text: "Columns", "icon": "sap-icon--table-column", children: [$scope.spinnerColumns] },
@@ -626,6 +805,12 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		} else if (f.kind == 'column') {
 			icon = 'sap-icon--grid';
 			name += ` [<i>${data.type}</i>(<i>${data.size}</i>)]`;
+		} else if (f.kind == 'nosql') {
+			let tablesChildren = f.tables.map(function (_table) {
+				return build(_table)
+			});
+			children = children.concat(tablesChildren);
+			icon = 'sap-icon--grid';
 		}
 		f.label = f.name;
 		return {
@@ -676,8 +861,14 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		messageHub.postMessage('database.sql.run', {});
 	};
 
-});
+	messageHub.onDidReceiveMessage(
+		'ide-databases.explorer.refresh',
+		function () {
+			$scope.$apply(function () {
+				$scope.getDatabases();
+			});
+		},
+		true
+	);
 
-function confirmRemove(type, name) {
-	return confirm("Do you really want to delete the " + type + ": " + name);
-}
+});

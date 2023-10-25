@@ -9,19 +9,25 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const registry = require("platform/registry");
-const templateEngines = require("template/engines");
+const registry = dirigibleRequire("platform/registry");
+const templateEngines = dirigibleRequire("template/engines");
 
 exports.generateFiles = function (model, parameters, templateSources) {
     let generatedFiles = [];
 
     let feedModels = model.entities.filter(e => e.feedUrl);
+
+    // Basic
     let uiManageModels = model.entities.filter(e => e.layoutType === "MANAGE" && e.type === "PRIMARY");
     let uiListModels = model.entities.filter(e => e.layoutType === "LIST" && e.type === "PRIMARY");
+
+    // Master-Details
     let uiManageMasterModels = model.entities.filter(e => e.layoutType === "MANAGE_MASTER" && e.type === "PRIMARY");
     let uiListMasterModels = model.entities.filter(e => e.layoutType === "LIST_MASTER" && e.type === "PRIMARY");
     let uiManageDetailsModels = model.entities.filter(e => e.layoutType === "MANAGE_DETAILS" && e.type === "DEPENDENT");
     let uiListDetailsModels = model.entities.filter(e => e.layoutType === "LIST_DETAILS" && e.type === "DEPENDENT");
+
+    // Reports
     let uiReportTableModels = model.entities.filter(e => e.layoutType === "REPORT_TABLE" && e.type === "REPORT");
     let uiReportBarsModels = model.entities.filter(e => e.layoutType === "REPORT_BAR" && e.type === "REPORT");
     let uiReportLinesModels = model.entities.filter(e => e.layoutType === "REPORT_LINE" && e.type === "REPORT");

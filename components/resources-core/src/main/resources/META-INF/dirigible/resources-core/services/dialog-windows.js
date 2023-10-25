@@ -18,6 +18,13 @@ let dialogWindows = [];
 let extensionPoint = request.getParameter('extensionPoint') || 'ide-dialog-window';
 let dialogWindowExtensions = extensions.getExtensions(extensionPoint);
 
+function setETag() {
+    let maxAge = 30 * 24 * 60 * 60;
+    let etag = uuid.random();
+    response.setHeader("ETag", etag);
+    response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
+}
+
 for (let i = 0; i < dialogWindowExtensions.length; i++) {
     let module = dialogWindowExtensions[i];
     try {
@@ -37,10 +44,3 @@ dialogWindows.sort(function (p, n) {
 response.setContentType("application/json");
 setETag();
 response.println(JSON.stringify(dialogWindows));
-
-function setETag() {
-    let maxAge = 30 * 24 * 60 * 60;
-    let etag = uuid.random();
-    response.setHeader("ETag", etag);
-    response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
-}
