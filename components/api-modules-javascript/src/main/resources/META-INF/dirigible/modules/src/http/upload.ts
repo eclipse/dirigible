@@ -31,90 +31,69 @@ export function parseRequest() {
  */
 class FileItems {
 
-    constructor(
-        private readonly native: any
-    ) { }
+    private readonly native: any
 
-    get(index) {
+    constructor(native: any) {
+        this.native = native;
+    }
+
+    public get(index) {
         const native = this.native.get(index);
         return new FileItem(native);
     }
 
-    size() {
+    public size() {
         return this.native.size();
     }
-};
+}
 
 /**
  * FileItem object
  */
 class FileItem {
 
-    constructor(
-        private readonly native: any
-    ) { }
+    private readonly native: any
 
-    getInputStream() {
+    constructor(native: any) {
+        this.native = native;
+    }
+
+    public getName() {
+        return this.native.getName();
+    }
+
+    public getOriginalFilename() {
+        return this.native.getOriginalFilename();
+    }
+
+    public getContentType() {
+        return this.native.getContentType();
+    }
+
+    public isEmpty() {
+        return this.native.isEmpty();
+    }
+
+    public getSize() {
+        return this.native.getSize();
+    }
+
+    public getBytes() {
+        const data = this.getBytesNative();
+        return bytes.toJavaScriptBytes(data);
+    }
+
+    public getBytesNative() {
+        return this.native.getBytes();
+    }
+
+    public getText() {
+        return String.fromCharCode.apply(null, this.getBytesNative());
+    }
+
+    public getInputStream() {
         const native = this.native.getInputStream();
         return new streams.InputStream(native);
     }
 
-    getContentType() {
-        return this.native.getContentType();
-    }
-
-    getName() {
-        return this.native.getOriginalFilename();
-    }
-
-    getSize() {
-        return this.native.getSize();
-    }
-
-    getBytes() {
-        var data = this.native.get();
-        return bytes.toJavaScriptBytes(data);
-    }
-
-    getBytesNative() {
-        var data = this.native.get();
-        return data;
-    }
-
-    getText() {
-        return this.native.getString();
-    }
-
-    isFormField() {
-        return this.native.isFormField();
-    }
-
-    getFieldName() {
-        return this.native.getFieldName();
-    }
-
-    getHeaders() {
-        const native = this.native.getHeaders();
-        return new Headers(native);
-    }
-
 }
-
-/**
- * Headers object
- */
-class Headers {
-
-    constructor(
-        private readonly native: any
-    ) { }
-
-    getHeaderNames() {
-        return HttpUploadFacade.headerNamesToList(this.native.getHeaderNames());
-    };
-
-    getHeader(headerName) {
-        return this.native.getHeader(headerName);
-    }
-}
-
