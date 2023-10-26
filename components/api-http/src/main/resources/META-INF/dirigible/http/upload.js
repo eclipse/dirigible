@@ -16,11 +16,11 @@
 const streams = require("io/streams");
 const bytes = require("io/bytes");
 
-exports.isMultipartContent = function() {
+exports.isMultipartContent = function () {
 	return org.eclipse.dirigible.components.api.http.HttpUploadFacade.isMultipartContent();
 };
 
-exports.parseRequest = function() {
+exports.parseRequest = function () {
 	const fileItems = new FileItems();
 	//fileItems.native = org.eclipse.dirigible.components.api.http.HttpUploadFacade.parseRequest();
 	fileItems.native = __context.get("files");
@@ -32,13 +32,13 @@ exports.parseRequest = function() {
  */
 function FileItems() {
 
-	this.get = function(index) {
+	this.get = function (index) {
 		const fileItem = new FileItem();
 		fileItem.native = this.native.get(index);
 		return fileItem;
 	};
 
-	this.size = function() {
+	this.size = function () {
 		return this.native.size();
 	};
 };
@@ -48,65 +48,70 @@ function FileItems() {
  */
 function FileItem() {
 
-	this.getInputStream = function() {
+	this.getName = function () {
+		return this.native.getName();
+	};
+
+	this.getOriginalFilename = function () {
+		return this.native.getOriginalFilename();
+	};
+
+	this.getContentType = function () {
+		return this.native.getContentType();
+	};
+
+	this.isEmpty = function () {
+		return this.native.isEmpty();
+	};
+
+	this.getSize = function () {
+		return this.native.getSize();
+	};
+
+	this.getBytes = function () {
+		return bytes.toJavaScriptBytes(this.getBytesNative());
+	};
+
+	this.getBytesNative = function () {
+		return this.native.getBytes();
+	};
+
+	this.getText = function () {
+		return String.fromCharCode.apply(null, this.getBytesNative());
+	};
+
+	this.getInputStream = function () {
 		const inputStream = new streams.InputStream();
 		inputStream.native = this.native.getInputStream();
 		return inputStream;
 	};
 
-	this.getContentType = function() {
-		return this.native.getContentType();
-	};
+	// this.isFormField = function () {
+	// 	return this.native.isFormField();
+	// };
 
-	this.getName = function() {
-		return this.native.getOriginalFilename();
-	};
+	// this.getFieldName = function () {
+	// 	return this.native.getFieldName();
+	// };
 
-	this.getSize = function() {
-		return this.native.getSize();
-	};
-
-	this.getBytes = function() {
-		var data = this.native.get();
-		return bytes.toJavaScriptBytes(data);
-	};
-
-	this.getBytesNative = function() {
-		var data = this.native.get();
-		return data;
-	};
-
-	this.getText = function() {
-		return this.native.getString();
-	};
-
-	this.isFormField = function() {
-		return this.native.isFormField();
-	};
-
-	this.getFieldName = function() {
-		return this.native.getFieldName();
-	};
-
-	this.getHeaders = function() {
-		const headers = new Headers();
-		headers.native = this.native.getHeaders();
-		return headers;
-	};
+	// this.getHeaders = function () {
+	// 	const headers = new Headers();
+	// 	headers.native = this.native.getHeaders();
+	// 	return headers;
+	// };
 
 }
 
-/**
- * Headers object
- */
-function Headers() {
+// /**
+//  * Headers object
+//  */
+// function Headers() {
 
-	this.getHeaderNames = function() {
-		return org.eclipse.dirigible.components.api.http.HttpUploadFacade.headerNamesToList(this.native.getHeaderNames());
-	};
+// 	this.getHeaderNames = function () {
+// 		return org.eclipse.dirigible.components.api.http.HttpUploadFacade.headerNamesToList(this.native.getHeaderNames());
+// 	};
 
-	this.getHeader = function(headerName) {
-		return this.native.getHeader(headerName);
-	}
-}
-
+// 	this.getHeader = function (headerName) {
+// 		return this.native.getHeader(headerName);
+// 	}
+// }
