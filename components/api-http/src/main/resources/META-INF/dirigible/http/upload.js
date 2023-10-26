@@ -85,33 +85,4 @@ function FileItem() {
 		inputStream.native = this.native.getInputStream();
 		return inputStream;
 	};
-
-	// this.isFormField = function () {
-	// 	return this.native.isFormField();
-	// };
-
-	// this.getFieldName = function () {
-	// 	return this.native.getFieldName();
-	// };
-
-	// this.getHeaders = function () {
-	// 	const headers = new Headers();
-	// 	headers.native = this.native.getHeaders();
-	// 	return headers;
-	// };
-
 }
-
-// /**
-//  * Headers object
-//  */
-// function Headers() {
-
-// 	this.getHeaderNames = function () {
-// 		return org.eclipse.dirigible.components.api.http.HttpUploadFacade.headerNamesToList(this.native.getHeaderNames());
-// 	};
-
-// 	this.getHeader = function (headerName) {
-// 		return this.native.getHeader(headerName);
-// 	}
-// }
