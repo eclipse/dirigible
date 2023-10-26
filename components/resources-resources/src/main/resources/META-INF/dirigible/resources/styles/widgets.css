@@ -407,7 +407,7 @@ body {
   padding-top: .0625rem;
 }
 
-/* Form label fix for 0.30.1 */
+/* Form label fix for 0.30.2 */
 .fd-form-label--colon {
   padding-right: .25rem;
 }

@@ -18,8 +18,8 @@ exports.getTheme = function () {
 		version: 8,
 		oldThemeId: 'fiori',
 		links: [
-			'/webjars/sap-theming__theming-base-content/11.6.4/content/Base/baseLib/sap_fiori_3/css_variables.css',
-			'/webjars/fundamental-styles/0.30.1/dist/theming/sap_fiori_3.css',
+			'/webjars/sap-theming__theming-base-content/11.7.0/content/Base/baseLib/sap_fiori_3/css_variables.css',
+			'/webjars/fundamental-styles/0.30.2/dist/theming/sap_fiori_3.css',
 		]
 	};
 };
