@@ -38,10 +38,6 @@ body {
   .dg-hamburger-menu {
     display: none;
   }
-
-  .dg-header-logo {
-    padding-left: .5rem;
-  }
 }
 
 /* Main container */

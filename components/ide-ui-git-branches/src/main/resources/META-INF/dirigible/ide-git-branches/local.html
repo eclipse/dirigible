@@ -24,26 +24,24 @@
   </head>
 
   <body class="dg-vbox">
-    <fd-toolbar ng-hide="loadingBranches">
+    <fd-toolbar ng-hide="loadingBranches" compact="true">
       <fd-toolbar-spacer></fd-toolbar-spacer>
-      <fd-button compact="true" dg-type="transparent" glyph="sap-icon--add" title="Create branch"
-        aria-label="Create branch" state="{{ branches.length ? '' : 'disabled' }}" ng-click="createBranch()">
+      <fd-button dg-type="transparent" glyph="sap-icon--add" title="Create branch" aria-label="Create branch"
+        state="{{ branches.length ? '' : 'disabled' }}" ng-click="createBranch()">
       </fd-button>
-      <fd-button compact="true" dg-type="transparent" glyph="sap-icon--delete" title="Delete branch"
-        aria-label="Delete branch"
+      <fd-button dg-type="transparent" glyph="sap-icon--delete" title="Delete branch" aria-label="Delete branch"
         state="{{ branches.length && activeBranch.name !== selectedBranch.name && selectedBranch.index !== -1 ? '' : 'disabled' }}"
         ng-click="deleteBranch()">
       </fd-button>
       <fd-toolbar-separator></fd-toolbar-separator>
-      <fd-button compact="true" dg-type="transparent" dg-toggled="searchVisible" glyph="sap-icon--search"
-        title="Toggle search" aria-label="Toggle search" state="{{ branches.length ? '' : 'disabled' }}"
-        ng-click="toggleSearch()">
+      <fd-button dg-type="transparent" dg-toggled="searchVisible" glyph="sap-icon--search" title="Toggle search"
+        aria-label="Toggle search" state="{{ branches.length ? '' : 'disabled' }}" ng-click="toggleSearch()">
       </fd-button>
       <fd-toolbar-separator></fd-toolbar-separator>
       <fd-popover close-innerclick="false">
         <fd-popover-control>
-          <fd-button fd-list-button compact="true" dg-type="transparent" glyph="sap-icon--information"
-            aria-label="branch information" state="{{ selectedBranch.index !== -1 ? '' : 'disabled' }}">
+          <fd-button fd-list-button dg-type="transparent" glyph="sap-icon--information" aria-label="branch information"
+            state="{{ selectedBranch.index !== -1 ? '' : 'disabled' }}">
           </fd-button>
         </fd-popover-control>
         <fd-popover-body dg-align="bottom-right" style="min-width:200px">
@@ -84,8 +82,8 @@
         <fd-list-item ng-repeat="branch in branches track by $index" dg-selected="selectedBranch.index === $index"
           ng-click="selected($index, branch)" ng-hide="branch.hidden">
           <fd-list-form-item>
-            <fd-radio id="b{{$index}}" compact="true" name="branchRadioItem" ng-model="activeBranch.name"
-              ng-value="branch.name" ng-change="checkout($index)">
+            <fd-radio id="b{{$index}}" name="branchRadioItem" ng-model="activeBranch.name" ng-value="branch.name"
+              ng-change="checkout($index)">
             </fd-radio>
             <fd-radio-label for="b{{$index}}"></fd-radio-label>
           </fd-list-form-item>

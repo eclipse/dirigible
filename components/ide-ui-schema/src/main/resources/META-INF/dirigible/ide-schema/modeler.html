@@ -1,3 +1,13 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2010-2023 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
 <html lang="en" ng-app="ui.schema.modeler" ng-controller="ModelerCtrl as ctrl">
 
     <head>
@@ -10,8 +20,7 @@
         <theme></theme>
         <script type="text/javascript" src="/services/js/resources-core/services/loader.js?id=ide-view-js">
         </script>
-        <link type="text/css" rel="stylesheet"
-            href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
+        <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <link type="text/css" href="css/styles.css" rel="stylesheet">
         <script type="text/javascript">
             mxBasePath = '/services/web/resources/mxgraph/3.9.1/src';
@@ -31,7 +40,7 @@
         <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
             {{state.busyText}}
         </fd-busy-indicator-extended>
-        <fd-toolbar id="toolbarContainer" dg-size="cozy" ng-show="!state.error && !state.isBusy">
+        <fd-toolbar id="toolbarContainer" ng-show="!state.error && !state.isBusy">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button dg-type="transparent" glyph="sap-icon--save" aria-label="Save" title="Save" ng-click="save()">
             </fd-button>
@@ -69,7 +78,7 @@
             <div id="graphContainer" class="dg-full-width"></div>
         </div>
         <div id="outlineContainer" class="outlineContainer" ng-show="!state.error && !state.isBusy"></div>
-        <fd-toolbar id="statusContainer" class="dg-border-top" dg-size="cozy" no-bottom-border="true"
+        <fd-toolbar id="statusContainer" class="dg-border-top" no-bottom-border="true"
             ng-show="!state.error && !state.isBusy">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button dg-type="transparent" glyph="sap-icon--collapse" aria-label="Collapse all" title="Collapse all"

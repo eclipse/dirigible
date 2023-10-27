@@ -17,21 +17,18 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
     .constant('extensionPoint', {})
     .config(function config($compileProvider) {
         $compileProvider.debugInfoEnabled(false);
-    })
-    .service('Perspectives', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
+    }).service('Perspectives', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
         let url = '/services/js/resources-core/services/perspectives.js';
         if (extensionPoint && extensionPoint.perspectives) {
             url = `${url}?extensionPoint=${extensionPoint.perspectives}`;
         }
         return $resource(url);
-    }])
-    .service('Menu', ['$resource', function ($resource) {
+    }]).service('Menu', ['$resource', function ($resource) {
         return $resource('/services/js/resources-core/services/menu.js');
-    }])
-    .service('User', ['$http', function ($http) {
+    }]).service('User', ['$http', function ($http) {
         return {
             get: function () {
-                let user = {};
+                let user = { name: undefined };
                 $http({
                     url: '/services/js/resources-core/services/user-name.js',
                     method: 'GET'
@@ -41,21 +38,18 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 return user;
             }
         };
-    }])
-    .service('DialogWindows', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
+    }]).service('DialogWindows', ['$resource', "extensionPoint", function ($resource, extensionPoint) {
         let url = '/services/js/resources-core/services/dialog-windows.js';
         if (extensionPoint && extensionPoint.dialogWindows) {
             url = `${url}?extensionPoint=${extensionPoint.dialogWindows}`;
         }
         return $resource(url);
-    }])
-    .filter('removeSpaces', [function () {
+    }]).filter('removeSpaces', [function () {
         return function (string) {
             if (!angular.isString(string)) return string;
             return string.replace(/[\s]/g, '');
         };
-    }])
-    .directive('dgBrandTitle', ['perspective', 'branding', function (perspective, branding) {
+    }]).directive('dgBrandTitle', ['perspective', 'branding', function (perspective, branding) {
         return {
             restrict: 'A',
             transclude: false,
@@ -66,8 +60,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             },
             template: '<title>{{perspective.name || "Loading..."}} | {{name}}</title>'
         };
-    }])
-    .directive('dgBrandIcon', ['branding', function (branding) {
+    }]).directive('dgBrandIcon', ['branding', function (branding) {
         return {
             restrict: 'A',
             transclude: false,
@@ -77,8 +70,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             },
             template: `<link rel="icon" type="image/x-icon" ng-href="{{icon}}">`
         };
-    }])
-    .directive('ideContextmenu', ['messageHub', '$window', function (messageHub, $window) {
+    }]).directive('ideContextmenu', ['messageHub', '$window', function (messageHub, $window) {
         return {
             restrict: 'E',
             replace: true,
@@ -181,8 +173,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             },
             templateUrl: '/services/web/resources-core/ui/templates/contextmenu.html'
         };
-    }])
-    .directive('ideContextmenuSubmenu', ['$window', function ($window) {
+    }]).directive('ideContextmenuSubmenu', ['$window', function ($window) {
         return {
             restrict: 'E',
             replace: true,
@@ -238,8 +229,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             },
             templateUrl: '/services/web/resources-core/ui/templates/contextmenuSubmenu.html'
         };
-    }])
-    .directive('ideHeader', ['$window', '$cookies', '$resource', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($window, $cookies, $resource, branding, theming, User, Menu, messageHub) {
+    }]).directive('ideHeader', ['$cookies', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($cookies, branding, theming, User, Menu, messageHub) {
         return {
             restrict: 'E',
             replace: true,
@@ -261,7 +251,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                             messageHub.postMessage(item.event, item.data, true);
                         }
                     };
-                }, post: function (scope, element) {
+                }, post: function (scope) {
                     scope.themes = [];
                     scope.currentTheme = theming.getCurrentTheme();
                     scope.user = User.get();
@@ -314,36 +304,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             },
             templateUrl: '/services/web/resources-core/ui/templates/ideHeader.html',
         };
-    }])
-    .directive("headerHamburgerMenu", [function () {
-        return {
-            restrict: "A",
-            replace: false,
-            scope: {
-                menuList: "<",
-                menuHandler: "&",
-            },
-            link: function (scope) {
-                scope.menuHandler = scope.menuHandler();
-            },
-            template: `<fd-popover">
-    <fd-popover-control>
-        <fd-button fd-tool-header-button compact="true" dg-type="transparent" glyph="sap-icon--menu2"
-            aria-label="main menu button">
-        </fd-button>
-    </fd-popover-control>
-    <fd-popover-body no-arrow="true" can-scroll="false">
-        <fd-menu aria-label="header menu">
-            <fd-menu-sublist ng-repeat="menuItem in menuList track by $index" title="{{ menuItem.label }}"
-                can-scroll="isScrollable(item.items)">
-                <header-submenu sublist="menuItem.items" menu-handler="menuHandler"></header-submenu>
-            </fd-menu-sublist>
-        </fd-menu>
-    </fd-popover-body>
-</fd-popover>`,
-        };
-    }])
-    .directive("headerMenu", [function () {
+    }]).directive("headerMenu", [function () {
         return {
             restrict: "A",
             replace: false,
@@ -384,8 +345,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 </fd-popover>
             </div>`,
         };
-    }])
-    .directive("headerSubmenu", function () {
+    }]).directive("headerSubmenu", function () {
         return {
             restrict: "E",
             replace: false,
@@ -404,8 +364,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             template: `<fd-menu-item ng-repeat-start="item in sublist track by $index" ng-if="!item.items" has-separator="item.divider" title="{{ item.label }}" ng-click="menuHandler(item)"></fd-menu-item>
 <fd-menu-sublist ng-if="item.items" has-separator="item.divider" title="{{ item.label }}" can-scroll="isScrollable($index)" ng-repeat-end><header-submenu sublist="item.items" menu-handler="menuHandler"></header-submenu></fd-menu-sublist>`,
         };
-    })
-    .directive('ideContainer', ['perspective', function (perspective) {
+    }).directive('ideContainer', ['perspective', function (perspective) {
         return {
             restrict: 'E',
             transclude: true,
@@ -424,8 +383,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 <ng-transclude ng-if="shouldLoad" class="dg-perspective-container"></ng-transclude>
             </div>`
         }
-    }])
-    .directive('ideSidebar', ['Perspectives', 'perspective', 'messageHub', function (Perspectives, perspective, messageHub) {
+    }]).directive('ideSidebar', ['Perspectives', 'perspective', 'messageHub', function (Perspectives, perspective, messageHub) {
         return {
             restrict: 'E',
             replace: true,
@@ -1119,8 +1077,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             },
             templateUrl: '/services/web/resources-core/ui/templates/ideDialogs.html'
         }
-    }])
-    .directive('ideStatusBar', ['messageHub', function (messageHub) {
+    }]).directive('ideStatusBar', ['messageHub', function (messageHub) {
         return {
             restrict: 'E',
             replace: true,

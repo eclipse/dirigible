@@ -615,20 +615,28 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: `<div class="fd-form-group__header" ng-class="{'true': 'fd-form-group__header--compact'}[compact]"><h1 id="{{ headerId }}" class="fd-form-group__header-text" ng-transclude></h1></div>`,
         }
-    }]).directive('fdFormItem', [function () {
+    }]).directive('fdFormItem', function (classNames) {
         /**
          * horizontal: Boolean - If true, items will be displayed horizontally.
+         * inList: Boolean - Set to true if the form item is in an fd-list-item element.
          */
         return {
             restrict: 'E',
             transclude: true,
             replace: true,
             scope: {
-                horizontal: '@',
+                horizontal: '<?',
+                inList: '<?',
             },
-            template: `<div class="fd-form-item" ng-class="{'true':'fd-form-item--horizontal'}[horizontal]" ng-transclude></div>`,
+            link: function (scope) {
+                scope.getClasses = () => classNames({
+                    'fd-form-item--horizontal': scope.horizontal,
+                    'fd-list__form-item': scope.inList,
+                });
+            },
+            template: `<div class="fd-form-item" ng-class="getClasses()" ng-transclude></div>`,
         }
-    }]).directive('fdFormLabel', [function () {
+    }).directive('fdFormLabel', [function () {
         /**
          * dgColon: Boolean - Puts a colon at the end of the label.
          * dgRequired: Boolean - If the checkbox is required.
@@ -936,6 +944,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * compact: Boolean - Checkbox size.
          * state: String - You have five options - 'error', 'success', 'warning' and 'information'.
          * dgIndeterminate: Boolean - Indeterminate/tri-state.
+         * displayMode: Boolean - In Display Mode, the checkbox is replaced by two icons to represent the checked and unchecked states.
          */
         return {
             restrict: 'E',
@@ -945,6 +954,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 compact: '<?',
                 state: '@?',
                 dgIndeterminate: '<?',
+                displayMode: '<?',
             },
             link: {
                 pre: function (scope, elem, attrs) {
@@ -953,6 +963,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (scope.compact === true) classList.push('fd-checkbox--compact');
                         if (scope.state) classList.push(`is-${scope.state}`);
                         if (attrs.disabled) classList.push('is-disabled');
+                        if (scope.displayMode) classList.push('is-display');
                         if (scope.dgIndeterminate === true) elem[0].indeterminate = true;
                         else elem[0].indeterminate = false;
                         return classList.join(' ');
@@ -966,7 +977,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * compact: Boolean - Checkbox label size.
          * dgRequired: Boolean - If the checkbox is required.
          * isHover: Boolean - If the checkbox is in hover state.
-         * empty: Boolean - If the label has text
+         * empty: Boolean - If the label has text.
+         * wrap: Boolean - By default, the label text will be truncated. Set this to true if you want it to wrap instead.
          */
         return {
             restrict: 'E',
@@ -976,7 +988,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 compact: '<?',
                 dgRequired: '<?',
                 isHover: '<?',
-                empty: '@'
+                empty: '<?',
+                wrap: '<?',
             },
             link: {
                 pre: function (scope) {
@@ -985,11 +998,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         if (scope.compact === true) classList.push('fd-checkbox__label--compact');
                         if (scope.dgRequired === true) classList.push('fd-checkbox__label--required');
                         if (scope.isHover === true) classList.push('is-hover');
+                        if (scope.wrap === true) classList.push('fd-checkbox__label--wrap');
                         return classList.join(' ');
                     };
                 },
             },
             template: `<label class="fd-checkbox__label" ng-class="getClasses()">
+                <span class="fd-checkbox__checkmark" aria-hidden="true"></span>
                 <div ng-if="empty!=='true'" class="fd-checkbox__label-container"><span class="fd-checkbox__text" ng-transclude></span></div>
             </label>`,
         }
@@ -1347,7 +1362,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         }
                     }
                     function pointerupEvent(e) {
-                        if (e.originalEvent && e.originalEvent.isSubmenuItem) return;
+                        if (e.target.attributes['of-close-btn']) return;
+                        else if (e.originalEvent && e.originalEvent.isSubmenuItem) return;
                         else if (scope.popoverControl && e.target === scope.popoverControl) return;
                         else if (element[0].contains(e.target) && !isHidden) scope.hidePopover();
                     }
@@ -1437,6 +1453,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * noArrow: Boolean - If the popup should have an arrow.
          * dropdownFill: Boolean - The dropdown body will be adjusted to match the text length.
          * canScroll: Boolean - Enable/disable scroll popover support. Default is true.
+         * inIconTabBar: Boolean - Enable when the popover is inside an icon tab bar.
          */
         return {
             restrict: 'E',
@@ -1449,6 +1466,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 noArrow: '<?',
                 dropdownFill: '<?',
                 canScroll: '<?',
+                inIconTabBar: '<?',
             },
             controller: function PopoverBodyController() {
                 this.widgetId = "popoverBody";
@@ -1484,6 +1502,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         'fd-popover__body--after fd-popover__body--arrow-left': scope.dgAlign === 'right-top',
                         'fd-popover__body--after fd-popover__body--middle fd-popover__body--arrow-left fd-popover__body--arrow-y-center': scope.dgAlign === 'right',
                         'fd-popover__body--after fd-popover__body--bottom fd-popover__body--arrow-left fd-popover__body--arrow-y-bottom': scope.dgAlign === 'right-bottom',
+                        'fd-icon-tab-bar__popover-body': scope.inIconTabBar,
                     });
                     function cleanUp() {
                         $window.removeEventListener('resize', resizeEvent);
@@ -1764,7 +1783,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdTable', [function () {
         /**
          * innerBorders: String - Table inner borders. One of 'horizontal', 'vertical', 'top', 'none' or 'all' (default value)
-         * outerBorders: String - Table outer borders. One of 'horizontal', 'vertical', 'none' or 'all' (default value)
+         * outerBorders: String - Table outer borders. One of 'horizontal', 'vertical', 'top', 'bottom', 'none' or 'all' (default value)
          * displayMode: String - The size of the table. Could be one of 'compact', 'condensed' or 'standard' (default value)
          */
         return {
@@ -1772,9 +1791,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             scope: {
-                innerBorders: '@',
-                outerBorders: '@',
-                displayMode: '@'
+                innerBorders: '@?',
+                outerBorders: '@?',
+                displayMode: '@?'
             },
             controller: ['$scope', '$element', function ($scope, $element) {
 
@@ -1807,6 +1826,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             break;
                         case 'horizontal':
                             classList.push('dg-table--no-outer-vertical-borders');
+                            break;
+                        case 'top':
+                            classList.push('fd-table--no-outer-border');
+                            classList.push('dg-list-border-top');
+                            break;
+                        case 'bottom':
+                            classList.push('fd-table--no-outer-border');
+                            classList.push('dg-list-border-bottom');
                             break;
                         case 'none':
                             classList.push('fd-table--no-outer-border');
@@ -2193,8 +2220,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdToolbar', [function () {
         /**
          * dgType: String - The type of the toolbar. One of 'transparent', 'auto', 'info' or 'solid' (default value)
-         * dgSize: String - The size of the toolbar. One of 'cozy' or 'compact' (default value)
-         * hasTitle: Boolean - Should be used whenever a title is required.
+         * compact: Boolean - Applies compact style to the toolbar and all elements inside it.
+         * hasTitle: Boolean - Should be used whenever a title is required. This is incompatible iwht "compact" size.
          * noBottomBorder: Boolean - Removes the bottom border of the toolbar
          * active: Boolean - Enables active and hover states
          */
@@ -2204,7 +2231,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 dgType: '@?',
-                dgSize: '@?',
+                compact: '<?',
                 hasTitle: '<?',
                 noBottomBorder: '<?',
                 active: '<?'
@@ -2229,7 +2256,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     if (scope.hasTitle) classList.push('fd-toolbar--title');
                     if (scope.noBottomBorder) classList.push('fd-toolbar--clear');
                     if (scope.active) classList.push('fd-toolbar--active');
-                    if (scope.dgSize === 'cozy') classList.push('fd-toolbar--cozy');
+                    if (scope.compact) classList.push('is-compact');
+                    if (scope.hasTitle && scope.compact) console.error("fd-toolbar: There cannot be a title in compact mode!");
                     return classList.join(' ');
                 };
             },
@@ -2284,12 +2312,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         return {
             restrict: 'EA',
             transclude: true,
-            scope: {
-                compact: '<?'
-            },
             template: `<fd-popover>
 				<fd-popover-control>
-					<fd-button compact="compact === undefined ? true : compact" glyph="sap-icon--overflow" dg-type="transparent" aria-label="Toolbar overflow"></fd-button>
+					<fd-button glyph="sap-icon--overflow" dg-type="transparent" aria-label="Toolbar overflow"></fd-button>
 				</fd-popover-control>
 				<fd-popover-body dg-align="bottom-right">
 					<div class="fd-toolbar__overflow" ng-transclude></div>
@@ -2403,11 +2428,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 dgSelected: '<?'
             },
             controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
-
                 this.addClass = function (className) {
                     $element.addClass(className);
                 }
-
                 this.setRole = function (role) {
                     $element.attr('role', role);
                 }
@@ -2723,18 +2746,20 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * inverted: Boolean - Inverts the background color
          * indication: Boolean - Applies generic indication color. Must be a number between 1 and 8 inclusive
          * large: Boolean - Increases the size
+         * truncate: Boolean - By default, Object Status text goes on multiple lines. For a single line text with ellipsis, set this to true.
          */
         return {
             restrict: 'A',
             replace: false,
             scope: {
-                status: '@',
-                glyph: '@',
-                text: '@',
-                clickable: '<',
-                inverted: '<',
-                indication: '<',
-                large: '<'
+                status: '@?',
+                glyph: '@?',
+                text: '@?',
+                clickable: '<?',
+                inverted: '<?',
+                indication: '<?',
+                large: '<?',
+                truncate: '<?',
             },
             controller: ['$scope', '$element', function (scope, element) {
                 const statuses = ['negative', 'critical', 'positive', 'informative'];
@@ -2744,7 +2769,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     element.addClass('fd-upload-collection__status-group-item');
                 }
 
-                scope.getIconClasses = () => classNames('fd-object-status__icon', scope.glyph);
+                scope.getIconClasses = () => {
+                    if (!scope.text) element.addClass('fd-object-status--icon-only');
+                    else element.removeClass('fd-object-status--icon-only');
+                    return classNames('fd-object-status__icon', scope.glyph);
+                };
                 scope.getTextClasses = () => classNames('fd-object-status__text', {
                     'fd-upload-collection__status-group-item-text': scope.isUploadCollection
                 })
@@ -2755,11 +2784,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     if (newStatus && !statuses.includes(newStatus)) {
                         console.error(`fd-object-status error: 'status' must be one of: ${statuses.join(', ')}`);
                     }
-
                     if (oldStatus) {
                         element.removeClass(`fd-object-status--${oldStatus}`);
                     }
-
                     if (statuses.includes(newStatus)) {
                         element.addClass(`fd-object-status--${newStatus}`);
                     }
@@ -2790,6 +2817,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         element.addClass('fd-object-status--large');
                     } else {
                         element.removeClass('fd-object-status--large');
+                    }
+                });
+
+                scope.$watch('truncate', function () {
+                    if (scope.truncate) {
+                        element.addClass('fd-object-status--truncate');
+                    } else {
+                        element.removeClass('fd-object-status--truncate');
                     }
                 });
 
@@ -3396,25 +3431,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     </fd-select>
                 </div>
                 <nav class="fd-pagination__nav" role="navigation">
-                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" class="fd-pagination__button--mobile" aria-label="First page" aria-disabled="{{ !isPrevButtonEnabled() }}" ng-click="gotoFirstPage()">
-                        <i class="sap-icon sap-icon--media-rewind"></i>
-                    </a>
-                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" aria-label="Previous page" aria-disabled="{{ !isPrevButtonEnabled() }}" ng-click="gotoPrevPage()">
-                        <i class="sap-icon sap-icon--navigation-left-arrow"></i>
-                    </a>
-
+                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" class="fd-pagination__button--mobile" aria-label="First page" aria-disabled="{{ !isPrevButtonEnabled() }}" ng-click="gotoFirstPage()"><i class="sap-icon sap-icon--media-rewind"></i></a>
+                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" aria-label="Previous page" aria-disabled="{{ !isPrevButtonEnabled() }}" ng-click="gotoPrevPage()"><i class="sap-icon sap-icon--navigation-left-arrow"></i></a>
                     <a ng-if="pageNumber !== currentPage || isShortMode()" ng-repeat-start="pageNumber in pageNumbers = getPageNumbers()" href="javascript:void(0)" ng-class="getNumberButtonClasses(pageNumber)" aria-label="{{ getNumberButtonAriaLabel(pageNumber) }}" aria-current="{{ currentPage === pageNumber }}" ng-click="gotoPage(pageNumber)">{{ pageNumber }}</a>
                     <label ng-if="pageNumber === currentPage" id="{{ currentPageLabelId }}" class="fd-form-label fd-pagination__label" aria-label="Page input, Current page, Page {currentPage}">Page:</label>
                     <fd-input ng-if="pageNumber === currentPage" aria-labelledby="{{ getCurrentPageInputAriaLabelledBy() }}" class="fd-pagination__input" type="number" min="1" max="{{ getPageCount() }}" compact="compact" ng-required state="{{ currentPageInputState }}" ng-model="$parent.$parent.currentPageInput" ng-keydown="$event.keyCode === 13 && changePage()" ng-blur="onCurrentPageInputBlur()" ng-change="onCurrentPageInputChange()"></fd-input>
                     <label ng-if="pageNumber === currentPage" id="{{ currentPageOfLabelId }}" class="fd-form-label fd-pagination__label">of {{ getPageCount() }}</label>
                     <span ng-if="showEllipsys($index, pageNumbers.length)" ng-repeat-end class="fd-pagination__more" role="presentation"></span>
-
-                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" aria-label="Next page" aria-disabled="{{ !isNextButtonEnabled() }}" ng-click="gotoNextPage()">
-                        <i class="sap-icon sap-icon--navigation-right-arrow"></i>
-                    </a>
-                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" class="fd-pagination__button--mobile" aria-label="Last page" aria-disabled="{{ !isNextButtonEnabled() }}" ng-click="gotoLastPage()">
-                        <i class="sap-icon sap-icon--media-forward"></i>
-                    </a>
+                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" aria-label="Next page" aria-disabled="{{ !isNextButtonEnabled() }}" ng-click="gotoNextPage()"><i class="sap-icon sap-icon--navigation-right-arrow"></i></a>
+                    <a href="javascript:void(0)" ng-class="getArrowButtonClassess()" class="fd-pagination__button--mobile" aria-label="Last page" aria-disabled="{{ !isNextButtonEnabled() }}" ng-click="gotoLastPage()"><i class="sap-icon sap-icon--media-forward"></i></a>
                 </nav>
                 <div ng-if="displayTotalItems" class="fd-pagination__total">
                     <span class="fd-form-label fd-pagination__total-label">{{ getTotal() }}</span>
@@ -3424,9 +3449,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdBar', ['classNames', function (classNames) {
         /**
          * barDesign: String - Whether the Bar component is used as a header, subheader, header-with-subheader, footer or floating-footer. Types available: 'header','subheader','header-with-subheader','footer','floating-footer'
-         * cozy: Boolean - Whether to apply cozy mode to the Bar.
+         * compact: Boolean - Applies compact style to the bar and all elements inside the bar.
          * inPage: Boolean - Whether the Bar component is used in Page Layout.
-         * size: String - The size of the Page in Page responsive design. Available sizes: 's' | 'm_l' | 'xl'
+         * padding: String - The size of the side paddings. Available sizes: 's', 'm_l', 'xl' and 'responsive'. This is incompatible with compact mode.
          */
         return {
             restrict: 'EA',
@@ -3434,27 +3459,34 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             scope: {
                 barDesign: '@?',
-                cozy: '<?',
+                compact: '<?',
                 inPage: '<?',
-                size: '@?'
+                padding: '@?'
             },
             link: function (scope) {
                 const barDesigns = ['header', 'subheader', 'header-with-subheader', 'footer', 'floating-footer'];
-                const sizes = ['s', 'm_l', 'xl'];
+                const paddings = ['s', 'm_l', 'xl', 'responsive'];
 
                 if (scope.barDesign && !barDesigns.includes(scope.barDesign)) {
                     console.error(`fd-bar error: 'bar-design' must be one of: ${barDesigns.join(', ')}`);
                 }
 
-                if (scope.size && !sizes.includes(scope.size)) {
-                    console.error(`fd-bar error: 'size' must be one of: ${sizes.join(', ')}`);
+                if (scope.padding && scope.compact) {
+                    console.error("fd-bar error: 'padding' and 'compact' attributes are incompatible.");
+                }
+
+                if (scope.padding && !paddings.includes(scope.padding)) {
+                    console.error(`fd-bar error: 'padding' must be one of: ${paddings.join(', ')}`);
                 }
 
                 scope.getClasses = () => classNames('fd-bar', {
                     [`fd-bar--${scope.barDesign}`]: barDesigns.includes(scope.barDesign),
-                    'fd-bar--cozy': scope.cozy,
+                    'fd-bar--compact': scope.compact,
                     'fd-bar--page': scope.inPage,
-                    [`fd-bar--page-${scope.size}`]: sizes.includes(scope.size)
+                    'fd-bar--page-s': scope.padding === 's',
+                    'fd-bar--page-m_l': scope.padding === 'm_l',
+                    'fd-bar--page-xl': scope.padding === 'xl',
+                    'fd-bar--responsive-paddings': scope.padding === 'responsive',
                 });
             },
             template: `<div ng-class="getClasses()" ng-transclude></div>`
@@ -3519,7 +3551,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'A',
             scope: {
                 headerSize: '<',
-                dgWrap: '<'
+                dgWrap: '<?'
             },
             link: function (scope, element) {
                 element.addClass('fd-title');
@@ -4758,14 +4790,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 scope.getClasses = () => classNames('fd-token', {
                     'fd-token--compact': scope.compact,
                     'fd-token--readonly': scope.dgReadOnly
-                })
+                });
 
                 scope.isVisible = () => tokenizerCtrl ? tokenizerCtrl.isTokenVisible(element) : true;
             },
             template: `<span ng-show="isVisible()" ng-class="getClasses()" role="button">
-            <span class="fd-token__text">{{dgText}}</span>
-            <button ng-if="!dgReadOnly" class="fd-token__close" aria-label="{{closeButtonAriaLabel}}" ng-click="closeClicked()"></button>
-        </span>`
+                <span class="fd-token__text">{{dgText}}</span>
+                <button ng-if="!dgReadOnly" class="fd-token__close" aria-label="{{closeButtonAriaLabel}}" ng-click="closeClicked()"></button>
+            </span>`
         }
     }]).directive('fdTokenIndicator', [function () {
         return {
@@ -4782,7 +4814,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         /**
          * hasMenu: Boolean - If the toolbar will contain a hamburger menu.
          * dgSize: String - Manually set the horizontal paddings of the tool header. Possible options are 'sm', 'md', 'lg' and 'xl'.
-         * responsive: Boolean - Automatically adjust the horizontal paddings.
          */
         return {
             restrict: 'E',
@@ -4796,7 +4827,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             link: function (scope) {
                 scope.getClasses = () => classNames('fd-tool-header', {
                     'fd-tool-header--menu': scope.hasMenu,
-                    'fd-tool-header--responsive-paddings': scope.responsive,
                     [`fd-tool-header--${scope.dgSize}`]: scope.dgSize,
                 });
             },
@@ -4810,6 +4840,31 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     element.addClass('fd-tool-header__group');
                 }
             },
+        }
+    }]).directive('fdToolHeaderGroup', ['classNames', function (classNames) {
+        /**
+         * hasMenu: Boolean - The group will have a menu inside it.
+         * position: String - Position of the group - 'center' or 'right'.
+         * isHidden: Boolean - Set the group to be hidden.
+         */
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            scope: {
+                hasMenu: '<?',
+                position: '@?',
+                isHidden: '<?',
+            },
+            link: function (scope) {
+                scope.getClasses = () => classNames({
+                    'fd-tool-header__group--menu': scope.hasMenu,
+                    'fd-tool-header__group--hidden': scope.isHidden,
+                    'fd-tool-header__group--center': scope.position === 'center',
+                    'fd-tool-header__group--actions': scope.position === 'right'
+                })
+            },
+            template: '<div class="fd-tool-header__group" ng-class="getClasses()" ng-transclude></div>'
         }
     }]).directive('fdToolHeaderElement', [function () {
         return {
@@ -4825,7 +4880,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'A',
             link: {
                 pre: function (scope, element) {
-                    element.addClass('fd-tool-header__button');
+                    element.addClass('fd-button--tool-header');
                 }
             },
         }
@@ -4834,7 +4889,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'A',
             link: {
                 pre: function (scope, element) {
-                    element.addClass('fd-tool-header__title');
+                    element.addClass('fd-tool-header__product-name');
                 }
             },
         }
@@ -5099,4 +5154,478 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 </div>
             </li>`
         }
-    }]);
+    }]).directive('fdIconTabBar', ['classNames', function (classNames) {
+        /**
+         * iconOnly: Boolean - When true, tabs can have icons but no text.
+         * hasIcons: Boolean - When true, tabs can have both icons and text.
+         * isProcess: Boolean - When the tabs are used as steps for a wizard, set this to true.
+         * isNav: Boolean - When the tabs are used as a main navigation, inside a Shell Navigation.
+         * hasFilter: Boolean - The tab bar has a filter tab.
+         * hasCounters: Boolean - The tabs inside the bar will have counters.
+         * flatNav: Boolean - Use with flat navigation.
+         * sidePadding: String - Size of the side padding. Supported options are 'sm', 'md', 'lg', 'xl', 'xxl' and 'responsive'.
+         * transparent: Boolean - Transparent background.
+         * translucent: Boolean - In translucent mode the header gets "--sapObjectHeader_Background" background color and the panel "--sapGroup_ContentBackground" background color.
+         * unfocused: Boolean - Tabs will be in an unfocused state.
+         */
+        return {
+            restrict: 'E',
+            transclude: {
+                'tabs': 'fdIconTabBarTablist',
+                'panels': '?fdIconTabBarPanel',
+                'buttons': '?dgIconTabBarButtons',
+            },
+            replace: true,
+            scope: {
+                iconOnly: '<?',
+                hasIcons: '<?',
+                isProcess: '<?',
+                isNav: '<?',
+                hasFilter: '<?',
+                hasCounters: '<?',
+                flatNav: '<?',
+                sidePadding: '@?',
+                transparent: '<?',
+                translucent: '<?',
+                unfocused: '<?',
+                selectedTabId: '=?'
+            },
+            controller: ['$scope', function ($scope) {
+                $scope.lastSelectedTabId;
+                $scope.updateLastSelectedTabId = true;
+                $scope.tabList = [];
+                $scope.eventCallbacks = [];
+
+                const fireEvent = function (c) {
+                    $scope.eventCallbacks.forEach(c);
+                }
+
+                this.getIsProgress = function () {
+                    return $scope.isProcess;
+                }
+                this.getIsFilter = function () {
+                    return $scope.hasFilter;
+                }
+                this.getIsUnfocused = function () {
+                    return $scope.unfocused;
+                }
+                $scope.getClasses = () => classNames({
+                    'fd-icon-tab-bar--icon-only': $scope.iconOnly && !$scope.hasIcons,
+                    'fd-icon-tab-bar--icon': $scope.hasIcons && !$scope.iconOnly,
+                    'fd-icon-tab-bar--process': $scope.isProcess,
+                    'fd-icon-tab-bar--counters': $scope.hasCounters,
+                    'fd-icon-tab-bar--navigation': $scope.isNav,
+                    'fd-icon-tab-bar--filter': $scope.hasFilter,
+                    'fd-icon-tab-bar--navigation-flat': $scope.isNav && $scope.flatNav,
+                    'fd-icon-tab-bar--sm': $scope.sidePadding === 'sm',
+                    'fd-icon-tab-bar--md': $scope.sidePadding === 'md',
+                    'fd-icon-tab-bar--lg': $scope.sidePadding === 'lg',
+                    'fd-icon-tab-bar--xl': $scope.sidePadding === 'xl',
+                    'fd-icon-tab-bar--xxl': $scope.sidePadding === 'xxl',
+                    'fd-icon-tab-bar--responsive-paddings': $scope.sidePadding === 'responsive',
+                    'fd-icon-tab-bar--transparent': $scope.transparent,
+                    'fd-icon-tab-bar--translucent': $scope.translucent,
+                });
+
+                this.addIconTab = function (tabId, tabCallbacks) {
+                    if ((!angular.isDefined($scope.selectedTabId) || $scope.selectedTabId === null) && $scope.tabList.length === 0) {
+                        $scope.selectedTabId = tabId;
+                    }
+
+                    $scope.tabList.push(tabId);
+
+                    fireEvent(c => c.tabAdded(tabId, tabCallbacks));
+                };
+
+                this.removeIconTab = function (tabId) {
+                    this.onTabClose(tabId);
+
+                    const tabIndex = $scope.tabList.indexOf(tabId);
+                    if (tabIndex >= 0) {
+                        $scope.tabList.splice(tabIndex, 1);
+                    }
+
+                    fireEvent(c => c.tabRemoved(tabId));
+                };
+
+                this.onTabClose = function (tabId) {
+                    let nextSelectedTabId;
+                    if (tabId === $scope.selectedTabId) {
+                        if ($scope.lastSelectedTabId)
+                            nextSelectedTabId = $scope.lastSelectedTabId;
+
+                        if (!nextSelectedTabId && $scope.tabList.length > 1) {
+                            let tabIndex = $scope.tabList.indexOf(tabId) + 1;
+
+                            nextSelectedTabId = $scope.tabList[tabIndex];
+                            if (!nextSelectedTabId) {
+                                const tabList = $scope.tabList.filter(x => x !== tabId);
+                                nextSelectedTabId = tabList[tabList.length - 1];
+                            }
+                        }
+                    } else if ($scope.lastSelectedTabId === tabId) {
+                        $scope.lastSelectedTabId = null;
+                    }
+
+                    if (nextSelectedTabId) {
+                        $scope.updateLastSelectedTabId = false;
+                        $scope.selectedTabId = nextSelectedTabId;
+                    }
+                }
+
+                this.getIsSelected = function (tabId) {
+                    return tabId === $scope.selectedTabId;
+                };
+
+                this.getSelectedTabId = function () {
+                    return $scope.selectedTabId;
+                }
+
+                this.getTabList = function () {
+                    return $scope.tabList;
+                }
+
+                this.subscribe = function (eventCallback) {
+                    const index = $scope.eventCallbacks.indexOf(eventCallback);
+                    if (index === -1) {
+                        $scope.eventCallbacks.push(eventCallback);
+                    }
+                }
+
+                this.unsubscribe = function (eventCallback) {
+                    const index = $scope.eventCallbacks.indexOf(eventCallback);
+                    if (index >= 0) {
+                        $scope.eventCallbacks.splice(index, 1);
+                    }
+                }
+
+                $scope.$watch('selectedTabId', function (newSelectedTabId, oldSelectedTabId) {
+                    if (newSelectedTabId !== oldSelectedTabId) {
+                        if ($scope.updateLastSelectedTabId) {
+                            $scope.lastSelectedTabId = oldSelectedTabId;
+                        } else {
+                            $scope.lastSelectedTabId = null;
+                            $scope.updateLastSelectedTabId = true;
+                        }
+
+                        fireEvent(c => c.tabSelected(newSelectedTabId));
+                    }
+                });
+            }],
+            template: `<div class="fd-icon-tab-bar dg-icon-tab-bar" ng-class="getClasses()"><ng-transclude ng-transclude-slot="tabs"></ng-transclude><ng-transclude ng-transclude-slot="panels" class="dg-icon-tab-bar-panels"></ng-transclude><ng-transclude ng-transclude-slot="buttons"></ng-transclude></div>`
+        }
+    }]).directive('fdIconTabBarTablist', function () {
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            template: `<ul role="tablist" class="fd-icon-tab-bar__header" style="overflow-x: visible" ng-transclude></ul>`
+        }
+    }).directive('dgTabsOverflowable', ['$timeout', function ($timeout) {
+        return {
+            restrict: 'A',
+            require: '^fdIconTabBar',
+            link: function (scope, element, attr, tabBarCtrl) {
+
+                scope.tabCallbacks = {};
+                scope.tabsListener = {
+                    tabAdded: (tabId, tabCallbacks) => {
+                        scope.tabCallbacks[tabId] = tabCallbacks;
+                        scope.updateTabsVisibility();
+                    },
+                    tabRemoved: (tabId) => {
+                        delete scope.tabCallbacks[tabId];
+                        scope.updateTabsVisibility();
+                    },
+                    tabSelected: () => {
+                        $timeout(scope.updateTabsVisibility);
+                    },
+                };
+
+                tabBarCtrl.subscribe(scope.tabsListener);
+
+                scope.updateTabsVisibility = (containerWidth = -1) => {
+                    const tabsListEl = element;
+
+                    if (containerWidth === -1)
+                        containerWidth = tabsListEl.width();
+
+                    const selectedTabId = tabBarCtrl.getSelectedTabId()
+
+                    const moreButtonEl = tabsListEl.find('button.fd-icon-tab-bar__overflow');
+                    const tabsButtonsEl = tabsListEl.find('.dg-icon-tab-bar__item--buttons');
+                    const selectedTabEl = tabsListEl.find(`[tab-id="${selectedTabId}"]`);
+
+                    let width = selectedTabEl.length > 0 ? selectedTabEl.outerWidth(true) : 0;
+                    let moreBtnWidth = moreButtonEl.length ? moreButtonEl.outerWidth(true) : 0;
+                    let tabsButtonsWidth = tabsButtonsEl.length ? tabsButtonsEl.outerWidth(false) : 0;
+
+                    const selectedTab = scope.tabCallbacks[selectedTabId];
+                    if (selectedTab)
+                        selectedTab.setTabHidden(false);
+
+                    const tabList = tabBarCtrl.getTabList();
+                    for (let i = 0; i < tabList.length; i++) {
+                        let tabId = tabList[i];
+                        if (tabId === selectedTabId) continue;
+
+                        const tabEl = tabsListEl.find(`[tab-id="${tabId}"]`);
+
+                        let availableWidth = containerWidth - tabsButtonsWidth - moreBtnWidth;
+
+                        width += tabEl.outerWidth(true);
+
+                        if (width < availableWidth) {
+                            scope.tabCallbacks[tabId].setTabHidden(false);
+                        } else {
+                            scope.tabCallbacks[tabId].setTabHidden(true);
+                        }
+                    }
+
+                }
+
+                const ro = new ResizeObserver(entries => {
+                    const width = entries[0].contentRect.width;
+                    $timeout(() => scope.updateTabsVisibility(width));
+                });
+
+                ro.observe(element[0]);
+
+                scope.$on('$destroy', function () {
+                    ro.unobserve(element[0]);
+                    tabBarCtrl.unsubscribe(scope.tabsListener);
+                });
+            }
+        }
+    }]).directive('fdIconTabBarTab', ['classNames', function (classNames) {
+        /**
+         * label: String - Tab label.
+         * description: String - Description label next to the icon.
+         * counter: String - Counter label shown next to or above the label.
+         * hasBadge: Boolean - If the tab has a badge indicator.
+         * dgIcon: String - Icon class.
+         * dgHref: String - Link.
+         * tabId: String - The id of the tab.
+         * dgState: String - State of the tab. Possible options are 'positive', 'negative', 'critical' and 'informative'.
+         * isLastStep: Boolean - If the tabs is the last step of a process.
+         * onClose: Function - Function that will be called when the tab close button is clicked. The tab will have an "X" button and on click, the tab ID will be passed as a parameter.
+         * isHidden: Boolean - Whether the tab shuold be visible or not
+         */
+        return {
+            restrict: 'E',
+            transclude: false,
+            require: '^^fdIconTabBar',
+            replace: true,
+            scope: {
+                label: '@?',
+                description: '@?',
+                counter: '@?',
+                hasBadge: '<?',
+                dgIcon: '@?',
+                dgHref: '@?',
+                tabId: '@',
+                dgState: '@?',
+                isLastStep: '<?',
+                onClose: '&?',
+                isHidden: '=?'
+            },
+            link: {
+                pre: function (scope, element, attr, tabBarCtrl) {
+                    tabBarCtrl.addIconTab(scope.tabId, {
+                        setTabHidden: (isHidden) => {
+                            scope.isHidden = isHidden;
+                        }
+                    });
+
+                    scope.isProcess = tabBarCtrl.getIsProgress;
+                    scope.isFilter = tabBarCtrl.getIsFilter;
+                    scope.isSelected = tabBarCtrl.getIsSelected;
+                    scope.getClasses = () => classNames({
+                        'fd-icon-tab-bar__item--positive': scope.dgState === 'positive',
+                        'fd-icon-tab-bar__item--negative': scope.dgState === 'negative',
+                        'fd-icon-tab-bar__item--critical': scope.dgState === 'critical',
+                        'fd-icon-tab-bar__item--informative': scope.dgState === 'informative',
+                        'fd-icon-tab-bar__item--closable': scope.onClose,
+                        'dg-opacity-7': tabBarCtrl.getIsUnfocused(),
+                        'dg-icon-tab-bar-tab-hidden': scope.isHidden
+                    });
+                    scope.close = function (event) {
+                        event.stopPropagation();
+                        if (scope.onClose) scope.onClose({ tabId: scope.tabId });
+                    };
+
+                    scope.$on('$destroy', function () {
+                        tabBarCtrl.removeIconTab(scope.tabId);
+                    });
+                }
+            },
+            template: `<li role="presentation" class="fd-icon-tab-bar__item" ng-class="getClasses()">
+                <a role="tab" class="fd-icon-tab-bar__tab" ng-attr-href="{{dgHref || undefined}}" aria-selected="{{isSelected(tabId)}}" id="{{tabId}}">
+                    <div ng-if="dgIcon" class="fd-icon-tab-bar__container">
+                        <span class="fd-icon-tab-bar__icon"><i class="{{dgIcon}}" role="presentation"></i></span>
+                        <span ng-if="!description" class="fd-icon-tab-bar__counter">{{counter}}</span>
+                        <span ng-if="hasBadge" class="fd-icon-tab-bar__badge"></span>
+                    </div>
+                    <span ng-if="counter && !dgIcon" class="fd-icon-tab-bar__counter">{{counter}}</span>
+                    <span ng-if="hasBadge && !dgIcon" class="fd-icon-tab-bar__badge"></span>
+                    <span ng-if="label && !dgIcon" class="fd-icon-tab-bar__tag">{{label}}</span>
+                    <div ng-if="label && isFilter()" class="fd-icon-tab-bar__label">{{label}}</div>
+                    <div ng-if="dgIcon && description" class="fd-icon-tab-bar__details">
+                        <span class="fd-icon-tab-bar__counter">{{counter}}</span>
+                        <span class="fd-icon-tab-bar__label">{{description}}</span>
+                    </div>
+                </a>
+                <div ng-if="onClose" class="fd-icon-tab-bar__button-container">
+                    <fd-button glyph="sap-icon--decline" class="fd-icon-tab-bar__button" aria-label="close tab" dg-type="transparent" ng-click="close($event)"></fd-button>
+                </div>
+                <span ng-if="isProcess() && !isLastStep" class="fd-icon-tab-bar__separator"><i class="sap-icon--process" role="presentation"></i></span>
+            </li>`
+        }
+    }]).directive('fdIconTabBarFilterItem', function () {
+        /**
+         * label: String - Filter tab label.
+         * counter: String - Counter label shown next to or above the label.
+         * dgHref: String - Link.
+         * tabId: String - The id of the tab.
+         * isSelected: Boolean - If the tab is selected.
+         */
+        return {
+            restrict: 'E',
+            transclude: false,
+            replace: true,
+            scope: {
+                label: '@?',
+                counter: '@?',
+                dgHref: '@?',
+                tabId: '@',
+                isSelected: '<?',
+            },
+            template: `<li role="presentation" class="fd-icon-tab-bar__item"">
+                <a role="tab" class="fd-icon-tab-bar__tab" ng-attr-href="{{dgHref || undefined}}" aria-selected="{{isSelected || false}}" id="{{tabId}}">
+                    <div class="fd-icon-tab-bar__container fd-icon-tab-bar__container--filter">
+                        <span class="fd-icon-tab-bar__filter-counter">{{counter}}</span>
+                        <span class="fd-icon-tab-bar__filter-label">{{label}}</span>
+                    </div>
+                </a>
+            </li>`
+        }
+    }).directive('fdIconTabBarOverflow', function (classNames) {
+        /**
+         * label: String - Button label.
+         * isHover: Boolean - Button is in hover state.
+         * isActive: Boolean - Button is in active state.
+         * isFocus: Boolean - Button is in focus state.
+         * dgAlign: String - Relative position of the popover. For possible options, look at "fd-popover-body".
+         */
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            scope: {
+                label: '@',
+                isHover: '<?',
+                isActive: '<?',
+                isFocus: '<?',
+                dgAlign: '@?',
+            },
+            link: function (scope) {
+                scope.getClasses = () => classNames({
+                    'is-hover': scope.isHover,
+                    'is-active': scope.isActive,
+                    'is-focus': scope.isFocus,
+                });
+            },
+            template: `<li role="presentation" class="fd-icon-tab-bar__item fd-icon-tab-bar__item--overflow">
+                <fd-popover>
+                    <fd-popover-control>
+                        <button class="fd-icon-tab-bar__overflow" ng-class="getClasses()">
+                            <span class="fd-icon-tab-bar__overflow-text">{{label}}</span>
+                            <i class="sap-icon--slim-arrow-down" role="presentation"></i>
+                        </button>
+                    </fd-popover-control>
+                    <fd-popover-body class="fd-icon-tab-bar__popover-body" no-arrow="true" dg-align="{{ dgAlign || 'bottom-right' }}">
+                        <ul role="list" class="fd-list fd-list--navigation fd-list--no-border fd-icon-tab-bar__list" ng-transclude></ul>
+                    </fd-popover-body>
+                </fd-popover>
+            </li>`
+        }
+    }).directive('fdIconTabBarOverflowItem', function (classNames) {
+        /**
+         * label: String - Tab label.
+         * counter: String - Counter label shown next to the label.
+         * hasBadge: Boolean - If the tab has a badge indicator.
+         * dgIcon: String - Icon class.
+         * dgHref: String - Link.
+         * tabId: String - The id of the tab.
+         * dgState: String - State of the tab. Possible options are 'positive', 'negative', 'critical' and 'informative'.
+         * onClose: Function - Function that will be called when the tab close button is clicked. The tab will have an "X" button and on click, the tab ID will be passed as a parameter.
+         */
+        return {
+            restrict: 'E',
+            transclude: false,
+            replace: true,
+            scope: {
+                label: '@',
+                counter: '@?',
+                hasBadge: '<?',
+                dgIcon: '@?',
+                dgHref: '@?',
+                tabId: '@',
+                dgState: '@?',
+                onClose: '&?',
+            },
+            link: {
+                pre: function (scope) {
+                    scope.getClasses = () => classNames('fd-list__item', 'fd-list__item--link', 'fd-icon-tab-bar__list-item', {
+                        'fd-icon-tab-bar__list-item--positive': scope.dgState === 'positive',
+                        'fd-icon-tab-bar__list-item--negative': scope.dgState === 'negative',
+                        'fd-icon-tab-bar__list-item----critical': scope.dgState === 'critical',
+                        'fd-icon-tab-bar__list-item--informative': scope.dgState === 'informative',
+                        'fd-icon-tab-bar__list-item--closable': scope.onClose,
+                    });
+                    scope.close = function (event) {
+                        event.stopPropagation();
+                        if (scope.onClose) scope.onClose({ tabId: scope.tabId });
+                    };
+                }
+            },
+            template: `<li ng-class="getClasses()" tabindex="-1">
+                <a tabindex="0" class="fd-list__link fd-icon-tab-bar__list-link" ng-attr-href="{{dgHref || undefined}}" id="{{tabId}}">
+                    <span ng-if="dgIcon" class="fd-icon-tab-bar__list-item-icon-container">
+                        <span class="fd-list__icon fd-icon-tab-bar__list-item-icon">
+                            <i class="{{dgIcon}}" role="presentation"></i>
+                        </span>
+                    </span>
+                    <span class="fd-list__title fd-icon-tab-bar__list-item-title">{{label}}</span>
+                    <span ng-if="counter" class="fd-list__counter fd-icon-tab-bar__list-item-counter">{{counter}}</span>
+                    <span ng-if="hasBadge" class="fd-icon-tab-bar__badge"></span>
+                </a>
+                <div ng-if="onClose" class="fd-icon-tab-bar__button-container">
+                    <fd-button glyph="sap-icon--decline" class="fd-icon-tab-bar__button" aria-label="close tab" dg-type="transparent" of-close-btn ng-click="close($event)"></fd-button>
+                </div>
+            </li>`
+        }
+    }).directive('dgIconTabBarButtons', function () {
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            scope: {
+                dgAlign: '@?',
+            },
+            template: `<div class="dg-icon-tab-bar__item--buttons" ng-class="{'right': 'dg-icon-tab-bar__item--buttons-right'}[dgAlign]" ng-transclude></div>`
+        }
+    }).directive('fdIconTabBarPanel', function () {
+        /**
+         * tabId: String - The id of the tab this panel belongs to.
+         */
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            scope: {
+                tabId: '@',
+            },
+            template: `<section role="tabpanel" class="fd-icon-tab-bar__panel " aria-labelledby="{{tabId}}" ng-transclude></section>`
+        }
+    });

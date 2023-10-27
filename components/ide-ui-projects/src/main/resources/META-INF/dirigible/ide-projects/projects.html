@@ -36,7 +36,7 @@
         <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="state.error || !state.isBusy" dg-size="l">
             {{state.busyText}}
         </fd-busy-indicator-extended>
-        <fd-toolbar ng-show="!state.error && !state.isBusy">
+        <fd-toolbar compact="true" ng-show="!state.error && !state.isBusy">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button compact="true" dg-type="transparent" glyph="sap-icon--save" title="Save all"
                 aria-label="Save all" ng-click="saveAll()"></fd-button>
@@ -45,14 +45,14 @@
             <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
                 aria-label="Refresh" ng-click="reloadWorkspace()"></fd-button>
             <fd-toolbar-separator></fd-toolbar-separator>
-            <fd-button compact="true" dg-type="transparent" dg-toggled="searchVisible" glyph="sap-icon--search"
-                title="Toggle search" aria-label="Toggle search" ng-click="toggleSearch()">
+            <fd-button dg-type="transparent" dg-toggled="searchVisible" glyph="sap-icon--search" title="Toggle search"
+                aria-label="Toggle search" ng-click="toggleSearch()">
             </fd-button>
             <fd-toolbar-separator></fd-toolbar-separator>
             <fd-popover>
                 <fd-popover-control>
-                    <fd-button compact="true" dg-type="transparent" is-menu="true"
-                        dg-label="{{ selectedWorkspace.name }}" title="Workspace select">
+                    <fd-button dg-type="transparent" is-menu="true" dg-label="{{ selectedWorkspace.name }}"
+                        title="Workspace select">
                     </fd-button>
                 </fd-popover-control>
                 <fd-popover-body dg-align="bottom-right" no-arrow="true">
@@ -65,29 +65,28 @@
             </fd-popover>
             <fd-toolbar-separator></fd-toolbar-separator>
             <fd-toolbar-overflow>
-                <fd-button compact="true" dg-type="transparent" dg-label="Create project" glyph="sap-icon--create"
-                    is-overflow="true" ng-click="createProject()">
+                <fd-button dg-type="transparent" dg-label="Create project" glyph="sap-icon--create" is-overflow="true"
+                    ng-click="createProject()">
                 </fd-button>
-                <fd-button compact="true" dg-type="transparent" dg-label="Duplicate project" glyph="sap-icon--duplicate"
+                <fd-button dg-type="transparent" dg-label="Duplicate project" glyph="sap-icon--duplicate"
                     is-overflow="true" ng-click="duplicateProject()">
                 </fd-button>
-                <!-- <fd-button compact="true" dg-type="transparent" dg-label="Link project" glyph="sap-icon--chain-link"
+                <!-- <fd-button dg-type="transparent" dg-label="Link project" glyph="sap-icon--chain-link"
                     is-overflow="true" ng-click="linkProject()">
                 </fd-button> -->
-                <fd-button compact="true" dg-type="transparent" dg-label="Export projects"
-                    glyph="sap-icon--download-from-cloud" is-overflow="true" ng-click="exportProjects()">
+                <fd-button dg-type="transparent" dg-label="Export projects" glyph="sap-icon--download-from-cloud"
+                    is-overflow="true" ng-click="exportProjects()">
                 </fd-button>
                 <fd-toolbar-separator></fd-toolbar-separator>
-                <fd-button compact="true" dg-type="transparent" dg-label="Create workspace" glyph="sap-icon--add"
-                    is-overflow="true" ng-click="createWorkspace()">
+                <fd-button dg-type="transparent" dg-label="Create workspace" glyph="sap-icon--add" is-overflow="true"
+                    ng-click="createWorkspace()">
                 </fd-button>
-                <fd-button compact="true" dg-type="transparent" dg-label="Delete workspace" glyph="sap-icon--delete"
-                    is-overflow="true" state="{{ selectedWorkspace.name === 'workspace' ? 'disabled' : '' }}"
-                    ng-click="deleteWorkspace()">
+                <fd-button dg-type="transparent" dg-label="Delete workspace" glyph="sap-icon--delete" is-overflow="true"
+                    state="{{ selectedWorkspace.name === 'workspace' ? 'disabled' : '' }}" ng-click="deleteWorkspace()">
                 </fd-button>
             </fd-toolbar-overflow>
         </fd-toolbar>
-        <fd-toolbar dg-size="cozy" ng-show="searchVisible && !state.error && !state.isBusy">
+        <fd-toolbar ng-show="searchVisible && !state.error && !state.isBusy">
             <fd-input type="search" placeholder="Search" ng-keyup="search()" ng-model="searchField.text"></fd-input>
         </fd-toolbar>
         <div id="dgProjects" class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar"

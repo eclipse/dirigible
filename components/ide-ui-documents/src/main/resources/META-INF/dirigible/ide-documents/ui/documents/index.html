@@ -27,15 +27,13 @@
     </head>
 
     <body class="dg-documents dg-vbox">
-        <fd-toolbar dg-type="solid" dg-size="cozy">
-            <fd-segmented-button aria-label="Test group">
-                <fd-button glyph="sap-icon--arrow-left" aria-label="Go back" title="Go back" dg-type="transparent"
-                    state="{{ hasBack() ? undefined : 'disabled' }}" ng-click="goBack()">
-                </fd-button>
-                <fd-button glyph="sap-icon--arrow-right" aria-label="Go forward" title="Go forward"
-                    dg-type="transparent" state="{{ hasForward() ? undefined : 'disabled' }}" ng-click="goForward()">
-                </fd-button>
-            </fd-segmented-button>
+        <fd-toolbar dg-type="solid">
+            <fd-button glyph="sap-icon--arrow-left" aria-label="Go back" title="Go back" dg-type="transparent"
+                state="{{ hasBack() ? undefined : 'disabled' }}" ng-click="goBack()">
+            </fd-button>
+            <fd-button glyph="sap-icon--arrow-right" aria-label="Go forward" title="Go forward" dg-type="transparent"
+                state="{{ hasForward() ? undefined : 'disabled' }}" ng-click="goForward()">
+            </fd-button>
             <nav aria-label="products breadcrumbs">
                 <ul class="fd-breadcrumb">
                     <li ng-if="!($last)" ng-repeat="path in breadcrumbs.crumbs" class="fd-breadcrumb__item"><a
@@ -76,7 +74,7 @@
             </fd-popover>
             <input id="fileUpload" type="file" nv-file-select="" uploader="uploader" ng-hide="true" multiple />
         </fd-toolbar>
-        <fd-toolbar ng-if="search.displaySearch" dg-size="cozy" has-title="false" dg-type="solid">
+        <fd-toolbar ng-if="search.displaySearch" has-title="false" dg-type="solid">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-input-group compact="true" style="max-width: 50%;">
                 <fd-input-group-addon has-button="true">

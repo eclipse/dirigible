@@ -19,36 +19,37 @@ body {
   width: 100%;
 }
 
-.dg-table--no-outer-horizontal-borders {
-  border-top: hidden;
-  border-bottom: hidden;
-}
+/* Backdrop, used internally */
 
-.dg-table--no-outer-vertical-borders {
-  border-left: hidden;
-  border-right: hidden;
-}
-
-.dg-table__header-sticky th.fd-table__cell {
-  position: sticky;
+.dg-backdrop {
+  display: none;
+  background-color: transparent;
+  position: fixed;
   top: 0;
-  -webkit-box-shadow: inset 0 1px 0 var(--sapList_BorderColor), inset 0 -1px 0 var(--sapList_BorderColor);
-  box-shadow: inset 0 1px 0 var(--sapList_BorderColor), inset 0 -1px 0 var(--sapList_BorderColor);
-  border-bottom: hidden;
-  border-top: hidden;
-  z-index: 1;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 200;
 }
 
-.dg-table--no-outer-horizontal-borders .dg-table__header-sticky th.fd-table__cell,
-.fd-table--no-outer-border .dg-table__header-sticky th.fd-table__cell {
-  -webkit-box-shadow: inset 0 1px 0 var(--sapList_HeaderBackground), inset 0 -1px 0 var(--sapList_BorderColor);
-  box-shadow: inset 0 1px 0 var(--sapList_HeaderBackground), inset 0 -1px 0 var(--sapList_BorderColor);
+.dg-backdrop--active .dg-backdrop {
+  display: block;
 }
 
-.dg-table__footer-sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  bottom: 0;
+.dg-backdrop--active .fd-popover__control,
+.fd-button-split {
+  /* Just below the dialogs, just above the backdrop */
+  position: relative;
+  z-index: 210;
+}
+
+.dg-backdrop--active .fd-popover__body,
+.fd-menu {
+  z-index: 215;
+}
+
+.dg-backdrop--active .fd-menu {
+  position: relative;
 }
 
 /* Vertical navigation icon file */
@@ -96,6 +97,10 @@ body {
 }
 
 /* General helper classes */
+.dg-opacity-7 {
+  opacity: .7;
+}
+
 .dg-scroll-hidden {
   overflow: hidden;
 }
@@ -357,6 +362,46 @@ body {
   flex-direction: column;
 }
 
+/* fd-icon-tab-bar additions */
+.fd-icon-tab-bar__item--overflow+.dg-icon-tab-bar__item--buttons {
+  margin: 0 0 0 .5rem;
+}
+
+.dg-icon-tab-bar__item--buttons {
+  white-space: nowrap;
+}
+
+:not(.fd-icon-tab-bar__item--overflow)+.dg-icon-tab-bar__item--buttons-right {
+  margin-left: auto;
+}
+
+.dg-icon-tab-bar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.dg-icon-tab-bar>.dg-icon-tab-bar-panels,
+.dg-icon-tab-bar>.dg-icon-tab-bar-panels>section {
+  height: 100%;
+}
+
+.dg-icon-tab-bar-tab-hidden {
+  visibility: hidden !important;
+  position: absolute !important;
+}
+
+/* Tool header fixes */
+.fd-button--tool-header {
+  width: auto;
+  max-width: none;
+}
+
+.fd-tool-header__product-name {
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
 /* Menu fixes and additions */
 .dg-submenu--left {
   margin: .25rem 0 0 .25rem;
@@ -374,7 +419,7 @@ body {
   padding-top: .0625rem;
 }
 
-/* Form label fix for 0.29.4 */
+/* Form label fix for 0.30.2 */
 .fd-form-label--colon {
   padding-right: .25rem;
 }
@@ -437,40 +482,48 @@ body {
   margin: 0;
 }
 
-/* Table margin fixes*/
+/* Table fixes and additions*/
 .fd-table .fd-table__cell .fd-select__control {
   margin: 0;
 }
 
-.dg-backdrop {
-  display: none;
-  background-color: transparent;
-  position: fixed;
+.fd-table--no-outer-border .fd-table__cell--no-data,
+.dg-table--no-outer-vertical-borders .fd-table__cell--no-data,
+.dg-table--bottom-outer-border .fd-table__cell--no-data {
+  border: none;
+  border-style: none !important;
+}
+
+.dg-table--no-outer-horizontal-borders {
+  border-top: hidden;
+  border-bottom: hidden;
+}
+
+.dg-table--no-outer-vertical-borders {
+  border-left: hidden;
+  border-right: hidden;
+}
+
+.dg-table__header-sticky th.fd-table__cell {
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 200;
+  -webkit-box-shadow: inset 0 1px 0 var(--sapList_BorderColor), inset 0 -1px 0 var(--sapList_BorderColor);
+  box-shadow: inset 0 1px 0 var(--sapList_BorderColor), inset 0 -1px 0 var(--sapList_BorderColor);
+  border-bottom: hidden;
+  border-top: hidden;
+  z-index: 1;
 }
 
-.dg-backdrop--active .dg-backdrop {
-  display: block;
+.dg-table--no-outer-horizontal-borders .dg-table__header-sticky th.fd-table__cell,
+.fd-table--no-outer-border .dg-table__header-sticky th.fd-table__cell {
+  -webkit-box-shadow: inset 0 1px 0 var(--sapList_HeaderBackground), inset 0 -1px 0 var(--sapList_BorderColor);
+  box-shadow: inset 0 1px 0 var(--sapList_HeaderBackground), inset 0 -1px 0 var(--sapList_BorderColor);
 }
 
-.dg-backdrop--active .fd-popover__control,
-.fd-button-split {
-  /* Just below the dialogs, just above the backdrop */
-  position: relative;
-  z-index: 210;
-}
-
-.dg-backdrop--active .fd-popover__body,
-.fd-menu {
-  z-index: 215;
-}
-
-.dg-backdrop--active .fd-menu {
-  position: relative;
+.dg-table__footer-sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
 }
 
 /** Split View **/

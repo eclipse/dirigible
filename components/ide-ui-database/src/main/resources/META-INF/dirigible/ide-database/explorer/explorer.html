@@ -27,16 +27,16 @@
 	</head>
 
 	<body class="dg-vbox">
-		<fd-toolbar>
+		<fd-toolbar compact="true">
 			<fd-toolbar-spacer></fd-toolbar-spacer>
 			<fd-button compact="true" dg-type="transparent" glyph="sap-icon--play" title="Run" aria-label="Run"
 				ng-click="runSQL()"></fd-button>
 			<fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
 				aria-label="Refresh" ng-click="getDatabases()"></fd-button>
 			<fd-toolbar-separator></fd-toolbar-separator>
-			<fd-popover compact="true">
+			<fd-popover>
 				<fd-popover-control>
-					<fd-button compact="true" dg-type="transparent" is-menu="true" dg-label="{{ selectedDatasource }}"
+					<fd-button dg-type="transparent" is-menu="true" dg-label="{{ selectedDatasource }}"
 						title="Datasource select">
 					</fd-button>
 				</fd-popover-control>

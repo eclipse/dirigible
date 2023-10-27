@@ -27,7 +27,7 @@
     </head>
 
     <body class="dg-vbox">
-        <fd-toolbar dg-size="cozy" no-bottom-border="true">
+        <fd-toolbar no-bottom-border="true">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-popover>
                 <fd-popover-control>
@@ -51,12 +51,11 @@
                 aria-label="Clear search" state="{{ search.text ? '' : 'disabled' }}" ng-click="clearSearch()">
             </fd-button>
         </fd-toolbar>
-        <fd-toolbar dg-size="cozy">
+        <fd-toolbar>
             <fd-input type="search" placeholder="Search..." ng-keyup="searchContent()" ng-model="search.text">
             </fd-input>
         </fd-toolbar>
-
-        <div class="fd-scrollbar dg-fill-parent" dg-contextmenu="contextMenuContext">
+        <div fd-scrollbar class="dg-fill-parent" dg-contextmenu="contextMenuContext">
             <div ng-hide="search.searching || search.results.length > 0" class="fd-message-page">
                 <div class="fd-message-page__container">
                     <div class="fd-message-page__icon-container">
@@ -72,11 +71,9 @@
                     </div>
                 </div>
             </div>
-
             <fd-busy-indicator-extended class="dg-fill-parent" ng-hide="{{ !search.searching }}" dg-size="l">
                 Searching...
             </fd-busy-indicator-extended>
-
             <fd-list compact="true" byline="true" ng-show="search.results.length > 0">
                 <fd-list-item id="{{ $index }}" ng-repeat="item in search.results track by $index"
                     dg-selected="selectedItemIndex === $index" ng-click="itemClick($index)"

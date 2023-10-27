@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2022 SAP and others.
+  ~ Copyright (c) 2023 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -27,43 +27,43 @@
     </head>
 
     <body class="dg-vbox">
-        <fd-toolbar>
+        <fd-toolbar compact="true">
             <fd-toolbar-spacer></fd-toolbar-spacer>
-            <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh"
-                aria-label="Refresh" ng-click="reload()"></fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--refresh" title="Refresh" aria-label="Refresh"
+                ng-click="reload()"></fd-button>
             <fd-toolbar-separator></fd-toolbar-separator>
-            <fd-button compact="true" dg-type="{{ searchVisible ? 'emphasized' : 'transparent' }}"
-                glyph="sap-icon--search" title="Toggle search" aria-label="Toggle search" ng-click="toggleSearch()">
+            <fd-button compact="true" dg-type="{{ definitions.displaySearch ? 'emphasized' : 'transparent' }}"
+                glyph="sap-icon--search" title="Toggle search" aria-label="Toggle search"
+                ng-click="definitions.toggleSearch()">
             </fd-button>
         </fd-toolbar>
-        <fd-toolbar dg-size="cozy" ng-show="searchVisible">
-            <fd-input type="search" placeholder="Search" ng-keyup="search()" ng-model="searchField.text"></fd-input>
+        <fd-toolbar ng-show="definitions.displaySearch">
+            <fd-input type="search" placeholder="Search" ng-keyup="definitions.inputSearchKeyUp($event)"
+                ng-model="definitions.searchText">
+            </fd-input>
         </fd-toolbar>
-
-        <body class="dg-vbox">
-            <fd-scrollbar class="dg-full-height">
-                <table fd-table outer-borders="none" display-mode="compact" class="dg-list-border-bottom">
-                    <thead fd-table-header sticky="true">
-                        <tr fd-table-row>
-                            <!--
+        <fd-scrollbar class="dg-fill-parent">
+            <table fd-table outer-borders="none" display-mode="compact" class="dg-list-border-bottom">
+                <thead fd-table-header sticky="true">
+                    <tr fd-table-row>
+                        <!--
                             <th fd-table-header-cell content-type="checkbox">
                                 <fd-checkbox compact="true" id="cb-all" ng-model="selection.allSelected"
                                     ng-change="definitions.selectAllChanged()"></fd-checkbox>
                                 <fd-checkbox-label empty="true" compact="true" for="cb-all"></fd-checkbox-label>
                             </th>
                             -->
-                            <th fd-table-header-cell>Id</th>
-                            <th fd-table-header-cell>Key</th>
-                            <th fd-table-header-cell>Name</th>
-                            <th fd-table-header-cell>Version</th>
-                            <th fd-table-header-cell>Deployment</th>
-                        </tr>
-                    </thead>
-                    <tbody fd-table-body>
-                        <tr fd-table-row ng-repeat="next in definitions.definitionsList track by next.id"
-                            hoverable="true" activable="true" dg-selected="next.selected"
-                            ng-click="definitions.selectionChanged(next)">
-                            <!--
+                        <th fd-table-header-cell>Id</th>
+                        <th fd-table-header-cell>Key</th>
+                        <th fd-table-header-cell>Name</th>
+                        <th fd-table-header-cell>Version</th>
+                        <th fd-table-header-cell>Deployment</th>
+                    </tr>
+                </thead>
+                <tbody fd-table-body>
+                    <tr fd-table-row ng-repeat="next in definitions.definitionsList track by next.id" hoverable="true"
+                        activable="true" dg-selected="next.selected" ng-click="definitions.selectionChanged(next)">
+                        <!--
                             <td fd-table-cell content-type="checkbox">
                                 <fd-checkbox id="cb-{{next.name}}" compact="true" ng-model="next.selected"
                                     ng-change="definitions.selectionChanged(next.key)"
@@ -73,25 +73,24 @@
                                 </fd-checkbox-label>
                             </td>
                             -->
-                            <td fd-table-cell>{{next.id}}</td>
-                            <td fd-table-cell>{{next.key}}</td>
-                            <td fd-table-cell>{{next.name}}</td>
-                            <td fd-table-cell>{{next.version}}</td>
-                            <td fd-table-cell>{{next.deploymentId}}</td>
-                        </tr>
-                        <tr ng-if="definitions.definitionsList.length === 0" fd-table-row>
-                            <td fd-table-cell no-data="true">{{definitions.getNoDataMessage()}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </fd-scrollbar>
-            <fd-pagination ng-if="definitions.totalRows > 0" current-page="definitions.currentPage"
-                total-items="definitions.totalRows" items-per-page="definitions.pageSize"
-                items-per-page-options="[10, 20, 50, 100]" items-per-page-placement="top-start"
-                display-total-items="true" compact="true" page-change="definitions.onPageChange(pageNumber)"
-                items-per-page-change="definitions.onItemsPerPageChange(itemsPerPage)">
-            </fd-pagination>
-        </body>
+                        <td fd-table-cell>{{next.id}}</td>
+                        <td fd-table-cell>{{next.key}}</td>
+                        <td fd-table-cell>{{next.name}}</td>
+                        <td fd-table-cell>{{next.version}}</td>
+                        <td fd-table-cell>{{next.deploymentId}}</td>
+                    </tr>
+                    <tr ng-if="definitions.definitionsList.length === 0" fd-table-row>
+                        <td fd-table-cell no-data="true">{{definitions.getNoDataMessage()}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fd-scrollbar>
+        <fd-pagination ng-if="definitions.totalRows > 0" current-page="definitions.currentPage"
+            total-items="definitions.totalRows" items-per-page="definitions.pageSize"
+            items-per-page-options="[10, 20, 50, 100]" items-per-page-placement="top-start" display-total-items="true"
+            compact="true" page-change="definitions.onPageChange(pageNumber)"
+            items-per-page-change="definitions.onItemsPerPageChange(itemsPerPage)">
+        </fd-pagination>
     </body>
 
 </html>

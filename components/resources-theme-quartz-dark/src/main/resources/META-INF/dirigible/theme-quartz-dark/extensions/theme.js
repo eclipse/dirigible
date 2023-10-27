@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getTheme = function () {
@@ -15,11 +15,13 @@ exports.getTheme = function () {
 		module: 'theme-quartz-dark',
 		name: 'Quartz Dark',
 		type: 'dark',
-		version: 7,
+		version: 8,
 		oldThemeId: 'default',
 		links: [
-			'/webjars/sap-theming__theming-base-content/11.4.2/content/Base/baseLib/sap_fiori_3_dark/css_variables.css',
-			'/webjars/fundamental-styles/0.29.4/dist/theming/sap_fiori_3_dark.css',
+			'/webjars/sap-theming__theming-base-content/11.7.0/content/Base/baseLib/sap_fiori_3_dark/css_variables.css',
+			'/webjars/fundamental-styles/0.30.2/dist/theming/sap_fiori_3_dark.css',
 		]
 	};
 };
+
+

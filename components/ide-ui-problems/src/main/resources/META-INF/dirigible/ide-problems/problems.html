@@ -24,10 +24,9 @@
     </head>
 
     <body class="dg-vbox">
-        <fd-toolbar has-title="true" dg-type="solid" dg-size="cozy">
-            <fd-toolbar-title ng-if="problems.hasSelected()">Selected {{problems.getSelectedCount()}} of
-                {{problems.problemsList.length}}
-            </fd-toolbar-title>
+        <fd-toolbar dg-type="solid">
+            <span ng-if="problems.hasSelected()">Selected {{problems.getSelectedCount()}} of
+                {{problems.problemsList.length}}</span>
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button glyph="sap-icon--search" aria-label="Search" dg-type="transparent"
                 ng-click="problems.toggleSearch()" dg-toggled="problems.displaySearch">
@@ -40,7 +39,7 @@
                 ng-click="problems.deleteSelected()" dg-toggled="problems.hasSelected()">
             </fd-button>
         </fd-toolbar>
-        <fd-toolbar ng-if="problems.displaySearch" has-title="false" dg-type="solid" dg-size="cozy">
+        <fd-toolbar ng-if="problems.displaySearch" dg-type="solid">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-input-group compact="true" style="max-width: 50%;">
                 <fd-input-group-addon has-button="true">

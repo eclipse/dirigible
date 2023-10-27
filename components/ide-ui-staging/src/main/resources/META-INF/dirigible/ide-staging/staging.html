@@ -26,7 +26,7 @@
     <script type="text/javascript" src="js/staging.js"></script>
   </head>
 
-  <body class="dg-vbox fd-scrollbar">
+  <body fd-scrollbar class="dg-vbox">
     <div class="dg-center fd-margin-top--tiny">
       <fd-segmented-button aria-label="View type group">
         <fd-button compact="true" dg-label="Path" dg-toggled="listType === 'path' ? true : false"
@@ -38,41 +38,42 @@
       </fd-segmented-button>
     </div>
     <div class="dg-vbox dg-full-height fd-padding-begin-end--sm">
-      <fd-toolbar no-bottom-border="true" class="fd-padding--none fd-margin-top-bottom--tiny">
-        <h6 class="fd-title fd-title--h6"><b>Unstaged</b></h6>
+      <fd-toolbar no-bottom-border="true" compact="true" class="fd-padding--none fd-margin-top-bottom--tiny">
+        <h6 fd-title header-size="6" aria-label="Unstaged" title="Unstaged"><b>Unstaged</b></h6>
         <fd-toolbar-spacer></fd-toolbar-spacer>
-        <fd-button compact="true" dg-type="transparent" glyph="sap-icon--add" aria-label="Add to index"
-          title="Add to index" ng-click="addToIndex()">
+        <fd-button dg-type="transparent" glyph="sap-icon--add" aria-label="Add to index" title="Add to index"
+          ng-click="addToIndex()">
         </fd-button>
-        <fd-button compact="true" dg-type="transparent" glyph="sap-icon--filter-facets" aria-label="Show difference"
+        <fd-button dg-type="transparent" glyph="sap-icon--filter-facets" aria-label="Show difference"
           title="Show difference" ng-click="getSelectedDiff()"></fd-button>
-        <fd-button compact="true" dg-type="transparent" glyph="sap-icon--reset" aria-label="Revert to last commit"
+        <fd-button dg-type="transparent" glyph="sap-icon--reset" aria-label="Revert to last commit"
           title="Revert to last commit" ng-click="revert()"></fd-button>
       </fd-toolbar>
-      <div id="unstaged"
-        class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar dg-list-border jstree-list-mode">
+      <div id="unstaged" fd-scrollbar class="jstree-fiori--fill dg-list-border jstree-list-mode" style="flex: 4">
       </div>
-      <fd-toolbar no-bottom-border="true" class="fd-padding--none fd-margin-top-bottom--tiny">
-        <h6 class="fd-title fd-title--h6"><b>Staged</b></h6>
+      <fd-toolbar no-bottom-border="true" compact="true" class="fd-padding--none fd-margin-top-bottom--tiny">
+        <h6 fd-title header-size="6" aria-label="Staged" title="Staged"><b>Staged</b></h6>
         <fd-toolbar-spacer></fd-toolbar-spacer>
-        <fd-button compact="true" dg-type="transparent" glyph="sap-icon--less" aria-label="Remove from index"
-          title="Remove from index" ng-click="removeFromIndex()">
+        <fd-button dg-type="transparent" glyph="sap-icon--less" aria-label="Remove from index" title="Remove from index"
+          ng-click="removeFromIndex()">
         </fd-button>
-        <fd-button compact="true" dg-type="transparent" glyph="sap-icon--filter-facets" aria-label="Show difference"
+        <fd-button dg-type="transparent" glyph="sap-icon--filter-facets" aria-label="Show difference"
           title="Show difference" ng-click="getSelectedDiff(false)"></fd-button>
       </fd-toolbar>
-      <div id="staged"
-        class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar dg-list-border jstree-list-mode"></div>
-      <h6 class="fd-title fd-title--h6 fd-margin-top-bottom--tiny"><b>Commit Message</b></h6>
-      <fd-textarea compact="true" class="fd-margin--none dg-full-height" placeholder="Short description"
-        ng-model="commitData.commitMessage">
+      <div id="staged" fd-scrollbar class="jstree-fiori--fill dg-list-border jstree-list-mode fd-margin-bottom--tiny"
+        style="flex: 4"></div>
+      <h6 fd-title header-size="6" aria-label="Commit Message" title="Commit Message"><b>Commit
+          Message</b></h6>
+      <fd-textarea compact="true" class="fd-margin-top--tiny" placeholder="Short description"
+        ng-model="commitData.commitMessage" style="flex: 1">
     </div>
-    <div class="fd-container fd-form-layout-grid-container" ng-form="forms.credentialsFieldset">
+    <div class="fd-container fd-form-layout-grid-container fd-padding-begin-end--sm"
+      ng-form="forms.credentialsFieldset">
       <div class="fd-row">
         <div class="fd-col fd-col-lg--6 fd-col-xl--4 fd-col--wrap">
           <div class="fd-row">
             <div class="fd-col fd-col-md--2 fd-col-lg--4 fd-col-xl--12">
-              <fd-form-label for="username" dg-colon="true" dg-required="true">Username</fd-form-label>
+              <fd-form-label for="username" dg-colon="true" dg-required="true" title="Username">Username</fd-form-label>
             </div>
             <div class="fd-col fd-col-md--10 fd-col-lg--8 fd-col-xl--12">
               <fd-input id="username" type="text" placeholder="Username" ng-required="true"
@@ -84,7 +85,7 @@
         <div class="fd-col fd-col-lg--6 fd-col-xl--4 fd-col--wrap">
           <div class="fd-row">
             <div class="fd-col fd-col-md--2 fd-col-lg--4 fd-col-xl--12">
-              <fd-form-label for="email" dg-colon="true" dg-required="true">Email</fd-form-label>
+              <fd-form-label for="email" dg-colon="true" dg-required="true" title="Email">Email</fd-form-label>
             </div>
             <div class="fd-col fd-col-md--10 fd-col-lg--8 fd-col-xl--12">
               <fd-input id="email" type="email" placeholder="email@example.com" ng-required="true"
@@ -96,7 +97,8 @@
         <div class="fd-col fd-col-lg--6 fd-col-xl--4 fd-col--wrap">
           <div class="fd-row">
             <div class="fd-col fd-col-md--2 fd-col-lg--4 fd-col-xl--12">
-              <fd-form-label for="password" dg-colon="true" dg-required="true">Password or Token</fd-form-label>
+              <fd-form-label for="password" dg-colon="true" dg-required="true" title="Password or Token">Password or
+                Token</fd-form-label>
             </div>
             <div class="fd-col fd-col-md--10 fd-col-lg--8 fd-col-xl--12">
               <fd-input id="password" type="password" ng-required="true" ng-model="commitData.password"></fd-input>

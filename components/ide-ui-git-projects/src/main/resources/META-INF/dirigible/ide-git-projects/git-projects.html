@@ -28,24 +28,24 @@
   </head>
 
   <body class="dg-vbox">
-    <fd-toolbar>
+    <fd-toolbar compact="true">
       <fd-toolbar-spacer></fd-toolbar-spacer>
-      <fd-button compact="true" dg-type="transparent" glyph="sap-icon--duplicate" title="Clone" aria-label="Clone"
+      <fd-button dg-type="transparent" glyph="sap-icon--duplicate" title="Clone" aria-label="Clone"
         ng-click="cloneDialog()()"></fd-button>
-      <fd-button compact="true" dg-type="transparent" glyph="sap-icon--download" title="Pull all projects"
+      <fd-button dg-type="transparent" glyph="sap-icon--download" title="Pull all projects"
         aria-label="Pull all projects" ng-click="pullDialog(true)"></fd-button>
-      <fd-button compact="true" dg-type="transparent" glyph="sap-icon--upload" title="Push all projects"
-        aria-label="Push all projects" ng-click="pushDialog(true)"></fd-button>
-      <fd-button compact="true" dg-type="transparent" glyph="sap-icon--refresh" title="Refresh" aria-label="Refresh"
+      <fd-button dg-type="transparent" glyph="sap-icon--upload" title="Push all projects" aria-label="Push all projects"
+        ng-click="pushDialog(true)"></fd-button>
+      <fd-button dg-type="transparent" glyph="sap-icon--refresh" title="Refresh" aria-label="Refresh"
         ng-click="reloadProjects()"></fd-button>
       <fd-toolbar-separator></fd-toolbar-separator>
-      <fd-button compact="true" dg-type="transparent" dg-toggled="searchVisible" glyph="sap-icon--search"
-        title="Toggle search" aria-label="Toggle search" ng-click="toggleSearch()">
+      <fd-button dg-type="transparent" dg-toggled="searchVisible" glyph="sap-icon--search" title="Toggle search"
+        aria-label="Toggle search" ng-click="toggleSearch()">
       </fd-button>
       <fd-toolbar-separator></fd-toolbar-separator>
       <fd-popover>
         <fd-popover-control>
-          <fd-button compact="true" dg-type="transparent" is-menu="true" dg-label="{{ selectedWorkspace.name }}"
+          <fd-button dg-type="transparent" is-menu="true" dg-label="{{ selectedWorkspace.name }}"
             title="Workspace select">
           </fd-button>
         </fd-popover-control>
@@ -58,7 +58,7 @@
         </fd-popover-body>
       </fd-popover>
     </fd-toolbar>
-    <fd-toolbar dg-size="cozy" ng-show="searchVisible">
+    <fd-toolbar ng-show="searchVisible">
       <fd-input type="search" placeholder="Search" ng-keyup="search()" ng-model="searchField.text"></fd-input>
     </fd-toolbar>
     <div id="dgProjects" class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar"
