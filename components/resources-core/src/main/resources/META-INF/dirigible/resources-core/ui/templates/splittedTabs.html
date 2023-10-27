@@ -5,10 +5,9 @@
                 remove-tab="onRemoveTab(pane)" split-tabs="onSplitTabs(direction, pane)" ng-transclude>
             </splitted-tabs>
 
-
             <fd-icon-tab-bar ng-if="!!pane.tabs" side-padding="sm" unfocused="!isFocused(pane)"
                 selected-tab-id="pane.selectedTab">
-                <fd-icon-tab-bar-tablist ng-if="!hideTabs" dg-tabs-overflowable>
+                <fd-icon-tab-bar-tablist ng-show="!hideTabs" dg-tabs-overflowable>
                     <fd-icon-tab-bar-tab ng-repeat="tab in pane.tabs" label="{{tab.label}}" tab-id="{{tab.id}}"
                         ng-click="onTabClick(pane, tab.id)" on-close="onRemoveTab(tab)" has-badge="tab.dirty"
                         is-hidden="tab.isHidden">

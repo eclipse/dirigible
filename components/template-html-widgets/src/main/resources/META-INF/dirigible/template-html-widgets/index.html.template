@@ -745,7 +745,7 @@
 				</fd-icon-tab-bar>
 
 				<h4>Text and counters</h4>
-				<fd-icon-tab-bar>
+				<fd-icon-tab-bar has-counters="true">
 					<fd-icon-tab-bar-tablist>
 						<fd-icon-tab-bar-tab label="Info" tab-id="ti1c"></fd-icon-tab-bar-tab>
 						<fd-icon-tab-bar-tab label="Attachments" tab-id="ti2c" counter="16">
@@ -880,6 +880,23 @@
 							<fd-icon-tab-bar-overflow-item dg-icon="sap-icon--product" label="Tab 2" tab-id="ti2oi"
 								has-badge="true"></fd-icon-tab-bar-overflow-item>
 							<fd-icon-tab-bar-overflow-item dg-icon="sap-icon--present" label="Tab 3" tab-id="ti3oi">
+							</fd-icon-tab-bar-overflow-item>
+						</fd-icon-tab-bar-overflow>
+					</fd-icon-tab-bar-tablist>
+				</fd-icon-tab-bar>
+
+				<h4>Overflowable</h4>
+				<span fd-object-status status="informative" glyph="sap-icon--message-information" inverted="true"
+					text="Resize the browser/window/view to see the overflow." class="fd-margin-bottom--sm"></span>
+				<fd-icon-tab-bar>
+					<fd-icon-tab-bar-tablist dg-tabs-overflowable>
+						<fd-icon-tab-bar-tab ng-repeat="tab in tabs" label="{{tab.label}}" tab-id="{{tab.id}}"
+							is-hidden="tab.isHidden">
+						</fd-icon-tab-bar-tab>
+						<fd-icon-tab-bar-overflow label="More"
+							ng-class="isMoreTabsButtonVisible(tabs) ? '' : 'dg-invisible'">
+							<fd-icon-tab-bar-overflow-item ng-if="tab.isHidden" ng-repeat="tab in tabs"
+								label="{{tab.label}}" tab-id="{{tab.id}}-overflow">
 							</fd-icon-tab-bar-overflow-item>
 						</fd-icon-tab-bar-overflow>
 					</fd-icon-tab-bar-tablist>
@@ -1032,7 +1049,7 @@
 				</fd-icon-tab-bar>
 
 			</fd-panel-content>
-		</fd-panel>		
+		</fd-panel>
 		<fd-panel expanded="false">
 			<fd-panel-header>
 				<fd-panel-expand></fd-panel-expand>
@@ -2155,7 +2172,7 @@
 					</thead>
 					<tbody fd-table-body>
 						<tr fd-table-row>
-							<td fd-table-cell no-data="true">No Items available.</td>
+							<td fd-table-cell no-data="true">No items available.</td>
 						</tr>
 					</tbody>
 				</table>
@@ -2316,6 +2333,38 @@
 					<fd-input type="text" class="fd-tokenizer__input" autocomplete="off" placeholder="Find option">
 					</fd-input>
 				</fd-tokenizer>
+			</fd-panel-content>
+		</fd-panel>
+		<fd-panel expanded="false">
+			<fd-panel-header>
+				<fd-panel-expand></fd-panel-expand>
+				<h4 fd-panel-title>Tool header</h4>
+			</fd-panel-header>
+			<fd-panel-content aria-label="Tool Header Panel Content">
+				<fd-tool-header has-menu="true">
+					<fd-tool-header-group has-menu="true">
+						<div fd-tool-header-element>
+							<fd-button glyph="sap-icon--menu2" aria-label="menu button" fd-tool-header-button>
+							</fd-button>
+						</div>
+					</fd-tool-header-group>
+					<fd-tool-header-group>
+						<div fd-tool-header-element>
+							<h5 fd-title header-size="h5" fd-tool-header-title>Product title</h5>
+						</div>
+					</fd-tool-header-group>
+					<fd-tool-header-group position="center">
+						<div fd-tool-header-element>
+							<fd-button fd-tool-header-button dg-label="Center"></fd-button>
+						</div>
+					</fd-tool-header-group>
+					<fd-tool-header-group position="right">
+						<div fd-tool-header-element>
+							<fd-button glyph="sap-icon--grid" aria-label="action button" fd-tool-header-button>
+							</fd-button>
+						</div>
+					</fd-tool-header-group>
+				</fd-tool-header>
 			</fd-panel-content>
 		</fd-panel>
 		<fd-panel expanded="false">

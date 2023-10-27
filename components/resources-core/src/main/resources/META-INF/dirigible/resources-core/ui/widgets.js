@@ -5161,6 +5161,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * isProcess: Boolean - When the tabs are used as steps for a wizard, set this to true.
          * isNav: Boolean - When the tabs are used as a main navigation, inside a Shell Navigation.
          * hasFilter: Boolean - The tab bar has a filter tab.
+         * hasCounters: Boolean - The tabs inside the bar will have counters.
          * flatNav: Boolean - Use with flat navigation.
          * sidePadding: String - Size of the side padding. Supported options are 'sm', 'md', 'lg', 'xl', 'xxl' and 'responsive'.
          * transparent: Boolean - Transparent background.
@@ -5181,6 +5182,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 isProcess: '<?',
                 isNav: '<?',
                 hasFilter: '<?',
+                hasCounters: '<?',
                 flatNav: '<?',
                 sidePadding: '@?',
                 transparent: '<?',
@@ -5211,6 +5213,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     'fd-icon-tab-bar--icon-only': $scope.iconOnly && !$scope.hasIcons,
                     'fd-icon-tab-bar--icon': $scope.hasIcons && !$scope.iconOnly,
                     'fd-icon-tab-bar--process': $scope.isProcess,
+                    'fd-icon-tab-bar--counters': $scope.hasCounters,
                     'fd-icon-tab-bar--navigation': $scope.isNav,
                     'fd-icon-tab-bar--filter': $scope.hasFilter,
                     'fd-icon-tab-bar--navigation-flat': $scope.isNav && $scope.flatNav,
@@ -5225,7 +5228,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 });
 
                 this.addIconTab = function (tabId, tabCallbacks) {
-                    if (!angular.isDefined($scope.selectedTabId) && $scope.tabList.length === 0) {
+                    if ((!angular.isDefined($scope.selectedTabId) || $scope.selectedTabId === null) && $scope.tabList.length === 0) {
                         $scope.selectedTabId = tabId;
                     }
 
@@ -5448,7 +5451,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     });
                     scope.close = function (event) {
                         event.stopPropagation();
-
                         if (scope.onClose) scope.onClose({ tabId: scope.tabId });
                     };
 
@@ -5574,7 +5576,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             link: {
                 pre: function (scope) {
-                    if (scope.onClose) scope.onClose = scope.onClose();
                     scope.getClasses = () => classNames('fd-list__item', 'fd-list__item--link', 'fd-icon-tab-bar__list-item', {
                         'fd-icon-tab-bar__list-item--positive': scope.dgState === 'positive',
                         'fd-icon-tab-bar__list-item--negative': scope.dgState === 'negative',
@@ -5584,7 +5585,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     });
                     scope.close = function (event) {
                         event.stopPropagation();
-                        if (scope.onClose) scope.onClose(scope.tabId);
+                        if (scope.onClose) scope.onClose({ tabId: scope.tabId });
                     };
                 }
             },

@@ -40,6 +40,9 @@ widgetsView.controller('WidgetsViewController', ['$scope', 'messageHub', functio
         });
     }
 
+    $scope.tabs = [...Array(10).keys()].map(i => ({ label: `Tab label ${i + 1}`, id: `tab_${i + 1}` }));
+    $scope.isMoreTabsButtonVisible = (tabs) => tabs.some(x => x.isHidden);
+
     $scope.selectedTab = 'ti1pan';
 
     $scope.lastInputValue = "";
