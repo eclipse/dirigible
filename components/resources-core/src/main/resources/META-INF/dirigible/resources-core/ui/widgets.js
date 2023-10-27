@@ -1783,7 +1783,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdTable', [function () {
         /**
          * innerBorders: String - Table inner borders. One of 'horizontal', 'vertical', 'top', 'none' or 'all' (default value)
-         * outerBorders: String - Table outer borders. One of 'horizontal', 'vertical', 'none' or 'all' (default value)
+         * outerBorders: String - Table outer borders. One of 'horizontal', 'vertical', 'top', 'bottom', 'none' or 'all' (default value)
          * displayMode: String - The size of the table. Could be one of 'compact', 'condensed' or 'standard' (default value)
          */
         return {
@@ -1826,6 +1826,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             break;
                         case 'horizontal':
                             classList.push('dg-table--no-outer-vertical-borders');
+                            break;
+                        case 'top':
+                            classList.push('fd-table--no-outer-border');
+                            classList.push('dg-list-border-top');
+                            break;
+                        case 'bottom':
+                            classList.push('fd-table--no-outer-border');
+                            classList.push('dg-list-border-bottom');
                             break;
                         case 'none':
                             classList.push('fd-table--no-outer-border');
@@ -4782,14 +4790,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 scope.getClasses = () => classNames('fd-token', {
                     'fd-token--compact': scope.compact,
                     'fd-token--readonly': scope.dgReadOnly
-                })
+                });
 
                 scope.isVisible = () => tokenizerCtrl ? tokenizerCtrl.isTokenVisible(element) : true;
             },
             template: `<span ng-show="isVisible()" ng-class="getClasses()" role="button">
-            <span class="fd-token__text">{{dgText}}</span>
-            <button ng-if="!dgReadOnly" class="fd-token__close" aria-label="{{closeButtonAriaLabel}}" ng-click="closeClicked()"></button>
-        </span>`
+                <span class="fd-token__text">{{dgText}}</span>
+                <button ng-if="!dgReadOnly" class="fd-token__close" aria-label="{{closeButtonAriaLabel}}" ng-click="closeClicked()"></button>
+            </span>`
         }
     }]).directive('fdTokenIndicator', [function () {
         return {
@@ -4806,7 +4814,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         /**
          * hasMenu: Boolean - If the toolbar will contain a hamburger menu.
          * dgSize: String - Manually set the horizontal paddings of the tool header. Possible options are 'sm', 'md', 'lg' and 'xl'.
-         * responsive: Boolean - Automatically adjust the horizontal paddings.
          */
         return {
             restrict: 'E',
@@ -4820,7 +4827,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             link: function (scope) {
                 scope.getClasses = () => classNames('fd-tool-header', {
                     'fd-tool-header--menu': scope.hasMenu,
-                    'fd-tool-header--responsive-paddings': scope.responsive,
                     [`fd-tool-header--${scope.dgSize}`]: scope.dgSize,
                 });
             },
@@ -4834,6 +4840,31 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     element.addClass('fd-tool-header__group');
                 }
             },
+        }
+    }]).directive('fdToolHeaderGroup', ['classNames', function (classNames) {
+        /**
+         * hasMenu: Boolean - The group will have a menu inside it.
+         * position: String - Position of the group - 'center' or 'right'.
+         * isHidden: Boolean - Set the group to be hidden.
+         */
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            scope: {
+                hasMenu: '<?',
+                position: '@?',
+                isHidden: '<?',
+            },
+            link: function (scope) {
+                scope.getClasses = () => classNames({
+                    'fd-tool-header__group--menu': scope.hasMenu,
+                    'fd-tool-header__group--hidden': scope.isHidden,
+                    'fd-tool-header__group--center': scope.position === 'center',
+                    'fd-tool-header__group--actions': scope.position === 'right'
+                })
+            },
+            template: '<div class="fd-tool-header__group" ng-class="getClasses()" ng-transclude></div>'
         }
     }]).directive('fdToolHeaderElement', [function () {
         return {
@@ -4849,7 +4880,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'A',
             link: {
                 pre: function (scope, element) {
-                    element.addClass('fd-tool-header__button');
+                    element.addClass('fd-button--tool-header');
                 }
             },
         }
@@ -4858,7 +4889,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'A',
             link: {
                 pre: function (scope, element) {
-                    element.addClass('fd-tool-header__title');
+                    element.addClass('fd-tool-header__product-name');
                 }
             },
         }
