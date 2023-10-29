@@ -18,12 +18,12 @@ exports.generateFiles = function (model, parameters, templateSources) {
     let feedModels = model.entities.filter(e => e.feedUrl);
 
     // Basic
-    let uiManageModels = model.entities.filter(e => e.layoutType === "MANAGE" && e.type === "PRIMARY");
-    let uiListModels = model.entities.filter(e => e.layoutType === "LIST" && e.type === "PRIMARY");
+    let uiManageModels = model.entities.filter(e => e.layoutType === "MANAGE" && (e.type === "PRIMARY" || e.type === "SETTING"));
+    let uiListModels = model.entities.filter(e => e.layoutType === "LIST" && (e.type === "PRIMARY" || e.type === "SETTING"));
 
     // Master-Details
-    let uiManageMasterModels = model.entities.filter(e => e.layoutType === "MANAGE_MASTER" && e.type === "PRIMARY");
-    let uiListMasterModels = model.entities.filter(e => e.layoutType === "LIST_MASTER" && e.type === "PRIMARY");
+    let uiManageMasterModels = model.entities.filter(e => e.layoutType === "MANAGE_MASTER" && (e.type === "PRIMARY" || e.type === "SETTING"));
+    let uiListMasterModels = model.entities.filter(e => e.layoutType === "LIST_MASTER" && (e.type === "PRIMARY" || e.type === "SETTING"));
     let uiManageDetailsModels = model.entities.filter(e => e.layoutType === "MANAGE_DETAILS" && e.type === "DEPENDENT");
     let uiListDetailsModels = model.entities.filter(e => e.layoutType === "LIST_DETAILS" && e.type === "DEPENDENT");
 

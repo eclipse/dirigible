@@ -305,7 +305,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.roleRead = msg.data.roleRead;
 				cell.value.roleWrite = msg.data.roleWrite;
 				// Maybe we should do this with "cell.value.clone()'
-				$scope.graph.model.setValue(cell, cell.value);
+				$scope.graph.model.setValue(cell, cell.value.clone());
 				if (cell.entityType === 'PROJECTION') {
 					$scope.graph.getSelectionCell().style = 'projection';
 					$scope.graph.getSelectionCell().children.forEach(cell => cell.style = 'projectionproperty');

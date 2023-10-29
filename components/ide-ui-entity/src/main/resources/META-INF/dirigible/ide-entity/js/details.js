@@ -35,7 +35,8 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
         $scope.entityTypes = [
             { value: "PRIMARY", label: "Primary Entity" },
             { value: "DEPENDENT", label: "Dependent Entity" },
-            { value: "REPORT", label: "Report Entity" }
+            { value: "REPORT", label: "Report Entity" },
+            { value: "SETTING", label: "Setting Entity" }
         ];
         $scope.layoutTypes = [
             { value: "MANAGE", label: "Manage Entities" },
