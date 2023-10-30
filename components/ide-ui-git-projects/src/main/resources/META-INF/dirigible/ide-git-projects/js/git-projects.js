@@ -305,6 +305,7 @@ gitProjectsView.controller('GitProjectsViewController', [
                     id: "cuni",
                     type: "input",
                     label: "Username",
+                    autocomplete: "git-username",
                     value: $scope.credentials.username,
                 },
                 {
@@ -312,6 +313,7 @@ gitProjectsView.controller('GitProjectsViewController', [
                     type: "input",
                     inputType: 'password',
                     label: "Password",
+                    autocomplete: "git-pass",
                     value: $scope.credentials.password,
                 },
                 {

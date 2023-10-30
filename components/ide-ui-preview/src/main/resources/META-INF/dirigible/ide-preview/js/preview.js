@@ -20,17 +20,28 @@ const defaultParameters = `{
   "perspectiveId": "workbench"
 }`;
 
-previewView.controller('PreviewController', ['$scope', 'messageHub', function ($scope, messageHub) {
+previewView.controller('PreviewController', ['$scope', 'messageHub', 'ViewParameters', function ($scope, messageHub, ViewParameters) {
     $scope.customizeLabel = "Set custom view parameters";
     $scope.reloadLabel = "Reload";
     $scope.backLabel = "Go back";
     $scope.forwardLabel = "Go forward";
-    $scope.urlLocked = localStorage.getItem('DIRIGIBLE.preview.urlLocked') === 'true';
-    $scope.customParameters = localStorage.getItem('DIRIGIBLE.preview.customParameters');
+    let customParamsId = 'DIRIGIBLE.preview.customParameters';
+    let urlLockedId = 'DIRIGIBLE.preview.urlLocked';
+    let inDebugPerspective = false;
+    $scope.dataParameters = ViewParameters.get();
+    if ($scope.dataParameters.hasOwnProperty('perspectiveId') && $scope.dataParameters.perspectiveId === 'debugger') {
+        inDebugPerspective = true;
+        customParamsId = 'DIRIGIBLE.debugger.preview.customParameters';
+        urlLockedId = 'DIRIGIBLE.debugger.preview.urlLocked';
+    }
+
+    $scope.urlLocked = localStorage.getItem(urlLockedId) === 'true';
+    $scope.customParameters = localStorage.getItem(customParamsId);
     if (!$scope.customParameters) {
         $scope.customParameters = defaultParameters;
-        localStorage.setItem('DIRIGIBLE.preview.customParameters', defaultParameters);
+        localStorage.setItem(customParamsId, defaultParameters);
     }
+
     $scope.iframe = document.getElementById('preview-iframe');
     $scope.history = {
         idx: -1,
@@ -39,7 +50,7 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
 
     $scope.urlLockedToggle = function () {
         $scope.urlLocked = !$scope.urlLocked;
-        localStorage.setItem('DIRIGIBLE.preview.urlLocked', `${$scope.urlLocked}`);
+        localStorage.setItem(urlLockedId, `${$scope.urlLocked}`);
     };
 
     $scope.reload = function () {
@@ -201,6 +212,7 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
             }
             url += resourcePath;
         }
+        if (inDebugPerspective) url += "?debug=true";
         return url;
     };
 
@@ -254,7 +266,7 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
                     );
                 } else {
                     $scope.customParameters = JSON.stringify(customData, null, 2);
-                    localStorage.setItem('DIRIGIBLE.preview.customParameters', $scope.customParameters);
+                    localStorage.setItem(customParamsId, $scope.customParameters);
                     messageHub.hideFormDialog("previewCustomizeDataParameters");
                     $scope.reload();
                 }

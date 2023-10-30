@@ -73,7 +73,8 @@
         <div class="fd-col fd-col-lg--6 fd-col-xl--4 fd-col--wrap">
           <div class="fd-row">
             <div class="fd-col fd-col-md--2 fd-col-lg--4 fd-col-xl--12">
-              <fd-form-label for="username" dg-colon="true" dg-required="true" title="Username">Username</fd-form-label>
+              <fd-form-label for="username" dg-colon="true" dg-required="true" title="Username"
+                autocomplete="git-username">Username</fd-form-label>
             </div>
             <div class="fd-col fd-col-md--10 fd-col-lg--8 fd-col-xl--12">
               <fd-input id="username" type="text" placeholder="Username" ng-required="true"
@@ -85,7 +86,8 @@
         <div class="fd-col fd-col-lg--6 fd-col-xl--4 fd-col--wrap">
           <div class="fd-row">
             <div class="fd-col fd-col-md--2 fd-col-lg--4 fd-col-xl--12">
-              <fd-form-label for="email" dg-colon="true" dg-required="true" title="Email">Email</fd-form-label>
+              <fd-form-label for="email" dg-colon="true" dg-required="true" title="Email" autocomplete="git-email">
+                Email</fd-form-label>
             </div>
             <div class="fd-col fd-col-md--10 fd-col-lg--8 fd-col-xl--12">
               <fd-input id="email" type="email" placeholder="email@example.com" ng-required="true"
@@ -97,8 +99,8 @@
         <div class="fd-col fd-col-lg--6 fd-col-xl--4 fd-col--wrap">
           <div class="fd-row">
             <div class="fd-col fd-col-md--2 fd-col-lg--4 fd-col-xl--12">
-              <fd-form-label for="password" dg-colon="true" dg-required="true" title="Password or Token">Password or
-                Token</fd-form-label>
+              <fd-form-label for="password" dg-colon="true" dg-required="true" title="Password or Token"
+                autocomplete="git-pass">Password or Token</fd-form-label>
             </div>
             <div class="fd-col fd-col-md--10 fd-col-lg--8 fd-col-xl--12">
               <fd-input id="password" type="password" ng-required="true" ng-model="commitData.password"></fd-input>
