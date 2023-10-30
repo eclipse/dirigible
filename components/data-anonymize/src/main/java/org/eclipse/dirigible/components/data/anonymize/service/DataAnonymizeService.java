@@ -17,6 +17,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -99,7 +100,8 @@ public class DataAnonymizeService {
 	            		ResultSet rs = statement.executeQuery(select);
 	            		int size = rs.getMetaData().getColumnDisplaySize(2);
 	            		while (rs.next()) {
-            				int length = rs.getString(2).length();
+	            			String value = rs.getString(2);
+            				int length = value != null ? value.length() : 0;
 	            			switch (typeValue) {
 							case FULL_NAME: {
 								preparedStatement.setString(1, truncate(faker.name().fullName(), size));
@@ -122,7 +124,11 @@ public class DataAnonymizeService {
 								break;
 							}
 							case PHONE: {
-								preparedStatement.setString(1, faker.examplify(rs.getString(2)));
+								if (value != null) {
+									preparedStatement.setString(1, faker.examplify(value));
+								} else {
+									preparedStatement.setNull(1, Types.VARCHAR);
+								}
 								break;
 							}
 							case ADDRESS: {
@@ -139,28 +145,49 @@ public class DataAnonymizeService {
 							}
 							case DATE: {
 								Date date = rs.getDate(2);
-								java.util.Date past = faker.date().past(10, TimeUnit.DAYS, new java.util.Date(date.getTime()));
-								preparedStatement.setDate(1, new Date(past.getTime()));
+								if (date != null) {
+									java.util.Date past = faker.date().past(10, TimeUnit.DAYS, new java.util.Date(date.getTime()));
+									preparedStatement.setDate(1, new Date(past.getTime()));
+								} else {
+									preparedStatement.setNull(1, Types.DATE);
+								}
 								break;
 							}
 							case RANDOM: {
-								preparedStatement.setString(1, faker.examplify(rs.getString(2)));
+								if (value != null) {
+									preparedStatement.setString(1, faker.examplify(value));
+								} else {
+									preparedStatement.setNull(1, Types.VARCHAR);
+								}
 								break;
 							}
 							case MASK: {
 								preparedStatement.setString(1, "*".repeat(length));
 								break;
 							}
+							case EMPTY: {
+								preparedStatement.setString(1, "");
+								break;
+							}
+							case NULL: {
+								preparedStatement.setNull(1, Types.VARCHAR);
+								break;
+							}
 							default:
 								throw new IllegalArgumentException("Unexpected value: " + typeValue);
 							}
 	            			updatedRecords++;
-	            				            			
-	            			preparedStatement.setObject(2, rs.getObject(1));
-	            			preparedStatement.addBatch();
-							if (updatedRecords % BATCH_SIZE == 0) {
-								preparedStatement.executeBatch();
-							}
+
+	            			Object key = rs.getObject(1);
+	            			if (key != null) {
+								preparedStatement.setObject(2, key);
+		            			preparedStatement.addBatch();
+								if (updatedRecords % BATCH_SIZE == 0) {
+									preparedStatement.executeBatch();
+								}
+	            			} else {
+	            				logger.error("Primary key cannot be null for the record: " + updatedRecords);
+	            			}
 	            		}
 	            		if (updatedRecords % BATCH_SIZE != 0) {
 	            			preparedStatement.executeBatch();

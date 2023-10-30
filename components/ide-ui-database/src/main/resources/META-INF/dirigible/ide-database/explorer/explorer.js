@@ -567,6 +567,20 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							anonymizeMenu(node, data, "MASK");
 						}.bind(this)
 					};
+					ctxmenu.anonymizeEmpty = {
+						"separator_before": false,
+						"label": "Empty Value",
+						"action": function (data) {
+							anonymizeMenu(node, data, "EMPTY");
+						}.bind(this)
+					};
+					ctxmenu.anonymizeNull = {
+						"separator_before": false,
+						"label": "Set to Null",
+						"action": function (data) {
+							anonymizeMenu(node, data, "NULL");
+						}.bind(this)
+					};
 				}
 
 				return ctxmenu;
@@ -592,7 +606,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		parameters.column = columnNode.original.name;
 		parameters.primaryKey = primaryKeyName;
 		parameters.type = type;
-							messageHub.postMessage('database.data.anonymize.columns', parameters);
+		messageHub.postMessage('database.data.anonymize.columns', parameters);
 	}
 
 	$scope.jstreeWidget.on('open_node.jstree', function (event, data) {

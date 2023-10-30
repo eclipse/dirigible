@@ -39,7 +39,13 @@ public enum DataAnonymizeType {
 	RANDOM("RANDOM"),
 	
 	/** The mask. */
-	MASK("MASK");
+	MASK("MASK"),
+	
+	/** The empty. */
+	EMPTY("EMPTY"),
+	
+	/** The null. */
+	NULL("NULL");
 	
 	
 	/** The type. */
