@@ -155,6 +155,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                         scope.$apply(function () {
                             scope.menuItems = msg.data.items;
                             scope.callbackTopic = msg.data.callbackTopic;
+                            scope.hasIcons = msg.data.hasIcons;
                             menu.style.top = `${msg.data.posY}px`;
                             menu.style.left = `${msg.data.posX}px`;
                             element[0].classList.remove("dg-hidden");
@@ -181,6 +182,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 menuClick: "&",
                 menuItems: "<",
                 submenuIndex: "<",
+                hasIcons: "<?",
             },
             link: function (scope, element, attr) {
                 let openedMenuId = "";
@@ -190,7 +192,11 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     for (let i = 0; i < scope.menuItems.length; i++)
                         if (scope.menuItems[i].items) return "";
                     return "fd-scrollbar fd-menu--overflow dg-menu__sublist--overflow";
-                }
+                };
+
+                scope.renderIcons = function () {
+                    return scope.hasIcons || false;
+                };
 
                 scope.menuHovered = function () {
                     if (openedMenuId !== "" && openedMenuId !== attr["id"]) {

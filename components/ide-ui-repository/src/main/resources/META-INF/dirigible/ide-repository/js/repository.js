@@ -171,6 +171,7 @@ repositoryView.controller('RepositoryViewController', [
                     if (closest) id = closest.id;
                     else return {
                         callbackTopic: "repository.tree.contextmenu",
+                        hasIcons: true,
                         items: [
                             {
                                 id: "folder",
@@ -230,6 +231,7 @@ repositoryView.controller('RepositoryViewController', [
                     };
                     let menuObj = {
                         callbackTopic: 'repository.tree.contextmenu',
+                        hasIcons: true,
                         items: [],
                     };
                     if (node.type === "folder") {

@@ -161,6 +161,7 @@ registryView.controller('RegistryController', [
 					if (closest) id = closest.id;
 					else return {
 						callbackTopic: "registry.tree.contextmenu",
+						hasIcons: true,
 						items: [
 							{
 								id: "folder",
@@ -220,6 +221,7 @@ registryView.controller('RegistryController', [
 					};
 					let menuObj = {
 						callbackTopic: 'registry.tree.contextmenu',
+						hasIcons: true,
 						items: [],
 					};
 					if (node.type === "folder") {

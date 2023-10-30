@@ -148,6 +148,7 @@ gitProjectsView.controller('GitProjectsViewController', [
                     if (closest) id = closest.id;
                     else return {
                         callbackTopic: "git-projects.tree.contextmenu",
+                        hasIcons: true,
                         items: [{
                             id: "refresh",
                             label: "Refresh",
@@ -169,6 +170,7 @@ gitProjectsView.controller('GitProjectsViewController', [
                         if (node.data.git) {
                             return {
                                 callbackTopic: 'git-projects.tree.contextmenu',
+                                hasIcons: true,
                                 items: [{
                                     id: "pull",
                                     label: "Pull",
@@ -212,6 +214,7 @@ gitProjectsView.controller('GitProjectsViewController', [
                         } else {
                             return {
                                 callbackTopic: 'git-projects.tree.contextmenu',
+                                hasIcons: true,
                                 items: [{
                                     id: "share",
                                     label: "Share",

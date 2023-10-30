@@ -160,6 +160,7 @@ fileManagerView.controller('FileManagerViewController', [
                     if (closest) id = closest.id;
                     else return {
                         callbackTopic: "file-manager.tree.contextmenu",
+                        hasIcons: true,
                         items: [
                             {
                                 id: "folder",
@@ -219,6 +220,7 @@ fileManagerView.controller('FileManagerViewController', [
                     };
                     let menuObj = {
                         callbackTopic: 'file-manager.tree.contextmenu',
+                        hasIcons: true,
                         items: [],
                     };
                     if (node.type === "folder") {
