@@ -43,9 +43,20 @@
             {{state.busyText}}
         </fd-busy-indicator-extended>
         <fd-toolbar id="toolbarContainer" ng-show="!state.error && !state.isBusy">
-            <fd-toolbar-spacer></fd-toolbar-spacer>
+            <fd-button dg-type="transparent" glyph="sap-icon--undo" aria-label="Undo" title="Undo" ng-click="undo()">
+            </fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--redo" aria-label="Redo" title="Redo" ng-click="redo()">
+            </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
             <fd-button dg-type="transparent" glyph="sap-icon--save" aria-label="Save" title="Save" ng-click="save()">
             </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button dg-type="transparent" glyph="sap-icon--copy" aria-label="Copy" title="Copy" ng-click="copy()">
+            </fd-button>
+            <fd-button dg-type="transparent" glyph="sap-icon--paste" aria-label="Paste" title="Paste"
+                ng-click="paste()">
+            </fd-button>
+            <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button dg-type="transparent" glyph="sap-icon--list" aria-label="Properties" title="Properties"
                 ng-click="properties()">
             </fd-button>
@@ -58,17 +69,6 @@
                 ng-click="navigation()">
             </fd-button>
             <fd-toolbar-separator></fd-toolbar-separator>
-            <fd-button dg-type="transparent" glyph="sap-icon--copy" aria-label="Copy" title="Copy" ng-click="copy()">
-            </fd-button>
-            <fd-button dg-type="transparent" glyph="sap-icon--paste" aria-label="Paste" title="Paste"
-                ng-click="paste()">
-            </fd-button>
-            <fd-toolbar-separator></fd-toolbar-separator>
-            <fd-button dg-type="transparent" glyph="sap-icon--undo" aria-label="Undo" title="Undo" ng-click="undo()">
-            </fd-button>
-            <fd-button dg-type="transparent" glyph="sap-icon--redo" aria-label="Redo" title="Redo" ng-click="redo()">
-            </fd-button>
-            <fd-toolbar-separator></fd-toolbar-separator>
             <fd-button dg-type="transparent" glyph="sap-icon--delete" aria-label="Delete" title="Delete"
                 ng-click="delete()">
             </fd-button>
@@ -78,35 +78,53 @@
             <fd-button dg-type="transparent" glyph="sap-icon--print" aria-label="Print" title="Print"
                 ng-click="print()">
             </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button class="edmBigScreen" dg-type="transparent" glyph="sap-icon--collapse" aria-label="Collapse all"
+                title="Collapse all" ng-click="collapseAll()">
+            </fd-button>
+            <fd-button class="edmBigScreen" dg-type="transparent" glyph="sap-icon--expand" aria-label="Expand all"
+                title="Expand all" ng-click="expandAll()">
+            </fd-button>
+            <fd-toolbar-separator class="edmBigScreen"></fd-toolbar-separator>
+            <fd-button class="edmBigScreen" dg-type="transparent" glyph="sap-icon--zoom-in" aria-label="Zoom in"
+                title="Zoom in" ng-click="zoomIn()">
+            </fd-button>
+            <fd-button class="edmBigScreen" dg-type="transparent" glyph="sap-icon--zoom-out" aria-label="Zoom out"
+                title="Zoom out" ng-click="zoomOut()">
+            </fd-button>
+            <fd-button class="edmBigScreen" dg-type="transparent" glyph="sap-icon--search" aria-label="Actual size"
+                title="Actual size" ng-click="actualSize()">
+            </fd-button>
+            <fd-button class="edmBigScreen" dg-type="transparent" glyph="sap-icon--exitfullscreen"
+                aria-label="Fit to screen" title="Fit" ng-click="fit()">
+            </fd-button>
+            <fd-toolbar-overflow class="edmSmallScreen">
+                <fd-button dg-type="transparent" dg-label="Collapse all" glyph="sap-icon--collapse" is-overflow="true"
+                    ng-click="collapseAll()">
+                </fd-button>
+                <fd-button dg-type="transparent" dg-label="Expand all" glyph="sap-icon--expand" is-overflow="true"
+                    ng-click="expandAll()">
+                </fd-button>
+                <fd-toolbar-separator></fd-toolbar-separator>
+                <fd-button dg-type="transparent" dg-label="Zoom in" glyph="sap-icon--zoom-in" is-overflow="true"
+                    ng-click="zoomIn()">
+                </fd-button>
+                <fd-button dg-type="transparent" dg-label="Zoom out" glyph="sap-icon--zoom-out" is-overflow="true"
+                    ng-click="zoomOut()">
+                </fd-button>
+                <fd-button dg-type="transparent" dg-label="Actual size" glyph="sap-icon--search" is-overflow="true"
+                    ng-click="actualSize()">
+                </fd-button>
+                <fd-button dg-type="transparent" dg-label="Fit to screen" glyph="sap-icon--exitfullscreen"
+                    is-overflow="true" ng-click="fit()">
+                </fd-button>
+            </fd-toolbar-overflow>
         </fd-toolbar>
-        <div class="dg-full-height dg-hbox" ng-show="!state.error && !state.isBusy">
+        <div class="dg-hbox editorContainer" ng-show="!state.error && !state.isBusy">
             <div id="sidebarContainer" class="dg-vbox dg-border-right"></div>
-            <div id="graphContainer" class="dg-full-width"></div>
+            <div id="graphContainer" fd-scrollbar class="dg-full-width"></div>
         </div>
         <div id="outlineContainer" class="outlineContainer" ng-show="!state.error && !state.isBusy"></div>
-        <fd-toolbar id="statusContainer" class="dg-border-top" no-bottom-border="true"
-            ng-show="!state.error && !state.isBusy">
-            <fd-toolbar-spacer></fd-toolbar-spacer>
-            <fd-button dg-type="transparent" glyph="sap-icon--collapse" aria-label="Collapse all" title="Collapse all"
-                ng-click="collapseAll()">
-            </fd-button>
-            <fd-button dg-type="transparent" glyph="sap-icon--expand" aria-label="Expand all" title="Expand all"
-                ng-click="expandAll()">
-            </fd-button>
-            <fd-toolbar-separator></fd-toolbar-separator>
-            <fd-button dg-type="transparent" glyph="sap-icon--zoom-in" aria-label="Zoom in" title="Zoom in"
-                ng-click="zoomIn()">
-            </fd-button>
-            <fd-button dg-type="transparent" glyph="sap-icon--zoom-out" aria-label="Zoom out" title="Zoom out"
-                ng-click="zoomOut()">
-            </fd-button>
-            <fd-button dg-type="transparent" glyph="sap-icon--search" aria-label="Actual size" title="Actual size"
-                ng-click="actualSize()">
-            </fd-button>
-            <fd-button dg-type="transparent" glyph="sap-icon--exitfullscreen" aria-label="Fit to screen" title="Fit"
-                ng-click="fit()">
-            </fd-button>
-        </fd-toolbar>
         <fd-message-page glyph="sap-icon--error" ng-if="state.error">
             <fd-message-page-title>Editor encounterd an error!</fd-message-page-title>
             <fd-message-page-subtitle>{{errorMessage}}</fd-message-page-subtitle>
