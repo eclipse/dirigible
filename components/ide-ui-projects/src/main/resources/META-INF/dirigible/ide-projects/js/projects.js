@@ -1307,12 +1307,12 @@ projectsView.controller('ProjectsViewController', [
                     if (isMultiple) {
                         for (let i = 0; i < selected.length; i++) {
                             let node = $scope.jstreeWidget.jstree(true).get_node(selected[i]);
-                            $scope.unpublish(node.data.path, node.data.workspace, function () {
+                            $scope.unpublish(node.data.path, node.data.workspace, node, function () {
                                 deleteNode(node);
                             });
                         }
                     } else {
-                        $scope.unpublish(selected.data.path, selected.data.workspace, function () {
+                        $scope.unpublish(selected.data.path, selected.data.workspace, selected, function () {
                             deleteNode(selected);
                         });
                     }
