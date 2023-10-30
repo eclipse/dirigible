@@ -363,6 +363,7 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', 'messageH
         } else return;
         return {
             callbackTopic: "csvEditor.contextmenu",
+            hasIcons: true,
             items: items,
         }
     };

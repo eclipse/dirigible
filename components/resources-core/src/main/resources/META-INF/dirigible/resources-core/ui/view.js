@@ -249,6 +249,7 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
                                 posX: posX,
                                 posY: posY,
                                 callbackTopic: menu.callbackTopic,
+                                hasIcons: menu.hasIcons || false,
                                 items: menu.items
                             },
                             true

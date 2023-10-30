@@ -3,7 +3,7 @@
         ng-click="!menuItem.isDisabled || $event.stopPropagation()">
         <span ng-if="!menuItem.items" class="fd-menu__link" ng-class="{'true': 'is-disabled'}[menuItem.isDisabled]"
             role="menuitem" ng-click="menuClick(menuItem.id, menuItem.data)" ng-mouseenter="menuHovered()">
-            <span class="fd-menu__addon-before">
+            <span ng-if="renderIcons()" class="fd-menu__addon-before">
                 <i ng-if="menuItem.icon" class="{{ menuItem.icon }}" role="presentation"></i>
             </span>
             <span class="fd-menu__title">{{ menuItem.label }}</span>
@@ -18,7 +18,7 @@
             <span class="fd-menu__title">{{ menuItem.label }}</span>
             <span class="fd-menu__addon-after fd-menu__addon-after--submenu"></span>
         </span>
-        <ide-contextmenu-submenu ng-if="menuItem.items"
+        <ide-contextmenu-submenu ng-if="menuItem.items" has-icons="renderIcons()"
             id="{{ ('CSM' + submenuIndex + $index + menuItem.id | removeSpaces) }}" submenu-index="$index"
             menu-items="menuItem.items" menu-click="menuClick">
         </ide-contextmenu-submenu>

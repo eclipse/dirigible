@@ -1240,7 +1240,8 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
                 removeTab: '&',
                 moveTab: '&',
                 splitTabs: '&',
-                hideTabs: '<'
+                hideTabs: '<',
+                editorTabs: '<?',
             },
             link: function (scope) {
                 scope.onRemoveTab = function (pane) {
@@ -1249,7 +1250,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                 scope.onSplitTabs = function (direction, pane) {
                     scope.splitTabs({ direction, pane });
-                }
+                };
 
                 scope.splitHorizontally = function (pane) {
                     scope.splitTabs({ direction: 'horizontal', pane });
@@ -1257,7 +1258,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                 scope.splitVertically = function (pane) {
                     scope.splitTabs({ direction: 'vertical', pane });
-                }
+                };
 
                 scope.canSplit = function (pane) {
                     if (pane.tabs.length < 2)
@@ -1269,16 +1270,28 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'i
 
                 scope.isFocused = function (pane) {
                     return pane === scope.focusedPane;
-                }
+                };
 
                 scope.isMoreTabsButtonVisible = function (pane) {
                     return pane.tabs.some(x => x.isHidden);
-                }
+                };
+
+                scope.isEditorTab = function () {
+                    return scope.editorTabs;
+                };
 
                 scope.onTabClick = function (pane, tabId) {
                     pane.selectedTab = tabId;
                     messageHub.setEditorFocusGain(tabId);
-                }
+                };
+
+                messageHub.onDidReceiveMessage(
+                    'ide.splittedTabs.action',
+                    function (msg) {
+                        console.log(msg.data);
+                    },
+                    true
+                );
             },
             templateUrl: '/services/web/resources-core/ui/templates/splittedTabs.html'
         };

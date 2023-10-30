@@ -364,6 +364,7 @@ projectsView.controller('ProjectsViewController', [
                         });
                         return {
                             callbackTopic: "projects.tree.contextmenu",
+                            hasIcons: true,
                             items: items
                         }
                     }
@@ -508,6 +509,7 @@ projectsView.controller('ProjectsViewController', [
                         }
                         let menuObj = {
                             callbackTopic: 'projects.tree.contextmenu',
+                            hasIcons: true,
                             items: items
                         };
                         if ($scope.menuTemplates.length && generateApi.isEnabled()) {
@@ -551,6 +553,7 @@ projectsView.controller('ProjectsViewController', [
                         }
                         let menuObj = {
                             callbackTopic: "projects.tree.contextmenu",
+                            hasIcons: true,
                             items: items
                         };
                         setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path);
@@ -580,6 +583,7 @@ projectsView.controller('ProjectsViewController', [
                         }
                         let menuObj = {
                             callbackTopic: "projects.tree.contextmenu",
+                            hasIcons: true,
                             items: items
                         };
                         if (generateApi.isEnabled()) {
@@ -1369,11 +1373,6 @@ projectsView.controller('ProjectsViewController', [
             });
         }
 
-        // Temp
-        // $scope.test = function () {
-        //     messageHub.postMessage('projects.tree.select', { filePath: '/ide/index.html' }, true);
-        // };
-
         messageHub.onFileSaved(function (data) {
             const { topic, ...fileDescriptor } = data;
             $scope.publish(fileDescriptor.path, fileDescriptor.workspace, fileDescriptor);
@@ -1433,19 +1432,18 @@ projectsView.controller('ProjectsViewController', [
         messageHub.onDidReceiveMessage(
             'projects.tree.select',
             function (msg) {
-                let objects = $scope.jstreeWidget.jstree(true).get_json(
-                    '#',
-                    {
-                        no_state: true,
-                        no_li_attr: true,
-                        no_a_attr: true,
-                        flat: true
-                    }
-                );
-                for (let i = 0; i < objects.length; i++) {
-                    if (objects[i].data.path === msg.data.filePath) {
-                        $scope.jstreeWidget.jstree(true).select_node(objects[i]);
-                        break;
+                if (msg.data.filePath.startsWith(`/${$scope.selectedWorkspace.name}/`)) {
+                    let filePath = msg.data.filePath.slice($scope.selectedWorkspace.name.length + 1);
+                    const instance = $scope.jstreeWidget.jstree(true);
+                    for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
+                        if (item !== '#' && instance._model.data.hasOwnProperty(item) && instance._model.data[item].data.path === filePath) {
+                            instance.deselect_all();
+                            instance._open_to(item).focus();
+                            instance.select_node(item);
+                            const objNode = instance.get_node(item, true);
+                            objNode[0].scrollIntoView({ behavior: "smooth", block: "center" });
+                            break;
+                        }
                     }
                 }
             },

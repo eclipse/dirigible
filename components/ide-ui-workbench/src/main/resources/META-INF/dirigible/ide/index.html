@@ -24,7 +24,7 @@
             href="/services/js/resources-core/services/loader.js?id=ide-perspective-css" />
     </head>
 
-    <body>
+    <body dg-contextmenu="contextMenuContent">
         <ide-header menu-ext-id="ide-menu"></ide-header>
         <ide-contextmenu></ide-contextmenu>
         <ide-container>
@@ -44,6 +44,58 @@
                     $scope.layoutConfig = {
 						leftPaneMinSize: 355,
 					};
+                    $scope.contextMenuContent = function (element) {
+                        let id;
+                        if (element.tagName !== "LI") {
+                            let closest = element.closest("li");
+                            if (closest && closest.hasAttribute('tab-id') && closest.hasAttribute('is-editor-tab')) {
+                                id = closest.getAttribute('tab-id');
+                            } else return;
+                        } else {
+                            if (element.hasAttribute('tab-id') && element.hasAttribute('is-editor-tab')) {
+                                id = closest.getAttribute('tab-id');
+                            } else return;
+                        }
+                        return {
+                            callbackTopic: "workbench.contextmenu",
+                            items: [
+                                {
+                                    id: "close",
+                                    label: "Close",
+                                    data: id,
+                                },
+                                {
+                                    id: "closeOthers",
+                                    label: "Close Others",
+                                    data: id,
+                                },
+                                {
+                                    id: "closeAll",
+                                    label: "Close All",
+                                },
+                                {
+                                    id: "reveal",
+                                    label: "Reveal in Projects View",
+                                    divider: true,
+                                    data: id,
+                                }
+                            ]
+                        }
+                    };
+                    messageHub.onDidReceiveMessage(
+                        'contextmenu',
+                        function (msg) {
+                            if (msg.data.itemId === 'reveal') {
+                                messageHub.postMessage('projects.tree.select', { filePath: msg.data.data }, true);
+                            } else if (msg.data.itemId === 'close') {
+                                messageHub.closeEditor(msg.data.data);
+                            } else if (msg.data.itemId === 'closeOthers') {
+                                messageHub.closeOtherEditors(msg.data.data);
+                            } else if (msg.data.itemId === 'closeAll') {
+                                messageHub.closeAllEditors();
+                            }
+                        }
+                    );
                 }]);
         </script>
     </body>

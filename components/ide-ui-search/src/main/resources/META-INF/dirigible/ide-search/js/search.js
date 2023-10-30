@@ -125,6 +125,7 @@ searchView.controller('SearchController', ['$scope', 'messageHub', 'workspaceApi
             if (closest) id = closest.id;
             else return {
                 callbackTopic: "search.list.contextmenu",
+                hasIcons: true,
                 items: [
                     {
                         id: "refresh",
@@ -140,6 +141,7 @@ searchView.controller('SearchController', ['$scope', 'messageHub', 'workspaceApi
         if (id) {
             return {
                 callbackTopic: "search.list.contextmenu",
+                hasIcons: true,
                 items: [
                     {
                         id: "open",
