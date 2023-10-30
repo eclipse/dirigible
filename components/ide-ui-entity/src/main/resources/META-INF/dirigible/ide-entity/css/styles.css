@@ -18,6 +18,10 @@
   border-right: none;
 }
 
+.editorContainer {
+  height: calc(100% - var(--fdToolbar_Height, 2.75rem));
+}
+
 div.mxPopupMenu {
   background-color: var(--sapList_Background, #fff) !important;
   font-size: var(--sapFontSize, 0.875rem);

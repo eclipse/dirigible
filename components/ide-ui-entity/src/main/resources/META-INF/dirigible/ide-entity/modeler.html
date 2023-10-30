@@ -120,9 +120,9 @@
                 </fd-button>
             </fd-toolbar-overflow>
         </fd-toolbar>
-        <div class="dg-full-height dg-hbox" ng-show="!state.error && !state.isBusy">
+        <div class="dg-hbox editorContainer" ng-show="!state.error && !state.isBusy">
             <div id="sidebarContainer" class="dg-vbox dg-border-right"></div>
-            <div id="graphContainer" class="dg-full-width"></div>
+            <div id="graphContainer" fd-scrollbar class="dg-full-width"></div>
         </div>
         <div id="outlineContainer" class="outlineContainer" ng-show="!state.error && !state.isBusy"></div>
         <fd-message-page glyph="sap-icon--error" ng-if="state.error">
