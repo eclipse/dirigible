@@ -3,7 +3,7 @@
     <parent>
         <artifactId>dirigible-components-parent</artifactId>
         <groupId>org.eclipse.dirigible</groupId>
-        <version>9.0.0-SNAPSHOT</version>
+        <version>8.18.1</version>
     </parent>
     
     <name>Components - Engine - OData</name>
@@ -16,50 +16,50 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-base</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-database</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-repository</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.1</version>
         </dependency>
         
         <!-- Data -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-data-structures</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-data-sources</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.1</version>
         </dependency>
         
         <!-- Engine -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-engine-javascript</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.1</version>
 		</dependency>
 		
 		<!-- API -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-security</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.1</version>
 		</dependency>
         
         <!-- Libraries -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-odata-core</artifactId>
-			<version>9.0.0-SNAPSHOT</version>
+			<version>8.18.1</version>
 		</dependency>
         
     </dependencies>
