@@ -1002,8 +1002,10 @@ function isDirty(model) {
             noFallthroughCasesInSwitch: true,
             module: (fileName?.endsWith(".mjs") === true) ? monaco.languages.typescript.ModuleKind.ESNext : monaco.languages.typescript.ModuleKind.CommonJS
         });
-        monaco.languages.typescript.javascriptDefaults.getCompilerOptions().moduleResolution = monaco.languages.typescript.ModuleResolutionKind.NodeJs
-        monaco.languages.typescript.typescriptDefaults.getCompilerOptions().moduleResolution = monaco.languages.typescript.ModuleResolutionKind.NodeJs
+        monaco.languages.typescript.javascriptDefaults.getCompilerOptions().moduleResolution = monaco.languages.typescript.ModuleResolutionKind.NodeJs;
+        monaco.languages.typescript.typescriptDefaults.getCompilerOptions().moduleResolution = monaco.languages.typescript.ModuleResolutionKind.NodeJs;
+        monaco.languages.typescript.typescriptDefaults.getCompilerOptions().jsx = (fileName?.endsWith(".tsx") === true) ? "react" : undefined;
+        monaco.languages.typescript.javascriptDefaults.getCompilerOptions().jsx = (fileName?.endsWith(".jsx") === true) ? "react" : undefined,
 
         monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
         monaco.languages.html.htmlDefaults.setOptions({
