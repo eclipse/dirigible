@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.AlphabeticalListOfProduct;
@@ -52,7 +53,7 @@ public abstract class AbstractODataNorthwindTest extends AbstractSQLProcessorTes
 	 */
 	@Override
 	protected String getChangelogLocation() {
-		return "liquibase/changelog-northwind.xml";
+		return "liquibase" + File.separator + "changelog-northwind.xml";
 	}
 
 	/**
@@ -66,7 +67,7 @@ public abstract class AbstractODataNorthwindTest extends AbstractSQLProcessorTes
 				Category.class, //
 				CustomerDemographic.class, //
 				Customer.class, //
-				Employee .class, //
+				Employee.class, //
 				OrderDetail.class, //
 				Order.class, //
 				Product.class, //
@@ -113,9 +114,8 @@ public abstract class AbstractODataNorthwindTest extends AbstractSQLProcessorTes
 	protected String loadExpectedData(String fileName) throws IOException {
 		String data = loadResource(fileName);
 		return data //
+				.replaceAll("\r\n", "") //
 				.replaceAll("\n", "") //
-				.replaceAll("[^\\S\\r]{2,}", "")
-				.replaceAll(": ", ":")
-				.replaceAll(" />", "/>");
+				.replaceAll("[^\\S\\r]{2,}", "").replaceAll(": ", ":").replaceAll(" />", "/>");
 	}
 }

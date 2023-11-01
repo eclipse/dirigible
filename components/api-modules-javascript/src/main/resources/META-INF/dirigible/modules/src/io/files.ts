@@ -15,6 +15,7 @@
 import * as streams from "@dirigible/io/streams";
 import * as bytes from "@dirigible/io/bytes";
 const FilesFacade = Java.type("org.eclipse.dirigible.components.api.io.FilesFacade");
+const File = Java.type("java.io.File")
 
 export function exists(path){
 	return FilesFacade.exists(path);
@@ -168,3 +169,5 @@ export function list(path) {
 export function find(path, pattern) {
 	return JSON.parse(FilesFacade.find(path, pattern));
 };
+
+export const separator = File.separator;

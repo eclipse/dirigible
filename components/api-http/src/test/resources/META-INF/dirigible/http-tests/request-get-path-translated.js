@@ -9,7 +9,8 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var request = require('http/request');
-var assertTrue = require('test/assert').assertTrue;
+const request = require('http/request');
+const separator = require('io/files').separator;
+const assertTrue = require('test/assert').assertTrue;
 
-assertTrue(request.getPathTranslated().endsWith('/services/js/http-tests/request-get-path-translated.js'));
+assertTrue(request.getPathTranslated().endsWith(`${separator }services${separator }js${separator}http-tests${separator}request-get-path-translated.js`));

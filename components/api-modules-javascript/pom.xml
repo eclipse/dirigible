@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,6 +14,28 @@
     <artifactId>dirigible-components-api-modules-javascript</artifactId>
     <packaging>jar</packaging>
 
+    <profiles>
+        <profile>
+            <id>Windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <script.extension>.bat</script.extension>
+            </properties>
+        </profile>
+        <profile>
+            <id>unix</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <script.extension>.sh</script.extension>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>
@@ -27,7 +51,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>${basedir}/src/main/resources/META-INF/dirigible/modules/build.sh</executable>
+                    <executable>${basedir}/src/main/resources/META-INF/dirigible/modules/build${script.extension}</executable>
                     <workingDirectory>src/main/resources/META-INF/dirigible/modules</workingDirectory>
                 </configuration>
             </plugin>

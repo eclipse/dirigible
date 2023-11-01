@@ -43,10 +43,10 @@ import org.springframework.util.Assert;
  */
 @Configuration
 public class FtpServerConfiguration {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FtpServerConfiguration.class);
-	
+
 	private static final String REPOSITORY_ROOT = "./target/dirigible/cms/dirigible/repository/root";
 
 	/**
@@ -142,7 +142,7 @@ public class FtpServerConfiguration {
 	 * @return the user manager
 	 */
 	@Bean
-	UserManager userManager(@Value("${ftp.root:${HOME}/ftp/root}") File root, FtpUserRepository ftpUserRepository) {
+	UserManager userManager(@Value("${ftp.root:${user.home}/ftp/root}") File root, FtpUserRepository ftpUserRepository) {
 		Assert.isTrue(root.exists() || root.mkdirs(), "the root directory must exist.");
 		return new FtpUserManager(root, ftpUserRepository);
 	}
