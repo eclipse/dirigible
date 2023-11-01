@@ -9,10 +9,12 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var command = require('platform/command');
-var assertTrue = require('test/assert').assertTrue;
+const command = require('platform/command');
+const assertTrue = require('test/assert').assertTrue;
+const os = require('platform/os');
 
-var result = command.execute("echo 'hello dirigible!'");
+const cmdForExec = os.isWindows() ? "cmd /c echo 'hello dirigible!'" : "echo 'hello dirigible!'";
+var result = command.execute(cmdForExec);
 console.log("[Result]: " + result);
 
 assertTrue(result !== undefined && result !== null);

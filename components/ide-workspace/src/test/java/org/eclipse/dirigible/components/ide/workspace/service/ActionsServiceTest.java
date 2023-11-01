@@ -14,8 +14,7 @@ package org.eclipse.dirigible.components.ide.workspace.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.List;
-
+import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
@@ -41,28 +40,30 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @EntityScan("org.eclipse.dirigible.components")
 public class ActionsServiceTest {
 
-	
+
 	/** The actions service. */
 	@Autowired
 	private ActionsService actionsService;
-	
+
 	/** The workspaces core service. */
 	@Autowired
 	private WorkspaceService workspaceService;
-	
+
+	private static final String OS_CMD = SystemUtils.IS_OS_WINDOWS ? "cmd /c echo test" : "echo test";
+
 	/** The project json content. */
-	String projectJsonContent = "{\n"
+	private static final String PROJECT_JSON_CONTENT= "{\n"
 			+ "    \"guid\": \"TestProject1\",\n"
 			+ "    \"actions\": [\n"
 			+ "        {\n"
 			+ "            \"name\": \"MyAction\",\n"
-			+ "            \"command\": \"uname -a\",\n"
+			+ "            \"command\": \"" + OS_CMD + "\",\n"
 			+ "            \"publish\": \"true\"\n"
 			+ "        }\n"
 			+ "    ]\n"
 			+ "}";
 
-	
+
 	/**
 	 * Publish with action test.
 	 */
@@ -78,7 +79,7 @@ public class ActionsServiceTest {
 		assertNotNull(project1.getInternal());
 		assertEquals("TestProject1", project1.getName());
 		assertEquals("/users/guest/TestWorkspace1/TestProject1", project1.getInternal().getPath());
-		File projectJson = workspaceService.createFile("TestWorkspace1", "TestProject1", "project.json", projectJsonContent.getBytes(), "application/json");
+		File projectJson = workspaceService.createFile("TestWorkspace1", "TestProject1", "project.json", PROJECT_JSON_CONTENT.getBytes(), "application/json");
 		assertNotNull(projectJson);
 		assertNotNull(projectJson.getInternal());
 		assertEquals("project.json", projectJson.getName());
@@ -88,7 +89,7 @@ public class ActionsServiceTest {
 		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
 
-	
+
 	/**
 	 * Publish without action test.
 	 */
@@ -108,7 +109,7 @@ public class ActionsServiceTest {
 		assertEquals(-1, result);
 		workspaceService.deleteWorkspace("TestWorkspace1");
 	}
-	
+
 	/**
 	 * The Class TestConfiguration.
 	 */
