@@ -86,7 +86,7 @@ public class DataAnonymizeEndpoint {
 	 * @return the response
 	 * @throws SQLException the SQL exception
 	 */
-	@PostMapping(produces = "application/json")
+	@PostMapping(value = "column", produces = "application/json")
 	public ResponseEntity anonymizeColumn(@Valid @RequestBody DataAnonymizeParameters content) throws SQLException {
 
 		if (!databaseMetadataService.existsDataSourceMetadata(content.getDatasource())) {

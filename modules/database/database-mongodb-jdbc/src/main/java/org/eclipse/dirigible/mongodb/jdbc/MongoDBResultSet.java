@@ -188,7 +188,16 @@ public class MongoDBResultSet implements ResultSet {
 			return this.currentDoc.toJson();
 		}
 		String name = this.metadata.getColumnName(columnIndex-1);
-		return this.currentDoc.getString(name);
+		Object object = this.currentDoc.get(name);
+		if (object != null) {
+			if (object instanceof String) {
+				return (String) name;
+			} else {
+				return name.toString();
+			}
+		}
+		return null;
+		
 	}
 
 	/**

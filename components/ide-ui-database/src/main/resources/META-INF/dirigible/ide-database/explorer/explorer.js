@@ -606,7 +606,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		parameters.column = columnNode.original.name;
 		parameters.primaryKey = primaryKeyName;
 		parameters.type = type;
-		messageHub.postMessage('database.data.anonymize.columns', parameters);
+		messageHub.postMessage('database.data.anonymize.column', parameters);
 	}
 
 	$scope.jstreeWidget.on('open_node.jstree', function (event, data) {

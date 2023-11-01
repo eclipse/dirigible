@@ -296,9 +296,9 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         window.open(url);
     }, true);
     
-    messageHub.onDidReceiveMessage("database.data.anonymize.columns", function (command) {
+    messageHub.onDidReceiveMessage("database.data.anonymize.column", function (command) {
         debugger
-        let url = "/services/data/anonymize/";
+        let url = "/services/data/anonymize/column";
         $http({
                 method: 'POST',
                 url: url,

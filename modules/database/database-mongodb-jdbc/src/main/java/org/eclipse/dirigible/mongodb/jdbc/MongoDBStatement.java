@@ -17,14 +17,23 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.eclipse.dirigible.mongodb.jdbc.util.SingleColumnStaticResultSet;
 
+import com.mongodb.bulk.BulkWriteResult;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.BulkWriteOptions;
+import com.mongodb.client.model.DeleteOneModel;
+import com.mongodb.client.model.InsertOneModel;
+import com.mongodb.client.model.UpdateOneModel;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.WriteModel;
 
 /**
  * The Class MongoDBStatement.
@@ -36,6 +45,14 @@ public class MongoDBStatement implements Statement {
 	
 	/** The is closed. */
 	protected boolean isClosed = false;
+	
+	/** The batch list. */
+	protected List<WriteModel<Document>> batchList = new ArrayList<WriteModel<Document>>();
+	
+	/** The current collection. */
+	protected String currentCollection;
+	
+	
 	
 	/**
 	 * Instantiates a new mongo DB statement.
@@ -96,6 +113,7 @@ public class MongoDBStatement implements Statement {
 			String collectionName = filterDocument.getString("find").getValue();
 			if(collectionName==null) {
 				collectionName = this.conn.getCollectionName();//fallback if any
+				currentCollection = collectionName;
 			}
 			if(collectionName==null) {
 				throw new IllegalArgumentException("Specifying a collection is mandatory for query operations");
@@ -133,24 +151,6 @@ public class MongoDBStatement implements Statement {
 			}
 			ResultSet result = new SingleColumnStaticResultSet(Arrays.asList(new String[]{count + ""}).iterator());
 			return result;
-		} else if (filterDocument.containsKey("create")) {
-			String collectionName = filterDocument.getString("create").getValue();
-			if(collectionName==null) {
-				throw new IllegalArgumentException("Specifying a collection is mandatory for create operations");
-			}
-			
-			db.createCollection(collectionName);
-			ResultSet result = new SingleColumnStaticResultSet(Arrays.asList(new String[]{collectionName + " created."}).iterator());
-			return result;
-		} else if (filterDocument.containsKey("drop")) {
-			String collectionName = filterDocument.getString("drop").getValue();
-			if(collectionName==null) {
-				throw new IllegalArgumentException("Specifying a collection is mandatory for drop operations");
-			}
-			
-			db.getCollection(collectionName).drop();
-			ResultSet result = new SingleColumnStaticResultSet(Arrays.asList(new String[]{collectionName + " dropped."}).iterator());
-			return result;
 		}
 		
 		throw new IllegalArgumentException("Specifying a collection is mandatory for query operations");
@@ -174,7 +174,11 @@ public class MongoDBStatement implements Statement {
 		Document response = this.conn.getMongoDatabase().runCommand(updateDocument);
 		int updatedDocuments = 0;
 		if(response!=null && response.get("ok")!=null){
-			updatedDocuments = response.getInteger("nModified");
+			try {
+				updatedDocuments = response.getInteger("nModified");
+			} catch (NullPointerException e) {
+				// e.g. create request
+			}
 			//TODO operation atomicity concerns? /errors/
 		}
 		return updatedDocuments;
@@ -311,7 +315,7 @@ public class MongoDBStatement implements Statement {
 	 */
 	@Override
 	public void setCursorName(String name) throws SQLException {
-		// TODO Auto-generated method stub
+		this.currentCollection = name;
 	}
 
 	/**
@@ -345,7 +349,7 @@ public class MongoDBStatement implements Statement {
 	 */
 	@Override
 	public int getUpdateCount() throws SQLException {
-		throw new SQLFeatureNotSupportedException();
+		return -1;
 	}
 
 	/**
@@ -433,8 +437,24 @@ public class MongoDBStatement implements Statement {
 	 */
 	@Override
 	public void addBatch(String sql) throws SQLException {
-		// TODO Auto-generated method stub
-
+		if (sql != null) {
+			WriteModel model;
+			if (sql.startsWith("INSERT")) {
+				model = new InsertOneModel<>(Document.parse(sql.substring("INSERT".length())));
+			} else if (sql.startsWith("UPDATE")) {
+				Document document = Document.parse(sql.substring("UPDATE".length()));
+				model = new UpdateOneModel<>(new Document().append("_id", document.get("_id")), 
+						new Document("$set", document),
+						new UpdateOptions().upsert(true));
+			} else if (sql.startsWith("DELETE")) {
+				Document document = Document.parse(sql.substring("UPDATE".length()));
+				model = new DeleteOneModel<>(new Document().append("_id", document.get("_id")));
+			} else {
+				model = new InsertOneModel<>(Document.parse(sql));
+			}
+			batchList.add(model);
+		}
+		
 	}
 
 	/**
@@ -444,8 +464,7 @@ public class MongoDBStatement implements Statement {
 	 */
 	@Override
 	public void clearBatch() throws SQLException {
-		// TODO Auto-generated method stub
-
+		batchList.clear();
 	}
 
 	/**
@@ -456,8 +475,14 @@ public class MongoDBStatement implements Statement {
 	 */
 	@Override
 	public int[] executeBatch() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		MongoDatabase db = this.conn.getMongoDatabase();
+		BulkWriteOptions options = new BulkWriteOptions();
+		options.ordered(false);
+		options.bypassDocumentValidation(true);
+		BulkWriteResult result = db.getCollection(currentCollection)
+				.bulkWrite(batchList, options);
+		clearBatch();
+		return new int[] {result.getInsertedCount() + result.getModifiedCount() + result.getDeletedCount()};
 	}
 
 	/**

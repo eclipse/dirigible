@@ -31,20 +31,40 @@ Example:
 #### Get the raw Document from ResultSet iteration as JSON
 
 	String doc = rs.getObject(-100);
+	
+### List of Commands
 
-#### Specify a collection to query
+[General](https://www.mongodb.com/docs/manual/reference/command/)
+[Find](https://docs.mongodb.org/manual/reference/command/find/#dbcmd.find)
+[Update](https://docs.mongodb.org/manual/reference/command/update/#dbcmd.update)
+
+##### Specify a collection to query
 
 	stmt.executeQuery(‘{find:"testCollection"}’);
 
-#### Specify a count of a collection
+##### Specify a count of a collection
 
 	stmt.executeQuery(‘{count:"testCollection"}’);
 	
-#### Specify a create collection
+##### Specify a create collection
 
-	stmt.executeQuery(‘{create:"testCollection"}’);
+	stmt.executeUpdate(‘{create:"testCollection"}’);
 	
-#### Specify a drop of a collection
+##### Specify a drop of a collection
 
-	stmt.executeQuery(‘{drop:"testCollection"}’);
+	stmt.executeUpdate(‘{drop:"testCollection"}’);
+	
+##### Insert documents
+
+	stmt.executeUpdate(‘{insert: "testCollection", documents: [ {"name":"foo", "age": 1}, {"name":"bar", "age": 2}, {"name":"mix", "age": 3}]}’);
+	
+##### Find document
+
+	stmt.executeUpdate(‘{ find: "testCollection",filter: {"name": "foo"} }’);
+	
+##### Update documents
+
+	stmt.executeUpdate(‘{delete: "testCollection", deletes: [{ q: {"name": "foo2"}, limit: 0}]}’);
+	
+    
 	

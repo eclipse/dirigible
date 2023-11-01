@@ -855,6 +855,11 @@ public class MongoDBConnection implements Connection {
 		return this.clientOptions.getConnectTimeout();
 	}
 	
+	/**
+	 * Gets the client.
+	 *
+	 * @return the client
+	 */
 	public MongoClient getClient() {
 		return client;
 	}
