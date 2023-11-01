@@ -341,7 +341,8 @@ public class CsvProcessor {
         } else if (Types.BOOLEAN == DataTypeUtils.getSqlTypeByDataType(dataType) 
         		|| Types.BIT == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             preparedStatement.setBoolean(i, Boolean.parseBoolean(value));
-        } else if (Types.DECIMAL == DataTypeUtils.getSqlTypeByDataType(dataType)) {
+        } else if (Types.DECIMAL == DataTypeUtils.getSqlTypeByDataType(dataType)
+        		|| Types.NUMERIC == DataTypeUtils.getSqlTypeByDataType(dataType)) {
             value = numberize(value);
             preparedStatement.setBigDecimal(i, new BigDecimal(value));
         } else if (Types.NCLOB == DataTypeUtils.getSqlTypeByDataType(dataType)) {
