@@ -32,7 +32,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     $scope.procedureResults = [];
     $scope.hasMultipleProcedureResults = false;
 
-    $http.get("", {headers: {"X-CSRF-Token": "Fetch"}}).then(function (response) {
+    $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).then(function (response) {
         csrfToken = response.headers()["x-csrf-token"];
     }, function (response) {
         console.error("Error getting token.", response);
@@ -64,25 +64,33 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                     'X-Requested-With': 'Fetch',
                     'X-CSRF-Token': csrfToken
                 }
-            }).then(function (result) {
-                cleanScope();
-                if (result.data != null && result.data.length > 0) {
-                    $scope.rows = result.data;
-                    $scope.columns = [];
-                    for (let i = 0; i < result.data.length; i++) {
-                        for (let column in result.data[i]) {
-                            $scope.columns.push(column);
+            }).then(
+                function (result) {
+                    cleanScope();
+                    if (result.data != null && result.data.length > 0) {
+                        $scope.rows = result.data;
+                        $scope.columns = [];
+                        for (let i = 0; i < result.data.length; i++) {
+                            for (let column in result.data[i]) {
+                                $scope.columns.push(column);
+                            }
+                            break;
                         }
-                        break;
+                    } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                        $scope.state.error = true;
+                        $scope.errorMessage = result.data.errorMessage;
+                    } else {
+                        $scope.result = 'Empty result';
                     }
-                } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                    $scope.state.isBusy = false;
+                }, function (reject) {
+                    cleanScope();
                     $scope.state.error = true;
-                    $scope.errorMessage = result.data.errorMessage;
-                } else {
-                    $scope.result = 'Empty result';
+                    $scope.errorMessage = reject.data.message;
+                    console.error(reject);
+                    $scope.state.isBusy = false;
                 }
-                $scope.state.isBusy = false;
-            });
+            );
         } else if (sql.startsWith('call')) {
             $http({
                 method: 'POST',
@@ -93,45 +101,53 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                     'X-Requested-With': 'Fetch',
                     'X-CSRF-Token': csrfToken
                 }
-            }).then(function (result) {
-                cleanScope();
-                if (result.data != null && result.data.length > 0) {
-                    $scope.hasMultipleProcedureResults = result.data.length > 1;
-                    if ($scope.hasMultipleProcedureResults) {
-                        $scope.procedureResults.length = 0;
-                        for (let resultIndex = 0; resultIndex < result.data.length; resultIndex++) {
-                            let procedureResult = JSON.parse(result.data[resultIndex]);
-                            let data = {
-                                rows: procedureResult,
-                                columns: []
-                            };
-                            for (let i = 0; i < procedureResult.length; i++) {
-                                for (let column in procedureResult[i]) {
-                                    data.columns.push(column);
+            }).then(
+                function (result) {
+                    cleanScope();
+                    if (result.data != null && result.data.length > 0) {
+                        $scope.hasMultipleProcedureResults = result.data.length > 1;
+                        if ($scope.hasMultipleProcedureResults) {
+                            $scope.procedureResults.length = 0;
+                            for (let resultIndex = 0; resultIndex < result.data.length; resultIndex++) {
+                                let procedureResult = JSON.parse(result.data[resultIndex]);
+                                let data = {
+                                    rows: procedureResult,
+                                    columns: []
+                                };
+                                for (let i = 0; i < procedureResult.length; i++) {
+                                    for (let column in procedureResult[i]) {
+                                        data.columns.push(column);
+                                    }
+                                    break;
+                                }
+                                $scope.procedureResults.push(data);
+                            }
+                        } else {
+                            result = JSON.parse(result.data[0]);
+                            $scope.rows = result;
+                            $scope.columns = [];
+                            for (let i = 0; i < result.length; i++) {
+                                for (let column in result[i]) {
+                                    $scope.columns.push(column);
                                 }
                                 break;
                             }
-                            $scope.procedureResults.push(data);
                         }
+                    } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                        $scope.state.error = true;
+                        $scope.errorMessage = result.data.errorMessage;
                     } else {
-                        result = JSON.parse(result.data[0]);
-                        $scope.rows = result;
-                        $scope.columns = [];
-                        for (let i = 0; i < result.length; i++) {
-                            for (let column in result[i]) {
-                                $scope.columns.push(column);
-                            }
-                            break;
-                        }
+                        $scope.result = 'Empty result';
                     }
-                } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                    $scope.state.isBusy = false;
+                }, function (reject) {
+                    cleanScope();
                     $scope.state.error = true;
-                    $scope.errorMessage = result.data.errorMessage;
-                } else {
-                    $scope.result = 'Empty result';
+                    $scope.errorMessage = reject.data.message;
+                    console.error(reject);
+                    $scope.state.isBusy = false;
                 }
-                $scope.state.isBusy = false;
-            });
+            );
         } else if (sql.startsWith('query: ')) {
             $http({
                 method: 'POST',
@@ -142,25 +158,33 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                     'X-Requested-With': 'Fetch',
                     'X-CSRF-Token': csrfToken
                 }
-            }).then(function (result) {
-                cleanScope();
-                if (result.data != null && result.data.length > 0) {
-                    $scope.rows = result.data;
-                    $scope.columns = [];
-                    for (let i = 0; i < result.data.length; i++) {
-                        for (let column in result.data[i]) {
-                            $scope.columns.push(column);
+            }).then(
+                function (result) {
+                    cleanScope();
+                    if (result.data != null && result.data.length > 0) {
+                        $scope.rows = result.data;
+                        $scope.columns = [];
+                        for (let i = 0; i < result.data.length; i++) {
+                            for (let column in result.data[i]) {
+                                $scope.columns.push(column);
+                            }
+                            break;
                         }
-                        break;
+                    } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                        $scope.state.error = true;
+                        $scope.errorMessage = result.data.errorMessage;
+                    } else {
+                        $scope.result = 'Empty result';
                     }
-                } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                    $scope.state.isBusy = false;
+                }, function (reject) {
+                    cleanScope();
                     $scope.state.error = true;
-                    $scope.errorMessage = result.data.errorMessage;
-                } else {
-                    $scope.result = 'Empty result';
+                    $scope.errorMessage = reject.data.message;
+                    console.error(reject);
+                    $scope.state.isBusy = false;
                 }
-                $scope.state.isBusy = false;
-            });
+            );
         } else if (sql.startsWith('update: ')) {
             $http({
                 method: 'POST',
@@ -171,18 +195,26 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                     'X-Requested-With': 'Fetch',
                     'X-CSRF-Token': csrfToken
                 }
-            }).then(function (result) {
-                cleanScope();
-                if (!isNaN(result.data)) {
-                    result = 'Rows updated: ' + result.data;
-                } else if (result.data !== null) {
+            }).then(
+                function (result) {
+                    cleanScope();
+                    if (!isNaN(result.data)) {
+                        result = 'Rows updated: ' + result.data;
+                    } else if (result.data !== null) {
+                        $scope.result = result.data;
+                    } else {
+                        $scope.result = 'Empty result';
+                    }
                     $scope.result = result.data;
-                } else {
-                    $scope.result = 'Empty result';
+                    $scope.state.isBusy = false;
+                }, function (reject) {
+                    cleanScope();
+                    $scope.state.error = true;
+                    $scope.errorMessage = reject.data.message;
+                    console.error(reject);
+                    $scope.state.isBusy = false;
                 }
-                $scope.result = result.data;
-                $scope.state.isBusy = false;
-            });
+            );
         } else {
             $http({
                 method: 'POST',
@@ -193,22 +225,30 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                     'X-Requested-With': 'Fetch',
                     'X-CSRF-Token': csrfToken
                 }
-            }).then(function (result) {
-                cleanScope();
-                if (!isNaN(result.data)) {
-                    result = 'Rows updated: ' + result.data;
-                } else if (result.data !== null) {
+            }).then(
+                function (result) {
+                    cleanScope();
+                    if (!isNaN(result.data)) {
+                        result = 'Rows updated: ' + result.data;
+                    } else if (result.data !== null) {
+                        $scope.result = result.data;
+                    } else {
+                        $scope.result = 'Empty result';
+                    }
                     $scope.result = result.data;
-                } else {
-                    $scope.result = 'Empty result';
+                    $scope.state.isBusy = false;
+                }, function (reject) {
+                    cleanScope();
+                    $scope.state.error = true;
+                    $scope.errorMessage = reject.data.message;
+                    console.error(reject);
+                    $scope.state.isBusy = false;
                 }
-                $scope.result = result.data;
-                $scope.state.isBusy = false;
-            });
+            );
         }
     }, true);
 
-	messageHub.onDidReceiveMessage("database.data.import.artifact", function (command) {
+    messageHub.onDidReceiveMessage("database.data.import.artifact", function (command) {
         let artifact = command.data.split('.');
         let url = "/services/data/import/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
         messageHub.showDialogWindow(
@@ -216,7 +256,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
             {
                 importType: 'data',
                 uploadPath: url,
-                workspace: "", 
+                workspace: "",
                 table: $scope.datasource + " -> " + artifact[0] + " -> " + artifact[1],
             }
         );
@@ -245,13 +285,12 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                 'X-CSRF-Token': csrfToken
             }
         }).then(function (resourceURI) {
-            let fileURL= window.location.protocol + '//' + window.location.host + `/services/ide/workspaces/${schema}/${schema}`
+            let fileURL = window.location.protocol + '//' + window.location.host + `/services/ide/workspaces/${schema}/${schema}`
             let msg = `Created requested files in Project [${schema}] in Workspace [${schema}]. \n To access it it please go to: ${fileURL}`;
-
             console.info(msg);
-
-            messageHub.showDialog('', msg);
+            messageHub.showAlertSuccess('Export', msg);
         }).catch(function (err) {
+            messageHub.showAlertError("Export error", "Error in exporting data in project");
             console.error("Error in exporting data in project", err);
         });
     }, true);
@@ -279,35 +318,35 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                 'X-CSRF-Token': csrfToken
             }
         }).then(function (resourceURI) {
-            let fileURL= window.location.protocol + '//' + window.location.host + `/services/ide/workspaces/${schema}/${schema}/${schema}.schema`
+            let fileURL = window.location.protocol + '//' + window.location.host + `/services/ide/workspaces/${schema}/${schema}/${schema}.schema`
             let msg = `Created file [${schema}.schema] in Project [${schema}] in Workspace [${schema}]. \n To access it it please go to: ${fileURL}`;
-
             console.info(msg);
-
-            messageHub.showDialog('', msg);
+            messageHub.showAlertSuccess('Export', msg);
         }).catch(function (err) {
+            messageHub.showAlertError("Export error", "Error in exporting metadata in project");
             console.error("Error in exporting metadata in project", err);
         });
     }, true);
-    
+
     messageHub.onDidReceiveMessage("database.metadata.project.export.topology", function (command) {
         let schema = command.data;
         let url = "/services/data/project/topology/" + $scope.datasource + "/" + schema;
         window.open(url);
     }, true);
-    
+
     messageHub.onDidReceiveMessage("database.data.anonymize.column", function (command) {
         let url = "/services/data/anonymize/column";
         $http({
-                method: 'POST',
-                url: url,
-                data: command.data,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'Fetch',
-                    'X-CSRF-Token': csrfToken
-                }
-            }).then(function (result) {
+            method: 'POST',
+            url: url,
+            data: command.data,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'Fetch',
+                'X-CSRF-Token': csrfToken
+            }
+        }).then(
+            function (result) {
                 cleanScope();
                 if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
                     $scope.state.error = true;
@@ -317,13 +356,12 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                 }
                 $scope.state.isBusy = false;
             }, function (result) {
-                
+                cleanScope();
                 $scope.state.error = true;
                 $scope.errorMessage = result.data.errorMessage;
-                
                 $scope.state.isBusy = false;
-            });
-        
+            }
+        );
     }, true);
 
     function cleanScope() {
