@@ -12,7 +12,6 @@
 function openReferEntity(title, message, $scope, graph) {
 	$scope.$parent.dialogTitle = title;
 	$scope.$parent.okReferEntity = function () {
-		debugger
 		if (!$scope.$parent.referencedModel || !$scope.$parent.referencedEntity) {
 			$('#Delete').click();
 			return;
