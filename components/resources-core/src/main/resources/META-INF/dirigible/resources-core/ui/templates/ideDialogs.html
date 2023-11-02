@@ -106,11 +106,11 @@
                     <div class="fd-bar__element">{{ formDialog.subheader }}</div>
                 </div>
             </div>
-            <div class="fd-dialog__body fd-scrollbar">
-                <fieldset ng-hide="formDialog.loader" class="fd-fieldset" ng-form="formFieldset">
-                    <div class="fd-form-group">
+            <div class="fd-dialog__body" fd-scrollbar>
+                <fd-fieldset ng-hide="formDialog.loader" ng-form="formFieldset">
+                    <fd-form-group>
                         <div class="dg-fd-repeat" ng-repeat="item in formDialog.items">
-                            <div ng-if="item.type === 'input'" ng-hide="shouldHide(item)" class="fd-form-item">
+                            <fd-form-item ng-if="item.type === 'input'" ng-hide="shouldHide(item)">
                                 <fd-form-label dg-colon="true" dg-required="item.required" for="{{ item.id }}">
                                     {{ item.label }}
                                 </fd-form-label>
@@ -129,8 +129,8 @@
                                     <fd-form-message dg-type="error">{{ item.errorMsg || "Incorrect input" }}
                                     </fd-form-message>
                                 </fd-form-input-message-group>
-                            </div>
-                            <div ng-if="item.type === 'number'" ng-hide="shouldHide(item)" class="fd-form-item">
+                            </fd-form-item>
+                            <fd-form-item ng-if="item.type === 'number'" ng-hide="shouldHide(item)">
                                 <fd-form-label dg-colon="true" dg-required="item.required" for="{{ item.id }}">
                                     {{ item.label }}
                                 </fd-form-label>
@@ -141,8 +141,8 @@
                                     ng-change="isValid(formFieldset['i' + item.id].$valid, item)"
                                     ng-attr-dg-step="item.step">
                                 </fd-step-input>
-                            </div>
-                            <div ng-if="item.type === 'textarea'" ng-hide="shouldHide(item)" class="fd-form-item">
+                            </fd-form-item>
+                            <fd-form-item ng-if="item.type === 'textarea'" ng-hide="shouldHide(item)">
                                 <fd-form-label dg-colon="true" dg-required="item.required" for="{{ item.id }}">
                                     {{ item.label }}
                                 </fd-form-label>
@@ -159,18 +159,16 @@
                                     <fd-form-message dg-type="error">{{ item.errorMsg || "Incorrect input" }}
                                     </fd-form-message>
                                 </fd-form-input-message-group>
-                            </div>
-                            <div ng-if="item.type === 'checkbox'" ng-hide="shouldHide(item)" class="fd-form-item">
-                                <input type="checkbox" class="fd-checkbox fd-checkbox--compact"
-                                    ng-class="{'is-error' : item.error }" id="{{ item.id }}" ng-model="item.value">
-                                <label class="fd-checkbox__label fd-checkbox__label--compact" for="{{ item.id }}">
-                                    <div class="fd-checkbox__label-container">
-                                        <span class="fd-checkbox__text">{{ item.label }}</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <div ng-if="item.type === 'radio'" ng-hide="shouldHide(item)"
-                                class="fd-form-item fd-margin--none">
+                            </fd-form-item>
+                            <fd-form-item ng-if="item.type === 'checkbox'" ng-hide="shouldHide(item)">
+                                <fd-checkbox id="{{ item.id }}" compact="true" ng-model="item.value"
+                                    state="{'error' : item.error }">
+                                </fd-checkbox>
+                                <fd-checkbox-label compact="true" for="{{ item.id }}">{{ item.label }}
+                                </fd-checkbox-label>
+                            </fd-form-item>
+                            <fd-form-item ng-if="item.type === 'radio'" ng-hide="shouldHide(item)"
+                                class="fd-margin--none">
                                 <div class="fd-form-group__item fd-form-item" ng-repeat="radio in item.items">
                                     <input type="radio" class="fd-radio" ng-class="{'is-error' : radio.error }"
                                         id="{{ radio.id }}" ng-model="item.value"
@@ -179,8 +177,8 @@
                                         {{ radio.label }}
                                     </label>
                                 </div>
-                            </div>
-                            <div ng-if="item.type === 'dropdown'" ng-hide="shouldHide(item)" class="fd-form-item">
+                            </fd-form-item>
+                            <fd-form-item ng-if="item.type === 'dropdown'" ng-hide="shouldHide(item)">
                                 <fd-form-label dg-colon="true" dg-required="item.required" for="{{ item.id }}">
                                     {{ item.label }}
                                 </fd-form-label>
@@ -191,29 +189,29 @@
                                         ng-repeat="menuItem in item.items">
                                     </fd-option>
                                 </fd-select>
-                            </div>
+                            </fd-form-item>
                         </div>
-                    </div>
-                </fieldset>
+                    </fd-form-group>
+                </fd-fieldset>
                 <div ng-show="formDialog.loader && formDialog.loadingMessage">
                     <strong>Status: </strong>{{ formDialog.loadingMessage }}
                 </div>
                 <fd-busy-indicator class="fd-margin-top--sm fd-margin-bottom--tiny" dg-size="l"
                     ng-show="formDialog.loader"></fd-busy-indicator>
             </div>
-            <footer ng-hide="formDialog.loader" ng-if="formDialog.buttons.length > 0"
-                class="fd-dialog__footer fd-bar fd-bar--compact fd-bar--footer">
-                <div class="fd-bar__right">
-                    <div class="fd-bar__element" ng-class="{'dg-hidden' : formDialog.footer === ''}">
+            <fd-bar class="fd-dialog__footer" ng-hide="formDialog.loader" ng-if="formDialog.buttons.length > 0"
+                compact="true" bar-design="footer">
+                <fd-bar-right>
+                    <fd-bar-element ng-if="formDialog.footer !== ''">
                         {{ formDialog.footer }}
-                    </div>
-                    <div class="fd-bar__element" ng-repeat="btn in formDialog.buttons">
+                    </fd-bar-element>
+                    <fd-bar-element ng-repeat="btn in formDialog.buttons">
                         <fd-button class="fd-dialog__decisive-button" dg-label="{{ btn.label }}"
                             dg-type="{{ btn.type }}" ng-click="formDialogAction(btn.id)"
                             state="{{ btn.whenValid && !formFieldset.$valid ? 'disabled' : ''  }}"></fd-button>
-                    </div>
-                </div>
-            </footer>
+                    </fd-bar-element>
+                </fd-bar-right>
+            </fd-bar>
         </div>
     </section>
     <!-- Selectable dialog -->
