@@ -134,18 +134,17 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
         java -jar build/application/target/dirigible-application-*.jar
 
-2. In case you want to debug the application run:
+   > for Windows
+   
+        java -jar build/application/target/$((Get-ChildItem dirigible-application-*.jar -recurse -File | Sort-Object LastWriteTime | Select -Last 1).BaseName).jar
+
+3. In case you want to debug the application run:
 
         java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar build/application/target/dirigible-application-*.jar
 
-3. Open a web browser and go to:
-
-        http://localhost:8080
-
-4. Login with dirigible/dirigible.
-5. REST API description in an OpenAPI format can be found at:
-
-	http://localhost:8080/swagger-ui/index.html
+4. Open a web browser and go to: [http://localhost:8080](http://localhost:8080 "http://localhost:8080")
+5. Login with user: `admin` and password `admin`
+6. REST API description in an OpenAPI format can be found at: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html "http://localhost:8080/swagger-ui/index.html")
 
 
 #### Docker
