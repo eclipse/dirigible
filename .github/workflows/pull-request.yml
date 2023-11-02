@@ -6,8 +6,11 @@ on:
       - main
       - master
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build:        
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
     - uses: actions/checkout@v3
       with:
@@ -32,4 +35,4 @@ jobs:
     - name: Install TypeScript compiler
       run: npm i -g typescript
     - name: Maven Build
-      run: mvn clean install -Dmaven.javadoc.skip=false -U
+      run: mvn clean install -D maven.javadoc.skip=false -U
