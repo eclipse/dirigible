@@ -87,6 +87,12 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	/** The Constant REMARKS. */
 	public static final String REMARKS = "REMARKS"; //$NON-NLS-1$
 	
+	/** The Constant NESTED. */
+	public static final String NESTED = "NESTED"; //$NON-NLS-1$
+	
+	/** The Constant PK. */
+	public static final String PK = "PK"; //$NON-NLS-1$
+	
 	/**
 	 * Instantiates a new mongo DB database metadata.
 	 *
@@ -1724,18 +1730,29 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 			String tableNamePattern, String columnNamePattern)
 			throws SQLException {
 		Document first = connection.getMongoDatabase().getCollection(tableNamePattern).find().first();
+		ArrayNode array = populateColumns(first);
+		ResultSet columns = new JsonArrayMongoIteratorResultSet(array);
+		return columns;
+	}
+
+	public ArrayNode populateColumns(Document document) {
 		ArrayNode array = MAPPER.createArrayNode();
-		for (Entry<String, Object> entry : first.entrySet()) {
+		for (Entry<String, Object> entry : document.entrySet()) {
 			ObjectNode obj = MAPPER.createObjectNode();
 			obj.put(COLUMN_NAME, entry.getKey().toString());
 			obj.put(TYPE_NAME, entry.getValue() != null ? entry.getValue().getClass().getSimpleName() : "?");
+			if (entry.getValue() != null && entry.getValue() instanceof Document) {
+				Document nestedDocument = (Document) entry.getValue();
+				ArrayNode nestedArray = populateColumns(nestedDocument);
+				obj.put(NESTED, nestedArray);
+			}
 			obj.put(COLUMN_SIZE, "");
 			obj.put(IS_NULLABLE, true);
 			obj.put(DECIMAL_DIGITS, 0);
+			obj.put(PK, "_id".equals(entry.getKey().toString()));
 			array.add(obj);
 		}
-		ResultSet columns = new JsonArrayMongoIteratorResultSet(array);
-		return columns;
+		return array;
 	}
 
 	/**

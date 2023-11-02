@@ -24,6 +24,7 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.data.management.domain.DatabaseMetadata;
 import org.eclipse.dirigible.components.data.management.domain.FunctionMetadata;
+import org.eclipse.dirigible.components.data.management.domain.NoSQLTableMetadata;
 import org.eclipse.dirigible.components.data.management.domain.ProcedureMetadata;
 import org.eclipse.dirigible.components.data.management.domain.SchemaMetadata;
 import org.eclipse.dirigible.components.data.management.domain.TableMetadata;
@@ -655,9 +656,15 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
         Connection connection = null;
         try {
             connection = dataSource.getConnection();
-            TableMetadata tableMetadata = describeTable(connection, null, schema, table);
-            String json = GsonHelper.toJson(tableMetadata);
-            return json;
+            if (SqlFactory.deriveDialect(connection).getDatabaseType(connection).equals(DatabaseType.NOSQL.getName())) {
+            	NoSQLTableMetadata noSQLTableMetadata = describeNoSQL(connection, null, schema, table);
+            	String json = GsonHelper.toJson(noSQLTableMetadata);
+	            return json;
+            } else {
+	            TableMetadata tableMetadata = describeTable(connection, null, schema, table);
+	            String json = GsonHelper.toJson(tableMetadata);
+	            return json;
+            }
         } finally {
             if (connection != null) {
                 try {
@@ -672,6 +679,42 @@ public class DatabaseMetadataHelper implements DatabaseParameters {
     }
 
     /**
+     * Describe no SQL.
+     *
+     * @param connection the connection
+     * @param catalogName the catalog name
+     * @param schemeName the scheme name
+     * @param tableName the table name
+     * @return the no SQL table metadata
+     * @throws SQLException the SQL exception
+     */
+    private static NoSQLTableMetadata describeNoSQL(Connection connection, String catalogName, String schemeName, String tableName) throws SQLException {
+    	DatabaseMetaData dmd = connection.getMetaData();
+
+        ISqlDialect sqlDialect = getDialect(connection);
+
+        ResultSet rs = null;
+        try {
+            if (sqlDialect.isCatalogForSchema()) {
+                rs = dmd.getTables(schemeName, null, DatabaseNameNormalizer.normalizeTableName(tableName), TABLE_TYPES);
+            } else {
+                rs = dmd.getTables(catalogName, schemeName, DatabaseNameNormalizer.normalizeTableName(tableName), TABLE_TYPES);
+            }
+
+            if (rs.next()) {
+                String tableType = rs.getString("TABLE_TYPE");
+                String tableRemarks = rs.getString("REMARKS");
+                return new NoSQLTableMetadata(tableName, tableType, tableRemarks, connection, catalogName, schemeName, true);
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
+        return null;
+	}
+
+	/**
      * Gets the metadata as json.
      *
      * @param dataSource the data source
