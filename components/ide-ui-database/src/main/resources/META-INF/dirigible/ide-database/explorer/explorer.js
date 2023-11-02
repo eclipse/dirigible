@@ -587,25 +587,42 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		}
 	};
 	
-	let anonymizeMenu = function (node, data, type) {
+	let anonymizeMenu = function(node, data, type) {
 		let tree = $.jstree.reference(data.reference);
 		let columnNode = tree.get_node(data.reference);
-		let tableNode = tree.get_node(tree.get_node(node.parent).parent);
-		let schemaNode = tree.get_node(tree.get_node(tree.get_node(node.parent).parent).parent);
-							
+		let tableNode = findParentTableOfColumn(tree, node); //tree.get_node(tree.get_node(node.parent).parent);
+		let schemaNode = findParentSchemaOfColumn(tree, node); //tree.get_node(tree.get_node(tree.get_node(node.parent).parent).parent);
+
 		let primaryKeyName = tree.get_node(tree.get_node(node.parent).children[0]).original.name;
 		tree.get_node(node.parent).children.forEach(c => {if (tree.get_node(c).original.key) {
 			primaryKeyName = tree.get_node(c).original.name;
 		}});
-							
+
 		let parameters = {};
 		parameters.datasource = $scope.selectedDatasource;
 		parameters.schema = schemaNode.original.text;
 		parameters.table = tableNode.original.text;
-		parameters.column = columnNode.original.name;
+		let a = columnNode.id.split('$');
+		parameters.column = a.splice(1, a.length - 1).join('.'); //columnNode.original.name;
 		parameters.primaryKey = primaryKeyName;
 		parameters.type = type;
 		messageHub.postMessage('database.data.anonymize.column', parameters);
+	}
+	
+	let findParentTableOfColumn = function(tree, node) {
+		let maybe = tree.get_node(node.parent);
+		if (maybe.original.type == "collection") {
+			return maybe;
+		}
+		return findParentTableOfColumn(tree, maybe);
+	}
+	
+	let findParentSchemaOfColumn = function(tree, node) {
+		let maybe = tree.get_node(node.parent);
+		if (maybe.original.type == "nosql") {
+			return maybe;
+		}
+		return findParentSchemaOfColumn(tree, maybe);
 	}
 
 	$scope.jstreeWidget.on('open_node.jstree', function (event, data) {
@@ -655,71 +672,80 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		let schemaParent = $scope.jstreeWidget.jstree(true).get_text(tableParent.parent);
 
 		$scope.jstreeWidget.jstree("delete_node", $scope.jstreeWidget.jstree(true).get_node(data.node.children[0]));
-		let position = 'last';
-
+		
 		$http.get(databasesSvcUrl + $scope.selectedDatabase + '/' + $scope.selectedDatasource
 			+ '/' + schemaParent + '/' + tableParent.text + "?kind=" + tableParent.original.kind.toUpperCase())
 			.then(function (data) {
 				data.data.columns.forEach(function (column) {
-					let icon = "sap-icon--grid";
-					if (column.key) {
-						icon = "sap-icon--key";
-					} else {
-						switch (column.type.toLowerCase()) {
-							case "character varying":
-							case "varchar":
-							case "nvarchar":
-							case "char":
-								icon = "sap-icon--text";
-								break;
-							case "date":
-								icon = "sap-icon--calendar";
-								break;
-							case "datetime":
-							case "timestamp":
-								icon = "sap-icon--date-time";
-								break;
-							case "bigint":
-							case "smallint":
-							case "tinyint":
-							case "integer":
-								icon = "sap-icon--numbered-text";
-								break;
-							case "float":
-							case "double":
-							case "double precision":
-							case "decimal":
-								icon = "sap-icon--numbered-text"
-								break;
-							case "boolean":
-								icon = "sap-icon--sys-enter";
-								break;
-							case "clob":
-							case "blob":
-								icon = "sap-icon--rhombus-milestone";
-								break;
-						}
-					}
-					let nodeText = column.name + ' - <i style="font-size: smaller;">' + column.type;
-					if ((column.size !== undefined && column.size !== 0)
-						|| (column.length !== undefined && column.size !== 0)) {
-						nodeText += "(" + (column.size !== undefined ? column.size : (column.length !== undefined ? column.length : "N/A")) + ")";
-					}
-					nodeText += "</i>";
-					let newNode = {
-						id: parent.id + "$" + column.name,
-						state: "open",
-						text: nodeText,
-						column: column,
-						icon: icon,
-						kind: column.kind,
-						name: column.name,
-						key: column.key
-						
-					};
-					$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
+					expandColumn(parent, column);
 				})
 			});
+	}
+	
+	let expandColumn = function(parent, column) {
+		let position = 'last';
+		let icon = "sap-icon--grid";
+		if (column.key) {
+			icon = "sap-icon--key";
+		} else {
+			switch (column.type.toLowerCase()) {
+				case "character varying":
+				case "varchar":
+				case "nvarchar":
+				case "char":
+					icon = "sap-icon--text";
+					break;
+				case "date":
+					icon = "sap-icon--calendar";
+					break;
+				case "datetime":
+				case "timestamp":
+					icon = "sap-icon--date-time";
+					break;
+				case "bigint":
+				case "smallint":
+				case "tinyint":
+				case "integer":
+					icon = "sap-icon--numbered-text";
+					break;
+				case "float":
+				case "double":
+				case "double precision":
+				case "decimal":
+					icon = "sap-icon--numbered-text"
+					break;
+				case "boolean":
+					icon = "sap-icon--sys-enter";
+					break;
+				case "clob":
+				case "blob":
+					icon = "sap-icon--rhombus-milestone";
+					break;
+			}
+		}
+		let nodeText = column.name + ' - <i style="font-size: smaller;">' + column.type;
+		if ((column.size !== undefined && column.size !== 0)
+			|| (column.length !== undefined && column.size !== 0)) {
+			nodeText += "(" + (column.size !== undefined ? column.size : (column.length !== undefined ? column.length : "N/A")) + ")";
+		}
+		nodeText += "</i>";
+		let newNode = {
+			id: parent.id + "$" + column.name,
+			state: "open",
+			text: nodeText,
+			column: column,
+			icon: icon,
+			kind: column.kind,
+			name: column.name,
+			key: column.key
+			
+		};
+		$scope.jstreeWidget.jstree("create_node", parent, newNode, position, false, false);
+		if (column.columns) {
+			column.columns.forEach(function (column) {
+				expandColumn(newNode, column);
+			});
+		}
 	}
 
 	let expandIndices = function (evt, data) {
