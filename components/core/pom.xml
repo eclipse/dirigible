@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.eclipse.dirigible</groupId>
+        <artifactId>dirigible-components-parent</artifactId>
+        <version>9.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <name>Components - Core</name>
+    <artifactId>dirigible-components-core</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>core-configurations</module>
+        <module>core-base</module>
+        <module>core-initializers</module>
+        <module>core-extensions</module>
+        <module>core-database</module>
+        <module>core-repository</module>
+        <module>core-registry</module>
+        <module>core-version</module>
+        <module>core-healthcheck</module>
+        <module>core-spring</module>
+    </modules>
+
+    <properties>
+        <license.header.location>../../licensing-header.txt</license.header.location>
+    </properties>
+
+</project>

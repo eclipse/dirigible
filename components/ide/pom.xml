@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.eclipse.dirigible</groupId>
+        <artifactId>dirigible-components-parent</artifactId>
+        <version>9.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <name>Components - IDE</name>
+    <artifactId>dirigible-components-ide</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>ide-workspace</module>
+        <module>ide-git</module>
+        <module>ide-console</module>
+        <module>ide-template</module>
+        <module>ide-terminal</module>
+        <module>ide-problems</module>
+        <module>ide-logs</module>
+    </modules>
+
+    <properties>
+        <license.header.location>../../licensing-header.txt</license.header.location>
+    </properties>
+
+</project>

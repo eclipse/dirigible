@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.eclipse.dirigible</groupId>
+        <artifactId>dirigible-components-parent</artifactId>
+        <version>9.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <name>Components - Engine</name>
+    <artifactId>dirigible-components-engine</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>engine-javascript</module>
+        <module>engine-typescript</module>
+        <module>engine-python</module>
+        <module>engine-web</module>
+        <module>engine-template</module>
+        <module>engine-template-velocity</module>
+        <module>engine-template-mustache</module>
+        <module>engine-template-javascript</module>
+        <module>engine-wiki</module>
+        <module>engine-command</module>
+        <module>engine-bpm</module>
+        <module>engine-bpm-flowable</module>
+        <module>engine-cms</module>
+        <module>engine-cms-internal</module>
+        <module>engine-jobs</module>
+        <module>engine-openapi</module>
+        <module>engine-websockets</module>
+        <module>engine-security</module>
+        <module>engine-listeners</module>
+        <module>engine-odata</module>
+        <module>engine-camel</module>
+        <module>engine-ftp</module>
+        <module>engine-sftp</module>
+    </modules>
+
+    <properties>
+        <license.header.location>../../licensing-header.txt</license.header.location>
+    </properties>
+
+</project>
