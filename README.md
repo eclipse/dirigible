@@ -82,13 +82,15 @@ git config --system core.longpaths true
 
         mvn clean install
 
+   > If you are using Windows, make sure that you open the terminal as Administrator otherwise the tests will fail
+
  - Quick build with tests:
 
-        mvn -T 1C clean install -Dmaven.javadoc.skip=true -Dlicense.skip=true
+        mvn -T 1C clean install -D maven.javadoc.skip=true -D license.skip=true
 
  - If you don't want to trigger license updates:
 
-        mvn clean install -Dlicense.skip=true
+        mvn clean install -D license.skip=true
 
  - If you have a multi-core system, enable threads:
 
@@ -96,15 +98,15 @@ git config --system core.longpaths true
 
  - If you don't need to run tests, you can add the following argument:
 
-        mvn clean install -DskipTests
+        mvn clean install -D skipTests
 
  - If you don't need to compile and run tests:
 
-        mvn clean install -Dmaven.test.skip=true -DskipTests
+        mvn clean install -D maven.test.skip=true -D skipTests
 
  - If you want to do a fast build, with no tests, javadocs and license updates:
 
-        mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true -Dlicense.skip=true
+        mvn -T 1C clean install -D maven.test.skip=true -D skipTests -D maven.javadoc.skip=true -D license.skip=true
 
 > The build should pass successfully.
 
