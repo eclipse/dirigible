@@ -11,15 +11,14 @@
  */
 package org.eclipse.dirigible.components.engine.typescript;
 
-import org.apache.commons.exec.CommandLine;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.process.execution.ProcessExecutionOptions;
 import org.eclipse.dirigible.commons.process.execution.ProcessExecutor;
 import org.eclipse.dirigible.commons.process.execution.output.OutputsPair;
 import org.eclipse.dirigible.commons.process.execution.output.ProcessResult;
-import org.eclipse.dirigible.components.base.command.CommandDescriptor;
-import org.eclipse.dirigible.components.base.project.ProjectAction;
-import org.eclipse.dirigible.components.base.project.ProjectMetadata;
+import org.eclipse.dirigible.components.command.CommandDescriptor;
+import org.eclipse.dirigible.components.project.ProjectAction;
+import org.eclipse.dirigible.components.project.ProjectMetadata;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
@@ -28,12 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nullable;
-import javax.swing.text.html.Option;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

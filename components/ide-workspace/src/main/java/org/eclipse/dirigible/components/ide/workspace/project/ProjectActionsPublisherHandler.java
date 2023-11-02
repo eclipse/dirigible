@@ -13,7 +13,7 @@ package org.eclipse.dirigible.components.ide.workspace.project;
 
 import java.util.List;
 
-import org.eclipse.dirigible.components.base.project.ProjectAction;
+import org.eclipse.dirigible.components.project.ProjectAction;
 import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.service.ActionsService;

@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.components.base.command;
+package org.eclipse.dirigible.components.command;
 
 import com.google.gson.annotations.SerializedName;
 

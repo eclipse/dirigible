@@ -23,6 +23,13 @@
             <version>9.0.0-SNAPSHOT</version>
         </dependency>
 
+        <!-- Project -->
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-core-project</artifactId>
+            <version>9.0.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- Repository -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>

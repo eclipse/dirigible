@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.base.command;
+package org.eclipse.dirigible.components.command;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,13 +28,13 @@ public class Command {
 	private String contentType;
 	
 	/** The commands. */
-	private List<CommandDescriptor> commands = new ArrayList<CommandDescriptor>();
+	private final List<CommandDescriptor> commands = new ArrayList<>();
 	
 	/** The set. */
-	private Map<String, String> set = new HashMap<String, String>();
+	private final Map<String, String> set = new HashMap<>();
 	
 	/** The unset. */
-	private List<String> unset = new ArrayList<String>();
+	private final List<String> unset = new ArrayList<>();
 	
 	/** The target command. */
 	private CommandDescriptor targetCommand;

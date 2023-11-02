@@ -24,7 +24,7 @@ import org.eclipse.dirigible.commons.process.Piper;
 import org.eclipse.dirigible.commons.process.ProcessUtils;
 import org.eclipse.dirigible.components.api.http.HttpRequestFacade;
 import org.eclipse.dirigible.components.api.http.HttpResponseFacade;
-import org.eclipse.dirigible.components.base.command.Command;
+import org.eclipse.dirigible.components.command.Command;
 import org.eclipse.dirigible.components.registry.accessor.RegistryAccessor;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;

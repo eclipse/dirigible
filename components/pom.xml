@@ -16,6 +16,7 @@
 		<!-- Core -->
 		<module>core-configurations</module>
 		<module>core-base</module>
+		<module>core-project</module>
 		<module>core-initializers</module>
 		<module>core-extensions</module>
 		<module>core-database</module>
@@ -23,6 +24,7 @@
 		<module>core-registry</module>
 		<module>core-version</module>
 		<module>core-healthcheck</module>
+		<module>core-spring</module>
 		
 		<!-- Security -->
 		<module>security-basic</module>
@@ -146,6 +148,7 @@
 		
 		<!-- API -->
 		<module>api-modules-javascript</module>
+		<module>api-modules-python</module>
 		<module>api-core</module>
 		<module>api-test</module>
 		<module>api-qunit</module>
@@ -225,8 +228,6 @@
 
 		<!-- Test -->
 		<module>test-project</module>
-        <module>core-spring</module>
-        <module>api-modules-python</module>
     </modules>
 
 	<dependencies>

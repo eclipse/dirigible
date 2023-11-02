@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.base.project;
+package org.eclipse.dirigible.components.project;
 
 /**
  * The ProjectMetadataDependency serialization object.

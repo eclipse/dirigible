@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.base.command;
+package org.eclipse.dirigible.components.command;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -31,7 +31,6 @@ public class CommandDescriptor {
 	 * @param command the command
 	 */
 	public CommandDescriptor(CommandOS os, String command) {
-		super();
 		this.os = os;
 		this.command = command;
 	}
