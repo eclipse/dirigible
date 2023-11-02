@@ -9,11 +9,10 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.command.domain;
+package org.eclipse.dirigible.components.base.command;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +28,7 @@ public class Command {
 	private String contentType;
 	
 	/** The commands. */
-	private List<CommandLine> commands = new ArrayList<CommandLine>();
+	private List<CommandDescriptor> commands = new ArrayList<CommandDescriptor>();
 	
 	/** The set. */
 	private Map<String, String> set = new HashMap<String, String>();
@@ -38,7 +37,7 @@ public class Command {
 	private List<String> unset = new ArrayList<String>();
 	
 	/** The target command. */
-	private CommandLine targetCommand;
+	private CommandDescriptor targetCommand;
 
 	/**
 	 * Gets the description.
@@ -81,7 +80,7 @@ public class Command {
 	 *
 	 * @return the commands
 	 */
-	public List<CommandLine> getCommands() {
+	public List<CommandDescriptor> getCommands() {
 		return commands;
 	}
 
@@ -108,7 +107,7 @@ public class Command {
 	 *
 	 * @return the target command
 	 */
-	public CommandLine getTargetCommand() {
+	public CommandDescriptor getTargetCommand() {
 		return targetCommand;
 	}
 	
@@ -117,7 +116,7 @@ public class Command {
 	 *
 	 * @param targetCommand the new target command
 	 */
-	public void setTargetCommand(CommandLine targetCommand) {
+	public void setTargetCommand(CommandDescriptor targetCommand) {
 		this.targetCommand = targetCommand;
 	}
 	
@@ -127,23 +126,16 @@ public class Command {
 	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	public void validate() throws IllegalArgumentException {
-		if (this.getCommands().size() == 0) {
+		if (commands.isEmpty()) {
 			throw new IllegalArgumentException("Commands array is empty. Set appropriate command per target OS");
 		}
-		
-		String os = System.getProperty("os.name").toLowerCase();
-		for (Iterator<CommandLine> iterator = this.getCommands().iterator(); iterator.hasNext();) {
-			CommandLine commandLine = iterator.next();
-			if (os.startsWith(commandLine.getOs().toLowerCase())) {
-				this.setTargetCommand(commandLine);
-				break;
-			}
-		}
-		
-		if (this.getTargetCommand() == null) {
-			throw new IllegalArgumentException(String.format("There is no command for your OS: %s", os));
-		}
-		
+
+		CommandDescriptor commandDescriptor = commands
+				.stream()
+				.filter(CommandDescriptor::isCompatibleWithCurrentOS)
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("There is no command for current OS"));
+		setTargetCommand(commandDescriptor);
 	}
 
 }

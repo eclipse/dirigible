@@ -9,25 +9,20 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.engine.command.domain;
+package org.eclipse.dirigible.components.base.command;
+
+import org.apache.commons.lang3.SystemUtils;
 
 /**
  * The Class CommandLine.
  */
-public class CommandLine {
+public class CommandDescriptor {
 	
 	/** The os. */
-	private String os;
+	private final CommandOS os;
 	
 	/** The command. */
-	private String command;
-	
-	/**
-	 * Instantiates a new command line.
-	 */
-	public CommandLine() {
-		super();
-	}
+	private final String command;
 	
 	/**
 	 * Instantiates a new command line.
@@ -35,7 +30,7 @@ public class CommandLine {
 	 * @param os the os
 	 * @param command the command
 	 */
-	public CommandLine(String os, String command) {
+	public CommandDescriptor(CommandOS os, String command) {
 		super();
 		this.os = os;
 		this.command = command;
@@ -46,17 +41,8 @@ public class CommandLine {
 	 *
 	 * @return the os
 	 */
-	public String getOs() {
+	public CommandOS getOS() {
 		return os;
-	}
-	
-	/**
-	 * Sets the os.
-	 *
-	 * @param os the new os
-	 */
-	public void setOs(String os) {
-		this.os = os;
 	}
 	
 	/**
@@ -67,14 +53,26 @@ public class CommandLine {
 	public String getCommand() {
 		return command;
 	}
-	
-	/**
-	 * Sets the command.
-	 *
-	 * @param command the new command
-	 */
-	public void setCommand(String command) {
-		this.command = command;
+
+	public boolean isCompatibleWithCurrentOS() {
+		if (os == null) {
+			return true; // treat as command with no explicit OS set, so use this command as universal
+		}
+
+		switch (os) {
+			case UNIX: return SystemUtils.IS_OS_UNIX;
+			case LINUX: return SystemUtils.IS_OS_LINUX;
+			case MAC: return SystemUtils.IS_OS_MAC;
+			case WINDOWS :return SystemUtils.IS_OS_WINDOWS;
+			default: throw new IllegalArgumentException("Unsupported OS type: " + os);
+		}
 	}
 
+	@Override
+	public String toString() {
+		return "CommandLine{" +
+				"os=" + os +
+				", command='" + command + '\'' +
+				'}';
+	}
 }

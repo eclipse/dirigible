@@ -11,21 +11,31 @@
  */
 package org.eclipse.dirigible.components.base.project;
 
+import org.eclipse.dirigible.components.base.command.CommandDescriptor;
+
+import java.util.List;
+
 /**
  * The Class ProjectAction.
  */
 public class ProjectAction {
 	
 	/** The name. */
-    private String name;
+    private final String name;
 	
-    /** The command. */
-    private String command;
+    /** The commands. */
+    private final List<CommandDescriptor> commands;
     
     /** The publish. */
-	private boolean publish;
-    
-    /**
+	private final  boolean publish;
+
+	public ProjectAction(String name, List<CommandDescriptor> commands, boolean publish) {
+		this.name = name;
+		this.commands = commands;
+		this.publish = publish;
+	}
+
+	/**
 	 * Gets the name.
 	 *
 	 * @return the name
@@ -35,12 +45,12 @@ public class ProjectAction {
 	}
     
     /**
-	 * Gets the command.
+	 * Gets the commands.
 	 *
-	 * @return the command
+	 * @return the commands
 	 */
-	public String getCommand() {
-		return command;
+	public List<CommandDescriptor> getCommands() {
+		return commands;
 	}
 	
 	/**
@@ -51,32 +61,13 @@ public class ProjectAction {
     public boolean isPublish() {
 		return publish;
 	}
-    
-    /**
-     * Sets the name.
-     *
-     * @param name the new name
-     */
-    public void setName(String name) {
-		this.name = name;
-	}
-    
-    /**
-     * Sets the command.
-     *
-     * @param command the new command
-     */
-    public void setCommand(String command) {
-		this.command = command;
-	}
-    
-    /**
-     * Sets the publish.
-     *
-     * @param publish the new publish
-     */
-    public void setPublish(boolean publish) {
-		this.publish = publish;
-	}
 
+	@Override
+	public String toString() {
+		return "ProjectAction{" +
+				"name='" + name + '\'' +
+				", commands=" + commands +
+				", publish=" + publish +
+				'}';
+	}
 }

@@ -49,19 +49,26 @@ public class ActionsServiceTest {
 	@Autowired
 	private WorkspaceService workspaceService;
 
-	private static final String OS_CMD = SystemUtils.IS_OS_WINDOWS ? "cmd /c echo test" : "echo test";
-
 	/** The project json content. */
-	private static final String PROJECT_JSON_CONTENT= "{\n"
-			+ "    \"guid\": \"TestProject1\",\n"
-			+ "    \"actions\": [\n"
-			+ "        {\n"
-			+ "            \"name\": \"MyAction\",\n"
-			+ "            \"command\": \"" + OS_CMD + "\",\n"
-			+ "            \"publish\": \"true\"\n"
-			+ "        }\n"
-			+ "    ]\n"
-			+ "}";
+	private static final String PROJECT_JSON_CONTENT= """
+	{
+		  "guid": "TestProject1",
+		  "actions": [{
+			  "name": "MyAction",
+			  "commands": [
+				  {
+					"os": "unix",
+					"command": "echo test"
+				  },
+				  {
+				    "os": "windows",
+			  	    "command": "cmd /c echo test"
+				  }
+			  ],
+			  "publish": "true"
+		  }]
+	}
+	""";
 
 
 	/**

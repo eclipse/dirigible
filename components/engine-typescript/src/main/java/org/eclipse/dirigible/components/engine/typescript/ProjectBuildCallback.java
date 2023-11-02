@@ -72,7 +72,7 @@ public class ProjectBuildCallback implements PublisherHandler, Initializer {
 			    projectBuildService.build(metadata.projectName(), metadata.entryPath());
 			}
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			LOGGER.error(e.getMessage(), e);
 		}
     }
 
@@ -89,7 +89,7 @@ public class ProjectBuildCallback implements PublisherHandler, Initializer {
                 	try {
 						projectBuildService.build(projectDir.getName());
 					} catch (Exception e) {
-						LOGGER.error(e.getMessage());
+						LOGGER.error(e.getMessage(), e);
 					}
                 }
             }
