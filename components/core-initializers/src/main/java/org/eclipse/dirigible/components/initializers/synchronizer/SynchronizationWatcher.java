@@ -13,18 +13,13 @@ package org.eclipse.dirigible.components.initializers.synchronizer;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -58,9 +53,10 @@ public class SynchronizationWatcher {
 
 		WatchService watchService = FileSystems.getDefault().newWatchService();
 		Path path = Paths.get(folder);
-		ExecutorService executor = Executors.newFixedThreadPool(1);
-		registerAll(path, watchService);
-		executor.submit(() -> {
+		path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
+				StandardWatchEventKinds.ENTRY_MODIFY);
+
+		Executors.newFixedThreadPool(1).submit(() -> {
 			WatchKey watchKey;
 			try {
 				while ((watchKey = watchService.take()) != null) {
@@ -76,29 +72,6 @@ public class SynchronizationWatcher {
 		});
 
 		logger.debug("Done initializing the Registry file watcher.");
-	}
-
-	/**
-	 * Register the given directory and all its sub-directories with the
-	 * WatchService.
-	 *
-	 * @param start        the start
-	 * @param watchService the watch service
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	private void registerAll(final Path start, WatchService watchService) throws IOException {
-		// register directory and sub-directories
-		Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
-
-			@Override
-			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-				dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
-						StandardWatchEventKinds.ENTRY_MODIFY);
-				return FileVisitResult.CONTINUE;
-			}
-
-		});
-
 	}
 
 	/**
