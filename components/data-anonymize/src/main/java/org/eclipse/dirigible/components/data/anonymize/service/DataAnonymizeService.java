@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -252,88 +253,104 @@ public class DataAnonymizeService {
 		try (Statement statement = connection.createStatement()) {
 			int updatedRecords = 0;
 			statement.setCursorName(collection);
+			boolean nested = false;
+			String name = null;
+			if (column.indexOf('.') > 0) {
+				name = column.substring(column.lastIndexOf(".") + 1);
+				nested = true;
+			} else {
+				name = column;
+			}
     		ResultSet rs = statement.executeQuery(find);
     		while (rs.next()) {
-    			String document = rs.getString(-100);
-    			JsonObject object = JsonHelper.parseJson(document).getAsJsonObject();
-    			String value = rs.getString(column);
-				int length = value != null ? value.length() : 0;
+    			
+    			String json = rs.getString(-100);
+    			JsonObject document = JsonHelper.parseJson(json).getAsJsonObject();
+    			JsonObject object;
+    			if (nested) {
+    				object = extractObject(document, column);
+    			} else {
+    				object = document;
+    			}
+    			String value = object.get(name).getAsString();
+    			int length = value != null ? value.length() : 0;
+				
     			switch (typeValue) {
 				case FULL_NAME: {
-					object.remove(column);
-					object.addProperty(column, faker.name().fullName());
+					object.remove(name);
+					object.addProperty(name, faker.name().fullName());
 					break;
 				}
 				case FIRST_NAME: {
-					object.remove(column);
-					object.addProperty(column, faker.name().firstName());
+					object.remove(name);
+					object.addProperty(name, faker.name().firstName());
 					break;
 				}
 				case LAST_NAME: {
-					object.remove(column);
-					object.addProperty(column, faker.name().lastName());
+					object.remove(name);
+					object.addProperty(name, faker.name().lastName());
 					break;
 				}
 				case USER_NAME: {
-					object.remove(column);
-					object.addProperty(column, faker.internet().username());
+					object.remove(name);
+					object.addProperty(name, faker.internet().username());
 					break;
 				}
 				case EMAIL: {
-					object.remove(column);
-					object.addProperty(column, faker.internet().username() + "@acme.com");
+					object.remove(name);
+					object.addProperty(name, faker.internet().username() + "@acme.com");
 					break;
 				}
 				case PHONE: {
 					if (value != null) {
-						object.remove(column);
-						object.addProperty(column, faker.examplify(value));
+						object.remove(name);
+						object.addProperty(name, faker.examplify(value));
 					}
 					break;
 				}
 				case ADDRESS: {
-					object.remove(column);
-					object.addProperty(column, faker.address().streetAddress());
+					object.remove(name);
+					object.addProperty(name, faker.address().streetAddress());
 					break;
 				}
 				case CITY: {
-					object.remove(column);
-					object.addProperty(column, faker.address().city());
+					object.remove(name);
+					object.addProperty(name, faker.address().city());
 					break;
 				}
 				case COUNTRY: {
-					object.remove(column);
-					object.addProperty(column, faker.address().country());
+					object.remove(name);
+					object.addProperty(name, faker.address().country());
 					break;
 				}
 				case DATE: {
 					Date date = rs.getDate(2);
 					if (date != null) {
 						java.util.Date past = faker.date().past(10, TimeUnit.DAYS, new java.util.Date(date.getTime()));
-						object.remove(column);
-						object.addProperty(column, past.getTime());
+						object.remove(name);
+						object.addProperty(name, past.getTime());
 					}
 					break;
 				}
 				case RANDOM: {
 					if (value != null) {
-						object.remove(column);
-						object.addProperty(column, faker.examplify(value));
+						object.remove(name);
+						object.addProperty(name, faker.examplify(value));
 					}
 					break;
 				}
 				case MASK: {
-					object.remove(column);
-					object.addProperty(column, "*".repeat(length));
+					object.remove(name);
+					object.addProperty(name, "*".repeat(length));
 					break;
 				}
 				case EMPTY: {
-					object.remove(column);
-					object.addProperty(column, "");
+					object.remove(name);
+					object.addProperty(name, "");
 					break;
 				}
 				case NULL: {
-					object.remove(column);
+					object.remove(name);
 					break;
 				}
 				default:
@@ -341,7 +358,7 @@ public class DataAnonymizeService {
 				}
     			updatedRecords++;
     			
-    			statement.addBatch("UPDATE" + object.toString());
+    			statement.addBatch("UPDATE" + document.toString());
 
 				if (updatedRecords % BATCH_SIZE == 0) {
 					statement.executeBatch();
@@ -355,6 +372,27 @@ public class DataAnonymizeService {
 	}
 	
     /**
+     * Extract object.
+     *
+     * @param document the document
+     * @param column the column
+     * @return the json object
+     */
+    private JsonObject extractObject(JsonObject document, String column) {
+    	JsonObject object = document;
+		StringTokenizer tokens = new StringTokenizer(column, ".");
+		while (tokens.hasMoreTokens()) {
+			String name = tokens.nextToken();
+			if (object.get(name).isJsonObject()) {
+				object = object.get(name).getAsJsonObject();
+			} else {
+				break;
+			}
+		}
+		return object;
+	}
+
+	/**
      * Truncate.
      *
      * @param value the value
