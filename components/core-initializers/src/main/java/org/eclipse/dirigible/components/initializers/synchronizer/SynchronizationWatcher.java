@@ -50,7 +50,7 @@ public class SynchronizationWatcher {
 	 * Initialize.
 	 *
 	 * @param folder the folder
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException          Signals that an I/O exception has occurred.
 	 * @throws InterruptedException the interrupted exception
 	 */
 	public void initialize(String folder) throws IOException, InterruptedException {
@@ -68,8 +68,8 @@ public class SynchronizationWatcher {
 					if (!events.isEmpty()) {
 						modified.set(true);
 					}
-		            watchKey.reset();
-		        }
+					watchKey.reset();
+				}
 			} catch (InterruptedException e) {
 				logger.error("Failed to take watch keys", e);
 			}
@@ -79,27 +79,25 @@ public class SynchronizationWatcher {
 	}
 
 	/**
-	 * Register the given directory and all its sub-directories with the WatchService.
+	 * Register the given directory and all its sub-directories with the
+	 * WatchService.
 	 *
-	 * @param start the start
+	 * @param start        the start
 	 * @param watchService the watch service
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void registerAll(final Path start, WatchService watchService) throws IOException {
-	    // register directory and sub-directories
-	    Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+		// register directory and sub-directories
+		Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
 
-	        @Override
-	        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-	                throws IOException {
-	            dir.register(watchService,
-	            		StandardWatchEventKinds.ENTRY_CREATE,
-	            		StandardWatchEventKinds.ENTRY_DELETE,
-	            		StandardWatchEventKinds.ENTRY_MODIFY);
-	            return FileVisitResult.CONTINUE;
-	        }
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
+						StandardWatchEventKinds.ENTRY_MODIFY);
+				return FileVisitResult.CONTINUE;
+			}
 
-	    });
+		});
 
 	}
 
