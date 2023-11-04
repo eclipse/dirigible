@@ -263,7 +263,6 @@ public class DataAnonymizeService {
 			}
     		ResultSet rs = statement.executeQuery(find);
     		while (rs.next()) {
-    			
     			String json = rs.getString(-100);
     			JsonObject document = JsonHelper.parseJson(json).getAsJsonObject();
     			JsonObject object;
@@ -272,8 +271,14 @@ public class DataAnonymizeService {
     			} else {
     				object = document;
     			}
+    			if (object == null) {
+    				continue;
+    			}
+    			if (object.get(name) == null) {
+    				continue;
+    			}
     			String value = object.get(name).getAsString();
-    			int length = value != null ? value.length() : 0;
+    			int length = value.length();
 				
     			switch (typeValue) {
 				case FULL_NAME: {
@@ -383,6 +388,9 @@ public class DataAnonymizeService {
 		StringTokenizer tokens = new StringTokenizer(column, ".");
 		while (tokens.hasMoreTokens()) {
 			String name = tokens.nextToken();
+			if (object.get(name) == null) {
+				return null;
+			}
 			if (object.get(name).isJsonObject()) {
 				object = object.get(name).getAsJsonObject();
 			} else {
