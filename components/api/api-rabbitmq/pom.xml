@@ -7,17 +7,12 @@
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-components-parent</artifactId>
         <version>9.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <name>Components - API - RabbitMQ</name>
     <artifactId>dirigible-components-api-rabbitmq</artifactId>
     <packaging>jar</packaging>
-
-    <properties>
-        <license.header.location>../../licensing-header.txt</license.header.location>
-    </properties>
-
 
     <dependencies>
         <!-- JS sources -->
@@ -99,5 +94,9 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <properties>
+        <license.header.location>../../../licensing-header.txt</license.header.location>
+    </properties>
 
 </project>

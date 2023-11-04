@@ -649,6 +649,9 @@
 		<jedis.version>5.0.2</jedis.version>
 		<spark.version>3.3.2</spark.version>
 		<javax.websocket-api.version>1.1</javax.websocket-api.version>
+		<camel.version>3.21.2</camel.version>
+		<mina.version>3.0.0-M2</mina.version>
+		<ftpserver.version>1.2.0</ftpserver.version>
 
 		<org.springdoc.openapi.ui.version>1.7.0</org.springdoc.openapi.ui.version>
 		<swagger-annotations.version>1.6.10</swagger-annotations.version>

@@ -9,7 +9,7 @@
         <artifactId>dirigible-components-parent</artifactId>
         <groupId>org.eclipse.dirigible</groupId>
         <version>9.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <name>Components - Security - Basic</name>
@@ -38,7 +38,7 @@
     
 
     <properties>
-        <license.header.location>../../licensing-header.txt</license.header.location>
+        <license.header.location>../../../licensing-header.txt</license.header.location>
     </properties>
 
 </project>
