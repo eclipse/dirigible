@@ -1,0 +1,81 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>dirigible-components-parent</artifactId>
+		<version>9.0.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<name>Components - Engine - Wiki</name>
+	<artifactId>dirigible-components-engine-wiki</artifactId>
+    <packaging>jar</packaging>
+
+
+    <dependencies>
+    	
+    	<!-- Base -->
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-base</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-core-database</artifactId>
+            <version>9.0.0-SNAPSHOT</version>
+        </dependency>
+    	
+    	<!-- Registry -->
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-registry</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
+    	</dependency>
+
+		<!-- Libraries -->    	
+    	<dependency>
+		    <groupId>org.eclipse.mylyn.docs</groupId>
+		    <artifactId>org.eclipse.mylyn.wikitext.confluence</artifactId>
+		    <version>${wikitext.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.vladsch.flexmark</groupId>
+		    <artifactId>flexmark-all</artifactId>
+		    <version>${flexmark.version}</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>com.ibm.icu</groupId>
+		    		<artifactId>icu4j</artifactId>
+		    	</exclusion>
+		    </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.icu</groupId>
+			<artifactId>icu4j</artifactId>
+			<version>${icu4j.version}</version>
+		</dependency>
+    	
+    	<!-- Test -->
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-initializers</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-ide-git</artifactId>
+			<version>9.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+    	</dependency>
+    	
+    </dependencies>
+
+	<properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+	</properties>
+
+</project>
