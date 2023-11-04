@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-components-parent</artifactId>
-        <version>9.0.0-SNAPSHOT</version>
+        <version>8.18.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -19,41 +19,41 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-base</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-repository</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-ide-workspace</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.3</version>
         </dependency>
         
         <!-- API -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-security</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-utils</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-extensions</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.3</version>
         </dependency>
         
         <!-- Test -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-engine-security</artifactId>
-            <version>9.0.0-SNAPSHOT</version>
+            <version>8.18.3</version>
             <scope>test</scope>
         </dependency>
         
