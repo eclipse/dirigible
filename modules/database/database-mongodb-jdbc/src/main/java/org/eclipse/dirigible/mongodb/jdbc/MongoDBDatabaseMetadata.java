@@ -1730,11 +1730,21 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 			String tableNamePattern, String columnNamePattern)
 			throws SQLException {
 		Document first = connection.getMongoDatabase().getCollection(tableNamePattern).find().first();
+		if (first == null) {
+			first = new Document();
+			first.append("error", "The first element in the collection is null");
+		}
 		ArrayNode array = populateColumns(first);
 		ResultSet columns = new JsonArrayMongoIteratorResultSet(array);
 		return columns;
 	}
 
+	/**
+	 * Populate columns.
+	 *
+	 * @param document the document
+	 * @return the array node
+	 */
 	public ArrayNode populateColumns(Document document) {
 		ArrayNode array = MAPPER.createArrayNode();
 		for (Entry<String, Object> entry : document.entrySet()) {
