@@ -165,16 +165,15 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
         cd build/application
         docker build -t dirigiblelabs/dirigible:latest -f Dockerfile .
+   > prerequisite: build the project as described in step 4 [here](https://github.com/eclipse/dirigible/blob/master/README.md#steps)
 
 2. Start the container
 
         docker run --name dirigible --rm -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible:latest
 
-3. Open a web browser and go to:
+3. Open a web browser and go to: [http://localhost:8080](http://localhost:8080 "http://localhost:8080")
 
-        http://localhost:8080
-
-4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/build/application/)
+4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/build/application/Dockerfile)
 
 #### PostgreSQL
 
