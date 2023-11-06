@@ -51,6 +51,10 @@
             <fd-button dg-type="transparent" glyph="sap-icon--save" aria-label="Save" title="Save" ng-click="save()">
             </fd-button>
             <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button dg-type="transparent" glyph="sap-icon-TNT--operations" aria-label="Regenerate" title="Regenerate"
+                ng-click="regenerate()" state="{{canRegenerate ? undefined : 'disabled'}}">
+            </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
             <fd-button dg-type="transparent" glyph="sap-icon--copy" aria-label="Copy" title="Copy" ng-click="copy()">
             </fd-button>
             <fd-button dg-type="transparent" glyph="sap-icon--paste" aria-label="Paste" title="Paste"
@@ -59,10 +63,6 @@
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button dg-type="transparent" glyph="sap-icon--list" aria-label="Properties" title="Properties"
                 ng-click="properties()">
-            </fd-button>
-            <fd-toolbar-separator></fd-toolbar-separator>
-            <fd-button dg-type="transparent" glyph="sap-icon-TNT--operations" aria-label="Regenerate" title="Regenerate"
-                ng-click="regenerate()" state="{{canRegenerate ? undefined : 'disabled'}}">
             </fd-button>
             <fd-toolbar-separator></fd-toolbar-separator>
             <fd-button dg-type="transparent" glyph="sap-icon--tree" aria-label="Navigation" title="Navigation"
