@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.components.base.project.ProjectMetadata;
-import org.eclipse.dirigible.components.base.project.ProjectMetadataDependency;
-import org.eclipse.dirigible.components.base.project.ProjectMetadataUtils;
+import org.eclipse.dirigible.components.project.ProjectMetadata;
+import org.eclipse.dirigible.components.project.ProjectMetadataDependency;
+import org.eclipse.dirigible.components.project.ProjectMetadataUtils;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;

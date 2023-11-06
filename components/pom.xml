@@ -24,6 +24,7 @@
 		<module>core/core-version</module>
 		<module>core/core-healthcheck</module>
 		<module>core/core-spring</module>
+		<module>core/core-project</module>
 		
 		<!-- Security -->
 		<module>security/security-basic</module>
@@ -227,7 +228,7 @@
 
 		<!-- Test -->
 		<module>test-project</module>
-    </modules>
+	</modules>
 
 	<dependencies>
 
