@@ -103,9 +103,15 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 				String name = resultSetMetaData.getColumnName(i);
 				Object value = resultSet.getObject(name);
-				if (value == null
-						&& stringify) {
+				if (value == null && stringify) {
 					value = "[NULL]";
+				}
+				if (value != null && (
+						"org.bson.Document".equals(value.getClass().getCanonicalName())
+						|| "org.bson.types.ObjectId".equals(value.getClass().getCanonicalName()))) {
+					if (stringify) {
+						value = value.toString();
+					} 
 				}
 				if (value != null && !ClassUtils.isPrimitiveOrWrapper(value.getClass())
 						&& value.getClass() != String.class
