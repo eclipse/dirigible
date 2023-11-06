@@ -99,7 +99,7 @@ public class ODataDatabaseMetadataUtil {
         SQL_TO_ODATA_EDM_TYPES.put("DECIMAL", "Edm.Decimal");
         SQL_TO_ODATA_EDM_TYPES.put("REAL", "Edm.Single");
         SQL_TO_ODATA_EDM_TYPES.put("FLOAT", "Edm.Single");
-		SQL_TO_ODATA_EDM_TYPES.put("FLOAT8", "Edm.Double");
+        SQL_TO_ODATA_EDM_TYPES.put("FLOAT8", "Edm.Double");
         SQL_TO_ODATA_EDM_TYPES.put("DOUBLE", "Edm.Double");
         SQL_TO_ODATA_EDM_TYPES.put("DOUBLE PRECISION", "Edm.Double");
         SQL_TO_ODATA_EDM_TYPES.put("VARCHAR", "Edm.String");
