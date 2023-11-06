@@ -643,7 +643,7 @@
 		<wikitext.version>3.0.48.202308291007</wikitext.version>
 		<flexmark.version>0.64.8</flexmark.version>
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.580</qldb.sdk.version>
+		<qldb.sdk.version>1.12.581</qldb.sdk.version>
 		<cassandra.version>1.17.6</cassandra.version>
 		<cassandra.driver.version>3.11.3</cassandra.driver.version>
 		<jedis.version>5.0.2</jedis.version>
