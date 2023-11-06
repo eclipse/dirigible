@@ -187,15 +187,15 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
         docker run -itd -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres  -p 5432:5432 --name postgresql postgres
     
-3. The run it:
+2. The run it:
 
         brew services start postgresql
     
-4. Create a default user:
+3. Create a default user:
 
         createuser -s postgres
     
-5. And expose the following environment variables:
+4. And expose the following environment variables:
 
         export DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER=org.postgresql.Driver
         export DIRIGIBLE_DATASOURCE_DEFAULT_URL=jdbc:postgresql://localhost:5432/postgres
@@ -210,7 +210,7 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 	[System.Environment]::SetEnvironmentVariable('DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD','postgres', 'Machine')
 	```
 
-6. Then you can run Dirigible with PostgreSQL default database (DefaultDB).
+5. Then you can run Dirigible with PostgreSQL default database (DefaultDB).
    
    > If you have started the Dirigible before, make sure to execute `mvn clean` before starting the Dirigible with the PostgreSQL
 
