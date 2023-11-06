@@ -13,7 +13,7 @@ const perspectiveData = {
 	id: "operations",
 	name: "Operations",
 	link: "../ide-operations/index.html",
-	order: "810",
+	order: "999",
 	image: "area-chart", // deprecated
 	icon: "../ide-operations/images/operations.svg",
 };
