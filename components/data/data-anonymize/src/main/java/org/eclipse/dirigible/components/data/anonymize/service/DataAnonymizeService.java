@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.datafaker.Faker;
@@ -274,92 +276,102 @@ public class DataAnonymizeService {
     			if (object == null) {
     				continue;
     			}
-    			if (object.get(name) == null) {
+    			JsonElement jsonElement = object.get(name);
+				if (jsonElement == null) {
     				continue;
     			}
-    			String value = object.get(name).getAsString();
-    			int length = value.length();
-				
-    			switch (typeValue) {
-				case FULL_NAME: {
-					object.remove(name);
-					object.addProperty(name, faker.name().fullName());
-					break;
-				}
-				case FIRST_NAME: {
-					object.remove(name);
-					object.addProperty(name, faker.name().firstName());
-					break;
-				}
-				case LAST_NAME: {
-					object.remove(name);
-					object.addProperty(name, faker.name().lastName());
-					break;
-				}
-				case USER_NAME: {
-					object.remove(name);
-					object.addProperty(name, faker.internet().username());
-					break;
-				}
-				case EMAIL: {
-					object.remove(name);
-					object.addProperty(name, faker.internet().username() + "@acme.com");
-					break;
-				}
-				case PHONE: {
-					if (value != null) {
+				if (jsonElement instanceof JsonArray) {
+					if (DataAnonymizeType.NULL.equals(typeValue)) {
 						object.remove(name);
-						object.addProperty(name, faker.examplify(value));
-					}
-					break;
-				}
-				case ADDRESS: {
-					object.remove(name);
-					object.addProperty(name, faker.address().streetAddress());
-					break;
-				}
-				case CITY: {
-					object.remove(name);
-					object.addProperty(name, faker.address().city());
-					break;
-				}
-				case COUNTRY: {
-					object.remove(name);
-					object.addProperty(name, faker.address().country());
-					break;
-				}
-				case DATE: {
-					Date date = rs.getDate(2);
-					if (date != null) {
-						java.util.Date past = faker.date().past(10, TimeUnit.DAYS, new java.util.Date(date.getTime()));
+					} else if (DataAnonymizeType.EMPTY.equals(typeValue)) {
 						object.remove(name);
-						object.addProperty(name, past.getTime());
+						object.add(name, new JsonArray());
 					}
-					break;
-				}
-				case RANDOM: {
-					if (value != null) {
+				} else {
+	    			String value = jsonElement.getAsString();
+	    			int length = value.length();
+					
+	    			switch (typeValue) {
+					case FULL_NAME: {
 						object.remove(name);
-						object.addProperty(name, faker.examplify(value));
+						object.addProperty(name, faker.name().fullName());
+						break;
 					}
-					break;
-				}
-				case MASK: {
-					object.remove(name);
-					object.addProperty(name, "*".repeat(length));
-					break;
-				}
-				case EMPTY: {
-					object.remove(name);
-					object.addProperty(name, "");
-					break;
-				}
-				case NULL: {
-					object.remove(name);
-					break;
-				}
-				default:
-					throw new IllegalArgumentException("Unexpected value: " + typeValue);
+					case FIRST_NAME: {
+						object.remove(name);
+						object.addProperty(name, faker.name().firstName());
+						break;
+					}
+					case LAST_NAME: {
+						object.remove(name);
+						object.addProperty(name, faker.name().lastName());
+						break;
+					}
+					case USER_NAME: {
+						object.remove(name);
+						object.addProperty(name, faker.internet().username());
+						break;
+					}
+					case EMAIL: {
+						object.remove(name);
+						object.addProperty(name, faker.internet().username() + "@acme.com");
+						break;
+					}
+					case PHONE: {
+						if (value != null) {
+							object.remove(name);
+							object.addProperty(name, faker.examplify(value));
+						}
+						break;
+					}
+					case ADDRESS: {
+						object.remove(name);
+						object.addProperty(name, faker.address().streetAddress());
+						break;
+					}
+					case CITY: {
+						object.remove(name);
+						object.addProperty(name, faker.address().city());
+						break;
+					}
+					case COUNTRY: {
+						object.remove(name);
+						object.addProperty(name, faker.address().country());
+						break;
+					}
+					case DATE: {
+						Date date = rs.getDate(2);
+						if (date != null) {
+							java.util.Date past = faker.date().past(10, TimeUnit.DAYS, new java.util.Date(date.getTime()));
+							object.remove(name);
+							object.addProperty(name, past.getTime());
+						}
+						break;
+					}
+					case RANDOM: {
+						if (value != null) {
+							object.remove(name);
+							object.addProperty(name, faker.examplify(value));
+						}
+						break;
+					}
+					case MASK: {
+						object.remove(name);
+						object.addProperty(name, "*".repeat(length));
+						break;
+					}
+					case EMPTY: {
+						object.remove(name);
+						object.addProperty(name, "");
+						break;
+					}
+					case NULL: {
+						object.remove(name);
+						break;
+					}
+					default:
+						throw new IllegalArgumentException("Unexpected value: " + typeValue);
+					}
 				}
     			updatedRecords++;
     			

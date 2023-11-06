@@ -106,9 +106,12 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 				if (value == null && stringify) {
 					value = "[NULL]";
 				}
-				if (value != null && (
+				if (value != null
+					&& (
 						"org.bson.Document".equals(value.getClass().getCanonicalName())
-						|| "org.bson.types.ObjectId".equals(value.getClass().getCanonicalName()))) {
+						|| "org.bson.types.ObjectId".equals(value.getClass().getCanonicalName())
+						|| "java.util.ArrayList".equals(value.getClass().getCanonicalName())
+					)) {
 					if (stringify) {
 						value = value.toString();
 					} 
