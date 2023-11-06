@@ -179,6 +179,7 @@ exports.create = function(entity) {
 	let id = dao.insert(entity);
 	triggerEvent("Create", {
 		table: "${tablePrefix}_${dataName}",
+		entity: entity,
 		key: {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
@@ -227,6 +228,7 @@ exports.update = function(entity) {
 	dao.update(entity);
 	triggerEvent("Update", {
 		table: "${tablePrefix}_${dataName}",
+		entity: entity,
 		key: {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
@@ -240,6 +242,7 @@ exports.update = function(entity) {
 };
 
 exports.delete = function(id) {
+	let entity = dao.find(id);
 #if($roleWrite && $roleWrite != "") 
 	if (!user.isInRole("${roleWrite}")) {
 		throw new ForbiddenError("You do not have the required role to call this function");
@@ -248,6 +251,7 @@ exports.delete = function(id) {
 	dao.remove(id);
 	triggerEvent("Delete", {
 		table: "${tablePrefix}_${dataName}",
+		entity: entity,
 		key: {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
