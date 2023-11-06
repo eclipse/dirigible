@@ -14,6 +14,6 @@ exports.getTemplate = function () {
 		name: "listener",
 		label: "Message Listener",
 		extension: "listener",
-		data: '{"name":"mylistener","type":"Q","handler":"myproject/myhandler.js","description":"My Listener"}'
+		data: '{"name":"mylistener","kind":"Q","handler":"myproject/myhandler.js","description":"My Listener"}'
 	};
 };
