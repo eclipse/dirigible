@@ -182,23 +182,37 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 1. Install PostgreSQL e.g. for MacOS:
 
         brew install postgresql
+
+   Alternatively you can use docker image
+
+        docker run -itd -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres  -p 5432:5432 --name postgresql postgres
     
-2. The run it:
+3. The run it:
 
         brew services start postgresql
     
-3. Create a default user:
+4. Create a default user:
 
         createuser -s postgres
     
-4. And expose the following environment variables:
+5. And expose the following environment variables:
 
         export DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER=org.postgresql.Driver
         export DIRIGIBLE_DATASOURCE_DEFAULT_URL=jdbc:postgresql://localhost:5432/postgres
         export DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME=postgres
         export DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD=postgres
 
-5. Then you can run Dirigible with PostgreSQL default database (DefaultDB).
+   for Windows execute the following in the terminal with admin privileges
+	```
+	[System.Environment]::SetEnvironmentVariable('DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER','org.postgresql.Driver', 'Machine')
+	[System.Environment]::SetEnvironmentVariable('DIRIGIBLE_DATASOURCE_DEFAULT_URL','jdbc:postgresql://localhost:5432/postgres', 'Machine')
+	[System.Environment]::SetEnvironmentVariable('DIRIGIBLE_DATASOURCE_DEFAULT_USERNAME','postgres', 'Machine')
+	[System.Environment]::SetEnvironmentVariable('DIRIGIBLE_DATASOURCE_DEFAULT_PASSWORD','postgres', 'Machine')
+	```
+
+6. Then you can run Dirigible with PostgreSQL default database (DefaultDB).
+   
+   > If you have started the Dirigible before, make sure to execute `mvn clean` before starting the Dirigible with the PostgreSQL
 
 ## Additional Information
 
