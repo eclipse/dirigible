@@ -48,40 +48,40 @@ public class ODataDatabaseMetadataUtil {
 
     /** The Constant JDBC_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_COLUMN_NAME_PROPERTY = "COLUMN_NAME";
-    
+
     /** The Constant JDBC_COLUMN_TYPE_PROPERTY. */
     public static final String JDBC_COLUMN_TYPE_PROPERTY = "TYPE_NAME";
-    
+
     /** The Constant JDBC_COLUMN_NULLABLE_PROPERTY. */
     public static final String JDBC_COLUMN_NULLABLE_PROPERTY = "NULLABLE";
-    
+
     /** The Constant JDBC_COLUMN_SIZE_PROPERTY. */
     public static final String JDBC_COLUMN_SIZE_PROPERTY = "COLUMN_SIZE";
-    
+
     /** The Constant JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY. */
     public static final String JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY = "DECIMAL_DIGITS";
-    
+
     /** The Constant JDBC_FK_TABLE_NAME_PROPERTY. */
     public static final String JDBC_FK_TABLE_NAME_PROPERTY = "FKTABLE_NAME";
-    
+
     /** The Constant JDBC_FK_NAME_PROPERTY. */
     public static final String JDBC_FK_NAME_PROPERTY = "FK_NAME";
-    
+
     /** The Constant JDBC_PK_NAME_PROPERTY. */
     public static final String JDBC_PK_NAME_PROPERTY = "PK_NAME";
-    
+
     /** The Constant JDBC_PK_TABLE_NAME_PROPERTY. */
     public static final String JDBC_PK_TABLE_NAME_PROPERTY = "PKTABLE_NAME";
 
     /** The Constant JDBC_PK_TABLE_NAME_PROPERTY. */
     public static final String JDBC_PK_SCHEMA_NAME_PROPERTY = "PKTABLE_SCHEM";
-    
+
     /** The Constant JDBC_FK_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_FK_COLUMN_NAME_PROPERTY = "FKCOLUMN_NAME";
-    
+
     /** The Constant JDBC_PK_COLUMN_NAME_PROPERTY. */
     public static final String JDBC_PK_COLUMN_NAME_PROPERTY = "PKCOLUMN_NAME";
-    
+
     /** The Constant SQL_TO_ODATA_EDM_TYPES. */
     private static final Map<String, String> SQL_TO_ODATA_EDM_TYPES = new HashMap<>();
 
@@ -99,6 +99,7 @@ public class ODataDatabaseMetadataUtil {
         SQL_TO_ODATA_EDM_TYPES.put("DECIMAL", "Edm.Decimal");
         SQL_TO_ODATA_EDM_TYPES.put("REAL", "Edm.Single");
         SQL_TO_ODATA_EDM_TYPES.put("FLOAT", "Edm.Single");
+		SQL_TO_ODATA_EDM_TYPES.put("FLOAT8", "Edm.Double");
         SQL_TO_ODATA_EDM_TYPES.put("DOUBLE", "Edm.Double");
         SQL_TO_ODATA_EDM_TYPES.put("DOUBLE PRECISION", "Edm.Double");
         SQL_TO_ODATA_EDM_TYPES.put("VARCHAR", "Edm.String");
@@ -119,7 +120,7 @@ public class ODataDatabaseMetadataUtil {
         SQL_TO_ODATA_EDM_TYPES.put("BINTEXT", "Edm.Binary");
         SQL_TO_ODATA_EDM_TYPES.put("ALPHANUM", "Edm.String");
     }
-    
+
     /**
      * Gets the data source.
      *
