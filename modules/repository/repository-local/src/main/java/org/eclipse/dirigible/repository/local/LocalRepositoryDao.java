@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.local;
 
@@ -46,16 +45,15 @@ public class LocalRepositoryDao {
 
 	/** The repository. */
 	private FileSystemRepository repository;
-	
+
 	/** The cache. */
 	private final RepositoryCache cache = new RepositoryCache();
-	
+
 
 	/**
 	 * Instantiates a new local repository dao.
 	 *
-	 * @param repository
-	 *            the repository
+	 * @param repository the repository
 	 */
 	public LocalRepositoryDao(FileSystemRepository repository) {
 		this.repository = repository;
@@ -73,16 +71,11 @@ public class LocalRepositoryDao {
 	/**
 	 * Creates the file.
 	 *
-	 * @param path
-	 *            the path
-	 * @param content
-	 *            the content
-	 * @param isBinary
-	 *            the is binary
-	 * @param contentType
-	 *            the content type
-	 * @throws LocalRepositoryException
-	 *             the local repository exception
+	 * @param path the path
+	 * @param content the content
+	 * @param isBinary the is binary
+	 * @param contentType the content type
+	 * @throws LocalRepositoryException the local repository exception
 	 */
 	public void createFile(String path, byte[] content, boolean isBinary, String contentType) throws LocalRepositoryException {
 		try {
@@ -107,10 +100,8 @@ public class LocalRepositoryDao {
 	/**
 	 * Sets the file content.
 	 *
-	 * @param localFile
-	 *            the local file
-	 * @param content
-	 *            the content
+	 * @param localFile the local file
+	 * @param content the content
 	 */
 	public void setFileContent(LocalFile localFile, byte[] content) {
 		try {
@@ -126,8 +117,7 @@ public class LocalRepositoryDao {
 	/**
 	 * Gets the file content.
 	 *
-	 * @param localFile
-	 *            the local file
+	 * @param localFile the local file
 	 * @return the file content
 	 */
 	public byte[] getFileContent(LocalFile localFile) {
@@ -147,10 +137,8 @@ public class LocalRepositoryDao {
 	/**
 	 * Rename file.
 	 *
-	 * @param path
-	 *            the path
-	 * @param newPath
-	 *            the new path
+	 * @param path the path
+	 * @param newPath the new path
 	 */
 	public void renameFile(String path, String newPath) {
 		try {
@@ -167,10 +155,8 @@ public class LocalRepositoryDao {
 	/**
 	 * Copy file.
 	 *
-	 * @param path
-	 *            the path
-	 * @param newPath
-	 *            the new path
+	 * @param path the path
+	 * @param newPath the new path
 	 */
 	public void copyFile(String path, String newPath) {
 		try {
@@ -187,8 +173,7 @@ public class LocalRepositoryDao {
 	/**
 	 * Removes the file by path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 */
 	public void removeFileByPath(String path) {
 		try {
@@ -204,8 +189,7 @@ public class LocalRepositoryDao {
 	/**
 	 * Removes the folder by path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 */
 	public void removeFolderByPath(String path) {
 		try {
@@ -221,8 +205,7 @@ public class LocalRepositoryDao {
 	/**
 	 * Creates the folder.
 	 *
-	 * @param normalizePath
-	 *            the normalize path
+	 * @param normalizePath the normalize path
 	 */
 	public void createFolder(String normalizePath) {
 		try {
@@ -237,10 +220,8 @@ public class LocalRepositoryDao {
 	/**
 	 * Rename folder.
 	 *
-	 * @param path
-	 *            the path
-	 * @param newPath
-	 *            the new path
+	 * @param path the path
+	 * @param newPath the new path
 	 */
 	public void renameFolder(String path, String newPath) {
 		try {
@@ -258,17 +239,15 @@ public class LocalRepositoryDao {
 	/**
 	 * Copy folder.
 	 *
-	 * @param path
-	 *            the path
-	 * @param newPath
-	 *            the new path
+	 * @param path the path
+	 * @param newPath the new path
 	 */
 	public void copyFolder(String path, String newPath) {
 		try {
 			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
 			FileSystemUtils.copyFolder(workspacePathOld, workspacePathNew, new FileFilter() {
-				
+
 				@Override
 				public boolean accept(File pathname) {
 					return !".git".equals(pathname.getName());
@@ -285,8 +264,7 @@ public class LocalRepositoryDao {
 	/**
 	 * Gets the object by path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the object by path
 	 */
 	public LocalObject getObjectByPath(String path) {
@@ -329,8 +307,7 @@ public class LocalRepositoryDao {
 	/**
 	 * Gets the children by folder.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the children by folder
 	 */
 	public List<LocalObject> getChildrenByFolder(String path) {
@@ -351,7 +328,7 @@ public class LocalRepositoryDao {
 		}
 		return localObjects;
 	}
-	
+
 	/**
 	 * Check whether the file exists.
 	 *
@@ -362,7 +339,7 @@ public class LocalRepositoryDao {
 		String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 		return FileSystemUtils.fileExists(workspacePath);
 	}
-	
+
 	/**
 	 * Check whether the directory exists.
 	 *
@@ -373,5 +350,5 @@ public class LocalRepositoryDao {
 		String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 		return FileSystemUtils.directoryExists(workspacePath);
 	}
-	
+
 }

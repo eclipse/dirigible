@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.transformers;
 
@@ -31,42 +30,44 @@ import org.eclipse.dirigible.components.odata.synchronizer.ODataSynchronizer;
  */
 public class OData2ODataTransformerTestUtil {
 
-    /**
-     * Load data test transform entity property.
-     *
-     * @param odataDatabaseMetadataUtil the db metadata util
-     * @return the o data definition
-     * @throws SQLException the SQL exception
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public static OData loadData_testTransformEntityProperty(ODataDatabaseMetadataUtil odataDatabaseMetadataUtil) throws SQLException, IOException {
-        byte[] orders = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/entityproperty/Entities.odata"));
-        OData definition = ODataSynchronizer.parseOData("/entityproperty/Entities.odata", orders);
+	/**
+	 * Load data test transform entity property.
+	 *
+	 * @param odataDatabaseMetadataUtil the db metadata util
+	 * @return the o data definition
+	 * @throws SQLException the SQL exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static OData loadData_testTransformEntityProperty(ODataDatabaseMetadataUtil odataDatabaseMetadataUtil)
+			throws SQLException, IOException {
+		byte[] orders = IOUtils.toByteArray(ODataDefinitionFactoryTest.class.getResourceAsStream("/entityproperty/Entities.odata"));
+		OData definition = ODataSynchronizer.parseOData("/entityproperty/Entities.odata", orders);
 
-        Table model = new Table("ENTITY1");
-        TableColumn column11 = new TableColumn("ENTITY1ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column12 = new TableColumn("PROPERTY2", "Edm.String", "20", model);
-        TableColumn column13 = new TableColumn("PROPERTY3", "Edm.String", "20", model);
-        TableColumn column14 = new TableColumn("Country.Id", "Edm.String", "0", model);
-        
-        when(odataDatabaseMetadataUtil.getTableMetadata("ENTITY1", null)).thenReturn(model);
+		Table model = new Table("ENTITY1");
+		TableColumn column11 = new TableColumn("ENTITY1ID", "Edm.Int32", "0", true, true, model);
+		TableColumn column12 = new TableColumn("PROPERTY2", "Edm.String", "20", model);
+		TableColumn column13 = new TableColumn("PROPERTY3", "Edm.String", "20", model);
+		TableColumn column14 = new TableColumn("Country.Id", "Edm.String", "0", model);
 
-        model = new Table("ENTITY2");
-        TableColumn column4 = new TableColumn("ENTITY2ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column5 = new TableColumn("PROPERTY2", "Edm.Int32", "0", model);
-        TableColumn column6 = new TableColumn("PROPERTY3", "Edm.String", "0", model);
-        TableColumn column7 = new TableColumn("PROPERTY4_5", "Edm.Int32", "0", model);
-        TableColumn column8 = new TableColumn("ENTITY1ENTITY1ID", "Edm.Int32", "0", model);
-        TableConstraintForeignKey rel = new TableConstraintForeignKey("ENTITY1ID", "ENTITY1ENTITY1ID", "ENTITY1ID", null, model.getConstraints());
-        
-        when(odataDatabaseMetadataUtil.getTableMetadata("ENTITY2", null)).thenReturn(model);
+		when(odataDatabaseMetadataUtil.getTableMetadata("ENTITY1", null)).thenReturn(model);
 
-        model = new Table("ENTITY3");
-        TableColumn column24 = new TableColumn("ENTITY3.ID", "Edm.Int32", "0", true, true, model);
-        TableColumn column25 = new TableColumn("NAME.ID", "Edm.String", "0", model);
-        
-        when(odataDatabaseMetadataUtil.getTableMetadata("ENTITY3", null)).thenReturn(model);
+		model = new Table("ENTITY2");
+		TableColumn column4 = new TableColumn("ENTITY2ID", "Edm.Int32", "0", true, true, model);
+		TableColumn column5 = new TableColumn("PROPERTY2", "Edm.Int32", "0", model);
+		TableColumn column6 = new TableColumn("PROPERTY3", "Edm.String", "0", model);
+		TableColumn column7 = new TableColumn("PROPERTY4_5", "Edm.Int32", "0", model);
+		TableColumn column8 = new TableColumn("ENTITY1ENTITY1ID", "Edm.Int32", "0", model);
+		TableConstraintForeignKey rel =
+				new TableConstraintForeignKey("ENTITY1ID", "ENTITY1ENTITY1ID", "ENTITY1ID", null, model.getConstraints());
 
-        return definition;
-    }
+		when(odataDatabaseMetadataUtil.getTableMetadata("ENTITY2", null)).thenReturn(model);
+
+		model = new Table("ENTITY3");
+		TableColumn column24 = new TableColumn("ENTITY3.ID", "Edm.Int32", "0", true, true, model);
+		TableColumn column25 = new TableColumn("NAME.ID", "Edm.String", "0", model);
+
+		when(odataDatabaseMetadataUtil.getTableMetadata("ENTITY3", null)).thenReturn(model);
+
+		return definition;
+	}
 }

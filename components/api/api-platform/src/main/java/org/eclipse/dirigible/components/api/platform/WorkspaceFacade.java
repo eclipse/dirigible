@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.platform;
 
@@ -28,13 +27,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WorkspaceFacade implements InitializingBean {
-	
+
 	/** The instance. */
 	private static WorkspaceFacade INSTANCE;
-	
+
 	/** The workspace service. */
 	private WorkspaceService workspaceService;
-	
+
 	/**
 	 * Instantiates a new workspace facade.
 	 *
@@ -44,7 +43,7 @@ public class WorkspaceFacade implements InitializingBean {
 	public WorkspaceFacade(WorkspaceService workspaceService) {
 		this.workspaceService = workspaceService;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -52,18 +51,18 @@ public class WorkspaceFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the workspace facade
 	 */
 	public static WorkspaceFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/**
 	 * Gets the workspace service.
 	 *
@@ -72,7 +71,7 @@ public class WorkspaceFacade implements InitializingBean {
 	public WorkspaceService getWorkspaceService() {
 		return workspaceService;
 	}
-	
+
 	/**
 	 * Creates a workspace.
 	 *
@@ -82,7 +81,7 @@ public class WorkspaceFacade implements InitializingBean {
 	public static Workspace createWorkspace(String name) {
 		return WorkspaceFacade.get().getWorkspaceService().createWorkspace(name);
 	}
-	
+
 	/**
 	 * Gets the workspace.
 	 *
@@ -92,7 +91,7 @@ public class WorkspaceFacade implements InitializingBean {
 	public static Workspace getWorkspace(String name) {
 		return WorkspaceFacade.get().getWorkspaceService().getWorkspace(name);
 	}
-	
+
 	/**
 	 * Gets the workspaces names.
 	 *
@@ -114,7 +113,7 @@ public class WorkspaceFacade implements InitializingBean {
 	public static void deleteWorkspace(String name) {
 		WorkspaceFacade.get().getWorkspaceService().deleteWorkspace(name);
 	}
-	
+
 	/**
 	 * Get the file content.
 	 *
@@ -124,7 +123,7 @@ public class WorkspaceFacade implements InitializingBean {
 	public static final byte[] getContent(File file) {
 		return file.getContent();
 	}
-	
+
 	/**
 	 * Set the file content.
 	 *

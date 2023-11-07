@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.domain;
 
@@ -15,31 +14,31 @@ package org.eclipse.dirigible.components.ide.git.domain;
  * The Branch representation POJO.
  */
 public class GitBranch {
-	
+
 	/** The name. */
 	private String name;
-	
+
 	/** The remote. */
 	private boolean remote;
-	
+
 	/** The current. */
 	private boolean current;
-	
+
 	/** The commit object id. */
 	private String commitObjectId;
-	
+
 	/** The commit short id. */
 	private String commitShortId;
-	
+
 	/** The commit date. */
 	private String commitDate;
-	
+
 	/** The commit message. */
 	private String commitMessage;
-	
+
 	/** The commit author. */
 	private String commitAuthor;
-	
+
 	/**
 	 * The constructor.
 	 *
@@ -100,7 +99,7 @@ public class GitBranch {
 	public void setRemote(boolean remote) {
 		this.remote = remote;
 	}
-	
+
 	/**
 	 * Getter for current.
 	 *
@@ -208,7 +207,7 @@ public class GitBranch {
 	public void setCommitAuthor(String commitAuthor) {
 		this.commitAuthor = commitAuthor;
 	}
-	
-	
+
+
 
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.command;
 
@@ -38,7 +37,7 @@ public class StatusCommand {
 
 	/** The verifier. */
 	private ProjectPropertiesVerifier projectPropertiesVerifier;
-	
+
 	/**
 	 * Instantiates a new status command.
 	 *
@@ -48,7 +47,7 @@ public class StatusCommand {
 	public StatusCommand(ProjectPropertiesVerifier projectPropertiesVerifier) {
 		this.projectPropertiesVerifier = projectPropertiesVerifier;
 	}
-	
+
 	/**
 	 * Gets the project properties verifier.
 	 *
@@ -62,33 +61,35 @@ public class StatusCommand {
 	/**
 	 * Execute the Status command.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
+	 * @param workspace the workspace
+	 * @param project the project
 	 * @return project status
 	 * @throws GitConnectorException in case of exception
 	 */
 	public ProjectStatus execute(String workspace, String project) throws GitConnectorException {
 
 		if (projectPropertiesVerifier.verify(workspace, project)) {
-			if (logger.isDebugEnabled()) {logger.debug(String.format("Start getting Status for project [%s]...", project));}
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("Start getting Status for project [%s]...", project));
+			}
 			ProjectStatus status = getStatus(workspace, project);
-			if (logger.isDebugEnabled()) {logger.debug(String.format("Status of the project [%s] finished.", project));}
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("Status of the project [%s] finished.", project));
+			}
 			return status;
 		} else {
-			if (logger.isWarnEnabled()) {logger.warn(String.format("Project [%s] is local only. Select a previously cloned project for Status operation.", project));}
+			if (logger.isWarnEnabled()) {
+				logger.warn(String.format("Project [%s] is local only. Select a previously cloned project for Status operation.", project));
+			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Getting status low level git commands.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
+	 * @param workspace the workspace
+	 * @param project the project
 	 * @return project status
 	 * @throws GitConnectorException in case of exception
 	 */
@@ -98,34 +99,32 @@ public class StatusCommand {
 		try {
 			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, project).getCanonicalFile();
 			String git = gitDirectory.getCanonicalPath() + File.separator;
-			
+
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 			ProjectStatus projectStatus = null;
-			try {	
+			try {
 				Status status = gitConnector.status();
-				projectStatus = new ProjectStatus(
-						project,
-						git,
-						status.getAdded(),
-						status.getChanged(),
-						status.getRemoved(),
-						status.getMissing(),
-						status.getModified(),
-						status.getConflicting(),
-						status.getUntracked(),
-						status.getUntrackedFolders());
+				projectStatus =
+						new ProjectStatus(project, git, status.getAdded(), status.getChanged(), status.getRemoved(), status.getMissing(),
+								status.getModified(), status.getConflicting(), status.getUntracked(), status.getUntrackedFolders());
 				return projectStatus;
 			} catch (GitAPIException e) {
-				if (logger.isDebugEnabled()) {logger.debug(e.getMessage(), e.getMessage());}
+				if (logger.isDebugEnabled()) {
+					logger.debug(e.getMessage(), e.getMessage());
+				}
 			}
 
 			String message = String.format("Repository [%s] successfully reset.", project);
-			if (logger.isInfoEnabled()) {logger.info(message);}
+			if (logger.isInfoEnabled()) {
+				logger.info(message);
+			}
 		} catch (IOException | GitConnectorException e) {
-			if (logger.isErrorEnabled()) {logger.error(errorMessage, e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(errorMessage, e);
+			}
 			throw new GitConnectorException(errorMessage, e);
 		}
 		return null;
 	}
-	
+
 }

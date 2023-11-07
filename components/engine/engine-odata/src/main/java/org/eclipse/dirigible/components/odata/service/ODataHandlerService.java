@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.service;
 
@@ -31,10 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ODataHandlerService implements ArtefactService<ODataHandler>, InitializingBean {
-	
+
 	/** The instance. */
 	private static ODataHandlerService INSTANCE;
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -42,145 +41,145 @@ public class ODataHandlerService implements ArtefactService<ODataHandler>, Initi
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the.
 	 *
 	 * @return the o data handler service
 	 */
 	public static ODataHandlerService get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/** The ODataHandler repository. */
-    @Autowired
-    private ODataHandlerRepository odataHandlerRepository;
+	@Autowired
+	private ODataHandlerRepository odataHandlerRepository;
 
-    /**
-     * Gets the all.
-     *
-     * @return the all
-     */
-    @Override
-    public List<ODataHandler> getAll() {
-        return odataHandlerRepository.findAll();
-    }
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
+	@Override
+	public List<ODataHandler> getAll() {
+		return odataHandlerRepository.findAll();
+	}
 
-    /**
-     * Find all.
-     *
-     * @param pageable the pageable
-     * @return the page
-     */
-    @Override
-    public Page<ODataHandler> getPages(Pageable pageable) {
-        return odataHandlerRepository.findAll(pageable);
-    }
+	/**
+	 * Find all.
+	 *
+	 * @param pageable the pageable
+	 * @return the page
+	 */
+	@Override
+	public Page<ODataHandler> getPages(Pageable pageable) {
+		return odataHandlerRepository.findAll(pageable);
+	}
 
-    /**
-     * Find by id.
-     *
-     * @param id the id
-     * @return the ODataHandler
-     */
-    @Override
-    public ODataHandler findById(Long id) {
-        Optional<ODataHandler> odataHandler = odataHandlerRepository.findById(id);
-        if (odataHandler.isPresent()) {
-            return odataHandler.get();
-        } else {
-            throw new IllegalArgumentException("OData Handler with id does not exist: " + id);
-        }
-    }
+	/**
+	 * Find by id.
+	 *
+	 * @param id the id
+	 * @return the ODataHandler
+	 */
+	@Override
+	public ODataHandler findById(Long id) {
+		Optional<ODataHandler> odataHandler = odataHandlerRepository.findById(id);
+		if (odataHandler.isPresent()) {
+			return odataHandler.get();
+		} else {
+			throw new IllegalArgumentException("OData Handler with id does not exist: " + id);
+		}
+	}
 
-    /**
-     * Find by name.
-     *
-     * @param name the name
-     * @return the ODataHandler
-     */
-    @Override
-    public ODataHandler findByName(String name) {
-    	ODataHandler filter = new ODataHandler();
-        filter.setName(name);
-        Example<ODataHandler> example = Example.of(filter);
-        Optional<ODataHandler> odataHandler = odataHandlerRepository.findOne(example);
-        if (odataHandler.isPresent()) {
-            return odataHandler.get();
-        } else {
-            throw new IllegalArgumentException("OData Handler with name does not exist: " + name);
-        }
-    }
-    
-    /**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<ODataHandler> findByLocation(String location) {
-    	ODataHandler filter = new ODataHandler();
-        filter.setLocation(location);
-        Example<ODataHandler> example = Example.of(filter);
-        List<ODataHandler> list = odataHandlerRepository.findAll(example);
-        return list;
-    }
-    
-    /**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the ODataHandler
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public ODataHandler findByKey(String key) {
-    	ODataHandler filter = new ODataHandler();
-        filter.setKey(key);
-        Example<ODataHandler> example = Example.of(filter);
-        Optional<ODataHandler> odataHandler = odataHandlerRepository.findOne(example);
-        if (odataHandler.isPresent()) {
-            return odataHandler.get();
-        }
-        return null;
-    }
+	/**
+	 * Find by name.
+	 *
+	 * @param name the name
+	 * @return the ODataHandler
+	 */
+	@Override
+	public ODataHandler findByName(String name) {
+		ODataHandler filter = new ODataHandler();
+		filter.setName(name);
+		Example<ODataHandler> example = Example.of(filter);
+		Optional<ODataHandler> odataHandler = odataHandlerRepository.findOne(example);
+		if (odataHandler.isPresent()) {
+			return odataHandler.get();
+		} else {
+			throw new IllegalArgumentException("OData Handler with name does not exist: " + name);
+		}
+	}
 
-    /**
-     * Save.
-     *
-     * @param odataHandler the ODataHandler
-     * @return the ODataHandler
-     */
-    @Override
-    public ODataHandler save(ODataHandler odataHandler) {
-        return odataHandlerRepository.saveAndFlush(odataHandler);
-    }
+	/**
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<ODataHandler> findByLocation(String location) {
+		ODataHandler filter = new ODataHandler();
+		filter.setLocation(location);
+		Example<ODataHandler> example = Example.of(filter);
+		List<ODataHandler> list = odataHandlerRepository.findAll(example);
+		return list;
+	}
 
-    /**
-     * Delete.
-     *
-     * @param odataHandler the ODataHandler
-     */
-    @Override
-    public void delete(ODataHandler odataHandler) {
-    	odataHandlerRepository.delete(odataHandler);
-    }
-    
-    /**
-     * Removes the handler.
-     *
-     * @param location the location
-     */
-    public void removeHandlers(String location) {
-    	ODataHandler filter = new ODataHandler();
-        filter.setLocation(location);
-        Example<ODataHandler> example = Example.of(filter);
-        odataHandlerRepository.deleteAll(odataHandlerRepository.findAll(example));
-    }
+	/**
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the ODataHandler
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public ODataHandler findByKey(String key) {
+		ODataHandler filter = new ODataHandler();
+		filter.setKey(key);
+		Example<ODataHandler> example = Example.of(filter);
+		Optional<ODataHandler> odataHandler = odataHandlerRepository.findOne(example);
+		if (odataHandler.isPresent()) {
+			return odataHandler.get();
+		}
+		return null;
+	}
+
+	/**
+	 * Save.
+	 *
+	 * @param odataHandler the ODataHandler
+	 * @return the ODataHandler
+	 */
+	@Override
+	public ODataHandler save(ODataHandler odataHandler) {
+		return odataHandlerRepository.saveAndFlush(odataHandler);
+	}
+
+	/**
+	 * Delete.
+	 *
+	 * @param odataHandler the ODataHandler
+	 */
+	@Override
+	public void delete(ODataHandler odataHandler) {
+		odataHandlerRepository.delete(odataHandler);
+	}
+
+	/**
+	 * Removes the handler.
+	 *
+	 * @param location the location
+	 */
+	public void removeHandlers(String location) {
+		ODataHandler filter = new ODataHandler();
+		filter.setLocation(location);
+		Example<ODataHandler> example = Example.of(filter);
+		odataHandlerRepository.deleteAll(odataHandlerRepository.findAll(example));
+	}
 
 	/**
 	 * Gets the by namespace name method and kind.
@@ -193,12 +192,12 @@ public class ODataHandlerService implements ArtefactService<ODataHandler>, Initi
 	 */
 	public List<ODataHandler> getByNamespaceNameMethodAndKind(String namespace, String name, String method, String kind) {
 		ODataHandler filter = new ODataHandler();
-        filter.setNamespace(namespace);
-        filter.setName(name);
-        filter.setMethod(method);
-        filter.setKind(kind);
-        Example<ODataHandler> example = Example.of(filter);
-        return odataHandlerRepository.findAll(example);
+		filter.setNamespace(namespace);
+		filter.setName(name);
+		filter.setMethod(method);
+		filter.setKind(kind);
+		Example<ODataHandler> example = Example.of(filter);
+		return odataHandlerRepository.findAll(example);
 	}
 
 }

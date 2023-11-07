@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.domain;
 
@@ -52,59 +51,49 @@ public class NoSQLTableMetadata {
 	/**
 	 * Instantiates a new table metadata.
 	 *
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
-	 * @param remarks
-	 *            the remarks
-	 * @param connection
-	 *            the connection
-	 * @param catalogName
-	 *            the catalog name
-	 * @param schemaName
-	 *            the schema name
-	 * @param deep
-	 *            whether to populate also the columns
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @param name the name
+	 * @param type the type
+	 * @param remarks the remarks
+	 * @param connection the connection
+	 * @param catalogName the catalog name
+	 * @param schemaName the schema name
+	 * @param deep whether to populate also the columns
+	 * @throws SQLException the SQL exception
 	 */
-	public NoSQLTableMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName, boolean deep) throws SQLException {
+	public NoSQLTableMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName,
+			boolean deep) throws SQLException {
 		super();
 		this.name = name;
 		this.type = type;
 		this.remarks = remarks;
 
 		this.columns = new ArrayList<NoSQLColumnMetadata>();
-		
+
 		DatabaseMetaData dmd = connection.getMetaData();
 
-        ResultSet rs = dmd.getColumns(catalogName, schemaName, DatabaseNameNormalizer.normalizeTableName(name), null);
-        if (columns == null) {
-            throw new SQLException("DatabaseMetaData.getColumns returns null");
-        }
-       
-        try {
+		ResultSet rs = dmd.getColumns(catalogName, schemaName, DatabaseNameNormalizer.normalizeTableName(name), null);
+		if (columns == null) {
+			throw new SQLException("DatabaseMetaData.getColumns returns null");
+		}
 
-            while (rs.next()) {
-                NoSQLColumnMetadata column = new NoSQLColumnMetadata(
-                		rs.getString(DatabaseMetadataHelper.COLUMN_NAME), 
-                		rs.getString(DatabaseMetadataHelper.TYPE_NAME), 
-                		rs.getInt(DatabaseMetadataHelper.COLUMN_SIZE),
-                		rs.getBoolean(DatabaseMetadataHelper.IS_NULLABLE),
-                		rs.getBoolean(DatabaseMetadataHelper.PK),
-                		rs.getInt(DatabaseMetadataHelper.DECIMAL_DIGITS));
-                if (rs.getObject("NESTED") != null) {
-                	Iterator<JsonNode> nestedNodes = ((ArrayNode) rs.getObject("NESTED")).iterator();
-                	populateNestedColumns(column, nestedNodes);
-                }
+		try {
+
+			while (rs.next()) {
+				NoSQLColumnMetadata column = new NoSQLColumnMetadata(rs.getString(DatabaseMetadataHelper.COLUMN_NAME),
+						rs.getString(DatabaseMetadataHelper.TYPE_NAME), rs.getInt(DatabaseMetadataHelper.COLUMN_SIZE),
+						rs.getBoolean(DatabaseMetadataHelper.IS_NULLABLE), rs.getBoolean(DatabaseMetadataHelper.PK),
+						rs.getInt(DatabaseMetadataHelper.DECIMAL_DIGITS));
+				if (rs.getObject("NESTED") != null) {
+					Iterator<JsonNode> nestedNodes = ((ArrayNode) rs.getObject("NESTED")).iterator();
+					populateNestedColumns(column, nestedNodes);
+				}
 				columns.add(column);
-            }
-            
-        } finally {
-        	rs.close();
-        }
-		
+			}
+
+		} finally {
+			rs.close();
+		}
+
 	}
 
 	/**
@@ -115,22 +104,19 @@ public class NoSQLTableMetadata {
 	 */
 	private void populateNestedColumns(NoSQLColumnMetadata parent, Iterator<JsonNode> nestedNodes) {
 		List<NoSQLColumnMetadata> columns = new ArrayList<NoSQLColumnMetadata>();
-		
+
 		while (nestedNodes.hasNext()) {
 			JsonNode node = nestedNodes.next();
-            NoSQLColumnMetadata column = new NoSQLColumnMetadata(
-            		node.get(DatabaseMetadataHelper.COLUMN_NAME).asText(),
-            		node.get(DatabaseMetadataHelper.TYPE_NAME).asText(),
-            		node.get(DatabaseMetadataHelper.COLUMN_SIZE).asInt(),
-            		node.get(DatabaseMetadataHelper.IS_NULLABLE).asBoolean(),
-            		node.get(DatabaseMetadataHelper.PK).asBoolean(),
-            		node.get(DatabaseMetadataHelper.DECIMAL_DIGITS).asInt());
-            if (node.get("NESTED") != null) {
-            	Iterator<JsonNode> nestedIterator = node.get("NESTED").iterator();
-            	populateNestedColumns(column, nestedIterator);
-            }
+			NoSQLColumnMetadata column = new NoSQLColumnMetadata(node.get(DatabaseMetadataHelper.COLUMN_NAME).asText(),
+					node.get(DatabaseMetadataHelper.TYPE_NAME).asText(), node.get(DatabaseMetadataHelper.COLUMN_SIZE).asInt(),
+					node.get(DatabaseMetadataHelper.IS_NULLABLE).asBoolean(), node.get(DatabaseMetadataHelper.PK).asBoolean(),
+					node.get(DatabaseMetadataHelper.DECIMAL_DIGITS).asInt());
+			if (node.get("NESTED") != null) {
+				Iterator<JsonNode> nestedIterator = node.get("NESTED").iterator();
+				populateNestedColumns(column, nestedIterator);
+			}
 			columns.add(column);
-        }
+		}
 		parent.setColumns(columns);
 	}
 
@@ -146,8 +132,7 @@ public class NoSQLTableMetadata {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name
-	 *            the new name
+	 * @param name the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -165,8 +150,7 @@ public class NoSQLTableMetadata {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type
-	 *            the new type
+	 * @param type the new type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -184,8 +168,7 @@ public class NoSQLTableMetadata {
 	/**
 	 * Sets the remarks.
 	 *
-	 * @param remarks
-	 *            the new remarks
+	 * @param remarks the new remarks
 	 */
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
@@ -199,7 +182,7 @@ public class NoSQLTableMetadata {
 	public List<NoSQLColumnMetadata> getColumns() {
 		return columns;
 	}
-	
+
 	/**
 	 * Sets the columns.
 	 *
@@ -221,8 +204,7 @@ public class NoSQLTableMetadata {
 	/**
 	 * Sets the kind.
 	 *
-	 * @param kind
-	 *            the new kind
+	 * @param kind the new kind
 	 */
 	public void setKind(String kind) {
 		this.kind = kind;

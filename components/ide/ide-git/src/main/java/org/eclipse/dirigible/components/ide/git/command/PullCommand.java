@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.command;
 
@@ -50,7 +49,7 @@ public class PullCommand {
 
 	/** The verifier. */
 	private ProjectPropertiesVerifier projectPropertiesVerifier;
-	
+
 	/**
 	 * Instantiates a new pull command.
 	 *
@@ -59,12 +58,13 @@ public class PullCommand {
 	 * @param projectPropertiesVerifier the project properties verifier
 	 */
 	@Autowired
-	public PullCommand(PublisherService publisherService, ProjectMetadataManager projectMetadataManager, ProjectPropertiesVerifier projectPropertiesVerifier) {
+	public PullCommand(PublisherService publisherService, ProjectMetadataManager projectMetadataManager,
+			ProjectPropertiesVerifier projectPropertiesVerifier) {
 		this.publisherService = publisherService;
 		this.projectMetadataManager = projectMetadataManager;
 		this.projectPropertiesVerifier = projectPropertiesVerifier;
 	}
-	
+
 	/**
 	 * Gets the publisher service.
 	 *
@@ -73,7 +73,7 @@ public class PullCommand {
 	public PublisherService getPublisherService() {
 		return publisherService;
 	}
-	
+
 	/**
 	 * Gets the project metadata manager.
 	 *
@@ -82,7 +82,7 @@ public class PullCommand {
 	public ProjectMetadataManager getProjectMetadataManager() {
 		return projectMetadataManager;
 	}
-	
+
 	/**
 	 * Gets the project properties verifier.
 	 *
@@ -95,10 +95,8 @@ public class PullCommand {
 	/**
 	 * Execute a Pull command.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param model
-	 *            the git pull model
+	 * @param workspace the workspace
+	 * @param model the git pull model
 	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final Workspace workspace, GitPullModel model) throws GitConnectorException {
@@ -109,14 +107,21 @@ public class PullCommand {
 		boolean atLeastOne = false;
 		for (String repositoryName : model.getProjects()) {
 			if (projectPropertiesVerifier.verify(workspace.getName(), repositoryName)) {
-				if (logger.isDebugEnabled()) {logger.debug(String.format("Start pulling %s repository...", repositoryName));}
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("Start pulling %s repository...", repositoryName));
+				}
 				boolean pulled = pullProjectFromGitRepository(workspace, repositoryName, model);
 				atLeastOne = atLeastOne ? atLeastOne : pulled;
-				if (logger.isDebugEnabled()) {logger.debug(String.format("Pull of the repository %s finished.", repositoryName));}
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
+				}
 				List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
 				pulledProjects.addAll(projects);
 			} else {
-				if (logger.isWarnEnabled()) {logger.warn(String.format("Project %s is local only. Select a previously cloned project for Pull operation.", repositoryName));}
+				if (logger.isWarnEnabled()) {
+					logger.warn(String.format("Project %s is local only. Select a previously cloned project for Pull operation.",
+							repositoryName));
+				}
 			}
 		}
 
@@ -129,20 +134,18 @@ public class PullCommand {
 	/**
 	 * Pull project from git repository by executing several low level Git commands.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param repositoryName
-	 *            the selected project
-	 * @param model
-	 *            the git pull model
+	 * @param workspace the workspace
+	 * @param repositoryName the selected project
+	 * @param model the git pull model
 	 * @return true, if successful
 	 * @throws GitConnectorException in case of exception
 	 */
-	private boolean pullProjectFromGitRepository(final Workspace workspace, String repositoryName, GitPullModel model) throws GitConnectorException {
+	private boolean pullProjectFromGitRepository(final Workspace workspace, String repositoryName, GitPullModel model)
+			throws GitConnectorException {
 		String errorMessage = String.format("Error occurred while pulling repository [%s].", repositoryName);
 
 		List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
-		for (String projectName: projects) {
+		for (String projectName : projects) {
 			projectMetadataManager.ensureProjectMetadata(workspace, projectName);
 		}
 
@@ -152,18 +155,28 @@ public class PullCommand {
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
 			String gitRepositoryBranch = gitConnector.getBranch();
-			if (logger.isDebugEnabled()) {logger.debug(String.format("Starting pull of the repository [%s] for the branch %s...", repositoryName, gitRepositoryBranch));}
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						String.format("Starting pull of the repository [%s] for the branch %s...", repositoryName, gitRepositoryBranch));
+			}
 			gitConnector.pull(model.getUsername(), model.getPassword());
-			if (logger.isDebugEnabled()) {logger.debug(String.format("Pull of the repository %s finished.", repositoryName));}
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
+			}
 
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
-			if (logger.isDebugEnabled()) {logger.debug(String.format("Number of conflicting files in the repository [%s]: %d.", repositoryName, numberOfConflictingFiles));}
-			
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						String.format("Number of conflicting files in the repository [%s]: %d.", repositoryName, numberOfConflictingFiles));
+			}
+
 			if (numberOfConflictingFiles > 0) {
 				String message = String.format(
-					"Repository [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
-					repositoryName, numberOfConflictingFiles);
-				if (logger.isErrorEnabled()) {logger.error(message);}
+						"Repository [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
+						repositoryName, numberOfConflictingFiles);
+				if (logger.isErrorEnabled()) {
+					logger.error(message);
+				}
 			}
 		} catch (IOException | GitAPIException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
@@ -177,7 +190,9 @@ public class PullCommand {
 			} else {
 				errorMessage += " " + e.getMessage();
 			}
-			if (logger.isErrorEnabled()) {logger.error(errorMessage);}
+			if (logger.isErrorEnabled()) {
+				logger.error(errorMessage);
+			}
 			throw new GitConnectorException(errorMessage, e);
 		}
 		return true;
@@ -186,10 +201,8 @@ public class PullCommand {
 	/**
 	 * Publish projects.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param pulledProjects
-	 *            the pulled projects
+	 * @param workspace the workspace
+	 * @param pulledProjects the pulled projects
 	 */
 	private void publishProjects(Workspace workspace, List<String> pulledProjects) {
 		if (pulledProjects.size() > 0) {
@@ -199,9 +212,14 @@ public class PullCommand {
 					if (project.getName().equals(pulledProject)) {
 						try {
 							publisherService.publish(workspace.getName(), pulledProject, "");
-							if (logger.isInfoEnabled()) {logger.info(String.format("Project [%s] has been published", project.getName()));}
+							if (logger.isInfoEnabled()) {
+								logger.info(String.format("Project [%s] has been published", project.getName()));
+							}
 						} catch (Exception e) {
-							if (logger.isErrorEnabled()) {logger.error(String.format("An error occurred while publishing the pulled project [%s]", project.getName()), e);}
+							if (logger.isErrorEnabled()) {
+								logger.error(String.format("An error occurred while publishing the pulled project [%s]", project.getName()),
+										e);
+							}
 						}
 						break;
 					}

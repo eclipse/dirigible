@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.view;
 
@@ -39,10 +38,8 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Instantiates a new creates the view builder.
 	 *
-	 * @param dialect
-	 *            the dialect
-	 * @param view
-	 *            the view
+	 * @param dialect the dialect
+	 * @param view the view
 	 */
 	public CreateViewBuilder(ISqlDialect dialect, String view) {
 		super(dialect);
@@ -79,23 +76,25 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Sets the select.
 	 *
-	 * @param select
-	 *            the new select
+	 * @param select the new select
 	 */
 	protected void setSelect(String select) {
-		if (logger.isTraceEnabled()) {logger.trace("setSelect: " + select);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("setSelect: " + select);
+		}
 		this.select = select;
 	}
 
 	/**
 	 * Column.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the creates the view builder
 	 */
 	public CreateViewBuilder column(String name) {
-		if (logger.isTraceEnabled()) {logger.trace("column: " + name);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("column: " + name);
+		}
 		this.columns.add(name);
 		return this;
 	}
@@ -103,12 +102,13 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * As select.
 	 *
-	 * @param select
-	 *            the select
+	 * @param select the select
 	 * @return the creates the view builder
 	 */
 	public CreateViewBuilder asSelect(String select) {
-		if (logger.isTraceEnabled()) {logger.trace("asSelect: " + select);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("asSelect: " + select);
+		}
 		this.select = select;
 		return this;
 	}
@@ -120,6 +120,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -141,7 +142,9 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 
 		String generated = sql.toString();
 
-		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("generated: " + generated);
+		}
 
 		return generated;
 	}
@@ -149,8 +152,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate view.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateView(StringBuilder sql) {
 		String viewName = (isCaseSensitive()) ? encapsulate(this.getView(), true) : this.getView();
@@ -160,8 +162,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate columns.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateColumns(StringBuilder sql) {
 		if (!this.columns.isEmpty()) {
@@ -188,8 +189,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate as select.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateAsSelect(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(this.select);

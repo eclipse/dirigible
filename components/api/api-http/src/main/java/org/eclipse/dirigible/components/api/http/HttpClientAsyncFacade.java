@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.http;
 
@@ -45,24 +44,24 @@ public final class HttpClientAsyncFacade {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientAsyncFacade.class);
-	
+
 	/** The default engine executor. */
 	private JavascriptService defaultEngineExecutor = null;
 
 	/** The requests counter. */
 	private int requestsCounter = 0;
-	
+
 	/** The async http requests. */
 	private List<AsyncHttpRequest> asyncHttpRequests = new ArrayList<AsyncHttpRequest>();
-	
+
 	/** The count down latch. */
 	private CountDownLatch countDownLatch;
-	
+
 	@Autowired
 	public HttpClientAsyncFacade(JavascriptService defaultEngineExecutor) {
 		this.defaultEngineExecutor = defaultEngineExecutor;
 	}
-	
+
 	/**
 	 * Gets the default engine executor.
 	 *
@@ -108,12 +107,12 @@ public final class HttpClientAsyncFacade {
 	/**
 	 * Performs a Async GET request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
-	 * @param httpResponseCallback            the callback
+	 * @param url the URL
+	 * @param options the options
+	 * @param httpResponseCallback the callback
 	 */
 	public void getAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
-		requestsCounter ++;
+		requestsCounter++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
 		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpGet request = HttpClientFacade.createGetRequest(url, httpClientRequestOptions);
@@ -123,13 +122,13 @@ public final class HttpClientAsyncFacade {
 	/**
 	 * Performs a Async POST request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
-	 * @param httpResponseCallback            the callback
-	 * @throws IOException             In case an I/O exception occurs
+	 * @param url the URL
+	 * @param options the options
+	 * @param httpResponseCallback the callback
+	 * @throws IOException In case an I/O exception occurs
 	 */
 	public void postAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
-		requestsCounter ++;
+		requestsCounter++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
 		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpPost request = HttpClientFacade.createPostRequest(url, httpClientRequestOptions);
@@ -139,13 +138,13 @@ public final class HttpClientAsyncFacade {
 	/**
 	 * Performs a Async PUT request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
-	 * @param httpResponseCallback            the callback
-	 * @throws IOException             In case an I/O exception occurs
+	 * @param url the URL
+	 * @param options the options
+	 * @param httpResponseCallback the callback
+	 * @throws IOException In case an I/O exception occurs
 	 */
 	public void putAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
-		requestsCounter ++;
+		requestsCounter++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
 		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpPut request = HttpClientFacade.createPutRequest(url, httpClientRequestOptions);
@@ -155,13 +154,13 @@ public final class HttpClientAsyncFacade {
 	/**
 	 * Performs a Async PATCH request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
-	 * @param httpResponseCallback            the callback
-	 * @throws IOException             In case an I/O exception occurs
+	 * @param url the URL
+	 * @param options the options
+	 * @param httpResponseCallback the callback
+	 * @throws IOException In case an I/O exception occurs
 	 */
 	public void patchAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
-		requestsCounter ++;
+		requestsCounter++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
 		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpPatch request = HttpClientFacade.createPatchRequest(url, httpClientRequestOptions);
@@ -171,12 +170,12 @@ public final class HttpClientAsyncFacade {
 	/**
 	 * Performs a Async DELETE request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
-	 * @param httpResponseCallback            the callback
+	 * @param url the URL
+	 * @param options the options
+	 * @param httpResponseCallback the callback
 	 */
 	public void deleteAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
-		requestsCounter ++;
+		requestsCounter++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
 		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpDelete request = HttpClientFacade.createDeleteRequest(url, httpClientRequestOptions);
@@ -186,12 +185,12 @@ public final class HttpClientAsyncFacade {
 	/**
 	 * Performs a Async HEAD request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
-	 * @param httpResponseCallback            the callback
+	 * @param url the URL
+	 * @param options the options
+	 * @param httpResponseCallback the callback
 	 */
 	public void headAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
-		requestsCounter ++;
+		requestsCounter++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
 		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpHead request = HttpClientFacade.createHeadRequest(url, httpClientRequestOptions);
@@ -201,12 +200,12 @@ public final class HttpClientAsyncFacade {
 	/**
 	 * Performs a Async TRACE request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
-	 * @param httpResponseCallback            the callback
+	 * @param url the URL
+	 * @param options the options
+	 * @param httpResponseCallback the callback
 	 */
 	public void traceAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
-		requestsCounter ++;
+		requestsCounter++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
 		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpTrace request = HttpClientFacade.createTraceRequest(url, httpClientRequestOptions);
@@ -234,10 +233,10 @@ public final class HttpClientAsyncFacade {
 	 * The Class AsyncHttpRequest.
 	 */
 	private static class AsyncHttpRequest {
-		
+
 		/** The request. */
 		private final HttpUriRequest request;
-		
+
 		/** The callback. */
 		private final FutureCallback<HttpResponse> callback;
 
@@ -278,7 +277,7 @@ public final class HttpClientAsyncFacade {
 
 		/** The callback. */
 		private final FutureCallback<HttpResponse> callback;
-		
+
 		/** The http client request options. */
 		private HttpClientRequestOptions httpClientRequestOptions;
 
@@ -300,7 +299,7 @@ public final class HttpClientAsyncFacade {
 		 */
 		public void setOptions(HttpClientRequestOptions httpClientRequestOptions) {
 			this.httpClientRequestOptions = httpClientRequestOptions;
-			
+
 		}
 
 		/**
@@ -358,7 +357,9 @@ public final class HttpClientAsyncFacade {
 					try {
 						getDefaultEngineExecutor().handleCallback(completeCallback, executionContext);
 					} catch (Exception e) {
-						if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+						if (logger.isErrorEnabled()) {
+							logger.error(e.getMessage(), e);
+						}
 					}
 				}
 			};

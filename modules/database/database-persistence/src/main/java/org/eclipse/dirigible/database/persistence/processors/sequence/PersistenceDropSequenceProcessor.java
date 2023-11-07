@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.processors.sequence;
 
@@ -36,8 +35,7 @@ public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcess
 	/**
 	 * Instantiates a new persistence drop sequence processor.
 	 *
-	 * @param entityManagerInterceptor
-	 *            the entity manager interceptor
+	 * @param entityManagerInterceptor the entity manager interceptor
 	 */
 	public PersistenceDropSequenceProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
@@ -52,32 +50,37 @@ public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcess
 	 */
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.
-	 * Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 *
+	 * @see
+	 * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
+	 * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		DropSequenceBuilder dropSequenceBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).drop()
-				.sequence(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
+		DropSequenceBuilder dropSequenceBuilder =
+				SqlFactory	.getNative(SqlFactory.deriveDialect(connection))
+							.drop()
+							.sequence(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
 
 		String sql = dropSequenceBuilder.toString();
-		if (logger.isTraceEnabled()) {logger.trace(sql);}
+		if (logger.isTraceEnabled()) {
+			logger.trace(sql);
+		}
 		return sql;
 	}
 
 	/**
 	 * Drop.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
+	 * @param connection the connection
+	 * @param tableModel the table model
 	 * @return the int
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("drop -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));}
+		if (logger.isTraceEnabled()) {
+			logger.trace("drop -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+		}
 		int result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -86,8 +89,12 @@ public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcess
 			preparedStatement = openPreparedStatement(connection, sql);
 			result = preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(sql);}
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(sql);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

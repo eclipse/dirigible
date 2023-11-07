@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.clause;
 
@@ -22,74 +21,74 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
  */
 public class SQLGroupByClause implements SQLClause {
 
-    /** The query. */
-    private final org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder query;
-    
-    /** The entity type. */
-    private final EdmEntityType entityType;
+	/** The query. */
+	private final org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder query;
 
-    /**
-     * Instantiates a new SQL group by clause.
-     *
-     * @param query the query
-     * @param entityType the entity type
-     */
-    public SQLGroupByClause(final org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder query,
-                            final EdmEntityType entityType) {
-        this.query  = query;
-        this.entityType  = entityType;
-    }
+	/** The entity type. */
+	private final EdmEntityType entityType;
 
-    /**
-     * Evaluate.
-     *
-     * @param context the context
-     * @return the string
-     * @throws EdmException the edm exception
-     */
-    @Override
-    public String evaluate(final SQLContext context) throws EdmException {
-        return groupByClauseBuilder(context);
-    }
+	/**
+	 * Instantiates a new SQL group by clause.
+	 *
+	 * @param query the query
+	 * @param entityType the entity type
+	 */
+	public SQLGroupByClause(final org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder query, final EdmEntityType entityType) {
+		this.query = query;
+		this.entityType = entityType;
+	}
 
-    /**
-     * Group by clause builder.
-     *
-     * @param context the context
-     * @return the string
-     * @throws EdmException the edm exception
-     */
-    public String groupByClauseBuilder(SQLContext context) throws EdmException {
-        StringBuilder groupByClause = new StringBuilder();
-        for(String propertyName: entityType.getPropertyNames()) {
-            EdmProperty prop = (EdmProperty) entityType.getProperty(propertyName);
-            String columnNameWithoutAlias = query.getPureSQLColumnName(entityType, prop);
+	/**
+	 * Evaluate.
+	 *
+	 * @param context the context
+	 * @return the string
+	 * @throws EdmException the edm exception
+	 */
+	@Override
+	public String evaluate(final SQLContext context) throws EdmException {
+		return groupByClauseBuilder(context);
+	}
 
-            if(!query.isAggregationTypeExplicit(entityType) &&
-                    query.isColumnContainedInAggregationProp(entityType, columnNameWithoutAlias)) {
-                continue;
-            }
+	/**
+	 * Group by clause builder.
+	 *
+	 * @param context the context
+	 * @return the string
+	 * @throws EdmException the edm exception
+	 */
+	public String groupByClauseBuilder(SQLContext context) throws EdmException {
+		StringBuilder groupByClause = new StringBuilder();
+		for (String propertyName : entityType.getPropertyNames()) {
+			EdmProperty prop = (EdmProperty) entityType.getProperty(propertyName);
+			String columnNameWithoutAlias = query.getPureSQLColumnName(entityType, prop);
 
-            if(!groupByClause.toString().isEmpty()) {
-                groupByClause.append(", ");
-            }
+			if (!query.isAggregationTypeExplicit(entityType)
+					&& query.isColumnContainedInAggregationProp(entityType, columnNameWithoutAlias)) {
+				continue;
+			}
 
-            if (context == null || context.getDatabaseProduct() != null) {
-                groupByClause.append(query.getSQLTableColumn(entityType, prop));
-            } else {
-                groupByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // this gives the correct "group by" column name for Open SQL
-            }
-        }
-        return groupByClause.toString();
-    }
+			if (!groupByClause.toString().isEmpty()) {
+				groupByClause.append(", ");
+			}
 
-    /**
-     * Checks if is empty.
-     *
-     * @return true, if is empty
-     */
-    @Override
-    public boolean isEmpty() {
-        return true;
-    }
+			if (context == null || context.getDatabaseProduct() != null) {
+				groupByClause.append(query.getSQLTableColumn(entityType, prop));
+			} else {
+				groupByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // this gives the correct "group by" column name for
+																						// Open SQL
+			}
+		}
+		return groupByClause.toString();
+	}
+
+	/**
+	 * Checks if is empty.
+	 *
+	 * @return true, if is empty
+	 */
+	@Override
+	public boolean isEmpty() {
+		return true;
+	}
 }

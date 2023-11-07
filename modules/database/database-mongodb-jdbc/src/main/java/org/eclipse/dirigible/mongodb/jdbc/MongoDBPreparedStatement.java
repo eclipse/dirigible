@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.mongodb.jdbc;
 
@@ -41,13 +40,13 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 
 	/** The p stmnt string. */
 	String pStmntString;
-	
+
 	/** The parameters. */
 	SortedMap<Integer, Object> parameters = new TreeMap<Integer, Object>();
-	
+
 	/** The rs. */
 	private ResultSet rs;
-	
+
 	/**
 	 * Instantiates a new mongo DB prepared statement.
 	 *
@@ -69,7 +68,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	public boolean execute() throws SQLException {
 		return super.execute(this.pStmntString);
 	}
-	
+
 	/**
 	 * Execute query.
 	 *
@@ -99,10 +98,10 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @return the result set
 	 */
 	@Override
-	public ResultSet getResultSet(){
+	public ResultSet getResultSet() {
 		return this.rs;
 	}
-	
+
 	/**
 	 * Gets the parameter meta data.
 	 *
@@ -114,7 +113,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 		ParameterMetaData paramsMetadata = new MongoDBParameterMetaData(parameters);
 		return paramsMetadata;
 	}
-	
+
 	/**
 	 * Clear parameters.
 	 *
@@ -136,7 +135,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setNull(int parameterIndex, int sqlType) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -149,7 +148,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setBoolean(int parameterIndex, boolean x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -162,7 +161,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setByte(int parameterIndex, byte x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -175,7 +174,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setShort(int parameterIndex, short x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -188,7 +187,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setInt(int parameterIndex, int x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -201,7 +200,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setLong(int parameterIndex, long x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -214,7 +213,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setFloat(int parameterIndex, float x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -227,7 +226,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setDouble(int parameterIndex, double x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -238,10 +237,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setBigDecimal(int parameterIndex, BigDecimal x)
-			throws SQLException {
+	public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -254,7 +252,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setString(int parameterIndex, String x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -267,7 +265,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setBytes(int parameterIndex, byte[] x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -280,7 +278,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setDate(int parameterIndex, Date x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -293,7 +291,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setTime(int parameterIndex, Time x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -304,10 +302,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setTimestamp(int parameterIndex, Timestamp x)
-			throws SQLException {
+	public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -319,10 +316,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setAsciiStream(int parameterIndex, InputStream x, int length)
-			throws SQLException {
+	public void setAsciiStream(int parameterIndex, InputStream x, int length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -334,10 +330,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setUnicodeStream(int parameterIndex, InputStream x, int length)
-			throws SQLException {
+	public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -349,10 +344,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setBinaryStream(int parameterIndex, InputStream x, int length)
-			throws SQLException {
+	public void setBinaryStream(int parameterIndex, InputStream x, int length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -364,10 +358,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setObject(int parameterIndex, Object x, int targetSqlType)
-			throws SQLException {
+	public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -380,7 +373,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setObject(int parameterIndex, Object x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -391,7 +384,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void addBatch() throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -403,10 +396,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setCharacterStream(int parameterIndex, Reader reader, int length)
-			throws SQLException {
+	public void setCharacterStream(int parameterIndex, Reader reader, int length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -419,7 +411,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setRef(int parameterIndex, Ref x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -432,7 +424,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setBlob(int parameterIndex, Blob x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -445,7 +437,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setClob(int parameterIndex, Clob x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -458,7 +450,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setArray(int parameterIndex, Array x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -482,10 +474,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setDate(int parameterIndex, Date x, Calendar cal)
-			throws SQLException {
+	public void setDate(int parameterIndex, Date x, Calendar cal) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -497,10 +488,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setTime(int parameterIndex, Time x, Calendar cal)
-			throws SQLException {
+	public void setTime(int parameterIndex, Time x, Calendar cal) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -512,10 +502,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setTimestamp(int parameterIndex, Timestamp x, Calendar cal)
-			throws SQLException {
+	public void setTimestamp(int parameterIndex, Timestamp x, Calendar cal) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -527,10 +516,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setNull(int parameterIndex, int sqlType, String typeName)
-			throws SQLException {
+	public void setNull(int parameterIndex, int sqlType, String typeName) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -543,7 +531,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setURL(int parameterIndex, URL x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -556,7 +544,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setRowId(int parameterIndex, RowId x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -567,10 +555,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setNString(int parameterIndex, String value)
-			throws SQLException {
+	public void setNString(int parameterIndex, String value) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -582,10 +569,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setNCharacterStream(int parameterIndex, Reader value,
-			long length) throws SQLException {
+	public void setNCharacterStream(int parameterIndex, Reader value, long length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -598,7 +584,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setNClob(int parameterIndex, NClob value) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -610,10 +596,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setClob(int parameterIndex, Reader reader, long length)
-			throws SQLException {
+	public void setClob(int parameterIndex, Reader reader, long length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -625,10 +610,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setBlob(int parameterIndex, InputStream inputStream, long length)
-			throws SQLException {
+	public void setBlob(int parameterIndex, InputStream inputStream, long length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -640,10 +624,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setNClob(int parameterIndex, Reader reader, long length)
-			throws SQLException {
+	public void setNClob(int parameterIndex, Reader reader, long length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -654,10 +637,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setSQLXML(int parameterIndex, SQLXML xmlObject)
-			throws SQLException {
+	public void setSQLXML(int parameterIndex, SQLXML xmlObject) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -670,10 +652,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setObject(int parameterIndex, Object x, int targetSqlType,
-			int scaleOrLength) throws SQLException {
+	public void setObject(int parameterIndex, Object x, int targetSqlType, int scaleOrLength) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -685,10 +666,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setAsciiStream(int parameterIndex, InputStream x, long length)
-			throws SQLException {
+	public void setAsciiStream(int parameterIndex, InputStream x, long length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -700,10 +680,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setBinaryStream(int parameterIndex, InputStream x, long length)
-			throws SQLException {
+	public void setBinaryStream(int parameterIndex, InputStream x, long length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -715,10 +694,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setCharacterStream(int parameterIndex, Reader reader,
-			long length) throws SQLException {
+	public void setCharacterStream(int parameterIndex, Reader reader, long length) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -729,10 +707,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setAsciiStream(int parameterIndex, InputStream x)
-			throws SQLException {
+	public void setAsciiStream(int parameterIndex, InputStream x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -743,10 +720,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setBinaryStream(int parameterIndex, InputStream x)
-			throws SQLException {
+	public void setBinaryStream(int parameterIndex, InputStream x) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -757,10 +733,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setCharacterStream(int parameterIndex, Reader reader)
-			throws SQLException {
+	public void setCharacterStream(int parameterIndex, Reader reader) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -771,10 +746,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setNCharacterStream(int parameterIndex, Reader value)
-			throws SQLException {
+	public void setNCharacterStream(int parameterIndex, Reader value) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -787,7 +761,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setClob(int parameterIndex, Reader reader) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -798,10 +772,9 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void setBlob(int parameterIndex, InputStream inputStream)
-			throws SQLException {
+	public void setBlob(int parameterIndex, InputStream inputStream) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -814,7 +787,7 @@ public class MongoDBPreparedStatement extends MongoDBStatement implements Prepar
 	@Override
 	public void setNClob(int parameterIndex, Reader reader) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

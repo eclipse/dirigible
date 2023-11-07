@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.base.synchronizer;
 
@@ -28,7 +27,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
  * @param <A> the generic type
  */
 public interface Synchronizer<A extends Artefact> {
-	
+
 	/**
 	 * Gets the service.
 	 *
@@ -52,7 +51,7 @@ public interface Synchronizer<A extends Artefact> {
 	 * @return true, if is accepted
 	 */
 	boolean isAccepted(String type);
-	
+
 	/**
 	 * Parse the definition and produce artefacts.
 	 *
@@ -62,7 +61,7 @@ public interface Synchronizer<A extends Artefact> {
 	 * @throws ParseException the parse exception
 	 */
 	List<A> parse(String location, byte[] content) throws ParseException;
-	
+
 	/**
 	 * Retrieve all the processed artefacts by the definition location.
 	 *
@@ -70,7 +69,7 @@ public interface Synchronizer<A extends Artefact> {
 	 * @return the list
 	 */
 	List<A> retrieve(String location);
-	
+
 	/**
 	 * Retrieve all the processed artefacts by the definition location.
 	 *
@@ -79,7 +78,7 @@ public interface Synchronizer<A extends Artefact> {
 	 * @param message the message
 	 */
 	void setStatus(Artefact artefact, ArtefactLifecycle lifecycle, String message);
-	
+
 	/**
 	 * Complete.
 	 *
@@ -88,7 +87,7 @@ public interface Synchronizer<A extends Artefact> {
 	 * @return true, if successful
 	 */
 	boolean complete(TopologyWrapper<Artefact> wrapper, ArtefactPhase flow);
-	
+
 	/**
 	 * Cleanup.
 	 *
@@ -102,19 +101,19 @@ public interface Synchronizer<A extends Artefact> {
 	 * @param callback the new callback
 	 */
 	void setCallback(SynchronizerCallback callback);
-	
+
 	/**
 	 * Gets the file extension.
 	 *
 	 * @return the file extension
 	 */
 	String getFileExtension();
-	
+
 	/**
 	 * Gets the artefact type.
 	 *
 	 * @return the artefact type
 	 */
 	String getArtefactType();
-	
+
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.mongodb.jdbc.util;
 
@@ -33,10 +32,10 @@ public class ListMongoIterable implements MongoIterable<String> {
 	 *
 	 * @param backingList the backing list
 	 */
-	public ListMongoIterable(List<String> backingList){
+	public ListMongoIterable(List<String> backingList) {
 		this.entries = backingList;
 	}
-	
+
 	/**
 	 * Map.
 	 *
@@ -48,7 +47,7 @@ public class ListMongoIterable implements MongoIterable<String> {
 	public <U> MongoIterable<U> map(Function<String, U> mapper) {
 		return null;
 	}
-	
+
 	/**
 	 * Iterator.
 	 *
@@ -57,8 +56,8 @@ public class ListMongoIterable implements MongoIterable<String> {
 	@Override
 	public MongoCursor<String> iterator() {
 		return new LocalIteratorMongoCursor(entries.iterator());
-	}				
-	
+	}
+
 	/**
 	 * Into.
 	 *
@@ -70,16 +69,15 @@ public class ListMongoIterable implements MongoIterable<String> {
 	public <A extends Collection<? super String>> A into(A target) {
 		return null;
 	}
-	
+
 	/**
 	 * For each.
 	 *
 	 * @param block the block
 	 */
 	@Override
-	public void forEach(Block<? super String> block) {
-	}
-	
+	public void forEach(Block<? super String> block) {}
+
 	/**
 	 * First.
 	 *
@@ -88,9 +86,9 @@ public class ListMongoIterable implements MongoIterable<String> {
 	@Override
 	public String first() {
 		Iterator<String> iter = this.iterator();
-		return iter.hasNext()?this.iterator().next():null;
+		return iter.hasNext() ? this.iterator().next() : null;
 	}
-	
+
 	/**
 	 * Batch size.
 	 *
@@ -111,5 +109,5 @@ public class ListMongoIterable implements MongoIterable<String> {
 	public MongoCursor<String> cursor() {
 		return null;
 	}
-	
+
 }

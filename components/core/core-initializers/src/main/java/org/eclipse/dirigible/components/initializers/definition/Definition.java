@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.initializers.definition;
 
@@ -36,54 +35,54 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Table(name = "DIRIGIBLE_DEFINITIONS")
 public class Definition extends Auditable<String> implements Serializable {
-	
+
 	/** The Constant KEY_SEPARATOR. */
 	public static final String KEY_SEPARATOR = ":";
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "DEFINITION_ID", nullable = false)
 	private Long id;
-	
+
 	/** The location. */
 	@Column(name = "DEFINITION_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	protected String location;
-	
+
 	/** The name. */
 	@Column(name = "DEFINITION_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	protected String name;
-	
+
 	/** The key. */
 	@Column(name = "DEFINITION_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	protected String type;
-	
-	/** The key
-	 * e.g. table:/sales/domain/customer.table:customer
+
+	/**
+	 * The key e.g. table:/sales/domain/customer.table:customer
 	 */
 	@Column(name = "DEFINITION_KEY", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
 	@Expose
 	protected String key;
-	
+
 	/** The checksum. */
 	@Column(name = "DEFINITION_CHECKSUM", columnDefinition = "VARCHAR", nullable = true, length = 32)
 	@Expose
-    protected String checksum;
-	
+	protected String checksum;
+
 	/** The status. */
 	@Column(name = "DEFINITION_STATE", columnDefinition = "VARCHAR", nullable = true, length = 32)
 	@Enumerated(EnumType.STRING)
 	@Expose
-    protected DefinitionState state;
-	
+	protected DefinitionState state;
+
 	/** The status. */
 	@Column(name = "DEFINITION_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Expose
-    protected String message;
-	
+	protected String message;
+
 	/** The content. */
 	@Transient
 	private transient byte[] content;
@@ -105,7 +104,7 @@ public class Definition extends Auditable<String> implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Instantiates a new artefact.
 	 *
@@ -123,12 +122,11 @@ public class Definition extends Auditable<String> implements Serializable {
 		updateKey();
 		updateChecksum(content);
 	}
-	
+
 	/**
 	 * Instantiates a new artefact.
 	 */
-	public Definition() {
-	}
+	public Definition() {}
 
 	/**
 	 * Gets the location.
@@ -148,7 +146,7 @@ public class Definition extends Auditable<String> implements Serializable {
 		this.location = location;
 		updateKey();
 	}
-	
+
 	/**
 	 * Gets the name.
 	 *
@@ -157,7 +155,7 @@ public class Definition extends Auditable<String> implements Serializable {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Sets the name.
 	 *
@@ -167,7 +165,7 @@ public class Definition extends Auditable<String> implements Serializable {
 		this.name = name;
 		updateKey();
 	}
-	
+
 	/**
 	 * Gets the type.
 	 *
@@ -185,7 +183,7 @@ public class Definition extends Auditable<String> implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * Gets the key.
 	 *
@@ -203,19 +201,17 @@ public class Definition extends Auditable<String> implements Serializable {
 	public void setKey(String key) {
 		this.key = key;
 	}
-	
+
 	/**
 	 * Update key.
 	 *
 	 */
 	public void updateKey() {
-		if (this.type != null
-				&& this.location != null 
-				&& this.name != null) {
+		if (this.type != null && this.location != null && this.name != null) {
 			this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
 		}
 	}
-	
+
 	/**
 	 * Gets the checksum.
 	 *
@@ -233,7 +229,7 @@ public class Definition extends Auditable<String> implements Serializable {
 	public void setChecksum(String checksum) {
 		this.checksum = checksum;
 	}
-	
+
 	/**
 	 * Gets the state.
 	 *
@@ -251,7 +247,7 @@ public class Definition extends Auditable<String> implements Serializable {
 	public void setState(DefinitionState state) {
 		this.state = state;
 	}
-	
+
 	/**
 	 * Gets the message.
 	 *
@@ -260,7 +256,7 @@ public class Definition extends Auditable<String> implements Serializable {
 	public String getMessage() {
 		return message;
 	}
-	
+
 	/**
 	 * Sets the message.
 	 *
@@ -269,7 +265,7 @@ public class Definition extends Auditable<String> implements Serializable {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 	/**
 	 * Update checksum.
 	 *
@@ -280,13 +276,13 @@ public class Definition extends Auditable<String> implements Serializable {
 		try {
 			md = MessageDigest.getInstance("MD5");
 			md.update(content);
-		    byte[] digest = md.digest();
-		    this.checksum = DatatypeConverter.printHexBinary(digest).toUpperCase();
+			byte[] digest = md.digest();
+			this.checksum = DatatypeConverter.printHexBinary(digest).toUpperCase();
 		} catch (NoSuchAlgorithmException e) {
 			this.checksum = "";
 		}
 	}
-	
+
 	/**
 	 * Gets the content.
 	 *
@@ -295,7 +291,7 @@ public class Definition extends Auditable<String> implements Serializable {
 	public byte[] getContent() {
 		return content;
 	}
-	
+
 	/**
 	 * Sets the content.
 	 *
@@ -312,10 +308,9 @@ public class Definition extends Auditable<String> implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Definition [id=" + id + ", location=" + location + ", name=" + name + ", type=" + type + ", key=" + key
-				+ ", checksum=" + checksum + ", state=" + state + ", message="
-				+ message + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy
-				+ ", updatedAt=" + updatedAt + "]";
+		return "Definition [id=" + id + ", location=" + location + ", name=" + name + ", type=" + type + ", key=" + key + ", checksum="
+				+ checksum + ", state=" + state + ", message=" + message + ", createdBy=" + createdBy + ", createdAt=" + createdAt
+				+ ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
-	
+
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.api;
 
@@ -21,29 +20,31 @@ import com.google.gson.annotations.Expose;
  */
 public class ODataProperty {
 
-    /** The name. */
+	/** The name. */
 	@Expose
-    private String name;
+	private String name;
 
-    /** The column. */
+	/** The column. */
 	@Expose
-    private String column;
+	private String column;
 
-    /** The nullable. */
+	/** The nullable. */
 	@Expose
-    private boolean nullable;
+	private boolean nullable;
 
-    /** The type. */
+	/** The type. */
 	@Expose
-    private String type;
+	private String type;
 
-    /**
-     * <p>Define list of additional annotations for Property element.</p>
-     * For example:
-     * <code> &lt;Property Name="SomeName" Type="Edm.String" sap:label="SomeLabel" sap:filterable="false"/&gt; </code>
-     */
+	/**
+	 * <p>
+	 * Define list of additional annotations for Property element.
+	 * </p>
+	 * For example:
+	 * <code> &lt;Property Name="SomeName" Type="Edm.String" sap:label="SomeLabel" sap:filterable="false"/&gt; </code>
+	 */
 	@Expose
-    private Map<String ,String> annotationsProperty = new HashMap<>();
+	private Map<String, String> annotationsProperty = new HashMap<>();
 
 	/**
 	 * Gets the name.
@@ -150,8 +151,8 @@ public class ODataProperty {
 	 */
 	@Override
 	public String toString() {
-		return "ODataProperty [name=" + name + ", column=" + column + ", nullable=" + nullable + ", type=" + type
-				+ ", annotationsProperty=" + annotationsProperty + "]";
+		return "ODataProperty [name=" + name + ", column=" + column + ", nullable=" + nullable + ", type=" + type + ", annotationsProperty="
+				+ annotationsProperty + "]";
 	}
-    
+
 }

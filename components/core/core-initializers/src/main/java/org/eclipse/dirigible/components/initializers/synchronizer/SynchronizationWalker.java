@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
@@ -34,14 +33,14 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("singleton")
 public class SynchronizationWalker {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationWalker.class);
-	
-	
+
+
 	/** The synchronization walker callback. */
 	private SynchronizationWalkerCallback synchronizationWalkerCallback;
-	
+
 	/**
 	 * Instantiates a new synchronization walker.
 	 *
@@ -50,7 +49,7 @@ public class SynchronizationWalker {
 	public SynchronizationWalker(SynchronizationWalkerCallback synchronizationWalkerCallback) {
 		this.synchronizationWalkerCallback = synchronizationWalkerCallback;
 	}
-	
+
 	/**
 	 * Walk.
 	 *
@@ -60,23 +59,21 @@ public class SynchronizationWalker {
 	public void walk(String root) throws IOException {
 		EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
 		Files.walkFileTree(Paths.get(root), opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
-           
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                    throws IOException {
-            	synchronizationWalkerCallback.visitFile(file, attrs, file.toString()
-            			.substring(root.length()).replace(File.separator, IRepository.SEPARATOR));
-                return FileVisitResult.CONTINUE;
-            }
 
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc)
-                    throws IOException {
-            	logger.error("Failed to access file: " + file.toString());
-                return FileVisitResult.CONTINUE;
-            }
-            
-        });
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				synchronizationWalkerCallback.visitFile(file, attrs,
+						file.toString().substring(root.length()).replace(File.separator, IRepository.SEPARATOR));
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+				logger.error("Failed to access file: " + file.toString());
+				return FileVisitResult.CONTINUE;
+			}
+
+		});
 	}
 
 }

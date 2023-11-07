@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.command;
 
@@ -40,7 +39,7 @@ public class CommitCommand {
 
 	/** The verifier. */
 	private ProjectPropertiesVerifier projectPropertiesVerifier;
-	
+
 	/**
 	 * Instantiates a new commit command.
 	 *
@@ -50,7 +49,7 @@ public class CommitCommand {
 	public CommitCommand(ProjectPropertiesVerifier projectPropertiesVerifier) {
 		this.projectPropertiesVerifier = projectPropertiesVerifier;
 	}
-	
+
 	/**
 	 * Gets the project properties verifier.
 	 *
@@ -63,10 +62,8 @@ public class CommitCommand {
 	/**
 	 * Execute the Commit command.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param model
-	 *            the git push model
+	 * @param workspace the workspace
+	 * @param model the git push model
 	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final Workspace workspace, GitPushModel model) throws GitConnectorException {
@@ -75,11 +72,18 @@ public class CommitCommand {
 		}
 		for (String repositoryName : model.getProjects()) {
 			if (projectPropertiesVerifier.verify(workspace.getName(), repositoryName)) {
-				if (logger.isDebugEnabled()) {logger.debug(String.format("Start committing repository [%s]...", repositoryName));}
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("Start committing repository [%s]...", repositoryName));
+				}
 				commitProjectToGitRepository(workspace, repositoryName, model);
-				if (logger.isDebugEnabled()) {logger.debug(String.format("Commit of the repository [%s] finished.", repositoryName));}
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("Commit of the repository [%s] finished.", repositoryName));
+				}
 			} else {
-				if (logger.isWarnEnabled()) {logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Commit operation.", repositoryName));}
+				if (logger.isWarnEnabled()) {
+					logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Commit operation.",
+							repositoryName));
+				}
 			}
 		}
 
@@ -88,15 +92,13 @@ public class CommitCommand {
 	/**
 	 * Commit project to git repository by executing several low level Git commands.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param repositoryName
-	 *            the selected project
-	 * @param model
-	 *            the git push model
+	 * @param workspace the workspace
+	 * @param repositoryName the selected project
+	 * @param model the git push model
 	 * @throws GitConnectorException in case of exception
 	 */
-	private void commitProjectToGitRepository(final Workspace workspace, String repositoryName, GitPushModel model) throws GitConnectorException {
+	private void commitProjectToGitRepository(final Workspace workspace, String repositoryName, GitPushModel model)
+			throws GitConnectorException {
 
 		String errorMessage = String.format("Error occurred while committing repository [%s]. ", repositoryName);
 
@@ -123,7 +125,9 @@ public class CommitCommand {
 			} else {
 				errorMessage += " " + e.getMessage();
 			}
-			if (logger.isErrorEnabled()) {logger.error(errorMessage);}
+			if (logger.isErrorEnabled()) {
+				logger.error(errorMessage);
+			}
 			throw new GitConnectorException(errorMessage, e);
 		}
 	}

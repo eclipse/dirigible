@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.service;
 
@@ -36,7 +35,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class ActionsServiceTest {
 
@@ -50,25 +49,25 @@ public class ActionsServiceTest {
 	private WorkspaceService workspaceService;
 
 	/** The project json content. */
-	private static final String PROJECT_JSON_CONTENT= """
-	{
-		  "guid": "TestProject1",
-		  "actions": [{
-			  "name": "MyAction",
-			  "commands": [
-				  {
-					"os": "unix",
-					"command": "echo test"
-				  },
-				  {
-				    "os": "windows",
-			  	    "command": "cmd /c echo test"
-				  }
-			  ],
-			  "publish": "true"
-		  }]
-	}
-	""";
+	private static final String PROJECT_JSON_CONTENT = """
+			{
+				  "guid": "TestProject1",
+				  "actions": [{
+					  "name": "MyAction",
+					  "commands": [
+						  {
+							"os": "unix",
+							"command": "echo test"
+						  },
+						  {
+						    "os": "windows",
+					  	    "command": "cmd /c echo test"
+						  }
+					  ],
+					  "publish": "true"
+				  }]
+			}
+			""";
 
 
 	/**
@@ -86,7 +85,8 @@ public class ActionsServiceTest {
 		assertNotNull(project1.getInternal());
 		assertEquals("TestProject1", project1.getName());
 		assertEquals("/users/guest/TestWorkspace1/TestProject1", project1.getInternal().getPath());
-		File projectJson = workspaceService.createFile("TestWorkspace1", "TestProject1", "project.json", PROJECT_JSON_CONTENT.getBytes(), "application/json");
+		File projectJson = workspaceService.createFile("TestWorkspace1", "TestProject1", "project.json", PROJECT_JSON_CONTENT.getBytes(),
+				"application/json");
 		assertNotNull(projectJson);
 		assertNotNull(projectJson.getInternal());
 		assertEquals("project.json", projectJson.getName());

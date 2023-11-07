@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.processors.identity;
 
@@ -34,8 +33,7 @@ public class PersistenceNextValueIdentityProcessor extends AbstractPersistencePr
 	/**
 	 * Instantiates a new persistence next value identity processor.
 	 *
-	 * @param entityManagerInterceptor
-	 *            the entity manager interceptor
+	 * @param entityManagerInterceptor the entity manager interceptor
 	 */
 	public PersistenceNextValueIdentityProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
@@ -50,8 +48,10 @@ public class PersistenceNextValueIdentityProcessor extends AbstractPersistencePr
 	 */
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.
-	 * Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 *
+	 * @see
+	 * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
+	 * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
@@ -61,32 +61,30 @@ public class PersistenceNextValueIdentityProcessor extends AbstractPersistencePr
 	/**
 	 * Nextval.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
+	 * @param connection the connection
+	 * @param tableModel the table model
 	 * @return the long
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public long nextval(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("nextval -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));}
+		if (logger.isTraceEnabled()) {
+			logger.trace("nextval -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+		}
 		return nextval(connection, tableModel.getTableName());
 	}
-	
+
 	/**
 	 * Nextval.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableName
-	 *            the table name
+	 * @param connection the connection
+	 * @param tableName the table name
 	 * @return the long
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public long nextval(Connection connection, String tableName) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("nextval -> connection: " + connection.hashCode() + ", tableName: " + tableName);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("nextval -> connection: " + connection.hashCode() + ", tableName: " + tableName);
+		}
 		PersistenceManager<Identity> persistenceManager = new PersistenceManager<Identity>();
 		if (!persistenceManager.tableExists(connection, Identity.class)) {
 			persistenceManager.tableCreate(connection, Identity.class);

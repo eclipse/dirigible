@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.websockets.endpoint;
 
@@ -36,18 +35,18 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class WebsocketController {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WebsocketController.class);
-	
+
 	/** The processor. */
 	private final WebsocketProcessor processor;
-	
+
 	/** The client outbound channel. */
 	@Autowired
 	@Qualifier("clientOutboundChannel")
 	private MessageChannel clientOutboundChannel;
-	
+
 	/**
 	 * Instantiates a new websockets service.
 	 *
@@ -57,7 +56,7 @@ public class WebsocketController {
 	public WebsocketController(WebsocketProcessor processor) {
 		this.processor = processor;
 	}
-	
+
 	/**
 	 * Gets the processor.
 	 *
@@ -66,7 +65,7 @@ public class WebsocketController {
 	public WebsocketProcessor getProcessor() {
 		return processor;
 	}
-	
+
 	/**
 	 * On message.
 	 *
@@ -77,22 +76,26 @@ public class WebsocketController {
 	 */
 	@MessageMapping("/stomp/{endpoint}")
 	@SendToUser("/queue/reply/{endpoint}")
-    public OutputMessage onMessage(@DestinationVariable String endpoint, final InputMessage message) throws Exception {
-        final String time = new SimpleDateFormat("HH:mm").format(new Date());
-        if (logger.isTraceEnabled()) {logger.trace(String.format("[websocket] Endpoint '%s' received message:%s ", endpoint, message));}
+	public OutputMessage onMessage(@DestinationVariable String endpoint, final InputMessage message) throws Exception {
+		final String time = new SimpleDateFormat("HH:mm").format(new Date());
+		if (logger.isTraceEnabled()) {
+			logger.trace(String.format("[websocket] Endpoint '%s' received message:%s ", endpoint, message));
+		}
 		Map<Object, Object> context = new HashMap<>();
 		context.put("message", message.getText());
 		context.put("from", message.getFrom());
-    	context.put("method", "onmessage");
-    	try {
-    		Object result = getProcessor().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE, context);
-    		return new OutputMessage(message.getFrom(), result != null ? result.toString() : "", time);
+		context.put("method", "onmessage");
+		try {
+			Object result = getProcessor().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE, context);
+			return new OutputMessage(message.getFrom(), result != null ? result.toString() : "", time);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			return new OutputMessage(message.getFrom(), e.getMessage(), time);
 		}
-    }
-	
+	}
+
 	/**
 	 * Handle exception.
 	 *
@@ -101,19 +104,25 @@ public class WebsocketController {
 	 * @return the string
 	 */
 	@MessageExceptionHandler
-    @SendToUser("/queue/errors/{endpoint}")
-    public String handleException(@DestinationVariable String endpoint, Throwable throwable) {
-		if (logger.isErrorEnabled()) {logger.error(String.format("[ws:console] Endpoint '%s' error %s", endpoint, throwable.getMessage()));}
-		if (logger.isErrorEnabled()) {logger.error("[websocket] " + throwable.getMessage(), throwable);}
+	@SendToUser("/queue/errors/{endpoint}")
+	public String handleException(@DestinationVariable String endpoint, Throwable throwable) {
+		if (logger.isErrorEnabled()) {
+			logger.error(String.format("[ws:console] Endpoint '%s' error %s", endpoint, throwable.getMessage()));
+		}
+		if (logger.isErrorEnabled()) {
+			logger.error("[websocket] " + throwable.getMessage(), throwable);
+		}
 		Map<Object, Object> context = new HashMap<>();
 		context.put("error", throwable.getMessage());
-    	context.put("method", "onerror");
-    	try {
-    		getProcessor().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR, context);
+		context.put("method", "onerror");
+		try {
+			getProcessor().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR, context);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 		}
-        return throwable.getMessage();
-    }
+		return throwable.getMessage();
+	}
 
 }

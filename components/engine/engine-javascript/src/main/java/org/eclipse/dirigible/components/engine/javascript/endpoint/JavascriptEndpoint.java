@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.javascript.endpoint;
 
@@ -54,22 +53,22 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping({BaseEndpoint.PREFIX_ENDPOINT_SECURED + "js", BaseEndpoint.PREFIX_ENDPOINT_PUBLIC + "js"})
 public class JavascriptEndpoint extends BaseEndpoint {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(JavascriptEndpoint.class.getCanonicalName());
-	
+
 	/** The Constant HTTP_PATH_MATCHER. */
 	private static final String HTTP_PATH_MATCHER = "/{projectName}/{*projectFilePath}";
-	
-	
+
+
 	/** The javascript service. */
 	private final JavascriptService javascriptService;
-	
+
 	/** The repository. */
 	private final IRepository repository;
 
 	private final JavascriptSourceProvider sourceProvider = new DirigibleSourceProvider();
-	
+
 	/**
 	 * Instantiates a new javascript endpoint.
 	 *
@@ -77,21 +76,15 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param repository the repository
 	 */
 	@Autowired
-	public JavascriptEndpoint(
-			JavascriptService javascriptService,
-			IRepository repository
-	) {
+	public JavascriptEndpoint(JavascriptService javascriptService, IRepository repository) {
 		this.javascriptService = javascriptService;
 		this.repository = repository;
 	}
 
 	@GetMapping("/all-dts")
 	public List<Dts> getDTS() throws IOException {
-		Path dtsRoot = sourceProvider
-				.getAbsoluteProjectPath("modules")
-				.resolve("dist")
-				.resolve("dts");
-		
+		Path dtsRoot = sourceProvider.getAbsoluteProjectPath("modules").resolve("dist").resolve("dts");
+
 		if (dtsRoot.toFile().exists()) {
 			try (var dtsTree = Files.walk(dtsRoot)) {
 				List<Dts> allDtsFilesContent = dtsTree.filter(Files::isRegularFile).map(dts -> Dts.fromDtsPath(dtsRoot, dts)).toList();
@@ -112,14 +105,11 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@GetMapping(HTTP_PATH_MATCHER)
-	public ResponseEntity<?> get(
-			@PathVariable("projectName") String projectName,
-			@PathVariable("projectFilePath") String projectFilePath,
-			@Nullable @RequestParam(required = false) MultiValueMap<String,String> params
-	) {
+	public ResponseEntity<?> get(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
+			@Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
 		return executeJavaScript(projectName, projectFilePath, params, null);
 	}
-	
+
 	/**
 	 * Post.
 	 *
@@ -129,11 +119,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@PostMapping(HTTP_PATH_MATCHER)
-	public ResponseEntity<?> post(
-			@PathVariable("projectName") String projectName,
-			@PathVariable("projectFilePath") String projectFilePath,
-			@Nullable @RequestParam(required = false) MultiValueMap<String,String> params
-	) {
+	public ResponseEntity<?> post(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
+			@Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
 		return executeJavaScript(projectName, projectFilePath, params, null);
 	}
 
@@ -147,15 +134,13 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@PostMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
-	public ResponseEntity<?> postFile(
-			@PathVariable("projectName") String projectName,
+	public ResponseEntity<?> postFile(@PathVariable("projectName") String projectName,
 			@PathVariable("projectFilePath") String projectFilePath,
-			@Nullable @RequestParam(required = false) MultiValueMap<String,String> params,
-			@Validated @RequestParam("file") MultipartFile file
-	) {
+			@Nullable @RequestParam(required = false) MultiValueMap<String, String> params,
+			@Validated @RequestParam("file") MultipartFile file) {
 		return executeJavaScript(projectName, projectFilePath, params, new MultipartFile[] {file});
 	}
-	
+
 	/**
 	 * Put.
 	 *
@@ -165,14 +150,11 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@PutMapping(HTTP_PATH_MATCHER)
-	public ResponseEntity<?> put(
-			@PathVariable("projectName") String projectName,
-			@PathVariable("projectFilePath") String projectFilePath,
-			@Nullable @RequestParam(required = false) MultiValueMap<String,String> params
-	) {
+	public ResponseEntity<?> put(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
+			@Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
 		return executeJavaScript(projectName, projectFilePath, params, null);
 	}
-	
+
 	/**
 	 * Put.
 	 *
@@ -183,12 +165,10 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@PutMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
-	public ResponseEntity<?> putFile(
-			@PathVariable("projectName") String projectName,
+	public ResponseEntity<?> putFile(@PathVariable("projectName") String projectName,
 			@PathVariable("projectFilePath") String projectFilePath,
-			@Nullable @RequestParam(required = false) MultiValueMap<String,String> params,
-			@Validated @RequestParam("file") MultipartFile file
-	) {
+			@Nullable @RequestParam(required = false) MultiValueMap<String, String> params,
+			@Validated @RequestParam("file") MultipartFile file) {
 		return executeJavaScript(projectName, projectFilePath, params, new MultipartFile[] {file});
 	}
 
@@ -201,11 +181,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@PatchMapping(HTTP_PATH_MATCHER)
-	public ResponseEntity<?> patch(
-			@PathVariable("projectName") String projectName,
-			@PathVariable("projectFilePath") String projectFilePath,
-			@Nullable @RequestParam(required = false) MultiValueMap<String,String> params
-	) {
+	public ResponseEntity<?> patch(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
+			@Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
 		return executeJavaScript(projectName, projectFilePath, params, null);
 	}
 
@@ -218,11 +195,9 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @return the response
 	 */
 	@DeleteMapping(HTTP_PATH_MATCHER)
-	public ResponseEntity<?> delete(
-			@PathVariable("projectName") String projectName,
+	public ResponseEntity<?> delete(@PathVariable("projectName") String projectName,
 			@PathVariable("projectFilePath") String projectFilePath,
-			@Nullable @RequestParam(required = false) MultiValueMap<String,String> params
-	) {
+			@Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
 		return executeJavaScript(projectName, projectFilePath, params, null);
 	}
 
@@ -235,14 +210,14 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param files the files
 	 * @return the response
 	 */
-	private ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, 
-			MultiValueMap<String,String> params, MultipartFile[] files) {
+	private ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, MultiValueMap<String, String> params,
+			MultipartFile[] files) {
 		String projectFilePathParam = extractPathParam(projectFilePath);
 		projectFilePath = extractProjectFilePath(projectFilePath);
 		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, params, files);
 	}
-	
-	
+
+
 	/** The Constant CJS. */
 	private static final String CJS = ".cjs/";
 
@@ -297,13 +272,13 @@ public class JavascriptEndpoint extends BaseEndpoint {
 	 * @param files the files
 	 * @return the response
 	 */
-	protected ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam, 
-			MultiValueMap<String,String> params, MultipartFile[] files) {
+	protected ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam,
+			MultiValueMap<String, String> params, MultipartFile[] files) {
 		try {
 			if (!isValid(projectName) || !isValid(projectFilePath)) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 			}
-			Map<Object,Object> context = new HashMap<Object, Object>();
+			Map<Object, Object> context = new HashMap<Object, Object>();
 			if (params != null) {
 				context.put("params", params);
 			}
@@ -314,10 +289,10 @@ public class JavascriptEndpoint extends BaseEndpoint {
 				}
 				context.put("files", filesList);
 			}
-			
-			Object result = getJavascriptHandler().handleRequest(projectName,
-					normalizePath(projectFilePath), normalizePath(projectFilePathParam),
-					context, ((MultiValueMap<String,String>) context.get("params")).get("debug") != null);
+
+			Object result =
+					getJavascriptHandler().handleRequest(projectName, normalizePath(projectFilePath), normalizePath(projectFilePathParam),
+							context, ((MultiValueMap<String, String>) context.get("params")).get("debug") != null);
 			return ResponseEntity.ok(result);
 		} catch (RepositoryNotFoundException e) {
 			String message = e.getMessage() + ". Try to publish the service before execution.";
@@ -360,7 +335,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Normalize path.
 	 *

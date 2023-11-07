@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.terminal.endpoint;
 
@@ -36,46 +35,47 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
  */
 @Configuration
 @EnableWebSocket
-@ConditionalOnProperty(name="terminal.enabled", havingValue="true")
+@ConditionalOnProperty(name = "terminal.enabled", havingValue = "true")
 public class TerminalWebsocketConfig implements WebSocketConfigurer {
-	
+
 	/** The Constant TERMINAL_PREFIX. */
 	private static final String TERMINAL_PREFIX = "[ws:terminal] ";
 
-//	/** The Constant FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE. */
-//	private static final String FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE = "Feature 'Terminal' is disabled in this mode.";
-	
+	// /** The Constant FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE. */
+	// private static final String FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE = "Feature 'Terminal' is
+	// disabled in this mode.";
+
 	/** The Constant PERMISSIONS_FAILED. */
 	private static final String PERMISSIONS_FAILED = "Failed to set permissions on file";
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TerminalWebsocketConfig.class);
-	
+
 	static {
 		runTTYD();
 	}
-	
-    /**
-     * Register web socket handlers.
-     *
-     * @param registry the registry
-     */
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(getConsoleWebsocketHandler(), BaseEndpoint.PREFIX_ENDPOINT_WEBSOCKETS + "ide/terminal");
-    }
 
-    /**
-     * Gets the data transfer websocket handler.
-     *
-     * @return the data transfer websocket handler
-     */
-    @Bean
-    public WebSocketHandler getConsoleWebsocketHandler() {
-        return new TerminalWebsocketHandler();
-    }
-    
-    /** The started. */
+	/**
+	 * Register web socket handlers.
+	 *
+	 * @param registry the registry
+	 */
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		registry.addHandler(getConsoleWebsocketHandler(), BaseEndpoint.PREFIX_ENDPOINT_WEBSOCKETS + "ide/terminal");
+	}
+
+	/**
+	 * Gets the data transfer websocket handler.
+	 *
+	 * @return the data transfer websocket handler
+	 */
+	@Bean
+	public WebSocketHandler getConsoleWebsocketHandler() {
+		return new TerminalWebsocketHandler();
+	}
+
+	/** The started. */
 	static volatile boolean started = false;
 
 	/**
@@ -83,28 +83,33 @@ public class TerminalWebsocketConfig implements WebSocketConfigurer {
 	 */
 	public synchronized static void runTTYD() {
 		if (!started) {
-//			if (Configuration.isAnonymousModeEnabled()) {
-//				if (logger.isWarnEnabled()) {logger.warn(TERMINAL_PREFIX + FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
-//				return;
-//			}
+			// if (Configuration.isAnonymousModeEnabled()) {
+			// if (logger.isWarnEnabled()) {logger.warn(TERMINAL_PREFIX +
+			// FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);}
+			// return;
+			// }
 			try {
 				String command = "";
 				String os = System.getProperty("os.name").toLowerCase();
-				if ((os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0 )) {
+				if ((os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0)) {
 					command = "bash -c ./ttyd.sh";
 					File ttydShell = new File("./ttyd.sh");
 					if (!ttydShell.exists()) {
 						// ttyd binary should be placed in advance to $CATALINA_HOME/bin
-						
+
 						createShellScript(ttydShell, "./ttyd -p 9000 bash");
 						if (ttydShell.setExecutable(true)) {
 							File ttydExecutable = new File("./ttyd");
 							createExecutable(TerminalWebsocketConfig.class.getResourceAsStream("/ttyd_linux.x86_64_1.6.0"), ttydExecutable);
 							if (!ttydExecutable.setExecutable(true)) {
-								if (logger.isWarnEnabled()) {logger.warn(TERMINAL_PREFIX + PERMISSIONS_FAILED);}
+								if (logger.isWarnEnabled()) {
+									logger.warn(TERMINAL_PREFIX + PERMISSIONS_FAILED);
+								}
 							}
 						} else {
-							if (logger.isWarnEnabled()) {logger.warn(TERMINAL_PREFIX + PERMISSIONS_FAILED);}
+							if (logger.isWarnEnabled()) {
+								logger.warn(TERMINAL_PREFIX + PERMISSIONS_FAILED);
+							}
 						}
 					}
 				} else if (os.indexOf("mac") >= 0) {
@@ -112,10 +117,10 @@ public class TerminalWebsocketConfig implements WebSocketConfigurer {
 					File ttydShell = new File("./ttyd.sh");
 					if (!ttydShell.exists()) {
 						// ttyd should be pre-installed with: brew install ttyd
-	//					ProcessRunnable processRunnable = new ProcessRunnable("brew install ttyd");
-	//					new Thread(processRunnable).start();
-	//					processRunnable.getProcess().waitFor();
-						
+						// ProcessRunnable processRunnable = new ProcessRunnable("brew install ttyd");
+						// new Thread(processRunnable).start();
+						// processRunnable.getProcess().waitFor();
+
 						createShellScript(ttydShell, "ttyd -p 9000 bash");
 						ttydShell.setExecutable(true);
 					}
@@ -124,10 +129,10 @@ public class TerminalWebsocketConfig implements WebSocketConfigurer {
 				} else {
 					throw new IllegalStateException("Unknown OS: " + os);
 				}
-					
+
 				ProcessRunnable processRunnable = new ProcessRunnable(command);
 				new Thread(processRunnable).start();
-				
+
 			} catch (IOException e) {
 				logger.error(TERMINAL_PREFIX + e.getMessage(), e);
 			}
@@ -148,7 +153,7 @@ public class TerminalWebsocketConfig implements WebSocketConfigurer {
 			IOUtils.write(command, fos, Charset.defaultCharset());
 		}
 	}
-	
+
 	/**
 	 * Creates the executable.
 	 *

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.messaging;
 
@@ -31,7 +30,7 @@ public class MessagingFacade {
 		MessagingProducer producer = new MessagingProducer(destination, 'Q', message);
 		new Thread(producer).start();
 	}
-	
+
 	/**
 	 * Send a message to topic.
 	 *
@@ -42,7 +41,7 @@ public class MessagingFacade {
 		MessagingProducer producer = new MessagingProducer(destination, 'T', message);
 		new Thread(producer).start();
 	}
-	
+
 	/**
 	 * Receive a message from queue.
 	 *
@@ -54,7 +53,7 @@ public class MessagingFacade {
 		MessagingConsumer consumer = new MessagingConsumer(destination, 'Q', timeout);
 		return consumer.receiveMessage();
 	}
-	
+
 	/**
 	 * Receive a message from topic.
 	 *
@@ -66,5 +65,5 @@ public class MessagingFacade {
 		MessagingConsumer consumer = new MessagingConsumer(destination, 'T', timeout);
 		return consumer.receiveMessage();
 	}
-	
+
 }

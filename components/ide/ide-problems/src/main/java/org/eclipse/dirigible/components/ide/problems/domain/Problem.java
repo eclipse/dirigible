@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.problems.domain;
 
@@ -27,87 +26,86 @@ import org.eclipse.dirigible.components.api.security.UserFacade;
  * The Class Problem.
  */
 @Entity
-@Table(name = "DIRIGIBLE_PROBLEMS", uniqueConstraints=
-	@UniqueConstraint(columnNames={"PROBLEM_LOCATION", "PROBLEM_TYPE", "PROBLEM_LINE", "PROBLEM_COLUMN"}))
+@Table(name = "DIRIGIBLE_PROBLEMS",
+		uniqueConstraints = @UniqueConstraint(columnNames = {"PROBLEM_LOCATION", "PROBLEM_TYPE", "PROBLEM_LINE", "PROBLEM_COLUMN"}))
 public class Problem {
-	
+
 	/**
-     * Always on insert.
-     */
-    public static final String ACTIVE = "ACTIVE";
-    /**
-     * Marked by the user as solved.
-     */
-    public static final String SOLVED = "SOLVED";
-    /**
-     * Marked by the user as ignored.
-     */
-    public static final String IGNORED = "IGNORED";
-	
+	 * Always on insert.
+	 */
+	public static final String ACTIVE = "ACTIVE";
+	/**
+	 * Marked by the user as solved.
+	 */
+	public static final String SOLVED = "SOLVED";
+	/**
+	 * Marked by the user as ignored.
+	 */
+	public static final String IGNORED = "IGNORED";
+
 	/** The id. */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PROBLEM_ID", columnDefinition = "BIGINT", nullable = false)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "PROBLEM_ID", columnDefinition = "BIGINT", nullable = false)
+	private Long id;
 
-    /** The location. */
-    @Column(name = "PROBLEM_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 512)
-    private String location;
+	/** The location. */
+	@Column(name = "PROBLEM_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 512)
+	private String location;
 
-    /** The type. */
-    @Column(name = "PROBLEM_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 32)
-    private String type;
+	/** The type. */
+	@Column(name = "PROBLEM_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	private String type;
 
-    /** The line. */
-    @Column(name = "PROBLEM_LINE", columnDefinition = "VARCHAR", nullable = false, length = 11)
-    private String line;
+	/** The line. */
+	@Column(name = "PROBLEM_LINE", columnDefinition = "VARCHAR", nullable = false, length = 11)
+	private String line;
 
-    /** The column. */
-    @Column(name = "PROBLEM_COLUMN", columnDefinition = "VARCHAR", nullable = false, length = 11)
-    private String column;
+	/** The column. */
+	@Column(name = "PROBLEM_COLUMN", columnDefinition = "VARCHAR", nullable = false, length = 11)
+	private String column;
 
-    /** The cause. */
-    @Column(name = "PROBLEM_CAUSE", columnDefinition = "VARCHAR", nullable = false, length = 1024)
-    private String cause;
+	/** The cause. */
+	@Column(name = "PROBLEM_CAUSE", columnDefinition = "VARCHAR", nullable = false, length = 1024)
+	private String cause;
 
-    /** The expected. */
-    @Column(name = "PROBLEM_EXPECTED", columnDefinition = "VARCHAR", nullable = false, length = 512)
-    private String expected;
+	/** The expected. */
+	@Column(name = "PROBLEM_EXPECTED", columnDefinition = "VARCHAR", nullable = false, length = 512)
+	private String expected;
 
-    /** The created at. */
-    @Column(name = "PROBLEM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
-    private Timestamp createdAt;
+	/** The created at. */
+	@Column(name = "PROBLEM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
+	private Timestamp createdAt;
 
-    /** The created by. */
-    @Column(name = "PROBLEM_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
-    private String createdBy;
+	/** The created by. */
+	@Column(name = "PROBLEM_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	private String createdBy;
 
-    /** The category. */
-    @Column(name = "PROBLEM_CATEGORY", columnDefinition = "VARCHAR", nullable = false, length = 32)
-    private String category;
+	/** The category. */
+	@Column(name = "PROBLEM_CATEGORY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	private String category;
 
-    /** The module. */
-    @Column(name = "PROBLEM_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 32)
-    private String module;
+	/** The module. */
+	@Column(name = "PROBLEM_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	private String module;
 
-    /** The source. */
-    @Column(name = "PROBLEM_SOURCE", columnDefinition = "VARCHAR", nullable = false, length = 32)
-    private String source;
+	/** The source. */
+	@Column(name = "PROBLEM_SOURCE", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	private String source;
 
-    /** The program. */
-    @Column(name = "PROBLEM_PROGRAM", columnDefinition = "VARCHAR", nullable = false, length = 32)
-    private String program;
+	/** The program. */
+	@Column(name = "PROBLEM_PROGRAM", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	private String program;
 
-    /** The status. */
-    @Column(name = "PROBLEM_STATUS", columnDefinition = "VARCHAR", nullable = false, length = 8)
-    private String status;
+	/** The status. */
+	@Column(name = "PROBLEM_STATUS", columnDefinition = "VARCHAR", nullable = false, length = 8)
+	private String status;
 
-    /**
-     * Instantiates a new problem.
-     */
-    public Problem() {
-    }
-    
+	/**
+	 * Instantiates a new problem.
+	 */
+	public Problem() {}
+
 	/**
 	 * Instantiates a new problem.
 	 *
@@ -122,8 +120,8 @@ public class Problem {
 	 * @param source the source
 	 * @param program the program
 	 */
-	public Problem(String location, String type, String line, String column, String cause, String expected,
-			String category, String module, String source, String program) {
+	public Problem(String location, String type, String line, String column, String cause, String expected, String category, String module,
+			String source, String program) {
 		this.location = location;
 		this.type = type;
 		this.line = line;
@@ -398,10 +396,9 @@ public class Problem {
 	 */
 	@Override
 	public String toString() {
-		return "Problem [id=" + id + ", location=" + location + ", type=" + type + ", line=" + line + ", column="
-				+ column + ", cause=" + cause + ", expected=" + expected + ", createdAt=" + createdAt + ", createdBy="
-				+ createdBy + ", category=" + category + ", module=" + module + ", source=" + source + ", program="
-				+ program + ", status=" + status + "]";
+		return "Problem [id=" + id + ", location=" + location + ", type=" + type + ", line=" + line + ", column=" + column + ", cause="
+				+ cause + ", expected=" + expected + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", category=" + category
+				+ ", module=" + module + ", source=" + source + ", program=" + program + ", status=" + status + "]";
 	}
 
 }

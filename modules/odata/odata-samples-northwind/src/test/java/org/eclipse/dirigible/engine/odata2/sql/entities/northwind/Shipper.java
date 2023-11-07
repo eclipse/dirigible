@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
@@ -30,16 +29,16 @@ public class Shipper {
 
 	/** The shipper id. */
 	@EdmKey
-    @EdmProperty(name = "ShipperID", facets = @EdmFacets(nullable = false))
-    private Integer shipperId;
+	@EdmProperty(name = "ShipperID", facets = @EdmFacets(nullable = false))
+	private Integer shipperId;
 
 	/** The company name. */
 	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
-    private String companyName;
+	private String companyName;
 
 	/** The phone. */
 	@EdmProperty(facets = @EdmFacets(maxLength = 24))
-    private String phone;
+	private String phone;
 
 	/** The orders. */
 	@EdmNavigationProperty( //
@@ -48,5 +47,5 @@ public class Shipper {
 			toRole = "Orders", //
 			association = "FK_Orders_Shippers" //
 	)
-    private List<Order> orders;
+	private List<Order> orders;
 }

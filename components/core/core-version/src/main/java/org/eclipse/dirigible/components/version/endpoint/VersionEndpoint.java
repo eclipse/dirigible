@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.version.endpoint;
 
@@ -33,25 +32,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "version")
 public class VersionEndpoint extends BaseEndpoint {
 
-    /**
-     * The Constant logger.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(VersionEndpoint.class);
+	/**
+	 * The Constant logger.
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(VersionEndpoint.class);
 
-    /**
-     * The version service.
-     */
-    @Autowired
-    private VersionService versionService;
+	/**
+	 * The version service.
+	 */
+	@Autowired
+	private VersionService versionService;
 
-    /**
-     * Gets the version.
-     *
-     * @return the version
-     * @throws Exception the exception
-     */
-    @GetMapping
-    public ResponseEntity<Version> getVersion() throws Exception {
-        return ResponseEntity.ok(versionService.getVersion());
-    }
+	/**
+	 * Gets the version.
+	 *
+	 * @return the version
+	 * @throws Exception the exception
+	 */
+	@GetMapping
+	public ResponseEntity<Version> getVersion() throws Exception {
+		return ResponseEntity.ok(versionService.getVersion());
+	}
 }

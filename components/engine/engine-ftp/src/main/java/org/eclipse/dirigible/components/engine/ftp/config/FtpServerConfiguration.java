@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.ftp.config;
 
@@ -102,10 +101,9 @@ public class FtpServerConfiguration {
 		try {
 			String username = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_FTP_USERNAME", "YWRtaW4="); // admin
 			String password = org.eclipse.dirigible.commons.config.Configuration.get("DIRIGIBLE_FTP_PASSWORD", "YWRtaW4="); // admin
-			userManager.save(new FtpUser(
-					new String(new Base64().decode(username.getBytes()), StandardCharsets.UTF_8).trim(),
-					new String(new Base64().decode(password.getBytes()), StandardCharsets.UTF_8).trim(),
-					true, Collections.EMPTY_LIST, -1, REPOSITORY_ROOT, true));
+			userManager.save(new FtpUser(new String(new Base64().decode(username.getBytes()), StandardCharsets.UTF_8).trim(),
+					new String(new Base64().decode(password.getBytes()), StandardCharsets.UTF_8).trim(), true, Collections.EMPTY_LIST, -1,
+					REPOSITORY_ROOT, true));
 		} catch (FtpException e) {
 			throw new RuntimeException(e);
 		}

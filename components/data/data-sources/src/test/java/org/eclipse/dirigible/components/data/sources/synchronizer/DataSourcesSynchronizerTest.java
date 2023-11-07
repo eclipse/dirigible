@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.sources.synchronizer;
 
@@ -39,84 +38,85 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class DataSourcesSynchronizerTest {
-	
+
 	/** The datasource repository. */
 	@Autowired
 	private DataSourceRepository datasourceRepository;
-	
+
 	/** The datasource synchronizer. */
 	@Autowired
 	private DataSourcesSynchronizer<DataSource> datasourcesSynchronizer;
-	
+
 	/** The entity manager. */
 	@Autowired
 	EntityManager entityManager;
-	
+
 	/**
 	 * Setup.
 	 *
 	 * @throws Exception the exception
 	 */
 	@BeforeEach
-    public void setup() throws Exception {
-		
+	public void setup() throws Exception {
+
 		cleanup();
 
-    	// create test DataSources
+		// create test DataSources
 		datasourceRepository.save(createDataSource("/a/b/c/ds1.datasource", "ds1", "description"));
 		datasourceRepository.save(createDataSource("/a/b/c/ds2.datasource", "ds2", "description"));
 		datasourceRepository.save(createDataSource("/a/b/c/ds3.datasource", "ds3", "description"));
 		datasourceRepository.save(createDataSource("/a/b/c/ds4.datasource", "ds4", "description"));
 		datasourceRepository.save(createDataSource("/a/b/c/ds5.datasource", "ds5", "description"));
-    }
-	
+	}
+
 	/**
 	 * Cleanup.
 	 *
 	 * @throws Exception the exception
 	 */
 	@AfterEach
-    public void cleanup() throws Exception {
+	public void cleanup() throws Exception {
 		datasourceRepository.deleteAll();
-    }
-	
+	}
 
-	
+
+
 	/**
 	 * Checks if is accepted.
 	 */
 	@Test
-    public void isAcceptedPath() {
+	public void isAcceptedPath() {
 		assertTrue(datasourcesSynchronizer.isAccepted(Path.of("/a/b/c/ds1.datasource"), null));
-    }
-	
+	}
+
 	/**
 	 * Checks if is accepted.
 	 */
 	@Test
-    public void isAcceptedArtefact() {
+	public void isAcceptedArtefact() {
 		assertTrue(datasourcesSynchronizer.isAccepted(createDataSource("/a/b/c/ds1.datasource", "ds1", "description").getType()));
-    }
-	
+	}
+
 	/**
 	 * Load the artefact.
 	 *
 	 * @throws ParseException the parse exception
 	 */
 	@Test
-    public void load() throws ParseException {
-		String content = "{\"location\":\"/test/test.datasource\",\"name\":\"test\",\"driver\":\"org.h2.Driver\",\"url\":\"jdbc:h2:~/test\",\"username\":\"sa\",\"password\":\"\"}";
+	public void load() throws ParseException {
+		String content =
+				"{\"location\":\"/test/test.datasource\",\"name\":\"test\",\"driver\":\"org.h2.Driver\",\"url\":\"jdbc:h2:~/test\",\"username\":\"sa\",\"password\":\"\"}";
 		List<DataSource> list = datasourcesSynchronizer.parse("/test/test.datasource", content.getBytes());
 		assertNotNull(list);
 		assertEquals("/test/test.datasource", list.get(0).getLocation());
-    }
-	
+	}
 
-	
+
+
 	/**
 	 * Creates the datasource.
 	 *
@@ -129,12 +129,12 @@ public class DataSourcesSynchronizerTest {
 		DataSource dataSource = new DataSource(location, name, description, "", "", "", "");
 		return dataSource;
 	}
-	
+
 	/**
 	 * The Class TestConfiguration.
 	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}
-	
+
 }

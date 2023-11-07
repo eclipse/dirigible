@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
@@ -29,10 +28,8 @@ public class CreateTableCheckBuilder extends AbstractCreateTableConstraintBuilde
 	/**
 	 * Instantiates a new creates the table check builder.
 	 *
-	 * @param dialect
-	 *            the dialect
-	 * @param name
-	 *            the name
+	 * @param dialect the dialect
+	 * @param name the name
 	 */
 	CreateTableCheckBuilder(ISqlDialect dialect, String name) {
 		super(dialect, name);
@@ -50,12 +47,13 @@ public class CreateTableCheckBuilder extends AbstractCreateTableConstraintBuilde
 	/**
 	 * Expression.
 	 *
-	 * @param expression
-	 *            the expression
+	 * @param expression the expression
 	 * @return the creates the table check builder
 	 */
 	public CreateTableCheckBuilder expression(String expression) {
-		if (logger.isTraceEnabled()) {logger.trace("expression: " + expression);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("expression: " + expression);
+		}
 		this.expression = expression;
 		return this;
 	}

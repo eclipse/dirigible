@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.processors.entity;
 
@@ -38,8 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Persistence Insert Processor.
  *
- * @param <T>
- *            the entity type
+ * @param <T> the entity type
  */
 public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor {
 
@@ -49,8 +47,7 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 	/**
 	 * Instantiates a new persistence insert processor.
 	 *
-	 * @param entityManagerInterceptor
-	 *            the entity manager interceptor
+	 * @param entityManagerInterceptor the entity manager interceptor
 	 */
 	public PersistenceInsertProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
@@ -65,8 +62,10 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 	 */
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.
-	 * Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 *
+	 * @see
+	 * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
+	 * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
@@ -78,26 +77,26 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 			insertBuilder.column(columnModel.getName());
 		}
 		String sql = insertBuilder.build();
-		if (logger.isTraceEnabled()) {logger.trace(sql);}
+		if (logger.isTraceEnabled()) {
+			logger.trace(sql);
+		}
 		return sql;
 	}
 
 	/**
 	 * Insert.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @param pojo
-	 *            the pojo
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param pojo the pojo
 	 * @return the identifier of the inserted pojo
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public Object insert(Connection connection, PersistenceTableModel tableModel, T pojo) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("insert -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
-				+ Serializer.serializePojo(pojo));}
+		if (logger.isTraceEnabled()) {
+			logger.trace("insert -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+					+ ", pojo: " + Serializer.serializePojo(pojo));
+		}
 		Object result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -135,8 +134,12 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 				}
 			}
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(sql);}
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(sql);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);
@@ -147,29 +150,31 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 	/**
 	 * Sets the generated values.
 	 *
-	 * @param connection            the connection
-	 * @param tableModel            the table model
-	 * @param pojo            the pojo
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param pojo the pojo
 	 * @return true, if successful
-	 * @throws NoSuchFieldException             the no such field exception
-	 * @throws IllegalAccessException             the illegal access exception
-	 * @throws SQLException             the SQL exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws SQLException the SQL exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private boolean setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
 			throws NoSuchFieldException, IllegalAccessException, SQLException, IOException {
-		if (logger.isTraceEnabled()) {logger.trace("setGeneratedValues -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
-				+ ", pojo: " + Serializer.serializePojo(pojo));}
+		if (logger.isTraceEnabled()) {
+			logger.trace("setGeneratedValues -> connection: " + connection.hashCode() + ", tableModel: "
+					+ Serializer.serializeTableModel(tableModel) + ", pojo: " + Serializer.serializePojo(pojo));
+		}
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey() && (columnModel.getGenerated() != null)) {
 				long id = -1;
 				if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
-					PersistenceNextValueSequenceProcessor persistenceNextValueSequenceProcessor = new PersistenceNextValueSequenceProcessor(
-							getEntityManagerInterceptor());
+					PersistenceNextValueSequenceProcessor persistenceNextValueSequenceProcessor =
+							new PersistenceNextValueSequenceProcessor(getEntityManagerInterceptor());
 					id = persistenceNextValueSequenceProcessor.nextval(connection, tableModel);
 				} else if (GenerationType.TABLE.name().equals(columnModel.getGenerated())) {
-					PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor = new PersistenceNextValueIdentityProcessor(
-							getEntityManagerInterceptor());
+					PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor =
+							new PersistenceNextValueIdentityProcessor(getEntityManagerInterceptor());
 					id = persistenceNextValueIdentityProcessor.nextval(connection, tableModel);
 				} else if (GenerationType.IDENTITY.name().equals(columnModel.getGenerated())) {
 					return false;
@@ -185,17 +190,12 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 	/**
 	 * Gets the primary key value.
 	 *
-	 * @param tableModel
-	 *            the table model
-	 * @param pojo
-	 *            the pojo
+	 * @param tableModel the table model
+	 * @param pojo the pojo
 	 * @return the primary key value
-	 * @throws NoSuchFieldException
-	 *             the no such field exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws SQLException the SQL exception
 	 */
 	private Object getPrimaryKeyValue(PersistenceTableModel tableModel, Object pojo)
 			throws NoSuchFieldException, IllegalAccessException, SQLException {

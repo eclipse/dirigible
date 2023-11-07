@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.sequence;
 
@@ -19,106 +18,110 @@ import org.slf4j.LoggerFactory;
  * The Class AlterSequenceBuilder.
  */
 public class AlterSequenceBuilder extends CreateSequenceBuilder {
-    
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(AlterSequenceBuilder.class);
 
-    /** The restart with. */
-    private Integer restartWith;
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(AlterSequenceBuilder.class);
 
-    /**
-     * Restart with.
-     *
-     * @param restartWith the restart with
-     * @return the creates the sequence builder
-     */
-    public CreateSequenceBuilder restartWith(Integer restartWith) {
-        if (logger.isTraceEnabled()) {logger.trace("restartWith: " + restartWith);}
-        this.restartWith = restartWith;
-        return this;
-    }
+	/** The restart with. */
+	private Integer restartWith;
 
-    /**
-     * Instantiates a new alter sequence builder.
-     *
-     * @param dialect the dialect
-     * @param sequence the sequence
-     */
-    public AlterSequenceBuilder(ISqlDialect dialect, String sequence) {
-        super(dialect, sequence);
-    }
+	/**
+	 * Restart with.
+	 *
+	 * @param restartWith the restart with
+	 * @return the creates the sequence builder
+	 */
+	public CreateSequenceBuilder restartWith(Integer restartWith) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("restartWith: " + restartWith);
+		}
+		this.restartWith = restartWith;
+		return this;
+	}
 
-    /**
-     * Generate reset by.
-     *
-     * @param sql the sql
-     */
-    protected void generateRestartWith(StringBuilder sql) {
-        if (this.restartWith != null) {
-            generateSequenceParameter(sql, KEYWORD_SEQUENCE_RESTART_WITH, String.valueOf(this.restartWith));
-        }
+	/**
+	 * Instantiates a new alter sequence builder.
+	 *
+	 * @param dialect the dialect
+	 * @param sequence the sequence
+	 */
+	public AlterSequenceBuilder(ISqlDialect dialect, String sequence) {
+		super(dialect, sequence);
+	}
 
-    }
+	/**
+	 * Generate reset by.
+	 *
+	 * @param sql the sql
+	 */
+	protected void generateRestartWith(StringBuilder sql) {
+		if (this.restartWith != null) {
+			generateSequenceParameter(sql, KEYWORD_SEQUENCE_RESTART_WITH, String.valueOf(this.restartWith));
+		}
 
-    /**
-     * Generate.
-     *
-     * @return the string
-     */
-    @Override
-    public String generate() {
-        StringBuilder sql = new StringBuilder();
+	}
 
-        // ALTER
-        generateAlter(sql);
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
+	@Override
+	public String generate() {
+		StringBuilder sql = new StringBuilder();
 
-        // SEQUENCE
-        generateSequence(sql);
+		// ALTER
+		generateAlter(sql);
 
-        // START_WITH
-        generateStart(sql);
+		// SEQUENCE
+		generateSequence(sql);
 
-        // INCREMENT_BY
-        generateIncrement(sql);
+		// START_WITH
+		generateStart(sql);
 
-        //MAXVALUE
-        generateMaxvalue(sql);
+		// INCREMENT_BY
+		generateIncrement(sql);
 
-        //NO MAXVALUE
-        generateNomaxvalue(sql);
+		// MAXVALUE
+		generateMaxvalue(sql);
 
-        //MINVALUE
-        generateMinvalue(sql);
+		// NO MAXVALUE
+		generateNomaxvalue(sql);
 
-        //NO MINVALUE
-        generateNominvalue(sql);
+		// MINVALUE
+		generateMinvalue(sql);
 
-        //CYCLE
-        generateCycle(sql);
+		// NO MINVALUE
+		generateNominvalue(sql);
 
-        //RESET BY
-        generateResetBy(sql);
+		// CYCLE
+		generateCycle(sql);
 
-        //RESTART WITH
-        generateRestartWith(sql);
+		// RESET BY
+		generateResetBy(sql);
 
-        String generated = sql.toString();
+		// RESTART WITH
+		generateRestartWith(sql);
 
-        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+		String generated = sql.toString();
 
-        return generated;
-    }
+		if (logger.isTraceEnabled()) {
+			logger.trace("generated: " + generated);
+		}
 
-    /**
-     * Generate start.
-     *
-     * @param sql the sql
-     */
-    @Override
-    protected void generateStart(StringBuilder sql) {
-        if (this.getStart() != null) {
-            generateSequenceParameter(sql, KEYWORD_SEQUENCE_RESTART_WITH, String.valueOf(this.getStart()));
-        }
+		return generated;
+	}
 
-    }
+	/**
+	 * Generate start.
+	 *
+	 * @param sql the sql
+	 */
+	@Override
+	protected void generateStart(StringBuilder sql) {
+		if (this.getStart() != null) {
+			generateSequenceParameter(sql, KEYWORD_SEQUENCE_RESTART_WITH, String.valueOf(this.getStart()));
+		}
+
+	}
 }

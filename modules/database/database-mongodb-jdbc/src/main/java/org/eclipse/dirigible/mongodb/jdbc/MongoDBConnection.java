@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.mongodb.jdbc;
 
@@ -47,46 +46,46 @@ import com.mongodb.client.MongoDatabase;
  * The Class MongoDBConnection.
  */
 public class MongoDBConnection implements Connection {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MongoDBConnection.class);
-	
+
 	/** The Constant MONGODB_DEFAULT_DB. */
 	private static final String MONGODB_DEFAULT_DB = "db";
 
 	/** The info. */
 	private Properties info;
-	
+
 	/** The uri. */
 	private MongoClientURI uri;
-	
+
 	/** The db name. */
 	private String dbName;
-	
+
 	/** The collection name. */
 	private String collectionName;
-	
+
 	/** The is closed. */
 	private boolean isClosed = true;
-	
+
 	/** The is readonly. */
 	private boolean isReadonly = false;
-	
+
 	/** The client. */
 	private MongoClient client;
-	
+
 	/** The client options. */
 	private MongoClientOptions clientOptions;
-	
+
 	/** The mongo atabase. */
 	MongoDatabase mongoDatabase;
-	
+
 	/** The collection. */
 	MongoCollection<Document> collection;
-	
+
 	/** The metadata. */
 	private MongoDBDatabaseMetadata metadata;
-	
+
 	/**
 	 * Instantiates a new mongo DB connection.
 	 *
@@ -99,26 +98,26 @@ public class MongoDBConnection implements Connection {
 		this.uri = uri;
 		this.dbName = this.uri.getDatabase() != null ? this.uri.getDatabase() : MONGODB_DEFAULT_DB;
 		this.collectionName = this.uri.getCollection();
-		
+
 		this.client = new MongoClient(this.uri);
 		this.isClosed = false;
-		
+
 		this.info = info;
-		if(this.info == null)
+		if (this.info == null)
 			this.info = new Properties();
 		this.clientOptions = this.client.getMongoClientOptions();
 		this.info.putAll(this.mongoClientOptionsAsProperties(this.clientOptions, this.info));
-		
+
 		// retrieve these from connected client
 		this.dbName = this.uri.getDatabase();
-		if(this.dbName!=null)
+		if (this.dbName != null)
 			this.mongoDatabase = this.client.getDatabase(this.dbName);
-		if(this.collectionName!=null)
+		if (this.collectionName != null)
 			this.collection = this.mongoDatabase.getCollection(this.collectionName);
-		
-		logger.debug("Connected with client properties: "+this.info.toString());
+
+		logger.debug("Connected with client properties: " + this.info.toString());
 	}
-	
+
 	/**
 	 * Gets the mongo db.
 	 *
@@ -127,13 +126,13 @@ public class MongoDBConnection implements Connection {
 	public MongoDatabase getMongoDatabase() {
 		return this.mongoDatabase;
 	}
-	
+
 	/**
 	 * Gets the collection name.
 	 *
 	 * @return the collection name
 	 */
-	public String getCollectionName(){
+	public String getCollectionName() {
 		return this.collectionName;
 	}
 
@@ -144,25 +143,25 @@ public class MongoDBConnection implements Connection {
 	 * @param props the props
 	 * @return the properties
 	 */
-	private Properties mongoClientOptionsAsProperties(MongoClientOptions ops, Properties props){
-		//TODO: write complex object properties too?
-		if(ops.getDescription()!=null)
+	private Properties mongoClientOptionsAsProperties(MongoClientOptions ops, Properties props) {
+		// TODO: write complex object properties too?
+		if (ops.getDescription() != null)
 			props.setProperty("description", ops.getDescription());
-		if(ops.getRequiredReplicaSetName()!=null)
+		if (ops.getRequiredReplicaSetName() != null)
 			props.setProperty("requiredReplicaSetName", ops.getRequiredReplicaSetName());
-		props.setProperty("connectionsPerHost", ""+ops.getConnectionsPerHost());
-		props.setProperty("connectTimeout", ""+ops.getConnectTimeout());
-		props.setProperty("heartbeatConnectTimeout", ""+ops.getHeartbeatConnectTimeout());
-		props.setProperty("heartbeatFrequency", ""+ops.getHeartbeatFrequency());
-		props.setProperty("heartbeatSocketTimeout", ""+ops.getHeartbeatSocketTimeout());
-		props.setProperty("localThreshold", ""+ops.getLocalThreshold());
-		props.setProperty("maxConnectionIdleTime", ""+ops.getMaxConnectionIdleTime());
-		props.setProperty("maxConnectionLifeTime", ""+ops.getMaxConnectionLifeTime());
-		props.setProperty("maxWaitTime", ""+ops.getMaxWaitTime());
-		props.setProperty("minConnectionsPerHost", ""+ops.getMinConnectionsPerHost());
-		props.setProperty("minHeartbeatFrequency", ""+ops.getMinHeartbeatFrequency());
-		props.setProperty("serverSelectionTimeout", ""+ops.getServerSelectionTimeout());
-		props.setProperty("socketTimeout", ""+ops.getSocketTimeout());
+		props.setProperty("connectionsPerHost", "" + ops.getConnectionsPerHost());
+		props.setProperty("connectTimeout", "" + ops.getConnectTimeout());
+		props.setProperty("heartbeatConnectTimeout", "" + ops.getHeartbeatConnectTimeout());
+		props.setProperty("heartbeatFrequency", "" + ops.getHeartbeatFrequency());
+		props.setProperty("heartbeatSocketTimeout", "" + ops.getHeartbeatSocketTimeout());
+		props.setProperty("localThreshold", "" + ops.getLocalThreshold());
+		props.setProperty("maxConnectionIdleTime", "" + ops.getMaxConnectionIdleTime());
+		props.setProperty("maxConnectionLifeTime", "" + ops.getMaxConnectionLifeTime());
+		props.setProperty("maxWaitTime", "" + ops.getMaxWaitTime());
+		props.setProperty("minConnectionsPerHost", "" + ops.getMinConnectionsPerHost());
+		props.setProperty("minHeartbeatFrequency", "" + ops.getMinHeartbeatFrequency());
+		props.setProperty("serverSelectionTimeout", "" + ops.getServerSelectionTimeout());
+		props.setProperty("socketTimeout", "" + ops.getSocketTimeout());
 		return props;
 	}
 
@@ -178,9 +177,9 @@ public class MongoDBConnection implements Connection {
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		if (isWrapperFor(iface)) {
-	        return (T) this;
-	    }
-	    throw new SQLException("No wrapper for " + iface);
+			return (T) this;
+		}
+		throw new SQLException("No wrapper for " + iface);
 	}
 
 	/**
@@ -192,7 +191,7 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		 return iface != null && iface.isAssignableFrom(getClass());
+		return iface != null && iface.isAssignableFrom(getClass());
 	}
 
 	/**
@@ -205,7 +204,7 @@ public class MongoDBConnection implements Connection {
 	public Statement createStatement() throws SQLException {
 		return new MongoDBStatement(this);
 	}
-	
+
 	/**
 	 * Creates the statement.
 	 *
@@ -229,7 +228,7 @@ public class MongoDBConnection implements Connection {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)throws SQLException {
+	public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -244,7 +243,7 @@ public class MongoDBConnection implements Connection {
 	public PreparedStatement prepareStatement(String sql) throws SQLException {
 		return new MongoDBPreparedStatement(this, sql);
 	}
-	
+
 	/**
 	 * Prepare statement.
 	 *
@@ -256,9 +255,9 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-		 throw new SQLFeatureNotSupportedException();
+		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Prepare statement.
 	 *
@@ -270,10 +269,11 @@ public class MongoDBConnection implements Connection {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-		 throw new SQLFeatureNotSupportedException();
+	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability)
+			throws SQLException {
+		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Prepare statement.
 	 *
@@ -336,10 +336,11 @@ public class MongoDBConnection implements Connection {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability)
+			throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Prepare call.
 	 *
@@ -351,9 +352,9 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-		 throw new SQLFeatureNotSupportedException();
+		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Native SQL.
 	 *
@@ -363,9 +364,9 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public String nativeSQL(String sql) throws SQLException {
-		//TODO: currently works only ofr queries
+		// TODO: currently works only ofr queries
 		BsonDocument filterDocument = null;
-		if(sql==null || sql.length()<1)//that is a call to find() in terms of mongodb queries
+		if (sql == null || sql.length() < 1)// that is a call to find() in terms of mongodb queries
 			filterDocument = new BsonDocument();
 		else
 			filterDocument = BsonDocument.parse(sql);
@@ -380,7 +381,7 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public void setAutoCommit(boolean autoCommit) throws SQLException {
-		//silently ignore
+		// silently ignore
 	}
 
 	/**
@@ -401,7 +402,7 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public void commit() throws SQLException {
-		//silently ignore
+		// silently ignore
 	}
 
 	/**
@@ -411,7 +412,7 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public void rollback() throws SQLException {
-		//silently ignore
+		// silently ignore
 	}
 
 	/**
@@ -444,7 +445,7 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public DatabaseMetaData getMetaData() throws SQLException {
-		if(metadata==null){
+		if (metadata == null) {
 			metadata = new MongoDBDatabaseMetadata(this);
 			Document response = mongoDatabase.runCommand(BsonDocument.parse("{ buildInfo: 1 }"));
 			metadata.setDatabaseProductName("MongoDB");
@@ -486,7 +487,7 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public void setCatalog(String catalog) throws SQLException {
-		//silently ignore
+		// silently ignore
 	}
 
 	/**
@@ -508,7 +509,7 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public void setTransactionIsolation(int level) throws SQLException {
-		//silently ignore
+		// silently ignore
 	}
 
 	/**
@@ -540,7 +541,7 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public void clearWarnings() throws SQLException {
-		//silently ignore
+		// silently ignore
 	}
 
 	/**
@@ -577,7 +578,7 @@ public class MongoDBConnection implements Connection {
 	public void setHoldability(int holdability) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Gets the holdability.
 	 *
@@ -588,7 +589,7 @@ public class MongoDBConnection implements Connection {
 	public int getHoldability() throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Sets the savepoint.
 	 *
@@ -599,7 +600,7 @@ public class MongoDBConnection implements Connection {
 	public Savepoint setSavepoint() throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Sets the savepoint.
 	 *
@@ -611,7 +612,7 @@ public class MongoDBConnection implements Connection {
 	public Savepoint setSavepoint(String name) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Rollback.
 	 *
@@ -620,9 +621,9 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public void rollback(Savepoint savepoint) throws SQLException {
-		//silenty ignore
+		// silenty ignore
 	}
-	
+
 	/**
 	 * Release savepoint.
 	 *
@@ -633,7 +634,7 @@ public class MongoDBConnection implements Connection {
 	public void releaseSavepoint(Savepoint savepoint) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Creates the clob.
 	 *
@@ -644,7 +645,7 @@ public class MongoDBConnection implements Connection {
 	public Clob createClob() throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Creates the blob.
 	 *
@@ -655,7 +656,7 @@ public class MongoDBConnection implements Connection {
 	public Blob createBlob() throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Creates the N clob.
 	 *
@@ -666,7 +667,7 @@ public class MongoDBConnection implements Connection {
 	public NClob createNClob() throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Creates the SQLXML.
 	 *
@@ -677,7 +678,7 @@ public class MongoDBConnection implements Connection {
 	public SQLXML createSQLXML() throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Checks if is valid.
 	 *
@@ -689,9 +690,9 @@ public class MongoDBConnection implements Connection {
 	public boolean isValid(int timeout) throws SQLException {
 		Document response = this.mongoDatabase.runCommand(new BsonDocument("ping", new BsonInt32(1)));
 		response.getDouble("ok");
-		return response != null && response.getDouble("ok")==1.0;
+		return response != null && response.getDouble("ok") == 1.0;
 	}
-	
+
 	/**
 	 * Sets the client info.
 	 *
@@ -701,9 +702,9 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public void setClientInfo(String name, String value) throws SQLClientInfoException {
-		//silently ingore
+		// silently ingore
 	}
-	
+
 	/**
 	 * Sets the client info.
 	 *
@@ -714,7 +715,7 @@ public class MongoDBConnection implements Connection {
 	public void setClientInfo(Properties properties) throws SQLClientInfoException {
 		// silently ingore
 	}
-	
+
 	/**
 	 * Gets the client info.
 	 *
@@ -726,7 +727,7 @@ public class MongoDBConnection implements Connection {
 	public String getClientInfo(String name) throws SQLException {
 		return this.info.getProperty(name);
 	}
-	
+
 	/**
 	 * Gets the client info.
 	 *
@@ -737,7 +738,7 @@ public class MongoDBConnection implements Connection {
 	public Properties getClientInfo() throws SQLException {
 		return this.info;
 	}
-	
+
 	/**
 	 * Creates the array of.
 	 *
@@ -750,7 +751,7 @@ public class MongoDBConnection implements Connection {
 	public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Creates the struct.
 	 *
@@ -763,7 +764,7 @@ public class MongoDBConnection implements Connection {
 	public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Sets the schema.
 	 *
@@ -772,11 +773,11 @@ public class MongoDBConnection implements Connection {
 	 */
 	@Override
 	public void setSchema(String schema) throws SQLException {
-		if(schema==null || schema.length()<1)
+		if (schema == null || schema.length() < 1)
 			throw new IllegalArgumentException();
 		this.collection = this.mongoDatabase.getCollection(schema);
 	}
-	
+
 	/**
 	 * Gets the schema.
 	 *
@@ -787,7 +788,7 @@ public class MongoDBConnection implements Connection {
 	public String getSchema() throws SQLException {
 		return this.collectionName;
 	}
-	
+
 	/**
 	 * Abort.
 	 *
@@ -798,15 +799,15 @@ public class MongoDBConnection implements Connection {
 	public void abort(Executor executor) throws SQLException {
 		executor.execute(new AsyncAbort(this));
 	}
-	
+
 	/**
 	 * The Class AsyncAbort.
 	 */
-	private class AsyncAbort implements Runnable{
-		
+	private class AsyncAbort implements Runnable {
+
 		/** The mongodb jdbc connection. */
 		MongoDBConnection mongodbJdbcConnection;
-		
+
 		/**
 		 * Instantiates a new async abort.
 		 *
@@ -822,16 +823,16 @@ public class MongoDBConnection implements Connection {
 		@Override
 		public void run() {
 			try {
-				if(!this.mongodbJdbcConnection.isClosed()){
+				if (!this.mongodbJdbcConnection.isClosed()) {
 					this.mongodbJdbcConnection.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Sets the network timeout.
 	 *
@@ -843,7 +844,7 @@ public class MongoDBConnection implements Connection {
 	public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
-	
+
 	/**
 	 * Gets the network timeout.
 	 *
@@ -854,7 +855,7 @@ public class MongoDBConnection implements Connection {
 	public int getNetworkTimeout() throws SQLException {
 		return this.clientOptions.getConnectTimeout();
 	}
-	
+
 	/**
 	 * Gets the client.
 	 *

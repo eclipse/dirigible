@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.extensions;
 
@@ -31,16 +30,16 @@ public class ExtensionsFacade implements InitializingBean {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsFacade.class);
-	
+
 	/** The database facade. */
 	private static ExtensionsFacade INSTANCE;
 
 	/** The extension point service. */
 	private final ExtensionPointService extensionPointService;
-	
+
 	/** The extension service. */
 	private final ExtensionService extensionService;
-	
+
 	/**
 	 * Instantiates a new extensions facade.
 	 *
@@ -52,7 +51,7 @@ public class ExtensionsFacade implements InitializingBean {
 		this.extensionPointService = extensionPointService;
 		this.extensionService = extensionService;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -60,18 +59,18 @@ public class ExtensionsFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the extensions facade
 	 */
 	public static ExtensionsFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/**
 	 * Gets the extension point service.
 	 *
@@ -80,7 +79,7 @@ public class ExtensionsFacade implements InitializingBean {
 	public ExtensionPointService getExtensionPointService() {
 		return extensionPointService;
 	}
-	
+
 	/**
 	 * Gets the extension service.
 	 *
@@ -98,14 +97,18 @@ public class ExtensionsFacade implements InitializingBean {
 	 * @throws Exception the exception
 	 */
 	public static final String[] getExtensions(String extensionPointName) throws Exception {
-		if (logger.isTraceEnabled()) {logger.trace("API - ExtensionsServiceFacade.getExtensions() -> begin");}
+		if (logger.isTraceEnabled()) {
+			logger.trace("API - ExtensionsServiceFacade.getExtensions() -> begin");
+		}
 		List<Extension> extensionDefinitions = ExtensionsFacade.get().extensionService.findByExtensionPoint(extensionPointName);
 		String[] extensions = new String[extensionDefinitions.size()];
 		int i = 0;
 		for (Extension extensionDefinition : extensionDefinitions) {
 			extensions[i++] = extensionDefinition.getModule();
 		}
-		if (logger.isTraceEnabled()) {logger.trace("API - ExtensionsServiceFacade.getExtensions() -> end");}
+		if (logger.isTraceEnabled()) {
+			logger.trace("API - ExtensionsServiceFacade.getExtensions() -> end");
+		}
 		return extensions;
 	}
 
@@ -116,14 +119,18 @@ public class ExtensionsFacade implements InitializingBean {
 	 * @throws Exception the exception
 	 */
 	public static final String[] getExtensionPoints() throws Exception {
-		if (logger.isTraceEnabled()) {logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> begin");}
+		if (logger.isTraceEnabled()) {
+			logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> begin");
+		}
 		List<ExtensionPoint> extensionPointDefinitions = ExtensionsFacade.get().getExtensionPointService().getAll();
 		String[] extensionPoints = new String[extensionPointDefinitions.size()];
 		int i = 0;
 		for (ExtensionPoint extensionPointDefinition : extensionPointDefinitions) {
 			extensionPoints[i++] = extensionPointDefinition.getName();
 		}
-		if (logger.isTraceEnabled()) {logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> end");}
+		if (logger.isTraceEnabled()) {
+			logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> end");
+		}
 		return extensionPoints;
 	}
 

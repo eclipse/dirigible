@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.api;
 
@@ -21,21 +20,23 @@ import com.google.gson.annotations.Expose;
  */
 public class ODataNavigation {
 
-    /** The name. */
+	/** The name. */
 	@Expose
-    private String name;
+	private String name;
 
-    /** The association. */
+	/** The association. */
 	@Expose
-    private String association;
+	private String association;
 
-    /**
-     * <p>Define list of additional annotations for NavigationProperty element.</p>
-     * For example:
-     * <code> &lt;NavigationProperty Name="SomeName" Relationship="SomeRel" FromRole="FromRoleName" ToRole="ToRoleName" sap:filterable="false"/&gt; </code>
-     */
+	/**
+	 * <p>
+	 * Define list of additional annotations for NavigationProperty element.
+	 * </p>
+	 * For example:
+	 * <code> &lt;NavigationProperty Name="SomeName" Relationship="SomeRel" FromRole="FromRoleName" ToRole="ToRoleName" sap:filterable="false"/&gt; </code>
+	 */
 	@Expose
-    private Map<String ,String> annotationsNavigationProperty = new HashMap<>();
+	private Map<String, String> annotationsNavigationProperty = new HashMap<>();
 
 	/**
 	 * Gets the name.
@@ -101,5 +102,5 @@ public class ODataNavigation {
 		return "ODataNavigation [name=" + name + ", association=" + association + ", annotationsNavigationProperty="
 				+ annotationsNavigationProperty + "]";
 	}
-    
+
 }

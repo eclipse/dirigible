@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.mail;
 
@@ -28,40 +27,40 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 
 	/** The Constant SOCKS5_VERSION. */
 	private static final byte SOCKS5_VERSION = 0x05;
-	
+
 	/** The Constant SOCKS5_PASSWORD_AUTHENTICATION_METHOD. */
 	private static final byte SOCKS5_PASSWORD_AUTHENTICATION_METHOD = (byte) 0x02;
-	
+
 	/** The Constant SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION. */
 	private static final byte SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION = 0x01;
-	
+
 	/** The Constant SOCKS5_COMMAND_CONNECT_BYTE. */
 	private static final byte SOCKS5_COMMAND_CONNECT_BYTE = 0x01;
-	
+
 	/** The Constant SOCKS5_COMMAND_REQUEST_RESERVED_BYTE. */
 	private static final byte SOCKS5_COMMAND_REQUEST_RESERVED_BYTE = 0x00;
-	
+
 	/** The Constant SOCKS5_COMMAND_ADDRESS_TYPE_IPv4_BYTE. */
 	private static final byte SOCKS5_COMMAND_ADDRESS_TYPE_IPv4_BYTE = 0x01;
-	
+
 	/** The Constant SOCKS5_COMMAND_ADDRESS_TYPE_DOMAIN_BYTE. */
 	private static final byte SOCKS5_COMMAND_ADDRESS_TYPE_DOMAIN_BYTE = 0x03;
-	
+
 	/** The Constant SOCKS5_AUTHENTICATION_METHODS_COUNT. */
 	private static final byte SOCKS5_AUTHENTICATION_METHODS_COUNT = 0x01;
-	
+
 	/** The Constant SOCKS5_PASSWORD_AUTHENTICATION_METHOD_UNSIGNED_VALUE. */
 	private static final int SOCKS5_PASSWORD_AUTHENTICATION_METHOD_UNSIGNED_VALUE = 0x02 & 0xFF;
-	
+
 	/** The Constant SOCKS5_AUTHENTICATION_SUCCESS_BYTE. */
 	private static final byte SOCKS5_AUTHENTICATION_SUCCESS_BYTE = 0x00;
 
 	/** The proxy address. */
 	private final InetSocketAddress proxyAddress;
-	
+
 	/** The username. */
 	private final String username;
-	
+
 	/** The password. */
 	private final String password;
 

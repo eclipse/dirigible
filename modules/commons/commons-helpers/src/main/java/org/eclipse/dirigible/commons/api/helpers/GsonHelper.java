@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.commons.api.helpers;
 
@@ -25,11 +24,8 @@ import com.google.gson.JsonParser;
 public class GsonHelper {
 
 	/** The GSON instance. */
-	private static final transient Gson GSON =new GsonBuilder()
-			.setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-			.setPrettyPrinting()
-			.create();
-	
+	private static final transient Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").setPrettyPrinting().create();
+
 	/**
 	 * To json.
 	 *
@@ -39,7 +35,7 @@ public class GsonHelper {
 	public static String toJson(Object src) {
 		return GSON.toJson(src);
 	}
-	
+
 	/**
 	 * To json.
 	 *
@@ -51,7 +47,7 @@ public class GsonHelper {
 	public static <T> String toJson(Object src, Class<T> classOfT) {
 		return GSON.toJson(src);
 	}
-	
+
 	/**
 	 * From json.
 	 *
@@ -63,7 +59,7 @@ public class GsonHelper {
 	public static <T> T fromJson(String src, Class<T> classOfT) {
 		return GSON.fromJson(src, classOfT);
 	}
-	
+
 	/**
 	 * From json.
 	 *
@@ -75,7 +71,7 @@ public class GsonHelper {
 	public static <T> T fromJson(InputStreamReader src, Type type) {
 		return GSON.fromJson(src, type);
 	}
-	
+
 	/**
 	 * From json.
 	 *
@@ -87,7 +83,7 @@ public class GsonHelper {
 	public static <T> T fromJson(String src, Type type) {
 		return GSON.fromJson(src, type);
 	}
-	
+
 	/**
 	 * To json tree.
 	 *
@@ -97,7 +93,7 @@ public class GsonHelper {
 	public static JsonElement toJsonTree(Object value) {
 		return GSON.toJsonTree(value);
 	}
-	
+
 	/**
 	 * Parses the json.
 	 *
@@ -107,5 +103,5 @@ public class GsonHelper {
 	public static JsonElement parseJson(String src) {
 		return JsonParser.parseString(src);
 	}
-	
+
 }

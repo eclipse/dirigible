@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.dto;
 
@@ -17,148 +16,148 @@ import java.util.Date;
  * The Class ExecutionData.
  */
 public class ExecutionData {
-	
+
 	/** The id. */
 	protected String id;
-	
+
 	/** The revision. */
 	protected int revision;
-	
+
 	/** The is inserted. */
 	protected boolean isInserted;
-	
+
 	/** The is updated. */
 	protected boolean isUpdated;
-	
+
 	/** The is deleted. */
 	protected boolean isDeleted;
-	
+
 	/** The tenant id. */
 	protected String tenantId = "";
-	
+
 	/** The name. */
 	protected String name;
-	
+
 	/** The description. */
 	protected String description;
-	
+
 	/** The localized name. */
 	protected String localizedName;
-	
+
 	/** The localized description. */
 	protected String localizedDescription;
-	
+
 	/** The lock time. */
 	protected Date lockTime;
-	
+
 	/** The is active. */
 	protected boolean isActive = true;
-	
+
 	/** The is scope. */
 	protected boolean isScope = true;
-	
+
 	/** The is concurrent. */
 	protected boolean isConcurrent;
-	
+
 	/** The is ended. */
 	protected boolean isEnded;
-	
+
 	/** The is event scope. */
 	protected boolean isEventScope;
-	
+
 	/** The is multi instance root. */
 	protected boolean isMultiInstanceRoot;
-	
+
 	/** The is count enabled. */
 	protected boolean isCountEnabled;
-	
+
 	/** The event name. */
 	protected String eventName;
-	
+
 	/** The delete reason. */
 	protected String deleteReason;
-	
+
 	/** The suspension state. */
 	protected int suspensionState = 1;
-	
+
 	/** The start activity id. */
 	protected String startActivityId;
-	
+
 	/** The start user id. */
 	protected String startUserId;
-	
+
 	/** The start time. */
 	protected Date startTime;
-	
+
 	/** The event subscription count. */
 	protected int eventSubscriptionCount;
-	
+
 	/** The task count. */
 	protected int taskCount;
-	
+
 	/** The job count. */
 	protected int jobCount;
-	
+
 	/** The timer job count. */
 	protected int timerJobCount;
-	
+
 	/** The suspended job count. */
 	protected int suspendedJobCount;
-	
+
 	/** The dead letter job count. */
 	protected int deadLetterJobCount;
-	
+
 	/** The variable count. */
 	protected int variableCount;
-	
+
 	/** The identity link count. */
 	protected int identityLinkCount;
-	
+
 	/** The process definition id. */
 	protected String processDefinitionId;
-	
+
 	/** The process definition key. */
 	protected String processDefinitionKey;
-	
+
 	/** The process definition name. */
 	protected String processDefinitionName;
-	
+
 	/** The process definition version. */
 	protected Integer processDefinitionVersion;
-	
+
 	/** The deployment id. */
 	protected String deploymentId;
-	
+
 	/** The activity id. */
 	protected String activityId;
-	
+
 	/** The activity name. */
 	protected String activityName;
-	
+
 	/** The process instance id. */
 	protected String processInstanceId;
-	
+
 	/** The business key. */
 	protected String businessKey;
-	
+
 	/** The parent id. */
 	protected String parentId;
-	
+
 	/** The super execution id. */
 	protected String superExecutionId;
-	
+
 	/** The root process instance id. */
 	protected String rootProcessInstanceId;
-	
+
 	/** The forced update. */
 	protected boolean forcedUpdate;
-	
+
 	/** The callback id. */
 	protected String callbackId;
-	
+
 	/** The callback type. */
 	protected String callbackType;
-	
+
 	/**
 	 * Gets the id.
 	 *
@@ -167,7 +166,7 @@ public class ExecutionData {
 	public String getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Sets the id.
 	 *
@@ -176,7 +175,7 @@ public class ExecutionData {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gets the revision.
 	 *
@@ -185,7 +184,7 @@ public class ExecutionData {
 	public int getRevision() {
 		return revision;
 	}
-	
+
 	/**
 	 * Sets the revision.
 	 *
@@ -194,7 +193,7 @@ public class ExecutionData {
 	public void setRevision(int revision) {
 		this.revision = revision;
 	}
-	
+
 	/**
 	 * Checks if is inserted.
 	 *
@@ -203,7 +202,7 @@ public class ExecutionData {
 	public boolean isInserted() {
 		return isInserted;
 	}
-	
+
 	/**
 	 * Sets the inserted.
 	 *
@@ -212,7 +211,7 @@ public class ExecutionData {
 	public void setInserted(boolean isInserted) {
 		this.isInserted = isInserted;
 	}
-	
+
 	/**
 	 * Checks if is updated.
 	 *
@@ -221,7 +220,7 @@ public class ExecutionData {
 	public boolean isUpdated() {
 		return isUpdated;
 	}
-	
+
 	/**
 	 * Sets the updated.
 	 *
@@ -230,7 +229,7 @@ public class ExecutionData {
 	public void setUpdated(boolean isUpdated) {
 		this.isUpdated = isUpdated;
 	}
-	
+
 	/**
 	 * Checks if is deleted.
 	 *
@@ -239,7 +238,7 @@ public class ExecutionData {
 	public boolean isDeleted() {
 		return isDeleted;
 	}
-	
+
 	/**
 	 * Sets the deleted.
 	 *
@@ -248,7 +247,7 @@ public class ExecutionData {
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-	
+
 	/**
 	 * Gets the tenant id.
 	 *
@@ -257,7 +256,7 @@ public class ExecutionData {
 	public String getTenantId() {
 		return tenantId;
 	}
-	
+
 	/**
 	 * Sets the tenant id.
 	 *
@@ -266,7 +265,7 @@ public class ExecutionData {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
-	
+
 	/**
 	 * Gets the name.
 	 *
@@ -275,7 +274,7 @@ public class ExecutionData {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Sets the name.
 	 *
@@ -284,7 +283,7 @@ public class ExecutionData {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * Gets the description.
 	 *
@@ -293,7 +292,7 @@ public class ExecutionData {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	/**
 	 * Sets the description.
 	 *
@@ -302,7 +301,7 @@ public class ExecutionData {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	/**
 	 * Gets the localized name.
 	 *
@@ -311,7 +310,7 @@ public class ExecutionData {
 	public String getLocalizedName() {
 		return localizedName;
 	}
-	
+
 	/**
 	 * Sets the localized name.
 	 *
@@ -320,7 +319,7 @@ public class ExecutionData {
 	public void setLocalizedName(String localizedName) {
 		this.localizedName = localizedName;
 	}
-	
+
 	/**
 	 * Gets the localized description.
 	 *
@@ -329,7 +328,7 @@ public class ExecutionData {
 	public String getLocalizedDescription() {
 		return localizedDescription;
 	}
-	
+
 	/**
 	 * Sets the localized description.
 	 *
@@ -338,7 +337,7 @@ public class ExecutionData {
 	public void setLocalizedDescription(String localizedDescription) {
 		this.localizedDescription = localizedDescription;
 	}
-	
+
 	/**
 	 * Gets the lock time.
 	 *
@@ -347,7 +346,7 @@ public class ExecutionData {
 	public Date getLockTime() {
 		return lockTime;
 	}
-	
+
 	/**
 	 * Sets the lock time.
 	 *
@@ -356,7 +355,7 @@ public class ExecutionData {
 	public void setLockTime(Date lockTime) {
 		this.lockTime = lockTime;
 	}
-	
+
 	/**
 	 * Checks if is active.
 	 *
@@ -365,7 +364,7 @@ public class ExecutionData {
 	public boolean isActive() {
 		return isActive;
 	}
-	
+
 	/**
 	 * Sets the active.
 	 *
@@ -374,7 +373,7 @@ public class ExecutionData {
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
-	
+
 	/**
 	 * Checks if is scope.
 	 *
@@ -383,7 +382,7 @@ public class ExecutionData {
 	public boolean isScope() {
 		return isScope;
 	}
-	
+
 	/**
 	 * Sets the scope.
 	 *
@@ -392,7 +391,7 @@ public class ExecutionData {
 	public void setScope(boolean isScope) {
 		this.isScope = isScope;
 	}
-	
+
 	/**
 	 * Checks if is concurrent.
 	 *
@@ -401,7 +400,7 @@ public class ExecutionData {
 	public boolean isConcurrent() {
 		return isConcurrent;
 	}
-	
+
 	/**
 	 * Sets the concurrent.
 	 *
@@ -410,7 +409,7 @@ public class ExecutionData {
 	public void setConcurrent(boolean isConcurrent) {
 		this.isConcurrent = isConcurrent;
 	}
-	
+
 	/**
 	 * Checks if is ended.
 	 *
@@ -419,7 +418,7 @@ public class ExecutionData {
 	public boolean isEnded() {
 		return isEnded;
 	}
-	
+
 	/**
 	 * Sets the ended.
 	 *
@@ -428,7 +427,7 @@ public class ExecutionData {
 	public void setEnded(boolean isEnded) {
 		this.isEnded = isEnded;
 	}
-	
+
 	/**
 	 * Checks if is event scope.
 	 *
@@ -437,7 +436,7 @@ public class ExecutionData {
 	public boolean isEventScope() {
 		return isEventScope;
 	}
-	
+
 	/**
 	 * Sets the event scope.
 	 *
@@ -446,7 +445,7 @@ public class ExecutionData {
 	public void setEventScope(boolean isEventScope) {
 		this.isEventScope = isEventScope;
 	}
-	
+
 	/**
 	 * Checks if is multi instance root.
 	 *
@@ -455,7 +454,7 @@ public class ExecutionData {
 	public boolean isMultiInstanceRoot() {
 		return isMultiInstanceRoot;
 	}
-	
+
 	/**
 	 * Sets the multi instance root.
 	 *
@@ -464,7 +463,7 @@ public class ExecutionData {
 	public void setMultiInstanceRoot(boolean isMultiInstanceRoot) {
 		this.isMultiInstanceRoot = isMultiInstanceRoot;
 	}
-	
+
 	/**
 	 * Checks if is count enabled.
 	 *
@@ -473,7 +472,7 @@ public class ExecutionData {
 	public boolean isCountEnabled() {
 		return isCountEnabled;
 	}
-	
+
 	/**
 	 * Sets the count enabled.
 	 *
@@ -482,7 +481,7 @@ public class ExecutionData {
 	public void setCountEnabled(boolean isCountEnabled) {
 		this.isCountEnabled = isCountEnabled;
 	}
-	
+
 	/**
 	 * Gets the event name.
 	 *
@@ -491,7 +490,7 @@ public class ExecutionData {
 	public String getEventName() {
 		return eventName;
 	}
-	
+
 	/**
 	 * Sets the event name.
 	 *
@@ -500,7 +499,7 @@ public class ExecutionData {
 	public void setEventName(String eventName) {
 		this.eventName = eventName;
 	}
-	
+
 	/**
 	 * Gets the delete reason.
 	 *
@@ -509,7 +508,7 @@ public class ExecutionData {
 	public String getDeleteReason() {
 		return deleteReason;
 	}
-	
+
 	/**
 	 * Sets the delete reason.
 	 *
@@ -518,7 +517,7 @@ public class ExecutionData {
 	public void setDeleteReason(String deleteReason) {
 		this.deleteReason = deleteReason;
 	}
-	
+
 	/**
 	 * Gets the suspension state.
 	 *
@@ -527,7 +526,7 @@ public class ExecutionData {
 	public int getSuspensionState() {
 		return suspensionState;
 	}
-	
+
 	/**
 	 * Sets the suspension state.
 	 *
@@ -536,7 +535,7 @@ public class ExecutionData {
 	public void setSuspensionState(int suspensionState) {
 		this.suspensionState = suspensionState;
 	}
-	
+
 	/**
 	 * Gets the start activity id.
 	 *
@@ -545,7 +544,7 @@ public class ExecutionData {
 	public String getStartActivityId() {
 		return startActivityId;
 	}
-	
+
 	/**
 	 * Sets the start activity id.
 	 *
@@ -554,7 +553,7 @@ public class ExecutionData {
 	public void setStartActivityId(String startActivityId) {
 		this.startActivityId = startActivityId;
 	}
-	
+
 	/**
 	 * Gets the start user id.
 	 *
@@ -563,7 +562,7 @@ public class ExecutionData {
 	public String getStartUserId() {
 		return startUserId;
 	}
-	
+
 	/**
 	 * Sets the start user id.
 	 *
@@ -572,7 +571,7 @@ public class ExecutionData {
 	public void setStartUserId(String startUserId) {
 		this.startUserId = startUserId;
 	}
-	
+
 	/**
 	 * Gets the start time.
 	 *
@@ -581,7 +580,7 @@ public class ExecutionData {
 	public Date getStartTime() {
 		return startTime;
 	}
-	
+
 	/**
 	 * Sets the start time.
 	 *
@@ -590,7 +589,7 @@ public class ExecutionData {
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
-	
+
 	/**
 	 * Gets the event subscription count.
 	 *
@@ -599,7 +598,7 @@ public class ExecutionData {
 	public int getEventSubscriptionCount() {
 		return eventSubscriptionCount;
 	}
-	
+
 	/**
 	 * Sets the event subscription count.
 	 *
@@ -608,7 +607,7 @@ public class ExecutionData {
 	public void setEventSubscriptionCount(int eventSubscriptionCount) {
 		this.eventSubscriptionCount = eventSubscriptionCount;
 	}
-	
+
 	/**
 	 * Gets the task count.
 	 *
@@ -617,7 +616,7 @@ public class ExecutionData {
 	public int getTaskCount() {
 		return taskCount;
 	}
-	
+
 	/**
 	 * Sets the task count.
 	 *
@@ -626,7 +625,7 @@ public class ExecutionData {
 	public void setTaskCount(int taskCount) {
 		this.taskCount = taskCount;
 	}
-	
+
 	/**
 	 * Gets the job count.
 	 *
@@ -635,7 +634,7 @@ public class ExecutionData {
 	public int getJobCount() {
 		return jobCount;
 	}
-	
+
 	/**
 	 * Sets the job count.
 	 *
@@ -644,7 +643,7 @@ public class ExecutionData {
 	public void setJobCount(int jobCount) {
 		this.jobCount = jobCount;
 	}
-	
+
 	/**
 	 * Gets the timer job count.
 	 *
@@ -653,7 +652,7 @@ public class ExecutionData {
 	public int getTimerJobCount() {
 		return timerJobCount;
 	}
-	
+
 	/**
 	 * Sets the timer job count.
 	 *
@@ -662,7 +661,7 @@ public class ExecutionData {
 	public void setTimerJobCount(int timerJobCount) {
 		this.timerJobCount = timerJobCount;
 	}
-	
+
 	/**
 	 * Gets the suspended job count.
 	 *
@@ -671,7 +670,7 @@ public class ExecutionData {
 	public int getSuspendedJobCount() {
 		return suspendedJobCount;
 	}
-	
+
 	/**
 	 * Sets the suspended job count.
 	 *
@@ -680,7 +679,7 @@ public class ExecutionData {
 	public void setSuspendedJobCount(int suspendedJobCount) {
 		this.suspendedJobCount = suspendedJobCount;
 	}
-	
+
 	/**
 	 * Gets the dead letter job count.
 	 *
@@ -689,7 +688,7 @@ public class ExecutionData {
 	public int getDeadLetterJobCount() {
 		return deadLetterJobCount;
 	}
-	
+
 	/**
 	 * Sets the dead letter job count.
 	 *
@@ -698,7 +697,7 @@ public class ExecutionData {
 	public void setDeadLetterJobCount(int deadLetterJobCount) {
 		this.deadLetterJobCount = deadLetterJobCount;
 	}
-	
+
 	/**
 	 * Gets the variable count.
 	 *
@@ -707,7 +706,7 @@ public class ExecutionData {
 	public int getVariableCount() {
 		return variableCount;
 	}
-	
+
 	/**
 	 * Sets the variable count.
 	 *
@@ -716,7 +715,7 @@ public class ExecutionData {
 	public void setVariableCount(int variableCount) {
 		this.variableCount = variableCount;
 	}
-	
+
 	/**
 	 * Gets the identity link count.
 	 *
@@ -725,7 +724,7 @@ public class ExecutionData {
 	public int getIdentityLinkCount() {
 		return identityLinkCount;
 	}
-	
+
 	/**
 	 * Sets the identity link count.
 	 *
@@ -734,7 +733,7 @@ public class ExecutionData {
 	public void setIdentityLinkCount(int identityLinkCount) {
 		this.identityLinkCount = identityLinkCount;
 	}
-	
+
 	/**
 	 * Gets the process definition id.
 	 *
@@ -743,7 +742,7 @@ public class ExecutionData {
 	public String getProcessDefinitionId() {
 		return processDefinitionId;
 	}
-	
+
 	/**
 	 * Sets the process definition id.
 	 *
@@ -752,7 +751,7 @@ public class ExecutionData {
 	public void setProcessDefinitionId(String processDefinitionId) {
 		this.processDefinitionId = processDefinitionId;
 	}
-	
+
 	/**
 	 * Gets the process definition key.
 	 *
@@ -761,7 +760,7 @@ public class ExecutionData {
 	public String getProcessDefinitionKey() {
 		return processDefinitionKey;
 	}
-	
+
 	/**
 	 * Sets the process definition key.
 	 *
@@ -770,7 +769,7 @@ public class ExecutionData {
 	public void setProcessDefinitionKey(String processDefinitionKey) {
 		this.processDefinitionKey = processDefinitionKey;
 	}
-	
+
 	/**
 	 * Gets the process definition name.
 	 *
@@ -779,7 +778,7 @@ public class ExecutionData {
 	public String getProcessDefinitionName() {
 		return processDefinitionName;
 	}
-	
+
 	/**
 	 * Sets the process definition name.
 	 *
@@ -788,7 +787,7 @@ public class ExecutionData {
 	public void setProcessDefinitionName(String processDefinitionName) {
 		this.processDefinitionName = processDefinitionName;
 	}
-	
+
 	/**
 	 * Gets the process definition version.
 	 *
@@ -797,7 +796,7 @@ public class ExecutionData {
 	public Integer getProcessDefinitionVersion() {
 		return processDefinitionVersion;
 	}
-	
+
 	/**
 	 * Sets the process definition version.
 	 *
@@ -806,7 +805,7 @@ public class ExecutionData {
 	public void setProcessDefinitionVersion(Integer processDefinitionVersion) {
 		this.processDefinitionVersion = processDefinitionVersion;
 	}
-	
+
 	/**
 	 * Gets the deployment id.
 	 *
@@ -815,7 +814,7 @@ public class ExecutionData {
 	public String getDeploymentId() {
 		return deploymentId;
 	}
-	
+
 	/**
 	 * Sets the deployment id.
 	 *
@@ -824,7 +823,7 @@ public class ExecutionData {
 	public void setDeploymentId(String deploymentId) {
 		this.deploymentId = deploymentId;
 	}
-	
+
 	/**
 	 * Gets the activity id.
 	 *
@@ -833,7 +832,7 @@ public class ExecutionData {
 	public String getActivityId() {
 		return activityId;
 	}
-	
+
 	/**
 	 * Sets the activity id.
 	 *
@@ -842,7 +841,7 @@ public class ExecutionData {
 	public void setActivityId(String activityId) {
 		this.activityId = activityId;
 	}
-	
+
 	/**
 	 * Gets the activity name.
 	 *
@@ -851,7 +850,7 @@ public class ExecutionData {
 	public String getActivityName() {
 		return activityName;
 	}
-	
+
 	/**
 	 * Sets the activity name.
 	 *
@@ -860,7 +859,7 @@ public class ExecutionData {
 	public void setActivityName(String activityName) {
 		this.activityName = activityName;
 	}
-	
+
 	/**
 	 * Gets the process instance id.
 	 *
@@ -869,7 +868,7 @@ public class ExecutionData {
 	public String getProcessInstanceId() {
 		return processInstanceId;
 	}
-	
+
 	/**
 	 * Sets the process instance id.
 	 *
@@ -878,7 +877,7 @@ public class ExecutionData {
 	public void setProcessInstanceId(String processInstanceId) {
 		this.processInstanceId = processInstanceId;
 	}
-	
+
 	/**
 	 * Gets the business key.
 	 *
@@ -887,7 +886,7 @@ public class ExecutionData {
 	public String getBusinessKey() {
 		return businessKey;
 	}
-	
+
 	/**
 	 * Sets the business key.
 	 *
@@ -896,7 +895,7 @@ public class ExecutionData {
 	public void setBusinessKey(String businessKey) {
 		this.businessKey = businessKey;
 	}
-	
+
 	/**
 	 * Gets the parent id.
 	 *
@@ -905,7 +904,7 @@ public class ExecutionData {
 	public String getParentId() {
 		return parentId;
 	}
-	
+
 	/**
 	 * Sets the parent id.
 	 *
@@ -914,7 +913,7 @@ public class ExecutionData {
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
-	
+
 	/**
 	 * Gets the super execution id.
 	 *
@@ -923,7 +922,7 @@ public class ExecutionData {
 	public String getSuperExecutionId() {
 		return superExecutionId;
 	}
-	
+
 	/**
 	 * Sets the super execution id.
 	 *
@@ -932,7 +931,7 @@ public class ExecutionData {
 	public void setSuperExecutionId(String superExecutionId) {
 		this.superExecutionId = superExecutionId;
 	}
-	
+
 	/**
 	 * Gets the root process instance id.
 	 *
@@ -941,7 +940,7 @@ public class ExecutionData {
 	public String getRootProcessInstanceId() {
 		return rootProcessInstanceId;
 	}
-	
+
 	/**
 	 * Sets the root process instance id.
 	 *
@@ -950,7 +949,7 @@ public class ExecutionData {
 	public void setRootProcessInstanceId(String rootProcessInstanceId) {
 		this.rootProcessInstanceId = rootProcessInstanceId;
 	}
-	
+
 	/**
 	 * Checks if is forced update.
 	 *
@@ -959,7 +958,7 @@ public class ExecutionData {
 	public boolean isForcedUpdate() {
 		return forcedUpdate;
 	}
-	
+
 	/**
 	 * Sets the forced update.
 	 *
@@ -968,7 +967,7 @@ public class ExecutionData {
 	public void setForcedUpdate(boolean forcedUpdate) {
 		this.forcedUpdate = forcedUpdate;
 	}
-	
+
 	/**
 	 * Gets the callback id.
 	 *
@@ -977,7 +976,7 @@ public class ExecutionData {
 	public String getCallbackId() {
 		return callbackId;
 	}
-	
+
 	/**
 	 * Sets the callback id.
 	 *
@@ -986,7 +985,7 @@ public class ExecutionData {
 	public void setCallbackId(String callbackId) {
 		this.callbackId = callbackId;
 	}
-	
+
 	/**
 	 * Gets the callback type.
 	 *
@@ -995,7 +994,7 @@ public class ExecutionData {
 	public String getCallbackType() {
 		return callbackType;
 	}
-	
+
 	/**
 	 * Sets the callback type.
 	 *
@@ -1004,5 +1003,5 @@ public class ExecutionData {
 	public void setCallbackType(String callbackType) {
 		this.callbackType = callbackType;
 	}
-	
+
 }

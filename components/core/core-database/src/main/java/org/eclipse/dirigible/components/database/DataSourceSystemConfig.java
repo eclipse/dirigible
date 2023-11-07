@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.database;
 
@@ -34,13 +33,13 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory",
-    transactionManagerRef = "transactionManager", basePackages = {"org.eclipse.dirigible.components"})
+@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager",
+		basePackages = {"org.eclipse.dirigible.components"})
 public class DataSourceSystemConfig {
 
 	@Value("${dirigible.scan.packages:org.eclipse.dirigible.components}")
 	private String dirigibleScanPackages;
-	
+
 	@Bean(name = "SystemDB")
 	public HikariDataSource getDataSource() {
 		DataSourceProperties dataSourceProperties = new DataSourceProperties();
@@ -53,8 +52,7 @@ public class DataSourceSystemConfig {
 	}
 
 	@Bean(name = "entityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-			@Qualifier("SystemDB") DataSource dataSource) {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("SystemDB") DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(dataSource);
 		String[] packages = dirigibleScanPackages.split(",");
@@ -70,10 +68,9 @@ public class DataSourceSystemConfig {
 
 		return em;
 	}
-	
+
 	@Bean(name = "transactionManager")
-	public PlatformTransactionManager transactionManager(
-			@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
+	public PlatformTransactionManager transactionManager(@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
 		return new JpaTransactionManager(entityManagerFactory);
 	}
 

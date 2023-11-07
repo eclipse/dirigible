@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.api;
 
@@ -21,25 +20,25 @@ import com.google.gson.annotations.Expose;
  */
 public class ODataAssociationEnd {
 
-    /** The entity. */
+	/** The entity. */
 	@Expose
-    private String entity;
+	private String entity;
 
-    /** The property. */
+	/** The property. */
 	@Expose
-    private String property;
-    
-    /** The properties. */
-	@Expose
-    private List<String> properties = new ArrayList<String>();
+	private String property;
 
-    /** The column. */
+	/** The properties. */
 	@Expose
-    private String column;
+	private List<String> properties = new ArrayList<String>();
 
-    /** The multiplicity. */
+	/** The column. */
 	@Expose
-    private String multiplicity;
+	private String column;
+
+	/** The multiplicity. */
+	@Expose
+	private String multiplicity;
 
 	/** The mapping table definition. */
 	@Expose
@@ -160,7 +159,7 @@ public class ODataAssociationEnd {
 	 */
 	@Override
 	public String toString() {
-		return "ODataAssociationEnd [entity=" + entity + ", property=" + property + ", properties=" + properties
-				+ ", column=" + column + ", multiplicity=" + multiplicity + ", mappingTable=" + mappingTable + "]";
+		return "ODataAssociationEnd [entity=" + entity + ", property=" + property + ", properties=" + properties + ", column=" + column
+				+ ", multiplicity=" + multiplicity + ", mappingTable=" + mappingTable + "]";
 	}
 }

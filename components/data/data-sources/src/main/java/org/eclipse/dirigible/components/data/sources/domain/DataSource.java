@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.sources.domain;
 
@@ -40,43 +39,43 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Table(name = "DIRIGIBLE_DATA_SOURCES")
 public class DataSource extends Artefact {
-	
+
 	/** The Constant ARTEFACT_TYPE. */
 	public static final String ARTEFACT_TYPE = "datasource";
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "DS_ID", nullable = false)
 	private Long id;
-	
+
 	/** The driver. */
 	@Column(name = "DS_DRIVER", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String driver;
-	
+
 	/** The url. */
 	@Column(name = "DS_URL", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String url;
-	
+
 	/** The username. */
 	@Column(name = "DS_USERNAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String username;
-	
+
 	/** The password. */
 	@Column(name = "DS_PASSWORD", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	@Encrypted
 	private String password;
-	
+
 	/** The properties. */
 	@OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Expose
 	private List<DataSourceProperty> properties = new ArrayList<DataSourceProperty>();
-	
+
 	/**
 	 * Instantiates a new data source.
 	 *
@@ -95,7 +94,7 @@ public class DataSource extends Artefact {
 		this.username = username;
 		this.password = password;
 	}
-	
+
 	/**
 	 * Instantiates a new extension.
 	 */
@@ -120,7 +119,7 @@ public class DataSource extends Artefact {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gets the driver.
 	 *
@@ -210,7 +209,7 @@ public class DataSource extends Artefact {
 	public List<DataSourceProperty> getProperties() {
 		return properties;
 	}
-	
+
 	/**
 	 * Get the property by name.
 	 *
@@ -233,13 +232,12 @@ public class DataSource extends Artefact {
 	 */
 	@Override
 	public String toString() {
-		return "DataSource [id=" + id + ", driver=" + driver + ", url=" + url + ", username=" + username + ", password="
-				+ password + ", properties=" + (properties != null ? Objects.toString(properties) : "null") + ", location=" + location + ", name="
-				+ name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies="
-				+ dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy
-				+ ", updatedAt=" + updatedAt + "]";
+		return "DataSource [id=" + id + ", driver=" + driver + ", url=" + url + ", username=" + username + ", password=" + password
+				+ ", properties=" + (properties != null ? Objects.toString(properties) : "null") + ", location=" + location + ", name="
+				+ name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies
+				+ ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
-	
+
 	/**
 	 * Adds the property.
 	 *
@@ -252,5 +250,5 @@ public class DataSource extends Artefact {
 		properties.add(property);
 		return property;
 	}
-	
+
 }

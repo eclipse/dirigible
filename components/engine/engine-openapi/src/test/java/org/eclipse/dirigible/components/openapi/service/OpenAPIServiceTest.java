@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.openapi.service;
 
@@ -38,75 +37,75 @@ import static org.eclipse.dirigible.components.openapi.repository.OpenAPIReposit
 @Transactional
 class OpenAPIServiceTest {
 
-    @Autowired
-    private OpenAPIRepository openAPIRepository;
+	@Autowired
+	private OpenAPIRepository openAPIRepository;
 
-    @Autowired
-    private OpenAPIService openAPIService;
+	@Autowired
+	private OpenAPIService openAPIService;
 
-    @BeforeEach
-    public void setup() {
-    	
-    	cleanup();
-    	
-        // Create test OpenAPIs
-        openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
-        openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
-        openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
-        openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
-        openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
-    }
+	@BeforeEach
+	public void setup() {
 
-    @AfterEach
-    public void cleanup() {
-        // Delete test OpenAPIs
-        openAPIRepository.deleteAll();
-    }
+		cleanup();
 
-    @Test
-    void testGetAll() {
-        List<OpenAPI> openAPIList = openAPIService.getAll();
-        assertEquals(5, openAPIList.size());
-    }
+		// Create test OpenAPIs
+		openAPIRepository.save(createOpenAPI("/a/b/c/test1.openapi", "test1", "description"));
+		openAPIRepository.save(createOpenAPI("/a/b/c/test2.openapi", "test2", "description"));
+		openAPIRepository.save(createOpenAPI("/a/b/c/test3.openapi", "test3", "description"));
+		openAPIRepository.save(createOpenAPI("/a/b/c/test4.openapi", "test4", "description"));
+		openAPIRepository.save(createOpenAPI("/a/b/c/test5.openapi", "test5", "description"));
+	}
 
-    @Test
-    void testFindAll() {
-        Page<OpenAPI> openApiPage = openAPIService.getPages(Pageable.ofSize(1));
-        assertEquals(5, openApiPage.getTotalElements());
-    }
+	@AfterEach
+	public void cleanup() {
+		// Delete test OpenAPIs
+		openAPIRepository.deleteAll();
+	}
 
-    @Test
-    void testFindById() {
-        OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
-        openAPIService.save(openAPI);
-        OpenAPI openAPIServiceById = openAPIService.findById(openAPI.getId());
-        assertEquals("test", openAPIServiceById.getName());
-    }
+	@Test
+	void testGetAll() {
+		List<OpenAPI> openAPIList = openAPIService.getAll();
+		assertEquals(5, openAPIList.size());
+	}
 
-    @Test
-    void testFindByName() {
-        OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
-        openAPIService.save(openAPI);
-        OpenAPI openAPIServiceByName = openAPIService.findByName("test");
-        assertEquals(openAPI.getId(), openAPIServiceByName.getId());
-    }
+	@Test
+	void testFindAll() {
+		Page<OpenAPI> openApiPage = openAPIService.getPages(Pageable.ofSize(1));
+		assertEquals(5, openApiPage.getTotalElements());
+	}
 
-    @Test
-    void testSave() {
-        OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
-        openAPIService.save(openAPI);
-        assertNotNull(openAPIService.findByName("test"));
-    }
+	@Test
+	void testFindById() {
+		OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
+		openAPIService.save(openAPI);
+		OpenAPI openAPIServiceById = openAPIService.findById(openAPI.getId());
+		assertEquals("test", openAPIServiceById.getName());
+	}
 
-    @Test
-    void testDelete() {
-        try {
-            OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
-            openAPIService.save(openAPI);
-            openAPIService.delete(openAPI);
-            openAPIService.findByName("test");
-        } catch (Exception e) {
-            assertEquals("OpenAPI with name does not exist: test", e.getMessage());
-        }
-    }
+	@Test
+	void testFindByName() {
+		OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
+		openAPIService.save(openAPI);
+		OpenAPI openAPIServiceByName = openAPIService.findByName("test");
+		assertEquals(openAPI.getId(), openAPIServiceByName.getId());
+	}
+
+	@Test
+	void testSave() {
+		OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
+		openAPIService.save(openAPI);
+		assertNotNull(openAPIService.findByName("test"));
+	}
+
+	@Test
+	void testDelete() {
+		try {
+			OpenAPI openAPI = new OpenAPI("/a/b/c/test.openapi", "test", "description");
+			openAPIService.save(openAPI);
+			openAPIService.delete(openAPI);
+			openAPIService.findByName("test");
+		} catch (Exception e) {
+			assertEquals("OpenAPI with name does not exist: test", e.getMessage());
+		}
+	}
 }

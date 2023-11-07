@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.dto;
 
@@ -19,118 +18,118 @@ import org.flowable.task.api.DelegationState;
  * The Class TaskData.
  */
 public class TaskData {
-	
+
 	/** The id. */
 	protected String id;
-	
+
 	/** The revision. */
 	protected int revision;
-	
+
 	/** The owner. */
 	protected String owner;
-	
+
 	/** The assignee updated count. */
 	protected int assigneeUpdatedCount;
-	
+
 	/** The original assignee. */
 	protected String originalAssignee;
-	
+
 	/** The assignee. */
 	protected String assignee;
-	
+
 	/** The delegation state. */
 	protected DelegationState delegationState;
-	
+
 	/** The parent task id. */
 	protected String parentTaskId;
-	
+
 	/** The name. */
 	protected String name;
-	
+
 	/** The localized name. */
 	protected String localizedName;
-	
+
 	/** The description. */
 	protected String description;
-	
+
 	/** The localized description. */
 	protected String localizedDescription;
-	
+
 	/** The priority. */
 	protected int priority = 50;
-	
+
 	/** The create time. */
 	protected Date createTime;
-	
+
 	/** The due date. */
 	protected Date dueDate;
-	
+
 	/** The suspension state. */
 	protected int suspensionState = 1;
-	
+
 	/** The category. */
 	protected String category;
-	
+
 	/** The is identity links initialized. */
 	protected boolean isIdentityLinksInitialized;
-	
+
 	/** The execution id. */
 	protected String executionId;
-	
+
 	/** The process instance id. */
 	protected String processInstanceId;
-	
+
 	/** The process definition id. */
 	protected String processDefinitionId;
-	
+
 	/** The scope id. */
 	protected String scopeId;
-	
+
 	/** The sub scope id. */
 	protected String subScopeId;
-	
+
 	/** The scope type. */
 	protected String scopeType;
-	
+
 	/** The scope definition id. */
 	protected String scopeDefinitionId;
-	
+
 	/** The task definition key. */
 	protected String taskDefinitionKey;
-	
+
 	/** The form key. */
 	protected String formKey;
-	
+
 	/** The is deleted. */
 	protected boolean isDeleted;
-	
+
 	/** The is canceled. */
 	protected boolean isCanceled;
-	
+
 	/** The is count enabled. */
 	private boolean isCountEnabled;
-	
+
 	/** The variable count. */
 	private int variableCount;
-	
+
 	/** The identity link count. */
 	private int identityLinkCount;
-	
+
 	/** The claim time. */
 	protected Date claimTime;
-	
+
 	/** The tenant id. */
 	protected String tenantId = "";
-	
+
 	/** The event name. */
 	protected String eventName;
-	
+
 	/** The event handler id. */
 	protected String eventHandlerId;
-	
+
 	/** The forced update. */
 	protected boolean forcedUpdate;
-	
+
 	/**
 	 * Gets the id.
 	 *
@@ -139,7 +138,7 @@ public class TaskData {
 	public String getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Sets the id.
 	 *
@@ -148,7 +147,7 @@ public class TaskData {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gets the revision.
 	 *
@@ -157,7 +156,7 @@ public class TaskData {
 	public int getRevision() {
 		return revision;
 	}
-	
+
 	/**
 	 * Sets the revision.
 	 *
@@ -166,7 +165,7 @@ public class TaskData {
 	public void setRevision(int revision) {
 		this.revision = revision;
 	}
-	
+
 	/**
 	 * Gets the owner.
 	 *
@@ -175,7 +174,7 @@ public class TaskData {
 	public String getOwner() {
 		return owner;
 	}
-	
+
 	/**
 	 * Sets the owner.
 	 *
@@ -184,7 +183,7 @@ public class TaskData {
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
-	
+
 	/**
 	 * Gets the assignee updated count.
 	 *
@@ -193,7 +192,7 @@ public class TaskData {
 	public int getAssigneeUpdatedCount() {
 		return assigneeUpdatedCount;
 	}
-	
+
 	/**
 	 * Sets the assignee updated count.
 	 *
@@ -202,7 +201,7 @@ public class TaskData {
 	public void setAssigneeUpdatedCount(int assigneeUpdatedCount) {
 		this.assigneeUpdatedCount = assigneeUpdatedCount;
 	}
-	
+
 	/**
 	 * Gets the original assignee.
 	 *
@@ -211,7 +210,7 @@ public class TaskData {
 	public String getOriginalAssignee() {
 		return originalAssignee;
 	}
-	
+
 	/**
 	 * Sets the original assignee.
 	 *
@@ -220,7 +219,7 @@ public class TaskData {
 	public void setOriginalAssignee(String originalAssignee) {
 		this.originalAssignee = originalAssignee;
 	}
-	
+
 	/**
 	 * Gets the assignee.
 	 *
@@ -229,7 +228,7 @@ public class TaskData {
 	public String getAssignee() {
 		return assignee;
 	}
-	
+
 	/**
 	 * Sets the assignee.
 	 *
@@ -238,7 +237,7 @@ public class TaskData {
 	public void setAssignee(String assignee) {
 		this.assignee = assignee;
 	}
-	
+
 	/**
 	 * Gets the delegation state.
 	 *
@@ -247,7 +246,7 @@ public class TaskData {
 	public DelegationState getDelegationState() {
 		return delegationState;
 	}
-	
+
 	/**
 	 * Sets the delegation state.
 	 *
@@ -256,7 +255,7 @@ public class TaskData {
 	public void setDelegationState(DelegationState delegationState) {
 		this.delegationState = delegationState;
 	}
-	
+
 	/**
 	 * Gets the parent task id.
 	 *
@@ -265,7 +264,7 @@ public class TaskData {
 	public String getParentTaskId() {
 		return parentTaskId;
 	}
-	
+
 	/**
 	 * Sets the parent task id.
 	 *
@@ -274,7 +273,7 @@ public class TaskData {
 	public void setParentTaskId(String parentTaskId) {
 		this.parentTaskId = parentTaskId;
 	}
-	
+
 	/**
 	 * Gets the name.
 	 *
@@ -283,7 +282,7 @@ public class TaskData {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Sets the name.
 	 *
@@ -292,7 +291,7 @@ public class TaskData {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * Gets the localized name.
 	 *
@@ -301,7 +300,7 @@ public class TaskData {
 	public String getLocalizedName() {
 		return localizedName;
 	}
-	
+
 	/**
 	 * Sets the localized name.
 	 *
@@ -310,7 +309,7 @@ public class TaskData {
 	public void setLocalizedName(String localizedName) {
 		this.localizedName = localizedName;
 	}
-	
+
 	/**
 	 * Gets the description.
 	 *
@@ -319,7 +318,7 @@ public class TaskData {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	/**
 	 * Sets the description.
 	 *
@@ -328,7 +327,7 @@ public class TaskData {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	/**
 	 * Gets the localized description.
 	 *
@@ -337,7 +336,7 @@ public class TaskData {
 	public String getLocalizedDescription() {
 		return localizedDescription;
 	}
-	
+
 	/**
 	 * Sets the localized description.
 	 *
@@ -346,7 +345,7 @@ public class TaskData {
 	public void setLocalizedDescription(String localizedDescription) {
 		this.localizedDescription = localizedDescription;
 	}
-	
+
 	/**
 	 * Gets the priority.
 	 *
@@ -355,7 +354,7 @@ public class TaskData {
 	public int getPriority() {
 		return priority;
 	}
-	
+
 	/**
 	 * Sets the priority.
 	 *
@@ -364,7 +363,7 @@ public class TaskData {
 	public void setPriority(int priority) {
 		this.priority = priority;
 	}
-	
+
 	/**
 	 * Gets the creates the time.
 	 *
@@ -373,7 +372,7 @@ public class TaskData {
 	public Date getCreateTime() {
 		return createTime;
 	}
-	
+
 	/**
 	 * Sets the creates the time.
 	 *
@@ -382,7 +381,7 @@ public class TaskData {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
+
 	/**
 	 * Gets the due date.
 	 *
@@ -391,7 +390,7 @@ public class TaskData {
 	public Date getDueDate() {
 		return dueDate;
 	}
-	
+
 	/**
 	 * Sets the due date.
 	 *
@@ -400,7 +399,7 @@ public class TaskData {
 	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
 	}
-	
+
 	/**
 	 * Gets the suspension state.
 	 *
@@ -409,7 +408,7 @@ public class TaskData {
 	public int getSuspensionState() {
 		return suspensionState;
 	}
-	
+
 	/**
 	 * Sets the suspension state.
 	 *
@@ -418,7 +417,7 @@ public class TaskData {
 	public void setSuspensionState(int suspensionState) {
 		this.suspensionState = suspensionState;
 	}
-	
+
 	/**
 	 * Gets the category.
 	 *
@@ -427,7 +426,7 @@ public class TaskData {
 	public String getCategory() {
 		return category;
 	}
-	
+
 	/**
 	 * Sets the category.
 	 *
@@ -436,7 +435,7 @@ public class TaskData {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	
+
 	/**
 	 * Checks if is identity links initialized.
 	 *
@@ -445,7 +444,7 @@ public class TaskData {
 	public boolean isIdentityLinksInitialized() {
 		return isIdentityLinksInitialized;
 	}
-	
+
 	/**
 	 * Sets the identity links initialized.
 	 *
@@ -454,7 +453,7 @@ public class TaskData {
 	public void setIdentityLinksInitialized(boolean isIdentityLinksInitialized) {
 		this.isIdentityLinksInitialized = isIdentityLinksInitialized;
 	}
-	
+
 	/**
 	 * Gets the execution id.
 	 *
@@ -463,7 +462,7 @@ public class TaskData {
 	public String getExecutionId() {
 		return executionId;
 	}
-	
+
 	/**
 	 * Sets the execution id.
 	 *
@@ -472,7 +471,7 @@ public class TaskData {
 	public void setExecutionId(String executionId) {
 		this.executionId = executionId;
 	}
-	
+
 	/**
 	 * Gets the process instance id.
 	 *
@@ -481,7 +480,7 @@ public class TaskData {
 	public String getProcessInstanceId() {
 		return processInstanceId;
 	}
-	
+
 	/**
 	 * Sets the process instance id.
 	 *
@@ -490,7 +489,7 @@ public class TaskData {
 	public void setProcessInstanceId(String processInstanceId) {
 		this.processInstanceId = processInstanceId;
 	}
-	
+
 	/**
 	 * Gets the process definition id.
 	 *
@@ -499,7 +498,7 @@ public class TaskData {
 	public String getProcessDefinitionId() {
 		return processDefinitionId;
 	}
-	
+
 	/**
 	 * Sets the process definition id.
 	 *
@@ -508,7 +507,7 @@ public class TaskData {
 	public void setProcessDefinitionId(String processDefinitionId) {
 		this.processDefinitionId = processDefinitionId;
 	}
-	
+
 	/**
 	 * Gets the scope id.
 	 *
@@ -517,7 +516,7 @@ public class TaskData {
 	public String getScopeId() {
 		return scopeId;
 	}
-	
+
 	/**
 	 * Sets the scope id.
 	 *
@@ -526,7 +525,7 @@ public class TaskData {
 	public void setScopeId(String scopeId) {
 		this.scopeId = scopeId;
 	}
-	
+
 	/**
 	 * Gets the sub scope id.
 	 *
@@ -535,7 +534,7 @@ public class TaskData {
 	public String getSubScopeId() {
 		return subScopeId;
 	}
-	
+
 	/**
 	 * Sets the sub scope id.
 	 *
@@ -544,7 +543,7 @@ public class TaskData {
 	public void setSubScopeId(String subScopeId) {
 		this.subScopeId = subScopeId;
 	}
-	
+
 	/**
 	 * Gets the scope type.
 	 *
@@ -553,7 +552,7 @@ public class TaskData {
 	public String getScopeType() {
 		return scopeType;
 	}
-	
+
 	/**
 	 * Sets the scope type.
 	 *
@@ -562,7 +561,7 @@ public class TaskData {
 	public void setScopeType(String scopeType) {
 		this.scopeType = scopeType;
 	}
-	
+
 	/**
 	 * Gets the scope definition id.
 	 *
@@ -571,7 +570,7 @@ public class TaskData {
 	public String getScopeDefinitionId() {
 		return scopeDefinitionId;
 	}
-	
+
 	/**
 	 * Sets the scope definition id.
 	 *
@@ -580,7 +579,7 @@ public class TaskData {
 	public void setScopeDefinitionId(String scopeDefinitionId) {
 		this.scopeDefinitionId = scopeDefinitionId;
 	}
-	
+
 	/**
 	 * Gets the task definition key.
 	 *
@@ -589,7 +588,7 @@ public class TaskData {
 	public String getTaskDefinitionKey() {
 		return taskDefinitionKey;
 	}
-	
+
 	/**
 	 * Sets the task definition key.
 	 *
@@ -598,7 +597,7 @@ public class TaskData {
 	public void setTaskDefinitionKey(String taskDefinitionKey) {
 		this.taskDefinitionKey = taskDefinitionKey;
 	}
-	
+
 	/**
 	 * Gets the form key.
 	 *
@@ -607,7 +606,7 @@ public class TaskData {
 	public String getFormKey() {
 		return formKey;
 	}
-	
+
 	/**
 	 * Sets the form key.
 	 *
@@ -616,7 +615,7 @@ public class TaskData {
 	public void setFormKey(String formKey) {
 		this.formKey = formKey;
 	}
-	
+
 	/**
 	 * Checks if is deleted.
 	 *
@@ -625,7 +624,7 @@ public class TaskData {
 	public boolean isDeleted() {
 		return isDeleted;
 	}
-	
+
 	/**
 	 * Sets the deleted.
 	 *
@@ -634,7 +633,7 @@ public class TaskData {
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-	
+
 	/**
 	 * Checks if is canceled.
 	 *
@@ -643,7 +642,7 @@ public class TaskData {
 	public boolean isCanceled() {
 		return isCanceled;
 	}
-	
+
 	/**
 	 * Sets the canceled.
 	 *
@@ -652,7 +651,7 @@ public class TaskData {
 	public void setCanceled(boolean isCanceled) {
 		this.isCanceled = isCanceled;
 	}
-	
+
 	/**
 	 * Checks if is count enabled.
 	 *
@@ -661,7 +660,7 @@ public class TaskData {
 	public boolean isCountEnabled() {
 		return isCountEnabled;
 	}
-	
+
 	/**
 	 * Sets the count enabled.
 	 *
@@ -670,7 +669,7 @@ public class TaskData {
 	public void setCountEnabled(boolean isCountEnabled) {
 		this.isCountEnabled = isCountEnabled;
 	}
-	
+
 	/**
 	 * Gets the variable count.
 	 *
@@ -679,7 +678,7 @@ public class TaskData {
 	public int getVariableCount() {
 		return variableCount;
 	}
-	
+
 	/**
 	 * Sets the variable count.
 	 *
@@ -688,7 +687,7 @@ public class TaskData {
 	public void setVariableCount(int variableCount) {
 		this.variableCount = variableCount;
 	}
-	
+
 	/**
 	 * Gets the claim time.
 	 *
@@ -697,7 +696,7 @@ public class TaskData {
 	public Date getClaimTime() {
 		return claimTime;
 	}
-	
+
 	/**
 	 * Sets the claim time.
 	 *
@@ -706,7 +705,7 @@ public class TaskData {
 	public void setClaimTime(Date claimTime) {
 		this.claimTime = claimTime;
 	}
-	
+
 	/**
 	 * Gets the tenant id.
 	 *
@@ -715,7 +714,7 @@ public class TaskData {
 	public String getTenantId() {
 		return tenantId;
 	}
-	
+
 	/**
 	 * Sets the tenant id.
 	 *
@@ -724,7 +723,7 @@ public class TaskData {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
-	
+
 	/**
 	 * Gets the event name.
 	 *
@@ -733,7 +732,7 @@ public class TaskData {
 	public String getEventName() {
 		return eventName;
 	}
-	
+
 	/**
 	 * Sets the event name.
 	 *
@@ -742,7 +741,7 @@ public class TaskData {
 	public void setEventName(String eventName) {
 		this.eventName = eventName;
 	}
-	
+
 	/**
 	 * Gets the event handler id.
 	 *
@@ -751,7 +750,7 @@ public class TaskData {
 	public String getEventHandlerId() {
 		return eventHandlerId;
 	}
-	
+
 	/**
 	 * Sets the event handler id.
 	 *
@@ -760,7 +759,7 @@ public class TaskData {
 	public void setEventHandlerId(String eventHandlerId) {
 		this.eventHandlerId = eventHandlerId;
 	}
-	
+
 	/**
 	 * Checks if is forced update.
 	 *
@@ -769,7 +768,7 @@ public class TaskData {
 	public boolean isForcedUpdate() {
 		return forcedUpdate;
 	}
-	
+
 	/**
 	 * Sets the forced update.
 	 *
@@ -778,7 +777,7 @@ public class TaskData {
 	public void setForcedUpdate(boolean forcedUpdate) {
 		this.forcedUpdate = forcedUpdate;
 	}
-	
+
 	/**
 	 * Gets the identity link count.
 	 *
@@ -787,7 +786,7 @@ public class TaskData {
 	public int getIdentityLinkCount() {
 		return identityLinkCount;
 	}
-	
+
 	/**
 	 * Sets the identity link count.
 	 *

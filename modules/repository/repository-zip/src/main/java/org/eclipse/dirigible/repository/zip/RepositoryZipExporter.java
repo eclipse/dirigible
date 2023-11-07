@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.zip;
 
@@ -33,17 +32,13 @@ import org.eclipse.dirigible.repository.api.RepositoryReadException;
 public class RepositoryZipExporter {
 
 	/**
-	 * Export all the content under the given path(s) with the target repository
-	 * instance Include the last segment of the relative roots during the
-	 * archiving.
+	 * Export all the content under the given path(s) with the target repository instance Include the
+	 * last segment of the relative roots during the archiving.
 	 *
-	 * @param repository
-	 *            the target {@link IRepository} instance
-	 * @param relativeRoots
-	 *            the relative roots
+	 * @param repository the target {@link IRepository} instance
+	 * @param relativeRoots the relative roots
 	 * @return the exported content
-	 * @throws RepositoryExportException
-	 *             in case the content cannot be exported
+	 * @throws RepositoryExportException in case the content cannot be exported
 	 */
 	public static byte[] exportZip(IRepository repository, List<String> relativeRoots) throws RepositoryExportException {
 		try {
@@ -59,7 +54,8 @@ public class RepositoryZipExporter {
 					} else {
 						IResource iResource = repository.getResource(relativeRoot);
 						if (iResource.exists()) {
-							ZipEntry zipEntry = new ZipEntry(iResource.getPath().substring(relativeRoot.length() - iResource.getName().length()));
+							ZipEntry zipEntry =
+									new ZipEntry(iResource.getPath().substring(relativeRoot.length() - iResource.getName().length()));
 							zipOutputStream.putNextEntry(zipEntry);
 							zipOutputStream.write((iResource.getContent() == null ? new byte[] {} : iResource.getContent()));
 							zipOutputStream.closeEntry();
@@ -84,20 +80,15 @@ public class RepositoryZipExporter {
 	}
 
 	/**
-	 * Export all the content under the given path with the target repository
-	 * instance Include or NOT the last segment of the relative root during the
-	 * archiving.
+	 * Export all the content under the given path with the target repository instance Include or NOT
+	 * the last segment of the relative root during the archiving.
 	 *
-	 * @param repository
-	 *            the repository
-	 * @param relativeRoot
-	 *            single root
-	 * @param inclusive
-	 *            whether to include the last segment of the root or to pack its
-	 *            content directly in the archive
+	 * @param repository the repository
+	 * @param relativeRoot single root
+	 * @param inclusive whether to include the last segment of the root or to pack its content directly
+	 *        in the archive
 	 * @return the exported content
-	 * @throws RepositoryExportException
-	 *             in case the content cannot be exported
+	 * @throws RepositoryExportException in case the content cannot be exported
 	 */
 	public static byte[] exportZip(IRepository repository, String relativeRoot, boolean inclusive) throws RepositoryExportException {
 
@@ -127,16 +118,13 @@ public class RepositoryZipExporter {
 	/**
 	 * Iterate recursively a given collection and put its content to the zip.
 	 *
-	 * @param zipOutputStream
-	 *            resulting output stream
-	 * @param collection
-	 *            the {ICollection} to be processed
-	 * @param substring
-	 *            the prefix size
-	 * @throws RepositoryExportException
-	 *             in case the processing fails
+	 * @param zipOutputStream resulting output stream
+	 * @param collection the {ICollection} to be processed
+	 * @param substring the prefix size
+	 * @throws RepositoryExportException in case the processing fails
 	 */
-	private static void traverseCollection(ZipOutputStream zipOutputStream, ICollection collection, int substring) throws RepositoryExportException {
+	private static void traverseCollection(ZipOutputStream zipOutputStream, ICollection collection, int substring)
+			throws RepositoryExportException {
 		try {
 			ZipEntry zipEntry = null;
 			if (collection.getPath().length() >= substring) {

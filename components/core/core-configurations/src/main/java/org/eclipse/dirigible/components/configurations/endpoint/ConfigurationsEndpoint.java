@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.configurations.endpoint;
 
@@ -27,11 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "configurations")
 public class ConfigurationsEndpoint extends BaseEndpoint {
-	
-	
+
+
 	/** The configurations service. */
 	private final ConfigurationsService configurationsService;
-	
+
 	/**
 	 * Instantiates a new configurations endpoint.
 	 *
@@ -41,15 +40,15 @@ public class ConfigurationsEndpoint extends BaseEndpoint {
 	public ConfigurationsEndpoint(ConfigurationsService configurationsService) {
 		this.configurationsService = configurationsService;
 	}
-	
-    /**
-     * Find all.
-     *
-     * @return the response entity
-     */
-    @GetMapping
-    public ResponseEntity<List<List<String>>> findAll() {
-        return ResponseEntity.ok(configurationsService.findAll());
-    }
+
+	/**
+	 * Find all.
+	 *
+	 * @return the response entity
+	 */
+	@GetMapping
+	public ResponseEntity<List<List<String>>> findAll() {
+		return ResponseEntity.ok(configurationsService.findAll());
+	}
 
 }

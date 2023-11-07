@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.search;
 
@@ -74,17 +73,16 @@ public class RepositorySearcher {
 
 	/** The Constant CURRENT_DIR. */
 	private static final String CURRENT_DIR = ".";
-	
+
 	/** The Constant CURRENT_INDEX. */
-	private static final String CURRENT_INDEX = "dirigible" + IRepository.SEPARATOR + "repository"
-			+ IRepository.SEPARATOR + "index";
+	private static final String CURRENT_INDEX = "dirigible" + IRepository.SEPARATOR + "repository" + IRepository.SEPARATOR + "index";
 
 	/** The Constant FIELD_CONTENTS. */
 	private static final String FIELD_CONTENTS = "contents";
-	
+
 	/** The Constant FIELD_MODIFIED. */
 	private static final String FIELD_MODIFIED = "modified";
-	
+
 	/** The Constant FIELD_LOCATION. */
 	private static final String FIELD_LOCATION = "location";
 
@@ -122,17 +120,14 @@ public class RepositorySearcher {
 
 		Configuration.loadModuleConfig("/dirigible-repository-search.properties");
 		String rootFolder = Configuration.get(RepositorySearcher.DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER);
-		boolean absolute = Boolean.parseBoolean(
-				Configuration.get(RepositorySearcher.DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER_IS_ABSOLUTE));
-		String indexLocation = Configuration.get(RepositorySearcher.DIRIGIBLE_REPOSITORY_SEARCH_INDEX_LOCATION,
-				CURRENT_INDEX);
+		boolean absolute = Boolean.parseBoolean(Configuration.get(RepositorySearcher.DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER_IS_ABSOLUTE));
+		String indexLocation = Configuration.get(RepositorySearcher.DIRIGIBLE_REPOSITORY_SEARCH_INDEX_LOCATION, CURRENT_INDEX);
 
 		if (absolute) {
 			if (rootFolder != null) {
 				this.root = rootFolder;
 			} else {
-				throw new IllegalStateException(
-						"Creating a Repository Searcher with absolute path flag, but the path itself is null");
+				throw new IllegalStateException("Creating a Repository Searcher with absolute path flag, but the path itself is null");
 			}
 		} else {
 			this.root = System.getProperty("user.dir");
@@ -152,7 +147,7 @@ public class RepositorySearcher {
 	 * The Class ReindexTask.
 	 */
 	class ReindexTask extends TimerTask {
-		
+
 		/**
 		 * Run.
 		 */
@@ -162,7 +157,9 @@ public class RepositorySearcher {
 				if (countUpdated > 30) {
 					countUpdated = 0;
 					lastUpdated = new Date(0);
-					if (logger.isTraceEnabled()) {logger.trace("Full reindexing of the Repository Content...");}
+					if (logger.isTraceEnabled()) {
+						logger.trace("Full reindexing of the Repository Content...");
+					}
 				}
 				reindex();
 				lastUpdated = new Date();
@@ -180,8 +177,7 @@ public class RepositorySearcher {
 	 * @param parameters the parameters
 	 * @throws RepositoryWriteException the repository write exception
 	 */
-	private void add(String location, byte[] contents, long lastModified, Map<String, String> parameters)
-			throws RepositoryWriteException {
+	private void add(String location, byte[] contents, long lastModified, Map<String, String> parameters) throws RepositoryWriteException {
 		String indexName = index;
 
 		try {
@@ -201,8 +197,8 @@ public class RepositorySearcher {
 						doc.add(new StringField(key, parameters.get(key), Field.Store.YES));
 					}
 				}
-				doc.add(new TextField(FIELD_CONTENTS, new BufferedReader(
-						new InputStreamReader(new ByteArrayInputStream(contents), StandardCharsets.UTF_8))));
+				doc.add(new TextField(FIELD_CONTENTS,
+						new BufferedReader(new InputStreamReader(new ByteArrayInputStream(contents), StandardCharsets.UTF_8))));
 				writer.updateDocument(new Term(FIELD_LOCATION, location), doc);
 			} finally {
 				if (writer != null) {
@@ -217,10 +213,9 @@ public class RepositorySearcher {
 	/**
 	 * Search for a given term in the text files content.
 	 *
-	 * @param term            the term
-	 * @return the list of the paths of resources which content matching the
-	 *         search term
-	 * @throws RepositoryReadException             in case of an error
+	 * @param term the term
+	 * @return the list of the paths of resources which content matching the search term
+	 * @throws RepositoryReadException in case of an error
 	 */
 	public List<String> search(String term) throws RepositoryReadException {
 		List<String> results = new ArrayList<String>();
@@ -269,15 +264,16 @@ public class RepositorySearcher {
 			List<String> paths = repository.getAllResourcePaths();
 			for (String path : paths) {
 				IResource resource = repository.getResource(path);
-				if ((resource != null) && (resource.getInformation() != null)
-						&& (resource.getInformation().getModifiedAt() != null)) {
+				if ((resource != null) && (resource.getInformation() != null) && (resource.getInformation().getModifiedAt() != null)) {
 					if (lastUpdated.before(resource.getInformation().getModifiedAt())) {
 						add(path, resource.getContent(), resource.getInformation().getModifiedAt().getTime(), null);
 					}
 				}
 			}
 			long end = System.currentTimeMillis();
-			if (logger.isTraceEnabled()) {logger.trace("Reindexing of the Repository Content finished in: " + (end - start) + "ms");}
+			if (logger.isTraceEnabled()) {
+				logger.trace("Reindexing of the Repository Content finished in: " + (end - start) + "ms");
+			}
 		}
 	}
 
@@ -291,7 +287,7 @@ public class RepositorySearcher {
 			reindex();
 		}
 	}
-	
+
 	/**
 	 * Gets the root.
 	 *

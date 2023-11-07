@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
@@ -41,23 +40,23 @@ import com.google.gson.annotations.Expose;
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_INDEXES")
 public class TableIndex {
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "INDEX_ID", nullable = false)
 	private Long id;
-	
+
 	/** The name. */
 	@Column(name = "INDEX_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String name;
-	
+
 	/** The type. */
 	@Column(name = "INDEX_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String type;
-    
+
 	/** The unique. */
 	@Column(name = "INDEX_UNIQUE", columnDefinition = "BOOLEAN", nullable = true)
 	@Expose
@@ -67,20 +66,20 @@ public class TableIndex {
 	@Column(name = "INDEX_ORDER", columnDefinition = "VARCHAR", nullable = true, length = 20)
 	@Expose
 	private String order;
-    
-    /** The index columns. */
+
+	/** The index columns. */
 	@Column(name = "INDEX_COLUMNS", columnDefinition = "VARCHAR", nullable = false, length = 2000)
 	@Convert(converter = ArrayOfStringsToCsvConverter.class)
 	@Expose
-    private String[] columns;
-	
+	private String[] columns;
+
 	/** The table. */
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "TABLE_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Table table;
-	
+	@JoinColumn(name = "TABLE_ID", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Table table;
+
 	/**
 	 * Instantiates a new table index.
 	 *
@@ -233,7 +232,7 @@ public class TableIndex {
 	public void setTable(Table table) {
 		this.table = table;
 	}
-	
+
 	/**
 	 * To string.
 	 *
@@ -244,5 +243,5 @@ public class TableIndex {
 		return "TableIndex [id=" + id + ", name=" + name + ", type=" + type + ", unique=" + unique + ", order=" + order + ", columns="
 				+ columns + ", table=" + table.getName() + "]";
 	}
-	
+
 }

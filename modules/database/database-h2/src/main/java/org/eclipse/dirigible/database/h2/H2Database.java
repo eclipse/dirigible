@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.h2;
 
@@ -55,8 +54,7 @@ public class H2Database {
 	/**
 	 * Constructor with default root folder - user.dir
 	 *
-	 * @throws SQLException
-	 *             in case the database cannot be created
+	 * @throws SQLException in case the database cannot be created
 	 */
 	public H2Database() throws SQLException {
 		this(null);
@@ -65,17 +63,19 @@ public class H2Database {
 	/**
 	 * Constructor with root folder parameter.
 	 *
-	 * @param rootFolder
-	 *            the root folder
-	 * @throws SQLException
-	 *             in case the database cannot be created
+	 * @param rootFolder the root folder
+	 * @throws SQLException in case the database cannot be created
 	 */
 	public H2Database(String rootFolder) throws SQLException {
-		if (logger.isDebugEnabled()) {logger.debug("Initializing the embedded H2 datasource...");}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Initializing the embedded H2 datasource...");
+		}
 
 		initialize();
 
-		if (logger.isDebugEnabled()) {logger.debug("Embedded H2 datasource initialized.");}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Embedded H2 datasource initialized.");
+		}
 	}
 
 	/**
@@ -83,7 +83,9 @@ public class H2Database {
 	 */
 	public void initialize() {
 		Configuration.loadModuleConfig("/dirigible-database-h2.properties");
-		if (logger.isDebugEnabled()) {logger.debug(this.getClass().getCanonicalName() + " module initialized.");}
+		if (logger.isDebugEnabled()) {
+			logger.debug(this.getClass().getCanonicalName() + " module initialized.");
+		}
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class H2Database {
 	 *
 	 * @param name the name
 	 * @return the data source
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public DataSource getDataSource(String name) throws SQLException {
 		DataSource dataSource = DATASOURCES.get(name);
@@ -123,13 +125,14 @@ public class H2Database {
 	/**
 	 * Creates the data source.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the data source
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	protected DataSource createDataSource(String name) throws SQLException {
-		if (logger.isDebugEnabled()) {logger.debug("Creating an embedded H2 datasource...");}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Creating an embedded H2 datasource...");
+		}
 		synchronized (H2Database.class) {
 			try {
 				String h2Root = prepareRootFolder(name);
@@ -137,7 +140,7 @@ public class H2Database {
 				String databaseUrl = Configuration.get("DIRIGIBLE_DATABASE_H2_URL");
 				String databaseUsername = Configuration.get("DIRIGIBLE_DATABASE_H2_USERNAME");
 				String databasePassword = Configuration.get("DIRIGIBLE_DATABASE_H2_PASSWORD");
-				
+
 				String databaseTimeout = Configuration.get("DIRIGIBLE_DATABASE_DEFAULT_WAIT_TIMEOUT", "180000");
 				int timeout = 180000;
 				try {
@@ -145,7 +148,7 @@ public class H2Database {
 				} catch (NumberFormatException e) {
 					timeout = 180000;
 				}
-				
+
 				if ((databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
 					HikariConfig config = new HikariConfig();
 
@@ -165,7 +168,9 @@ public class H2Database {
 
 					HikariDataSource ds = new HikariDataSource(config);
 
-					if (logger.isWarnEnabled()) {logger.warn("Embedded H2 at: {}", h2Root);}
+					if (logger.isWarnEnabled()) {
+						logger.warn("Embedded H2 at: {}", h2Root);
+					}
 
 					DATASOURCES.put(name, ds);
 					return ds;
@@ -181,18 +186,16 @@ public class H2Database {
 	/**
 	 * Prepare root folder.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the string
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private String prepareRootFolder(String name) throws IOException {
 		// TODO validate name parameter
 		// TODO get by name from Configuration
 
-		String rootFolder = ("DefaultDB".equals(name)) ? DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
-				: DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
+		String rootFolder =
+				("DefaultDB".equals(name)) ? DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT : DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + name;
 		String h2Root = Configuration.get(rootFolder, name);
 		File rootFile = new File(h2Root);
 		File parentFile = rootFile.getCanonicalFile().getParentFile();

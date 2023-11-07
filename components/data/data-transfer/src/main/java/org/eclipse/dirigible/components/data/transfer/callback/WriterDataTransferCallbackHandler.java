@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.transfer.callback;
 
@@ -24,29 +23,29 @@ import org.slf4j.LoggerFactory;
  * The Class WriterDataTransferCallbackHandler.
  */
 public class WriterDataTransferCallbackHandler implements DataTransferCallbackHandler {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WriterDataTransferCallbackHandler.class);
-	
+
 	/** The Constant SEVERITY_INFO. */
 	private static final String SEVERITY_INFO = "INFO";
-	
+
 	/** The Constant SEVERITY_ERROR. */
 	private static final String SEVERITY_ERROR = "ERROR";
-	
+
 	/** The Constant SEVERITY_WARNING. */
 	private static final String SEVERITY_WARNING = "WARNING";
-	
-	
+
+
 	/** The writer. */
 	private Writer writer;
-	
+
 	/** The identifier. */
 	private String identifier;
-	
+
 	/** The stopped. */
 	private boolean stopped = false;
-	
+
 	/**
 	 * Instantiates a new writer data transfer callback handler.
 	 *
@@ -57,7 +56,7 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 		this.writer = writer;
 		this.identifier = identifier;
 	}
-	
+
 	/**
 	 * Write.
 	 *
@@ -70,9 +69,13 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 			this.writer.write(message);
 			this.writer.write("\n");
 			this.writer.flush();
-			if (logger.isInfoEnabled()) {logger.info(message);}
+			if (logger.isInfoEnabled()) {
+				logger.info(message);
+			}
 		} catch (IOException e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage());
+			}
 		}
 	}
 
@@ -117,7 +120,9 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 		try {
 			this.writer.close();
 		} catch (IOException e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage());
+			}
 		}
 	}
 
@@ -136,9 +141,9 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 	 */
 	@Override
 	public void metadataLoadingStarted() {
-		write("Loading of metadata has been started...", SEVERITY_INFO);	
+		write("Loading of metadata has been started...", SEVERITY_INFO);
 	}
-	
+
 	/**
 	 * Metadata loading error.
 	 *
@@ -147,7 +152,7 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 	@Override
 	public void metadataLoadingError(String error) {
 		write(error, SEVERITY_ERROR);
-		
+
 	}
 
 	/**
@@ -181,7 +186,8 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 		for (PersistenceTableModel model : result) {
 			buffer.append(model.getTableName() + ", ");
 		}
-		write("Loading of metadata has been finished successfully - tables count is: " + buffer.substring(0, buffer.length()-2), SEVERITY_INFO);
+		write("Loading of metadata has been finished successfully - tables count is: " + buffer.substring(0, buffer.length() - 2),
+				SEVERITY_INFO);
 	}
 
 	/**
@@ -190,7 +196,7 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 	@Override
 	public void dataTransferStarted() {
 		write("Data transfer has been started...", SEVERITY_INFO);
-		
+
 	}
 
 	/**
@@ -199,7 +205,7 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 	@Override
 	public void dataTransferFinished() {
 		write("Data transfer has been finished successfully.", SEVERITY_INFO);
-		
+
 	}
 
 	/**
@@ -210,7 +216,7 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 	@Override
 	public void tableTransferStarted(String table) {
 		write("Data transfer has been started for table: " + table, SEVERITY_INFO);
-		
+
 	}
 
 	/**
@@ -221,8 +227,9 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 	 */
 	@Override
 	public void tableTransferFinished(String table, int transferedRecords) {
-		write("Data transfer has been finished successfully for table: " + table + " with records count: " + transferedRecords, SEVERITY_INFO);
-		
+		write("Data transfer has been finished successfully for table: " + table + " with records count: " + transferedRecords,
+				SEVERITY_INFO);
+
 	}
 
 	/**
@@ -254,8 +261,10 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 	 */
 	@Override
 	public void tableSelectSQL(String selectSQL) {
-		if (logger.isDebugEnabled()) {logger.debug("Table select SQL script is: " + selectSQL, SEVERITY_INFO);}
-		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Table select SQL script is: " + selectSQL, SEVERITY_INFO);
+		}
+
 	}
 
 	/**
@@ -265,7 +274,9 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 	 */
 	@Override
 	public void tableInsertSQL(String insertSQL) {
-		if (logger.isDebugEnabled()) {logger.debug("Table select SQL script is: " + insertSQL, SEVERITY_INFO);}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Table select SQL script is: " + insertSQL, SEVERITY_INFO);
+		}
 	}
 
 	/**
@@ -276,8 +287,10 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 	 */
 	@Override
 	public void tableSkipped(String table, String reason) {
-		if (logger.isDebugEnabled()) {logger.debug("Table " + table + " has been skipped due to: " + reason, SEVERITY_WARNING);}
-		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Table " + table + " has been skipped due to: " + reason, SEVERITY_WARNING);
+		}
+
 	}
 
 	/**
@@ -286,9 +299,11 @@ public class WriterDataTransferCallbackHandler implements DataTransferCallbackHa
 	@Override
 	public void stopTransfer() {
 		stopped = true;
-		if (logger.isDebugEnabled()) {logger.debug("Transfer has been stopped.", SEVERITY_WARNING);}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Transfer has been stopped.", SEVERITY_WARNING);
+		}
 	}
-	
+
 	/**
 	 * Checks if is stopped.
 	 *

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
@@ -22,10 +21,10 @@ import org.slf4j.LoggerFactory;
 /**
  * The Abstract Create Table Constraint Builder.
  *
- * @param <CONSTRAINT>
- *            the generic type
+ * @param <CONSTRAINT> the generic type
  */
-public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends AbstractCreateTableConstraintBuilder> extends AbstractSqlBuilder {
+public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends AbstractCreateTableConstraintBuilder>
+		extends AbstractSqlBuilder {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractCreateTableConstraintBuilder.class);
@@ -42,10 +41,8 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	/**
 	 * Instantiates a new abstract create table constraint builder.
 	 *
-	 * @param dialect
-	 *            the dialect
-	 * @param name
-	 *            the name
+	 * @param dialect the dialect
+	 * @param name the name
 	 */
 	AbstractCreateTableConstraintBuilder(ISqlDialect dialect, String name) {
 		super(dialect);
@@ -78,7 +75,7 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	public Set<String> getColumns() {
 		return columns;
 	}
-	
+
 	/**
 	 * Sets the columns.
 	 *
@@ -91,8 +88,7 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	/**
 	 * Modifier.
 	 *
-	 * @param modifier
-	 *            the modifier
+	 * @param modifier the modifier
 	 * @return the constraint
 	 */
 	public CONSTRAINT modifier(String modifier) {
@@ -103,12 +99,13 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	/**
 	 * Column.
 	 *
-	 * @param column
-	 *            the column
+	 * @param column the column
 	 * @return the constraint
 	 */
 	public CONSTRAINT column(String column) {
-		if (logger.isTraceEnabled()) {logger.trace("column: " + column);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("column: " + column);
+		}
 		this.columns.add(column);
 		return (CONSTRAINT) this;
 	}
@@ -120,6 +117,7 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override

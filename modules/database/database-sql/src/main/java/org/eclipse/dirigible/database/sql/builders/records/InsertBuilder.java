@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.records;
 
@@ -42,8 +41,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	/**
 	 * Instantiates a new insert builder.
 	 *
-	 * @param dialect
-	 *            the dialect
+	 * @param dialect the dialect
 	 */
 	public InsertBuilder(ISqlDialect dialect) {
 		super(dialect);
@@ -52,12 +50,13 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	/**
 	 * Into.
 	 *
-	 * @param table
-	 *            the table
+	 * @param table the table
 	 * @return the insert builder
 	 */
 	public InsertBuilder into(String table) {
-		if (logger.isTraceEnabled()) {logger.trace("into: " + table);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("into: " + table);
+		}
 		this.table = table;
 		return this;
 	}
@@ -65,12 +64,13 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the insert builder
 	 */
 	public InsertBuilder column(String name) {
-		if (logger.isTraceEnabled()) {logger.trace("column: " + name);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("column: " + name);
+		}
 		this.columns.add(name);
 		return this;
 	}
@@ -78,12 +78,13 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	/**
 	 * Value.
 	 *
-	 * @param value
-	 *            the value
+	 * @param value the value
 	 * @return the insert builder
 	 */
 	public InsertBuilder value(String value) {
-		if (logger.isTraceEnabled()) {logger.trace("value: " + value);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("value: " + value);
+		}
 		this.values.add(value);
 		return this;
 	}
@@ -91,12 +92,13 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	/**
 	 * Select.
 	 *
-	 * @param select
-	 *            the select
+	 * @param select the select
 	 * @return the insert builder
 	 */
 	public InsertBuilder select(String select) {
-		if (logger.isTraceEnabled()) {logger.trace("select: " + select);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("select: " + select);
+		}
 		this.select = select;
 		return this;
 	}
@@ -108,6 +110,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -132,7 +135,9 @@ public class InsertBuilder extends AbstractSqlBuilder {
 
 		String generated = sql.toString();
 
-		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("generated: " + generated);
+		}
 
 		return generated;
 	}
@@ -140,8 +145,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	/**
 	 * Generate table.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
 		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
@@ -151,8 +155,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	/**
 	 * Generate columns.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateColumns(StringBuilder sql) {
 		if (!this.columns.isEmpty()) {
@@ -163,8 +166,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	/**
 	 * Generate values.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateValues(StringBuilder sql) {
 		if (!this.values.isEmpty()) {
@@ -177,8 +179,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	/**
 	 * Generate select.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateSelect(StringBuilder sql) {
 		if (this.select != null) {
@@ -229,8 +230,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	/**
 	 * Generate insert.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateInsert(StringBuilder sql) {
 		sql.append(KEYWORD_INSERT);

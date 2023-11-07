@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 
 package org.eclipse.dirigible.components.data.export.endpoint;
@@ -39,32 +38,32 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_DATA + "import")
 public class DataImportEndpoint {
-	
+
 	/** The constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataImportEndpoint.class);
 
-    /**
-     * The database metadata service.
-     */
-    private final DatabaseMetadataService databaseMetadataService;
+	/**
+	 * The database metadata service.
+	 */
+	private final DatabaseMetadataService databaseMetadataService;
 
-    /**
-     * The database metadata service.
-     */
-    private final DataImportService dataImportService;
+	/**
+	 * The database metadata service.
+	 */
+	private final DataImportService dataImportService;
 
-    /**
-     * Instantiates a new data export endpoint.
-     *
-     * @param databaseMetadataService the database metadata service
-     * @param dataImportService       the data import service
-     */
-    public DataImportEndpoint(DatabaseMetadataService databaseMetadataService, DataImportService dataImportService) {
-        this.databaseMetadataService = databaseMetadataService;
-        this.dataImportService = dataImportService;
-    }
-    
-    
+	/**
+	 * Instantiates a new data export endpoint.
+	 *
+	 * @param databaseMetadataService the database metadata service
+	 * @param dataImportService the data import service
+	 */
+	public DataImportEndpoint(DatabaseMetadataService databaseMetadataService, DataImportService dataImportService) {
+		this.databaseMetadataService = databaseMetadataService;
+		this.dataImportService = dataImportService;
+	}
+
+
 	/**
 	 * Import data in table.
 	 *
@@ -76,20 +75,20 @@ public class DataImportEndpoint {
 	 * @throws Exception the exception
 	 */
 	@PostMapping(value = "/{datasource}/{schema}/{table}", consumes = "multipart/form-data", produces = "application/json")
-	public ResponseEntity<?> importDataInTable(
-			@Validated @PathVariable("datasource") String datasource,
-			@Validated @PathVariable("schema") String schema,
-			@Validated @PathVariable("table") String table,
+	public ResponseEntity<?> importDataInTable(@Validated @PathVariable("datasource") String datasource,
+			@Validated @PathVariable("schema") String schema, @Validated @PathVariable("table") String table,
 			@Validated @RequestParam("file") MultipartFile file) throws Exception {
 		try {
 			return importData(datasource, schema, table, file);
-		} catch(IOException e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+		} catch (IOException e) {
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Project upload failed: " + e.getMessage());
 		}
 	}
-	
-	
+
+
 	/**
 	 * Import data.
 	 *
@@ -103,9 +102,9 @@ public class DataImportEndpoint {
 	private ResponseEntity<?> importData(String datasource, String schema, String table, MultipartFile file) throws Exception {
 
 		if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
-          String error = format("Datasource {0} does not exist.", datasource);
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
-      }
+			String error = format("Datasource {0} does not exist.", datasource);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
+		}
 
 		InputStream is = file.getInputStream();
 		dataImportService.importData(datasource, schema, table, is);

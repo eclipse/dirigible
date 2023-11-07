@@ -1,19 +1,17 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.api;
 
 /**
- * The <code>IResource</code> interface represents a resource located in the
- * repository.
+ * The <code>IResource</code> interface represents a resource located in the repository.
  */
 public interface IResource extends IEntity {
 
@@ -22,34 +20,27 @@ public interface IResource extends IEntity {
 
 	/**
 	 * Returns the content of the resource as a byte array.
-	 * 
+	 *
 	 * @return the raw content
-	 * @throws RepositoryReadException
-	 *             in case the content cannot be retrieved
+	 * @throws RepositoryReadException in case the content cannot be retrieved
 	 */
 	public byte[] getContent() throws RepositoryReadException;
 
 	/**
 	 * Sets this resource's content.
 	 *
-	 * @param content
-	 *            the raw content
-	 * @throws RepositoryWriteException
-	 *             the repository write exception
+	 * @param content the raw content
+	 * @throws RepositoryWriteException the repository write exception
 	 */
 	public void setContent(byte[] content) throws RepositoryWriteException;
 
 	/**
 	 * Sets this resource's content.
 	 *
-	 * @param content
-	 *            the raw content
-	 * @param isBinary
-	 *            whether it is binary
-	 * @param contentType
-	 *            the type of the content
-	 * @throws RepositoryWriteException
-	 *             in case the content of the {@link IResource} cannot be retrieved
+	 * @param content the raw content
+	 * @param isBinary whether it is binary
+	 * @param contentType the type of the content
+	 * @throws RepositoryWriteException in case the content of the {@link IResource} cannot be retrieved
 	 */
 	public void setContent(byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException;
 

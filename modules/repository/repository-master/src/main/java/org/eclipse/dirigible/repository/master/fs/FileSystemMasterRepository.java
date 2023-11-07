@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.master.fs;
 
@@ -33,10 +32,8 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 	/**
 	 * Instantiates a new file system master repository.
 	 *
-	 * @param rootFolder
-	 *            the root folder
-	 * @throws LocalRepositoryException
-	 *             the local repository exception
+	 * @param rootFolder the root folder
+	 * @throws LocalRepositoryException the local repository exception
 	 */
 	public FileSystemMasterRepository(String rootFolder) throws LocalRepositoryException {
 		super(rootFolder);
@@ -45,8 +42,7 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 	/**
 	 * Instantiates a new file system master repository.
 	 *
-	 * @throws LocalRepositoryException
-	 *             the local repository exception
+	 * @throws LocalRepositoryException the local repository exception
 	 */
 	public FileSystemMasterRepository() throws LocalRepositoryException {
 		super();
@@ -59,6 +55,7 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#getRepositoryRootFolder()
 	 */
 	@Override
@@ -73,6 +70,7 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
 	 */
 	@Override
@@ -80,7 +78,7 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	/**
 	 * Gets the last modified.
 	 *

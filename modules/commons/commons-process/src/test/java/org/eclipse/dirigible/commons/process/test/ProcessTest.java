@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.commons.process.test;
 
@@ -29,8 +28,7 @@ public class ProcessTest {
 	/**
 	 * Test command.
 	 *
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Test
 	public void testCommand() throws IOException {
@@ -40,10 +38,10 @@ public class ProcessTest {
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.indexOf("win") >= 0) {
 			// Windows Commands
-			args = new String[] { "cmd", "/c", "dir" }; // windows
+			args = new String[] {"cmd", "/c", "dir"}; // windows
 		} else {
 			// Linux Commands
-			args = new String[] { "bash", "-c", "ls" }; // windows
+			args = new String[] {"bash", "-c", "ls"}; // windows
 		}
 
 		executeCommand(args);
@@ -52,10 +50,8 @@ public class ProcessTest {
 	/**
 	 * Execute command.
 	 *
-	 * @param args
-	 *            the args
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param args the args
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void executeCommand(String[] args) throws IOException {
 		if (args.length <= 0) {

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.endpoint;
 
@@ -53,47 +52,46 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class WorkspaceEndpointTest {
-	
+
 	/** The workspace service. */
 	@Autowired
-	private WorkspaceService workspaceService; 
-	
+	private WorkspaceService workspaceService;
+
 	/** The mock mvc. */
 	@Autowired
-    private MockMvc mockMvc;
+	private MockMvc mockMvc;
 
-    /** The wac. */
-    @Autowired
-    protected WebApplicationContext wac;
+	/** The wac. */
+	@Autowired
+	protected WebApplicationContext wac;
 
-    /** The spring security filter chain. */
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
-	
+	/** The spring security filter chain. */
+	@Autowired
+	private FilterChainProxy springSecurityFilterChain;
+
 	/**
 	 * Setup.
 	 *
 	 * @throws Exception the exception
 	 */
 	@BeforeEach
-    public void setup() throws Exception {
-		
+	public void setup() throws Exception {
+
 		cleanup();
-    	
-    }
-	
+
+	}
+
 	/**
 	 * Cleanup.
 	 *
 	 * @throws Exception the exception
 	 */
 	@AfterEach
-    public void cleanup() throws Exception {
-    }
-	
+	public void cleanup() throws Exception {}
+
 	/**
 	 * Copy.
 	 *
@@ -110,22 +108,18 @@ public class WorkspaceEndpointTest {
 		pair.setTargetWorkspace("workspace1");
 		pair.setSource("project1/folder1/file1.txt");
 		pair.setTarget("project1");
-		mockMvc.perform(post("/services/ide/workspace/workspace1/copy")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(GsonHelper.toJson(pair))
-					.with(csrf()))
+		mockMvc.perform(post("/services/ide/workspace/workspace1/copy")	.contentType(MediaType.APPLICATION_JSON)
+																		.content(GsonHelper.toJson(pair))
+																		.with(csrf()))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
 		File file = project.getFile("file1.txt");
 		assertNotNull(file);
 		assertEquals("file1.txt", file.getName());
 		assertTrue(file.exists());
-		mockMvc.perform(delete("/services/ide/workspaces/workspace1")
-				.with(csrf()))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(delete("/services/ide/workspaces/workspace1").with(csrf())).andDo(print()).andExpect(status().is2xxSuccessful());
 	}
-	
+
 	/**
 	 * Move.
 	 *
@@ -142,20 +136,16 @@ public class WorkspaceEndpointTest {
 		pair.setTargetWorkspace("workspace1");
 		pair.setSource("project1/folder1/file1.txt");
 		pair.setTarget("project1/file1.txt");
-		mockMvc.perform(post("/services/ide/workspace/workspace1/move")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(GsonHelper.toJson(pair))
-					.with(csrf()))
+		mockMvc.perform(post("/services/ide/workspace/workspace1/move")	.contentType(MediaType.APPLICATION_JSON)
+																		.content(GsonHelper.toJson(pair))
+																		.with(csrf()))
 				.andDo(print())
 				.andExpect(status().is2xxSuccessful());
 		File file = project.getFile("file1.txt");
 		assertNotNull(file);
 		assertEquals("file1.txt", file.getName());
 		assertTrue(file.exists());
-		mockMvc.perform(delete("/services/ide/workspaces/workspace1")
-				.with(csrf()))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(delete("/services/ide/workspaces/workspace1").with(csrf())).andDo(print()).andExpect(status().is2xxSuccessful());
 	}
 
 	/**
@@ -173,6 +163,6 @@ public class WorkspaceEndpointTest {
 		public ProjectStatusProvider createProjectStatusProvider() {
 			return new DummyProjectStatusProvider();
 		}
-		
+
 	}
 }

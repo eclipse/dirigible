@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.mongodb.jdbc;
 
@@ -35,64 +34,64 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 
 	/** The db product name. */
 	private String dbProductName;
-	
+
 	/** The db product version. */
 	private String dbProductVersion;
-	
+
 	/** The url. */
 	private String url;
-	
+
 	/** The is read only. */
 	private boolean isReadOnly;
-	
+
 	/** The driver version. */
 	private String driverVersion;
-	
+
 	/** The driver major version. */
 	private int driverMajorVersion;
-	
+
 	/** The driver minor version. */
 	private int driverMinorVersion;
-	
+
 	/** The driver name. */
 	private String driverName;
-	
+
 	/** The connection. */
 	private MongoDBConnection connection;
-	
+
 	/** The mapper. */
 	private static ObjectMapper MAPPER = new ObjectMapper();
-	
+
 	/** The Constant COLUMN_NAME. */
 	public static final String COLUMN_NAME = "COLUMN_NAME"; //$NON-NLS-1$
-	
+
 	/** The Constant TYPE_NAME. */
 	public static final String TYPE_NAME = "TYPE_NAME"; //$NON-NLS-1$
 
 	/** The Constant COLUMN_SIZE. */
 	public static final String COLUMN_SIZE = "COLUMN_SIZE"; //$NON-NLS-1$
-	
+
 	/** The Constant IS_NULLABLE. */
 	public static final String IS_NULLABLE = "IS_NULLABLE"; //$NON-NLS-1$
-	
+
 	/** The Constant DECIMAL_DIGITS. */
 	public static final String DECIMAL_DIGITS = "DECIMAL_DIGITS"; //$NON-NLS-1$
-	
+
 	/** The Constant TABLE_NAME. */
 	public static final String TABLE_NAME = "TABLE_NAME"; //$NON-NLS-1$
-	
+
 	/** The Constant TABLE_TYPE. */
 	public static final String TABLE_TYPE = "TABLE_TYPE"; //$NON-NLS-1$
-	
+
 	/** The Constant REMARKS. */
 	public static final String REMARKS = "REMARKS"; //$NON-NLS-1$
-	
+
 	/** The Constant NESTED. */
 	public static final String NESTED = "NESTED"; //$NON-NLS-1$
-	
+
 	/** The Constant PK. */
 	public static final String PK = "PK"; //$NON-NLS-1$
-	
+
 	/**
 	 * Instantiates a new mongo DB database metadata.
 	 *
@@ -114,9 +113,9 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		if (isWrapperFor(iface)) {
-	        return (T) this;
-	    }
-	    throw new SQLException("No wrapper for " + iface);
+			return (T) this;
+		}
+		throw new SQLException("No wrapper for " + iface);
 	}
 
 	/**
@@ -128,7 +127,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 */
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		 return iface != null && iface.isAssignableFrom(getClass());
+		return iface != null && iface.isAssignableFrom(getClass());
 	}
 
 	/**
@@ -165,7 +164,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	public String getURL() throws SQLException {
 		return this.url;
 	}
-	
+
 	/**
 	 * Sets the url.
 	 *
@@ -198,7 +197,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	public boolean isReadOnly() throws SQLException {
 		return this.isReadOnly;
 	}
-	
+
 	/**
 	 * Sets the checks if is read only.
 	 *
@@ -267,7 +266,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	public String getDatabaseProductName() throws SQLException {
 		return this.dbProductName;
 	}
-	
+
 	/**
 	 * Sets the database product name.
 	 *
@@ -298,7 +297,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	void setDatabaseProductVersion(String version) throws SQLException {
 		this.dbProductVersion = version;
 	}
-	
+
 	/**
 	 * Gets the driver name.
 	 *
@@ -309,7 +308,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	public String getDriverName() throws SQLException {
 		return this.driverName;
 	}
-	
+
 	/**
 	 * Sets the driver name.
 	 *
@@ -330,7 +329,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	public String getDriverVersion() throws SQLException {
 		return this.driverVersion;
 	}
-	
+
 	/**
 	 * Sets the driver version.
 	 *
@@ -350,7 +349,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	public int getDriverMajorVersion() {
 		return this.driverMajorVersion;
 	}
-	
+
 	/**
 	 * Sets the driver major version.
 	 *
@@ -369,7 +368,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	public int getDriverMinorVersion() {
 		return this.driverMinorVersion;
 	}
-	
+
 	/**
 	 * Sets the driver minor version.
 	 *
@@ -664,8 +663,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public boolean supportsConvert(int fromType, int toType)
-			throws SQLException {
+	public boolean supportsConvert(int fromType, int toType) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -1565,8 +1563,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public boolean supportsTransactionIsolationLevel(int level)
-			throws SQLException {
+	public boolean supportsTransactionIsolationLevel(int level) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -1578,8 +1575,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public boolean supportsDataDefinitionAndDataManipulationTransactions()
-			throws SQLException {
+	public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -1591,8 +1587,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public boolean supportsDataManipulationTransactionsOnly()
-			throws SQLException {
+	public boolean supportsDataManipulationTransactionsOnly() throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -1631,8 +1626,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getProcedures(String catalog, String schemaPattern,
-			String procedureNamePattern) throws SQLException {
+	public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1648,8 +1642,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getProcedureColumns(String catalog, String schemaPattern,
-			String procedureNamePattern, String columnNamePattern)
+	public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern)
 			throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
@@ -1667,7 +1660,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 */
 	@Override
 	public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
-		//we ignore catalog (not valid in mongodb) and schema pattern (not implemented)
+		// we ignore catalog (not valid in mongodb) and schema pattern (not implemented)
 		MongoIterable<String> collections = connection.getMongoDatabase().listCollectionNames();
 		ArrayNode array = MAPPER.createArrayNode();
 		for (String name : collections) {
@@ -1680,7 +1673,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 		ResultSet tables = new JsonArrayMongoIteratorResultSet(array);
 		return tables;
 	}
-	
+
 	/**
 	 * Gets the schemas.
 	 *
@@ -1726,8 +1719,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getColumns(String catalog, String schemaPattern,
-			String tableNamePattern, String columnNamePattern)
+	public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
 			throws SQLException {
 		Document first = connection.getMongoDatabase().getCollection(tableNamePattern).find().first();
 		if (first == null) {
@@ -1776,8 +1768,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getColumnPrivileges(String catalog, String schema,
-			String table, String columnNamePattern) throws SQLException {
+	public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1792,8 +1783,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getTablePrivileges(String catalog, String schemaPattern,
-			String tableNamePattern) throws SQLException {
+	public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1810,8 +1800,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getBestRowIdentifier(String catalog, String schema,
-			String table, int scope, boolean nullable) throws SQLException {
+	public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1826,8 +1815,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getVersionColumns(String catalog, String schema,
-			String table) throws SQLException {
+	public ResultSet getVersionColumns(String catalog, String schema, String table) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1842,9 +1830,8 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getPrimaryKeys(String catalog, String schema, String table)
-			throws SQLException {
-		ResultSet primaryKeys = new SingleColumnStaticResultSet(Arrays.asList(new String[]{"_id"}).iterator());
+	public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
+		ResultSet primaryKeys = new SingleColumnStaticResultSet(Arrays.asList(new String[] {"_id"}).iterator());
 		return primaryKeys;
 	}
 
@@ -1858,8 +1845,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getImportedKeys(String catalog, String schema, String table)
-			throws SQLException {
+	public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1874,8 +1860,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getExportedKeys(String catalog, String schema, String table)
-			throws SQLException {
+	public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1893,8 +1878,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getCrossReference(String parentCatalog,
-			String parentSchema, String parentTable, String foreignCatalog,
+	public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable, String foreignCatalog,
 			String foreignSchema, String foreignTable) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
@@ -1924,9 +1908,8 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getIndexInfo(String catalog, String schema, String table,
-			boolean unique, boolean approximate) throws SQLException {
-		ResultSet indexInfo = new SingleColumnStaticResultSet(Arrays.asList(new String[]{}).iterator());
+	public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
+		ResultSet indexInfo = new SingleColumnStaticResultSet(Arrays.asList(new String[] {}).iterator());
 		return indexInfo;
 	}
 
@@ -1952,8 +1935,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public boolean supportsResultSetConcurrency(int type, int concurrency)
-			throws SQLException {
+	public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -2098,8 +2080,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getUDTs(String catalog, String schemaPattern,
-			String typeNamePattern, int[] types) throws SQLException {
+	public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -2173,8 +2154,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getSuperTypes(String catalog, String schemaPattern,
-			String typeNamePattern) throws SQLException {
+	public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -2189,8 +2169,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getSuperTables(String catalog, String schemaPattern,
-			String tableNamePattern) throws SQLException {
+	public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -2206,8 +2185,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getAttributes(String catalog, String schemaPattern,
-			String typeNamePattern, String attributeNamePattern)
+	public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern)
 			throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
@@ -2221,8 +2199,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public boolean supportsResultSetHoldability(int holdability)
-			throws SQLException {
+	public boolean supportsResultSetHoldability(int holdability) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -2345,10 +2322,10 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 */
 	@Override
 	public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-		ResultSet schemas = new SingleColumnStaticResultSet(Arrays.asList(new String[]{connection.mongoDatabase.getName()}).iterator());
+		ResultSet schemas = new SingleColumnStaticResultSet(Arrays.asList(new String[] {connection.mongoDatabase.getName()}).iterator());
 		return schemas;
 	}
-	
+
 	/**
 	 * Supports stored functions using call syntax.
 	 *
@@ -2395,8 +2372,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getFunctions(String catalog, String schemaPattern,
-			String functionNamePattern) throws SQLException {
+	public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -2412,8 +2388,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getFunctionColumns(String catalog, String schemaPattern,
-			String functionNamePattern, String columnNamePattern)
+	public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern)
 			throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
@@ -2430,8 +2405,7 @@ public class MongoDBDatabaseMetadata implements DatabaseMetaData {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public ResultSet getPseudoColumns(String catalog, String schemaPattern,
-			String tableNamePattern, String columnNamePattern)
+	public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
 			throws SQLException {
 		// TODO Auto-generated method stub
 		return null;

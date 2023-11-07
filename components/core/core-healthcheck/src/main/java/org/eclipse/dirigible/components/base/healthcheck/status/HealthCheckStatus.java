@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.base.healthcheck.status;
 
@@ -40,8 +39,7 @@ public class HealthCheckStatus {
 	 * @return single instance of HealthStatus
 	 */
 	public static HealthCheckStatus getInstance() {
-		if (!INSTANCE.status.equals(Status.Ready)
-				&& (System.currentTimeMillis() - INSTANCE.started) > TimeLimited.getTimeoutInMillis()) {
+		if (!INSTANCE.status.equals(Status.Ready) && (System.currentTimeMillis() - INSTANCE.started) > TimeLimited.getTimeoutInMillis()) {
 			INSTANCE.status = Status.Ready;
 			if (logger.isWarnEnabled()) {
 				logger.warn("Health status: one or more synchronizers still in progress...");
@@ -162,7 +160,7 @@ public class HealthCheckStatus {
 		/**
 		 * Sets the status.
 		 *
-		 * @param name   the name
+		 * @param name the name
 		 * @param status the status
 		 */
 		public void setStatus(String name, JobStatus status) {

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.template.velocity;
 
@@ -34,7 +33,7 @@ public class VelocityGenerationEngine implements TemplateEngine {
 
 	/** The Constant ENGINE_NAME. */
 	public static final String ENGINE_NAME = "velocity";
-	
+
 	/** The engine. */
 	private VelocityEngine engine;
 
@@ -51,7 +50,7 @@ public class VelocityGenerationEngine implements TemplateEngine {
 		}
 	}
 
-	
+
 	/**
 	 * Gets the name.
 	 *
@@ -88,8 +87,7 @@ public class VelocityGenerationEngine implements TemplateEngine {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Override
-	public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em)
-			throws IOException {
+	public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Writer writer = new OutputStreamWriter(baos, StandardCharsets.UTF_8);
 		ByteArrayInputStream in = new ByteArrayInputStream(input);
@@ -109,7 +107,7 @@ public class VelocityGenerationEngine implements TemplateEngine {
 			}
 		}
 	}
-	
+
 	/**
 	 * Put the input parameters to the Velocity Context for processing.
 	 *

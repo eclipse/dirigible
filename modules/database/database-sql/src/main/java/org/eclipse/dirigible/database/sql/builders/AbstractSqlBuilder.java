@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders;
 
@@ -25,13 +24,12 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 
 	/** The dialect. */
 	private ISqlDialect dialect;
-	
-	
+
+
 	/**
 	 * Instantiates a new abstract sql builder.
 	 *
-	 * @param dialect
-	 *            the dialect
+	 * @param dialect the dialect
 	 */
 	protected AbstractSqlBuilder(ISqlDialect dialect) {
 		this.dialect = dialect;
@@ -65,7 +63,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	public String build() {
 		return generate();
 	}
-	
+
 	/**
 	 * Whether the names of tables, columns, indices are case sensitive.
 	 *
@@ -74,7 +72,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	protected boolean isCaseSensitive() {
 		return Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
 	}
-	
+
 	/**
 	 * Encapsulate the name within quotes.
 	 *
@@ -93,7 +91,8 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return the encapsulated name
 	 */
 	protected String encapsulate(String name, boolean isDataStructureName) {
-		if (name == null) return null;
+		if (name == null)
+			return null;
 		String escapeSymbol = getEscapeSymbol();
 		if ("*".equals(name.trim())) {
 			return name;
@@ -107,7 +106,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 		}
 		return name;
 	}
-	
+
 	/** The column pattern. */
 	private Pattern columnPattern = Pattern.compile("^(?![0-9]*$)[a-zA-Z0-9_#$]+$");
 
@@ -121,17 +120,19 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	}
 
 	/**
-	 * Check whether the name is a column (one word) or it is complex expression containing functions, etc. (count(*))
+	 * Check whether the name is a column (one word) or it is complex expression containing functions,
+	 * etc. (count(*))
+	 *
 	 * @param name the name of the eventual column
 	 * @return true if it is one word
 	 */
 	protected boolean isColumn(String name) {
 		if (name == null) {
-	        return false; 
-	    }
-	    return columnPattern.matcher(name).matches();
+			return false;
+		}
+		return columnPattern.matcher(name).matches();
 	}
-	
+
 	/**
 	 * Encapsulate all the non-function and non-numeric words.
 	 *
@@ -147,8 +148,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 			if (isNumeric(word) || isValue(word)) {
 				continue;
 			}
-			if (!"".equals(word.trim())
-					&& !functionsNames.contains(word.toLowerCase())) {
+			if (!"".equals(word.trim()) && !functionsNames.contains(word.toLowerCase())) {
 				line = line.replace(word, "\"" + word + "\"");
 			}
 		}
@@ -159,10 +159,10 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * The Regex find the content between single quotes.
 	 */
 	private Pattern contentBetweenSingleQuotes = Pattern.compile("'([^']*?)'");
-	
+
 	/** The numeric pattern. */
 	private Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
-	
+
 	/**
 	 * Check whether the string is a number.
 	 *
@@ -170,10 +170,10 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return true if it is a number
 	 */
 	protected boolean isNumeric(String s) {
-	    if (s == null) {
-	        return false; 
-	    }
-	    return numericPattern.matcher(s).matches();
+		if (s == null) {
+			return false;
+		}
+		return numericPattern.matcher(s).matches();
 	}
 
 	/**

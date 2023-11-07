@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.domain;
 
@@ -30,36 +29,36 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Table(name = "DIRIGIBLE_ODATA_HANDLER")
 public class ODataHandler extends Artefact {
-	
+
 	/** The Constant ARTEFACT_TYPE. */
-    public static final String ARTEFACT_TYPE = "odatahandler";
-    
-    /** The id. */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ODATAH_ID", nullable = false)
-    private Long id;
-	
+	public static final String ARTEFACT_TYPE = "odatahandler";
+
+	/** The id. */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ODATAH_ID", nullable = false)
+	private Long id;
+
 	/** The namespace. */
 	@Column(name = "ODATAH_NAMESPACE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String namespace;
-	
+
 	/** The method. */
 	@Column(name = "ODATAH_METHOD", columnDefinition = "VARCHAR", nullable = false, length = 20)
 	@Expose
 	private String method;
-	
+
 	/** The type. */
 	@Column(name = "ODATAH_KIND", columnDefinition = "VARCHAR", nullable = false, length = 20)
 	@Expose
 	private String kind;
-	
+
 	/** The handler. */
 	@Column(name = "ODATAH_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String handler;
-	
+
 	/**
 	 * Instantiates a new o data handler.
 	 *
@@ -72,15 +71,15 @@ public class ODataHandler extends Artefact {
 	 * @param kind the kind
 	 * @param handler the handler
 	 */
-	public ODataHandler(String location, String name, String description, Set<String> dependencies,
-			String namespace, String method, String kind, String handler) {
+	public ODataHandler(String location, String name, String description, Set<String> dependencies, String namespace, String method,
+			String kind, String handler) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.namespace = namespace;
 		this.method = method;
 		this.kind = kind;
 		this.handler = handler;
 	}
-	
+
 	/**
 	 * Instantiates a new o data handler.
 	 */
@@ -185,11 +184,10 @@ public class ODataHandler extends Artefact {
 	 */
 	@Override
 	public String toString() {
-		return "ODataHandler [id=" + id + ", namespace=" + namespace + ", method=" + method + ", kind=" + kind
-				+ ", handler=" + handler + ", location=" + location + ", name=" + name + ", type=" + type
-				+ ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy="
-				+ createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt
-				+ "]";
+		return "ODataHandler [id=" + id + ", namespace=" + namespace + ", method=" + method + ", kind=" + kind + ", handler=" + handler
+				+ ", location=" + location + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key
+				+ ", dependencies=" + dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy
+				+ ", updatedAt=" + updatedAt + "]";
 	}
 
 }

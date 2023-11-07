@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.http;
 
@@ -56,10 +55,10 @@ public class HttpClientFacade {
 	/**
 	 * Performs a GET request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
+	 * @param url the URL
+	 * @param options the options
 	 * @return the response as JSON
-	 * @throws IOException             In case an I/O exception occurs
+	 * @throws IOException In case an I/O exception occurs
 	 */
 	public static final String get(String url, String options) throws IOException {
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -72,10 +71,10 @@ public class HttpClientFacade {
 	/**
 	 * Performs a POST request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
+	 * @param url the URL
+	 * @param options the options
 	 * @return the response as JSON
-	 * @throws IOException             In case an I/O exception occurs
+	 * @throws IOException In case an I/O exception occurs
 	 */
 	public static final String post(String url, String options) throws IOException {
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -88,10 +87,10 @@ public class HttpClientFacade {
 	/**
 	 * Performs a PUT request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
+	 * @param url the URL
+	 * @param options the options
 	 * @return the response as JSON
-	 * @throws IOException             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static final String put(String url, String options) throws IOException {
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -104,10 +103,10 @@ public class HttpClientFacade {
 	/**
 	 * Performs a PATCH request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
+	 * @param url the URL
+	 * @param options the options
 	 * @return the response as JSON
-	 * @throws IOException             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static final String patch(String url, String options) throws IOException {
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -120,10 +119,10 @@ public class HttpClientFacade {
 	/**
 	 * Performs a DELETE request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
+	 * @param url the URL
+	 * @param options the options
 	 * @return the response as JSON
-	 * @throws IOException             In case an I/O exception occurs
+	 * @throws IOException In case an I/O exception occurs
 	 */
 	public static final String delete(String url, String options) throws IOException {
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -137,10 +136,10 @@ public class HttpClientFacade {
 	/**
 	 * Performs a HEAD request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
+	 * @param url the URL
+	 * @param options the options
 	 * @return the response as JSON
-	 * @throws IOException             In case an I/O exception occurs
+	 * @throws IOException In case an I/O exception occurs
 	 */
 	public static final String head(String url, String options) throws IOException {
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -154,10 +153,10 @@ public class HttpClientFacade {
 	/**
 	 * Performs a TRACE request for the specified URL and options.
 	 *
-	 * @param url            the URL
-	 * @param options            the options
+	 * @param url the URL
+	 * @param options the options
 	 * @return the response as JSON
-	 * @throws IOException             In case an I/O exception occurs
+	 * @throws IOException In case an I/O exception occurs
 	 */
 	public static final String trace(String url, String options) throws IOException {
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -181,18 +180,10 @@ public class HttpClientFacade {
 	}
 
 	/** The Constant recognizedTextMimeTypes. */
-	private static final HashSet<String> recognizedTextMimeTypes = new HashSet<>(Arrays.asList(
-			"application/CSV",
-			"application/csv",
-			"text/csv",
-			ContentType.TEXT_PLAIN.getMimeType(),
-			ContentType.TEXT_HTML.getMimeType(),
-			ContentType.TEXT_XML.getMimeType(),
-			ContentType.APPLICATION_JSON.getMimeType(),
-			ContentType.APPLICATION_ATOM_XML.getMimeType(),
-			ContentType.APPLICATION_XML.getMimeType(),
-			ContentType.APPLICATION_XHTML_XML.getMimeType()
-	));
+	private static final HashSet<String> recognizedTextMimeTypes = new HashSet<>(Arrays.asList("application/CSV", "application/csv",
+			"text/csv", ContentType.TEXT_PLAIN.getMimeType(), ContentType.TEXT_HTML.getMimeType(), ContentType.TEXT_XML.getMimeType(),
+			ContentType.APPLICATION_JSON.getMimeType(), ContentType.APPLICATION_ATOM_XML.getMimeType(),
+			ContentType.APPLICATION_XML.getMimeType(), ContentType.APPLICATION_XHTML_XML.getMimeType()));
 
 	/**
 	 * Process http client response.
@@ -275,18 +266,19 @@ public class HttpClientFacade {
 	 */
 	public static RequestConfig prepareConfig(HttpClientRequestOptions httpClientRequestOptions) {
 		RequestConfig.Builder configBuilder = RequestConfig.custom();
-		configBuilder.setAuthenticationEnabled(httpClientRequestOptions.isAuthenticationEnabled())
-				.setCircularRedirectsAllowed(httpClientRequestOptions.isCircularRedirectsAllowed())
-				.setContentCompressionEnabled(httpClientRequestOptions.isContentCompressionEnabled())
-				.setExpectContinueEnabled(httpClientRequestOptions.isExpectContinueEnabled())
-				.setRedirectsEnabled(httpClientRequestOptions.isRedirectsEnabled())
-				.setRelativeRedirectsAllowed(httpClientRequestOptions.isRelativeRedirectsAllowed())
-				.setMaxRedirects(httpClientRequestOptions.getMaxRedirects())
-				.setConnectionRequestTimeout(httpClientRequestOptions.getConnectionRequestTimeout())
-				.setConnectTimeout(httpClientRequestOptions.getConnectTimeout()).setSocketTimeout(httpClientRequestOptions.getSocketTimeout())
-				.setCookieSpec(httpClientRequestOptions.getCookieSpec())
-				.setProxyPreferredAuthSchemes(httpClientRequestOptions.getProxyPreferredAuthSchemes())
-				.setTargetPreferredAuthSchemes(httpClientRequestOptions.getTargetPreferredAuthSchemes());
+		configBuilder	.setAuthenticationEnabled(httpClientRequestOptions.isAuthenticationEnabled())
+						.setCircularRedirectsAllowed(httpClientRequestOptions.isCircularRedirectsAllowed())
+						.setContentCompressionEnabled(httpClientRequestOptions.isContentCompressionEnabled())
+						.setExpectContinueEnabled(httpClientRequestOptions.isExpectContinueEnabled())
+						.setRedirectsEnabled(httpClientRequestOptions.isRedirectsEnabled())
+						.setRelativeRedirectsAllowed(httpClientRequestOptions.isRelativeRedirectsAllowed())
+						.setMaxRedirects(httpClientRequestOptions.getMaxRedirects())
+						.setConnectionRequestTimeout(httpClientRequestOptions.getConnectionRequestTimeout())
+						.setConnectTimeout(httpClientRequestOptions.getConnectTimeout())
+						.setSocketTimeout(httpClientRequestOptions.getSocketTimeout())
+						.setCookieSpec(httpClientRequestOptions.getCookieSpec())
+						.setProxyPreferredAuthSchemes(httpClientRequestOptions.getProxyPreferredAuthSchemes())
+						.setTargetPreferredAuthSchemes(httpClientRequestOptions.getTargetPreferredAuthSchemes());
 
 		if ((httpClientRequestOptions.getProxyHost() != null) && (httpClientRequestOptions.getProxyPort() != 0)) {
 			configBuilder.setProxy(new HttpHost(httpClientRequestOptions.getProxyHost(), httpClientRequestOptions.getProxyPort()));
@@ -329,7 +321,8 @@ public class HttpClientFacade {
 		} else if (httpClientRequestOptions.getFiles() != null) {
 			return createPostFilesRequest(url, httpClientRequestOptions);
 		}
-		throw new IllegalArgumentException("The element [data] or [text] or [params] or [files] in [options] have to be set for POST requests");
+		throw new IllegalArgumentException(
+				"The element [data] or [text] or [params] or [files] in [options] have to be set for POST requests");
 	}
 
 	/**
@@ -340,12 +333,16 @@ public class HttpClientFacade {
 	 * @return the http post
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private static final HttpPost createPostBinaryRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+	private static final HttpPost createPostBinaryRequest(String url, HttpClientRequestOptions httpClientRequestOptions)
+			throws IOException {
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPost);
-		HttpEntity entity = EntityBuilder.create().setBinary(httpClientRequestOptions.getData()).setContentType(ContentType.APPLICATION_OCTET_STREAM).build();
+		HttpEntity entity = EntityBuilder	.create()
+											.setBinary(httpClientRequestOptions.getData())
+											.setContentType(ContentType.APPLICATION_OCTET_STREAM)
+											.build();
 		httpPost.setEntity(entity);
 		return httpPost;
 	}
@@ -368,7 +365,7 @@ public class HttpClientFacade {
 		prepareHeaders(httpClientRequestOptions, httpPost);
 
 		String contentTypeString = httpClientRequestOptions.getContentType();
-		boolean shouldParseContentType = contentTypeString.contains("charset") || contentTypeString.contains(";"); 
+		boolean shouldParseContentType = contentTypeString.contains("charset") || contentTypeString.contains(";");
 		ContentType contentType = shouldParseContentType ? ContentType.parse(contentTypeString) : ContentType.create(contentTypeString);
 
 		EntityBuilder entityBuilder = EntityBuilder.create().setText(httpClientRequestOptions.getText()).setContentType(contentType);
@@ -446,7 +443,8 @@ public class HttpClientFacade {
 		} else if (httpClientRequestOptions.getFiles() != null) {
 			return createPutFilesRequest(url, httpClientRequestOptions);
 		}
-		throw new IllegalArgumentException("The element [data] or [text] or [params] or [files] in [options] have to be set for PUT requests");
+		throw new IllegalArgumentException(
+				"The element [data] or [text] or [params] or [files] in [options] have to be set for PUT requests");
 	}
 
 	/**
@@ -462,7 +460,10 @@ public class HttpClientFacade {
 		HttpPut httpPut = new HttpPut(url);
 		httpPut.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPut);
-		HttpEntity entity = EntityBuilder.create().setBinary(httpClientRequestOptions.getData()).setContentType(ContentType.APPLICATION_OCTET_STREAM).build();
+		HttpEntity entity = EntityBuilder	.create()
+											.setBinary(httpClientRequestOptions.getData())
+											.setContentType(ContentType.APPLICATION_OCTET_STREAM)
+											.build();
 		httpPut.setEntity(entity);
 		return httpPut;
 	}
@@ -483,7 +484,9 @@ public class HttpClientFacade {
 		HttpPut httpPut = new HttpPut(url);
 		httpPut.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPut);
-		EntityBuilder entityBuilder = EntityBuilder.create().setText(httpClientRequestOptions.getText()).setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
+		EntityBuilder entityBuilder = EntityBuilder	.create()
+													.setText(httpClientRequestOptions.getText())
+													.setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
 		if (httpClientRequestOptions.isCharacterEncodingEnabled()) {
 			entityBuilder.setContentEncoding(httpClientRequestOptions.getCharacterEncoding());
 		}
@@ -560,7 +563,8 @@ public class HttpClientFacade {
 		} else if (httpClientRequestOptions.getFiles() != null) {
 			return createPatchFilesRequest(url, httpClientRequestOptions);
 		}
-		throw new IllegalArgumentException("The element [data] or [text] or [params] or [files] in [options] have to be set for PATCH requests");
+		throw new IllegalArgumentException(
+				"The element [data] or [text] or [params] or [files] in [options] have to be set for PATCH requests");
 	}
 
 	/**
@@ -571,12 +575,16 @@ public class HttpClientFacade {
 	 * @return the http patch
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private static final HttpPatch createPatchBinaryRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+	private static final HttpPatch createPatchBinaryRequest(String url, HttpClientRequestOptions httpClientRequestOptions)
+			throws IOException {
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
 		HttpPatch httpPatch = new HttpPatch(url);
 		httpPatch.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPatch);
-		HttpEntity entity = EntityBuilder.create().setBinary(httpClientRequestOptions.getData()).setContentType(ContentType.APPLICATION_OCTET_STREAM).build();
+		HttpEntity entity = EntityBuilder	.create()
+											.setBinary(httpClientRequestOptions.getData())
+											.setContentType(ContentType.APPLICATION_OCTET_STREAM)
+											.build();
 		httpPatch.setEntity(entity);
 		return httpPatch;
 	}
@@ -589,7 +597,8 @@ public class HttpClientFacade {
 	 * @return the http patch
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private static final HttpPatch createPatchTextRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+	private static final HttpPatch createPatchTextRequest(String url, HttpClientRequestOptions httpClientRequestOptions)
+			throws IOException {
 		if (httpClientRequestOptions.getText() == null) {
 			throw new IllegalArgumentException("The element [text] in [options] cannot be null for POST requests in [text] mode");
 		}
@@ -597,7 +606,9 @@ public class HttpClientFacade {
 		HttpPatch httpPatch = new HttpPatch(url);
 		httpPatch.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPatch);
-		EntityBuilder entityBuilder = EntityBuilder.create().setText(httpClientRequestOptions.getText()).setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
+		EntityBuilder entityBuilder = EntityBuilder	.create()
+													.setText(httpClientRequestOptions.getText())
+													.setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
 		if (httpClientRequestOptions.isCharacterEncodingEnabled()) {
 			entityBuilder.setContentEncoding(httpClientRequestOptions.getCharacterEncoding());
 		}
@@ -613,7 +624,8 @@ public class HttpClientFacade {
 	 * @return the http patch
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private static final HttpPatch createPatchFormRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+	private static final HttpPatch createPatchFormRequest(String url, HttpClientRequestOptions httpClientRequestOptions)
+			throws IOException {
 		if (httpClientRequestOptions.getParams() == null) {
 			throw new IllegalArgumentException("The element [params] in [options] cannot be null for POST requests in [form] mode");
 		}
@@ -638,7 +650,8 @@ public class HttpClientFacade {
 	 * @return the http patch
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private static final HttpPatch createPatchFilesRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+	private static final HttpPatch createPatchFilesRequest(String url, HttpClientRequestOptions httpClientRequestOptions)
+			throws IOException {
 		if (httpClientRequestOptions.getParams() == null) {
 			throw new IllegalArgumentException("The element [files] in [options] cannot be null for POST requests in [file] mode");
 		}

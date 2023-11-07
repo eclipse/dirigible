@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.api;
 
@@ -28,7 +27,7 @@ public interface OData2EventHandler {
 
 	/** The Constant DIRIGIBLE_ODATA_EVENT_HANDLER_NAME. */
 	public static final String DIRIGIBLE_ODATA_EVENT_HANDLER_NAME = "DIRIGIBLE_ODATA_EVENT_HANDLER_NAME";
-	
+
 	/** The Constant DEFAULT_ODATA_EVENT_HANDLER_NAME. */
 	public static final String DEFAULT_ODATA_EVENT_HANDLER_NAME = "default";
 
@@ -43,8 +42,8 @@ public interface OData2EventHandler {
 	 * @return the o data response
 	 * @throws ODataException the o data exception
 	 */
-	ODataResponse beforeCreateEntity(final PostUriInfo uriInfo,
-			final String requestContentType, final String contentType, ODataEntry entry, Map<Object, Object> context) throws ODataException;
+	ODataResponse beforeCreateEntity(final PostUriInfo uriInfo, final String requestContentType, final String contentType, ODataEntry entry,
+			Map<Object, Object> context) throws ODataException;
 
 	/**
 	 * After create entity.
@@ -57,8 +56,8 @@ public interface OData2EventHandler {
 	 * @return the o data response
 	 * @throws ODataException the o data exception
 	 */
-	ODataResponse afterCreateEntity(final PostUriInfo uriInfo,
-			final String requestContentType, final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
+	ODataResponse afterCreateEntity(final PostUriInfo uriInfo, final String requestContentType, final String contentType,
+			final ODataEntry entry, Map<Object, Object> context) throws ODataException;
 
 	/**
 	 * Checks if is using on create entity.
@@ -68,8 +67,7 @@ public interface OData2EventHandler {
 	 * @param contentType the content type
 	 * @return true, if is using on create entity
 	 */
-	boolean isUsingOnCreateEntity(final PostUriInfo uriInfo,
-								  final String requestContentType, final String contentType);
+	boolean isUsingOnCreateEntity(final PostUriInfo uriInfo, final String requestContentType, final String contentType);
 
 	/**
 	 * Checks if is using after create entity.
@@ -79,8 +77,7 @@ public interface OData2EventHandler {
 	 * @param contentType the content type
 	 * @return true, if is using after create entity
 	 */
-	boolean isUsingAfterCreateEntity(final PostUriInfo uriInfo,
-								  final String requestContentType, final String contentType);
+	boolean isUsingAfterCreateEntity(final PostUriInfo uriInfo, final String requestContentType, final String contentType);
 
 	/**
 	 * On create entity.
@@ -93,8 +90,8 @@ public interface OData2EventHandler {
 	 * @return the o data response
 	 * @throws ODataException the o data exception
 	 */
-	ODataResponse onCreateEntity(final PostUriInfo uriInfo, final InputStream content,
-			final String requestContentType, final String contentType, Map<Object, Object> context) throws ODataException;
+	ODataResponse onCreateEntity(final PostUriInfo uriInfo, final InputStream content, final String requestContentType,
+			final String contentType, Map<Object, Object> context) throws ODataException;
 
 	/**
 	 * Forbid create entity.
@@ -104,8 +101,7 @@ public interface OData2EventHandler {
 	 * @param contentType the content type
 	 * @return true, if successful
 	 */
-	boolean forbidCreateEntity(final PostUriInfo uriInfo,
-			final String requestContentType, final String contentType);
+	boolean forbidCreateEntity(final PostUriInfo uriInfo, final String requestContentType, final String contentType);
 
 	/**
 	 * Before update entity.
@@ -119,8 +115,8 @@ public interface OData2EventHandler {
 	 * @return the o data response
 	 * @throws ODataException the o data exception
 	 */
-	ODataResponse beforeUpdateEntity(final PutMergePatchUriInfo uriInfo,
-			final String requestContentType, final boolean merge, final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
+	ODataResponse beforeUpdateEntity(final PutMergePatchUriInfo uriInfo, final String requestContentType, final boolean merge,
+			final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
 
 	/**
 	 * After update entity.
@@ -134,8 +130,8 @@ public interface OData2EventHandler {
 	 * @return the o data response
 	 * @throws ODataException the o data exception
 	 */
-	ODataResponse afterUpdateEntity(final PutMergePatchUriInfo uriInfo,
-			final String requestContentType, final boolean merge, final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
+	ODataResponse afterUpdateEntity(final PutMergePatchUriInfo uriInfo, final String requestContentType, final boolean merge,
+			final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
 
 	/**
 	 * Checks if is using on update entity.
@@ -146,8 +142,8 @@ public interface OData2EventHandler {
 	 * @param contentType the content type
 	 * @return true, if is using on update entity
 	 */
-	boolean isUsingOnUpdateEntity(final PutMergePatchUriInfo uriInfo,
-								  final String requestContentType, final boolean merge, final String contentType);
+	boolean isUsingOnUpdateEntity(final PutMergePatchUriInfo uriInfo, final String requestContentType, final boolean merge,
+			final String contentType);
 
 
 	/**
@@ -162,8 +158,8 @@ public interface OData2EventHandler {
 	 * @return the o data response
 	 * @throws ODataException the o data exception
 	 */
-	ODataResponse onUpdateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
-			final String requestContentType, final boolean merge, final String contentType, Map<Object, Object> context) throws ODataException;
+	ODataResponse onUpdateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content, final String requestContentType,
+			final boolean merge, final String contentType, Map<Object, Object> context) throws ODataException;
 
 	/**
 	 * Forbid update entity.
@@ -174,8 +170,8 @@ public interface OData2EventHandler {
 	 * @param contentType the content type
 	 * @return true, if successful
 	 */
-	boolean forbidUpdateEntity(final PutMergePatchUriInfo uriInfo,
-			final String requestContentType, final boolean merge, final String contentType);
+	boolean forbidUpdateEntity(final PutMergePatchUriInfo uriInfo, final String requestContentType, final boolean merge,
+			final String contentType);
 
 	/**
 	 * Before delete entity.
@@ -186,7 +182,8 @@ public interface OData2EventHandler {
 	 * @return the o data response
 	 * @throws ODataException the o data exception
 	 */
-	ODataResponse beforeDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context) throws ODataException;
+	ODataResponse beforeDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context)
+			throws ODataException;
 
 	/**
 	 * After delete entity.
@@ -197,7 +194,8 @@ public interface OData2EventHandler {
 	 * @return the o data response
 	 * @throws ODataException the o data exception
 	 */
-	ODataResponse afterDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context) throws ODataException;
+	ODataResponse afterDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context)
+			throws ODataException;
 
 	/**
 	 * Checks if is using on delete entity.

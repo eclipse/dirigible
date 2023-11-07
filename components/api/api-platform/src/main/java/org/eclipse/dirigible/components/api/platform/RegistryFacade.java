@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.platform;
 
@@ -36,7 +35,7 @@ public class RegistryFacade {
 
 	/** The Constant META_INF_DIRIGIBLE. */
 	private static final String META_INF_DIRIGIBLE = "/META-INF/dirigible";
-	
+
 	/** The Constant META_INF_WEBJARS. */
 	private static final String META_INF_WEBJARS = "/META-INF/resources/webjars";
 
@@ -63,7 +62,7 @@ public class RegistryFacade {
 		if (content != null) {
 			return content;
 		}
-		
+
 		return null;
 	}
 
@@ -81,7 +80,7 @@ public class RegistryFacade {
 				return IOUtils.toByteArray(in);
 			} else {
 				return null;
-			} 
+			}
 		} finally {
 			if (in != null) {
 				in.close();
@@ -137,7 +136,7 @@ public class RegistryFacade {
 		}
 		return path;
 	}
-	
+
 	/**
 	 * Find all the files matching the pattern.
 	 *
@@ -150,8 +149,8 @@ public class RegistryFacade {
 		ICollection collection = RepositoryFacade.getCollection(toRepositoryPath(path));
 		if (collection.exists() && collection instanceof LocalCollection) {
 			List<String> list = FileSystemUtils.find(((LocalCollection) collection).getFolder().getPath(), pattern);
-			int repositoryRootLength = ((LocalCollection) collection.getRepository().getRoot()).getFolder().getPath().length() +
-					IRepositoryStructure.PATH_REGISTRY_PUBLIC.length();
+			int repositoryRootLength = ((LocalCollection) collection.getRepository().getRoot()).getFolder().getPath().length()
+					+ IRepositoryStructure.PATH_REGISTRY_PUBLIC.length();
 			List<String> prepared = new ArrayList<String>();
 			list.forEach(item -> {
 				String truncated = item.substring(repositoryRootLength);

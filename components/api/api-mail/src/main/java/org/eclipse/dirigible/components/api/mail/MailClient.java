@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.mail;
 
@@ -31,17 +30,17 @@ import java.util.Properties;
  * The Class MailClient.
  */
 public class MailClient {
-	
+
 	/** The Constant MAIL_USER. */
 	// Mail properties
 	private static final String MAIL_USER = "mail.user";
-	
+
 	/** The Constant MAIL_PASSWORD. */
 	private static final String MAIL_PASSWORD = "mail.password";
-	
+
 	/** The Constant SMTP_TRANSPORT. */
 	private static final String SMTP_TRANSPORT = "smtp";
-	
+
 	/** The Constant SMTPS_TRANSPORT. */
 	private static final String SMTPS_TRANSPORT = "smtps";
 
@@ -60,17 +59,18 @@ public class MailClient {
 	/**
 	 * Send an email.
 	 *
-	 * @param from    the sender
-	 * @param to      the to receiver
-	 * @param cc      the cc receiver
-	 * @param bcc     the bcc receiver
+	 * @param from the sender
+	 * @param to the to receiver
+	 * @param cc the cc receiver
+	 * @param bcc the bcc receiver
 	 * @param subject the subject
-	 * @param parts   the mail parts
+	 * @param parts the mail parts
 	 * @return the map
 	 * @throws MessagingException the messaging exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public Map send(String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts) throws MessagingException, IOException {
+	public Map send(String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts)
+			throws MessagingException, IOException {
 		Session session = getSession(this.properties);
 		SMTPTransport transport;
 		String transportProperty = properties.getProperty("mail.transport.protocol").toLowerCase();
@@ -85,27 +85,22 @@ public class MailClient {
 			default:
 				throw new IllegalStateException("Unexpected transport property: " + transportProperty);
 		}
-		
+
 		try {
 			String proxyType = this.properties.getProperty("ProxyType");
 			if (proxyType != null && proxyType.equals("OnPremise")) {
-				Socket socket =
-						new ConnectivitySocks5ProxySocket(getTransportProperty(transportProperty, "socks.host"),
-								getTransportProperty(transportProperty, "socks.port"),
-								getTransportProperty(transportProperty, "proxy.user"),
-								getTransportProperty(transportProperty, "proxy.password", " "));
-	
+				Socket socket = new ConnectivitySocks5ProxySocket(getTransportProperty(transportProperty, "socks.host"),
+						getTransportProperty(transportProperty, "socks.port"), getTransportProperty(transportProperty, "proxy.user"),
+						getTransportProperty(transportProperty, "proxy.password", " "));
+
 				socket.connect(new InetSocketAddress(getTransportProperty(transportProperty, "host"),
 						Integer.parseInt(getTransportProperty(transportProperty, "port"))));
-	
+
 				transport.connect(socket);
 			} else {
-				transport.connect(
-					this.properties.getProperty(MAIL_USER),
-					this.properties.getProperty(MAIL_PASSWORD)
-				);
+				transport.connect(this.properties.getProperty(MAIL_USER), this.properties.getProperty(MAIL_PASSWORD));
 			}
-	
+
 			MimeMessage mimeMessage = createMimeMessage(session, from, to, cc, bcc, subject, parts);
 			mimeMessage.saveChanges();
 			String messageId = mimeMessage.getMessageID();
@@ -119,7 +114,7 @@ public class MailClient {
 		} finally {
 			transport.close();
 		}
-		
+
 	}
 
 	/**
@@ -152,8 +147,8 @@ public class MailClient {
 	 * @return the mime message
 	 * @throws MessagingException the messaging exception
 	 */
-	private static MimeMessage createMimeMessage(Session smtpSession, String from, String to[], String cc[], String bcc[], String subjectText, List<Map> parts)
-			throws MessagingException {
+	private static MimeMessage createMimeMessage(Session smtpSession, String from, String to[], String cc[], String bcc[],
+			String subjectText, List<Map> parts) throws MessagingException {
 
 		MimeMessage mimeMessage = new MimeMessage(smtpSession);
 		mimeMessage.setFrom(InternetAddress.parse(from)[0]);

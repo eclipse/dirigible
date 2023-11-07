@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.http;
 
@@ -56,9 +55,9 @@ public class HttpUploadFacade {
 	/**
 	 * Parses the request.
 	 *
-	 * @return A list of FileItem instances parsed from the request, in the order that they were transmitted.
-	 * @throws FileUploadException
-	 *             if there is a problem parsing the request
+	 * @return A list of FileItem instances parsed from the request, in the order that they were
+	 *         transmitted.
+	 * @throws FileUploadException if there is a problem parsing the request
 	 */
 	public static final List<FileItem> parseRequest() throws FileUploadException {
 		ServletFileUpload servletFileUpload = new ServletFileUpload(new DiskFileItemFactory());

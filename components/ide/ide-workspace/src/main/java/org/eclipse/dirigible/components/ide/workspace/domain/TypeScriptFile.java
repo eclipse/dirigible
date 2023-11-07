@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.domain;
 
@@ -30,172 +29,163 @@ import java.util.stream.Collectors;
  */
 public class TypeScriptFile {
 
-    /** The Constant IMPORT_STATEMENTS_PATTERN. */
-    private static final Pattern IMPORT_STATEMENTS_PATTERN = Pattern.compile("(?:import|export)\\s+\\{.*\\}\\s+from\\s+['\"](.*)['\"];*");
+	/** The Constant IMPORT_STATEMENTS_PATTERN. */
+	private static final Pattern IMPORT_STATEMENTS_PATTERN = Pattern.compile("(?:import|export)\\s+\\{.*\\}\\s+from\\s+['\"](.*)['\"];*");
 
-    /** The repository. */
-    private final IRepository repository;
-    
-    /** The workspace. */
-    private final String workspace;
-    
-    /** The project. */
-    private final String project;
-    
-    /** The file path. */
-    private final String filePath;
-    
-    /** The source code. */
-    private final String sourceCode;
-    
-    /** The imported files names. */
-    private final List<String> importedFilesNames;
+	/** The repository. */
+	private final IRepository repository;
 
-    /**
-     * Instantiates a new type script file.
-     *
-     * @param repository the repository
-     * @param workspace the workspace
-     * @param project the project
-     * @param filePath the file path
-     */
-    public TypeScriptFile(IRepository repository, String workspace, String project, String filePath) {
-        var user = UserFacade.getName();
-        this.repository = repository;
-        this.workspace = workspace;
-        this.project = project;
-        this.filePath = filePath;
-        this.sourceCode = getSourceCode(user, workspace, project, filePath);
-        this.importedFilesNames = getImportedFilesNames(user, workspace, project, filePath, sourceCode);
-    }
+	/** The workspace. */
+	private final String workspace;
 
-    /**
-     * Gets the source code.
-     *
-     * @param user the user
-     * @param workspace the workspace
-     * @param project the project
-     * @param filePath the file path
-     * @return the source code
-     */
-    private String getSourceCode(String user, String workspace, String project, String filePath) {
-        var repositoryPath = generateWorkspaceProjectFilePath(user, workspace, project, filePath);
-        var resource = repository.getResource(repositoryPath);
-        var content = new String(resource.getContent(), StandardCharsets.UTF_8);
-        return content;
-    }
+	/** The project. */
+	private final String project;
 
-    /**
-     * Gets the imported files names.
-     *
-     * @param user the user
-     * @param workspace the workspace
-     * @param project the project
-     * @param filePath the file path
-     * @param sourceCode the source code
-     * @return the imported files names
-     */
-    private List<String> getImportedFilesNames(String user, String workspace, String project, String filePath, String sourceCode) {
-        var fileRepositoryPath = Path.of(repository.getInternalResourcePath(generateWorkspaceProjectFilePath(user, workspace, project, filePath)));
-        var projectRepositoryPath = Path.of(repository.getInternalResourcePath(generateUserRepositoryPath(user)));
-        var fileRepositoryPathParentDir = fileRepositoryPath.getParent();
+	/** The file path. */
+	private final String filePath;
 
-        var allImports = new HashSet<String>();
+	/** The source code. */
+	private final String sourceCode;
 
-        Matcher importStatementsMatcher = IMPORT_STATEMENTS_PATTERN.matcher(sourceCode);
-        while (importStatementsMatcher.find()) {
-            var fromStatement = importStatementsMatcher.group(1);
-            allImports.add(fromStatement);
-        }
+	/** The imported files names. */
+	private final List<String> importedFilesNames;
 
-        var relativeImports = allImports.stream()
-                .filter(x -> x.startsWith("./") || x.startsWith("../"))
-                .map(x -> {
-                    try {
-                        var importedModule = x.endsWith(".ts") ? x : x + ".ts";
-                        return fileRepositoryPathParentDir
-                                .resolve(Path.of(importedModule))
-                                .toRealPath();
-                    } catch (Exception e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .map(x -> "/" + projectRepositoryPath.relativize(x))
-                .collect(Collectors.toList());
+	/**
+	 * Instantiates a new type script file.
+	 *
+	 * @param repository the repository
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param filePath the file path
+	 */
+	public TypeScriptFile(IRepository repository, String workspace, String project, String filePath) {
+		var user = UserFacade.getName();
+		this.repository = repository;
+		this.workspace = workspace;
+		this.project = project;
+		this.filePath = filePath;
+		this.sourceCode = getSourceCode(user, workspace, project, filePath);
+		this.importedFilesNames = getImportedFilesNames(user, workspace, project, filePath, sourceCode);
+	}
 
-        return relativeImports;
-    }
+	/**
+	 * Gets the source code.
+	 *
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param filePath the file path
+	 * @return the source code
+	 */
+	private String getSourceCode(String user, String workspace, String project, String filePath) {
+		var repositoryPath = generateWorkspaceProjectFilePath(user, workspace, project, filePath);
+		var resource = repository.getResource(repositoryPath);
+		var content = new String(resource.getContent(), StandardCharsets.UTF_8);
+		return content;
+	}
 
-    /**
-     * Generate workspace project file path.
-     *
-     * @param user the user
-     * @param workspace the workspace
-     * @param project the project
-     * @param path the path
-     * @return the string
-     */
-    private String generateWorkspaceProjectFilePath(String user, String workspace, String project, String path) {
-        return IRepositoryStructure.PATH_USERS +
-                IRepositoryStructure.SEPARATOR + user +
-                IRepositoryStructure.SEPARATOR + workspace +
-                IRepositoryStructure.SEPARATOR + project +
-                IRepositoryStructure.SEPARATOR + path;
-    }
+	/**
+	 * Gets the imported files names.
+	 *
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param filePath the file path
+	 * @param sourceCode the source code
+	 * @return the imported files names
+	 */
+	private List<String> getImportedFilesNames(String user, String workspace, String project, String filePath, String sourceCode) {
+		var fileRepositoryPath =
+				Path.of(repository.getInternalResourcePath(generateWorkspaceProjectFilePath(user, workspace, project, filePath)));
+		var projectRepositoryPath = Path.of(repository.getInternalResourcePath(generateUserRepositoryPath(user)));
+		var fileRepositoryPathParentDir = fileRepositoryPath.getParent();
 
-    /**
-     * Generate user repository path.
-     *
-     * @param user the user
-     * @return the string
-     */
-    private String generateUserRepositoryPath(String user) {
-        return IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + user;
-    }
+		var allImports = new HashSet<String>();
 
-    /**
-     * Gets the source code.
-     *
-     * @return the source code
-     */
-    public String getSourceCode() {
-        return sourceCode;
-    }
+		Matcher importStatementsMatcher = IMPORT_STATEMENTS_PATTERN.matcher(sourceCode);
+		while (importStatementsMatcher.find()) {
+			var fromStatement = importStatementsMatcher.group(1);
+			allImports.add(fromStatement);
+		}
 
-    /**
-     * Gets the imported files names.
-     *
-     * @return the imported files names
-     */
-    public List<String> getImportedFilesNames() {
-        return importedFilesNames;
-    }
+		var relativeImports = allImports.stream().filter(x -> x.startsWith("./") || x.startsWith("../")).map(x -> {
+			try {
+				var importedModule = x.endsWith(".ts") ? x : x + ".ts";
+				return fileRepositoryPathParentDir.resolve(Path.of(importedModule)).toRealPath();
+			} catch (Exception e) {
+				return null;
+			}
+		}).filter(Objects::nonNull).map(x -> "/" + projectRepositoryPath.relativize(x)).collect(Collectors.toList());
 
-    /**
-     * Gets the workspace.
-     *
-     * @return the workspace
-     */
-    public String getWorkspace() {
-        return workspace;
-    }
+		return relativeImports;
+	}
 
-    /**
-     * Gets the project.
-     *
-     * @return the project
-     */
-    public String getProject() {
-        return project;
-    }
+	/**
+	 * Generate workspace project file path.
+	 *
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @return the string
+	 */
+	private String generateWorkspaceProjectFilePath(String user, String workspace, String project, String path) {
+		return IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + user + IRepositoryStructure.SEPARATOR + workspace
+				+ IRepositoryStructure.SEPARATOR + project + IRepositoryStructure.SEPARATOR + path;
+	}
 
-    /**
-     * Gets the file path.
-     *
-     * @return the file path
-     */
-    public String getFilePath() {
-        return filePath;
-    }
+	/**
+	 * Generate user repository path.
+	 *
+	 * @param user the user
+	 * @return the string
+	 */
+	private String generateUserRepositoryPath(String user) {
+		return IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + user;
+	}
+
+	/**
+	 * Gets the source code.
+	 *
+	 * @return the source code
+	 */
+	public String getSourceCode() {
+		return sourceCode;
+	}
+
+	/**
+	 * Gets the imported files names.
+	 *
+	 * @return the imported files names
+	 */
+	public List<String> getImportedFilesNames() {
+		return importedFilesNames;
+	}
+
+	/**
+	 * Gets the workspace.
+	 *
+	 * @return the workspace
+	 */
+	public String getWorkspace() {
+		return workspace;
+	}
+
+	/**
+	 * Gets the project.
+	 *
+	 * @return the project
+	 */
+	public String getProject() {
+		return project;
+	}
+
+	/**
+	 * Gets the file path.
+	 *
+	 * @return the file path
+	 */
+	public String getFilePath() {
+		return filePath;
+	}
 }

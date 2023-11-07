@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.format;
 
@@ -40,8 +39,7 @@ public class ColumnDescriptor {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name
-	 *            the new name
+	 * @param name the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -59,8 +57,7 @@ public class ColumnDescriptor {
 	/**
 	 * Sets the label.
 	 *
-	 * @param label
-	 *            the new label
+	 * @param label the new label
 	 */
 	public void setLabel(String label) {
 		this.label = label;
@@ -78,8 +75,7 @@ public class ColumnDescriptor {
 	/**
 	 * Sets the sql type.
 	 *
-	 * @param sqlType
-	 *            the new sql type
+	 * @param sqlType the new sql type
 	 */
 	public void setSqlType(int sqlType) {
 		this.sqlType = sqlType;
@@ -97,8 +93,7 @@ public class ColumnDescriptor {
 	/**
 	 * Sets the display size.
 	 *
-	 * @param displaySize
-	 *            the new display size
+	 * @param displaySize the new display size
 	 */
 	public void setDisplaySize(int displaySize) {
 		this.displaySize = displaySize;
@@ -111,6 +106,7 @@ public class ColumnDescriptor {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -132,6 +128,7 @@ public class ColumnDescriptor {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

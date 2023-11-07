@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.processors;
 
@@ -64,8 +63,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Instantiates a new abstract persistence processor.
 	 *
-	 * @param entityManagerInterceptor
-	 *            the entity manager interceptor
+	 * @param entityManagerInterceptor the entity manager interceptor
 	 */
 	protected AbstractPersistenceProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		this.entityManagerInterceptor = entityManagerInterceptor;
@@ -74,10 +72,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Generate script.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
+	 * @param connection the connection
+	 * @param tableModel the table model
 	 * @return the string
 	 */
 	protected abstract String generateScript(Connection connection, PersistenceTableModel tableModel);
@@ -85,23 +81,19 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the values from pojo.
 	 *
-	 * @param tableModel
-	 *            the table model
-	 * @param pojo
-	 *            the pojo
-	 * @param preparedStatement
-	 *            the prepared statement
-	 * @throws SQLException
-	 *             the SQL exception
-	 * @throws NoSuchFieldException
-	 *             the no such field exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
+	 * @param tableModel the table model
+	 * @param pojo the pojo
+	 * @param preparedStatement the prepared statement
+	 * @throws SQLException the SQL exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws IllegalAccessException the illegal access exception
 	 */
 	protected void setValuesFromPojo(PersistenceTableModel tableModel, Object pojo, PreparedStatement preparedStatement)
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
-		if (logger.isTraceEnabled()) {logger.trace("setValuesFromPojo -> tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
-				+ Serializer.serializePojo(pojo));}
+		if (logger.isTraceEnabled()) {
+			logger.trace("setValuesFromPojo -> tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
+					+ Serializer.serializePojo(pojo));
+		}
 		int i = 1;
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (!shouldSetColumnValue(columnModel)) {
@@ -132,9 +124,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 				valueObject = truncateValue(columnModel, valueObject);
 				setValue(preparedStatement, i++, dataType, valueObject);
 			} catch (PersistenceException e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-				throw new PersistenceException(
-						format("Database type [{0}] not supported (Class: [{1}])", dataType, pojo.getClass()));
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage(), e);
+				}
+				throw new PersistenceException(format("Database type [{0}] not supported (Class: [{1}])", dataType, pojo.getClass()));
 			}
 		}
 	}
@@ -149,13 +142,11 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	protected Object truncateValue(PersistenceTableColumnModel columnModel, Object valueObject) {
 		String dataType = columnModel.getType();
 		int dataLength = columnModel.getLength();
-		if (DataTypeUtils.isVarchar(dataType) 
-				|| DataTypeUtils.isNvarchar(dataType) 
-				|| DataTypeUtils.isChar(dataType)) {
+		if (DataTypeUtils.isVarchar(dataType) || DataTypeUtils.isNvarchar(dataType) || DataTypeUtils.isChar(dataType)) {
 			if (valueObject != null && valueObject.toString().length() > dataLength) {
 				if (logger.isWarnEnabled()) {
-					logger.warn("String has been truncated to fit to the database column [{}] length [{}].",
-							columnModel.getName(), columnModel.getLength());
+					logger.warn("String has been truncated to fit to the database column [{}] length [{}].", columnModel.getName(),
+							columnModel.getLength());
 				}
 				return valueObject.toString().substring(0, dataLength - 1);
 			}
@@ -166,8 +157,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Should set column value.
 	 *
-	 * @param columnModel
-	 *            the column model
+	 * @param columnModel the column model
 	 * @return true, if successful
 	 */
 	protected boolean shouldSetColumnValue(PersistenceTableColumnModel columnModel) {
@@ -177,10 +167,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Reset accessible.
 	 *
-	 * @param field
-	 *            the field
-	 * @param oldAccessible
-	 *            the old accessible
+	 * @param field the field
+	 * @param oldAccessible the old accessible
 	 */
 	private void resetAccessible(Field field, boolean oldAccessible) {
 		field.setAccessible(oldAccessible);
@@ -189,8 +177,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the accessible.
 	 *
-	 * @param field
-	 *            the field
+	 * @param field the field
 	 * @return true, if successful
 	 */
 	private boolean setAccessible(Field field) {
@@ -202,22 +189,18 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value primary key.
 	 *
-	 * @param tableModel
-	 *            the table model
-	 * @param id
-	 *            the id
-	 * @param preparedStatement
-	 *            the prepared statement
-	 * @throws SQLException
-	 *             the SQL exception
-	 * @throws NoSuchFieldException
-	 *             the no such field exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
+	 * @param tableModel the table model
+	 * @param id the id
+	 * @param preparedStatement the prepared statement
+	 * @throws SQLException the SQL exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws IllegalAccessException the illegal access exception
 	 */
 	protected void setValuePrimaryKey(PersistenceTableModel tableModel, Object id, PreparedStatement preparedStatement)
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
-		if (logger.isTraceEnabled()) {logger.trace("setValuePrimaryKey -> tableModel: " + Serializer.serializeTableModel(tableModel) + ", id: " + id);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("setValuePrimaryKey -> tableModel: " + Serializer.serializeTableModel(tableModel) + ", id: " + id);
+		}
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey()) {
 				String dataType = columnModel.getType();
@@ -230,37 +213,31 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value.
 	 *
-	 * @param preparedStatement
-	 *            the prepared statement
-	 * @param i
-	 *            the i
-	 * @param value
-	 *            the value
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @param preparedStatement the prepared statement
+	 * @param i the i
+	 * @param value the value
+	 * @throws SQLException the SQL exception
 	 */
 	protected void setValue(PreparedStatement preparedStatement, int i, Object value) throws SQLException {
-		if (logger.isTraceEnabled()) {logger.trace("setValue -> i: " + i + ", value: " + value);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("setValue -> i: " + i + ", value: " + value);
+		}
 		setValue(preparedStatement, i, DataTypeUtils.getDatabaseTypeNameByJavaType(value.getClass()), value);
 	}
 
 	/**
 	 * Sets the value.
 	 *
-	 * @param preparedStatement
-	 *            the prepared statement
-	 * @param i
-	 *            the i
-	 * @param dataType
-	 *            the data type
-	 * @param value
-	 *            the value
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @param preparedStatement the prepared statement
+	 * @param i the i
+	 * @param dataType the data type
+	 * @param value the value
+	 * @throws SQLException the SQL exception
 	 */
-	protected void setValue(PreparedStatement preparedStatement, int i, String dataType, Object value)
-			throws SQLException {
-		if (logger.isTraceEnabled()) {logger.trace("setValue -> i: " + i + ", dataType: " + dataType + ", value: " + value);}
+	protected void setValue(PreparedStatement preparedStatement, int i, String dataType, Object value) throws SQLException {
+		if (logger.isTraceEnabled()) {
+			logger.trace("setValue -> i: " + i + ", dataType: " + dataType + ", value: " + value);
+		}
 		if (getEntityManagerInterceptor() != null) {
 			value = getEntityManagerInterceptor().onGetValueBeforeUpdate(i, dataType, value);
 		}
@@ -274,12 +251,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		} else if (DataTypeUtils.isChar(dataType)) {
 			if (value instanceof String) {
 				preparedStatement.setString(i, (String) value);
-			} else if ((value instanceof Character)
-					|| char.class.getCanonicalName().equals(value.getClass().getCanonicalName())) {
-				preparedStatement.setString(i, new String(new char[] { (char) value }));
+			} else if ((value instanceof Character) || char.class.getCanonicalName().equals(value.getClass().getCanonicalName())) {
+				preparedStatement.setString(i, new String(new char[] {(char) value}));
 			} else {
-				throw new PersistenceException(
-						format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
 			}
 		} else if (DataTypeUtils.isDate(dataType)) {
 			preparedStatement.setDate(i, (Date) value);
@@ -299,8 +274,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			} else if (value instanceof BigInteger) {
 				preparedStatement.setLong(i, ((BigInteger) value).longValueExact());
 			} else {
-				throw new PersistenceException(
-						format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
 			}
 		} else if (DataTypeUtils.isReal(dataType)) {
 			preparedStatement.setFloat(i, (Float) value);
@@ -314,8 +288,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			} else if (value instanceof BigDecimal) {
 				preparedStatement.setBigDecimal(i, ((BigDecimal) value));
 			} else {
-				throw new PersistenceException(
-						format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
 			}
 		} else if (DataTypeUtils.isBlob(dataType)) {
 			byte[] bytes = (byte[]) value;
@@ -328,11 +301,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			} else if (value instanceof Integer || Integer.TYPE.isInstance(value)) {
 				preparedStatement.setBoolean(i, ((Integer) value == 1));
 			} else {
-				throw new PersistenceException(
-						format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
 			}
 		} else if (DataTypeUtils.isArray(dataType) && value instanceof List) {
-			for (Object element: ((List<?>)value)) {
+			for (Object element : ((List<?>) value)) {
 				setValue(preparedStatement, i++, element);
 			}
 		}
@@ -345,12 +317,12 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value to pojo.
 	 *
-	 * @param pojo            the pojo
-	 * @param resultSet            the result set
-	 * @param columnModel            the column model
-	 * @throws NoSuchFieldException             the no such field exception
-	 * @throws SQLException             the SQL exception
-	 * @throws IllegalAccessException             the illegal access exception
+	 * @param pojo the pojo
+	 * @param resultSet the result set
+	 * @param columnModel the column model
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws SQLException the SQL exception
+	 * @throws IllegalAccessException the illegal access exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void setValueToPojo(Object pojo, ResultSet resultSet, PersistenceTableColumnModel columnModel)
@@ -362,32 +334,32 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value to pojo.
 	 *
-	 * @param pojo            the pojo
-	 * @param value            the value
-	 * @param columnModel            the column model
-	 * @throws NoSuchFieldException             the no such field exception
-	 * @throws SQLException             the SQL exception
-	 * @throws IllegalAccessException             the illegal access exception
+	 * @param pojo the pojo
+	 * @param value the value
+	 * @param columnModel the column model
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws SQLException the SQL exception
+	 * @throws IllegalAccessException the illegal access exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void setValueToPojo(Object pojo, Object value, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException, IOException {
-		if (logger.isTraceEnabled()) {logger.trace("setValueToPojo -> pojo: " + Serializer.serializePojo(pojo) + ", value: " + value
-				+ ", columnModel: " + Serializer.serializeColumnModel(columnModel));}
+		if (logger.isTraceEnabled()) {
+			logger.trace("setValueToPojo -> pojo: " + Serializer.serializePojo(pojo) + ", value: " + value + ", columnModel: "
+					+ Serializer.serializeColumnModel(columnModel));
+		}
 		Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
 		try {
 			if (columnModel.getEnumerated() != null) {
-				if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.ORDINAL)
-						&& (value instanceof Integer)) {
+				if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.ORDINAL) && (value instanceof Integer)) {
 					if (field.getType().isEnum()) {
 						value = field.getType().getEnumConstants()[(Integer) value];
 					} else {
 						throw new IllegalStateException(
 								"The annotation @Enumerated is set to a field with a type, which is not an enum type.");
 					}
-				} else if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.STRING)
-						&& (value instanceof String)) {
+				} else if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.STRING) && (value instanceof String)) {
 					if (field.getType().isEnum()) {
 						value = Enum.valueOf((Class<Enum>) field.getType(), (String) value);
 					} else {
@@ -561,22 +533,19 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Gets the value from pojo.
 	 *
-	 * @param pojo
-	 *            the pojo
-	 * @param columnModel
-	 *            the column model
+	 * @param pojo the pojo
+	 * @param columnModel the column model
 	 * @return the value from pojo
-	 * @throws NoSuchFieldException
-	 *             the no such field exception
-	 * @throws SQLException
-	 *             the SQL exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws SQLException the SQL exception
+	 * @throws IllegalAccessException the illegal access exception
 	 */
 	protected Object getValueFromPojo(Object pojo, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
-		if (logger.isTraceEnabled()) {logger.trace("getValueFromPojo -> pojo: " + Serializer.serializePojo(pojo) + ", columnModel: "
-				+ Serializer.serializeColumnModel(columnModel));}
+		if (logger.isTraceEnabled()) {
+			logger.trace("getValueFromPojo -> pojo: " + Serializer.serializePojo(pojo) + ", columnModel: "
+					+ Serializer.serializeColumnModel(columnModel));
+		}
 		// Field field = pojo.getClass().getDeclaredField(columnModel.getField());
 		Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
@@ -590,13 +559,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Gets the field from class.
 	 *
-	 * @param clazz
-	 *            the clazz
-	 * @param fieldName
-	 *            the field name
+	 * @param clazz the clazz
+	 * @param fieldName the field name
 	 * @return the field from class
-	 * @throws NoSuchFieldException
-	 *             the no such field exception
+	 * @throws NoSuchFieldException the no such field exception
 	 */
 	private Field getFieldFromClass(Class clazz, String fieldName) throws NoSuchFieldException {
 		Field field = null;
@@ -608,8 +574,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			}
 		}
 		if (field == null) {
-			throw new NoSuchFieldException(format("There is no a Field named [{0}] in the POJO of Class [{1}]",
-					fieldName, clazz.getCanonicalName()));
+			throw new NoSuchFieldException(
+					format("There is no a Field named [{0}] in the POJO of Class [{1}]", fieldName, clazz.getCanonicalName()));
 		}
 		return field;
 	}
@@ -617,13 +583,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Open prepared statement.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param sql
-	 *            the sql
+	 * @param connection the connection
+	 * @param sql the sql
 	 * @return the prepared statement
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @throws SQLException the SQL exception
 	 */
 	protected PreparedStatement openPreparedStatement(Connection connection, String sql) throws SQLException {
 		return connection.prepareStatement(sql);
@@ -632,8 +595,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Close prepared statement.
 	 *
-	 * @param preparedStatement
-	 *            the prepared statement
+	 * @param preparedStatement the prepared statement
 	 */
 	protected void closePreparedStatement(PreparedStatement preparedStatement) {
 		try {
@@ -648,8 +610,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Gets the primary key.
 	 *
-	 * @param tableModel
-	 *            the table model
+	 * @param tableModel the table model
 	 * @return the primary key
 	 */
 	public String getPrimaryKey(PersistenceTableModel tableModel) {
@@ -659,14 +620,12 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 
 	/**
 	 * Gets the primary key model.
-	 * 
-	 * @param tableModel
-	 *            the table model
+	 *
+	 * @param tableModel the table model
 	 * @return the primary key model
 	 */
 	protected PersistenceTableColumnModel getPrimaryKeyModel(PersistenceTableModel tableModel) {
-		Optional<PersistenceTableColumnModel> optional = tableModel.getColumns().stream()
-				.filter(model -> model.isPrimaryKey()).findFirst();
+		Optional<PersistenceTableColumnModel> optional = tableModel.getColumns().stream().filter(model -> model.isPrimaryKey()).findFirst();
 		return optional.orElse(null);
 	}
 
@@ -682,8 +641,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the entity manager interceptor.
 	 *
-	 * @param entityManagerInterceptor
-	 *            the new entity manager interceptor
+	 * @param entityManagerInterceptor the new entity manager interceptor
 	 */
 	public void setEntityManagerInterceptor(IEntityManagerInterceptor entityManagerInterceptor) {
 		this.entityManagerInterceptor = entityManagerInterceptor;

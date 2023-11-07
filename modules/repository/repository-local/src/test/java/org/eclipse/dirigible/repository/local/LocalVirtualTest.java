@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.local;
 
@@ -28,7 +27,7 @@ import org.junit.Test;
  * The Class LocalTextTest.
  */
 public class LocalVirtualTest {
-	
+
 	/** The repository. */
 	protected LocalRepository repository;
 
@@ -44,7 +43,7 @@ public class LocalVirtualTest {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Test text.
 	 */
@@ -58,22 +57,22 @@ public class LocalVirtualTest {
 		IResource resourceB = null;
 		try {
 			String content = "test1";
-			
+
 			Files.createDirectories(Paths.get("target/linked/b").toAbsolutePath());
 			Files.createFile(Paths.get("target/linked/b/testB.txt").toAbsolutePath());
-			
+
 			resourceA = repository.createResource("/a/testA.txt", content.getBytes(), false, //$NON-NLS-1$
 					"text/plain"); //$NON-NLS-1$
 			assertNotNull(resourceA);
 			assertTrue(resourceA.exists());
-			
+
 			repository.linkPath("/a/b", Paths.get("target/linked/b").toAbsolutePath().toString());
-			
+
 
 			resourceB = repository.getResource("/a/b/testB.txt"); //$NON-NLS-1$
 			assertNotNull(resourceB);
 			assertTrue(resourceB.exists());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

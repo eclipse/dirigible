@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
@@ -31,8 +30,8 @@ public class Product {
 
 	/** The product id. */
 	@EdmKey
-    @EdmProperty(name = "ProductID", facets = @EdmFacets(nullable = false))
-    private Integer productId;
+	@EdmProperty(name = "ProductID", facets = @EdmFacets(nullable = false))
+	private Integer productId;
 
 	/** The product name. */
 	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
@@ -40,18 +39,18 @@ public class Product {
 
 	/** The supplier id. */
 	@EdmProperty(name = "SupplierID")
-    private Integer supplierId;
+	private Integer supplierId;
 
 	/** The category id. */
 	@EdmProperty(name = "CategoryID")
-    private Integer categoryId;
+	private Integer categoryId;
 
 	/** The quantity per unit. */
 	@EdmProperty(facets = @EdmFacets(maxLength = 20))
 	private String quantityPerUnit;
 
 	/** The unit price. */
-	@EdmProperty(type = EdmType.DECIMAL,facets = @EdmFacets(precision = 19, scale = 4))
+	@EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(precision = 19, scale = 4))
 	private Double unitPrice;
 
 	/** The units in stock. */
@@ -87,7 +86,7 @@ public class Product {
 			toRole = "Order_Details", //
 			association = "FK_Order_Details_Products" //
 	)
-    private List<OrderDetail> orderDetails;
+	private List<OrderDetail> orderDetails;
 
 	/** The supplier. */
 	@EdmNavigationProperty( //

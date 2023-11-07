@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.template.domain;
 
@@ -15,31 +14,31 @@ package org.eclipse.dirigible.components.ide.template.domain;
  * The Generation Template Metadata Source serialization object.
  */
 public class GenerationTemplateMetadataSource {
-	
+
 	/** The location. */
 	private String location;
-	
+
 	/** The action. */
 	private String action;
-	
+
 	/** The rename. */
 	private String rename;
-	
+
 	/** The start. */
 	private String start;
-	
+
 	/** The end. */
 	private String end;
-	
+
 	/** The collection. */
 	private String collection;
-	
+
 	/** The type. */
 	private String type;
-	
+
 	/** The engine. */
 	private String engine;
-	
+
 	/** The handler. */
 	private String handler;
 
@@ -132,7 +131,7 @@ public class GenerationTemplateMetadataSource {
 	public void setEnd(String end) {
 		this.end = end;
 	}
-	
+
 	/**
 	 * Gets the collection element.
 	 *
@@ -141,7 +140,7 @@ public class GenerationTemplateMetadataSource {
 	public String getCollection() {
 		return collection;
 	}
-	
+
 	/**
 	 * Sets the collection element.
 	 *
@@ -150,7 +149,7 @@ public class GenerationTemplateMetadataSource {
 	public void setCollection(String collection) {
 		this.collection = collection;
 	}
-	
+
 	/**
 	 * Gets the named type.
 	 *
@@ -159,7 +158,7 @@ public class GenerationTemplateMetadataSource {
 	public String getType() {
 		return type;
 	}
-	
+
 	/**
 	 * Sets the named type.
 	 *
@@ -168,7 +167,7 @@ public class GenerationTemplateMetadataSource {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * Gets the named engine.
 	 *
@@ -177,7 +176,7 @@ public class GenerationTemplateMetadataSource {
 	public String getEngine() {
 		return engine;
 	}
-	
+
 	/**
 	 * Sets the named engine.
 	 *
@@ -204,5 +203,5 @@ public class GenerationTemplateMetadataSource {
 	public void setHandler(String handler) {
 		this.handler = handler;
 	}
-	
+
 }

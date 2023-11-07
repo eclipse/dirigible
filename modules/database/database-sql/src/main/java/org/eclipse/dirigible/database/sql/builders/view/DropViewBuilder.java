@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.view;
 
@@ -30,10 +29,8 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
 	/**
 	 * Instantiates a new drop view builder.
 	 *
-	 * @param dialect
-	 *            the dialect
-	 * @param view
-	 *            the view
+	 * @param dialect the dialect
+	 * @param view the view
 	 */
 	public DropViewBuilder(ISqlDialect dialect, String view) {
 		super(dialect);
@@ -47,6 +44,7 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -62,7 +60,9 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
 
 		String generated = sql.toString();
 
-		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("generated: " + generated);
+		}
 
 		return generated;
 	}
@@ -70,14 +70,13 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
 	/**
 	 * Generate view.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateView(StringBuilder sql) {
 		String viewName = (isCaseSensitive()) ? encapsulate(this.getView(), true) : this.getView();
 		sql.append(SPACE).append(KEYWORD_VIEW).append(SPACE).append(viewName);
 	}
-	
+
 	/**
 	 * Getter for the view.
 	 *

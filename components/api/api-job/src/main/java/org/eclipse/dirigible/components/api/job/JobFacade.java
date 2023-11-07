@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.job;
 
@@ -30,19 +29,19 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class JobFacade implements InitializingBean {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(JobFacade.class);
-	
+
 	/** The job facade. */
 	private static JobFacade INSTANCE;
-	
+
 	/** The job service. */
 	private JobService jobService;
-	
+
 	/** The job log service. */
 	private JobLogService jobLogService;
-	
+
 	/**
 	 * Instantiates a new database facade.
 	 *
@@ -54,7 +53,7 @@ public class JobFacade implements InitializingBean {
 		this.jobService = jobService;
 		this.jobLogService = jobLogService;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -62,18 +61,18 @@ public class JobFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the job facade
 	 */
 	public static JobFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/**
 	 * Gets the job service.
 	 *
@@ -82,7 +81,7 @@ public class JobFacade implements InitializingBean {
 	public JobService getJobService() {
 		return jobService;
 	}
-	
+
 	/**
 	 * Gets the job log service.
 	 *
@@ -91,7 +90,7 @@ public class JobFacade implements InitializingBean {
 	public JobLogService getJobLogService() {
 		return jobLogService;
 	}
-	
+
 	/**
 	 * Gets the jobs.
 	 *
@@ -100,7 +99,7 @@ public class JobFacade implements InitializingBean {
 	public static String getJobs() {
 		return GsonHelper.toJson(JobFacade.get().getJobService().getAll());
 	}
-	
+
 	/**
 	 * Gets the job.
 	 *
@@ -110,7 +109,7 @@ public class JobFacade implements InitializingBean {
 	public static String getJob(String name) {
 		return GsonHelper.toJson(JobFacade.get().getJobService().findByName(name));
 	}
-	
+
 	/**
 	 * Enable.
 	 *
@@ -121,7 +120,7 @@ public class JobFacade implements InitializingBean {
 	public static String enable(String name) throws Exception {
 		return GsonHelper.toJson(JobFacade.get().getJobService().enable(name));
 	}
-	
+
 	/**
 	 * Disable.
 	 *
@@ -132,7 +131,7 @@ public class JobFacade implements InitializingBean {
 	public static String disable(String name) throws Exception {
 		return GsonHelper.toJson(JobFacade.get().getJobService().disable(name));
 	}
-	
+
 	/**
 	 * Trigger.
 	 *
@@ -146,7 +145,7 @@ public class JobFacade implements InitializingBean {
 		Map<String, String> parametersMap = GsonHelper.fromJson(parameters, Map.class);
 		return JobFacade.get().getJobService().trigger(name, parametersMap);
 	}
-	
+
 	/**
 	 * Log.
 	 *
@@ -164,7 +163,7 @@ public class JobFacade implements InitializingBean {
 			throw new Exception(error);
 		}
 	}
-	
+
 	/**
 	 * Error.
 	 *
@@ -182,7 +181,7 @@ public class JobFacade implements InitializingBean {
 			throw new Exception(error);
 		}
 	}
-	
+
 	/**
 	 * Warn.
 	 *
@@ -200,7 +199,7 @@ public class JobFacade implements InitializingBean {
 			throw new Exception(error);
 		}
 	}
-	
+
 	/**
 	 * Info.
 	 *
@@ -218,5 +217,5 @@ public class JobFacade implements InitializingBean {
 			throw new Exception(error);
 		}
 	}
-	
+
 }

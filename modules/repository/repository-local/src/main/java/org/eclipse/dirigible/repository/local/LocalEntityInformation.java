@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.local;
 
@@ -33,10 +32,8 @@ public class LocalEntityInformation implements IEntityInformation {
 	/**
 	 * Instantiates a new local entity information.
 	 *
-	 * @param wrapperPath
-	 *            the wrapper path
-	 * @param master
-	 *            the master
+	 * @param wrapperPath the wrapper path
+	 * @param master the master
 	 */
 	public LocalEntityInformation(RepositoryPath wrapperPath, LocalObject master) {
 		this.wrapperPath = wrapperPath;
@@ -50,6 +47,7 @@ public class LocalEntityInformation implements IEntityInformation {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getName()
 	 */
 	@Override
@@ -64,6 +62,7 @@ public class LocalEntityInformation implements IEntityInformation {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getPath()
 	 */
 	@Override
@@ -78,6 +77,7 @@ public class LocalEntityInformation implements IEntityInformation {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getPermissions()
 	 */
 	@Override
@@ -92,6 +92,7 @@ public class LocalEntityInformation implements IEntityInformation {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getSize()
 	 */
 	@Override
@@ -106,6 +107,7 @@ public class LocalEntityInformation implements IEntityInformation {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getCreatedBy()
 	 */
 	@Override
@@ -120,6 +122,7 @@ public class LocalEntityInformation implements IEntityInformation {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getCreatedAt()
 	 */
 	@Override
@@ -134,6 +137,7 @@ public class LocalEntityInformation implements IEntityInformation {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getModifiedBy()
 	 */
 	@Override
@@ -148,6 +152,7 @@ public class LocalEntityInformation implements IEntityInformation {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getModifiedAt()
 	 */
 	@Override
@@ -163,6 +168,7 @@ public class LocalEntityInformation implements IEntityInformation {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -187,6 +193,7 @@ public class LocalEntityInformation implements IEntityInformation {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override

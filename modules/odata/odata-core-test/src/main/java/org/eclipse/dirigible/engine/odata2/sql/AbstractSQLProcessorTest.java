@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
@@ -61,41 +60,40 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 /*
  * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 public abstract class AbstractSQLProcessorTest {
 
-    /** The ds. */
-    protected DataSource ds;
+	/** The ds. */
+	protected DataSource ds;
 
-    /** The edm. */
-    protected AnnotationEdmProvider edm;
+	/** The edm. */
+	protected AnnotationEdmProvider edm;
 
-    /** The sf. */
-    protected OData2TestServiceFactory sf;
+	/** The sf. */
+	protected OData2TestServiceFactory sf;
 
-    /**
-     * Setup.
-     *
-     * @throws ODataException the o data exception
-     * @throws SQLException the SQL exception
-     */
-    @Before
-    public void setup() throws ODataException, SQLException {
-        ds = createDataSource();
-        Class<?>[] classes = getODataEntities();
+	/**
+	 * Setup.
+	 *
+	 * @throws ODataException the o data exception
+	 * @throws SQLException the SQL exception
+	 */
+	@Before
+	public void setup() throws ODataException, SQLException {
+		ds = createDataSource();
+		Class<?>[] classes = getODataEntities();
 
-        edm = new AnnotationEdmProvider(Arrays.asList(classes));
-        edm.getSchemas();
-        sf = new OData2TestServiceFactory(ds, classes);
-        initLiquibase(ds);
-    }
+		edm = new AnnotationEdmProvider(Arrays.asList(classes));
+		edm.getSchemas();
+		sf = new OData2TestServiceFactory(ds, classes);
+		initLiquibase(ds);
+	}
 
 	/**
 	 * Inits the liquibase.
@@ -131,206 +129,206 @@ public abstract class AbstractSQLProcessorTest {
 	 */
 	protected abstract Class<?>[] getODataEntities();
 
-    /**
-     * Clear db.
-     */
-    @After
-    public void clearDb() {
-        try (Connection c = ds.getConnection()) {
-            try (PreparedStatement s = c.prepareStatement("DROP ALL OBJECTS")) {
-                s.execute();
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Unable to clear the H2 database, the tests are not isolated!");
-        }
-    }
+	/**
+	 * Clear db.
+	 */
+	@After
+	public void clearDb() {
+		try (Connection c = ds.getConnection()) {
+			try (PreparedStatement s = c.prepareStatement("DROP ALL OBJECTS")) {
+				s.execute();
+			}
+		} catch (Exception e) {
+			throw new IllegalStateException("Unable to clear the H2 database, the tests are not isolated!");
+		}
+	}
 
-    /**
-     * Creates the data source.
-     *
-     * @return the data source
-     */
-    public DataSource createDataSource() {
-        JdbcDataSource ds = new JdbcDataSource();
-        ds.setURL("jdbc:h2:mem:odata2;JMX=TRUE;DB_CLOSE_DELAY=-1");
-        ds.setUser("sa");
-        return ds;
-    }
+	/**
+	 * Creates the data source.
+	 *
+	 * @return the data source
+	 */
+	public DataSource createDataSource() {
+		JdbcDataSource ds = new JdbcDataSource();
+		ds.setURL("jdbc:h2:mem:odata2;JMX=TRUE;DB_CLOSE_DELAY=-1");
+		ds.setUser("sa");
+		return ds;
+	}
 
 
-    /**
-     * Load resource.
-     *
-     * @param fileName the file name
-     * @return the string
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    protected String loadResource(String fileName) throws IOException {
+	/**
+	 * Load resource.
+	 *
+	 * @param fileName the file name
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	protected String loadResource(String fileName) throws IOException {
 		return IOUtils.toString(AbstractSQLProcessorTest.class.getResourceAsStream(fileName), Charset.defaultCharset());
 	}
 
-    /**
-     * Modifying request builder.
-     *
-     * @param sf the sf
-     * @param content the content
-     * @return the o data 2 request builder
-     */
-    OData2RequestBuilder modifyingRequestBuilder(ODataServiceFactory sf, String content) {
-        OData2RequestBuilder builder = new OData2RequestBuilder() {
-            @Override
-            protected void getServletInputStream(final ODataHttpMethod method, final EasyMockSupport easyMockSupport,
-                                                 final HttpServletRequest servletRequest) throws IOException {
+	/**
+	 * Modifying request builder.
+	 *
+	 * @param sf the sf
+	 * @param content the content
+	 * @return the o data 2 request builder
+	 */
+	OData2RequestBuilder modifyingRequestBuilder(ODataServiceFactory sf, String content) {
+		OData2RequestBuilder builder = new OData2RequestBuilder() {
+			@Override
+			protected void getServletInputStream(final ODataHttpMethod method, final EasyMockSupport easyMockSupport,
+					final HttpServletRequest servletRequest) throws IOException {
 
-                final ServletInputStream s = new DelegateServletInputStream(new ByteArrayInputStream(content.getBytes()));
-                expect(servletRequest.getInputStream()).andReturn(s).atLeastOnce();
-            }
+				final ServletInputStream s = new DelegateServletInputStream(new ByteArrayInputStream(content.getBytes()));
+				expect(servletRequest.getInputStream()).andReturn(s).atLeastOnce();
+			}
 
-        };
-        return builder.serviceFactory(sf);
-    }
+		};
+		return builder.serviceFactory(sf);
+	}
 
-    /**
-     * The Class DelegateServletInputStream.
-     */
-    class DelegateServletInputStream extends ServletInputStream {
+	/**
+	 * The Class DelegateServletInputStream.
+	 */
+	class DelegateServletInputStream extends ServletInputStream {
 
-        /** The delegate. */
-        private final InputStream delegate;
+		/** The delegate. */
+		private final InputStream delegate;
 
-        /** The finished. */
-        private boolean finished = false;
+		/** The finished. */
+		private boolean finished = false;
 
-        /**
-         * Instantiates a new delegate servlet input stream.
-         *
-         * @param sourceStream the source stream
-         */
-        public DelegateServletInputStream(InputStream sourceStream) {
-            this.delegate = sourceStream;
-        }
+		/**
+		 * Instantiates a new delegate servlet input stream.
+		 *
+		 * @param sourceStream the source stream
+		 */
+		public DelegateServletInputStream(InputStream sourceStream) {
+			this.delegate = sourceStream;
+		}
 
-        /**
-         * Gets the source stream.
-         *
-         * @return the source stream
-         */
-        public final InputStream getSourceStream() {
-            return this.delegate;
-        }
+		/**
+		 * Gets the source stream.
+		 *
+		 * @return the source stream
+		 */
+		public final InputStream getSourceStream() {
+			return this.delegate;
+		}
 
-        /**
-         * Read.
-         *
-         * @return the int
-         * @throws IOException Signals that an I/O exception has occurred.
-         */
-        @Override
-        public int read() throws IOException {
-            int data = this.delegate.read();
-            if (data == -1) {
-                this.finished = true;
-            }
-            return data;
-        }
+		/**
+		 * Read.
+		 *
+		 * @return the int
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
+		@Override
+		public int read() throws IOException {
+			int data = this.delegate.read();
+			if (data == -1) {
+				this.finished = true;
+			}
+			return data;
+		}
 
-        /**
-         * Available.
-         *
-         * @return the int
-         * @throws IOException Signals that an I/O exception has occurred.
-         */
-        @Override
-        public int available() throws IOException {
-            return this.delegate.available();
-        }
+		/**
+		 * Available.
+		 *
+		 * @return the int
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
+		@Override
+		public int available() throws IOException {
+			return this.delegate.available();
+		}
 
-        /**
-         * Close.
-         *
-         * @throws IOException Signals that an I/O exception has occurred.
-         */
-        @Override
-        public void close() throws IOException {
-            super.close();
-            this.delegate.close();
-        }
+		/**
+		 * Close.
+		 *
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
+		@Override
+		public void close() throws IOException {
+			super.close();
+			this.delegate.close();
+		}
 
-        /**
-         * Checks if is finished.
-         *
-         * @return true, if is finished
-         */
-        @Override
-        public boolean isFinished() {
-            return this.finished;
-        }
+		/**
+		 * Checks if is finished.
+		 *
+		 * @return true, if is finished
+		 */
+		@Override
+		public boolean isFinished() {
+			return this.finished;
+		}
 
-        /**
-         * Checks if is ready.
-         *
-         * @return true, if is ready
-         */
-        @Override
-        public boolean isReady() {
-            return true;
-        }
+		/**
+		 * Checks if is ready.
+		 *
+		 * @return true, if is ready
+		 */
+		@Override
+		public boolean isReady() {
+			return true;
+		}
 
-        /**
-         * Sets the read listener.
-         *
-         * @param readListener the new read listener
-         */
-        @Override
-        public void setReadListener(ReadListener readListener) {
-        }
+		/**
+		 * Sets the read listener.
+		 *
+		 * @param readListener the new read listener
+		 */
+		@Override
+		public void setReadListener(ReadListener readListener) {}
 
-    }
+	}
 
-    /**
-     * Retrieve O data feed.
-     *
-     * @param response the response
-     * @param entitySetName the entity set name
-     * @return the o data feed
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws ODataException the o data exception
-     */
-    protected ODataFeed retrieveODataFeed(final Response response, final String entitySetName) throws IOException, ODataException {
-        EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
-        return OData2TestUtils.retrieveODataFeedFromResponse(response, entitySet);
-    }
+	/**
+	 * Retrieve O data feed.
+	 *
+	 * @param response the response
+	 * @param entitySetName the entity set name
+	 * @return the o data feed
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ODataException the o data exception
+	 */
+	protected ODataFeed retrieveODataFeed(final Response response, final String entitySetName) throws IOException, ODataException {
+		EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
+		return OData2TestUtils.retrieveODataFeedFromResponse(response, entitySet);
+	}
 
-    /**
-     * Retrieve O data entry.
-     *
-     * @param response the response
-     * @param entitySetName the entity set name
-     * @return the o data entry
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws ODataException the o data exception
-     */
-    protected ODataEntry retrieveODataEntry(final Response response, final String entitySetName) throws IOException, ODataException {
-        EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
-        return OData2TestUtils.retrieveODataEntryFromResponse(response, entitySet);
-    }
+	/**
+	 * Retrieve O data entry.
+	 *
+	 * @param response the response
+	 * @param entitySetName the entity set name
+	 * @return the o data entry
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ODataException the o data exception
+	 */
+	protected ODataEntry retrieveODataEntry(final Response response, final String entitySetName) throws IOException, ODataException {
+		EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
+		return OData2TestUtils.retrieveODataEntryFromResponse(response, entitySet);
+	}
 
-    /**
-     * Assert car has price.
-     *
-     * @param segment the segment
-     * @param expectedPrice the expected price
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws ODataException the o data exception
-     */
-    public void assertCarHasPrice(String segment, double expectedPrice) throws IOException, ODataException {
-        Response existingCar = OData2RequestBuilder.createRequest(sf) //
-                .segments(segment) //
-                .accept("application/json").executeRequest(GET);
+	/**
+	 * Assert car has price.
+	 *
+	 * @param segment the segment
+	 * @param expectedPrice the expected price
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ODataException the o data exception
+	 */
+	public void assertCarHasPrice(String segment, double expectedPrice) throws IOException, ODataException {
+		Response existingCar = OData2RequestBuilder	.createRequest(sf) //
+													.segments(segment) //
+													.accept("application/json")
+													.executeRequest(GET);
 
-        assertEquals(200, existingCar.getStatus());
-        ODataEntry resultEntry  = retrieveODataEntry(existingCar, "Cars");
-        Map<String, Object> properties  = resultEntry.getProperties();
-        assertEquals(expectedPrice, properties.get("Price"));
-    }
+		assertEquals(200, existingCar.getStatus());
+		ODataEntry resultEntry = retrieveODataEntry(existingCar, "Cars");
+		Map<String, Object> properties = resultEntry.getProperties();
+		assertEquals(expectedPrice, properties.get("Price"));
+	}
 }

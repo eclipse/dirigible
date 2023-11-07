@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.service;
 
@@ -37,19 +36,19 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DatabaseDefinitionService {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseDefinitionService.class);
-	
+
 	/** The data sources manager. */
 	private final DataSourcesManager datasourceManager;
-	
+
 	/** The data loader. */
 	private final DataSourceMetadataLoader datasourceMetadataLoader;
-	
+
 	/** The data sources service. */
 	private final DataSourceService datasourceService;
-	
+
 
 	/**
 	 * Instantiates a new data source endpoint.
@@ -59,12 +58,13 @@ public class DatabaseDefinitionService {
 	 * @param datasourceService the datasource service
 	 */
 	@Autowired
-	public DatabaseDefinitionService(DataSourcesManager datasourceManager, DataSourceMetadataLoader datasourceMetadataLoader, DataSourceService datasourceService) {
+	public DatabaseDefinitionService(DataSourcesManager datasourceManager, DataSourceMetadataLoader datasourceMetadataLoader,
+			DataSourceService datasourceService) {
 		this.datasourceManager = datasourceManager;
 		this.datasourceMetadataLoader = datasourceMetadataLoader;
 		this.datasourceService = datasourceService;
 	}
-	
+
 	/**
 	 * Gets the data sources.
 	 *
@@ -73,7 +73,7 @@ public class DatabaseDefinitionService {
 	public Set<String> getDataSourcesNames() {
 		return datasourceService.getAll().stream().map(DataSource::getName).collect(Collectors.toSet());
 	}
-	
+
 	/**
 	 * Gets the schemas.
 	 *
@@ -86,7 +86,7 @@ public class DatabaseDefinitionService {
 		Set<String> schemas = datasourceMetadataLoader.getSchemas(dataSource);
 		return schemas;
 	}
-	
+
 	/**
 	 * Gets the schema metadata.
 	 *
@@ -100,13 +100,13 @@ public class DatabaseDefinitionService {
 		List<Table> model = datasourceMetadataLoader.loadSchemaMetadata(schema, dataSource);
 		model.forEach(m -> {
 			m.setType(m.getKind());
-			if (ISqlKeywords.METADATA_TABLE_STRUCTURES.contains(m.getType())){
+			if (ISqlKeywords.METADATA_TABLE_STRUCTURES.contains(m.getType())) {
 				m.setType(ISqlKeywords.METADATA_TABLE);
 			}
 		});
 
 		JsonArray structureArray = new JsonArray();
-		for(Table m : model){
+		for (Table m : model) {
 			structureArray.add(JsonHelper.fromJson(JsonHelper.toJson(m), JsonElement.class));
 		}
 

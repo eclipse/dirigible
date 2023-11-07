@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.ftp.domain;
 
@@ -41,46 +40,46 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Table(name = "DIRIGIBLE_FTP_USERS")
 public class FtpUser implements User {
-	
+
 	/** The id. */
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "FTPUSER_ID", nullable = false)
-    private Long id;
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "FTPUSER_ID", nullable = false)
+	private Long id;
+
 	/** The username. */
 	@Column(name = "FTPUSER_USERNAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
-    @Expose
+	@Expose
 	private String username;
-	
+
 	/** The password. */
 	@Column(name = "FTPUSER_PASSWORD", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Encrypted
 	private String password;
-	
+
 	/** The enabled. */
 	@Column(name = "FTPUSER_ENABLED")
-    @Expose
+	@Expose
 	private boolean enabled;
-	
+
 	/** The max idle time. */
 	@Column(name = "FTPUSER_MAXIDLETIME")
-    @Expose
+	@Expose
 	private int maxIdleTime;
-	
+
 	/** The home directory. */
 	@Column(name = "FTPUSER_HOME_DIRECTORY", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Nullable
 	@Expose
 	private String homeDirectory;
-	
+
 	/** The authorities. */
 	@Transient
 	private transient List<Authority> authorities = new ArrayList<>();
-	
+
 	/** The enabled. */
 	@Column(name = "FTPUSER_ADMIN")
-    @Expose
+	@Expose
 	private boolean admin;
 
 	/**
@@ -94,10 +93,10 @@ public class FtpUser implements User {
 	 * @param homeDirectory the home directory
 	 * @param admin the admin
 	 */
-	public FtpUser(String name, String password, boolean enabled, List<? extends Authority> auths, int maxIdleTime, String homeDirectory, boolean admin) {
+	public FtpUser(String name, String password, boolean enabled, List<? extends Authority> auths, int maxIdleTime, String homeDirectory,
+			boolean admin) {
 		this.username = name;
-		this.maxIdleTime = maxIdleTime == -1 ?
-			60_000 : maxIdleTime;
+		this.maxIdleTime = maxIdleTime == -1 ? 60_000 : maxIdleTime;
 		this.homeDirectory = homeDirectory;
 		this.password = password;
 		this.enabled = enabled;
@@ -106,12 +105,11 @@ public class FtpUser implements User {
 		}
 		this.admin = admin;
 	}
-	
+
 	/**
 	 * Instantiates a new ftp user.
 	 */
-	public FtpUser() {
-	}
+	public FtpUser() {}
 
 	/**
 	 * Gets the name.
@@ -162,13 +160,13 @@ public class FtpUser implements User {
 	 */
 	@Override
 	public AuthorizationRequest authorize(AuthorizationRequest req) {
-		return this.getAuthorities()
-			.stream()
-			.filter(a -> a.canAuthorize(req))
-			.map(a -> a.authorize(req))
-			.filter(Objects::nonNull)
-			.findFirst()
-			.orElse(null);
+		return this	.getAuthorities()
+					.stream()
+					.filter(a -> a.canAuthorize(req))
+					.map(a -> a.authorize(req))
+					.filter(Objects::nonNull)
+					.findFirst()
+					.orElse(null);
 	}
 
 	/**

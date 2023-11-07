@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.records;
 
@@ -42,8 +41,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Instantiates a new update builder.
 	 *
-	 * @param dialect
-	 *            the dialect
+	 * @param dialect the dialect
 	 */
 	public UpdateBuilder(ISqlDialect dialect) {
 		super(dialect);
@@ -52,12 +50,13 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Table.
 	 *
-	 * @param table
-	 *            the table
+	 * @param table the table
 	 * @return the update builder
 	 */
 	public UpdateBuilder table(String table) {
-		if (logger.isTraceEnabled()) {logger.trace("table: " + table);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("table: " + table);
+		}
 		this.table = table;
 		return this;
 	}
@@ -65,14 +64,14 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Sets the.
 	 *
-	 * @param column
-	 *            the column
-	 * @param value
-	 *            the value
+	 * @param column the column
+	 * @param value the value
 	 * @return the update builder
 	 */
 	public UpdateBuilder set(String column, String value) {
-		if (logger.isTraceEnabled()) {logger.trace("set: " + column + ", value: " + value);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("set: " + column + ", value: " + value);
+		}
 		values.put(column, value);
 		return this;
 	}
@@ -80,12 +79,13 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Where.
 	 *
-	 * @param condition
-	 *            the condition
+	 * @param condition the condition
 	 * @return the update builder
 	 */
 	public UpdateBuilder where(String condition) {
-		if (logger.isTraceEnabled()) {logger.trace("where: " + condition);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("where: " + condition);
+		}
 		wheres.add(OPEN + condition + CLOSE);
 		return this;
 	}
@@ -97,6 +97,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -117,7 +118,9 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 
 		String generated = sql.toString();
 
-		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("generated: " + generated);
+		}
 
 		return generated;
 	}
@@ -125,8 +128,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate table.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
 		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
@@ -136,8 +138,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate set values.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateSetValues(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_SET);
@@ -153,8 +154,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate update.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateUpdate(StringBuilder sql) {
 		sql.append(KEYWORD_UPDATE);

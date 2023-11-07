@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
@@ -43,32 +42,32 @@ import com.google.gson.annotations.Expose;
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLES")
 public class Table extends Artefact {
-	
+
 	/** The Constant ARTEFACT_TYPE. */
 	public static final String ARTEFACT_TYPE = "table";
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "TABLE_ID", nullable = false)
 	private Long id;
-	
+
 	/** The kind. */
 	@Column(name = "TABLE_KIND", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	protected String kind;
-	
+
 	/** The schema name. */
 	@Column(name = "TABLE_SCHEMA", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	protected String schema;
-	
+
 	/** The columns. */
 	@OneToMany(mappedBy = "table", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Expose
 	private List<TableColumn> columns = new ArrayList<TableColumn>();
-	
+
 	/** The indexes. */
 	@OneToMany(mappedBy = "table", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -81,13 +80,13 @@ public class Table extends Artefact {
 	@Nullable
 	@Expose
 	private TableConstraints constraints;
-	
+
 	/** The schema reference. */
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "SCHEMA_ID", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Schema schemaReference;
+	@JoinColumn(name = "SCHEMA_ID", nullable = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Schema schemaReference;
 
 	/**
 	 * Instantiates a new table.
@@ -105,7 +104,7 @@ public class Table extends Artefact {
 		this.kind = kind;
 		this.schema = schema;
 	}
-	
+
 	/**
 	 * Instantiates a new table.
 	 *
@@ -114,7 +113,7 @@ public class Table extends Artefact {
 	public Table(String tableName) {
 		this(tableName, tableName, null, null, "TABLE", "");
 	}
-	
+
 	/**
 	 * Instantiates a new table.
 	 */
@@ -140,7 +139,7 @@ public class Table extends Artefact {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gets the kind.
 	 *
@@ -194,7 +193,7 @@ public class Table extends Artefact {
 	public void setColumns(List<TableColumn> columns) {
 		this.columns = columns;
 	}
-	
+
 	/**
 	 * Get the column by name.
 	 *
@@ -227,7 +226,7 @@ public class Table extends Artefact {
 	public void setIndexes(List<TableIndex> indexes) {
 		this.indexes = indexes;
 	}
-	
+
 	/**
 	 * Get the index by name.
 	 *
@@ -245,7 +244,7 @@ public class Table extends Artefact {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the constraints.
 	 *
@@ -263,7 +262,7 @@ public class Table extends Artefact {
 	public void setConstraints(TableConstraints constraints) {
 		this.constraints = constraints;
 	}
-	
+
 	/**
 	 * Gets the schema reference.
 	 *
@@ -272,7 +271,7 @@ public class Table extends Artefact {
 	public Schema getSchemaReference() {
 		return schemaReference;
 	}
-	
+
 	/**
 	 * Sets the schema reference.
 	 *
@@ -289,11 +288,10 @@ public class Table extends Artefact {
 	 */
 	@Override
 	public String toString() {
-		return "Table [id=" + id + ", schemaName=" + schema + ", columns=" + columns + ", indexes=" + indexes
-				+ ", constraints=" + constraints + ", location=" + location + ", name=" + name + ", type=" + type
-				+ ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy="
-				+ createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt
-				+ "]";
+		return "Table [id=" + id + ", schemaName=" + schema + ", columns=" + columns + ", indexes=" + indexes + ", constraints="
+				+ constraints + ", location=" + location + ", name=" + name + ", type=" + type + ", description=" + description + ", key="
+				+ key + ", dependencies=" + dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy="
+				+ updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
 
 	/**
@@ -309,13 +307,13 @@ public class Table extends Artefact {
 	 * @param unique the unique
 	 * @return the table column
 	 */
-	public TableColumn addColumn(String name, String type, String length, boolean nullable, boolean primaryKey,
-			String defaultValue, String scale, boolean unique) {
+	public TableColumn addColumn(String name, String type, String length, boolean nullable, boolean primaryKey, String defaultValue,
+			String scale, boolean unique) {
 		TableColumn tableColumn = new TableColumn(name, type, length, nullable, primaryKey, defaultValue, scale, unique, this);
 		columns.add(tableColumn);
 		return tableColumn;
 	}
-	
+
 	/**
 	 * Adds the index.
 	 *
@@ -330,7 +328,7 @@ public class Table extends Artefact {
 		indexes.add(tableIndex);
 		return tableIndex;
 	}
-	
-	
-	
+
+
+
 }

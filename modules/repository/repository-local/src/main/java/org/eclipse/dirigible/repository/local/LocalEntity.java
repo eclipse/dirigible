@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.local;
 
@@ -41,10 +40,8 @@ public abstract class LocalEntity implements IEntity {
 	/**
 	 * Instantiates a new local entity.
 	 *
-	 * @param repository
-	 *            the repository
-	 * @param path
-	 *            the path
+	 * @param repository the repository
+	 * @param path the path
 	 */
 	public LocalEntity(FileSystemRepository repository, RepositoryPath path) {
 		super();
@@ -59,6 +56,7 @@ public abstract class LocalEntity implements IEntity {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getRepository()
 	 */
 	@Override
@@ -67,8 +65,7 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	/**
-	 * Returns the path of this {@link IEntity} represented by an instance of
-	 * {@link RepositoryPath}.
+	 * Returns the path of this {@link IEntity} represented by an instance of {@link RepositoryPath}.
 	 *
 	 * @return the repository path location
 	 */
@@ -83,6 +80,7 @@ public abstract class LocalEntity implements IEntity {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getName()
 	 */
 	@Override
@@ -97,6 +95,7 @@ public abstract class LocalEntity implements IEntity {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getPath()
 	 */
 	@Override
@@ -111,6 +110,7 @@ public abstract class LocalEntity implements IEntity {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getParent()
 	 */
 	@Override
@@ -130,6 +130,7 @@ public abstract class LocalEntity implements IEntity {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getInformation()
 	 */
 	@Override
@@ -138,31 +139,29 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	/**
-	 * Returns the {@link LocalObject} that matches this entity's path. If there is
-	 * no such object in the real repository, then <code>null</code> is
-	 * returned.
+	 * Returns the {@link LocalObject} that matches this entity's path. If there is no such object in
+	 * the real repository, then <code>null</code> is returned.
 	 *
 	 * @return the local object
-	 * @throws RepositoryReadException
-	 *             the repository read exception
+	 * @throws RepositoryReadException the repository read exception
 	 */
 	protected LocalObject getLocalObject() throws RepositoryReadException {
 		try {
 			return this.repository.getRepositoryDao().getObjectByPath(getPath());
 		} catch (LocalRepositoryException ex) {
-			if (logger.isErrorEnabled()) {logger.error(ex.getMessage(), ex);}
+			if (logger.isErrorEnabled()) {
+				logger.error(ex.getMessage(), ex);
+			}
 			return null;
 		}
 	}
 
 	/**
-	 * Returns the {@link LocalObject} that matches this entity's path. If there is
-	 * no such object in the real repository, then an {@link RepositoryNotFoundException} is
-	 * thrown.
+	 * Returns the {@link LocalObject} that matches this entity's path. If there is no such object in
+	 * the real repository, then an {@link RepositoryNotFoundException} is thrown.
 	 *
 	 * @return the {@link LocalObject} that matches this entity's path
-	 * @throws RepositoryNotFoundException
-	 *             If there is no such object in the real repository
+	 * @throws RepositoryNotFoundException If there is no such object in the real repository
 	 */
 	protected LocalObject getLocalObjectSafe() throws RepositoryNotFoundException {
 		final LocalObject result = getLocalObject();
@@ -173,11 +172,10 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	/**
-	 * Creates all ancestors of the given {@link IEntity} inside the
-	 * repository if they don't already exist.
+	 * Creates all ancestors of the given {@link IEntity} inside the repository if they don't already
+	 * exist.
 	 *
-	 * @throws RepositoryWriteException
-	 *             the repository write exception
+	 * @throws RepositoryWriteException the repository write exception
 	 */
 	protected void createAncestorsIfMissing() throws RepositoryWriteException {
 		final ICollection parent = getParent();
@@ -187,11 +185,9 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	/**
-	 * Creates all ancestors of the given {@link IEntity} and itself too if
-	 * they don't already exist.
+	 * Creates all ancestors of the given {@link IEntity} and itself too if they don't already exist.
 	 *
-	 * @throws RepositoryWriteException
-	 *             the repository write exception
+	 * @throws RepositoryWriteException the repository write exception
 	 */
 	protected void createAncestorsAndSelfIfMissing() throws RepositoryWriteException {
 		createAncestorsIfMissing();
@@ -208,6 +204,7 @@ public abstract class LocalEntity implements IEntity {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -232,6 +229,7 @@ public abstract class LocalEntity implements IEntity {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override

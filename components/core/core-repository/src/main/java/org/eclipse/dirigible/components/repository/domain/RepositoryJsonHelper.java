@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.repository.domain;
 
@@ -24,12 +23,9 @@ public class RepositoryJsonHelper {
 	/**
 	 * Traverse repository.
 	 *
-	 * @param collection
-	 *            the collection
-	 * @param removePathPrefix
-	 *            the remove path prefix
-	 * @param addPathPrefix
-	 *            the add path prefix
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
 	 * @return the repository
 	 */
 	public static Repository traverseRepository(ICollection collection, String removePathPrefix, String addPathPrefix) {
@@ -56,12 +52,9 @@ public class RepositoryJsonHelper {
 	/**
 	 * Traverse registry.
 	 *
-	 * @param collection
-	 *            the collection
-	 * @param removePathPrefix
-	 *            the remove path prefix
-	 * @param addPathPrefix
-	 *            the add path prefix
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
 	 * @return the registry
 	 */
 	public static Registry traverseRegistry(ICollection collection, String removePathPrefix, String addPathPrefix) {
@@ -88,12 +81,9 @@ public class RepositoryJsonHelper {
 	/**
 	 * Traverse collection.
 	 *
-	 * @param collection
-	 *            the collection
-	 * @param removePathPrefix
-	 *            the remove path prefix
-	 * @param addPathPrefix
-	 *            the add path prefix
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
 	 * @return the collection
 	 */
 	public static Collection traverseCollection(ICollection collection, String removePathPrefix, String addPathPrefix) {

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.command;
 
@@ -50,15 +49,13 @@ public class UpdateDependenciesCommand extends CloneCommand {
 	/**
 	 * Execute Update Dependencies Command.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param projects
-	 *            the projects
-	 * @param model
-	 *            the git update dependencies model
+	 * @param workspace the workspace
+	 * @param projects the projects
+	 * @param model the git update dependencies model
 	 * @throws GitConnectorException in case of exception
 	 */
-	public void execute(final Workspace workspace, final Project[] projects, GitUpdateDependenciesModel model) throws GitConnectorException {
+	public void execute(final Workspace workspace, final Project[] projects, GitUpdateDependenciesModel model)
+			throws GitConnectorException {
 		for (Project selectedProject : projects) {
 			String user = UserFacade.getName();
 			try {
@@ -67,10 +64,15 @@ public class UpdateDependenciesCommand extends CloneCommand {
 				if (model.isPublish()) {
 					publishProjects(workspace, clonedProjects);
 				}
-				if (logger.isInfoEnabled()) {logger.info(String.format("Project's [%s] dependencies has been updated successfully.", selectedProject.getName()));}
+				if (logger.isInfoEnabled()) {
+					logger.info(String.format("Project's [%s] dependencies has been updated successfully.", selectedProject.getName()));
+				}
 			} catch (IOException | GitConnectorException e) {
-				String errorMessage = String.format("Error occured while updating dependencies of the project [%s]", selectedProject.getName());
-				if (logger.isErrorEnabled()) {logger.error(errorMessage, e);}
+				String errorMessage =
+						String.format("Error occured while updating dependencies of the project [%s]", selectedProject.getName());
+				if (logger.isErrorEnabled()) {
+					logger.error(errorMessage, e);
+				}
 				throw new GitConnectorException(errorMessage, e);
 			}
 		}

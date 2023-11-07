@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.generic;
 
@@ -41,7 +40,7 @@ public class RepositoryGenericBinaryTest {
 
 		try {
 			IResource resource = repository.createResource("/testCollection/toBeRemoved.bin", //$NON-NLS-1$
-					new byte[] { 0, 1, 1, 0 }, true, "application/bin"); //$NON-NLS-1$
+					new byte[] {0, 1, 1, 0}, true, "application/bin"); //$NON-NLS-1$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertTrue(resource.isBinary());
@@ -62,12 +61,12 @@ public class RepositoryGenericBinaryTest {
 
 		try {
 			repository.createResource("/testCollection/toBeRemoved.bin", //$NON-NLS-1$
-					new byte[] { 0, 1, 1, 0 }, true, "application/bin"); //$NON-NLS-1$
+					new byte[] {0, 1, 1, 0}, true, "application/bin"); //$NON-NLS-1$
 			IResource resource = repository.getResource("/testCollection/toBeRemoved.bin"); //$NON-NLS-1$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertTrue(resource.isBinary());
-			assertTrue(Arrays.equals(resource.getContent(), new byte[] { 0, 1, 1, 0 }));
+			assertTrue(Arrays.equals(resource.getContent(), new byte[] {0, 1, 1, 0}));
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -85,7 +84,7 @@ public class RepositoryGenericBinaryTest {
 
 		try {
 			repository.createResource("/testCollection/toBeRemoved.bin", //$NON-NLS-1$
-					new byte[] { 0, 1, 1, 0 }, true, "application/bin"); //$NON-NLS-1$
+					new byte[] {0, 1, 1, 0}, true, "application/bin"); //$NON-NLS-1$
 			repository.removeResource("/testCollection/toBeRemoved.bin"); //$NON-NLS-1$
 			IResource resource = repository.getResource("/testCollection/toBeRemoved.bin"); //$NON-NLS-1$
 			assertNotNull(resource);

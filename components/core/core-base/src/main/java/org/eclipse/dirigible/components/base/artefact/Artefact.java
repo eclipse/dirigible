@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.base.artefact;
 
@@ -33,69 +32,69 @@ import com.google.gson.annotations.Expose;
  */
 @MappedSuperclass
 public abstract class Artefact extends Auditable<String> implements Serializable {
-	
+
 	/** The Constant KEY_SEPARATOR. */
 	public static final String KEY_SEPARATOR = ":";
-	
+
 	/** The location. */
 	@Column(name = "ARTEFACT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	protected String location;
-	
+
 	/** The name. */
 	@Column(name = "ARTEFACT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	protected String name;
-	
+
 	/** The key. */
 	@Column(name = "ARTEFACT_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	protected String type;
-	
+
 	/** The description. */
 	@Column(name = "ARTEFACT_DESCRIPTION")
 	@Lob()
 	@Expose
 	protected String description;
-	
-	/** The key
-	 * e.g. table:/sales/domain/customer.table:customer
+
+	/**
+	 * The key e.g. table:/sales/domain/customer.table:customer
 	 */
 	@Column(name = "ARTEFACT_KEY", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
 	@Expose
 	protected String key;
-	
+
 	/** The dependencies as comma separated keys. */
 	@Column(name = "ARTEFACT_DEPENDENCIES", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Expose
 	@Nullable
 	@Convert(converter = SetOfStringsToCsvConverter.class)
 	protected Set<String> dependencies;
-	
+
 	/** The lifecycle. */
 	@Column(name = "ARTEFACT_STATUS", columnDefinition = "VARCHAR", nullable = true, length = 32)
 	@Enumerated(EnumType.STRING)
 	@JsonIgnore
 	protected ArtefactLifecycle lifecycle;
-	
+
 	/** The phase. */
 	@Column(name = "ARTEFACT_PHASE", columnDefinition = "VARCHAR", nullable = true, length = 32)
 	@Enumerated(EnumType.STRING)
 	@JsonIgnore
 	protected ArtefactPhase phase;
-	
+
 	/** The description. */
 	@Column(name = "ARTEFACT_ERROR", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Expose
 	protected String error;
-	
+
 	/** The running. */
 	@Column(name = "ARTEFACT_RUNNING", columnDefinition = "BOOLEAN")
 	@JsonIgnore
 	private Boolean running;
-	
-	
-	
+
+
+
 	/**
 	 * Instantiates a new artefact.
 	 *
@@ -114,12 +113,11 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 		this.dependencies = dependencies;
 		updateKey();
 	}
-	
+
 	/**
 	 * Instantiates a new artefact.
 	 */
-	public Artefact() {
-	}
+	public Artefact() {}
 
 	/**
 	 * Gets the location.
@@ -137,9 +135,9 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 */
 	public void setLocation(String location) {
 		this.location = location;
-		//updateKey();
+		// updateKey();
 	}
-	
+
 	/**
 	 * Gets the name.
 	 *
@@ -148,7 +146,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Sets the name.
 	 *
@@ -156,9 +154,9 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 */
 	public void setName(String name) {
 		this.name = name;
-		//updateKey();
+		// updateKey();
 	}
-	
+
 	/**
 	 * Gets the type.
 	 *
@@ -176,7 +174,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * Gets the description.
 	 *
@@ -194,7 +192,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	/**
 	 * Gets the key.
 	 *
@@ -212,7 +210,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public void setKey(String key) {
 		this.key = key;
 	}
-	
+
 	/**
 	 * Gets the dependencies.
 	 *
@@ -230,7 +228,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public void setDependencies(Set<String> dependencies) {
 		this.dependencies = dependencies;
 	}
-	
+
 	/**
 	 * Adds the dependency.
 	 *
@@ -242,7 +240,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 		}
 		dependencies.add(dependency);
 	}
-	
+
 	/**
 	 * Adds the dependency.
 	 *
@@ -253,7 +251,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public void addDependency(String location, String name, String type) {
 		addDependency(type + KEY_SEPARATOR + location + KEY_SEPARATOR + name);
 	}
-	
+
 	/**
 	 * Gets the lifecycle.
 	 *
@@ -262,7 +260,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public ArtefactLifecycle getLifecycle() {
 		return lifecycle;
 	}
-	
+
 	/**
 	 * Sets the lifecycle.
 	 *
@@ -271,7 +269,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public void setLifecycle(ArtefactLifecycle lifecycle) {
 		this.lifecycle = lifecycle;
 	}
-	
+
 	/**
 	 * Gets the phase.
 	 *
@@ -280,7 +278,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public ArtefactPhase getPhase() {
 		return phase;
 	}
-	
+
 	/**
 	 * Sets the phase.
 	 *
@@ -289,7 +287,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public void setPhase(ArtefactPhase phase) {
 		this.phase = phase;
 	}
-	
+
 	/**
 	 * Gets the error.
 	 *
@@ -298,7 +296,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public String getError() {
 		return error;
 	}
-	
+
 	/**
 	 * Sets the error.
 	 *
@@ -307,7 +305,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	public void setError(String error) {
 		this.error = error;
 	}
-	
+
 	/**
 	 * Gets the running.
 	 *
@@ -331,15 +329,14 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 *
 	 */
 	public void updateKey() {
-		if (this.type != null
-				&& this.location != null 
-				&& this.name != null) {
+		if (this.type != null && this.location != null && this.name != null) {
 			this.key = this.type + KEY_SEPARATOR + this.location + KEY_SEPARATOR + this.name;
 		} else {
-			throw new IllegalArgumentException(String.format("Attempt to generate an artefact key by type=[%s], location=[%s], name=[%s]", type, location, name));
+			throw new IllegalArgumentException(
+					String.format("Attempt to generate an artefact key by type=[%s], location=[%s], name=[%s]", type, location, name));
 		}
 	}
-	
+
 	/**
 	 * Construct key.
 	 *
@@ -349,9 +346,7 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 * @return the string
 	 */
 	public String constructKey(String typeA, String locationA, String nameA) {
-		if (typeA != null
-				&& locationA != null 
-				&& nameA != null) {
+		if (typeA != null && locationA != null && nameA != null) {
 			String keyA = typeA + KEY_SEPARATOR + locationA + KEY_SEPARATOR + nameA;
 			return keyA;
 		}
@@ -365,10 +360,9 @@ public abstract class Artefact extends Auditable<String> implements Serializable
 	 */
 	@Override
 	public String toString() {
-		return "Artefact [location=" + location + ", name=" + name + ", type=" + type + ", description=" + description
-				+ ", key=" + key + ", dependencies=" + dependencies + ", lifecycle=" + lifecycle
-				+ ", phase=" + phase + ", error=" + error + ", createdBy=" + createdBy + ", createdAt="
-				+ createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
+		return "Artefact [location=" + location + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key
+				+ ", dependencies=" + dependencies + ", lifecycle=" + lifecycle + ", phase=" + phase + ", error=" + error + ", createdBy="
+				+ createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
-	
+
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.project;
 
@@ -29,16 +28,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProjectMetadataManager {
 
-	/**  The default branch. */
+	/** The default branch. */
 	public static final String BRANCH_MASTER = "master"; //$NON-NLS-1$
-	
+
 	/**
 	 * Ensure project metadata.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param projectName
-	 *            the project name
+	 * @param workspace the workspace
+	 * @param projectName the project name
 	 */
 	public void ensureProjectMetadata(Workspace workspace, String projectName) {
 		Project project = workspace.getProject(projectName);
@@ -57,11 +54,9 @@ public class ProjectMetadataManager {
 	/**
 	 * Gets the dependencies.
 	 *
-	 * @param selectedProject
-	 *            the selected project
+	 * @param selectedProject the selected project
 	 * @return the dependencies
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static ProjectMetadataDependency[] getDependencies(Project selectedProject) throws IOException {
 		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
@@ -84,11 +79,9 @@ public class ProjectMetadataManager {
 	/**
 	 * Gets the project metadata.
 	 *
-	 * @param selectedProject
-	 *            the selected project
+	 * @param selectedProject the selected project
 	 * @return the project metadata
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private static ProjectMetadata getProjectMetadata(Project selectedProject) throws IOException {
 		File projectFile = selectedProject.getFile(ProjectMetadata.PROJECT_METADATA_FILE_NAME);

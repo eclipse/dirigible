@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.templates;
 
@@ -29,28 +28,28 @@ public class TemplateEnginesFacade implements InitializingBean {
 
 	/** The engine mustache. */
 	private final TemplateEngine ENGINE_MUSTACHE;
-	
+
 	/** The engine velocity. */
 	private final TemplateEngine ENGINE_VELOCITY;
-	
+
 	/** The engine javascript. */
 	private final TemplateEngine ENGINE_JAVASCRIPT;
 
 	/** The template engine mustache. */
 	private final TemplateEngineFacade TEMPLATE_ENGINE_MUSTACHE;
-	
+
 	/** The template engine velocity. */
 	private final TemplateEngineFacade TEMPLATE_ENGINE_VELOCITY;
-	
+
 	/** The template engine javascript. */
 	private final TemplateEngineFacade TEMPLATE_ENGINE_JAVASCRIPT;
-	
+
 	/** The generation engines manager. */
 	private final TemplateEnginesManager generationEnginesManager;
-	
+
 	/** The instance. */
 	private static TemplateEnginesFacade INSTANCE;
-	
+
 	/**
 	 * Instantiates a new template engines facade.
 	 *
@@ -66,7 +65,7 @@ public class TemplateEnginesFacade implements InitializingBean {
 		this.TEMPLATE_ENGINE_VELOCITY = new TemplateEngineFacade(ENGINE_VELOCITY);
 		this.TEMPLATE_ENGINE_JAVASCRIPT = new TemplateEngineFacade(ENGINE_JAVASCRIPT);
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -74,18 +73,18 @@ public class TemplateEnginesFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the database facade
 	 */
 	public static TemplateEnginesFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/**
 	 * Gets the generation engines manager.
 	 *
@@ -121,7 +120,7 @@ public class TemplateEnginesFacade implements InitializingBean {
 	public static TemplateEngineFacade getVelocityEngine() {
 		return TemplateEnginesFacade.get().TEMPLATE_ENGINE_VELOCITY;
 	}
-	
+
 	/**
 	 * Gets the javascript engine.
 	 *

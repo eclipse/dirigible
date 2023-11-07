@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.web.domain;
 
@@ -33,30 +32,30 @@ import org.eclipse.dirigible.components.base.converters.ArrayOfStringsToCsvConve
 @Entity
 @Table(name = "DIRIGIBLE_WEB_EXPOSE")
 public class Expose extends Artefact {
-	
+
 	/** The Constant ARTEFACT_TYPE. */
 	public static final String ARTEFACT_TYPE = "expose";
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EXPOSE_ID", nullable = false)
 	private Long id;
-	
+
 	/** The guid. */
 	@Column(name = "EXPOSE_GUID", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@com.google.gson.annotations.Expose
 	private String guid;
-	
+
 	/** The exposes. */
 	@Column(name = "EXPOSE_EXPOSES", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Nullable
-//	@ElementCollection
-//	@OrderColumn
+	// @ElementCollection
+	// @OrderColumn
 	@Convert(converter = ArrayOfStringsToCsvConverter.class)
 	@com.google.gson.annotations.Expose
 	private String[] exposes;
-	
+
 	/**
 	 * Instantiates a new web.
 	 *
@@ -68,15 +67,15 @@ public class Expose extends Artefact {
 	public Expose(String location, String name, String description, String[] exposes) {
 		super(location, name, ARTEFACT_TYPE, description, null);
 		this.exposes = exposes;
-	}	
-	
+	}
+
 	/**
 	 * Instantiates a new web.
 	 */
 	public Expose() {
 		super();
 	}
-	
+
 	/**
 	 * Gets the id.
 	 *
@@ -94,7 +93,7 @@ public class Expose extends Artefact {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gets the guid.
 	 *
@@ -112,7 +111,7 @@ public class Expose extends Artefact {
 	public void setGuid(String guid) {
 		this.guid = guid;
 	}
-	
+
 	/**
 	 * Gets the exposes list.
 	 *
@@ -121,10 +120,10 @@ public class Expose extends Artefact {
 	public String[] getExposes() {
 		return exposes;
 	}
-	
+
 	/**
 	 * Sets the exposes list.
-	 * 
+	 *
 	 * @param exposes the exposes list
 	 */
 	public void setExposes(String[] exposes) {
@@ -138,10 +137,9 @@ public class Expose extends Artefact {
 	 */
 	@Override
 	public String toString() {
-		return "Web [id=" + id + ", exposes=" + Arrays.toString(exposes) + ", location=" + location
-				+ ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key
-				+ ", dependencies=" + dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt
-				+ ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
+		return "Web [id=" + id + ", exposes=" + Arrays.toString(exposes) + ", location=" + location + ", name=" + name + ", type=" + type
+				+ ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy=" + createdBy
+				+ ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
 
 }

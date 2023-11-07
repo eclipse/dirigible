@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.mongodb.jdbc;
 
@@ -54,58 +53,59 @@ public class MongoDBResultSet implements ResultSet {
 
 	/** The Constant RAW_DOCUMENT_INDEX. */
 	public static final int RAW_DOCUMENT_INDEX = -100;
-	
+
 	/** The stmnt. */
 	private Statement stmnt;
-	
+
 	/** The find iterable. */
 	private FindIterable<Document> findIterable;
-	
+
 	/** The find iterator. */
 	private MongoCursor<Document> findIterator;
-	
+
 	/** The current doc. */
-	private Document currentDoc; 
-	
+	private Document currentDoc;
+
 	/** The row number. */
 	private int rowNumber = 0;
-	
+
 	/** The is closed. */
 	private boolean isClosed;
-	
+
 	/** The warning. */
 	private SQLWarning warning;
-	
+
 	/** The rs metadata. */
 	private MongoDBResultSetMetaData metadata;
-			
+
 	/**
 	 * Instantiates a new mongo DB result set.
 	 *
 	 * @param stmnt the stmnt
 	 * @param findIterable the find iterable
 	 */
-	public MongoDBResultSet(Statement stmnt, FindIterable<Document> findIterable){
+	public MongoDBResultSet(Statement stmnt, FindIterable<Document> findIterable) {
 		this.stmnt = stmnt;
 		this.findIterable = findIterable;
 		this.findIterator = this.findIterable.iterator();
 		this.isClosed = false;
 	}
-	
+
 	/**
 	 * Builds the metadata.
 	 *
 	 * @throws SQLException the SQL exception
 	 */
-	private void buildMetadata() throws SQLException{
+	private void buildMetadata() throws SQLException {
 		this.metadata = new MongoDBResultSetMetaData(this.stmnt.getConnection().unwrap(MongoDBConnection.class).getCollectionName());
 		this.metadata.setColumnCount(this.currentDoc.size());
-		Set<Entry<String,BsonValue>> docEntries = this.currentDoc.toBsonDocument(this.currentDoc.getClass(), MongoClient.getDefaultCodecRegistry()).entrySet();
+		Set<Entry<String, BsonValue>> docEntries =
+				this.currentDoc.toBsonDocument(this.currentDoc.getClass(), MongoClient.getDefaultCodecRegistry()).entrySet();
 		for (Entry<String, BsonValue> docEntry : docEntries) {
 			this.metadata.keys().put(docEntry.getKey(), docEntry.getValue().getBsonType());
 		}
 	}
-	
+
 	/**
 	 * Unwrap.
 	 *
@@ -118,9 +118,9 @@ public class MongoDBResultSet implements ResultSet {
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		if (isWrapperFor(iface)) {
-	        return (T) this;
-	    }
-	    throw new SQLException("No wrapper for " + iface);
+			return (T) this;
+		}
+		throw new SQLException("No wrapper for " + iface);
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		 return iface != null && iface.isAssignableFrom(getClass());
+		return iface != null && iface.isAssignableFrom(getClass());
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class MongoDBResultSet implements ResultSet {
 	@Override
 	public boolean next() throws SQLException {
 		boolean hasNext = this.findIterator.hasNext();
-		if(hasNext){
+		if (hasNext) {
 			this.currentDoc = this.findIterator.next();
 			this.rowNumber++;
 			this.buildMetadata();
@@ -184,10 +184,10 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public String getString(int columnIndex) throws SQLException {
-		if(columnIndex == RAW_DOCUMENT_INDEX){
+		if (columnIndex == RAW_DOCUMENT_INDEX) {
 			return this.currentDoc.toJson();
 		}
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		Object object = this.currentDoc.get(name);
 		if (object != null) {
 			if (object instanceof String) {
@@ -197,7 +197,7 @@ public class MongoDBResultSet implements ResultSet {
 			}
 		}
 		return null;
-		
+
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean getBoolean(int columnIndex) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return this.currentDoc.getBoolean(name);
 	}
 
@@ -222,7 +222,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public byte getByte(int columnIndex) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return this.currentDoc.getInteger(name).byteValue();
 	}
 
@@ -235,7 +235,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public short getShort(int columnIndex) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return this.currentDoc.getInteger(name).shortValue();
 	}
 
@@ -248,7 +248,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public int getInt(int columnIndex) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return this.currentDoc.getInteger(name);
 	}
 
@@ -261,7 +261,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public long getLong(int columnIndex) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return this.currentDoc.getLong(name);
 	}
 
@@ -274,7 +274,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public float getFloat(int columnIndex) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return this.currentDoc.getDouble(name).floatValue();
 	}
 
@@ -287,7 +287,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public double getDouble(int columnIndex) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return this.currentDoc.getDouble(name);
 	}
 
@@ -301,7 +301,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return new BigDecimal(this.currentDoc.getDouble(name));
 	}
 
@@ -326,7 +326,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Date getDate(int columnIndex) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return new Date(this.currentDoc.getDate(name).getTime());
 	}
 
@@ -339,7 +339,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Time getTime(int columnIndex) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return new Time(this.currentDoc.getDate(name).getTime());
 	}
 
@@ -352,7 +352,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Timestamp getTimestamp(int columnIndex) throws SQLException {
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return new Timestamp(this.currentDoc.getDate(name).getTime());
 	}
 
@@ -558,7 +558,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public InputStream getAsciiStream(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -571,7 +571,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public InputStream getUnicodeStream(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -584,7 +584,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public InputStream getBinaryStream(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -596,7 +596,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public SQLWarning getWarnings() throws SQLException {
-		if(this.isClosed())
+		if (this.isClosed())
 			throw new SQLException();
 		return this.warning;
 	}
@@ -608,7 +608,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void clearWarnings() throws SQLException {
-		if(this.isClosed())
+		if (this.isClosed())
 			throw new SQLException();
 		this.warning = null;
 	}
@@ -644,10 +644,10 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Object getObject(int columnIndex) throws SQLException {
-		if(columnIndex == RAW_DOCUMENT_INDEX){
+		if (columnIndex == RAW_DOCUMENT_INDEX) {
 			return this.currentDoc.toJson();
 		}
-		String name = this.metadata.getColumnName(columnIndex-1);
+		String name = this.metadata.getColumnName(columnIndex - 1);
 		return this.currentDoc.get(name);
 	}
 
@@ -696,7 +696,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Reader getCharacterStream(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -734,7 +734,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean isBeforeFirst() throws SQLException {
-		return this.currentDoc==null;
+		return this.currentDoc == null;
 	}
 
 	/**
@@ -745,7 +745,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean isAfterLast() throws SQLException {
-		//TODO
+		// TODO
 		return false;
 	}
 
@@ -757,7 +757,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean isFirst() throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -779,7 +779,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void beforeFirst() throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -790,7 +790,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void afterLast() throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -802,7 +802,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public boolean first() throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1177,7 +1177,7 @@ public class MongoDBResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateObject(int columnIndex, Object x, int scaleOrLength)throws SQLException {
+	public void updateObject(int columnIndex, Object x, int scaleOrLength) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1576,7 +1576,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1589,7 +1589,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Ref getRef(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1602,7 +1602,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Blob getBlob(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1615,7 +1615,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Clob getClob(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1628,7 +1628,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Array getArray(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1655,7 +1655,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Date getDate(String columnLabel, Calendar cal) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1682,7 +1682,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Time getTime(String columnLabel, Calendar cal) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1709,7 +1709,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1762,7 +1762,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateRef(String columnLabel, Ref x) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1787,7 +1787,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateBlob(String columnLabel, Blob x) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1812,7 +1812,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateClob(String columnLabel, Clob x) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1837,7 +1837,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateArray(String columnLabel, Array x) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1862,7 +1862,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public RowId getRowId(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1887,7 +1887,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateRowId(String columnLabel, RowId x) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1934,7 +1934,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateNString(String columnLabel, String nString) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1959,7 +1959,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateNClob(String columnLabel, NClob nClob) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1984,7 +1984,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public NClob getNClob(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2009,7 +2009,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public SQLXML getSQLXML(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2034,7 +2034,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateSQLXML(String columnLabel, SQLXML xmlObject) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2059,7 +2059,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public String getNString(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2084,7 +2084,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public Reader getNCharacterStream(String columnLabel) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2111,7 +2111,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateNCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2164,7 +2164,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateAsciiStream(String columnLabel, InputStream x, long length) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2178,7 +2178,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateBinaryStream(String columnLabel, InputStream x, long length) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2192,7 +2192,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2219,7 +2219,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2246,7 +2246,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2273,7 +2273,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2298,7 +2298,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateNCharacterStream(String columnLabel, Reader reader) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2347,7 +2347,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateAsciiStream(String columnLabel, InputStream x) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2360,7 +2360,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateBinaryStream(String columnLabel, InputStream x) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2373,7 +2373,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateCharacterStream(String columnLabel, Reader reader) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2398,7 +2398,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2423,7 +2423,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateClob(String columnLabel, Reader reader) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2448,7 +2448,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public void updateNClob(String columnLabel, Reader reader) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -2477,7 +2477,7 @@ public class MongoDBResultSet implements ResultSet {
 	 */
 	@Override
 	public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-		//TODO
+		// TODO
 		throw new SQLFeatureNotSupportedException();
 	}
 

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.service;
 
@@ -54,8 +53,8 @@ public class ActionsService {
 	 * Execute action.
 	 *
 	 * @param workspace the workspace
-	 * @param project   the project
-	 * @param action    the action
+	 * @param project the project
+	 * @param action the action
 	 * @return the int
 	 */
 	public int executeAction(String workspace, String project, String action) {
@@ -69,16 +68,18 @@ public class ActionsService {
 			ProjectMetadata projectJson = GsonHelper.fromJson(new String(fileObject.getContent()), ProjectMetadata.class);
 			List<ProjectAction> actions = projectJson.getActions();
 			if (actions == null) {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Actions section not found in the project descriptor file: " + project);
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+						"Actions section not found in the project descriptor file: " + project);
 			}
 
-			ProjectAction projectAction = actions
-					.stream()
-					.filter(a -> a.getName().equals(action))
-					.findFirst()
-					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Action not found: " + action));
+			ProjectAction projectAction =
+					actions	.stream()
+							.filter(a -> a.getName().equals(action))
+							.findFirst()
+							.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Action not found: " + action));
 
-			String workingDirectory = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectObject.getRepository(), projectObject.getPath());
+			String workingDirectory =
+					LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectObject.getRepository(), projectObject.getPath());
 			CommandDescriptor commandDescriptor = getCommandForOS(projectAction);
 			return executeCommandLine(workingDirectory, commandDescriptor.getCommand());
 		} catch (Exception e) {
@@ -91,18 +92,14 @@ public class ActionsService {
 
 	private static CommandDescriptor getCommandForOS(ProjectAction projectAction) {
 		List<CommandDescriptor> commands = projectAction.getCommands();
-		return commands
-				.stream()
-				.filter(CommandDescriptor::isCompatibleWithCurrentOS)
-				.findFirst()
-				.orElseThrow();
+		return commands.stream().filter(CommandDescriptor::isCompatibleWithCurrentOS).findFirst().orElseThrow();
 	}
 
 	/**
 	 * List actions.
 	 *
 	 * @param workspace the workspace
-	 * @param project   the project
+	 * @param project the project
 	 * @return the string
 	 */
 	public String listActions(String workspace, String project) {
@@ -113,7 +110,7 @@ public class ActionsService {
 	 * List actions.
 	 *
 	 * @param workspace the workspace
-	 * @param project   the project
+	 * @param project the project
 	 * @return the list of actions
 	 */
 	public List<ProjectAction> listRegisteredActions(String workspace, String project) {
@@ -126,7 +123,8 @@ public class ActionsService {
 			ProjectMetadata projectJson = GsonHelper.fromJson(new String(fileObject.getContent()), ProjectMetadata.class);
 			List<ProjectAction> actions = projectJson.getActions();
 			if (actions == null) {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Actions section not found in the project descriptor file: " + project);
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+						"Actions section not found in the project descriptor file: " + project);
 			}
 			return actions;
 		} catch (Exception e) {
@@ -141,7 +139,7 @@ public class ActionsService {
 	 * Execute command line.
 	 *
 	 * @param workingDirectory the working directory
-	 * @param commandLine      the command line
+	 * @param commandLine the command line
 	 * @return the int
 	 * @throws Exception the exception
 	 */

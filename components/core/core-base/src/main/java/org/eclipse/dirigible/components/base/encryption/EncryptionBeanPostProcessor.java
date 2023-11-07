@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.base.encryption;
 
@@ -29,46 +28,46 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EncryptionBeanPostProcessor implements BeanPostProcessor {
-    
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(EncryptionBeanPostProcessor.class);
 
-    /** The encryption listener. */
-    @Autowired
-    private EncryptionListener encryptionListener;
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(EncryptionBeanPostProcessor.class);
 
-    /**
-     * Post process before initialization.
-     *
-     * @param bean the bean
-     * @param beanName the bean name
-     * @return the object
-     * @throws BeansException the beans exception
-     */
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-    }
+	/** The encryption listener. */
+	@Autowired
+	private EncryptionListener encryptionListener;
 
-    /**
-     * Post process after initialization.
-     *
-     * @param bean the bean
-     * @param beanName the bean name
-     * @return the object
-     * @throws BeansException the beans exception
-     */
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof EntityManagerFactory) {
-            HibernateEntityManagerFactory hibernateEntityManagerFactory = (HibernateEntityManagerFactory) bean;
-            SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) hibernateEntityManagerFactory.getSessionFactory();
-            EventListenerRegistry registry = sessionFactoryImpl.getServiceRegistry().getService(EventListenerRegistry.class);
-            registry.appendListeners(EventType.PRE_LOAD, encryptionListener);
-            registry.appendListeners(EventType.PRE_INSERT, encryptionListener);
-            registry.appendListeners(EventType.PRE_UPDATE, encryptionListener);
-            logger.info("Encryption has been successfully set up");
-        }
-        return bean;
-    }
+	/**
+	 * Post process before initialization.
+	 *
+	 * @param bean the bean
+	 * @param beanName the bean name
+	 * @return the object
+	 * @throws BeansException the beans exception
+	 */
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		return bean;
+	}
+
+	/**
+	 * Post process after initialization.
+	 *
+	 * @param bean the bean
+	 * @param beanName the bean name
+	 * @return the object
+	 * @throws BeansException the beans exception
+	 */
+	@Override
+	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		if (bean instanceof EntityManagerFactory) {
+			HibernateEntityManagerFactory hibernateEntityManagerFactory = (HibernateEntityManagerFactory) bean;
+			SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) hibernateEntityManagerFactory.getSessionFactory();
+			EventListenerRegistry registry = sessionFactoryImpl.getServiceRegistry().getService(EventListenerRegistry.class);
+			registry.appendListeners(EventType.PRE_LOAD, encryptionListener);
+			registry.appendListeners(EventType.PRE_INSERT, encryptionListener);
+			registry.appendListeners(EventType.PRE_UPDATE, encryptionListener);
+			logger.info("Encryption has been successfully set up");
+		}
+		return bean;
+	}
 }

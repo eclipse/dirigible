@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.platform;
 
@@ -27,13 +26,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RepositoryFacade implements InitializingBean {
-	
+
 	/** The instance. */
 	private static RepositoryFacade INSTANCE;
-	
-	/**  The repository. */
+
+	/** The repository. */
 	private IRepository repository;
-	
+
 	/**
 	 * Instantiates a new repository facade.
 	 *
@@ -43,7 +42,7 @@ public class RepositoryFacade implements InitializingBean {
 	private RepositoryFacade(IRepository repository) {
 		this.repository = repository;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -51,18 +50,18 @@ public class RepositoryFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the database facade
 	 */
 	public static RepositoryFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/**
 	 * Gets the repository.
 	 *
@@ -71,8 +70,8 @@ public class RepositoryFacade implements InitializingBean {
 	public IRepository getRepository() {
 		return repository;
 	}
-	
-	
+
+
 	/**
 	 * Gets the resource.
 	 *
@@ -92,7 +91,9 @@ public class RepositoryFacade implements InitializingBean {
 	 * @return the resource
 	 */
 	public static IResource createResource(String path, String content, String contentType) {
-		return RepositoryFacade.get().getRepository().createResource(path, content.getBytes(), ContentTypeHelper.isBinary(contentType), contentType);
+		return RepositoryFacade	.get()
+								.getRepository()
+								.createResource(path, content.getBytes(), ContentTypeHelper.isBinary(contentType), contentType);
 	}
 
 	/**
@@ -143,8 +144,7 @@ public class RepositoryFacade implements InitializingBean {
 	/**
 	 * Gets the collection.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the collection
 	 */
 	public static ICollection getCollection(String path) {
@@ -154,8 +154,7 @@ public class RepositoryFacade implements InitializingBean {
 	/**
 	 * Creates a new collection.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the collection
 	 */
 	public static ICollection createCollection(String path) {
@@ -165,13 +164,12 @@ public class RepositoryFacade implements InitializingBean {
 	/**
 	 * Deletes a collection.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 */
 	public static void deleteCollection(String path) {
 		RepositoryFacade.get().getRepository().getCollection(path).delete();
 	}
-	
+
 	/**
 	 * Find all the files matching the pattern.
 	 *

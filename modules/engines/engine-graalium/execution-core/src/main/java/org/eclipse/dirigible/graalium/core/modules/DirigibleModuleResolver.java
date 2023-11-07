@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.modules;
 
@@ -27,70 +26,73 @@ import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleResolver;
  */
 public class DirigibleModuleResolver implements ModuleResolver {
 
-    /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE. */
-    private static final String DIRIGIBLE_CORE_MODULE_SIGNATURE = "@dirigible";
-    
-    /** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN. */
-    private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(@dirigible)(\\/)(\\w+)"); // e.g. @dirigible/core  => $1=dirigible $2=/ $3=core
+	/** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE. */
+	private static final String DIRIGIBLE_CORE_MODULE_SIGNATURE = "@dirigible";
 
-    /** The dirigible module ESM proxy generator. */
-    private final DirigibleModuleESMProxyGenerator dirigibleModuleESMProxyGenerator;
-    
-    /** The cache directory path. */
-    private final Path cacheDirectoryPath;
-    
-    /**
-     * Instantiates a new dirigible module resolver.
-     *
-     * @param cacheDirectoryPath the cache directory path
-     * @param dirigibleSourceProvider the dirigible source provider
-     */
-    public DirigibleModuleResolver(Path cacheDirectoryPath, JavascriptSourceProvider dirigibleSourceProvider) {
-        dirigibleModuleESMProxyGenerator = new DirigibleModuleESMProxyGenerator(dirigibleSourceProvider);
-        cacheDirectoryPath.toFile().mkdirs();
-        this.cacheDirectoryPath = cacheDirectoryPath;
-    }
+	/** The Constant DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN. */
+	private static final Pattern DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN = Pattern.compile("(@dirigible)(\\/)(\\w+)"); // e.g.
+																														// @dirigible/core
+																														// => $1=dirigible
+																														// $2=/ $3=core
 
-    /**
-     * Checks if is resolvable.
-     *
-     * @param moduleToResolve the module to resolve
-     * @return true, if is resolvable
-     */
-    @Override
-    public boolean isResolvable(String moduleToResolve) {
-        return moduleToResolve.contains(DIRIGIBLE_CORE_MODULE_SIGNATURE) && !DirigibleModulesMetadata.isPureEsmModule(moduleToResolve);
-    }
+	/** The dirigible module ESM proxy generator. */
+	private final DirigibleModuleESMProxyGenerator dirigibleModuleESMProxyGenerator;
 
-    /**
-     * Resolve.
-     *
-     * @param moduleToResolve the module to resolve
-     * @return the path
-     */
-    @Override
-    public Path resolve(String moduleToResolve) {
-        Matcher modulePathMatcher = DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN.matcher(moduleToResolve);
-        if (!modulePathMatcher.matches()) {
-            throw new RuntimeException("Found invalid Dirigible core modules path!");
-        }
+	/** The cache directory path. */
+	private final Path cacheDirectoryPath;
 
-        String coreModuleName = modulePathMatcher.group(3);
+	/**
+	 * Instantiates a new dirigible module resolver.
+	 *
+	 * @param cacheDirectoryPath the cache directory path
+	 * @param dirigibleSourceProvider the dirigible source provider
+	 */
+	public DirigibleModuleResolver(Path cacheDirectoryPath, JavascriptSourceProvider dirigibleSourceProvider) {
+		dirigibleModuleESMProxyGenerator = new DirigibleModuleESMProxyGenerator(dirigibleSourceProvider);
+		cacheDirectoryPath.toFile().mkdirs();
+		this.cacheDirectoryPath = cacheDirectoryPath;
+	}
 
-        Path coreModuleGeneratedPath = cacheDirectoryPath.resolve(coreModuleName + ".mjs");
-        File coreModuleGeneratedFile = coreModuleGeneratedPath.toFile();
+	/**
+	 * Checks if is resolvable.
+	 *
+	 * @param moduleToResolve the module to resolve
+	 * @return true, if is resolvable
+	 */
+	@Override
+	public boolean isResolvable(String moduleToResolve) {
+		return moduleToResolve.contains(DIRIGIBLE_CORE_MODULE_SIGNATURE) && !DirigibleModulesMetadata.isPureEsmModule(moduleToResolve);
+	}
 
-        if (coreModuleGeneratedFile.exists()) {
-            return coreModuleGeneratedFile.toPath();
-        }
+	/**
+	 * Resolve.
+	 *
+	 * @param moduleToResolve the module to resolve
+	 * @return the path
+	 */
+	@Override
+	public Path resolve(String moduleToResolve) {
+		Matcher modulePathMatcher = DIRIGIBLE_CORE_MODULE_SIGNATURE_PATTERN.matcher(moduleToResolve);
+		if (!modulePathMatcher.matches()) {
+			throw new RuntimeException("Found invalid Dirigible core modules path!");
+		}
 
-        String coreModuleContent = dirigibleModuleESMProxyGenerator.generate(coreModuleName, "");
-        try {
-            Files.writeString(coreModuleGeneratedPath, coreModuleContent, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+		String coreModuleName = modulePathMatcher.group(3);
 
-        return coreModuleGeneratedFile.toPath();
-    }
+		Path coreModuleGeneratedPath = cacheDirectoryPath.resolve(coreModuleName + ".mjs");
+		File coreModuleGeneratedFile = coreModuleGeneratedPath.toFile();
+
+		if (coreModuleGeneratedFile.exists()) {
+			return coreModuleGeneratedFile.toPath();
+		}
+
+		String coreModuleContent = dirigibleModuleESMProxyGenerator.generate(coreModuleName, "");
+		try {
+			Files.writeString(coreModuleGeneratedPath, coreModuleContent, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		return coreModuleGeneratedFile.toPath();
+	}
 }

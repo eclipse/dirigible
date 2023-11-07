@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
@@ -41,13 +40,13 @@ import com.google.gson.annotations.Expose;
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_CONSTRAINTS")
 public class TableConstraints {
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CONSTRAINTS_ID", nullable = false)
 	private Long id;
-	
+
 	/** The primary key. */
 	@OneToOne(mappedBy = "constraints", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
 	@Nullable
@@ -74,13 +73,13 @@ public class TableConstraints {
 	@Nullable
 	@Expose
 	private List<TableConstraintCheck> checks = new ArrayList<TableConstraintCheck>();
-	
+
 	/** The table. */
 	@OneToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "TABLE_ID", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Table table;
+	@JoinColumn(name = "TABLE_ID", nullable = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Table table;
 
 	/**
 	 * Instantiates a new table constraints.
@@ -91,15 +90,15 @@ public class TableConstraints {
 		this();
 		this.table = table;
 	}
-	
+
 	/**
 	 * Instantiates a new table constraints.
 	 */
 	public TableConstraints() {
 		super();
 	}
-	
-	
+
+
 
 	/**
 	 * Gets the id.
@@ -154,7 +153,7 @@ public class TableConstraints {
 	public void setForeignKeys(List<TableConstraintForeignKey> foreignKeys) {
 		this.foreignKeys = foreignKeys;
 	}
-	
+
 	/**
 	 * Get the foreignKey by name.
 	 *
@@ -189,7 +188,7 @@ public class TableConstraints {
 	public void setUniqueIndexes(List<TableConstraintUnique> uniqueIndexes) {
 		this.uniqueIndexes = uniqueIndexes;
 	}
-	
+
 	/**
 	 * Get the uniqueIndex by name.
 	 *
@@ -224,7 +223,7 @@ public class TableConstraints {
 	public void setChecks(List<TableConstraintCheck> checks) {
 		this.checks = checks;
 	}
-	
+
 	/**
 	 * Get the checks by name.
 	 *
@@ -267,11 +266,10 @@ public class TableConstraints {
 	 */
 	@Override
 	public String toString() {
-		return "TableConstraints [id=" + id + ", primaryKey=" + primaryKey 
-				+ ", foreignKeys=" + (foreignKeys != null ? Objects.toString(foreignKeys) : "null")
-				+ ", uniqueIndexes=" + (uniqueIndexes != null ? Objects.toString(uniqueIndexes) : "null")
-				+ ", checks=" + (checks != null ? Objects.toString(checks) : "null")
-				+ ", table=" + table.getName() + "]";
+		return "TableConstraints [id=" + id + ", primaryKey=" + primaryKey + ", foreignKeys="
+				+ (foreignKeys != null ? Objects.toString(foreignKeys) : "null") + ", uniqueIndexes="
+				+ (uniqueIndexes != null ? Objects.toString(uniqueIndexes) : "null") + ", checks="
+				+ (checks != null ? Objects.toString(checks) : "null") + ", table=" + table.getName() + "]";
 	}
 
 }

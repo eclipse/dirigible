@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.ftp.config;
 
@@ -38,26 +37,24 @@ public class FtpUserManager implements UserManager {
 
 	/** The root. */
 	private File root;
-	
+
 	/** The ftp user repository. */
 	private FtpUserRepository ftpUserRepository;
-	
+
 	/** The admin authorities. */
-	public static final List<Authority> adminAuthorities = List.of(
-			new WritePermission());
-	
+	public static final List<Authority> adminAuthorities = List.of(new WritePermission());
+
 	/** The anonymous authorities. */
-	public static final List<Authority> anonymousAuthorities = List.of(
-			new ConcurrentLoginPermission(20, 20),
-			new TransferRatePermission(4800, 4800));
+	public static final List<Authority> anonymousAuthorities =
+			List.of(new ConcurrentLoginPermission(20, 20), new TransferRatePermission(4800, 4800));
 
 	/**
- * Instantiates a new ftp user manager.
- *
- * @param root the root
- * @param ftpUserRepository the ftp user repository
- */
-public FtpUserManager(File root, FtpUserRepository ftpUserRepository) {
+	 * Instantiates a new ftp user manager.
+	 *
+	 * @param root the root
+	 * @param ftpUserRepository the ftp user repository
+	 */
+	public FtpUserManager(File root, FtpUserRepository ftpUserRepository) {
 		this.root = root;
 		this.ftpUserRepository = ftpUserRepository;
 	}
@@ -111,11 +108,9 @@ public FtpUserManager(File root, FtpUserRepository ftpUserRepository) {
 	@Override
 	public void save(User user) throws FtpException {
 		File home = new File(new File(root, user.getName()), "home");
-		Assert.isTrue(home.exists() || home.mkdirs(),
-				"The home directory " + home.getAbsolutePath() + " must exist");
-		FtpUser ftpuser = new FtpUser(user.getName(), user.getPassword(), user.getEnabled(),
-				user.getAuthorities(), user.getMaxIdleTime(), user.getHomeDirectory(),
-				user.getAuthorities().equals(adminAuthorities));
+		Assert.isTrue(home.exists() || home.mkdirs(), "The home directory " + home.getAbsolutePath() + " must exist");
+		FtpUser ftpuser = new FtpUser(user.getName(), user.getPassword(), user.getEnabled(), user.getAuthorities(), user.getMaxIdleTime(),
+				user.getHomeDirectory(), user.getAuthorities().equals(adminAuthorities));
 		this.ftpUserRepository.save(ftpuser);
 	}
 
@@ -147,8 +142,7 @@ public FtpUserManager(File root, FtpUserRepository ftpUserRepository) {
 		return Optional.ofNullable(this.getUserByName(user)).filter(u -> {
 			String incomingPw = u.getPassword();
 			return encode(incomingPw).equalsIgnoreCase(u.getPassword());
-		}).orElseThrow(
-				() -> new AuthenticationFailedException("Authentication has failed! Try your username and password."));
+		}).orElseThrow(() -> new AuthenticationFailedException("Authentication has failed! Try your username and password."));
 	}
 
 	/**

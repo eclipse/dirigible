@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.web.service;
 
@@ -40,17 +39,17 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @RequestScope
 public class WebService {
-	
+
 	/** The Constant WEB_CACHE. */
 	private static final Cache WEB_CACHE = ResourcesCache.getWebCache();
-	
+
 	/** The Constant INDEX_HTML. */
 	private static final String INDEX_HTML = "index.html";
-	
+
 	/** The request. */
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	/** The registry accessor. */
 	@Autowired
 	private RegistryAccessor registryAccessor;
@@ -76,12 +75,11 @@ public class WebService {
 		}
 		throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Requested resource is not exposed.");
 	}
-	
+
 	/**
 	 * Gets the resource by path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the resource by path
 	 */
 	private ResponseEntity getResourceByPath(String path) {
@@ -111,15 +109,15 @@ public class WebService {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
 		}
 	}
-	
+
 	/**
 	 * Send resource not modified.
 	 *
 	 * @return the response
 	 */
 	private ResponseEntity sendResourceNotModified() {
-		final HttpHeaders httpHeaders= new HttpHeaders();
-	    httpHeaders.add("ETag", getTag());
+		final HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("ETag", getTag());
 		return new ResponseEntity(httpHeaders, HttpStatus.NOT_MODIFIED);
 	}
 
@@ -134,10 +132,10 @@ public class WebService {
 	 */
 	private ResponseEntity sendResource(String path, boolean isBinary, byte[] content, String contentType) {
 		String tag = cacheResource(path);
-		final HttpHeaders httpHeaders= new HttpHeaders();
-	    httpHeaders.setContentType(MediaType.valueOf(contentType));
-	    httpHeaders.add("Cache-Control", "public, must-revalidate, max-age=0");
-	    httpHeaders.add("ETag", tag);
+		final HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setContentType(MediaType.valueOf(contentType));
+		httpHeaders.add("Cache-Control", "public, must-revalidate, max-age=0");
+		httpHeaders.add("ETag", tag);
 		if (isBinary) {
 			return new ResponseEntity(content, httpHeaders, HttpStatus.OK);
 		}
@@ -165,8 +163,8 @@ public class WebService {
 	private boolean isCached(String path) {
 		String tag = getTag();
 		String cachedTag = WEB_CACHE.getTag(path);
-		return tag == null || cachedTag == null ? false : tag.equals(cachedTag); 
-		
+		return tag == null || cachedTag == null ? false : tag.equals(cachedTag);
+
 	}
 
 	/**

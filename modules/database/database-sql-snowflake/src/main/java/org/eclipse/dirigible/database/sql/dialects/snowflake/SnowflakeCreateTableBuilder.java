@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.snowflake;
 
@@ -51,39 +50,38 @@ public class SnowflakeCreateTableBuilder extends CreateTableBuilder<SnowflakeCre
 	 * @param args the args
 	 * @return the h 2 create table builder
 	 */
-	public SnowflakeCreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable,
-			Boolean isUnique, Boolean isIdentity, Boolean isFuzzyIndexEnabled, String... args) {
-		if (logger.isTraceEnabled()) {logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: "
-				+ isPrimaryKey + ", isNullable: " + isNullable + ", isUnique: " + isUnique + ", isIdentity: "
-				+ isIdentity + ", args: " + Arrays.toString(args));}
+	public SnowflakeCreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+			Boolean isIdentity, Boolean isFuzzyIndexEnabled, String... args) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey
+					+ ", isNullable: " + isNullable + ", isUnique: " + isUnique + ", isIdentity: " + isIdentity + ", args: "
+					+ Arrays.toString(args));
+		}
 		String[] definition;
 		if (isIdentity) {
-			definition = new String[] { name};
+			definition = new String[] {name};
 		} else {
-			definition = new String[] { name, getDialect().getDataTypeName(type) };
+			definition = new String[] {name, getDialect().getDataTypeName(type)};
 		}
 		String[] column;
 		if (isIdentity) {
-			column = Stream.of(definition, args, new String[] { getDialect().getIdentityArgument() })
-					.flatMap(Stream::of).toArray(String[]::new);
+			column = Stream	.of(definition, args, new String[] {getDialect().getIdentityArgument()})
+							.flatMap(Stream::of)
+							.toArray(String[]::new);
 		} else {
 			column = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
 		}
 		if (!isNullable) {
-			column = Stream.of(column, new String[] { getDialect().getNotNullArgument() }).flatMap(Stream::of)
-					.toArray(String[]::new);
+			column = Stream.of(column, new String[] {getDialect().getNotNullArgument()}).flatMap(Stream::of).toArray(String[]::new);
 		}
 		if (isPrimaryKey) {
-			column = Stream.of(column, new String[] { getDialect().getPrimaryKeyArgument() }).flatMap(Stream::of)
-					.toArray(String[]::new);
+			column = Stream.of(column, new String[] {getDialect().getPrimaryKeyArgument()}).flatMap(Stream::of).toArray(String[]::new);
 		}
 		if (isUnique && !isPrimaryKey) {
-			column = Stream.of(column, new String[] { getDialect().getUniqueArgument() }).flatMap(Stream::of)
-					.toArray(String[]::new);
+			column = Stream.of(column, new String[] {getDialect().getUniqueArgument()}).flatMap(Stream::of).toArray(String[]::new);
 		}
 		if (isFuzzyIndexEnabled) {
-			column = Stream.of(column, new String[] { getDialect().getFuzzySearchIndex() }).flatMap(Stream::of)
-					.toArray(String[]::new);
+			column = Stream.of(column, new String[] {getDialect().getFuzzySearchIndex()}).flatMap(Stream::of).toArray(String[]::new);
 		}
 
 		this.columns.add(column);

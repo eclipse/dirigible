@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.registry.service;
 
@@ -31,12 +30,12 @@ public class RegistryService {
 
 	/** The repository. */
 	private IRepository repository;
-	
+
 	@Autowired
 	public RegistryService(IRepository repository) {
 		this.repository = repository;
 	}
-	
+
 	/**
 	 * Gets the repository.
 	 *
@@ -49,8 +48,7 @@ public class RegistryService {
 	/**
 	 * Gets the resource.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the resource
 	 */
 	public IResource getResource(String path) {
@@ -61,8 +59,7 @@ public class RegistryService {
 	/**
 	 * Gets the collection.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the collection
 	 */
 	public ICollection getCollection(String path) {
@@ -73,8 +70,7 @@ public class RegistryService {
 	/**
 	 * Render registry.
 	 *
-	 * @param collection
-	 *            the collection
+	 * @param collection the collection
 	 * @return the registry
 	 */
 	public Registry renderRegistry(ICollection collection) {
@@ -84,13 +80,13 @@ public class RegistryService {
 	/**
 	 * Generate registry path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the string builder
 	 */
 	private StringBuilder generateRegistryPath(String path) {
-		StringBuilder registryPath = new StringBuilder(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(IRepositoryStructure.SEPARATOR).append(path);
+		StringBuilder registryPath =
+				new StringBuilder(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(IRepositoryStructure.SEPARATOR).append(path);
 		return registryPath;
 	}
-	
+
 }

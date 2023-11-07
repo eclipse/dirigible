@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.factory;
 
@@ -43,9 +42,9 @@ import org.slf4j.LoggerFactory;
  */
 public class DirigibleODataServiceFactory extends ODataServiceFactory {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(DirigibleODataServiceFactory.class);
-    
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(DirigibleODataServiceFactory.class);
+
 	/**
 	 * Gets the data sources manager.
 	 *
@@ -54,7 +53,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 	public DataSourcesManager getDataSourcesManager() {
 		return DataSourcesManager.get();
 	}
-	
+
 	/**
 	 * Gets the odata metadata service.
 	 *
@@ -63,7 +62,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 	public ODataMetadataService getODataMetadataService() {
 		return ODataMetadataService.get();
 	}
-	
+
 	/**
 	 * Gets the edm table mapping provider.
 	 *
@@ -74,93 +73,97 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 		return new ODataEdmTableMappingProvider();
 	}
 
-    /**
-     * Creates a new DirigibleODataService object.
-     *
-     * @param ctx the ctx
-     * @return the o data service
-     * @throws ODataException the o data exception
-     */
-    @Override
-    public ODataService createService(ODataContext ctx) throws ODataException {
-        try {
-            EdmProvider edmProvider = new EdmxProvider();
-            ((EdmxProvider) edmProvider).parse(getODataMetadataService().getMetadata(), false);
+	/**
+	 * Creates a new DirigibleODataService object.
+	 *
+	 * @param ctx the ctx
+	 * @return the o data service
+	 * @throws ODataException the o data exception
+	 */
+	@Override
+	public ODataService createService(ODataContext ctx) throws ODataException {
+		try {
+			EdmProvider edmProvider = new EdmxProvider();
+			((EdmxProvider) edmProvider).parse(getODataMetadataService().getMetadata(), false);
 
-            setDefaultDataSource(ctx);
+			setDefaultDataSource(ctx);
 
-            DefaultSQLProcessor singleProcessor = new DefaultSQLProcessor(getEdmTableMappingProvider(), getEventHandler());
+			DefaultSQLProcessor singleProcessor = new DefaultSQLProcessor(getEdmTableMappingProvider(), getEventHandler());
 
-            return createODataSingleProcessorService(edmProvider, singleProcessor);
-        } catch (ODataException e) {
-        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-            throw new ODataException(e);
-        }
-    }
+			return createODataSingleProcessorService(edmProvider, singleProcessor);
+		} catch (ODataException e) {
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
+			throw new ODataException(e);
+		}
+	}
 
-    /**
-     * Gets the callback.
-     *
-     * @param <T> the generic type
-     * @param callbackInterface the callback interface
-     * @return the callback
-     */
-    @Override
-    public <T extends ODataCallback> T getCallback(Class<T> callbackInterface) {
-        if (callbackInterface.isAssignableFrom(ODataErrorCallback.class)) {
-            return (T) new ODataDefaulErrorCallback();
-        }
-        return super.getCallback(callbackInterface);
-    }
+	/**
+	 * Gets the callback.
+	 *
+	 * @param <T> the generic type
+	 * @param callbackInterface the callback interface
+	 * @return the callback
+	 */
+	@Override
+	public <T extends ODataCallback> T getCallback(Class<T> callbackInterface) {
+		if (callbackInterface.isAssignableFrom(ODataErrorCallback.class)) {
+			return (T) new ODataDefaulErrorCallback();
+		}
+		return super.getCallback(callbackInterface);
+	}
 
-    /**
-     * The Class ODataDefaulErrorCallback.
-     */
-    private class ODataDefaulErrorCallback implements ODataErrorCallback {
-        
-        /**
-         * Handle error.
-         *
-         * @param context the context
-         * @return the o data response
-         * @throws ODataApplicationException the o data application exception
-         */
-        @Override
-        public ODataResponse handleError(ODataErrorContext context) throws ODataApplicationException {
-        	if (logger.isErrorEnabled()) {logger.error(context.getMessage(), context.getException());}
-            return EntityProvider.writeErrorDocument(context);
-        }
-    }
+	/**
+	 * The Class ODataDefaulErrorCallback.
+	 */
+	private class ODataDefaulErrorCallback implements ODataErrorCallback {
 
-    /**
-     * Sets the default data source.
-     *
-     * @param ctx the new default data source
-     * @throws ODataException the o data exception
-     */
-    private void setDefaultDataSource(ODataContext ctx) throws ODataException {
-        DataSource dataSource;
-        dataSource = getDataSourcesManager().getDefaultDataSource();
-        ctx.setParameter(DEFAULT_DATA_SOURCE_CONTEXT_KEY, dataSource);
-    }
+		/**
+		 * Handle error.
+		 *
+		 * @param context the context
+		 * @return the o data response
+		 * @throws ODataApplicationException the o data application exception
+		 */
+		@Override
+		public ODataResponse handleError(ODataErrorContext context) throws ODataApplicationException {
+			if (logger.isErrorEnabled()) {
+				logger.error(context.getMessage(), context.getException());
+			}
+			return EntityProvider.writeErrorDocument(context);
+		}
+	}
 
-    /**
-     * Gets the event handler.
-     *
-     * @return the event handler
-     */
-    private OData2EventHandler getEventHandler() {
-        ServiceLoader<OData2EventHandler> odata2EventHandlers = ServiceLoader.load(OData2EventHandler.class);
+	/**
+	 * Sets the default data source.
+	 *
+	 * @param ctx the new default data source
+	 * @throws ODataException the o data exception
+	 */
+	private void setDefaultDataSource(ODataContext ctx) throws ODataException {
+		DataSource dataSource;
+		dataSource = getDataSourcesManager().getDefaultDataSource();
+		ctx.setParameter(DEFAULT_DATA_SOURCE_CONTEXT_KEY, dataSource);
+	}
 
-        String odata2EventHandlerName = Configuration.get(OData2EventHandler.DIRIGIBLE_ODATA_EVENT_HANDLER_NAME,
-                OData2EventHandler.DEFAULT_ODATA_EVENT_HANDLER_NAME);
-        for (OData2EventHandler next : odata2EventHandlers) {
-            if(next.getName().equals(odata2EventHandlerName)) {
-                return next;
-            }
-        }
+	/**
+	 * Gets the event handler.
+	 *
+	 * @return the event handler
+	 */
+	private OData2EventHandler getEventHandler() {
+		ServiceLoader<OData2EventHandler> odata2EventHandlers = ServiceLoader.load(OData2EventHandler.class);
 
-        throw new InvalidStateException("No odata2 event handler found with name " + odata2EventHandlerName);
-    }
-    
+		String odata2EventHandlerName = Configuration.get(OData2EventHandler.DIRIGIBLE_ODATA_EVENT_HANDLER_NAME,
+				OData2EventHandler.DEFAULT_ODATA_EVENT_HANDLER_NAME);
+		for (OData2EventHandler next : odata2EventHandlers) {
+			if (next.getName().equals(odata2EventHandlerName)) {
+				return next;
+			}
+		}
+
+		throw new InvalidStateException("No odata2 event handler found with name " + odata2EventHandlerName);
+	}
+
 }

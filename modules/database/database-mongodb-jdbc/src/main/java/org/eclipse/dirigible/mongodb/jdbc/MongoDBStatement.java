@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.mongodb.jdbc;
 
@@ -39,27 +38,27 @@ import com.mongodb.client.model.WriteModel;
  * The Class MongoDBStatement.
  */
 public class MongoDBStatement implements Statement {
-	
+
 	/** The conn. */
 	protected MongoDBConnection conn;
-	
+
 	/** The is closed. */
 	protected boolean isClosed = false;
-	
+
 	/** The batch list. */
 	protected List<WriteModel<Document>> batchList = new ArrayList<WriteModel<Document>>();
-	
+
 	/** The current collection. */
 	protected String currentCollection;
-	
-	
-	
+
+
+
 	/**
 	 * Instantiates a new mongo DB statement.
 	 *
 	 * @param conn the conn
 	 */
-	public MongoDBStatement(MongoDBConnection conn){
+	public MongoDBStatement(MongoDBConnection conn) {
 		this.conn = conn;
 	}
 
@@ -75,9 +74,9 @@ public class MongoDBStatement implements Statement {
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		if (isWrapperFor(iface)) {
-	        return (T) this;
-	    }
-	    throw new SQLException("No wrapper for " + iface);
+			return (T) this;
+		}
+		throw new SQLException("No wrapper for " + iface);
 	}
 
 	/**
@@ -93,7 +92,8 @@ public class MongoDBStatement implements Statement {
 	}
 
 	/**
-	 * Input string: the document specification as defined in https://docs.mongodb.org/manual/reference/command/find/#dbcmd.find
+	 * Input string: the document specification as defined in
+	 * https://docs.mongodb.org/manual/reference/command/find/#dbcmd.find
 	 *
 	 * @param sql the sql
 	 * @return the result set
@@ -103,56 +103,56 @@ public class MongoDBStatement implements Statement {
 	public ResultSet executeQuery(String sql) throws SQLException {
 		MongoDatabase db = this.conn.getMongoDatabase();
 		BsonDocument filterDocument = null;
-		if(sql==null || sql.length()<1) {
+		if (sql == null || sql.length() < 1) {
 			filterDocument = new BsonDocument();
 		} else {
 			filterDocument = BsonDocument.parse(sql);
 		}
-		
+
 		if (filterDocument.containsKey("find")) {
 			String collectionName = filterDocument.getString("find").getValue();
-			if(collectionName==null) {
-				collectionName = this.conn.getCollectionName();//fallback if any
+			if (collectionName == null) {
+				collectionName = this.conn.getCollectionName();// fallback if any
 				currentCollection = collectionName;
 			}
-			if(collectionName==null) {
+			if (collectionName == null) {
 				throw new IllegalArgumentException("Specifying a collection is mandatory for query operations");
 			}
-			
-			BsonDocument filter = filterDocument.containsKey("filter")? filterDocument.getDocument("filter"): null;
+
+			BsonDocument filter = filterDocument.containsKey("filter") ? filterDocument.getDocument("filter") : null;
 			FindIterable<Document> searchHits = null;
-			if(filter==null) {
+			if (filter == null) {
 				searchHits = db.getCollection(collectionName).find();
 			} else {
 				searchHits = db.getCollection(collectionName).find(filter);
 			}
-			if(filterDocument.containsKey("batchSize"))
+			if (filterDocument.containsKey("batchSize"))
 				searchHits.batchSize(filterDocument.getInt32("batchSize").getValue());
-			if(filterDocument.containsKey("limit"))
+			if (filterDocument.containsKey("limit"))
 				searchHits.limit(filterDocument.getInt32("limit").getValue());
-			if(filterDocument.containsKey("sort"))
+			if (filterDocument.containsKey("sort"))
 				searchHits.sort(filterDocument.getDocument("sort"));
 			return new MongoDBResultSet(this, searchHits);
 		} else if (filterDocument.containsKey("count")) {
 			String collectionName = filterDocument.getString("count").getValue();
-			if(collectionName==null) {
-				collectionName = this.conn.getCollectionName();//fallback if any
+			if (collectionName == null) {
+				collectionName = this.conn.getCollectionName();// fallback if any
 			}
-			if(collectionName==null) {
+			if (collectionName == null) {
 				throw new IllegalArgumentException("Specifying a collection is mandatory for query operations");
 			}
-			
-			BsonDocument filter = filterDocument.containsKey("filter")? filterDocument.getDocument("filter"): null;
+
+			BsonDocument filter = filterDocument.containsKey("filter") ? filterDocument.getDocument("filter") : null;
 			long count = -1;
-			if(filter==null) {
+			if (filter == null) {
 				count = db.getCollection(collectionName).countDocuments();
 			} else {
 				count = db.getCollection(collectionName).countDocuments(filter);
 			}
-			ResultSet result = new SingleColumnStaticResultSet(Arrays.asList(new String[]{count + ""}).iterator());
+			ResultSet result = new SingleColumnStaticResultSet(Arrays.asList(new String[] {count + ""}).iterator());
 			return result;
 		}
-		
+
 		throw new IllegalArgumentException("Specifying a collection is mandatory for query operations");
 	}
 
@@ -166,20 +166,20 @@ public class MongoDBStatement implements Statement {
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
 		BsonDocument updateDocument = null;
-		if(sql==null || sql.length()<1)
+		if (sql == null || sql.length() < 1)
 			throw new IllegalArgumentException();
 		else
 			updateDocument = BsonDocument.parse(sql);
-		
+
 		Document response = this.conn.getMongoDatabase().runCommand(updateDocument);
 		int updatedDocuments = 0;
-		if(response!=null && response.get("ok")!=null){
+		if (response != null && response.get("ok") != null) {
 			try {
 				updatedDocuments = response.getInteger("nModified");
 			} catch (NullPointerException e) {
 				// e.g. create request
 			}
-			//TODO operation atomicity concerns? /errors/
+			// TODO operation atomicity concerns? /errors/
 		}
 		return updatedDocuments;
 	}
@@ -443,8 +443,7 @@ public class MongoDBStatement implements Statement {
 				model = new InsertOneModel<>(Document.parse(sql.substring("INSERT".length())));
 			} else if (sql.startsWith("UPDATE")) {
 				Document document = Document.parse(sql.substring("UPDATE".length()));
-				model = new UpdateOneModel<>(new Document().append("_id", document.get("_id")), 
-						new Document("$set", document),
+				model = new UpdateOneModel<>(new Document().append("_id", document.get("_id")), new Document("$set", document),
 						new UpdateOptions().upsert(true));
 			} else if (sql.startsWith("DELETE")) {
 				Document document = Document.parse(sql.substring("UPDATE".length()));
@@ -454,7 +453,7 @@ public class MongoDBStatement implements Statement {
 			}
 			batchList.add(model);
 		}
-		
+
 	}
 
 	/**
@@ -479,8 +478,7 @@ public class MongoDBStatement implements Statement {
 		BulkWriteOptions options = new BulkWriteOptions();
 		options.ordered(false);
 		options.bypassDocumentValidation(true);
-		BulkWriteResult result = db.getCollection(currentCollection)
-				.bulkWrite(batchList, options);
+		BulkWriteResult result = db.getCollection(currentCollection).bulkWrite(batchList, options);
 		clearBatch();
 		return new int[] {result.getInsertedCount() + result.getModifiedCount() + result.getDeletedCount()};
 	}

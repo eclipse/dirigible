@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
@@ -39,13 +38,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("singleton")
 public class SynchronizationWatcher {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizationWatcher.class);
-	
+
 	/** The modified. */
 	private AtomicBoolean modified = new AtomicBoolean(false);
-	
+
 	/**
 	 * Initialize.
 	 *
@@ -78,7 +77,7 @@ public class SynchronizationWatcher {
 
 		logger.debug("Done initializing the Registry file watcher.");
 	}
-	
+
 	/**
 	 * Register the given directory and all its sub-directories with the WatchService.
 	 *
@@ -87,23 +86,20 @@ public class SynchronizationWatcher {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void registerAll(final Path start, WatchService watchService) throws IOException {
-	    // register directory and sub-directories
-	    Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+		// register directory and sub-directories
+		Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
 
-	        @Override
-	        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-	                throws IOException {
-	            dir.register(watchService,
-	            		StandardWatchEventKinds.ENTRY_CREATE,
-	            		StandardWatchEventKinds.ENTRY_DELETE,
-	            		StandardWatchEventKinds.ENTRY_MODIFY);
-	            return FileVisitResult.CONTINUE;
-	        }
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
+						StandardWatchEventKinds.ENTRY_MODIFY);
+				return FileVisitResult.CONTINUE;
+			}
 
-	    });
+		});
 
 	}
-	
+
 	/**
 	 * Checks if is modified.
 	 *
@@ -112,14 +108,14 @@ public class SynchronizationWatcher {
 	public boolean isModified() {
 		return modified.get();
 	}
-	
+
 	/**
 	 * Reset.
 	 */
 	public void reset() {
 		modified.set(false);
 	}
-	
+
 	/**
 	 * Force.
 	 */

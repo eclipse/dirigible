@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.verifier;
 
@@ -40,49 +39,47 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class AccessVerifierTest {
 
-    @Autowired
-    private AccessVerifier securityAccessVerifier;
+	@Autowired
+	private AccessVerifier securityAccessVerifier;
 
-    @Autowired
-    private AccessRepository securityAccessRepository;
+	@Autowired
+	private AccessRepository securityAccessRepository;
 
-    @Autowired
-    private RoleRepository securityRoleRepository;
+	@Autowired
+	private RoleRepository securityRoleRepository;
 
-    @BeforeEach
-    public void setup() {
-    	
-    	cleanup();
-    	
-        // Create test security roles and accesses
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test.access", "test1", "description", "HTTP", "/a" +
-                "/b/c/test.txt", "GET", "test1"));
-        securityAccessRepository.save(createSecurityAccess("/a/b/c/test.access", "test2", "description", "HTTP", "/a" +
-                "/b/c/test.txt", "GET", "test2"));
-    }
+	@BeforeEach
+	public void setup() {
 
-    @AfterEach
-    public void cleanup() {
-        // Delete test security roles and accesses
-        securityRoleRepository.deleteAll();
-        securityAccessRepository.deleteAll();
-    }
+		cleanup();
 
-    @Test
-    void testGetMatchingSecurityAccesses() {
-        List<Access> matchingSecurityAccesses =
-                securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c", "GET");
-        assertTrue(matchingSecurityAccesses.isEmpty());
+		// Create test security roles and accesses
+		securityRoleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
+		securityRoleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
+		securityAccessRepository.save(
+				createSecurityAccess("/a/b/c/test.access", "test1", "description", "HTTP", "/a" + "/b/c/test.txt", "GET", "test1"));
+		securityAccessRepository.save(
+				createSecurityAccess("/a/b/c/test.access", "test2", "description", "HTTP", "/a" + "/b/c/test.txt", "GET", "test2"));
+	}
 
-        matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP",
-                "/a/b/c/test.txt", "GET");
-        assertFalse(matchingSecurityAccesses.isEmpty());
-        assertEquals(2, matchingSecurityAccesses.size());
-    }
+	@AfterEach
+	public void cleanup() {
+		// Delete test security roles and accesses
+		securityRoleRepository.deleteAll();
+		securityAccessRepository.deleteAll();
+	}
 
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
+	@Test
+	void testGetMatchingSecurityAccesses() {
+		List<Access> matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c", "GET");
+		assertTrue(matchingSecurityAccesses.isEmpty());
+
+		matchingSecurityAccesses = securityAccessVerifier.getMatchingSecurityAccesses("HTTP", "/a/b/c/test.txt", "GET");
+		assertFalse(matchingSecurityAccesses.isEmpty());
+		assertEquals(2, matchingSecurityAccesses.size());
+	}
+
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.service;
 
@@ -30,34 +29,34 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TransportService {
-	
+
 	/** The workspace service. */
-    @Autowired
-    private WorkspaceService workspaceService;
-    
-    /** The repository. */
-    @Autowired
+	@Autowired
+	private WorkspaceService workspaceService;
+
+	/** The repository. */
+	@Autowired
 	private IRepository repository;
-    
-    /**
-     * Gets the workspace service.
-     *
-     * @return the workspace service
-     */
-    public WorkspaceService getWorkspaceService() {
+
+	/**
+	 * Gets the workspace service.
+	 *
+	 * @return the workspace service
+	 */
+	public WorkspaceService getWorkspaceService() {
 		return workspaceService;
 	}
-    
-    /**
-     * Gets the repository.
-     *
-     * @return the repository
-     */
-    public IRepository getRepository() {
+
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
+	public IRepository getRepository() {
 		return repository;
 	}
-    
-    /**
+
+	/**
 	 * Import project.
 	 *
 	 * @param workspaceName the workspace name
@@ -79,13 +78,14 @@ public class TransportService {
 	 * @param override the override
 	 */
 	public void importZipToPath(String workspaceName, String projectName, String pathInProject, byte[] content, Boolean override) {
-		if (override == null) override = true;
+		if (override == null)
+			override = true;
 		Workspace workspace = getWorkspace(workspaceName);
 		String projectPath = workspace.getProject(projectName).getPath();
-		String importPath = projectPath + IRepositoryStructure.SEPARATOR  + pathInProject;
+		String importPath = projectPath + IRepositoryStructure.SEPARATOR + pathInProject;
 		getRepository().importZip(content, importPath, override, false, null);
 	}
-  
+
 	/**
 	 * Import project in path.
 	 *
@@ -138,7 +138,7 @@ public class TransportService {
 		Project projectApi = getProject(workspaceApi, project);
 		return getRepository().exportZip(projectApi.getPath(), true);
 	}
-	
+
 	/**
 	 * Export workspace.
 	 *
@@ -160,7 +160,7 @@ public class TransportService {
 	 * @throws UnsupportedEncodingException the unsupported encoding exception
 	 * @throws DecoderException the decoder exception
 	 */
-	public byte[] exportFolder(String workspace, String project, String folder) throws  UnsupportedEncodingException, DecoderException {
+	public byte[] exportFolder(String workspace, String project, String folder) throws UnsupportedEncodingException, DecoderException {
 		Workspace workspaceApi = getWorkspace(workspace);
 		Project projectApi = getProject(workspaceApi, project);
 		UrlFacade decodedFolder = new UrlFacade();
@@ -188,7 +188,7 @@ public class TransportService {
 	private Project getProject(Workspace workspaceApi, String project) {
 		return workspaceApi.getProject(project);
 	}
-	
+
 	/**
 	 * Import snapshot.
 	 *
@@ -206,7 +206,7 @@ public class TransportService {
 	public byte[] exportSnapshot() {
 		return getRepository().exportZip(IRepositoryStructure.SEPARATOR, true);
 	}
-	
+
 	/**
 	 * Import files to folder.
 	 *
@@ -218,7 +218,7 @@ public class TransportService {
 	public void importFileToPath(String workspaceName, String projectName, String pathInProject, byte[] content) {
 		Workspace workspace = getWorkspace(workspaceName);
 		String projectPath = workspace.getProject(projectName).getPath();
-		String importPath = projectPath + IRepositoryStructure.SEPARATOR  + pathInProject;
+		String importPath = projectPath + IRepositoryStructure.SEPARATOR + pathInProject;
 		if (getRepository().hasResource(importPath)) {
 			getRepository().getResource(importPath).setContent(content);
 		} else {

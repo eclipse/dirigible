@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.componenets.api.io;
 
@@ -35,29 +34,29 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class IOSuiteTest {
-	
+
 	@Autowired
 	private JavascriptService javascriptService;
-	
-	@Autowired
-    private MockMvc mockMvc;
 
-    @Autowired
-    protected WebApplicationContext wac;
+	@Autowired
+	private MockMvc mockMvc;
+
+	@Autowired
+	protected WebApplicationContext wac;
 
 	@Test
 	public void executeFilesTest() throws Exception {
 		javascriptService.handleRequest("io-tests", "files-create-temp-file.js", null, null, false);
 		javascriptService.handleRequest("io-tests", "files-file-streams.js", null, null, false);
 	}
-	
-//	@Test
-//	public void executeFTPTest() throws Exception {
-//		javascriptService.handleRequest("io-tests", "ftp-get-file.js", null, null, false);
-//	}
-	
+
+	// @Test
+	// public void executeFTPTest() throws Exception {
+	// javascriptService.handleRequest("io-tests", "ftp-get-file.js", null, null, false);
+	// }
+
 	@Test
 	public void executeStreamsTest() throws Exception {
 		javascriptService.handleRequest("io-tests", "streams-copy.js", null, null, false);

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.test;
 
@@ -71,8 +70,7 @@ public class Process {
 	/**
 	 * Sets the id.
 	 *
-	 * @param id
-	 *            the new id
+	 * @param id the new id
 	 */
 	public void setId(long id) {
 		this.id = id;
@@ -90,8 +88,7 @@ public class Process {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name
-	 *            the new name
+	 * @param name the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -109,8 +106,7 @@ public class Process {
 	/**
 	 * Sets the type as string.
 	 *
-	 * @param typeAsString
-	 *            the new type as string
+	 * @param typeAsString the new type as string
 	 */
 	public void setTypeAsString(ProcessType typeAsString) {
 		this.typeAsString = typeAsString;
@@ -128,8 +124,7 @@ public class Process {
 	/**
 	 * Sets the type as int.
 	 *
-	 * @param typeAsInt
-	 *            the new type as int
+	 * @param typeAsInt the new type as int
 	 */
 	public void setTypeAsInt(ProcessType typeAsInt) {
 		this.typeAsInt = typeAsInt;

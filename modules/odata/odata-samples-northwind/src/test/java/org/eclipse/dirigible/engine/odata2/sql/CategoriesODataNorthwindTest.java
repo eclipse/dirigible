@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
@@ -34,9 +33,9 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 	@Test
 	public void testCount() throws Exception {
 		Response response = OData2RequestBuilder.createRequest(sf) //
-				.segments("Categories") //
-				.segments("$count") //
-				.executeRequest(GET);
+												.segments("Categories") //
+												.segments("$count") //
+												.executeRequest(GET);
 		int count = Integer.valueOf(IOUtils.toString((InputStream) response.getEntity()));
 		int expectedCount = 8;
 		assertEquals(expectedCount, count);
@@ -50,9 +49,9 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 	@Test
 	public void testGet() throws Exception {
 		Response response = OData2RequestBuilder.createRequest(sf) //
-				.segments("Categories") //
-				.param("$format", "json") //
-				.executeRequest(GET);
+												.segments("Categories") //
+												.param("$format", "json") //
+												.executeRequest(GET);
 		String data = IOUtils.toString((InputStream) response.getEntity());
 		String expectedData = loadExpectedData("Categories-get.json");
 		assertEquals(expectedData, data);
@@ -66,9 +65,9 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 	@Test
 	public void testGetById() throws Exception {
 		Response response = OData2RequestBuilder.createRequest(sf) //
-				.segments("Categories(1)") //
-				.param("$format", "json") //
-				.executeRequest(GET);
+												.segments("Categories(1)") //
+												.param("$format", "json") //
+												.executeRequest(GET);
 		String data = IOUtils.toString((InputStream) response.getEntity());
 		String expectedData = loadExpectedData("Categories-getById.json");
 		assertEquals(expectedData, data);
@@ -82,27 +81,28 @@ public class CategoriesODataNorthwindTest extends AbstractODataNorthwindTest {
 	@Test
 	public void testNavigationProductsCount() throws Exception {
 		Response response = OData2RequestBuilder.createRequest(sf) //
-				.segments("Categories(1)") //
-				.segments("Products")
-				.segments("$count") //
-				.executeRequest(GET);
+												.segments("Categories(1)") //
+												.segments("Products")
+												.segments("$count") //
+												.executeRequest(GET);
 		int count = Integer.valueOf(IOUtils.toString((InputStream) response.getEntity()));
 		int expectedCount = 12;
 		assertEquals(expectedCount, count);
 	}
 
 	/**
-	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)/Products?$format=json
+	 * HTTP GET:
+	 * https://services.odata.org/V2/Northwind/Northwind.svc/Categories(1)/Products?$format=json
 	 *
 	 * @throws Exception the exception
 	 */
 	@Test
 	public void testNavigationProductsGet() throws Exception {
 		Response response = OData2RequestBuilder.createRequest(sf) //
-				.segments("Categories(1)") //
-				.segments("Products") //
-				.param("$format", "json") //
-				.executeRequest(GET);
+												.segments("Categories(1)") //
+												.segments("Products") //
+												.param("$format", "json") //
+												.executeRequest(GET);
 		String data = IOUtils.toString((InputStream) response.getEntity());
 		String expectedData = loadExpectedData("Categories-navigationProductsGet.json");
 		assertEquals(expectedData, data);

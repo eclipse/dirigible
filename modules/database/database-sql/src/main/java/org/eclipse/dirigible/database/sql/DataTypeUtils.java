@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql;
 
@@ -28,9 +27,9 @@ import java.util.Map.Entry;
  */
 public class DataTypeUtils {
 
-	/**  The default length. */
+	/** The default length. */
 	public static final int VARCHAR_DEFAULT_LENGTH = 512;
-	
+
 	/** The Constant DECIMAL_DEFAULT_LENGTH. */
 	public static final int DECIMAL_DEFAULT_LENGTH = 100000;
 
@@ -71,11 +70,11 @@ public class DataTypeUtils {
 		STRING_TO_DATABASE_TYPE.put("CHAR", Types.CHAR);
 		STRING_TO_DATABASE_TYPE.put("CHARACTER", Types.CHAR);
 		STRING_TO_DATABASE_TYPE.put("TEXT", Types.VARCHAR);
-		
+
 		STRING_TO_DATABASE_TYPE.put("DATE", Types.DATE);
 		STRING_TO_DATABASE_TYPE.put("TIMESTAMP", Types.TIMESTAMP);
 		STRING_TO_DATABASE_TYPE.put("TIME", Types.TIME);
-		
+
 		STRING_TO_DATABASE_TYPE.put("BIT", Types.BIT);
 		STRING_TO_DATABASE_TYPE.put("SMALLINT", Types.SMALLINT);
 		STRING_TO_DATABASE_TYPE.put("INTEGER", Types.INTEGER);
@@ -84,10 +83,10 @@ public class DataTypeUtils {
 		STRING_TO_DATABASE_TYPE.put("INT4", Types.INTEGER);
 		STRING_TO_DATABASE_TYPE.put("INT8", Types.BIGINT);
 		STRING_TO_DATABASE_TYPE.put("BIGINT", Types.BIGINT);
-		
+
 		STRING_TO_DATABASE_TYPE.put("BIGSERIAL", Types.BIGINT);
 		STRING_TO_DATABASE_TYPE.put("SERIAL8", Types.BIGINT);
-		
+
 		STRING_TO_DATABASE_TYPE.put("REAL", Types.REAL);
 		STRING_TO_DATABASE_TYPE.put("FLOAT", Types.FLOAT);
 		STRING_TO_DATABASE_TYPE.put("DOUBLE", Types.DOUBLE);
@@ -96,21 +95,21 @@ public class DataTypeUtils {
 		STRING_TO_DATABASE_TYPE.put("FLOAT8", Types.DOUBLE);
 		STRING_TO_DATABASE_TYPE.put("NUMERIC", Types.NUMERIC);
 		STRING_TO_DATABASE_TYPE.put("DECIMAL", Types.DECIMAL);
-		
+
 		STRING_TO_DATABASE_TYPE.put("BOOLEAN", Types.BOOLEAN);
 		STRING_TO_DATABASE_TYPE.put("BOOL", Types.BOOLEAN);
-		
+
 		STRING_TO_DATABASE_TYPE.put("CLOB", Types.CLOB);
 		STRING_TO_DATABASE_TYPE.put("CHARACTER LARGE OBJECT", Types.CLOB);
-		
+
 		STRING_TO_DATABASE_TYPE.put("BLOB", Types.BLOB);
 		STRING_TO_DATABASE_TYPE.put("BINARY", Types.BLOB);
 		STRING_TO_DATABASE_TYPE.put("BINARY VARYING", Types.BLOB);
 		STRING_TO_DATABASE_TYPE.put("BINARY LARGE OBJECT", Types.BLOB);
 		STRING_TO_DATABASE_TYPE.put("BYTEA", Types.BLOB);
-		
+
 		STRING_TO_DATABASE_TYPE.put("ARRAY", Types.ARRAY);
-		
+
 		STRING_TO_DATABASE_TYPE.put("JSON", Types.OTHER);
 		STRING_TO_DATABASE_TYPE.put("JSONB", Types.OTHER);
 
@@ -156,19 +155,17 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is database type supported.
 	 *
-	 * @param type
-	 *            the type
+	 * @param type the type
 	 * @return true, if is database type supported
 	 */
 	public static boolean isDatabaseTypeSupported(Integer type) {
 		return DATABASE_TYPE_TO_DATA_TYPE.containsKey(type);
 	}
-	
+
 	/**
 	 * Gets the database type.
 	 *
-	 * @param type
-	 *            the type
+	 * @param type the type
 	 * @return the database type
 	 */
 	public static DataType getDatabaseType(Integer type) {
@@ -181,8 +178,7 @@ public class DataTypeUtils {
 	/**
 	 * Gets the database type name.
 	 *
-	 * @param type
-	 *            the type
+	 * @param type the type
 	 * @return the database type name
 	 */
 	public static String getDatabaseTypeName(Integer type) {
@@ -195,8 +191,7 @@ public class DataTypeUtils {
 	/**
 	 * Gets the database type by java type.
 	 *
-	 * @param clazz
-	 *            the clazz
+	 * @param clazz the clazz
 	 * @return the database type by java type
 	 */
 	public static Integer getDatabaseTypeByJavaType(Class clazz) {
@@ -215,8 +210,7 @@ public class DataTypeUtils {
 	/**
 	 * Gets the java type by database type.
 	 *
-	 * @param type
-	 *            the type
+	 * @param type the type
 	 * @return the java type by database type
 	 */
 	public static Class getJavaTypeByDatabaseType(Integer type) {
@@ -230,8 +224,7 @@ public class DataTypeUtils {
 	/**
 	 * Gets the sql type by data type.
 	 *
-	 * @param type
-	 *            the type
+	 * @param type the type
 	 * @return the sql type by data type
 	 */
 	public static Integer getSqlTypeByDataType(String type) {
@@ -245,8 +238,7 @@ public class DataTypeUtils {
 	/**
 	 * Gets the database type name by java type.
 	 *
-	 * @param clazz
-	 *            the clazz
+	 * @param clazz the clazz
 	 * @return the database type name by java type
 	 */
 	public static String getDatabaseTypeNameByJavaType(Class clazz) {
@@ -257,8 +249,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is blob.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is blob
 	 */
 	public static boolean isBlob(String dataType) {
@@ -268,8 +259,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is boolean.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is boolean
 	 */
 	public static boolean isBoolean(String dataType) {
@@ -279,8 +269,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is double.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is double
 	 */
 	public static boolean isDouble(String dataType) {
@@ -290,19 +279,17 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is real.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is real
 	 */
 	public static boolean isReal(String dataType) {
 		return DataType.REAL.toString().equals(dataType);
 	}
-	
+
 	/**
 	 * Checks if is float.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is real
 	 */
 	public static boolean isFloat(String dataType) {
@@ -312,8 +299,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is bigint.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is bigint
 	 */
 	public static boolean isBigint(String dataType) {
@@ -323,8 +309,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is smallint.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is smallint
 	 */
 	public static boolean isSmallint(String dataType) {
@@ -334,8 +319,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is integer.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is integer
 	 */
 	public static boolean isInteger(String dataType) {
@@ -345,8 +329,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is tinyint.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is tinyint
 	 */
 	public static boolean isTinyint(String dataType) {
@@ -356,8 +339,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is timestamp.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is timestamp
 	 */
 	public static boolean isTimestamp(String dataType) {
@@ -367,8 +349,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is time.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is time
 	 */
 	public static boolean isTime(String dataType) {
@@ -378,8 +359,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is date.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is date
 	 */
 	public static boolean isDate(String dataType) {
@@ -389,8 +369,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is char.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is char
 	 */
 	public static boolean isChar(String dataType) {
@@ -400,19 +379,17 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is varchar.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is varchar
 	 */
 	public static boolean isVarchar(String dataType) {
 		return DataType.VARCHAR.toString().equals(dataType);
 	}
-	
+
 	/**
 	 * Checks if is nvarchar.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is varchar
 	 */
 	public static boolean isNvarchar(String dataType) {
@@ -422,19 +399,17 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is decimal.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is decimal
 	 */
 	public static boolean isDecimal(String dataType) {
 		return DataType.DECIMAL.toString().equals(dataType);
 	}
-	
+
 	/**
 	 * Checks if is bit.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is bit
 	 */
 	public static boolean isBit(String dataType) {
@@ -444,8 +419,7 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is array.
 	 *
-	 * @param dataType
-	 *            the data type
+	 * @param dataType the data type
 	 * @return true, if is array
 	 */
 	public static boolean isArray(String dataType) {

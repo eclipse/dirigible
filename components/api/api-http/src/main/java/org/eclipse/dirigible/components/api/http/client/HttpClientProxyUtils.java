@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.http.client;
 
@@ -68,15 +67,16 @@ public class HttpClientProxyUtils {
 		try {
 			setProxySettings();
 		} catch (IOException e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 
 	/**
 	 * Sets the proxy settings.
 	 *
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void setProxySettings() throws IOException {
 		setTrustAllSSL();
@@ -85,8 +85,7 @@ public class HttpClientProxyUtils {
 	/**
 	 * Returns the http client.
 	 *
-	 * @param trustAll
-	 *            if no SSL verification should be done
+	 * @param trustAll if no SSL verification should be done
 	 * @return the http client
 	 */
 	public static CloseableHttpClient getHttpClient(boolean trustAll) {
@@ -96,14 +95,16 @@ public class HttpClientProxyUtils {
 			try {
 				SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
 				sslContextBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
-				SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContextBuilder.build(),
-						(hostName, sslSession) -> true);
+				SSLConnectionSocketFactory sslSocketFactory =
+						new SSLConnectionSocketFactory(sslContextBuilder.build(), (hostName, sslSession) -> true);
 				HttpClientBuilder httpClientBuilder = HttpClients.custom();
 				httpClientBuilder.setSSLSocketFactory(sslSocketFactory);
 				setProxyIfNeeded(httpClientBuilder);
 				httpClient = httpClientBuilder.build();
 			} catch (Exception e) {
-				if (logger.isErrorEnabled()) {logger.error("Error occurred when trying to create a TRUST ALL HTTP Client", e);}
+				if (logger.isErrorEnabled()) {
+					logger.error("Error occurred when trying to create a TRUST ALL HTTP Client", e);
+				}
 				httpClient = HttpClients.createDefault();
 			}
 		} else {
@@ -118,8 +119,7 @@ public class HttpClientProxyUtils {
 	/**
 	 * Sets the proxy if needed.
 	 *
-	 * @param httpClientBuilder
-	 *            the client build
+	 * @param httpClientBuilder the client build
 	 */
 	private static void setProxyIfNeeded(HttpClientBuilder httpClientBuilder) {
 		String httpProxyHost = Configuration.get(HTTP_PROXY_HOST);
@@ -169,8 +169,7 @@ public class HttpClientProxyUtils {
 	/**
 	 * Sets the trust all SSL.
 	 *
-	 * @throws IOException
-	 *             in case an error occurs while setting the SSL socket factory
+	 * @throws IOException in case an error occurs while setting the SSL socket factory
 	 */
 	private static void setTrustAllSSL() throws IOException {
 		try {
@@ -196,29 +195,25 @@ public class HttpClientProxyUtils {
 	 * Creates the trust all SSL context.
 	 *
 	 * @return the SSL context
-	 * @throws NoSuchAlgorithmException
-	 *             the no such algorithm exception
-	 * @throws KeyManagementException
-	 *             the key management exception
+	 * @throws NoSuchAlgorithmException the no such algorithm exception
+	 * @throws KeyManagementException the key management exception
 	 */
 	private static SSLContext createTrustAllSSLContext() throws NoSuchAlgorithmException, KeyManagementException {
 		SSLContext sslContext = SSLContext.getInstance("SSL");
 
 		// Create a trust manager that does not validate certificate chains
-		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+		TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
 			@Override
 			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 				return null;
 			}
 
 			@Override
-			public void checkClientTrusted(X509Certificate[] certs, String authType) {
-			}
+			public void checkClientTrusted(X509Certificate[] certs, String authType) {}
 
 			@Override
-			public void checkServerTrusted(X509Certificate[] certs, String authType) {
-			}
-		} };
+			public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+		}};
 
 		// Set up a TrustManager that trusts everything
 		sslContext.init(null, trustAllCerts, new SecureRandom());

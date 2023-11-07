@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders;
 
@@ -27,8 +26,7 @@ public class ExpressionBuilder extends AbstractSqlBuilder {
 	/**
 	 * Instantiates a new expression builder.
 	 *
-	 * @param dialect
-	 *            the dialect
+	 * @param dialect the dialect
 	 */
 	public ExpressionBuilder(ISqlDialect dialect) {
 		super(dialect);
@@ -37,8 +35,7 @@ public class ExpressionBuilder extends AbstractSqlBuilder {
 	/**
 	 * And.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the expression builder
 	 */
 	public ExpressionBuilder and(String name) {
@@ -53,8 +50,7 @@ public class ExpressionBuilder extends AbstractSqlBuilder {
 	/**
 	 * Or.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the expression builder
 	 */
 	public ExpressionBuilder or(String name) {
@@ -73,6 +69,7 @@ public class ExpressionBuilder extends AbstractSqlBuilder {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override

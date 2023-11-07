@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.transfer.callback;
 
@@ -57,8 +56,7 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param count the count
 	 */
 	@Override
-	public void transferFinished(int count) {
-	}
+	public void transferFinished(int count) {}
 
 	/**
 	 * Transfer failed.
@@ -66,24 +64,21 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param error the error
 	 */
 	@Override
-	public void transferFailed(String error) {
-	}
+	public void transferFailed(String error) {}
 
 	/**
 	 * Metadata loading started.
 	 */
 	@Override
-	public void metadataLoadingStarted() {
-	}
-	
+	public void metadataLoadingStarted() {}
+
 	/**
 	 * Metadata loading error.
 	 *
 	 * @param error the error
 	 */
 	@Override
-	public void metadataLoadingError(String error) {
-	}
+	public void metadataLoadingError(String error) {}
 
 	/**
 	 * Metadata loading finished.
@@ -91,8 +86,7 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param count the count
 	 */
 	@Override
-	public void metadataLoadingFinished(int count) {
-	}
+	public void metadataLoadingFinished(int count) {}
 
 	/**
 	 * Sorting started.
@@ -100,8 +94,7 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param tables the tables
 	 */
 	@Override
-	public void sortingStarted(List<PersistenceTableModel> tables) {
-	}
+	public void sortingStarted(List<PersistenceTableModel> tables) {}
 
 	/**
 	 * Sorting finished.
@@ -109,22 +102,19 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param result the result
 	 */
 	@Override
-	public void sortingFinished(List<PersistenceTableModel> result) {
-	}
+	public void sortingFinished(List<PersistenceTableModel> result) {}
 
 	/**
 	 * Data transfer started.
 	 */
 	@Override
-	public void dataTransferStarted() {
-	}
+	public void dataTransferStarted() {}
 
 	/**
 	 * Data transfer finished.
 	 */
 	@Override
-	public void dataTransferFinished() {
-	}
+	public void dataTransferFinished() {}
 
 	/**
 	 * Table transfer started.
@@ -132,8 +122,7 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param table the table
 	 */
 	@Override
-	public void tableTransferStarted(String table) {
-	}
+	public void tableTransferStarted(String table) {}
 
 	/**
 	 * Table transfer finished.
@@ -142,8 +131,7 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param transferedRecords the transfered records
 	 */
 	@Override
-	public void tableTransferFinished(String table, int transferedRecords) {
-	}
+	public void tableTransferFinished(String table, int transferedRecords) {}
 
 	/**
 	 * Table transfer failed.
@@ -152,8 +140,7 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param error the error
 	 */
 	@Override
-	public void tableTransferFailed(String table, String error) {
-	}
+	public void tableTransferFailed(String table, String error) {}
 
 	/**
 	 * Record transfer finished.
@@ -162,8 +149,7 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param i the i
 	 */
 	@Override
-	public void recordTransferFinished(String tableName, int i) {
-	}
+	public void recordTransferFinished(String tableName, int i) {}
 
 	/**
 	 * Table select SQL.
@@ -171,8 +157,7 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param selectSQL the select SQL
 	 */
 	@Override
-	public void tableSelectSQL(String selectSQL) {
-	}
+	public void tableSelectSQL(String selectSQL) {}
 
 	/**
 	 * Table insert SQL.
@@ -180,8 +165,7 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param insertSQL the insert SQL
 	 */
 	@Override
-	public void tableInsertSQL(String insertSQL) {
-	}
+	public void tableInsertSQL(String insertSQL) {}
 
 	/**
 	 * Table skipped.
@@ -190,15 +174,13 @@ public class DummyDataTransferCallbackHandler implements DataTransferCallbackHan
 	 * @param reason the reason
 	 */
 	@Override
-	public void tableSkipped(String table, String reason) {
-	}
+	public void tableSkipped(String table, String reason) {}
 
 	/**
 	 * Stop transfer.
 	 */
 	@Override
-	public void stopTransfer() {
-	}
+	public void stopTransfer() {}
 
 	/**
 	 * Checks if is stopped.

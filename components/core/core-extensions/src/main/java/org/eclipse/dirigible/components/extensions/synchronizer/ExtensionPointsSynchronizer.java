@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.extensions.synchronizer;
 
@@ -43,19 +42,19 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(SynchronizersOrder.EXTENSIONPOINT)
 public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchronizer<ExtensionPoint> {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionPointsSynchronizer.class);
-	
+
 	/** The Constant FILE_EXTENSION_EXTENSIONPOINT. */
 	private static final String FILE_EXTENSION_EXTENSIONPOINT = ".extensionpoint";
-	
+
 	/** The extension point service. */
 	private ExtensionPointService extensionPointService;
-	
+
 	/** The synchronization callback. */
 	private SynchronizerCallback callback;
-	
+
 	/**
 	 * Instantiates a new extension points synchronizer.
 	 *
@@ -65,7 +64,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	public ExtensionPointsSynchronizer(ExtensionPointService extensionPointService) {
 		this.extensionPointService = extensionPointService;
 	}
-	
+
 	/**
 	 * Gets the service.
 	 *
@@ -105,7 +104,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	@Override
 	public List<ExtensionPoint> parse(String location, byte[] content) throws ParseException {
@@ -121,14 +120,20 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 			}
 			extensionPoint = getService().save(extensionPoint);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			if (logger.isErrorEnabled()) {logger.error("extension point: {}", extensionPoint);}
-			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error("extension point: {}", extensionPoint);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error("content: {}", new String(content));
+			}
 			throw new ParseException(e.getMessage(), 0);
 		}
 		return List.of(extensionPoint);
 	}
-	
+
 	/**
 	 * Retrieve.
 	 *
@@ -139,7 +144,7 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 	public List<ExtensionPoint> retrieve(String location) {
 		return getService().getAll();
 	}
-	
+
 	/**
 	 * Sets the status.
 	 *
@@ -167,36 +172,39 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 		if (wrapper.getArtefact() instanceof ExtensionPoint) {
 			extensionPoint = (ExtensionPoint) wrapper.getArtefact();
 		} else {
-			throw new UnsupportedOperationException(String.format("Trying to process %s as Extension Point", wrapper.getArtefact().getClass()));
+			throw new UnsupportedOperationException(
+					String.format("Trying to process %s as Extension Point", wrapper.getArtefact().getClass()));
 		}
-		
+
 		switch (flow) {
-		case CREATE:
-			if (ArtefactLifecycle.NEW.equals(extensionPoint.getLifecycle())) {
-				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
-			}
-			break;
-		case UPDATE:
-			if (ArtefactLifecycle.MODIFIED.equals(extensionPoint.getLifecycle())) {
-				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
-			}
-			break;
-		case DELETE:
-			if (ArtefactLifecycle.CREATED.equals(extensionPoint.getLifecycle())
-					|| ArtefactLifecycle.UPDATED.equals(extensionPoint.getLifecycle())) {
-				try {
-            		getService().delete(extensionPoint);
-					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
-				} catch (Exception e) {
-					if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-		            callback.addError(e.getMessage());
-					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
+			case CREATE:
+				if (ArtefactLifecycle.NEW.equals(extensionPoint.getLifecycle())) {
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 				}
-			}
-			break;
-		case START:
-		case STOP:
-		}		
+				break;
+			case UPDATE:
+				if (ArtefactLifecycle.MODIFIED.equals(extensionPoint.getLifecycle())) {
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+				}
+				break;
+			case DELETE:
+				if (ArtefactLifecycle.CREATED.equals(extensionPoint.getLifecycle())
+						|| ArtefactLifecycle.UPDATED.equals(extensionPoint.getLifecycle())) {
+					try {
+						getService().delete(extensionPoint);
+						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+					} catch (Exception e) {
+						if (logger.isErrorEnabled()) {
+							logger.error(e.getMessage(), e);
+						}
+						callback.addError(e.getMessage());
+						callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, e.getMessage());
+					}
+				}
+				break;
+			case START:
+			case STOP:
+		}
 		return true;
 	}
 
@@ -210,12 +218,14 @@ public class ExtensionPointsSynchronizer<A extends Artefact> implements Synchron
 		try {
 			getService().delete(extensionPoint);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			callback.addError(e.getMessage());
 			callback.registerState(this, extensionPoint, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Sets the callback.
 	 *

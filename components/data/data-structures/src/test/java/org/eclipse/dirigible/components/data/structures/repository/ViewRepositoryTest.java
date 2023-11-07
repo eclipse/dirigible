@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.repository;
 
@@ -36,48 +35,48 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class ViewRepositoryTest {
-	
+
 	/** The view repository. */
 	@Autowired
 	private ViewRepository viewRepository;
-	
+
 	/** The entity manager. */
 	@Autowired
 	EntityManager entityManager;
-	
+
 	/**
 	 * Setup.
 	 *
 	 * @throws Exception the exception
 	 */
 	@BeforeEach
-    public void setup() throws Exception {
-		
+	public void setup() throws Exception {
+
 		cleanup();
 
-    	// create test Views
+		// create test Views
 		createView(viewRepository, "/a/b/c/v1.view", "v1", "description", null);
 		createView(viewRepository, "/a/b/c/v2.view", "v2", "description", null);
 		createView(viewRepository, "/a/b/c/v3.view", "v3", "description", null);
 		createView(viewRepository, "/a/b/c/v4.view", "v4", "description", null);
 		createView(viewRepository, "/a/b/c/v5.view", "v5", "description", null);
-    }
-	
+	}
+
 	/**
 	 * Cleanup.
 	 *
 	 * @throws Exception the exception
 	 */
 	@AfterEach
-    public void cleanup() throws Exception {
+	public void cleanup() throws Exception {
 		// delete test Views
 		viewRepository.deleteAll();
-    }
-	
+	}
+
 
 	/**
 	 * Gets the one.
@@ -85,32 +84,32 @@ public class ViewRepositoryTest {
 	 * @return the one
 	 */
 	@Test
-    public void getOne() {
+	public void getOne() {
 		Long id = viewRepository.findAll().get(0).getId();
 		Optional<View> optional = viewRepository.findById(id);
 		View view = optional.isPresent() ? optional.get() : null;
-        assertNotNull(view);
-        assertNotNull(view.getLocation());
-        assertNotNull(view.getCreatedBy());
-        assertEquals("SYSTEM", view.getCreatedBy());
-        assertNotNull(view.getCreatedAt());
-        assertNotNull(view.getQuery());
-//        assertEquals("view:/a/b/c/t1.view:t1", view.getKey());
-    }
-	
+		assertNotNull(view);
+		assertNotNull(view.getLocation());
+		assertNotNull(view.getCreatedBy());
+		assertEquals("SYSTEM", view.getCreatedBy());
+		assertNotNull(view.getCreatedAt());
+		assertNotNull(view.getQuery());
+		// assertEquals("view:/a/b/c/t1.view:t1", view.getKey());
+	}
+
 	/**
 	 * Gets the reference using entity manager.
 	 *
 	 * @return the reference using entity manager
 	 */
 	@Test
-    public void getReferenceUsingEntityManager() {
+	public void getReferenceUsingEntityManager() {
 		Long id = viewRepository.findAll().get(0).getId();
 		View view = entityManager.getReference(View.class, id);
-        assertNotNull(view);
-        assertNotNull(view.getLocation());
-    }
-	
+		assertNotNull(view);
+		assertNotNull(view.getLocation());
+	}
+
 	/**
 	 * Creates the view.
 	 *
@@ -121,17 +120,18 @@ public class ViewRepositoryTest {
 	 * @param dependencies the dependencies
 	 * @return the view
 	 */
-	public static View createView(ViewRepository viewRepository, String location, String name, String description, Set<String> dependencies) {
+	public static View createView(ViewRepository viewRepository, String location, String name, String description,
+			Set<String> dependencies) {
 		View view = new View(location, name, description, dependencies, null, "VIEW", "SELECT ...");
 		viewRepository.save(view);
 		return view;
 	}
-	
+
 	/**
 	 * The Class TestConfiguration.
 	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}
-	
+
 }

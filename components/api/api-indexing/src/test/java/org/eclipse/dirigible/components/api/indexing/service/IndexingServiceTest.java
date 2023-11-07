@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.indexing.service;
 
@@ -39,7 +38,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @AutoConfigureMockMvc
 @ContextConfiguration
 @WebAppConfiguration
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class IndexingServiceTest {
 
 	/** The Constant TEST_INDEX. */
@@ -106,8 +105,8 @@ public class IndexingServiceTest {
 				"Apache Lucene is an open source project available for free download. Please use the links on the right to access Lucene.".getBytes(),
 				new Date(789).getTime(), parameters);
 
-		List matches = GsonHelper.fromJson(indexingService.between(TEST_INDEX, new Date(124).getTime(), new Date(689).getTime()),
-				List.class);
+		List matches =
+				GsonHelper.fromJson(indexingService.between(TEST_INDEX, new Date(124).getTime(), new Date(689).getTime()), List.class);
 		assertNotNull(matches);
 		assertEquals(1, matches.size());
 	}

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.utils;
 
@@ -24,8 +23,7 @@ public class Base64Facade {
 	/**
 	 * Base64 encode.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the base64 encoded input
 	 */
 	public static final String encode(String input) {
@@ -36,20 +34,18 @@ public class Base64Facade {
 	/**
 	 * Base64 encode.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the base64 encoded input
 	 */
 	public static final String encode(byte[] input) {
 		Base64 base64 = new Base64();
 		return base64.encodeAsString(input);
 	}
-	
+
 	/**
 	 * Base64 encode.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the base64 encoded input
 	 */
 	public static final byte[] encodeNative(byte[] input) {
@@ -60,20 +56,18 @@ public class Base64Facade {
 	/**
 	 * Base64 decode.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the base64 decoded output
 	 */
 	public static final byte[] decode(String input) {
 		Base64 base64 = new Base64();
 		return base64.decode(input);
 	}
-	
+
 	/**
 	 * Base64 decode.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the base64 decoded output
 	 */
 	public static final byte[] decodeNative(byte[] input) {

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.store.synchronizer;
 
@@ -44,22 +43,22 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(SynchronizersOrder.ENTITY)
 public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Entity> {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(EntitySynchronizer.class);
-	
+
 	/** The Constant FILE_EXTENSION_BPMN. */
 	public static final String FILE_EXTENSION_ENTITY = ".hbm.xml";
-	
+
 	/** The entity service. */
 	private EntityService entityService;
-	
+
 	/** The object store. */
 	private DataStore dataStore;
-	
+
 	/** The synchronization callback. */
 	private SynchronizerCallback callback;
-	
+
 	/**
 	 * Instantiates a new entity synchronizer.
 	 *
@@ -71,7 +70,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 		this.entityService = entityService;
 		this.dataStore = dataStore;
 	}
-	
+
 	/**
 	 * Gets the service.
 	 *
@@ -81,7 +80,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 	public ArtefactService<Entity> getService() {
 		return entityService;
 	}
-	
+
 	/**
 	 * Gets the data store.
 	 *
@@ -102,7 +101,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
 		return file.toString().endsWith(getFileExtension());
 	}
-	
+
 	/**
 	 * Checks if is accepted.
 	 *
@@ -120,7 +119,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	@Override
 	public List<Entity> parse(String location, byte[] content) throws ParseException {
@@ -137,14 +136,20 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 			}
 			entity = getService().save(entity);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			if (logger.isErrorEnabled()) {logger.error("entity: {}", entity);}
-			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error("entity: {}", entity);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error("content: {}", new String(content));
+			}
 			throw new ParseException(e.getMessage(), 0);
 		}
 		return List.of(entity);
 	}
-	
+
 	/**
 	 * Retrieve.
 	 *
@@ -155,7 +160,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 	public List<Entity> retrieve(String location) {
 		return getService().getAll();
 	}
-	
+
 	/**
 	 * Sets the status.
 	 *
@@ -169,7 +174,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 		artefact.setError(error);
 		getService().save((Entity) artefact);
 	}
-	
+
 	/**
 	 * Complete.
 	 *
@@ -185,35 +190,34 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 		} else {
 			throw new UnsupportedOperationException(String.format("Trying to process %s as Entity", wrapper.getArtefact().getClass()));
 		}
-		
+
 		switch (flow) {
-		case CREATE:
-			if (entity.getLifecycle().equals(ArtefactLifecycle.NEW)) {
-				dataStore.addMapping(entity.getKey(), prepareContent(entity));
-				dataStore.initialize();
-				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
-			}
-			break;
-		case UPDATE:
-			if (entity.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
-				dataStore.removeMapping(entity.getKey());
-				dataStore.addMapping(entity.getKey(), prepareContent(entity));
-				dataStore.initialize();
-				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
-			}
-			break;
-		case DELETE:
-			if (entity.getLifecycle().equals(ArtefactLifecycle.CREATED)
-					|| entity.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
-				dataStore.removeMapping(entity.getKey());
-				dataStore.initialize();
-				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
-			}
-			break;
-		case START:
-		case STOP:
+			case CREATE:
+				if (entity.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+					dataStore.addMapping(entity.getKey(), prepareContent(entity));
+					dataStore.initialize();
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
+				}
+				break;
+			case UPDATE:
+				if (entity.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+					dataStore.removeMapping(entity.getKey());
+					dataStore.addMapping(entity.getKey(), prepareContent(entity));
+					dataStore.initialize();
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
+				}
+				break;
+			case DELETE:
+				if (entity.getLifecycle().equals(ArtefactLifecycle.CREATED) || entity.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+					dataStore.removeMapping(entity.getKey());
+					dataStore.initialize();
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+				}
+				break;
+			case START:
+			case STOP:
 		}
-		
+
 		return true;
 	}
 
@@ -239,12 +243,14 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 			dataStore.initialize();
 			getService().delete(entity);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			callback.addError(e.getMessage());
 			callback.registerState(this, entity, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Sets the callback.
 	 *
@@ -254,7 +260,7 @@ public class EntitySynchronizer<A extends Artefact> implements Synchronizer<Enti
 	public void setCallback(SynchronizerCallback callback) {
 		this.callback = callback;
 	}
-	
+
 	/**
 	 * Gets the file entity.
 	 *

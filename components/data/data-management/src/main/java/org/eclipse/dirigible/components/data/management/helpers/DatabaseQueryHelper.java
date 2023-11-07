@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.helpers;
 
@@ -25,8 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Convenience class for common DataSource operations.
- * An instance represents a single DataSource.
+ * Convenience class for common DataSource operations. An instance represents a single DataSource.
  */
 public class DatabaseQueryHelper {
 
@@ -54,16 +52,14 @@ public class DatabaseQueryHelper {
 	/**
 	 * The Interface Filter.
 	 *
-	 * @param <T>
-	 *            the generic type
+	 * @param <T> the generic type
 	 */
 	public interface Filter<T> {
 
 		/**
 		 * Accepts.
 		 *
-		 * @param t
-		 *            the t
+		 * @param t the t
 		 * @return true, if successful
 		 */
 		boolean accepts(T t);
@@ -77,41 +73,34 @@ public class DatabaseQueryHelper {
 		/**
 		 * Update done.
 		 *
-		 * @param recordsCount
-		 *            the records count
+		 * @param recordsCount the records count
 		 */
 		void updateDone(int recordsCount);
 
 		/**
 		 * Query done.
 		 *
-		 * @param rs
-		 *            the rs
+		 * @param rs the rs
 		 */
 		void queryDone(ResultSet rs);
 
 		/**
 		 * Error.
 		 *
-		 * @param t
-		 *            the t
+		 * @param t the t
 		 */
 		void error(Throwable t);
 	}
 
 	/**
-	 * Executes a single SQL statement. The callbacks are on queryDone in case of query or updateDone in case of update,
-	 * and on error. The method does not iterate on the result set and its pointer is in its initial position.
-	 * It is up to the callback to do something with it.
+	 * Executes a single SQL statement. The callbacks are on queryDone in case of query or updateDone in
+	 * case of update, and on error. The method does not iterate on the result set and its pointer is in
+	 * its initial position. It is up to the callback to do something with it.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param sql
-	 *            the SQL expression
-	 * @param isQuery
-	 *            whether it is a query or update
-	 * @param callback
-	 *            the callback
+	 * @param connection the connection
+	 * @param sql the SQL expression
+	 * @param isQuery whether it is a query or update
+	 * @param callback the callback
 	 */
 	public static void executeSingleStatement(Connection connection, String sql, boolean isQuery, RequestExecutionCallback callback) {
 		try {
@@ -126,23 +115,24 @@ public class DatabaseQueryHelper {
 				}
 			}
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(sql);}
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(sql);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			callback.error(e);
 		}
 	}
 
 	/**
-	 * Executes a single SQL procedure. The callbacks are on queryDone in case of query or updateDone in case of update,
-	 * and on error. The method does not iterate on the result set and its pointer is in its initial position.
-	 * It is up to the callback to do something with it.
+	 * Executes a single SQL procedure. The callbacks are on queryDone in case of query or updateDone in
+	 * case of update, and on error. The method does not iterate on the result set and its pointer is in
+	 * its initial position. It is up to the callback to do something with it.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param sql
-	 *            the SQL expression
-	 * @param callback
-	 *            the callback
+	 * @param connection the connection
+	 * @param sql the SQL expression
+	 * @param callback the callback
 	 */
 	public static void executeSingleProcedure(Connection connection, String sql, RequestExecutionCallback callback) {
 		ResultSet resultSet = null;
@@ -154,14 +144,18 @@ public class DatabaseQueryHelper {
 					callback.queryDone(resultSet);
 					resultSet.close();
 					hasMoreResults = callableStatement.getMoreResults();
-					if (hasMoreResults) {					
+					if (hasMoreResults) {
 						resultSet = callableStatement.getResultSet();
 					}
 				} while (hasMoreResults);
 			}
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(sql);}
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(sql);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			callback.error(e);
 		} finally {
 			try {
@@ -169,7 +163,9 @@ public class DatabaseQueryHelper {
 					resultSet.close();
 				}
 			} catch (SQLException e) {
-				if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
+				if (logger.isWarnEnabled()) {
+					logger.warn(e.getMessage(), e);
+				}
 			}
 		}
 	}
@@ -184,38 +180,32 @@ public class DatabaseQueryHelper {
 		/**
 		 * On query done.
 		 *
-		 * @param conn
-		 *            the conn
-		 * @param table
-		 *            the table
+		 * @param conn the conn
+		 * @param table the table
 		 */
 		void onQueryDone(Connection conn, List<NavigableMap<String, Object>> table);
 
 		/**
 		 * On row construction.
 		 *
-		 * @param conn
-		 *            the conn
-		 * @param row
-		 *            the row
+		 * @param conn the conn
+		 * @param row the row
 		 */
 		void onRowConstruction(Connection conn, NavigableMap<String, Object> row);
 
 		/**
 		 * On error.
 		 *
-		 * @param conn
-		 *            the conn
-		 * @param t
-		 *            the t
+		 * @param conn the conn
+		 * @param t the t
 		 */
 		void onError(Connection conn, Throwable t);
 	}
 
 	/**
-	 * Unlike executeSingleStatement(String, boolean, RequestIteratorCallback), this method
-	 * iterates on the ResultSet and produces a table data structure in the form of a list of ordered key-value tuples.
-	 * Schematically it looks like this:
+	 * Unlike executeSingleStatement(String, boolean, RequestIteratorCallback), this method iterates on
+	 * the ResultSet and produces a table data structure in the form of a list of ordered key-value
+	 * tuples. Schematically it looks like this:
 	 *
 	 * <PRE>
 	 * [[{column 1:value A}, {column 2: value B}, {column 3: value C}],
@@ -225,12 +215,9 @@ public class DatabaseQueryHelper {
 	 *
 	 * The callbacks are on completing the whole data structure, on error, and on each row construction.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param sql
-	 *            the SQL expression
-	 * @param callback
-	 *            the callback
+	 * @param connection the connection
+	 * @param sql the SQL expression
+	 * @param callback the callback
 	 */
 	public static void executeQueryStatement(Connection connection, String sql, ResultSetIteratorCallback callback) {
 		try {

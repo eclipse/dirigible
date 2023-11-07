@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.logs.service;
 
@@ -38,22 +37,22 @@ import ch.qos.logback.classic.LoggerContext;
  */
 @Service
 public class LogsService {
-	
+
 	/** The Constant DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT. */
 	private static final String DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT = "DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT";
-	
+
 	/** The Constant CATALINA_BASE. */
 	private static final String CATALINA_BASE = "CATALINA_BASE";
-	
+
 	/** The Constant CATALINA_HOME. */
 	private static final String CATALINA_HOME = "CATALINA_HOME";
-	
+
 	/** The Constant DEFAULT_LOGS_FOLDER. */
 	private static final String DEFAULT_LOGS_FOLDER = "logs";
-	
+
 	/** The Constant DEFAULT_LOGS_LOCATION. */
-	private static final String DEFAULT_LOGS_LOCATION = ".." + File.separator +DEFAULT_LOGS_FOLDER;
-	
+	private static final String DEFAULT_LOGS_LOCATION = ".." + File.separator + DEFAULT_LOGS_FOLDER;
+
 	/**
 	 * List.
 	 *
@@ -63,17 +62,17 @@ public class LogsService {
 	public List<String> list() throws IOException {
 		String logsFolder = getLogsLocation();
 		List<String> fileNames = new ArrayList<>();
-        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(logsFolder))) {
-            for (Path path : directoryStream) {
-                String name = path.toString();
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(logsFolder))) {
+			for (Path path : directoryStream) {
+				String name = path.toString();
 				fileNames.add(name.substring(name.lastIndexOf(File.separator) + 1));
-            }
-        } catch (IOException e) {
-        	throw e;
-        }
-        return fileNames;
+			}
+		} catch (IOException e) {
+			throw e;
+		}
+		return fileNames;
 	}
-	
+
 	/**
 	 * Gets the.
 	 *
@@ -116,7 +115,7 @@ public class LogsService {
 		}
 		return DEFAULT_LOGS_LOCATION;
 	}
-	
+
 	/**
 	 * List loggers.
 	 *
@@ -125,12 +124,12 @@ public class LogsService {
 	public List<LogInfo> listLoggers() {
 		List<LogInfo> result = new ArrayList<LogInfo>();
 		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-        List<Logger> loggers = loggerContext.getLoggerList();
-        for (Logger logger : loggers) {
-        	LogInfo logInfo = new LogInfo(logger.getName(), logger.getLevel() == null ? "-" : logger.getLevel().toString());
-        	result.add(logInfo);
-        }
-        return result;
+		List<Logger> loggers = loggerContext.getLoggerList();
+		for (Logger logger : loggers) {
+			LogInfo logInfo = new LogInfo(logger.getName(), logger.getLevel() == null ? "-" : logger.getLevel().toString());
+			result.add(logInfo);
+		}
+		return result;
 	}
 
 	/**
@@ -152,10 +151,10 @@ public class LogsService {
 		} else if (logger.isErrorEnabled()) {
 			return Level.ERROR.toString();
 		}
-		
+
 		return "Unknown logger: " + loggerName;
 	}
-	
+
 	/**
 	 * Sets the severity.
 	 *
@@ -165,9 +164,9 @@ public class LogsService {
 	 */
 	public String setSeverity(String loggerName, String logLevel) {
 		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-        Logger logger = loggerContext.getLogger(loggerName);
-        logger.setLevel(Level.toLevel(logLevel));
-        return getSeverity(loggerName);
+		Logger logger = loggerContext.getLogger(loggerName);
+		logger.setLevel(Level.toLevel(logLevel));
+		return getSeverity(loggerName);
 	}
 
 }

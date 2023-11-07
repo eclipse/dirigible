@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.domain;
 
@@ -30,13 +29,13 @@ public class ParameterColumnMetadata {
 
 	/** The length. */
 	private int length;
-	
+
 	/** The scale. */
 	private int scale;
-	
+
 	/** The radix. */
 	private int radix;
-	
+
 	/** The nullable. */
 	private boolean nullable;
 
@@ -56,8 +55,8 @@ public class ParameterColumnMetadata {
 	 * @param nullable nullable
 	 * @param remarks remarks
 	 */
-	public ParameterColumnMetadata(String name, int kind, String type, int precision, int length, int scale, int radix,
-			boolean nullable, String remarks) {
+	public ParameterColumnMetadata(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable,
+			String remarks) {
 		super();
 		this.name = name;
 		this.kind = kind;

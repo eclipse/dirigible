@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.listeners.service;
 
@@ -48,22 +47,18 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	private String handler;
 	private int timeout = 1000;
 	private boolean stopped;
-	
+
 	/** The javascript service. */
-    @Autowired
-    private JavascriptService javascriptService;
+	@Autowired
+	private JavascriptService javascriptService;
 
 	/**
 	 * Instantiates a new messaging consumer.
 	 *
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
-	 * @param handler
-	 *            the handler
-	 * @param timeout
-	 *            the timeout
+	 * @param name the name
+	 * @param type the type
+	 * @param handler the handler
+	 * @param timeout the timeout
 	 */
 	public MessagingConsumer(String name, char type, String handler, int timeout) {
 		this.name = name;
@@ -75,12 +70,9 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	/**
 	 * Instantiates a new messaging consumer.
 	 *
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
-	 * @param timeout
-	 *            the timeout
+	 * @param name the name
+	 * @param type the type
+	 * @param timeout the timeout
 	 */
 	public MessagingConsumer(String name, char type, int timeout) {
 		this.name = name;
@@ -97,6 +89,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
@@ -115,7 +108,9 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	 */
 	public String receiveMessage() {
 		try {
-			if (logger.isInfoEnabled()) {logger.info("Starting a message listener for {} ...", this.name);}
+			if (logger.isInfoEnabled()) {
+				logger.info("Starting a message listener for {} ...", this.name);
+			}
 
 			ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ListenersManager.CONNECTOR_URL_ATTACH);
 
@@ -144,7 +139,9 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 						if (message == null) {
 							continue;
 						}
-						if (logger.isTraceEnabled()) {logger.trace(format("Start processing a received message in [{0}] by [{1}] ...", this.name, this.handler));}
+						if (logger.isTraceEnabled()) {
+							logger.trace(format("Start processing a received message in [{0}] by [{1}] ...", this.name, this.handler));
+						}
 						if (message instanceof TextMessage) {
 							Map<Object, Object> context = createMessagingContext();
 							context.put("message", escapeCodeString(((TextMessage) message).getText()));
@@ -153,11 +150,15 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 						} else {
 							throw new Exception(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
 						}
-						if (logger.isTraceEnabled()) {logger.trace(format("Done processing the received message in [{0}] by [{1}]", this.name, this.handler));}
+						if (logger.isTraceEnabled()) {
+							logger.trace(format("Done processing the received message in [{0}] by [{1}]", this.name, this.handler));
+						}
 					}
 				} else {
 					message = consumer.receive(this.timeout);
-					if (logger.isDebugEnabled()) {logger.debug(format("Received message in [{0}] by synchronous consumer.", this.name));}
+					if (logger.isDebugEnabled()) {
+						logger.debug(format("Received message in [{0}] by synchronous consumer.", this.name));
+					}
 					if (message instanceof TextMessage) {
 						TextMessage textMessage = (TextMessage) message;
 						String text = textMessage.getText();
@@ -180,6 +181,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see javax.jms.ExceptionListener#onException(javax.jms.JMSException)
 	 */
 	@Override
@@ -190,9 +192,13 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 			RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR);
 			javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 		}
-		if (logger.isErrorEnabled()) {logger.error(exception.getMessage(), exception);}
+		if (logger.isErrorEnabled()) {
+			logger.error(exception.getMessage(), exception);
+		}
 	}
 
 	private Map<Object, Object> createMessagingContext() {
@@ -204,8 +210,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	/**
 	 * Escape code string.
 	 *
-	 * @param raw
-	 *            the raw
+	 * @param raw the raw
 	 * @return the string
 	 */
 	private String escapeCodeString(String raw) {

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
@@ -30,16 +29,16 @@ public class Territory {
 
 	/** The territory id. */
 	@EdmKey
-    @EdmProperty(name = "TerritoryID", facets = @EdmFacets(nullable = false, maxLength = 20))
-    private String territoryId;
+	@EdmProperty(name = "TerritoryID", facets = @EdmFacets(nullable = false, maxLength = 20))
+	private String territoryId;
 
 	/** The territory description. */
 	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 50))
-    private String territoryDescription;
+	private String territoryDescription;
 
 	/** The region id. */
 	@EdmProperty(name = "RegionID", facets = @EdmFacets(nullable = false))
-    private Integer regionId;
+	private Integer regionId;
 
 	/** The employees. */
 	@EdmNavigationProperty( //

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.base.artefact.topology;
 
@@ -24,7 +23,7 @@ import org.eclipse.dirigible.components.base.synchronizer.Synchronizer;
  * A factory for creating Topology objects.
  */
 public class TopologyFactory {
-	
+
 	/**
 	 * Wrap.
 	 *
@@ -32,7 +31,8 @@ public class TopologyFactory {
 	 * @param synchronizers the synchronizers
 	 * @return the list of topology wrappers
 	 */
-	public static final List<TopologyWrapper<? extends Artefact>> wrap(Collection<Artefact> artefacts, List<Synchronizer<Artefact>> synchronizers) {
+	public static final List<TopologyWrapper<? extends Artefact>> wrap(Collection<Artefact> artefacts,
+			List<Synchronizer<Artefact>> synchronizers) {
 		List<TopologyWrapper<? extends Artefact>> list = new ArrayList<TopologyWrapper<? extends Artefact>>();
 		Map<String, TopologyWrapper<? extends Artefact>> wrappers = new HashMap<String, TopologyWrapper<? extends Artefact>>();
 		for (Artefact artefact : artefacts) {

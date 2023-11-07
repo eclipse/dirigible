@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.domain;
 
@@ -37,36 +36,36 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Table(name = "DIRIGIBLE_ODATA")
 public class OData extends Artefact {
-	
+
 	/** The Constant ARTEFACT_TYPE. */
-    public static final String ARTEFACT_TYPE = "odata";
-    
-    /** The id. */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ODATA_ID", nullable = false)
-    private Long id;
-	
+	public static final String ARTEFACT_TYPE = "odata";
+
+	/** The id. */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ODATA_ID", nullable = false)
+	private Long id;
+
 	/** The namespace. */
 	@Column(name = "ODATA_NAMESPACE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String namespace;
-	
+
 	/** The raw content. */
 	@Column(name = "HDB_CONTENT", columnDefinition = "CLOB")
 	@Lob
 	private String content;
-	
+
 	/** The entities. */
 	@Transient
 	@Expose
 	private List<ODataEntity> entities = new ArrayList<ODataEntity>();
-	
+
 	/** The associations. */
 	@Transient
 	@Expose
 	private List<ODataAssociation> associations = new ArrayList<ODataAssociation>();
-	
+
 	/**
 	 * Instantiates a new o data.
 	 *
@@ -78,22 +77,22 @@ public class OData extends Artefact {
 	 * @param entities the entities
 	 * @param associations the associations
 	 */
-	public OData(String location, String name, String description, Set<String> dependencies,
-			String namespace, List<ODataEntity> entities, List<ODataAssociation> associations) {
+	public OData(String location, String name, String description, Set<String> dependencies, String namespace, List<ODataEntity> entities,
+			List<ODataAssociation> associations) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.namespace = namespace;
 		this.entities = entities;
 		this.associations = associations;
 	}
-	
+
 	/**
 	 * Instantiates a new o data.
 	 */
 	public OData() {
 		super();
 	}
-	
-	
+
+
 
 	/**
 	 * Gets the id.
@@ -103,7 +102,7 @@ public class OData extends Artefact {
 	public Long getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Sets the id.
 	 *
@@ -112,7 +111,7 @@ public class OData extends Artefact {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gets the namesapce.
 	 *
@@ -130,7 +129,7 @@ public class OData extends Artefact {
 	public void setNamespace(String namespace) {
 		this.namespace = namespace;
 	}
-	
+
 	/**
 	 * Gets the content.
 	 *
@@ -139,7 +138,7 @@ public class OData extends Artefact {
 	public String getContent() {
 		return content;
 	}
-	
+
 	/**
 	 * Sets the content.
 	 *
@@ -166,7 +165,7 @@ public class OData extends Artefact {
 	public List<ODataEntity> getEntities() {
 		return entities;
 	}
-	
+
 	/**
 	 * Sets the entities.
 	 *
@@ -175,7 +174,7 @@ public class OData extends Artefact {
 	public void setEntities(List<ODataEntity> entities) {
 		this.entities = entities;
 	}
-	
+
 	/**
 	 * Gets the associations.
 	 *
@@ -184,7 +183,7 @@ public class OData extends Artefact {
 	public List<ODataAssociation> getAssociations() {
 		return associations;
 	}
-	
+
 	/**
 	 * Sets the associations.
 	 *
@@ -201,10 +200,10 @@ public class OData extends Artefact {
 	 */
 	@Override
 	public String toString() {
-		return "OData [id=" + id + ", namespace=" + namespace + ", entities=" + entities + ", associations="
-				+ associations + ", location=" + location + ", name=" + name + ", type=" + type + ", description="
-				+ description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy=" + createdBy
-				+ ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
+		return "OData [id=" + id + ", namespace=" + namespace + ", entities=" + entities + ", associations=" + associations + ", location="
+				+ location + ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies="
+				+ dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt="
+				+ updatedAt + "]";
 	}
 
 }

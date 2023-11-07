@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.commons.api.helpers;
 
@@ -687,7 +686,7 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("xsjs", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("xsjslib", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("calculationview", APPLICATION_XML_CALCULATIONVIEW); //$NON-NLS-1$
-		//TEXT_CONTENT_TYPES.put("jslib", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
+		// TEXT_CONTENT_TYPES.put("jslib", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("table", APPLICATION_JSON_TABLE); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("view", APPLICATION_JSON_VIEW); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("job", APPLICATION_JSON_JOB); //$NON-NLS-1$
@@ -703,9 +702,9 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("command", APPLICATION_JSON_COMMAND); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("form", APPLICATION_JSON_FORM); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("xsaccess", APPLICATION_JSON_XSACCESS); //$NON-NLS-1$
-		//TEXT_CONTENT_TYPES.put("entity", APPLICATION_JSON); //$NON-NLS-1$
-		//TEXT_CONTENT_TYPES.put("ws", APPLICATION_JSON); //$NON-NLS-1$
-		//TEXT_CONTENT_TYPES.put("routes", TEXT_XML); //$NON-NLS-1$
+		// TEXT_CONTENT_TYPES.put("entity", APPLICATION_JSON); //$NON-NLS-1$
+		// TEXT_CONTENT_TYPES.put("ws", APPLICATION_JSON); //$NON-NLS-1$
+		// TEXT_CONTENT_TYPES.put("routes", TEXT_XML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("wsdl", TEXT_XML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("xsl", TEXT_XML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("xslt", TEXT_XML); //$NON-NLS-1$
@@ -764,8 +763,7 @@ public class ContentTypeHelper {
 	/**
 	 * Gets the content type.
 	 *
-	 * @param extension
-	 *            the extension
+	 * @param extension the extension
 	 * @return the content type
 	 */
 	public static String getContentType(String extension) {
@@ -783,8 +781,7 @@ public class ContentTypeHelper {
 	/**
 	 * Checks if is binary.
 	 *
-	 * @param contentType
-	 *            the content type
+	 * @param contentType the content type
 	 * @return true, if is binary
 	 */
 	public static boolean isBinary(String contentType) {
@@ -794,8 +791,7 @@ public class ContentTypeHelper {
 	/**
 	 * Gets the extension.
 	 *
-	 * @param filename
-	 *            the filename
+	 * @param filename the filename
 	 * @return the extension
 	 */
 	public static String getExtension(String filename) {

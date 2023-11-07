@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.dto;
 
@@ -15,34 +14,34 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.dto;
  * The Class ProcessInstanceData.
  */
 public class ProcessInstanceData {
-	
+
 	/** The business key. */
 	private String businessKey;
-	
+
 	/** The business status. */
 	private String businessStatus;
-	
+
 	/** The deployment id. */
 	private String deploymentId;
-	
+
 	/** The id. */
 	private String id;
-	
+
 	/** The name. */
 	private String name;
-	
+
 	/** The process definition id. */
 	private String processDefinitionId;
-	
+
 	/** The process definition key. */
 	private String processDefinitionKey;
-	
+
 	/** The process definition name. */
 	private String processDefinitionName;
-	
+
 	/** The process definition version. */
 	private int processDefinitionVersion;
-	
+
 	/** The tenant id. */
 	private String tenantId;
 
@@ -225,7 +224,7 @@ public class ProcessInstanceData {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
-	
-	
+
+
 
 }

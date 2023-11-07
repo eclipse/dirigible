@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.binding;
 
@@ -80,11 +79,12 @@ public class EdmTableBinding extends Mapping {
 			+ " Did you map this property in the %s mapping?";
 
 	/** The Constant PROPERTY_WRONG_CONFIGURATION. */
-	private static final String PROPERTY_WRONG_CONFIGURATION = "Sql binding configuration in the mapping configuration for property %s is wrongly configured.";
+	private static final String PROPERTY_WRONG_CONFIGURATION =
+			"Sql binding configuration in the mapping configuration for property %s is wrongly configured.";
 
 	/** The Constant JOIN_COLUMN_UNSUPPORTED_CONFIGURATION. */
-	private static final String JOIN_COLUMN_UNSUPPORTED_CONFIGURATION = PROPERTY_WRONG_CONFIGURATION
-			+ " The value %s is not of expected type List and String.";
+	private static final String JOIN_COLUMN_UNSUPPORTED_CONFIGURATION =
+			PROPERTY_WRONG_CONFIGURATION + " The value %s is not of expected type List and String.";
 
 	/** The binding data. */
 	private Map<String, Object> bindingData;
@@ -156,15 +156,14 @@ public class EdmTableBinding extends Mapping {
 	/**
 	 * Gets the ref properties.
 	 *
-	 * @param target            the target
-	 * @param property          the property
+	 * @param target the target
+	 * @param property the property
 	 * @param secondaryProperty the secondary property
 	 * @return the ref properties
 	 * @throws EdmException the edm exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<String> getRefProperties(EdmStructuralType target, String property, String secondaryProperty)
-			throws EdmException {
+	public List<String> getRefProperties(EdmStructuralType target, String property, String secondaryProperty) throws EdmException {
 		String ref = "_ref_" + target.getName();
 		Map<String, Object> refKeys = readMandatoryConfig(ref, Map.class);
 		if (refKeys.containsKey(property)) {
@@ -176,8 +175,7 @@ public class EdmTableBinding extends Mapping {
 			} else if (refKeys.get(property) instanceof Map) {
 				return Arrays.asList(((Map<String, String>) refKeys.get(property)).get(secondaryProperty));
 			} else {
-				throw new IllegalArgumentException(
-						format(format(JOIN_COLUMN_UNSUPPORTED_CONFIGURATION, ref, joinColumn)));
+				throw new IllegalArgumentException(format(format(JOIN_COLUMN_UNSUPPORTED_CONFIGURATION, ref, joinColumn)));
 			}
 		} else {
 			throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, ref + "->" + property, targetFqn));
@@ -270,8 +268,8 @@ public class EdmTableBinding extends Mapping {
 	/**
 	 * Checks if is of type.
 	 *
-	 * @param <T>   the generic type
-	 * @param key   the key
+	 * @param <T> the generic type
+	 * @param key the key
 	 * @param clazz the clazz
 	 * @return true, if is of type
 	 */
@@ -291,8 +289,8 @@ public class EdmTableBinding extends Mapping {
 	/**
 	 * Read mandatory config.
 	 *
-	 * @param <T>   the generic type
-	 * @param key   the key
+	 * @param <T> the generic type
+	 * @param key the key
 	 * @param clazz the clazz
 	 * @return the t
 	 */
@@ -386,7 +384,7 @@ public class EdmTableBinding extends Mapping {
 	 * @param propertyName the property name
 	 * @return the column info
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public ColumnInfo getColumnInfo(String propertyName) {
 		if (bindingData.containsKey(propertyName)) {
 			if (isOfType(propertyName, String.class)) {
@@ -473,7 +471,7 @@ public class EdmTableBinding extends Mapping {
 		 * Instantiates a new column info.
 		 *
 		 * @param columnName the column name
-		 * @param jdbcType   the jdbc type
+		 * @param jdbcType the jdbc type
 		 */
 		public ColumnInfo(final String columnName, final String jdbcType) {
 			this.columnName = columnName;

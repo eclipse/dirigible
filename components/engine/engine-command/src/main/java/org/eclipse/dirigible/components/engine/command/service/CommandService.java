@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.command.service;
 
@@ -40,25 +39,24 @@ import org.springframework.web.context.annotation.RequestScope;
 @Service
 @RequestScope
 public class CommandService {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CommandService.class);
-	
+
 	/** The Constant COMMAND_EXTENSION. */
 	public static final String COMMAND_EXTENSION = ".command";
-	
+
 	/** The Constant DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED. */
 	private static final String DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED = "DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED";
-	
+
 	/** The registry accessor. */
 	@Autowired
 	private RegistryAccessor registryAccessor;
-	
+
 	/**
 	 * Exist resource.
 	 *
-	 * @param path
-	 *            the requested resource location
+	 * @param path the requested resource location
 	 * @return if the {@link IResource}
 	 */
 	public boolean existResource(String path) {
@@ -68,8 +66,7 @@ public class CommandService {
 	/**
 	 * Gets the resource.
 	 *
-	 * @param path
-	 *            the requested resource location
+	 * @param path the requested resource location
 	 * @return the {@link IResource} instance
 	 */
 	public IResource getResource(String path) {
@@ -85,7 +82,7 @@ public class CommandService {
 	public byte[] getResourceContent(String path) {
 		return registryAccessor.getRegistryContent(path);
 	}
-	
+
 	/**
 	 * Execute service.
 	 *
@@ -95,34 +92,40 @@ public class CommandService {
 	 * @throws Exception the exception
 	 */
 	public String executeCommand(String module, Map<String, String> params) throws Exception {
-		
-		if (logger.isTraceEnabled()) {logger.trace("entering: executeCommand()");} //$NON-NLS-1$
-		if (logger.isTraceEnabled()) {logger.trace("module = " + module);} //$NON-NLS-1$
+
+		if (logger.isTraceEnabled()) {
+			logger.trace("entering: executeCommand()"); //$NON-NLS-1$
+		}
+		if (logger.isTraceEnabled()) {
+			logger.trace("module = " + module); //$NON-NLS-1$
+		}
 
 		if (module == null) {
 			throw new IllegalArgumentException("Command module name cannot be null");
 		}
-		
+
 		if (HttpRequestFacade.isValid()) {
 			HttpRequestFacade.setAttribute(HttpRequestFacade.ATTRIBUTE_REST_RESOURCE_PATH, getResource(module).getPath());
 		}
 
 		String result;
-		
+
 		String commandSource = new String(getResourceContent(module), StandardCharsets.UTF_8);
 		String root = registryAccessor.getRepository().getParameter("REPOSITORY_ROOT_FOLDER");
 		String workingDirectory = root + getResource(module).getParent().getPath();
-		
+
 		Command commandDefinition;
 		try {
 			commandDefinition = GsonHelper.fromJson(commandSource, Command.class);
 		} catch (Exception e2) {
-			if (logger.isErrorEnabled()) {logger.error(e2.getMessage(), e2);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e2.getMessage(), e2);
+			}
 			throw new Exception(e2);
 		}
 
 		commandDefinition.validate();
-		
+
 		String commandLine = commandDefinition.getTargetCommand().getCommand();
 
 		result = executeCommandLine(workingDirectory, commandLine, commandDefinition.getSet(), commandDefinition.getUnset(), params);
@@ -130,10 +133,14 @@ public class CommandService {
 		try {
 			HttpResponseFacade.setContentType(commandDefinition.getContentType());
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 		}
-		
-		if (logger.isTraceEnabled()) {logger.trace("exiting: executeCommand()");}
+
+		if (logger.isTraceEnabled()) {
+			logger.trace("exiting: executeCommand()");
+		}
 		return result;
 	}
 
@@ -148,19 +155,24 @@ public class CommandService {
 	 * @return the string
 	 * @throws Exception the exception
 	 */
-	public String executeCommandLine(String workingDirectory, String commandLine, Map<String, String> forAdding, List<String> forRemoving, Map<String, String> params) throws Exception {
+	public String executeCommandLine(String workingDirectory, String commandLine, Map<String, String> forAdding, List<String> forRemoving,
+			Map<String, String> params) throws Exception {
 		String result;
 
 		String[] args;
 		try {
 			args = ProcessUtils.translateCommandline(commandLine);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			throw new Exception(e);
 		}
 
 		if (shouldLogCommand()) {
-			if (logger.isDebugEnabled()) {logger.debug("executing command=" + commandLine);} //$NON-NLS-1$
+			if (logger.isDebugEnabled()) {
+				logger.debug("executing command=" + commandLine); //$NON-NLS-1$
+			}
 		}
 
 		ByteArrayOutputStream out;
@@ -197,11 +209,15 @@ public class CommandService {
 				} while (!deadYet);
 
 			} catch (Exception e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage(), e);
+				}
 				throw new IOException(e);
 			}
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			throw new Exception(e);
 		}
 		result = out.toString(StandardCharsets.UTF_8);

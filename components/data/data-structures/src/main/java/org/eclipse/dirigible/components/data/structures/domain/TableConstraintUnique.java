@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
@@ -26,24 +25,24 @@ import com.google.gson.annotations.Expose;
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_UNIQUES")
 public class TableConstraintUnique extends TableConstraint {
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "UNIQUE_ID", nullable = false)
 	private Long id;
-	
+
 	/** The index type. */
 	@Column(name = "UNIQUE_INDEXTYPE", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Nullable
 	@Expose
-    private String indexType;
+	private String indexType;
 
-    /** The order. */
+	/** The order. */
 	@Column(name = "UNIQUE_ORDER", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Nullable
 	@Expose
-    private String order;
+	private String order;
 
 	/**
 	 * Instantiates a new table constraint unique.
@@ -55,8 +54,8 @@ public class TableConstraintUnique extends TableConstraint {
 	 * @param indexType the index type
 	 * @param order the order
 	 */
-	public TableConstraintUnique(String name, String[] modifiers, String[] columns, TableConstraints constraints,
-			String indexType, String order) {
+	public TableConstraintUnique(String name, String[] modifiers, String[] columns, TableConstraints constraints, String indexType,
+			String order) {
 		super(name, modifiers, columns, constraints);
 		this.indexType = indexType;
 		this.order = order;
@@ -131,8 +130,8 @@ public class TableConstraintUnique extends TableConstraint {
 	 */
 	@Override
 	public String toString() {
-		return "TableConstraintUnique [id=" + id + ", indexType=" + indexType + ", order=" + order + ", name=" + name
-				+ ", modifiers=" + modifiers + ", columns=" + columns + ", constraints.table=" + constraints.getTable().getName() + "]";
+		return "TableConstraintUnique [id=" + id + ", indexType=" + indexType + ", order=" + order + ", name=" + name + ", modifiers="
+				+ modifiers + ", columns=" + columns + ", constraints.table=" + constraints.getTable().getName() + "]";
 	}
 
 }

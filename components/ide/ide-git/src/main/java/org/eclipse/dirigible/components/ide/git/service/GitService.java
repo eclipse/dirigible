@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.service;
 
@@ -95,16 +94,16 @@ public class GitService {
 
 	/** The share command. */
 	private ShareCommand shareCommand;
-	
+
 	/** The checkout command. */
 	private CheckoutCommand checkoutCommand;
-	
+
 	/** The commit command. */
 	private CommitCommand commitCommand;
 
 	/** The update dependencies command. */
 	private UpdateDependenciesCommand updateDependenciesCommand;
-	
+
 	/**
 	 * Instantiates a new git service.
 	 *
@@ -119,9 +118,9 @@ public class GitService {
 	 * @param commitCommand the commit command
 	 * @param updateDependenciesCommand the update dependencies command
 	 */
-	public GitService(WorkspaceService workspacesService, PublisherService publisherService, CloneCommand cloneCommand, PullCommand pullCommand, 
-			PushCommand pushCommand, ResetCommand resetCommand, ShareCommand shareCommand, CheckoutCommand checkoutCommand, 
-			CommitCommand commitCommand, UpdateDependenciesCommand updateDependenciesCommand) {
+	public GitService(WorkspaceService workspacesService, PublisherService publisherService, CloneCommand cloneCommand,
+			PullCommand pullCommand, PushCommand pushCommand, ResetCommand resetCommand, ShareCommand shareCommand,
+			CheckoutCommand checkoutCommand, CommitCommand commitCommand, UpdateDependenciesCommand updateDependenciesCommand) {
 		this.workspacesService = workspacesService;
 		this.publisherService = publisherService;
 		this.cloneCommand = cloneCommand;
@@ -195,7 +194,7 @@ public class GitService {
 			IRepository repository = workspaceApi.getRepository();
 			Project[] workspaceProjects = getProjects(workspaceApi, projects);
 			for (Project next : workspaceProjects) {
-				if (next.exists()) {					
+				if (next.exists()) {
 					next.delete();
 				} else if (repository.isLinkedPath(next.getPath())) {
 					repository.deleteLinkedPath(next.getPath());
@@ -223,7 +222,7 @@ public class GitService {
 		Project project = getProject(workspaceApi, model.getProject());
 		shareCommand.execute(workspaceApi, project, model);
 	}
-	
+
 	/**
 	 * Checkout.
 	 *
@@ -234,7 +233,7 @@ public class GitService {
 	public void checkout(String workspace, GitCheckoutModel model) throws GitConnectorException {
 		checkoutCommand.execute(getWorkspace(workspace), model);
 	}
-	
+
 	/**
 	 * Commit.
 	 *
@@ -308,7 +307,7 @@ public class GitService {
 
 	/**
 	 * Return the list of the Git branches - local ones
-	 *  
+	 *
 	 *
 	 * @param workspace the workspace
 	 * @param project the project
@@ -324,10 +323,10 @@ public class GitService {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Return the list of the Git branches - remote ones
-	 *  
+	 *
 	 * @param workspace the workspace
 	 * @param project the project
 	 * @return the branches
@@ -342,12 +341,11 @@ public class GitService {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Exists workspace.
 	 *
-	 * @param workspace
-	 *            the workspace
+	 * @param workspace the workspace
 	 * @return true, if successful
 	 */
 	public boolean existsWorkspace(String workspace) {
@@ -358,8 +356,7 @@ public class GitService {
 	/**
 	 * Render workspace tree.
 	 *
-	 * @param workspace
-	 *            the workspace
+	 * @param workspace the workspace
 	 * @return the workspace descriptor
 	 */
 	public WorkspaceDescriptor renderWorkspaceTree(Workspace workspace) {
@@ -387,7 +384,7 @@ public class GitService {
 		Workspace workspaceObject = getWorkspace(workspace);
 		IRepository repository = workspaceObject.getRepository();
 		for (Project next : workspaceObject.getProjects()) {
-			if (!repository.isLinkedPath(next.getPath())) {				
+			if (!repository.isLinkedPath(next.getPath())) {
 				ProjectDescriptor project = new ProjectDescriptor();
 				project.setGit(false);
 				project.setName(next.getName());
@@ -407,7 +404,8 @@ public class GitService {
 	 */
 	public ProjectDescriptor renderWorkspaceProject(Workspace workspace, String projectName) {
 		Project project = workspace.getProject(projectName);
-		return WorkspaceJsonHelper.describeProject(workspace.getName(), project, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
+		return WorkspaceJsonHelper.describeProject(workspace.getName(), project,
+				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
 	}
 
 	/**
@@ -445,7 +443,7 @@ public class GitService {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Add file(s) to index.
 	 *
@@ -459,7 +457,7 @@ public class GitService {
 			IGitConnector gitConnector = getGitConnector(workspace, repositoryName);
 			if (gitConnector != null) {
 				List<File> projects = GitFileUtils.getGitRepositoryProjectsFiles(workspace, repositoryName);
-	
+
 				String[] files = paths.split(",");
 				for (String file : files) {
 					File projectFile = null;
@@ -472,7 +470,8 @@ public class GitService {
 						}
 					}
 					if (projectFile == null) {
-						throw new IllegalArgumentException("Project not found in git repository [" + repositoryName + "] for file [" + file + "]");
+						throw new IllegalArgumentException(
+								"Project not found in git repository [" + repositoryName + "] for file [" + file + "]");
 					}
 					String fileLocation = projectFile.getPath() + File.separator + file.substring(projectLocation.length());
 					File canonicalFile = new File(fileLocation).getCanonicalFile();
@@ -487,7 +486,7 @@ public class GitService {
 			throw new GitConnectorException(e);
 		}
 	}
-	
+
 	/**
 	 * Revert file(s) to index.
 	 *
@@ -536,7 +535,8 @@ public class GitService {
 	 * @throws GitAPIException Git API Exception
 	 * @throws URISyntaxException URL with wrong format provided
 	 */
-	public void setFetchUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
+	public void setFetchUrl(String workspace, String project, String url)
+			throws GitConnectorException, GitAPIException, URISyntaxException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		if (gitConnector != null) {
 			gitConnector.setFetchUrl(url);
@@ -581,7 +581,7 @@ public class GitService {
 			throw new GitConnectorException(e);
 		}
 	}
-	
+
 	/**
 	 * Get file diff.
 	 *
@@ -609,7 +609,8 @@ public class GitService {
 						filePath = path;
 					}
 				}
-				org.eclipse.dirigible.components.ide.workspace.domain.File file = getProject(workspace, project.getName()).getFile(filePath);
+				org.eclipse.dirigible.components.ide.workspace.domain.File file =
+						getProject(workspace, project.getName()).getFile(filePath);
 				String original = getOriginalFileContent(project, filePath, gitConnector);
 				String modified = getModifiedFileContent(file);
 				GitDiffModel diffModel = new GitDiffModel(original, modified);
@@ -669,7 +670,7 @@ public class GitService {
 		if (projectPath.indexOf(DOT_GIT) > 0) {
 			String path = projectPath.substring(projectPath.indexOf(DOT_GIT) + DOT_GIT.length() + IRepository.SEPARATOR.length());
 			String[] tokens = path.split(IRepository.SEPARATOR);
-			for (int i = 3 ; i < tokens.length; i ++) {
+			for (int i = 3; i < tokens.length; i++) {
 				projectLocation.append(tokens[i]).append(IRepository.SEPARATOR);
 			}
 		}
@@ -707,7 +708,7 @@ public class GitService {
 		}
 		return modified;
 	}
-	
+
 	/**
 	 * Get file history.
 	 *
@@ -759,7 +760,7 @@ public class GitService {
 			if (workspaceObject.getRepository() instanceof FileSystemRepository) {
 				File gitDirectoryFile = getGitRepository(workspace, repositoryName);
 				if (gitDirectoryFile != null) {
-						String gitDirectory	= gitDirectoryFile.getCanonicalPath();
+					String gitDirectory = gitDirectoryFile.getCanonicalPath();
 					if (Paths.get(Paths.get(gitDirectory).toString(), DOT_GIT).toFile().exists()) {
 						IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory);
 						return gitConnector;
@@ -786,7 +787,7 @@ public class GitService {
 	 * @throws GitConnectorException the git connector exception
 	 */
 	private File getGitRepository(String workspace, String repositoryName) throws GitConnectorException {
-		if (getWorkspace(workspace).getRepository() instanceof FileSystemRepository) {			
+		if (getWorkspace(workspace).getRepository() instanceof FileSystemRepository) {
 			return GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
 		}
 		throw new GitConnectorException("Not a file based repository used, hence no git support");
@@ -804,13 +805,14 @@ public class GitService {
 	 * @throws InvalidRefNameException the invalid ref name exception
 	 * @throws GitAPIException the git API exception
 	 */
-	public void createLocalBranch(String workspace, String project, String branch) throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+	public void createLocalBranch(String workspace, String project, String branch)
+			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		if (gitConnector != null) {
 			gitConnector.createBranch(branch, "HEAD");
 		}
 	}
-	
+
 	/**
 	 * Delete the local branch.
 	 *
@@ -823,13 +825,14 @@ public class GitService {
 	 * @throws InvalidRefNameException the invalid ref name exception
 	 * @throws GitAPIException the git API exception
 	 */
-	public void deleteLocalBranch(String workspace, String project, String branch) throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+	public void deleteLocalBranch(String workspace, String project, String branch)
+			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		if (gitConnector != null) {
 			gitConnector.deleteBranch(branch);
 		}
 	}
-	
+
 	/**
 	 * Rename the local branch.
 	 *
@@ -843,7 +846,8 @@ public class GitService {
 	 * @throws InvalidRefNameException the invalid ref name exception
 	 * @throws GitAPIException the git API exception
 	 */
-	public void renameLocalBranch(String workspace, String project, String oldName, String newName) throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+	public void renameLocalBranch(String workspace, String project, String oldName, String newName)
+			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		if (gitConnector != null) {
 			gitConnector.renameBranch(oldName, newName);
@@ -863,7 +867,8 @@ public class GitService {
 	 * @throws InvalidRefNameException the invalid ref name exception
 	 * @throws GitAPIException the git API exception
 	 */
-	public void createRemoteBranch(String workspace, String project, String branch, BaseGitModel model) throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+	public void createRemoteBranch(String workspace, String project, String branch, BaseGitModel model)
+			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		if (gitConnector != null) {
 			gitConnector.createRemoteBranch(branch, "HEAD", model.getUsername(), model.getPassword());
@@ -883,7 +888,8 @@ public class GitService {
 	 * @throws InvalidRefNameException the invalid ref name exception
 	 * @throws GitAPIException the git API exception
 	 */
-	public void deleteRemoteBranch(String workspace, String project, String branch, BaseGitModel model) throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
+	public void deleteRemoteBranch(String workspace, String project, String branch, BaseGitModel model)
+			throws GitConnectorException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		if (gitConnector != null) {
 			gitConnector.deleteRemoteBranch(branch, model.getUsername(), model.getPassword());

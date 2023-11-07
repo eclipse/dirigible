@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.transfer.callback;
 
@@ -20,14 +19,14 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
  * The Interface IDataTransferCallbackHandler.
  */
 public interface DataTransferCallbackHandler {
-	
+
 	/**
 	 * Gets the identifier.
 	 *
 	 * @return the identifier
 	 */
 	String getIdentifier();
-	
+
 	/**
 	 * Sets the identifier.
 	 *
@@ -60,7 +59,7 @@ public interface DataTransferCallbackHandler {
 	 * Metadata loading started.
 	 */
 	void metadataLoadingStarted();
-	
+
 	/**
 	 * Metadata loading error.
 	 *
@@ -98,14 +97,14 @@ public interface DataTransferCallbackHandler {
 	 * Data transfer finished.
 	 */
 	void dataTransferFinished();
-	
+
 	/**
 	 * Table transfer started.
 	 *
 	 * @param table the table
 	 */
 	void tableTransferStarted(String table);
-	
+
 	/**
 	 * Table transfer finished.
 	 *
@@ -113,7 +112,7 @@ public interface DataTransferCallbackHandler {
 	 * @param transferedRecords the transfered records
 	 */
 	void tableTransferFinished(String table, int transferedRecords);
-	
+
 	/**
 	 * Table transfer failed.
 	 *
@@ -143,7 +142,7 @@ public interface DataTransferCallbackHandler {
 	 * @param insertSQL the insert SQL
 	 */
 	void tableInsertSQL(String insertSQL);
-	
+
 	/**
 	 * Table skipped.
 	 *
@@ -151,7 +150,7 @@ public interface DataTransferCallbackHandler {
 	 * @param reason the reason
 	 */
 	void tableSkipped(String table, String reason);
-	
+
 	/**
 	 * Stop transfer.
 	 */

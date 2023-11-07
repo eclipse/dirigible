@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.listeners.service;
 
@@ -58,32 +57,31 @@ public class ListenersManager {
 	private static BrokerService broker;
 
 	private static Map<String, MessagingConsumer> LISTENERS = Collections.synchronizedMap(new HashMap<String, MessagingConsumer>());
-	
+
 	@Qualifier("SystemDB")
 	private final DataSource dataSource;
-	
+
 	/** The repository. */
 	private final IRepository repository;
-	
+
 	public ListenersManager(DataSource dataSource, IRepository repository) {
 		this.dataSource = dataSource;
 		this.repository = repository;
 	}
-	
+
 	public DataSource getDataSource() {
 		return dataSource;
 	}
-	
+
 	public IRepository getRepository() {
 		return repository;
 	}
-	
+
 
 	/**
 	 * Initialize.
 	 *
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public void initialize() throws Exception {
 		synchronized (ListenersManager.class) {
@@ -108,8 +106,7 @@ public class ListenersManager {
 	/**
 	 * Shutdown all registered listeners.
 	 *
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public static void shutdown() throws Exception {
 		for (MessagingConsumer consumer : LISTENERS.values()) {
@@ -132,48 +129,57 @@ public class ListenersManager {
 	/**
 	 * Adds listener.
 	 *
-	 * @param listener
-	 *            the listener
+	 * @param listener the listener
 	 */
 	public void startListener(Listener listener) {
 		if (!LISTENERS.keySet().contains(listener.getLocation())) {
-			IResource resource = getRepository().getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandler());
+			IResource resource = getRepository().getResource(
+					IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandler());
 			if (!resource.exists()) {
-				if (logger.isErrorEnabled()) {logger.error("Listener {} cannot be started, because the handler {} does not exist!", listener.getLocation(), listener.getHandler());}
+				if (logger.isErrorEnabled()) {
+					logger.error("Listener {} cannot be started, because the handler {} does not exist!", listener.getLocation(),
+							listener.getHandler());
+				}
 			}
 			MessagingConsumer consumer = new MessagingConsumer(listener.getName(), listener.getKind(), listener.getHandler(), 1000);
 			Thread consumerThread = new Thread(consumer);
 			consumerThread.setDaemon(false);
 			consumerThread.start();
 			LISTENERS.put(listener.getLocation(), consumer);
-			if (logger.isInfoEnabled()) {logger.info("Listener started: " + listener.getLocation());}
+			if (logger.isInfoEnabled()) {
+				logger.info("Listener started: " + listener.getLocation());
+			}
 		} else {
-			if (logger.isWarnEnabled()) {logger.warn(format("Message consumer for listener at [{0}] already running!", listener.getLocation()));}
+			if (logger.isWarnEnabled()) {
+				logger.warn(format("Message consumer for listener at [{0}] already running!", listener.getLocation()));
+			}
 		}
 	}
 
 	/**
 	 * Remove listener.
 	 *
-	 * @param listener
-	 *            the listener
+	 * @param listener the listener
 	 */
 	public void stopListener(Listener listener) {
 		MessagingConsumer consumer = LISTENERS.get(listener.getLocation());
 		if (consumer != null) {
 			consumer.stop();
 			LISTENERS.remove(listener.getLocation());
-			if (logger.isInfoEnabled()) {logger.info("Listener stopped: " + listener.getLocation());}
+			if (logger.isInfoEnabled()) {
+				logger.info("Listener stopped: " + listener.getLocation());
+			}
 		} else {
-			if (logger.isWarnEnabled()) {logger.warn(format("There is no a message consumer for listener at [{0}] running!", listener.getLocation()));}
+			if (logger.isWarnEnabled()) {
+				logger.warn(format("There is no a message consumer for listener at [{0}] running!", listener.getLocation()));
+			}
 		}
 	}
 
 	/**
 	 * Check if listener is registered.
 	 *
-	 * @param listenerLocation
-	 *            the listener location
+	 * @param listenerLocation the listener location
 	 * @return true, if such listener is registered
 	 */
 	public boolean existsListener(String listenerLocation) {

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.db;
 
@@ -57,16 +56,16 @@ public class DatabaseFacade implements InitializingBean {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
-	
+
 	/** The database facade. */
 	private static DatabaseFacade INSTANCE;
 
 	/** The database definition service. */
 	private DatabaseDefinitionService databaseDefinitionService;
-	
+
 	/** The data sources manager. */
 	private DataSourcesManager dataSourcesManager;
-	
+
 	/**
 	 * Instantiates a new database facade.
 	 *
@@ -78,7 +77,7 @@ public class DatabaseFacade implements InitializingBean {
 		this.databaseDefinitionService = databaseDefinitionService;
 		this.dataSourcesManager = dataSourcesManager;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -86,18 +85,18 @@ public class DatabaseFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the database facade
 	 */
 	public static DatabaseFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/**
 	 * Gets the database definition service.
 	 *
@@ -106,7 +105,7 @@ public class DatabaseFacade implements InitializingBean {
 	public DatabaseDefinitionService getDatabaseDefinitionService() {
 		return databaseDefinitionService;
 	}
-	
+
 	/**
 	 * Gets the data sources manager.
 	 *
@@ -115,7 +114,7 @@ public class DatabaseFacade implements InitializingBean {
 	public DataSourcesManager getDataSourcesManager() {
 		return dataSourcesManager;
 	}
-	
+
 	/**
 	 * Gets the data sources.
 	 *
@@ -216,7 +215,7 @@ public class DatabaseFacade implements InitializingBean {
 		return dataSource;
 	}
 
-	//  ============  Query  ===========
+	// ============ Query ===========
 
 	/**
 	 * Executes SQL query.
@@ -286,7 +285,7 @@ public class DatabaseFacade implements InitializingBean {
 		return query(sql, null, null);
 	}
 
-	//  ===========  Update  ===========
+	// =========== Update ===========
 
 	/**
 	 * Executes SQL update.
@@ -415,7 +414,7 @@ public class DatabaseFacade implements InitializingBean {
 					if (typeElement.isJsonPrimitive() && typeElement.getAsJsonPrimitive().isString()) {
 						String dataType = typeElement.getAsJsonPrimitive().getAsString();
 
-						if(valueElement.isJsonNull()){
+						if (valueElement.isJsonNull()) {
 							Integer sqlType = DataTypeUtils.getSqlTypeByDataType(dataType);
 							preparedStatement.setNull(i++, sqlType);
 						} else if (DataTypeUtils.isVarchar(dataType)) {
@@ -449,7 +448,10 @@ public class DatabaseFacade implements InitializingBean {
 									value = new Date(Long.parseLong(valueElement.getAsJsonPrimitive().getAsString()));
 								} catch (NumberFormatException e) {
 									// assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
-									value = new Date(javax.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive().getAsString()).getTime().getTime());
+									value = new Date(
+											javax.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive().getAsString())
+																			.getTime()
+																			.getTime());
 								}
 								preparedStatement.setDate(i++, value);
 							} else {
@@ -465,7 +467,10 @@ public class DatabaseFacade implements InitializingBean {
 									value = new Time(Long.parseLong(valueElement.getAsJsonPrimitive().getAsString()));
 								} catch (NumberFormatException e) {
 									// assume XSDTime
-									value = new Time(javax.xml.bind.DatatypeConverter.parseTime(valueElement.getAsJsonPrimitive().getAsString()).getTime().getTime());
+									value = new Time(
+											javax.xml.bind.DatatypeConverter.parseTime(valueElement.getAsJsonPrimitive().getAsString())
+																			.getTime()
+																			.getTime());
 								}
 								preparedStatement.setTime(i++, value);
 							} else {
@@ -481,7 +486,10 @@ public class DatabaseFacade implements InitializingBean {
 									value = new Timestamp(Long.parseLong(valueElement.getAsJsonPrimitive().getAsString()));
 								} catch (NumberFormatException e) {
 									// assume date string in ISO format e.g. 2018-05-22T21:00:00.000Z
-									value = new Timestamp(javax.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive().getAsString()).getTime().getTime());
+									value = new Timestamp(
+											javax.xml.bind.DatatypeConverter.parseDateTime(valueElement.getAsJsonPrimitive().getAsString())
+																			.getTime()
+																			.getTime());
 								}
 								preparedStatement.setTimestamp(i++, value);
 							} else {
@@ -573,7 +581,8 @@ public class DatabaseFacade implements InitializingBean {
 								preparedStatement.setBinaryStream(i, new ByteArrayInputStream(bytes), bytes.length);
 							}
 						} else {
-							throw new IllegalArgumentException("Parameter 'type'["+dataType+"] must be a string representing a valid database type name");
+							throw new IllegalArgumentException(
+									"Parameter 'type'[" + dataType + "] must be a string representing a valid database type name");
 						}
 					} else {
 						throw new IllegalArgumentException("Parameter 'type' must be a string representing the database type name");
@@ -615,7 +624,7 @@ public class DatabaseFacade implements InitializingBean {
 		return getConnection(null);
 	}
 
-	//  =========  Sequence  ===========
+	// ========= Sequence ===========
 
 	/**
 	 * Nextval.
@@ -662,7 +671,9 @@ public class DatabaseFacade implements InitializingBean {
 				return getNextVal(sequence, connection);
 			} catch (SQLException e) {
 				// assuming the sequence does not exists first time, hence create it implicitly
-				if (logger.isWarnEnabled()) {logger.warn( format("Implicitly creating a Sequence [{0}] due to: [{1}]", sequence, e.getMessage()));}
+				if (logger.isWarnEnabled()) {
+					logger.warn(format("Implicitly creating a Sequence [{0}] due to: [{1}]", sequence, e.getMessage()));
+				}
 				createSequenceInternal(sequence, null, connection, tableName);
 				return getNextVal(sequence, connection);
 			} catch (IllegalStateException e) {
@@ -670,7 +681,7 @@ public class DatabaseFacade implements InitializingBean {
 				PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor =
 						new PersistenceNextValueIdentityProcessor(null);
 				long id = persistenceNextValueIdentityProcessor.nextval(connection, sequence);
-				return  id;
+				return id;
 			}
 		} finally {
 			if (connection != null) {
@@ -712,7 +723,8 @@ public class DatabaseFacade implements InitializingBean {
 	 * @param tableName the table name
 	 * @throws SQLException the SQL exception
 	 */
-	private static void createSequenceInternal(String sequence, Integer sequenceStart, Connection connection, String tableName) throws SQLException {
+	private static void createSequenceInternal(String sequence, Integer sequenceStart, Connection connection, String tableName)
+			throws SQLException {
 		if (sequenceStart == null && tableName != null) {
 			String countSql = SqlFactory.getNative(connection).select().column("count(*)").from(tableName).build();
 			PreparedStatement countPreparedStatement = null;
@@ -721,9 +733,9 @@ public class DatabaseFacade implements InitializingBean {
 				ResultSet rs = countPreparedStatement.executeQuery();
 				if (rs.next()) {
 					sequenceStart = rs.getInt(1);
-					sequenceStart ++;
+					sequenceStart++;
 				}
-			} catch(SQLException e) {
+			} catch (SQLException e) {
 				// Do nothing
 			} finally {
 				if (countPreparedStatement != null) {
@@ -832,7 +844,7 @@ public class DatabaseFacade implements InitializingBean {
 	}
 
 
-	//  =========== SQL ===========
+	// =========== SQL ===========
 
 
 	/**

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
@@ -33,19 +32,19 @@ import com.google.gson.annotations.Expose;
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_DATA_TABLE_CHECKS")
 public class TableConstraintCheck extends TableConstraint {
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CHECK_ID", nullable = false)
 	private Long id;
-	
+
 	/** The expression. */
 	@Column(name = "CHECK_EXPRESSION", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Nullable
 	@Expose
 	private String expression;
-	
+
 	/**
 	 * Instantiates a new table constraint check.
 	 *
@@ -55,8 +54,7 @@ public class TableConstraintCheck extends TableConstraint {
 	 * @param constraints the constraints
 	 * @param expression the expression
 	 */
-	public TableConstraintCheck(String name, String[] modifiers, String[] columns, TableConstraints constraints,
-			String expression) {
+	public TableConstraintCheck(String name, String[] modifiers, String[] columns, TableConstraints constraints, String expression) {
 		super(name, modifiers, columns, constraints);
 		this.expression = expression;
 		this.constraints.getChecks().add(this);
@@ -112,10 +110,10 @@ public class TableConstraintCheck extends TableConstraint {
 	 */
 	@Override
 	public String toString() {
-		return "TableConstraintCheck [id=" + id + ", expression=" + expression + ", name=" + name + ", modifiers="
-				+ modifiers + ", columns=" + columns + ", constraints.table=" + constraints.getTable().getName() + "]";
+		return "TableConstraintCheck [id=" + id + ", expression=" + expression + ", name=" + name + ", modifiers=" + modifiers
+				+ ", columns=" + columns + ", constraints.table=" + constraints.getTable().getName() + "]";
 	}
-	
-	
+
+
 
 }

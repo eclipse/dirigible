@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.test;
 
@@ -26,7 +25,7 @@ import javax.persistence.Table;
  */
 @Table(name = "DT")
 public class AllDataTypes {
-	
+
 	/** The varchar. */
 	@Id
 	@Column(name = "ALL_VARCHAR", columnDefinition = "VARCHAR", nullable = false, length = 512)
@@ -35,55 +34,55 @@ public class AllDataTypes {
 	/** The char. */
 	@Column(name = "ALL_CHAR", columnDefinition = "CHAR", nullable = false, length = 10)
 	private String _char;
-	
+
 	/** The date. */
 	@Column(name = "ALL_DATE", columnDefinition = "DATE", nullable = false)
 	private Date _date;
-	
+
 	/** The time. */
 	@Column(name = "ALL_TIME", columnDefinition = "TIME", nullable = false)
 	private Time _time;
-	
+
 	/** The timestamp. */
 	@Column(name = "ALL_TIMESTAMP", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp _timestamp;
-	
+
 	/** The integer. */
 	@Column(name = "ALL_INTEGER", columnDefinition = "INTEGER", nullable = false)
 	private int _integer;
-	
+
 	/** The tinyint. */
 	@Column(name = "ALL_TINYINT", columnDefinition = "TINYINT", nullable = false)
 	private byte _tinyint;
-	
+
 	/** The bigint. */
 	@Column(name = "ALL_BIGINT", columnDefinition = "BIGINT", nullable = false)
 	private BigInteger _bigint;
-	
+
 	/** The smallint. */
 	@Column(name = "ALL_SMALLINT", columnDefinition = "SMALLINT", nullable = false)
 	private short _smallint;
-	
+
 	/** The real. */
 	@Column(name = "ALL_REAL", columnDefinition = "REAL", nullable = false)
 	private float _real;
-	
+
 	/** The double. */
 	@Column(name = "ALL_DOUBLE", columnDefinition = "DOUBLE", nullable = false)
 	private double _double;
-	
+
 	/** The boolean. */
 	@Column(name = "ALL_BOOLEAN", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean _boolean;
-	
+
 	/** The blob. */
 	@Column(name = "ALL_BLOB", columnDefinition = "BLOB", nullable = false)
 	private byte[] _blob;
-	
+
 	/** The decimal. */
 	@Column(name = "ALL_DECIMAL", columnDefinition = "DECIMAL", nullable = false, length = 10, scale = 2)
 	private BigDecimal _decimal;
-	
+
 	/** The bit. */
 	@Column(name = "ALL_BIT", columnDefinition = "BIT", nullable = false)
 	private boolean _bit;
@@ -358,6 +357,6 @@ public class AllDataTypes {
 		this._bit = _bit;
 	}
 
-	
-	
+
+
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.test;
 
@@ -50,8 +49,7 @@ public class Customer {
 	/**
 	 * Sets the id.
 	 *
-	 * @param id
-	 *            the new id
+	 * @param id the new id
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -69,8 +67,7 @@ public class Customer {
 	/**
 	 * Sets the first name.
 	 *
-	 * @param firstName
-	 *            the new first name
+	 * @param firstName the new first name
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
@@ -88,8 +85,7 @@ public class Customer {
 	/**
 	 * Sets the last name.
 	 *
-	 * @param lastName
-	 *            the new last name
+	 * @param lastName the new last name
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
@@ -107,8 +103,7 @@ public class Customer {
 	/**
 	 * Sets the age.
 	 *
-	 * @param age
-	 *            the new age
+	 * @param age the new age
 	 */
 	public void setAge(int age) {
 		this.age = age;

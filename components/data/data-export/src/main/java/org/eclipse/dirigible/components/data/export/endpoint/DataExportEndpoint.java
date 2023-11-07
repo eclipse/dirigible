@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 
 package org.eclipse.dirigible.components.data.export.endpoint;
@@ -69,14 +68,14 @@ public class DataExportEndpoint {
 	 * Export metadata in project as *.schema file.
 	 *
 	 * @param datasource the datasource
-	 * @param schema     the schema name
+	 * @param schema the schema name
 	 * @return the response
-	 * @throws SQLException       the SQL exception
+	 * @throws SQLException the SQL exception
 	 * @throws URISyntaxException the URI syntax exception
 	 */
 	@PutMapping(value = "/metadata/{datasource}/{schema}")
-	public ResponseEntity<URI> exportMetadataAsProject(@PathVariable("datasource") String datasource,
-			@PathVariable("schema") String schema) throws SQLException, URISyntaxException {
+	public ResponseEntity<URI> exportMetadataAsProject(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema)
+			throws SQLException, URISyntaxException {
 
 		if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
 			String error = format("Datasource {0} does not exist.", datasource);
@@ -92,14 +91,14 @@ public class DataExportEndpoint {
 	 * Export schema data in project as csvs and csvim.
 	 *
 	 * @param datasource the datasource
-	 * @param schema     the schema name
+	 * @param schema the schema name
 	 * @return the response
 	 * @throws URISyntaxException the URI syntax exception
-	 * @throws SQLException       the SQL exception
+	 * @throws SQLException the SQL exception
 	 */
 	@PutMapping(value = "/csv/{datasource}/{schema}")
-	public ResponseEntity<URI> exportDataAsProject(@PathVariable("datasource") String datasource,
-			@PathVariable("schema") String schema) throws URISyntaxException, SQLException {
+	public ResponseEntity<URI> exportDataAsProject(@PathVariable("datasource") String datasource, @PathVariable("schema") String schema)
+			throws URISyntaxException, SQLException {
 
 		if (!databaseMetadataService.existsDataSourceMetadata(datasource)) {
 			String error = format("Datasource {0} does not exist.", datasource);
@@ -140,10 +139,11 @@ public class DataExportEndpoint {
 			}
 		};
 
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION,
-						"attachment; filename=\"" + schema + "-"
-								+ new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".topology\"")
-				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(responseBody);
+		return ResponseEntity	.ok()
+								.header(HttpHeaders.CONTENT_DISPOSITION,
+										"attachment; filename=\"" + schema + "-" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date())
+												+ ".topology\"")
+								.contentType(MediaType.APPLICATION_OCTET_STREAM)
+								.body(responseBody);
 	}
 }

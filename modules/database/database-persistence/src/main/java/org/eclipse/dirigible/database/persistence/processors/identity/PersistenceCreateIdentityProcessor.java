@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.processors.identity;
 
@@ -33,8 +32,7 @@ public class PersistenceCreateIdentityProcessor extends AbstractPersistenceProce
 	/**
 	 * Instantiates a new persistence create identity processor.
 	 *
-	 * @param entityManagerInterceptor
-	 *            the entity manager interceptor
+	 * @param entityManagerInterceptor the entity manager interceptor
 	 */
 	public PersistenceCreateIdentityProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
@@ -49,8 +47,10 @@ public class PersistenceCreateIdentityProcessor extends AbstractPersistenceProce
 	 */
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.
-	 * Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 *
+	 * @see
+	 * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
+	 * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
@@ -60,16 +60,15 @@ public class PersistenceCreateIdentityProcessor extends AbstractPersistenceProce
 	/**
 	 * Creates the.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
+	 * @param connection the connection
+	 * @param tableModel the table model
 	 * @return the int
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("create -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));}
+		if (logger.isTraceEnabled()) {
+			logger.trace("create -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+		}
 		PersistenceManager<Identity> persistenceManager = new PersistenceManager<Identity>();
 		if (!persistenceManager.tableExists(connection, Identity.class)) {
 			persistenceManager.tableCreate(connection, Identity.class);

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.command;
 
@@ -47,7 +46,7 @@ public class PushCommand {
 
 	/** The verifier. */
 	private ProjectPropertiesVerifier projectPropertiesVerifier;
-	
+
 	/**
 	 * Instantiates a new push command.
 	 *
@@ -59,7 +58,7 @@ public class PushCommand {
 		this.projectMetadataManager = projectMetadataManager;
 		this.projectPropertiesVerifier = projectPropertiesVerifier;
 	}
-	
+
 	/**
 	 * Gets the project metadata manager.
 	 *
@@ -68,7 +67,7 @@ public class PushCommand {
 	public ProjectMetadataManager getProjectMetadataManager() {
 		return projectMetadataManager;
 	}
-	
+
 	/**
 	 * Gets the project properties verifier.
 	 *
@@ -82,10 +81,8 @@ public class PushCommand {
 	/**
 	 * Execute the Push command.
 	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param model
-	 *            the git push modeladd
+	 * @param workspace the workspace
+	 * @param model the git push modeladd
 	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final Workspace workspace, GitPushModel model) throws GitConnectorException {
@@ -94,11 +91,18 @@ public class PushCommand {
 		}
 		for (String repositoryName : model.getProjects()) {
 			if (projectPropertiesVerifier.verify(workspace.getName(), repositoryName)) {
-				if (logger.isDebugEnabled()) {logger.debug(String.format("Start pushing repository [%s]...", repositoryName));}
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("Start pushing repository [%s]...", repositoryName));
+				}
 				pushProjectToGitRepository(workspace, repositoryName, model);
-				if (logger.isDebugEnabled()) {logger.debug(String.format("Push of the repository [%s] finished.", repositoryName));}
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("Push of the repository [%s] finished.", repositoryName));
+				}
 			} else {
-				if (logger.isWarnEnabled()) {logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.", repositoryName));}
+				if (logger.isWarnEnabled()) {
+					logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.",
+							repositoryName));
+				}
 			}
 		}
 
@@ -107,18 +111,19 @@ public class PushCommand {
 	/**
 	 * Push project to git repository by executing several low level Git commands.
 	 *
-	 * @param workspace            the workspace
+	 * @param workspace the workspace
 	 * @param repositoryName the repository name
-	 * @param model            the git push model
+	 * @param model the git push model
 	 * @throws GitConnectorException in case of exception
 	 */
-	private void pushProjectToGitRepository(final Workspace workspace, String repositoryName, GitPushModel model) throws GitConnectorException {
+	private void pushProjectToGitRepository(final Workspace workspace, String repositoryName, GitPushModel model)
+			throws GitConnectorException {
 
 		String errorMessage = String.format("Error occurred while pushing repository [%s]. ", repositoryName);
-		
+
 		try {
 			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
-			for (String projectName : projects) {				
+			for (String projectName : projects) {
 				projectMetadataManager.ensureProjectMetadata(workspace, projectName);
 			}
 
@@ -127,7 +132,7 @@ public class PushCommand {
 
 			String gitRepositoryBranch = gitConnector.getBranch();
 			if (model.isAutoAdd()) {
-				for (String projectName : projects) {				
+				for (String projectName : projects) {
 					gitConnector.add(projectName);
 				}
 			}
@@ -137,21 +142,29 @@ public class PushCommand {
 			try {
 				gitConnector.pull(model.getUsername(), model.getPassword());
 			} catch (GitAPIException e) {
-				if (logger.isDebugEnabled()) {logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());}
+				if (logger.isDebugEnabled()) {
+					logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+				}
 			}
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
 			if (numberOfConflictingFiles == 0) {
-				
+
 				gitConnector.push(model.getUsername(), model.getPassword());
 
-				if (logger.isInfoEnabled()) {logger.info(String.format("Repository [%s] has been pushed to remote repository.", repositoryName));}
+				if (logger.isInfoEnabled()) {
+					logger.info(String.format("Repository [%s] has been pushed to remote repository.", repositoryName));
+				}
 			} else {
 				String statusLineMessage = String.format("Project has %d conflicting file(s).", numberOfConflictingFiles);
-				if (logger.isWarnEnabled()) {logger.warn(statusLineMessage);}
-				String message = String.format(
-						"Project has %d conflicting file(s). Please merge to [%s] and then continue working on project.",
-						numberOfConflictingFiles, gitRepositoryBranch);
-				if (logger.isWarnEnabled()) {logger.warn(message);}
+				if (logger.isWarnEnabled()) {
+					logger.warn(statusLineMessage);
+				}
+				String message =
+						String.format("Project has %d conflicting file(s). Please merge to [%s] and then continue working on project.",
+								numberOfConflictingFiles, gitRepositoryBranch);
+				if (logger.isWarnEnabled()) {
+					logger.warn(message);
+				}
 			}
 		} catch (IOException | GitAPIException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
@@ -165,7 +178,9 @@ public class PushCommand {
 			} else {
 				errorMessage += " " + e.getMessage();
 			}
-			if (logger.isErrorEnabled()) {logger.error(errorMessage);}
+			if (logger.isErrorEnabled()) {
+				logger.error(errorMessage);
+			}
 			throw new GitConnectorException(errorMessage, e);
 		}
 	}

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.api;
 
@@ -40,10 +39,10 @@ public class CaffeineRepositoryCache implements IRepositoryCache {
 		long timePolicy = Long.parseLong(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_TIME_LIMIT_IN_MINUTES, "10"));
 		long sizePolicy = Long.parseLong(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_SIZE_LIMIT_IN_MEGABYTES, "100"));
 		cache = Caffeine.newBuilder()
-				.expireAfterAccess(timePolicy, TimeUnit.MINUTES)
-				.maximumWeight(sizePolicy * 1024 * 1024)
-				.weigher((String k, byte[] v) -> v.length)
-				.build();
+						.expireAfterAccess(timePolicy, TimeUnit.MINUTES)
+						.maximumWeight(sizePolicy * 1024 * 1024)
+						.weigher((String k, byte[] v) -> v.length)
+						.build();
 	}
 
 	/**

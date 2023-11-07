@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.mongodb.jdbc.util;
 
@@ -47,13 +46,13 @@ import com.mongodb.MongoClient;
  * The Class SingleColumnStaticResultSet.
  */
 public class SingleColumnStaticResultSet implements ResultSet {
-	
+
 	/** The iterable. */
 	private Iterator<String> iterable;
-	
+
 	/** The current record index. */
 	private int currentRecordIndex;
-	
+
 	/** The current record. */
 	private String currentRecord;
 
@@ -65,7 +64,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	public SingleColumnStaticResultSet(Iterator<String> iterable) {
 		this.iterable = iterable;
 	}
-	
+
 	/**
 	 * Unwrap.
 	 *
@@ -102,7 +101,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	@Override
 	public boolean next() throws SQLException {
 		boolean hasNext = this.iterable.hasNext();
-		if(hasNext){
+		if (hasNext) {
 			this.currentRecord = this.iterable.next();
 			this.currentRecordIndex++;
 		}
@@ -116,7 +115,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 */
 	@Override
 	public void close() throws SQLException {
-		while(this.iterable.hasNext())
+		while (this.iterable.hasNext())
 			this.iterable.next();
 	}
 
@@ -237,8 +236,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public BigDecimal getBigDecimal(int columnIndex, int scale)
-			throws SQLException {
+	public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
 		return this.getBigDecimal(null);
 	}
 
@@ -437,8 +435,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public BigDecimal getBigDecimal(String columnLabel, int scale)
-			throws SQLException {
+	public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1034,8 +1031,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBigDecimal(int columnIndex, BigDecimal x)
-			throws SQLException {
+	public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1100,8 +1096,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateTimestamp(int columnIndex, Timestamp x)
-			throws SQLException {
+	public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1115,8 +1110,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateAsciiStream(int columnIndex, InputStream x, int length)
-			throws SQLException {
+	public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1130,8 +1124,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBinaryStream(int columnIndex, InputStream x, int length)
-			throws SQLException {
+	public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1145,8 +1138,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateCharacterStream(int columnIndex, Reader x, int length)
-			throws SQLException {
+	public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1160,8 +1152,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateObject(int columnIndex, Object x, int scaleOrLength)
-			throws SQLException {
+	public void updateObject(int columnIndex, Object x, int scaleOrLength) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1199,8 +1190,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBoolean(String columnLabel, boolean x)
-			throws SQLException {
+	public void updateBoolean(String columnLabel, boolean x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1291,8 +1281,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBigDecimal(String columnLabel, BigDecimal x)
-			throws SQLException {
+	public void updateBigDecimal(String columnLabel, BigDecimal x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1357,8 +1346,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateTimestamp(String columnLabel, Timestamp x)
-			throws SQLException {
+	public void updateTimestamp(String columnLabel, Timestamp x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1372,8 +1360,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateAsciiStream(String columnLabel, InputStream x, int length)
-			throws SQLException {
+	public void updateAsciiStream(String columnLabel, InputStream x, int length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1387,8 +1374,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBinaryStream(String columnLabel, InputStream x, int length)
-			throws SQLException {
+	public void updateBinaryStream(String columnLabel, InputStream x, int length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1402,8 +1388,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateCharacterStream(String columnLabel, Reader reader,
-			int length) throws SQLException {
+	public void updateCharacterStream(String columnLabel, Reader reader, int length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1417,8 +1402,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateObject(String columnLabel, Object x, int scaleOrLength)
-			throws SQLException {
+	public void updateObject(String columnLabel, Object x, int scaleOrLength) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1534,8 +1518,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public Object getObject(int columnIndex, Map<String, Class<?>> map)
-			throws SQLException {
+	public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1601,8 +1584,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public Object getObject(String columnLabel, Map<String, Class<?>> map)
-			throws SQLException {
+	public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1724,8 +1706,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public Timestamp getTimestamp(int columnIndex, Calendar cal)
-			throws SQLException {
+	public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1739,8 +1720,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public Timestamp getTimestamp(String columnLabel, Calendar cal)
-			throws SQLException {
+	public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1959,8 +1939,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateNString(int columnIndex, String nString)
-			throws SQLException {
+	public void updateNString(int columnIndex, String nString) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -1973,8 +1952,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateNString(String columnLabel, String nString)
-			throws SQLException {
+	public void updateNString(String columnLabel, String nString) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2000,8 +1978,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateNClob(String columnLabel, NClob nClob)
-			throws SQLException {
+	public void updateNClob(String columnLabel, NClob nClob) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2066,8 +2043,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateSQLXML(int columnIndex, SQLXML xmlObject)
-			throws SQLException {
+	public void updateSQLXML(int columnIndex, SQLXML xmlObject) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2080,8 +2056,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateSQLXML(String columnLabel, SQLXML xmlObject)
-			throws SQLException {
+	public void updateSQLXML(String columnLabel, SQLXML xmlObject) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2147,8 +2122,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateNCharacterStream(int columnIndex, Reader x, long length)
-			throws SQLException {
+	public void updateNCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2162,8 +2136,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateNCharacterStream(String columnLabel, Reader reader,
-			long length) throws SQLException {
+	public void updateNCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2177,8 +2150,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateAsciiStream(int columnIndex, InputStream x, long length)
-			throws SQLException {
+	public void updateAsciiStream(int columnIndex, InputStream x, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2192,8 +2164,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBinaryStream(int columnIndex, InputStream x, long length)
-			throws SQLException {
+	public void updateBinaryStream(int columnIndex, InputStream x, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2207,8 +2178,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateCharacterStream(int columnIndex, Reader x, long length)
-			throws SQLException {
+	public void updateCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2222,8 +2192,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateAsciiStream(String columnLabel, InputStream x, long length)
-			throws SQLException {
+	public void updateAsciiStream(String columnLabel, InputStream x, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2237,8 +2206,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBinaryStream(String columnLabel, InputStream x,
-			long length) throws SQLException {
+	public void updateBinaryStream(String columnLabel, InputStream x, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2252,8 +2220,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateCharacterStream(String columnLabel, Reader reader,
-			long length) throws SQLException {
+	public void updateCharacterStream(String columnLabel, Reader reader, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2267,8 +2234,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBlob(int columnIndex, InputStream inputStream, long length)
-			throws SQLException {
+	public void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2282,8 +2248,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBlob(String columnLabel, InputStream inputStream,
-			long length) throws SQLException {
+	public void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2297,8 +2262,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateClob(int columnIndex, Reader reader, long length)
-			throws SQLException {
+	public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2312,8 +2276,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateClob(String columnLabel, Reader reader, long length)
-			throws SQLException {
+	public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2327,8 +2290,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateNClob(int columnIndex, Reader reader, long length)
-			throws SQLException {
+	public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2342,8 +2304,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateNClob(String columnLabel, Reader reader, long length)
-			throws SQLException {
+	public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2356,8 +2317,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateNCharacterStream(int columnIndex, Reader x)
-			throws SQLException {
+	public void updateNCharacterStream(int columnIndex, Reader x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2370,8 +2330,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateNCharacterStream(String columnLabel, Reader reader)
-			throws SQLException {
+	public void updateNCharacterStream(String columnLabel, Reader reader) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2384,8 +2343,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateAsciiStream(int columnIndex, InputStream x)
-			throws SQLException {
+	public void updateAsciiStream(int columnIndex, InputStream x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2398,8 +2356,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBinaryStream(int columnIndex, InputStream x)
-			throws SQLException {
+	public void updateBinaryStream(int columnIndex, InputStream x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2412,8 +2369,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateCharacterStream(int columnIndex, Reader x)
-			throws SQLException {
+	public void updateCharacterStream(int columnIndex, Reader x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2426,8 +2382,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateAsciiStream(String columnLabel, InputStream x)
-			throws SQLException {
+	public void updateAsciiStream(String columnLabel, InputStream x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2440,8 +2395,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBinaryStream(String columnLabel, InputStream x)
-			throws SQLException {
+	public void updateBinaryStream(String columnLabel, InputStream x) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2454,8 +2408,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateCharacterStream(String columnLabel, Reader reader)
-			throws SQLException {
+	public void updateCharacterStream(String columnLabel, Reader reader) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2468,8 +2421,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBlob(int columnIndex, InputStream inputStream)
-			throws SQLException {
+	public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2482,8 +2434,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateBlob(String columnLabel, InputStream inputStream)
-			throws SQLException {
+	public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2509,8 +2460,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateClob(String columnLabel, Reader reader)
-			throws SQLException {
+	public void updateClob(String columnLabel, Reader reader) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2536,8 +2486,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public void updateNClob(String columnLabel, Reader reader)
-			throws SQLException {
+	public void updateNClob(String columnLabel, Reader reader) throws SQLException {
 		// TODO Auto-generated method stub
 
 	}
@@ -2567,8 +2516,7 @@ public class SingleColumnStaticResultSet implements ResultSet {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public <T> T getObject(String columnLabel, Class<T> type)
-			throws SQLException {
+	public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}

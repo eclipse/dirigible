@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.base.http.access;
 
@@ -26,16 +25,16 @@ import org.slf4j.LoggerFactory;
  * The Class UserRequestVerifier.
  */
 public class UserRequestVerifier {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(UserRequestVerifier.class);
 
 	/** The Constant ACCESS_MANAGERS. */
 	private static final ServiceLoader<UserAccessVerifier> ACCESS_VERIFIERS = ServiceLoader.load(UserAccessVerifier.class);
-	
+
 	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Request Facade without a valid Request";
-	
+
 	/**
 	 * Returns the request in the current thread context.
 	 *
@@ -48,7 +47,9 @@ public class UserRequestVerifier {
 		try {
 			return (HttpServletRequest) ThreadContextFacade.get(HttpServletRequest.class.getCanonicalName());
 		} catch (ContextException e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 		return null;
 	}
@@ -62,12 +63,11 @@ public class UserRequestVerifier {
 		HttpServletRequest request = getRequest();
 		return request != null;
 	}
-	
+
 	/**
 	 * Checks if is user in role.
 	 *
-	 * @param role
-	 *            the role
+	 * @param role the role
 	 * @return true, if is user in role
 	 * @see HttpServletRequest#isUserInRole(String)
 	 */

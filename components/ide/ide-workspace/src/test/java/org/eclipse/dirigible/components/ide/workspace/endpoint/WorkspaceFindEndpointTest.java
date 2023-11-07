@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.endpoint;
 
@@ -42,42 +41,41 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class WorkspaceFindEndpointTest {
-	
+
 	/** The mock mvc. */
 	@Autowired
-    private MockMvc mockMvc;
+	private MockMvc mockMvc;
 
-    /** The wac. */
-    @Autowired
-    protected WebApplicationContext wac;
+	/** The wac. */
+	@Autowired
+	protected WebApplicationContext wac;
 
-    /** The spring security filter chain. */
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
-	
+	/** The spring security filter chain. */
+	@Autowired
+	private FilterChainProxy springSecurityFilterChain;
+
 	/**
 	 * Setup.
 	 *
 	 * @throws Exception the exception
 	 */
 	@BeforeEach
-    public void setup() throws Exception {
+	public void setup() throws Exception {
 		cleanup();
 
-    }
-	
+	}
+
 	/**
 	 * Cleanup.
 	 *
 	 * @throws Exception the exception
 	 */
 	@AfterEach
-    public void cleanup() throws Exception {
-    }
-	
+	public void cleanup() throws Exception {}
+
 	/**
 	 * Find all.
 	 *
@@ -85,13 +83,11 @@ public class WorkspaceFindEndpointTest {
 	 */
 	@Test
 	public void findAll() throws Exception {
-		mockMvc.perform(post("/services/ide/workspace-find")
-				.content("test")
-				.with(csrf()))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(post("/services/ide/workspace-find").content("test").with(csrf()))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
-	
+
 	/**
 	 * Find in workspace.
 	 *
@@ -99,11 +95,9 @@ public class WorkspaceFindEndpointTest {
 	 */
 	@Test
 	public void findInWorkspace() throws Exception {
-		mockMvc.perform(post("/services/ide/workspace-find/workspace1")
-				.content("test")
-				.with(csrf()))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		mockMvc	.perform(post("/services/ide/workspace-find/workspace1").content("test").with(csrf()))
+				.andDo(print())
+				.andExpect(status().is2xxSuccessful());
 	}
 
 	/**

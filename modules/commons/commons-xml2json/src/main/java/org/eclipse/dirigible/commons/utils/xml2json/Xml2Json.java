@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.commons.utils.xml2json;
 
@@ -56,46 +55,46 @@ import com.google.gson.JsonPrimitive;
  * The Class Xml2Json.
  */
 public class Xml2Json {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(Xml2Json.class);
-	
+
 	/** The Constant CDATA_CLOSE. */
 	private static final String CDATA_CLOSE = "]]>";
-	
+
 	/** The Constant CDATA_OPEN. */
 	private static final String CDATA_OPEN = "<![CDATA[";
-	
+
 	/** The Constant ESQ. */
 	private static final String ESQ = "=\"";
-	
+
 	/** The Constant SPACE. */
 	private static final String SPACE = " ";
-	
+
 	/** The Constant EQ. */
 	private static final String EQ = "\"";
-	
+
 	/** The Constant EMPTY. */
 	private static final String EMPTY = "";
-	
+
 	/** The Constant ATTR_TEXT. */
 	private static final String ATTR_TEXT = "#text";
-	
+
 	/** The Constant ATTR_CDATA. */
 	private static final String ATTR_CDATA = "#cdata-section";
-	
+
 	/** The Constant LTS. */
 	private static final String LTS = "</";
-	
+
 	/** The Constant GT. */
 	private static final String GT = ">";
-	
+
 	/** The Constant LT. */
 	private static final String LT = "<";
-	
+
 	/** The added by value. */
 	static List<Object> ADDED_BY_VALUE = new ArrayList<Object>();
-	
+
 	/** The reorganized. */
 	static Map<String, JsonElement> REORGANIZED = new HashMap<String, JsonElement>();
 
@@ -176,10 +175,14 @@ public class Xml2Json {
 									reorganizeAddAttributes(childNode, attrs);
 								}
 							} else if (existing instanceof JsonObject) {
-								if (logger.isErrorEnabled()) {logger.error("Found object, but expected primitive or array");}
+								if (logger.isErrorEnabled()) {
+									logger.error("Found object, but expected primitive or array");
+								}
 							}
 						} else {
-							if (logger.isErrorEnabled()) {logger.error("Expected element, but it does not exist");}
+							if (logger.isErrorEnabled()) {
+								logger.error("Expected element, but it does not exist");
+							}
 						}
 						// remove it from the list
 						ADDED_BY_VALUE.remove(childNode);
@@ -205,7 +208,9 @@ public class Xml2Json {
 				String base64 = Base64.getEncoder().encodeToString(childNode.getNodeValue().getBytes(StandardCharsets.UTF_8));
 				parentJson.addProperty(childNode.getNodeName(), base64);
 			} else {
-				if (logger.isErrorEnabled()) {logger.error("Unsupported node type: {}", childNode.getNodeType());}
+				if (logger.isErrorEnabled()) {
+					logger.error("Unsupported node type: {}", childNode.getNodeType());
+				}
 			}
 		}
 	}
@@ -250,7 +255,8 @@ public class Xml2Json {
 	 * @param childNode the child node
 	 * @param existing the existing
 	 */
-	private static void reorganizeElement(Node parentNode, JsonObject parentJson, JsonObject childJson, Node childNode, JsonElement existing) {
+	private static void reorganizeElement(Node parentNode, JsonObject parentJson, JsonObject childJson, Node childNode,
+			JsonElement existing) {
 		parentJson.remove(childNode.getNodeName());
 		JsonArray arrayJson = new JsonArray();
 		arrayJson.add(existing);
@@ -267,7 +273,8 @@ public class Xml2Json {
 	 * @param childNode the child node
 	 * @param existing the existing
 	 */
-	private static void reorganizeObjectToArray(Node parentNode, JsonObject upperJson, JsonObject childJson, Node childNode, JsonElement existing) {
+	private static void reorganizeObjectToArray(Node parentNode, JsonObject upperJson, JsonObject childJson, Node childNode,
+			JsonElement existing) {
 		upperJson.remove(parentNode.getNodeName());
 		JsonArray arrayJson = new JsonArray();
 		arrayJson.add(existing);
@@ -311,7 +318,9 @@ public class Xml2Json {
 				objectJson.addProperty(entry.getKey().toString(), entry.getValue().toString().replace(EQ, EMPTY));
 			}
 		} else {
-			if (logger.isErrorEnabled()) {logger.error("Expected object, found element or null");}
+			if (logger.isErrorEnabled()) {
+				logger.error("Expected object, found element or null");
+			}
 		}
 		REORGANIZED.remove(childNode.hashCode() + EMPTY);
 	}
@@ -387,15 +396,24 @@ public class Xml2Json {
 				if (ATTR_TEXT.equals(key)) {
 					buff.append(value.toString().replace(EQ, EMPTY));
 				} else if (ATTR_CDATA.equals(key)) {
-					buff.append(CDATA_OPEN).append(new String(Base64.getDecoder().decode(value.toString().replace(EQ, EMPTY)), StandardCharsets.UTF_8)).append(CDATA_CLOSE);
+					buff.append(CDATA_OPEN)
+						.append(new String(Base64.getDecoder().decode(value.toString().replace(EQ, EMPTY)), StandardCharsets.UTF_8))
+						.append(CDATA_CLOSE);
 				} else {
 					if (!key.toString().startsWith("-")) {
-						buff.append(LT).append(key.toString()).append(GT).append(value.toString().replace(EQ, EMPTY)).append(LTS)
-								.append(key.toString()).append(GT);
+						buff.append(LT)
+							.append(key.toString())
+							.append(GT)
+							.append(value.toString().replace(EQ, EMPTY))
+							.append(LTS)
+							.append(key.toString())
+							.append(GT);
 					}
 				}
 			} else {
-				if (logger.isErrorEnabled()) {logger.error("Unhandled element");}
+				if (logger.isErrorEnabled()) {
+					logger.error("Unhandled element");
+				}
 			}
 		}
 	}
@@ -414,7 +432,11 @@ public class Xml2Json {
 			Object value = entry.getValue();
 			if (value instanceof JsonPrimitive) {
 				if (key.toString().startsWith("-")) {
-					buff.append(SPACE).append(key.toString().substring(1)).append(ESQ).append(value.toString().replace(EQ, EMPTY)).append(EQ);
+					buff.append(SPACE)
+						.append(key.toString().substring(1))
+						.append(ESQ)
+						.append(value.toString().replace(EQ, EMPTY))
+						.append(EQ);
 				}
 			}
 		}
@@ -444,8 +466,10 @@ public class Xml2Json {
 				if (ATTR_TEXT.equals(key)) {
 					buff.append(elementPrimitive.toString().replace(EQ, EMPTY));
 				} else if (ATTR_CDATA.equals(key)) {
-					buff.append(CDATA_OPEN).append(new String(Base64.getDecoder().decode(elementPrimitive.toString().replace(EQ, EMPTY)), StandardCharsets.UTF_8))
-							.append(CDATA_CLOSE);
+					buff.append(CDATA_OPEN)
+						.append(new String(Base64.getDecoder().decode(elementPrimitive.toString().replace(EQ, EMPTY)),
+								StandardCharsets.UTF_8))
+						.append(CDATA_CLOSE);
 				} else {
 					// System.err.println("ERROR: content attributes must be #text");
 					buff.append(LT).append(key);

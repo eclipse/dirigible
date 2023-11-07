@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.local;
 
@@ -40,10 +39,8 @@ public class LocalResource extends LocalEntity implements IResource {
 	/**
 	 * Instantiates a new local resource.
 	 *
-	 * @param repository
-	 *            the repository
-	 * @param path
-	 *            the path
+	 * @param repository the repository
+	 * @param path the path
 	 */
 	public LocalResource(FileSystemRepository repository, RepositoryPath path) {
 		super(repository, path);
@@ -55,7 +52,9 @@ public class LocalResource extends LocalEntity implements IResource {
 
 			}
 		} catch (RepositoryReadException e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 
@@ -66,6 +65,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#create()
 	 */
 	@Override
@@ -80,6 +80,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#delete()
 	 */
 	@Override
@@ -100,6 +101,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#renameTo(java.lang.String)
 	 */
 	@Override
@@ -120,6 +122,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#moveTo(java.lang.String)
 	 */
 	@Override
@@ -140,6 +143,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#copyTo(java.lang.String)
 	 */
 	@Override
@@ -147,10 +151,12 @@ public class LocalResource extends LocalEntity implements IResource {
 		try {
 			String repositorySourcePath = getRepositoryPath().toString();
 			String repositoryTargetPath = RepositoryPath.normalizePath(path, getName());
-//			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), repositorySourcePath);
-//			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryTargetPath);
+			// String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(),
+			// repositorySourcePath);
+			// String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(),
+			// repositoryTargetPath);
 			getRepository().getRepositoryDao().copyFile(repositorySourcePath, repositoryTargetPath);
-//			FileSystemUtils.copyFile(workspacePathOld, workspacePathNew);
+			// FileSystemUtils.copyFile(workspacePathOld, workspacePathNew);
 		} catch (LocalRepositoryException e) {
 			throw new RepositoryWriteException(e);
 		}
@@ -164,13 +170,14 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#exists()
 	 */
 	@Override
 	public boolean exists() throws RepositoryReadException {
 		String repositoryPath = getRepositoryPath().toString();
-//		String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
-		return getRepository().getRepositoryDao().fileExists(repositoryPath);//  (FileSystemUtils.fileExists(localPath));
+		// String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
+		return getRepository().getRepositoryDao().fileExists(repositoryPath);// (FileSystemUtils.fileExists(localPath));
 	}
 
 	/**
@@ -181,6 +188,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IEntity#isEmpty()
 	 */
 	@Override
@@ -196,6 +204,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IResource#getContent()
 	 */
 	@Override
@@ -217,6 +226,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IResource#setContent(byte[])
 	 */
 	@Override
@@ -245,6 +255,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.local.LocalEntity#equals(java.lang.Object)
 	 */
 	@Override
@@ -269,6 +280,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.local.LocalEntity#hashCode()
 	 */
 	@Override
@@ -277,12 +289,11 @@ public class LocalResource extends LocalEntity implements IResource {
 	}
 
 	/**
-	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
-	 * there is no such object, then <code>null</code> is returned.
+	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If there is no such
+	 * object, then <code>null</code> is returned.
 	 *
 	 * @return the document
-	 * @throws RepositoryReadException
-	 *             the repository read exception
+	 * @throws RepositoryReadException the repository read exception
 	 */
 	protected LocalFile getDocument() throws RepositoryReadException {
 		final LocalObject object = getLocalObject();
@@ -294,26 +305,24 @@ public class LocalResource extends LocalEntity implements IResource {
 		}
 		return (LocalFile) object;
 	}
-	
+
 	/**
-	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
-	 * there is no such object, then <code>null</code> is returned.
+	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If there is no such
+	 * object, then <code>null</code> is returned.
 	 *
 	 * @return the local file
-	 * @throws RepositoryReadException
-	 *             the repository read exception
+	 * @throws RepositoryReadException the repository read exception
 	 */
 	protected LocalFile getFile() throws RepositoryReadException {
 		return getDocument();
 	}
 
 	/**
-	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
-	 * there is no such object, then an {@link RepositoryNotFoundException} is thrown.
+	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If there is no such
+	 * object, then an {@link RepositoryNotFoundException} is thrown.
 	 *
 	 * @return the document safe
-	 * @throws RepositoryNotFoundException
-	 *             the repository not found exception
+	 * @throws RepositoryNotFoundException the repository not found exception
 	 */
 	protected LocalFile getDocumentSafe() throws RepositoryNotFoundException {
 		final LocalFile document = getDocument();
@@ -330,6 +339,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IResource#isBinary()
 	 */
 	@Override
@@ -344,6 +354,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IResource#getContentType()
 	 */
 	@Override
@@ -361,6 +372,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IResource#setContent(byte[], boolean, java.lang.String)
 	 */
 	@Override

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.store.service;
 
@@ -27,9 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class EntityService implements ArtefactService<Entity> {
-	
+
 	/** The entity repository. */
-	@Autowired 
+	@Autowired
 	private EntityRepository entityRepository;
 
 	/**
@@ -42,7 +41,7 @@ public class EntityService implements ArtefactService<Entity> {
 	public List<Entity> getAll() {
 		return entityRepository.findAll();
 	}
-	
+
 	/**
 	 * Find all.
 	 *
@@ -54,7 +53,7 @@ public class EntityService implements ArtefactService<Entity> {
 	public Page<Entity> getPages(Pageable pageable) {
 		return entityRepository.findAll(pageable);
 	}
-	
+
 	/**
 	 * Find by id.
 	 *
@@ -71,7 +70,7 @@ public class EntityService implements ArtefactService<Entity> {
 			throw new IllegalArgumentException("Entity with id does not exist: " + id);
 		}
 	}
-	
+
 	/**
 	 * Find by name.
 	 *
@@ -91,42 +90,42 @@ public class EntityService implements ArtefactService<Entity> {
 			throw new IllegalArgumentException("Entity with name does not exist: " + name);
 		}
 	}
-	
+
 	/**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Entity> findByLocation(String location) {
-    	Entity filter = new Entity();
-        filter.setLocation(location);
-        Example<Entity> example = Example.of(filter);
-        List<Entity> list = entityRepository.findAll(example);
-        return list;
-    }
-	
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Entity> findByLocation(String location) {
+		Entity filter = new Entity();
+		filter.setLocation(location);
+		Example<Entity> example = Example.of(filter);
+		List<Entity> list = entityRepository.findAll(example);
+		return list;
+	}
+
 	/**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the entity point
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Entity findByKey(String key) {
-    	Entity filter = new Entity();
-        filter.setKey(key);
-        Example<Entity> example = Example.of(filter);
-        Optional<Entity> entity = entityRepository.findOne(example);
-        if (entity.isPresent()) {
-            return entity.get();
-        }
-        return null;
-    }
-    
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the entity point
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Entity findByKey(String key) {
+		Entity filter = new Entity();
+		filter.setKey(key);
+		Example<Entity> example = Example.of(filter);
+		Optional<Entity> entity = entityRepository.findOne(example);
+		if (entity.isPresent()) {
+			return entity.get();
+		}
+		return null;
+	}
+
 	/**
 	 * Save.
 	 *
@@ -137,7 +136,7 @@ public class EntityService implements ArtefactService<Entity> {
 	public Entity save(Entity entity) {
 		return entityRepository.saveAndFlush(entity);
 	}
-	
+
 	/**
 	 * Delete.
 	 *

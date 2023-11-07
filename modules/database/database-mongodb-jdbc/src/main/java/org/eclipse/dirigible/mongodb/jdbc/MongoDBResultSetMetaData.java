@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.mongodb.jdbc;
 
@@ -29,13 +28,13 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 
 	/** The column count. */
 	private int columnCount;
-	
+
 	/** The key map. */
 	private SortedMap<String, BsonType> keyMap = new TreeMap<String, BsonType>();
-	
+
 	/** The collection name. */
 	private String collectionName;
-	
+
 	/** The bson tojava type map. */
 	private BsonTypeClassMap bsonTojavaTypeMap = new BsonTypeClassMap();
 
@@ -44,10 +43,10 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	 *
 	 * @param collectionName the collection name
 	 */
-	public MongoDBResultSetMetaData(String collectionName){
-		 this.collectionName =  collectionName;
+	public MongoDBResultSetMetaData(String collectionName) {
+		this.collectionName = collectionName;
 	}
-	
+
 	/**
 	 * Unwrap.
 	 *
@@ -60,9 +59,9 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		if (isWrapperFor(iface)) {
-	        return (T) this;
-	    }
-	    throw new SQLException("No wrapper for " + iface);
+			return (T) this;
+		}
+		throw new SQLException("No wrapper for " + iface);
 	}
 
 	/**
@@ -74,7 +73,7 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	 */
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		 return iface != null && iface.isAssignableFrom(getClass());
+		return iface != null && iface.isAssignableFrom(getClass());
 	}
 
 	/**
@@ -83,9 +82,9 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	 * @return the map
 	 */
 	public Map<String, BsonType> keys() {
-		return this.keyMap ;
+		return this.keyMap;
 	}
-	
+
 	/**
 	 * Gets the column count.
 	 *
@@ -96,13 +95,13 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	public int getColumnCount() throws SQLException {
 		return this.columnCount;
 	}
-	
+
 	/**
 	 * Sets the column count.
 	 *
 	 * @param count the new column count
 	 */
-	public void setColumnCount(int count){
+	public void setColumnCount(int count) {
 		this.columnCount = count;
 	}
 
@@ -200,7 +199,7 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getColumnLabel(int column) throws SQLException {
-		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column-1];
+		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column - 1];
 		return entry.getKey();
 	}
 
@@ -214,7 +213,7 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getColumnName(int column) throws SQLException {
-		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column-1];
+		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column - 1];
 		return entry.getKey();
 	}
 
@@ -287,8 +286,9 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	 */
 	@Override
 	public int getColumnType(int column) throws SQLException {
-		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column-1];
-		//return entries[column-1].getValue().getValue();//TODO: this returns the BSON type ordinal. What we need is a mapping to SQL types ordinals.
+		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column - 1];
+		// return entries[column-1].getValue().getValue();//TODO: this returns the BSON type ordinal. What
+		// we need is a mapping to SQL types ordinals.
 		return this.getSqlType(entry.getValue());
 	}
 
@@ -302,8 +302,8 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getColumnTypeName(int column) throws SQLException {
-		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column-1];
-		//return entries[column-1].getValue().toString();// return MongoDB specific datatype name.
+		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column - 1];
+		// return entries[column-1].getValue().toString();// return MongoDB specific datatype name.
 		return this.getSqlTypeName(entry.getValue());
 	}
 
@@ -352,56 +352,98 @@ public class MongoDBResultSetMetaData implements ResultSetMetaData {
 	 */
 	@Override
 	public String getColumnClassName(int column) throws SQLException {
-		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column-1];
+		Entry<String, BsonType> entry = (Entry<String, BsonType>) this.keyMap.entrySet().toArray()[column - 1];
 		return this.bsonTojavaTypeMap.get(entry.getValue()).getCanonicalName();
 	}
-	
+
 	/**
 	 * Gets the sql type.
 	 *
 	 * @param bsonType the bson type
 	 * @return the sql type
 	 */
-	int getSqlType(BsonType bsonType){
-		switch(bsonType){
-			case OBJECT_ID: { return Types.VARCHAR;}
-			case ARRAY: { return Types.ARRAY;}
-			case BINARY: { return Types.BINARY; }
-			case BOOLEAN: { return Types.BOOLEAN;}
-			/*case DATE_TIME: { return Types.DATE}*/
-			case DOCUMENT: { return Types.OTHER; }
-			case DOUBLE: { return Types.DOUBLE; }
-			case INT32: {return Types.INTEGER; }
-			case INT64: {return Types.INTEGER; }
-			case STRING: { return Types.VARCHAR; }
-			case TIMESTAMP: { return Types.TIMESTAMP;}
-			default: break;
+	int getSqlType(BsonType bsonType) {
+		switch (bsonType) {
+			case OBJECT_ID: {
+				return Types.VARCHAR;
+			}
+			case ARRAY: {
+				return Types.ARRAY;
+			}
+			case BINARY: {
+				return Types.BINARY;
+			}
+			case BOOLEAN: {
+				return Types.BOOLEAN;
+			}
+			/* case DATE_TIME: { return Types.DATE} */
+			case DOCUMENT: {
+				return Types.OTHER;
+			}
+			case DOUBLE: {
+				return Types.DOUBLE;
+			}
+			case INT32: {
+				return Types.INTEGER;
+			}
+			case INT64: {
+				return Types.INTEGER;
+			}
+			case STRING: {
+				return Types.VARCHAR;
+			}
+			case TIMESTAMP: {
+				return Types.TIMESTAMP;
+			}
+			default:
+				break;
 		}
 		return Integer.MIN_VALUE;
 	}
-	
+
 	/**
 	 * Gets the sql type name.
 	 *
 	 * @param bsonType the bson type
 	 * @return the sql type name
 	 */
-	String getSqlTypeName(BsonType bsonType){
-		switch(bsonType){
-			case ARRAY: { return "ARRAY";}
-			case BINARY: { return "BINARY"; }
-			case BOOLEAN: { return "BOOLEAN";}
-			/*case DATE_TIME: { return Types.DATE}*/
-			case DOCUMENT: { return "OTHER"; }
-			case DOUBLE: { return "DOUBLE"; }
-			case INT32: {return "INTEGER"; }
-			case INT64: {return "INTEGER"; }
-			case STRING: { return "VARCHAR"; }
-			case TIMESTAMP: { return "TIMESTAMP";}
-			case OBJECT_ID: { return "STRING";}
-			default: break;
+	String getSqlTypeName(BsonType bsonType) {
+		switch (bsonType) {
+			case ARRAY: {
+				return "ARRAY";
+			}
+			case BINARY: {
+				return "BINARY";
+			}
+			case BOOLEAN: {
+				return "BOOLEAN";
+			}
+			/* case DATE_TIME: { return Types.DATE} */
+			case DOCUMENT: {
+				return "OTHER";
+			}
+			case DOUBLE: {
+				return "DOUBLE";
+			}
+			case INT32: {
+				return "INTEGER";
+			}
+			case INT64: {
+				return "INTEGER";
+			}
+			case STRING: {
+				return "VARCHAR";
+			}
+			case TIMESTAMP: {
+				return "TIMESTAMP";
+			}
+			case OBJECT_ID: {
+				return "STRING";
+			}
+			default:
+				break;
 		}
 		return null;
 	}
-	
+
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.jobs.manager;
 
@@ -43,11 +42,11 @@ public class JobsManager {
 	/** The scheduler. */
 	@Autowired
 	private Scheduler scheduler;
-	
-	/**  The internal jobs. */
+
+	/** The internal jobs. */
 	public static String JOB_GROUP_INTERNAL = "dirigible-internal";
 
-	/**  The user defined jobs. */
+	/** The user defined jobs. */
 	public static String JOB_GROUP_DEFINED = "dirigible-defined";
 
 	/**
@@ -77,18 +76,22 @@ public class JobsManager {
 				}
 
 				Trigger trigger = null;
-				if (!jobDefinition.getExpression().equals("")) {					
+				if (!jobDefinition.getExpression().equals("")) {
 					trigger = newTrigger().withIdentity(triggerKey).withSchedule(cronSchedule(jobDefinition.getExpression())).build();
 				} else {
 					trigger = newTrigger().withIdentity(triggerKey).startNow().build();
 				}
 				scheduler.scheduleJob(job, trigger);
 
-				if (logger.isInfoEnabled()) {logger.info("Scheduled Job: [{}] of group: [{}] at: [{}]", jobDefinition.getName(), jobDefinition.getGroup(),
-						jobDefinition.getExpression());}
+				if (logger.isInfoEnabled()) {
+					logger.info("Scheduled Job: [{}] of group: [{}] at: [{}]", jobDefinition.getName(), jobDefinition.getGroup(),
+							jobDefinition.getExpression());
+				}
 			}
 		} catch (ObjectAlreadyExistsException e) {
-			if (logger.isWarnEnabled()) {logger.warn(e.getMessage());}
+			if (logger.isWarnEnabled()) {
+				logger.warn(e.getMessage());
+			}
 		} catch (ClassNotFoundException e) {
 			throw new Exception("Invalid class name for the job", e);
 		} catch (org.quartz.SchedulerException e) {
@@ -113,10 +116,14 @@ public class JobsManager {
 			if (scheduler.checkExists(triggerKey)) {
 				scheduler.unscheduleJob(triggerKey);
 				scheduler.deleteJob(jobKey);
-				if (logger.isInfoEnabled()) {logger.info("Unscheduled Job: [{}] of group: [{}]", name, group);}
+				if (logger.isInfoEnabled()) {
+					logger.info("Unscheduled Job: [{}] of group: [{}]", name, group);
+				}
 			}
 		} catch (ObjectAlreadyExistsException e) {
-			if (logger.isWarnEnabled()) {logger.warn(e.getMessage());}
+			if (logger.isWarnEnabled()) {
+				logger.warn(e.getMessage());
+			}
 		} catch (org.quartz.SchedulerException e) {
 			throw new Exception(e);
 		}
@@ -140,7 +147,7 @@ public class JobsManager {
 	/**
 	 * Checks whether the job with a given name is already scheduled.
 	 *
-	 * @param name            the name of the job
+	 * @param name the name of the job
 	 * @return true if registered
 	 * @throws Exception the exception
 	 */

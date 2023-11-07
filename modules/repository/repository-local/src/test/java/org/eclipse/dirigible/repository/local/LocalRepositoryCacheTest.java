@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.local;
 
@@ -64,7 +63,8 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 			assertTrue(resource1.exists());
 			assertFalse(resource1.isBinary());
 
-			String workspacePath = LocalWorkspaceMapper.getMappedName(((FileSystemRepository) repository), "/testCollection/toBeRemoved1Cached2.txt");
+			String workspacePath =
+					LocalWorkspaceMapper.getMappedName(((FileSystemRepository) repository), "/testCollection/toBeRemoved1Cached2.txt");
 
 			FileSystemUtils.createFile(workspacePath);
 
@@ -72,7 +72,8 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 			assertNotNull(resource2);
 			assertTrue(resource2.exists());
 
-			String workspacePath1 = LocalWorkspaceMapper.getMappedName(((FileSystemRepository) repository), "/testCollection/toBeRemoved1Cached.txt");
+			String workspacePath1 =
+					LocalWorkspaceMapper.getMappedName(((FileSystemRepository) repository), "/testCollection/toBeRemoved1Cached.txt");
 			FileWriter output = new FileWriter(workspacePath1);
 			IOUtils.write("cached file changed", output);
 			output.flush();

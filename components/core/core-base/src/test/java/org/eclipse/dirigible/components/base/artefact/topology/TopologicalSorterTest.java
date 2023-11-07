@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.base.artefact.topology;
 
@@ -38,18 +37,18 @@ public class TopologicalSorterTest {
 		SortableNode nodeG = new SortableNode("G_F", nodeF);
 		SortableNode nodeH = new SortableNode("H_FA", nodeF, nodeA);
 		SortableNode nodeI = new SortableNode("I_FC", nodeF, nodeC);
-		
+
 		List<TopologicallySortable> list = new ArrayList<>();
-//		list.add(nodeG);
-//		list.add(nodeB);
-//		list.add(nodeH);
-//		list.add(nodeA);
-//		list.add(nodeD);
-//		list.add(nodeE);
-//		list.add(nodeF);
-//		list.add(nodeI);
-//		list.add(nodeC);
-		
+		// list.add(nodeG);
+		// list.add(nodeB);
+		// list.add(nodeH);
+		// list.add(nodeA);
+		// list.add(nodeD);
+		// list.add(nodeE);
+		// list.add(nodeF);
+		// list.add(nodeI);
+		// list.add(nodeC);
+
 		list.add(nodeC);
 		list.add(nodeD);
 		list.add(nodeG);
@@ -59,49 +58,49 @@ public class TopologicalSorterTest {
 		list.add(nodeA);
 		list.add(nodeE);
 		list.add(nodeF);
-		
-		
-		
+
+
+
 		TopologicalSorter sorter = new TopologicalSorter();
 		List<TopologicallySortable> results = sorter.sort(list);
 		for (TopologicallySortable sortable : results) {
 			System.out.println(sortable.getId());
 		}
-		
-		assertEquals(results.get(0).getId(), "F");
-		
-//		F
-//		A
-//		H_FA
-//		C_A
-//		I_FC
-//		B_A
-//		D_AB
-//		E_CD
-//		G_F
 
-		
-		
+		assertEquals(results.get(0).getId(), "F");
+
+		// F
+		// A
+		// H_FA
+		// C_A
+		// I_FC
+		// B_A
+		// D_AB
+		// E_CD
+		// G_F
+
+
+
 	}
-	
+
 	/**
 	 * The Class SortableNode.
 	 */
 	public static class SortableNode implements TopologicallySortable {
-		
+
 		/** The id. */
 		public String id;
-		
+
 		/** The dependencies. */
 		public List<TopologicallySortable> dependencies;
-		
+
 		/**
 		 * Instantiates a new sortable node.
 		 *
 		 * @param id the id
 		 * @param dependencies the dependencies
 		 */
-		public SortableNode(String id, TopologicallySortable ... dependencies) {
+		public SortableNode(String id, TopologicallySortable... dependencies) {
 			this.id = id;
 			this.dependencies = Arrays.asList(dependencies);
 		}
@@ -125,7 +124,7 @@ public class TopologicalSorterTest {
 		public List<TopologicallySortable> getDependencies() {
 			return this.dependencies;
 		}
-		
+
 	}
 
 }

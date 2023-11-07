@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.test;
 
@@ -33,8 +32,7 @@ public class PersistenceManagerAllDataTypesTest extends AbstractPersistenceManag
 	/**
 	 * Ordered CRUD tests.
 	 *
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @throws SQLException the SQL exception
 	 */
 	@Test
 	public void orderedCrudTests() throws SQLException {
@@ -55,7 +53,7 @@ public class PersistenceManagerAllDataTypesTest extends AbstractPersistenceManag
 				// drop the table
 				dropTableForPojo(connection, persistenceManager);
 			}
-			
+
 		} finally {
 			if (connection != null) {
 				connection.close();
@@ -94,7 +92,7 @@ public class PersistenceManagerAllDataTypesTest extends AbstractPersistenceManag
 		AllDataTypes allDataTypes = new AllDataTypes();
 		allDataTypes.set_bigint(new BigInteger("1000000000"));
 		allDataTypes.set_bit(true);
-		allDataTypes.set_blob(new byte[]{1,2,3,4,5,6});
+		allDataTypes.set_blob(new byte[] {1, 2, 3, 4, 5, 6});
 		allDataTypes.set_boolean(true);
 		allDataTypes.set_char("XXX");
 		allDataTypes.set_date(new Date(123456));
@@ -102,12 +100,12 @@ public class PersistenceManagerAllDataTypesTest extends AbstractPersistenceManag
 		allDataTypes.set_double(12.34);
 		allDataTypes.set_integer(1234);
 		allDataTypes.set_real(12.34f);
-		allDataTypes.set_smallint((short)1);
+		allDataTypes.set_smallint((short) 1);
 		allDataTypes.set_time(new Time(123456));
 		allDataTypes.set_timestamp(new Timestamp(123456));
-		allDataTypes.set_tinyint((byte)1);
+		allDataTypes.set_tinyint((byte) 1);
 		allDataTypes.set_varchar("Test");
-		
+
 		persistenceManager.insert(connection, allDataTypes);
 	}
 

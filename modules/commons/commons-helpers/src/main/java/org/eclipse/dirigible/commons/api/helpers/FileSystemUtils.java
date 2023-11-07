@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.commons.api.helpers;
 
@@ -50,39 +49,39 @@ public class FileSystemUtils {
 
 	/** The Constant FOLDER_TARGET. */
 	public static final String FOLDER_TARGET = "target";
-	
+
 	/** The Constant PREFIX_DOT. */
 	public static final String PREFIX_DOT = ".";
-	
+
 	/** The Constant PROJECT_JSON. */
 	public static final String PROJECT_JSON = "project.json";
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FileSystemUtils.class);
-	
+
 	/** The Constant SEPARATOR. */
 	public static final String SEPARATOR = "/";
-	
+
 	/** The Constant DOT_GIT. */
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
-	
+
 	/** The Constant PROJECT_METADATA_FILE_NAME. */
-	public static final String PROJECT_METADATA_FILE_NAME = PROJECT_JSON; //$NON-NLS-1$
+	public static final String PROJECT_METADATA_FILE_NAME = PROJECT_JSON; // $NON-NLS-1$
 
 	/** The git root folder. */
 	private static String GIT_ROOT_FOLDER;
-	
+
 	/** The Constant DIRIGIBLE_GIT_ROOT_FOLDER. */
 	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
-	
+
 	/** The Constant DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER. */
 	private static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$
-	
+
 	/** The Constant REPOSITORY_GIT_FOLDER. */
 	private static final String REPOSITORY_GIT_FOLDER = "dirigible" + File.separator + "repository" + File.separator + DOT_GIT;
-	
+
 	/** The Constant DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER. */
-	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = FOLDER_TARGET + File.separator + REPOSITORY_GIT_FOLDER; //$NON-NLS-1$
+	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = FOLDER_TARGET + File.separator + REPOSITORY_GIT_FOLDER; // $NON-NLS-1$
 
 	static {
 		if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER))) {
@@ -115,7 +114,7 @@ public class FileSystemUtils {
 	 * Load file.
 	 *
 	 * @param workspacePath the workspace path
-	 * @return the byte[] 
+	 * @return the byte[]
 	 * @throws FileNotFoundException the file not found exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -193,7 +192,7 @@ public class FileSystemUtils {
 		Path destDir = fileSystem.getPath(destPath);
 		FileUtils.copyDirectory(srcDir.toFile(), destDir.toFile(), true);
 	}
-	
+
 	/**
 	 * Copy folder.
 	 *
@@ -230,11 +229,15 @@ public class FileSystemUtils {
 
 				// if (Files.exists(dir)) {
 				if (dir.toFile().exists()) {
-					if (logger.isTraceEnabled()) {logger.trace(String.format("Deleting directory: %s", dir));}
+					if (logger.isTraceEnabled()) {
+						logger.trace(String.format("Deleting directory: %s", dir));
+					}
 					try {
 						Files.delete(dir);
 					} catch (java.nio.file.NoSuchFileException e) {
-						if (logger.isTraceEnabled()) {logger.trace(String.format("Directory already has been deleted: %s", dir));}
+						if (logger.isTraceEnabled()) {
+							logger.trace(String.format("Directory already has been deleted: %s", dir));
+						}
 					}
 				}
 				return FileVisitResult.CONTINUE;
@@ -249,11 +252,15 @@ public class FileSystemUtils {
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				// if (Files.exists(file)) {
 				if (file.toFile().exists()) {
-					if (logger.isTraceEnabled()) {logger.trace(String.format("Deleting file: %s", file));}
+					if (logger.isTraceEnabled()) {
+						logger.trace(String.format("Deleting file: %s", file));
+					}
 					try {
 						Files.delete(file);
 					} catch (java.nio.file.NoSuchFileException e) {
-						if (logger.isTraceEnabled()) {logger.trace(String.format("File already has been deleted: %s", file));}
+						if (logger.isTraceEnabled()) {
+							logger.trace(String.format("File already has been deleted: %s", file));
+						}
 					}
 				}
 				return FileVisitResult.CONTINUE;
@@ -261,7 +268,9 @@ public class FileSystemUtils {
 
 			@Override
 			public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-				if (logger.isErrorEnabled()) {logger.error(String.format("Error in file: %s", file), exc);}
+				if (logger.isErrorEnabled()) {
+					logger.error(String.format("Error in file: %s", file), exc);
+				}
 				return FileVisitResult.CONTINUE;
 			}
 		});
@@ -280,7 +289,9 @@ public class FileSystemUtils {
 			try {
 				FileUtils.forceMkdir(folder.getCanonicalFile());
 			} catch (IOException e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage(), e);
+				}
 				return false;
 			}
 			return true;
@@ -308,7 +319,7 @@ public class FileSystemUtils {
 	 * Gets the extension.
 	 *
 	 * @param workspacePath the workspace path
-	 * @return the extension 
+	 * @return the extension
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static String getExtension(String workspacePath) throws IOException {
@@ -344,7 +355,7 @@ public class FileSystemUtils {
 	 * Gets the modified at.
 	 *
 	 * @param workspacePath the workspace path
-	 * @return the modified at 
+	 * @return the modified at
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static Date getModifiedAt(String workspacePath) throws IOException {
@@ -408,7 +419,9 @@ public class FileSystemUtils {
 			File file = path.toFile();
 			return file.exists() && file.getCanonicalFile().getName().equals(file.getName());
 		} catch (java.nio.file.InvalidPathException | IOException e) {
-			if (logger.isWarnEnabled()) {logger.warn(e.getMessage());}
+			if (logger.isWarnEnabled()) {
+				logger.warn(e.getMessage());
+			}
 			return false;
 		}
 
@@ -465,7 +478,7 @@ public class FileSystemUtils {
 		try {
 			Path[] paths = filesStream.toArray(size -> new Path[size]);
 			File[] files = new File[paths.length];
-			for (int i=0; i<paths.length; i++) {
+			for (int i = 0; i < paths.length; i++) {
 				files[i] = paths[i].toFile();
 			}
 			return files;
@@ -482,7 +495,7 @@ public class FileSystemUtils {
 	 * @return the resulting path
 	 * @throws IOException IO error
 	 */
-	public static File forceCreateDirectory(String firstSegment, String ...segments) throws IOException {
+	public static File forceCreateDirectory(String firstSegment, String... segments) throws IOException {
 		Path dir = Paths.get(firstSegment, segments);
 		if (dir.toFile().exists()) {
 			return dir.toFile();
@@ -497,7 +510,7 @@ public class FileSystemUtils {
 	 * @param segments the segments
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public static void deleteDirectory(String firstSegment, String ...segments) throws IOException  {
+	public static void deleteDirectory(String firstSegment, String... segments) throws IOException {
 		Path dir = Paths.get(firstSegment, segments);
 		File file = new File(String.valueOf(dir));
 		FileUtils.deleteDirectory(file);
@@ -510,7 +523,7 @@ public class FileSystemUtils {
 	 * @param segments the rest segments
 	 * @return the resulting path
 	 */
-	public static File getDirectory(String firstSegment, String ...segments) {
+	public static File getDirectory(String firstSegment, String... segments) {
 		Path dir = Paths.get(firstSegment, segments);
 		if (dir.toFile().exists()) {
 			return dir.toFile();
@@ -559,13 +572,9 @@ public class FileSystemUtils {
 		if (gitRoot == null) {
 			return new ArrayList<String>();
 		}
-		return Arrays.asList(gitRoot.listFiles())
-				.stream()
-				.filter(e -> !e.isFile())
-				.map(e -> e.getName())
-				.collect(Collectors.toList());
+		return Arrays.asList(gitRoot.listFiles()).stream().filter(e -> !e.isFile()).map(e -> e.getName()).collect(Collectors.toList());
 	}
-	
+
 	/**
 	 * Get the directory for git.
 	 *
@@ -591,7 +600,7 @@ public class FileSystemUtils {
 		File directGitDirectory = FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
 		return directGitDirectory;
 	}
-	
+
 	/**
 	 * Get the directory for git for deep projects.
 	 *
@@ -614,10 +623,10 @@ public class FileSystemUtils {
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Check subfolder.
 	 *
@@ -626,8 +635,7 @@ public class FileSystemUtils {
 	 * @return the file
 	 */
 	private static File checkSubfolder(File rootFolder, String repositoryName) {
-		if (rootFolder.getName().startsWith(PREFIX_DOT)
-				|| rootFolder.getName().equals(FOLDER_TARGET)) {
+		if (rootFolder.getName().startsWith(PREFIX_DOT) || rootFolder.getName().equals(FOLDER_TARGET)) {
 			return null;
 		}
 		if (rootFolder.getName().equals(repositoryName)) {
@@ -671,7 +679,10 @@ public class FileSystemUtils {
 		if (projects != null) {
 			return projects.stream().map(e -> e.getName()).collect(Collectors.toList());
 		}
-		if (logger.isWarnEnabled()) {logger.warn(String.format("Cannot enumerate the projects under a git folder for user, workspace and path: %s, %s, %s", user, workspace, repositoryName));}
+		if (logger.isWarnEnabled()) {
+			logger.warn(String.format("Cannot enumerate the projects under a git folder for user, workspace and path: %s, %s, %s", user,
+					workspace, repositoryName));
+		}
 		return new ArrayList<String>();
 	}
 
@@ -688,161 +699,165 @@ public class FileSystemUtils {
 		return getGitRepositoryProjects(gitRepository);
 	}
 
-    /**
-     * Gets the git repository projects.
-     *
-     * @param gitRepository the git repository
-     * @return the git repository projects
-     */
-    public static List<File> getGitRepositoryProjects(File gitRepository) {
-    	if (gitRepository != null) {
-	        EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-	        ProjectsFinder projectsFinder = new ProjectsFinder();
-	        try {
-	            Files.walkFileTree(Paths.get(gitRepository.getAbsolutePath()), opts, Integer.MAX_VALUE, projectsFinder);
-	        }
-	        catch (IOException e) {
-	        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), (Throwable)e);}
-	        }
-	        List<File> gitProjects = projectsFinder.getProjects();
-	
-	        return gitProjects;
-    	}
-    	return null;
-    }
+	/**
+	 * Gets the git repository projects.
+	 *
+	 * @param gitRepository the git repository
+	 * @return the git repository projects
+	 */
+	public static List<File> getGitRepositoryProjects(File gitRepository) {
+		if (gitRepository != null) {
+			EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+			ProjectsFinder projectsFinder = new ProjectsFinder();
+			try {
+				Files.walkFileTree(Paths.get(gitRepository.getAbsolutePath()), opts, Integer.MAX_VALUE, projectsFinder);
+			} catch (IOException e) {
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage(), (Throwable) e);
+				}
+			}
+			List<File> gitProjects = projectsFinder.getProjects();
 
-    /**
-     * The Class ProjectsFinder.
-     */
-    private static class ProjectsFinder extends SimpleFileVisitor<Path> {
+			return gitProjects;
+		}
+		return null;
+	}
 
-    	/** The projects. */
-	    private List<File> projects = new ArrayList<File>();
+	/**
+	 * The Class ProjectsFinder.
+	 */
+	private static class ProjectsFinder extends SimpleFileVisitor<Path> {
 
-    	/**
-	     * Gets the projects.
-	     *
-	     * @return the projects
-	     */
-	    public List<File> getProjects() {
+		/** The projects. */
+		private List<File> projects = new ArrayList<File>();
+
+		/**
+		 * Gets the projects.
+		 *
+		 * @return the projects
+		 */
+		public List<File> getProjects() {
 			return projects;
 		}
 
-    	/**
-	     * Visit file.
-	     *
-	     * @param path the path
-	     * @param attrs the attrs
-	     * @return the file visit result
-	     * @throws IOException Signals that an I/O exception has occurred.
-	     */
-	    @Override
-    	public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-    		File file = path.toFile();
-    		if (file.exists() && file.isFile() && file.getName().equals(PROJECT_METADATA_FILE_NAME)) {
-    			projects.add(file.getParentFile());
-    		}
-    		return CONTINUE;
-    	}
+		/**
+		 * Visit file.
+		 *
+		 * @param path the path
+		 * @param attrs the attrs
+		 * @return the file visit result
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
+		@Override
+		public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+			File file = path.toFile();
+			if (file.exists() && file.isFile() && file.getName().equals(PROJECT_METADATA_FILE_NAME)) {
+				projects.add(file.getParentFile());
+			}
+			return CONTINUE;
+		}
 
-    	/**
-	     * Visit file failed.
-	     *
-	     * @param file the file
-	     * @param exc the exc
-	     * @return the file visit result
-	     * @throws IOException Signals that an I/O exception has occurred.
-	     */
-	    @Override
-    	public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-	    	if (logger.isErrorEnabled()) {logger.error(exc.getMessage(), exc);}
-    		return CONTINUE;
-    	}
-    }
-    
+		/**
+		 * Visit file failed.
+		 *
+		 * @param file the file
+		 * @param exc the exc
+		 * @return the file visit result
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
+		@Override
+		public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+			if (logger.isErrorEnabled()) {
+				logger.error(exc.getMessage(), exc);
+			}
+			return CONTINUE;
+		}
+	}
+
 	/**
 	 * The Class Finder.
 	 */
 	private static class Finder extends SimpleFileVisitor<Path> {
 
-	    /** The matcher. */
-    	private final PathMatcher matcher;
-	    
-    	/** The files. */
-    	private List<String> files = new ArrayList<String>();
+		/** The matcher. */
+		private final PathMatcher matcher;
 
-	    /**
-    	 * Instantiates a new finder.
-    	 *
-    	 * @param pattern the pattern
-    	 */
-    	Finder(String pattern) {
-	        matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
-	    }
+		/** The files. */
+		private List<String> files = new ArrayList<String>();
 
-	    /**
-    	 * Find.
-    	 *
-    	 * @param file the file
-    	 */
-    	void find(Path file) {
-	        Path name = file.getFileName();
-	        if (name != null && matcher.matches(name)) {
-	        	files.add(file.toString());
-	        }
-	    }
+		/**
+		 * Instantiates a new finder.
+		 *
+		 * @param pattern the pattern
+		 */
+		Finder(String pattern) {
+			matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+		}
 
-	    /**
-    	 * Done.
-    	 */
-    	void done() {
-	    }
+		/**
+		 * Find.
+		 *
+		 * @param file the file
+		 */
+		void find(Path file) {
+			Path name = file.getFileName();
+			if (name != null && matcher.matches(name)) {
+				files.add(file.toString());
+			}
+		}
 
-	    /**
-    	 * Visit file.
-    	 *
-    	 * @param file the file
-    	 * @param attrs the attrs
-    	 * @return the file visit result
-    	 */
-    	@Override
-	    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-	        find(file);
-	        return CONTINUE;
-	    }
+		/**
+		 * Done.
+		 */
+		void done() {}
 
-	    /**
-    	 * Pre visit directory.
-    	 *
-    	 * @param dir the dir
-    	 * @param attrs the attrs
-    	 * @return the file visit result
-    	 */
-    	@Override
-	    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-	        find(dir);
-	        return CONTINUE;
-	    }
+		/**
+		 * Visit file.
+		 *
+		 * @param file the file
+		 * @param attrs the attrs
+		 * @return the file visit result
+		 */
+		@Override
+		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+			find(file);
+			return CONTINUE;
+		}
 
-	    /**
-    	 * Visit file failed.
-    	 *
-    	 * @param file the file
-    	 * @param exc the exc
-    	 * @return the file visit result
-    	 */
-    	@Override
-	    public FileVisitResult visitFileFailed(Path file, IOException exc) {
-    		if (logger.isErrorEnabled()) {logger.error(exc.getMessage(), exc);}
-	        return CONTINUE;
-	    }
+		/**
+		 * Pre visit directory.
+		 *
+		 * @param dir the dir
+		 * @param attrs the attrs
+		 * @return the file visit result
+		 */
+		@Override
+		public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+			find(dir);
+			return CONTINUE;
+		}
 
-	    /**
-    	 * Gets the files.
-    	 *
-    	 * @return the files
-    	 */
-    	public List<String> getFiles() {
+		/**
+		 * Visit file failed.
+		 *
+		 * @param file the file
+		 * @param exc the exc
+		 * @return the file visit result
+		 */
+		@Override
+		public FileVisitResult visitFileFailed(Path file, IOException exc) {
+			if (logger.isErrorEnabled()) {
+				logger.error(exc.getMessage(), exc);
+			}
+			return CONTINUE;
+		}
+
+		/**
+		 * Gets the files.
+		 *
+		 * @return the files
+		 */
+		public List<String> getFiles() {
 			return files;
 		}
 	}
@@ -856,11 +871,11 @@ public class FileSystemUtils {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static final List<String> find(String root, String pattern) throws IOException {
-		 Path startingDir = Paths.get(root);
-		 Finder finder = new Finder(pattern);
-		 EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-	     Files.walkFileTree(startingDir, opts, Integer.MAX_VALUE, finder);
-	     finder.done();
-	     return finder.getFiles();
+		Path startingDir = Paths.get(root);
+		Finder finder = new Finder(pattern);
+		EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+		Files.walkFileTree(startingDir, opts, Integer.MAX_VALUE, finder);
+		finder.done();
+		return finder.getFiles();
 	}
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.repository.endpoint;
 
@@ -41,10 +40,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "repository")
 public class RepositoryEndpoint {
-	
-/** The repository service. */
-private final RepositoryService repositoryService;
-	
+
+	/** The repository service. */
+	private final RepositoryService repositoryService;
+
 	/**
 	 * Instantiates a new repository endpoint.
 	 *
@@ -54,7 +53,7 @@ private final RepositoryService repositoryService;
 	public RepositoryEndpoint(RepositoryService repositoryService) {
 		this.repositoryService = repositoryService;
 	}
-	
+
 	/**
 	 * Gets the resource.
 	 *
@@ -63,9 +62,9 @@ private final RepositoryService repositoryService;
 	 */
 	@GetMapping("/{*path}")
 	public ResponseEntity<?> getRepositoryResource(@PathVariable("path") String path) {
-		
-		final HttpHeaders httpHeaders= new HttpHeaders();
-		
+
+		final HttpHeaders httpHeaders = new HttpHeaders();
+
 		IResource resource = repositoryService.getResource(path);
 		if (!resource.exists()) {
 			ICollection collection = repositoryService.getCollection(path);
@@ -96,7 +95,8 @@ private final RepositoryService repositoryService;
 
 		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
 			ICollection collection = repositoryService.createCollection(path);
-			return ResponseEntity.created(repositoryService.getURI(RepositoryService.escape(collection.getPath() + IRepositoryStructure.SEPARATOR))).build();
+			return ResponseEntity.created(
+					repositoryService.getURI(RepositoryService.escape(collection.getPath() + IRepositoryStructure.SEPARATOR))).build();
 		}
 
 		IResource resource = repositoryService.getResource(path);

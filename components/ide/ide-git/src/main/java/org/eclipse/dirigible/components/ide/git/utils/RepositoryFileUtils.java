@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.utils;
 
@@ -32,11 +31,9 @@ public class RepositoryFileUtils {
 	/**
 	 * Creates the directory.
 	 *
-	 * @param directory
-	 *            the directory
+	 * @param directory the directory
 	 * @return the file
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static File createDirectory(String directory) throws IOException {
 		return FileSystemUtils.forceCreateDirectory(directory);
@@ -45,12 +42,9 @@ public class RepositoryFileUtils {
 	/**
 	 * Copy collection to directory.
 	 *
-	 * @param source
-	 *            the source
-	 * @param tempDirectory
-	 *            the temp directory
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param source the source
+	 * @param tempDirectory the temp directory
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void copyCollectionToDirectory(ICollection source, File tempDirectory) throws IOException {
 		copyCollectionToDirectory(source, tempDirectory, new String[] {});
@@ -59,14 +53,10 @@ public class RepositoryFileUtils {
 	/**
 	 * Copy collection to directory.
 	 *
-	 * @param source
-	 *            the source
-	 * @param tempDirectory
-	 *            the temp directory
-	 * @param roots
-	 *            the roots
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param source the source
+	 * @param tempDirectory the temp directory
+	 * @param roots the roots
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void copyCollectionToDirectory(ICollection source, File tempDirectory, String... roots) throws IOException {
 		if (!source.exists()) {

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
@@ -40,49 +39,49 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
  */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { SynchronousSpringEventsConfig.class }, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {SynchronousSpringEventsConfig.class}, loader = AnnotationConfigContextLoader.class)
 @EntityScan("org.eclipse.dirigible.components")
 public class SynchronizationInitializerBrokenTest {
-	
+
 	/**
 	 * The Class ContextConfiguration.
 	 */
 	@Configuration
 	@ComponentScan("org.eclipse.dirigible.components")
-    static class ContextConfiguration {
+	static class ContextConfiguration {
 
-        /**
-         * Repository.
-         *
-         * @return the i repository
-         */
-        @Bean("SynchronizationInitializerBrokenTestReposiotry")
-        public IRepository repository() {
-            return new RepositoryConfig().repository();
-        }
-        
-    }
-	
+		/**
+		 * Repository.
+		 *
+		 * @return the i repository
+		 */
+		@Bean("SynchronizationInitializerBrokenTestReposiotry")
+		public IRepository repository() {
+			return new RepositoryConfig().repository();
+		}
+
+	}
+
 	/** The listener. */
 	@Autowired
-    private SynchronizationInitializer initializer;
-	
+	private SynchronizationInitializer initializer;
+
 	/** The synchronization processor. */
 	@Autowired
 	private SynchronizationProcessor synchronizationProcessor;
-	
+
 	/** The synchronization watcher. */
 	@Autowired
 	private SynchronizationWatcher synchronizationWatcher;
-	
+
 	/** The repository. */
 	@Autowired
-    private IRepository repository;
-	
+	private IRepository repository;
+
 	/** The datasource. */
 	@Autowired
 	private DataSource datasource;
-	
+
 	/**
 	 * Test context started handler.
 	 *
@@ -91,36 +90,36 @@ public class SynchronizationInitializerBrokenTest {
 	 * @throws SQLException the SQL exception
 	 */
 	@Test
-    public void testSynchronizationBroken() throws RepositoryWriteException, IOException, SQLException {
-		
+	public void testSynchronizationBroken() throws RepositoryWriteException, IOException, SQLException {
+
 		try (Connection connection = datasource.getConnection()) {
-		
+
 			// initialization
 			initializer.handleContextStart(null);
-			
+
 			// check if the definition has been created
 			CheckDefinitionUtils.isDefinitionBroken(connection);
-						
+
 			// check if the artefact has been created
 			CheckArtefactUtils.isArtefactNotCreated(connection);
-			
+
 			// correct the artefact
-			repository.getResource("/registry/public/test/test_broken.extension").setContent(
-					IOUtils.toByteArray(SynchronizationInitializerBrokenTest.class.getResourceAsStream(
-							"/META-INF/dirigible/test/test_broken.extension_recovered")));
-			
+			repository	.getResource("/registry/public/test/test_broken.extension")
+						.setContent(IOUtils.toByteArray(SynchronizationInitializerBrokenTest.class.getResourceAsStream(
+								"/META-INF/dirigible/test/test_broken.extension_recovered")));
+
 			// process again
 			synchronizationWatcher.force();
 			synchronizationProcessor.processSynchronizers();
-			
+
 			// check if the definition has been recovered
 			CheckDefinitionUtils.isDefinitionRecovered(connection);
-			
+
 			// check if the artefact has been recovered
 			CheckArtefactUtils.isArtefactRecovered(connection);
 		}
-    }
-	
+	}
+
 	/**
 	 * The Class TestConfiguration.
 	 */

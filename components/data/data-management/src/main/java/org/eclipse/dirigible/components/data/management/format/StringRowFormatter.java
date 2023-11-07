@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.format;
 
@@ -28,10 +27,10 @@ public class StringRowFormatter implements RowFormatter {
 	private static final String VALUE_BINARY = "[BINARY]";
 
 	/** The Constant BINARY_TYPES. */
-	static final int[] BINARY_TYPES = new int[] { java.sql.Types.ARRAY, java.sql.Types.BINARY, java.sql.Types.BIT, java.sql.Types.BIT,
+	static final int[] BINARY_TYPES = new int[] {java.sql.Types.ARRAY, java.sql.Types.BINARY, java.sql.Types.BIT, java.sql.Types.BIT,
 			java.sql.Types.BLOB, java.sql.Types.CLOB, java.sql.Types.DATALINK, java.sql.Types.DISTINCT, java.sql.Types.JAVA_OBJECT,
-			java.sql.Types.LONGVARBINARY, java.sql.Types.NCLOB, java.sql.Types.NULL, java.sql.Types.OTHER, java.sql.Types.REF, java.sql.Types.SQLXML,
-			java.sql.Types.STRUCT, java.sql.Types.VARBINARY };
+			java.sql.Types.LONGVARBINARY, java.sql.Types.NCLOB, java.sql.Types.NULL, java.sql.Types.OTHER, java.sql.Types.REF,
+			java.sql.Types.SQLXML, java.sql.Types.STRUCT, java.sql.Types.VARBINARY};
 
 	/**
 	 * Write.
@@ -43,7 +42,8 @@ public class StringRowFormatter implements RowFormatter {
 	 * @throws SQLException the SQL exception
 	 */
 	@Override
-	public String write(List<ColumnDescriptor> columnDescriptors, ResultSetMetaData resultSetMetaData, ResultSet resultSet) throws SQLException {
+	public String write(List<ColumnDescriptor> columnDescriptors, ResultSetMetaData resultSetMetaData, ResultSet resultSet)
+			throws SQLException {
 		StringBuilder buff = new StringBuilder();
 		buff.append(ResultSetMonospacedWriter.DELIMITER);
 		for (ColumnDescriptor columnDescriptor : columnDescriptors) {
@@ -90,8 +90,7 @@ public class StringRowFormatter implements RowFormatter {
 	/**
 	 * Checks if is binary type.
 	 *
-	 * @param columnType
-	 *            the column type
+	 * @param columnType the column type
 	 * @return true, if is binary type
 	 */
 	boolean isBinaryType(int columnType) {

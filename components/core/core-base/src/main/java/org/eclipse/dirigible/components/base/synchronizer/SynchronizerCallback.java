@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.base.synchronizer;
 
@@ -22,21 +21,21 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
  *
  */
 public interface SynchronizerCallback {
-	
+
 	/**
 	 * Adds the error.
 	 *
 	 * @param error the error
 	 */
 	void addError(String error);
-	
+
 	/**
 	 * Gets the errors.
 	 *
 	 * @return the errors
 	 */
 	List<String> getErrors();
-	
+
 	/**
 	 * Register errors.
 	 *
@@ -44,7 +43,7 @@ public interface SynchronizerCallback {
 	 * @param lifecycle the lifecycle
 	 */
 	void registerErrors(List<TopologyWrapper<? extends Artefact>> remained, ArtefactLifecycle lifecycle);
-	
+
 	/**
 	 * Register errors.
 	 *
@@ -61,8 +60,9 @@ public interface SynchronizerCallback {
 	 * @param lifecycle the lifecycle
 	 * @param message the message
 	 */
-	void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper, ArtefactLifecycle lifecycle, String message);
-	
+	void registerState(Synchronizer<? extends Artefact> synchronizer, TopologyWrapper<? extends Artefact> wrapper,
+			ArtefactLifecycle lifecycle, String message);
+
 	/**
 	 * Register errors.
 	 *

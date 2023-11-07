@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.utils;
 
@@ -28,16 +27,13 @@ import com.google.common.net.UrlEscapers;
 public class UrlFacade {
 
 	/**
-	 * Translates a string into application/x-www-form-urlencoded format using a specific encoding scheme. This method
-	 * uses the supplied encoding scheme to obtain the bytes for unsafe characters.
+	 * Translates a string into application/x-www-form-urlencoded format using a specific encoding
+	 * scheme. This method uses the supplied encoding scheme to obtain the bytes for unsafe characters.
 	 *
-	 * @param input
-	 *            the input string
-	 * @param charset
-	 *            the input charset
+	 * @param input the input string
+	 * @param charset the input charset
 	 * @return the translated input
-	 * @throws UnsupportedEncodingException
-	 *             in case of problem with encoding
+	 * @throws UnsupportedEncodingException in case of problem with encoding
 	 */
 	public static final String encode(String input, String charset) throws UnsupportedEncodingException {
 		if (charset == null) {
@@ -47,32 +43,27 @@ public class UrlFacade {
 	}
 
 	/**
-	 * Translates a string into application/x-www-form-urlencoded format using a specific encoding scheme. This method
-	 * uses the supplied encoding scheme to obtain the bytes for unsafe characters.
+	 * Translates a string into application/x-www-form-urlencoded format using a specific encoding
+	 * scheme. This method uses the supplied encoding scheme to obtain the bytes for unsafe characters.
 	 *
-	 * @param input
-	 *            the input string
+	 * @param input the input string
 	 * @return the translated input
-	 * @throws UnsupportedEncodingException
-	 *             in case of problem with encoding
+	 * @throws UnsupportedEncodingException in case of problem with encoding
 	 */
 	public static final String encode(String input) throws UnsupportedEncodingException {
 		return encode(input, null);
 	}
 
 	/**
-	 * Decodes a application/x-www-form-urlencoded string using a specific encoding scheme. The supplied encoding is
-	 * used to determine what characters are represented by any consecutive sequences of the form "%xy".
+	 * Decodes a application/x-www-form-urlencoded string using a specific encoding scheme. The supplied
+	 * encoding is used to determine what characters are represented by any consecutive sequences of the
+	 * form "%xy".
 	 *
-	 * @param input
-	 *            the input string
-	 * @param charset
-	 *            the input charset
+	 * @param input the input string
+	 * @param charset the input charset
 	 * @return the decoded input
-	 * @throws DecoderException
-	 *             in case of decoding failure
-	 * @throws UnsupportedEncodingException
-	 *             in case of problem with encoding
+	 * @throws DecoderException in case of decoding failure
+	 * @throws UnsupportedEncodingException in case of problem with encoding
 	 */
 	public static final String decode(String input, String charset) throws DecoderException, UnsupportedEncodingException {
 		if (charset == null) {
@@ -82,16 +73,14 @@ public class UrlFacade {
 	}
 
 	/**
-	 * Decodes a application/x-www-form-urlencoded string using a specific encoding scheme. The supplied encoding is
-	 * used to determine what characters are represented by any consecutive sequences of the form "%xy".
+	 * Decodes a application/x-www-form-urlencoded string using a specific encoding scheme. The supplied
+	 * encoding is used to determine what characters are represented by any consecutive sequences of the
+	 * form "%xy".
 	 *
-	 * @param input
-	 *            the input string
+	 * @param input the input string
 	 * @return the decoded input
-	 * @throws DecoderException
-	 *             in case of decoding failure
-	 * @throws UnsupportedEncodingException
-	 *             in case of problem with encoding
+	 * @throws DecoderException in case of decoding failure
+	 * @throws UnsupportedEncodingException in case of problem with encoding
 	 */
 	public static final String decode(String input) throws DecoderException, UnsupportedEncodingException {
 		return decode(input, null);
@@ -100,29 +89,29 @@ public class UrlFacade {
 	/**
 	 * Escape URL fragments.
 	 *
-	 * @param input            the input string
+	 * @param input the input string
 	 * @return escaped input
 	 */
 	public static final String escape(String input) {
 		return UrlEscapers.urlFragmentEscaper().escape(input);
 
 	}
-	
+
 	/**
 	 * Escape URL path.
 	 *
-	 * @param input            the input string
+	 * @param input the input string
 	 * @return escaped input
 	 */
 	public static final String escapePath(String input) {
 		return UrlEscapers.urlPathSegmentEscaper().escape(input);
 
 	}
-	
+
 	/**
 	 * Escape URL fragments.
 	 *
-	 * @param input            the input string
+	 * @param input the input string
 	 * @return escaped input
 	 */
 	public static final String escapeForm(String input) {

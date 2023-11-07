@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.web.synchronizer;
 
@@ -45,19 +44,19 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(SynchronizersOrder.EXPOSE)
 public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Expose> {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ExposesSynchronizer.class);
-	
+
 	/** The Constant FILE_NAME. */
 	public static final String FILE_NAME = "project.json";
-	
+
 	/** The expose service. */
 	private ExposeService exposeService;
-	
+
 	/** The synchronization callback. */
 	private SynchronizerCallback callback;
-	
+
 	/**
 	 * Instantiates a new exposes synchronizer.
 	 *
@@ -67,7 +66,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	public ExposesSynchronizer(ExposeService exposeService) {
 		this.exposeService = exposeService;
 	}
-	
+
 	/**
 	 * Gets the service.
 	 *
@@ -90,7 +89,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	public boolean isAccepted(Path file, BasicFileAttributes attrs) {
 		return file.toString().endsWith(FILE_NAME);
 	}
-	
+
 	/**
 	 * Checks if is accepted.
 	 *
@@ -108,7 +107,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	 * @param location the location
 	 * @param content the content
 	 * @return the list
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	@Override
 	public List<Expose> parse(String location, byte[] content) throws ParseException {
@@ -128,14 +127,20 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 			}
 			expose = getService().save(expose);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-			if (logger.isErrorEnabled()) {logger.error("expose: {}", expose);}
-			if (logger.isErrorEnabled()) {logger.error("content: {}", new String(content));}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error("expose: {}", expose);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error("content: {}", new String(content));
+			}
 			throw new ParseException(e.getMessage(), 0);
 		}
 		return List.of(expose);
 	}
-	
+
 	/**
 	 * Retrieve.
 	 *
@@ -146,7 +151,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	public List<Expose> retrieve(String location) {
 		return getService().getAll();
 	}
-	
+
 	/**
 	 * Sets the status.
 	 *
@@ -160,7 +165,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 		artefact.setError(error);
 		getService().save((Expose) artefact);
 	}
-	
+
 	/**
 	 * Complete.
 	 *
@@ -176,40 +181,43 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 		} else {
 			throw new UnsupportedOperationException(String.format("Trying to process %s as Expose", wrapper.getArtefact().getClass()));
 		}
-		
+
 		switch (flow) {
-		case CREATE:
-			if (expose.getLifecycle().equals(ArtefactLifecycle.NEW)) {
-				if (expose.getExposes() != null) {
-					ExposeManager.registerExposableProject(expose.getName(), expose.getExposes());
-				} else {
-					if (logger.isTraceEnabled()) {logger.trace(expose.getName() + " skipped due to lack of exposures");}
+			case CREATE:
+				if (expose.getLifecycle().equals(ArtefactLifecycle.NEW)) {
+					if (expose.getExposes() != null) {
+						ExposeManager.registerExposableProject(expose.getName(), expose.getExposes());
+					} else {
+						if (logger.isTraceEnabled()) {
+							logger.trace(expose.getName() + " skipped due to lack of exposures");
+						}
+					}
+					callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
 				}
-				callback.registerState(this, wrapper, ArtefactLifecycle.CREATED, "");
-			}
-			break;
-		case UPDATE:
-			if (expose.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
-				ExposeManager.unregisterProject(expose.getName());
-				if (expose.getExposes() != null) {
-					ExposeManager.registerExposableProject(expose.getName(), expose.getExposes());
-				} else {
-					if (logger.isTraceEnabled()) {logger.trace(expose.getName() + " skipped due to lack of exposures");}
+				break;
+			case UPDATE:
+				if (expose.getLifecycle().equals(ArtefactLifecycle.MODIFIED)) {
+					ExposeManager.unregisterProject(expose.getName());
+					if (expose.getExposes() != null) {
+						ExposeManager.registerExposableProject(expose.getName(), expose.getExposes());
+					} else {
+						if (logger.isTraceEnabled()) {
+							logger.trace(expose.getName() + " skipped due to lack of exposures");
+						}
+					}
+					callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
 				}
-				callback.registerState(this, wrapper, ArtefactLifecycle.UPDATED, "");
-			}
-			break;
-		case DELETE:
-			if (expose.getLifecycle().equals(ArtefactLifecycle.CREATED)
-					|| expose.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
-				ExposeManager.unregisterProject(expose.getName());
-				callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
-			}
-			break;
-		case START:
-		case STOP:
+				break;
+			case DELETE:
+				if (expose.getLifecycle().equals(ArtefactLifecycle.CREATED) || expose.getLifecycle().equals(ArtefactLifecycle.UPDATED)) {
+					ExposeManager.unregisterProject(expose.getName());
+					callback.registerState(this, wrapper, ArtefactLifecycle.DELETED, "");
+				}
+				break;
+			case START:
+			case STOP:
 		}
-		
+
 		return true;
 	}
 
@@ -224,12 +232,14 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 			ExposeManager.unregisterProject(expose.getName());
 			getService().delete(expose);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			callback.addError(e.getMessage());
 			callback.registerState(this, expose, ArtefactLifecycle.DELETED, e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Sets the callback.
 	 *
@@ -239,7 +249,7 @@ public class ExposesSynchronizer<A extends Artefact> implements Synchronizer<Exp
 	public void setCallback(SynchronizerCallback callback) {
 		this.callback = callback;
 	}
-	
+
 	/**
 	 * Gets the file extension.
 	 *

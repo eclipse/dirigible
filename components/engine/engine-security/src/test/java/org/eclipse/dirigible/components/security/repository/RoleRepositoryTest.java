@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.repository;
 
@@ -36,54 +35,54 @@ import static org.junit.jupiter.api.Assertions.*;
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class RoleRepositoryTest {
-    @Autowired
-    private RoleRepository securityRoleRepository;
+	@Autowired
+	private RoleRepository securityRoleRepository;
 
-    @Autowired
-    EntityManager entityManager;
+	@Autowired
+	EntityManager entityManager;
 
-    @BeforeEach
-    public void setup() {
-        // Create test security roles
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test3.role", "test3", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test4.role", "test4", "description"));
-        securityRoleRepository.save(createSecurityRole("/a/b/c/test5.role", "test5", "description"));
-    }
+	@BeforeEach
+	public void setup() {
+		// Create test security roles
+		securityRoleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
+		securityRoleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
+		securityRoleRepository.save(createSecurityRole("/a/b/c/test3.role", "test3", "description"));
+		securityRoleRepository.save(createSecurityRole("/a/b/c/test4.role", "test4", "description"));
+		securityRoleRepository.save(createSecurityRole("/a/b/c/test5.role", "test5", "description"));
+	}
 
-    @AfterEach
-    public void cleanup() {
-        // Delete test security roles
-        securityRoleRepository.findAll().stream().forEach(securityRole -> securityRoleRepository.delete(securityRole));
-    }
+	@AfterEach
+	public void cleanup() {
+		// Delete test security roles
+		securityRoleRepository.findAll().stream().forEach(securityRole -> securityRoleRepository.delete(securityRole));
+	}
 
-    @Test
-    public void getOne() {
-        Long id = securityRoleRepository.findAll().get(0).getId();
-        Optional<Role> optional = securityRoleRepository.findById(id);
-        Role securityRole = optional.isPresent() ? optional.get() : null;
-        assertNotNull(securityRole);
-        assertNotNull(securityRole.getLocation());
-        assertNotNull(securityRole.getCreatedBy());
-        assertEquals("SYSTEM", securityRole.getCreatedBy());
-        assertNotNull(securityRole.getCreatedAt());
-    }
+	@Test
+	public void getOne() {
+		Long id = securityRoleRepository.findAll().get(0).getId();
+		Optional<Role> optional = securityRoleRepository.findById(id);
+		Role securityRole = optional.isPresent() ? optional.get() : null;
+		assertNotNull(securityRole);
+		assertNotNull(securityRole.getLocation());
+		assertNotNull(securityRole.getCreatedBy());
+		assertEquals("SYSTEM", securityRole.getCreatedBy());
+		assertNotNull(securityRole.getCreatedAt());
+	}
 
-    @Test
-    public void getReferenceUsingEntityManager() {
-        Long id = securityRoleRepository.findAll().get(0).getId();
-        Role securityRole = entityManager.getReference(Role.class, id);
-        assertNotNull(securityRole);
-        assertNotNull(securityRole.getLocation());
-    }
+	@Test
+	public void getReferenceUsingEntityManager() {
+		Long id = securityRoleRepository.findAll().get(0).getId();
+		Role securityRole = entityManager.getReference(Role.class, id);
+		assertNotNull(securityRole);
+		assertNotNull(securityRole.getLocation());
+	}
 
-    public static Role createSecurityRole(String location, String name, String description) {
-        Role securityRole = new Role(location, name, description);
-        return securityRole;
-    }
+	public static Role createSecurityRole(String location, String name, String description) {
+		Role securityRole = new Role(location, name, description);
+		return securityRole;
+	}
 
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 }

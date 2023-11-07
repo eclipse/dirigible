@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.websockets.repository;
 
@@ -39,55 +38,55 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class WebsocketRepositoryTest {
 
-    @Autowired
-    private WebsocketRepository websocketRepository;
+	@Autowired
+	private WebsocketRepository websocketRepository;
 
-    @Autowired
-    EntityManager entityManager;
+	@Autowired
+	EntityManager entityManager;
 
-    @BeforeEach
-    public void setup() {
-    	
-    	cleanup();
-    	
-        websocketRepository.save(new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1"));
-        websocketRepository.save(new Websocket("/a/b/c/w2.websocket", "name2", "description", "endpoint2", "handler2", "engine2"));
-        websocketRepository.save(new Websocket("/a/b/c/w3.websocket", "name3", "description", "endpoint3", "handler3", "engine3"));
-    }
+	@BeforeEach
+	public void setup() {
 
-    @AfterEach
-    public void cleanup() {
-        websocketRepository.deleteAll();
-    }
+		cleanup();
 
-    @Test
-    public void getOne() {
-        List<Websocket> all = websocketRepository.findAll();
-        assertEquals(3, all.size());
-        Long id = all.get(0).getId();
-        Optional<Websocket> optional = websocketRepository.findById(id);
-        Websocket websocket = optional.isPresent() ? optional.get() : null;
-        assertNotNull(websocket);
-        assertEquals("/a/b/c/w1.websocket", websocket.getLocation());
-        assertEquals("name1", websocket.getName());
-        assertEquals("engine1", websocket.getEngine());
-        assertEquals("handler1", websocket.getHandler());
-        assertEquals("endpoint1", websocket.getEndpoint());
-        assertEquals("websocket", websocket.getType());
-        assertEquals("description", websocket.getDescription());
-        assertEquals("SYSTEM", websocket.getCreatedBy());
-        assertNotNull(websocket.getCreatedAt());
-    }
+		websocketRepository.save(new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1"));
+		websocketRepository.save(new Websocket("/a/b/c/w2.websocket", "name2", "description", "endpoint2", "handler2", "engine2"));
+		websocketRepository.save(new Websocket("/a/b/c/w3.websocket", "name3", "description", "endpoint3", "handler3", "engine3"));
+	}
 
-    @Test
-    public void getReferenceUsingEntityManager() {
-        Long id = websocketRepository.findAll().get(0).getId();
-        Websocket websocket = entityManager.getReference(Websocket.class, id);
-        assertNotNull(websocket);
-        assertEquals("/a/b/c/w1.websocket", websocket.getLocation());
-    }
+	@AfterEach
+	public void cleanup() {
+		websocketRepository.deleteAll();
+	}
 
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
+	@Test
+	public void getOne() {
+		List<Websocket> all = websocketRepository.findAll();
+		assertEquals(3, all.size());
+		Long id = all.get(0).getId();
+		Optional<Websocket> optional = websocketRepository.findById(id);
+		Websocket websocket = optional.isPresent() ? optional.get() : null;
+		assertNotNull(websocket);
+		assertEquals("/a/b/c/w1.websocket", websocket.getLocation());
+		assertEquals("name1", websocket.getName());
+		assertEquals("engine1", websocket.getEngine());
+		assertEquals("handler1", websocket.getHandler());
+		assertEquals("endpoint1", websocket.getEndpoint());
+		assertEquals("websocket", websocket.getType());
+		assertEquals("description", websocket.getDescription());
+		assertEquals("SYSTEM", websocket.getCreatedBy());
+		assertNotNull(websocket.getCreatedAt());
+	}
+
+	@Test
+	public void getReferenceUsingEntityManager() {
+		Long id = websocketRepository.findAll().get(0).getId();
+		Websocket websocket = entityManager.getReference(Websocket.class, id);
+		assertNotNull(websocket);
+		assertEquals("/a/b/c/w1.websocket", websocket.getLocation());
+	}
+
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 }

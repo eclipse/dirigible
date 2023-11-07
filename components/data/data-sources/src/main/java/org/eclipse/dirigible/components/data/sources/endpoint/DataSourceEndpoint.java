@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.sources.endpoint;
 
@@ -90,7 +89,7 @@ public class DataSourceEndpoint extends BaseEndpoint {
 	public ResponseEntity<DataSource> get(@PathVariable("id") Long id) {
 		return ResponseEntity.ok(datasourceService.findById(id));
 	}
-	
+
 	/**
 	 * Find by name.
 	 *
@@ -101,7 +100,7 @@ public class DataSourceEndpoint extends BaseEndpoint {
 	public ResponseEntity<DataSource> findByName(@RequestParam("name") String name) {
 		return ResponseEntity.ok(datasourceService.findByName(name));
 	}
-	
+
 	/**
 	 * Gets the all.
 	 *
@@ -111,7 +110,7 @@ public class DataSourceEndpoint extends BaseEndpoint {
 	public ResponseEntity<List<DataSource>> getAll() {
 		return ResponseEntity.ok(datasourceService.getAll());
 	}
-	
+
 	/**
 	 * Creates the data source.
 	 *
@@ -120,33 +119,31 @@ public class DataSourceEndpoint extends BaseEndpoint {
 	 * @throws URISyntaxException the URI syntax exception
 	 */
 	@PostMapping
-	public ResponseEntity<URI> createDataSource(
-			@Valid @RequestBody DataSourceParameter datasourceParameter) throws URISyntaxException {
-		DataSource datasource = new DataSource(
-				"API_" + datasourceParameter.getName(), datasourceParameter.getName(), "",
-				datasourceParameter.getDriver(), datasourceParameter.getUrl(),
-				datasourceParameter.getUsername(), datasourceParameter.getPassword());
-		
+	public ResponseEntity<URI> createDataSource(@Valid @RequestBody DataSourceParameter datasourceParameter) throws URISyntaxException {
+		DataSource datasource =
+				new DataSource("API_" + datasourceParameter.getName(), datasourceParameter.getName(), "", datasourceParameter.getDriver(),
+						datasourceParameter.getUrl(), datasourceParameter.getUsername(), datasourceParameter.getPassword());
+
 		if (datasourceParameter.getParameters() != null && !datasourceParameter.getParameters().isEmpty()) {
 			StringTokenizer tokenizer = new StringTokenizer(datasourceParameter.getParameters(), ",");
 			while (tokenizer.hasMoreTokens()) {
 				String token = tokenizer.nextToken().trim();
 				if (!token.isEmpty()) {
 					int index = token.indexOf('=');
-					if (index >0) {
+					if (index > 0) {
 						String name = token.substring(0, index).trim();
-						String value = token.substring(index+1).trim();
+						String value = token.substring(index + 1).trim();
 						datasource.addProperty(name, value);
 					}
 				}
 			}
 		}
-		
+
 		datasource.updateKey();
 		datasource = datasourceService.save(datasource);
 		return ResponseEntity.created(new URI(BaseEndpoint.PREFIX_ENDPOINT_DATA + "sources/" + datasource.getId())).build();
 	}
-	
+
 	/**
 	 * Updates the data source.
 	 *
@@ -156,18 +153,16 @@ public class DataSourceEndpoint extends BaseEndpoint {
 	 * @throws URISyntaxException the URI syntax exception
 	 */
 	@PutMapping("{id}")
-	public ResponseEntity<URI> updateDataSource(@PathVariable("id") Long id,
-			@Valid @RequestBody DataSourceParameter datasourceParameter) throws URISyntaxException {
-		DataSource datasource = new DataSource(
-				"_", datasourceParameter.getName(), "",
-				datasourceParameter.getDriver(), datasourceParameter.getUrl(),
-				datasourceParameter.getUsername(), datasourceParameter.getPassword());
+	public ResponseEntity<URI> updateDataSource(@PathVariable("id") Long id, @Valid @RequestBody DataSourceParameter datasourceParameter)
+			throws URISyntaxException {
+		DataSource datasource = new DataSource("_", datasourceParameter.getName(), "", datasourceParameter.getDriver(),
+				datasourceParameter.getUrl(), datasourceParameter.getUsername(), datasourceParameter.getPassword());
 		datasource.setId(id);
 		datasource.updateKey();
 		datasource = datasourceService.save(datasource);
 		return ResponseEntity.created(new URI(BaseEndpoint.PREFIX_ENDPOINT_DATA + "sources/" + datasource.getId())).build();
 	}
-	
+
 	/**
 	 * Deletes the data source.
 	 *

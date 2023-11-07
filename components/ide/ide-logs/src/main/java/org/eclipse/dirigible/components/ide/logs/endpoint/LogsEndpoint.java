@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.logs.endpoint;
 
@@ -29,11 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_IDE + "logs")
 public class LogsEndpoint {
-	
+
 	/** The logs service. */
 	@Autowired
-    private LogsService logsService;
-	
+	private LogsService logsService;
+
 	/**
 	 * List all the log files in the logs folder.
 	 *
@@ -41,11 +40,11 @@ public class LogsEndpoint {
 	 * @throws URISyntaxException the URI syntax exception
 	 * @throws IOException the I/O error
 	 */
-	@GetMapping(value = "/", produces="application/json")
+	@GetMapping(value = "/", produces = "application/json")
 	public ResponseEntity<?> listLogs() throws URISyntaxException, IOException {
 		return ResponseEntity.ok(logsService.list());
 	}
-	
+
 	/**
 	 * Search.
 	 *
@@ -54,7 +53,7 @@ public class LogsEndpoint {
 	 * @throws URISyntaxException the URI syntax exception
 	 * @throws IOException the I/O error
 	 */
-	@GetMapping(value = "/{file}", produces="text/plain")
+	@GetMapping(value = "/{file}", produces = "text/plain")
 	public ResponseEntity<?> list(@PathVariable("file") String file) throws URISyntaxException, IOException {
 		return ResponseEntity.ok(logsService.get(file));
 	}

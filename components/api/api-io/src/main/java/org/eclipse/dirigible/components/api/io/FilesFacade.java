@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.io;
 
@@ -47,7 +46,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class FilesFacade {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FilesFacade.class);
 
@@ -59,7 +58,7 @@ public class FilesFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final boolean exists(String path) throws IOException {
-//		return Files.exists(Paths.get(path));
+		// return Files.exists(Paths.get(path));
 		return Paths.get(path).toFile().exists();
 	}
 
@@ -171,7 +170,7 @@ public class FilesFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String getParentPath(String path) throws IOException {
-		return new File(path).getParentFile().getPath(); //FIXME may throw NPE
+		return new File(path).getParentFile().getPath(); // FIXME may throw NPE
 	}
 
 	/**
@@ -197,8 +196,9 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Write the provided data to the file represented by the provided path.
-	 * If the file exists the old content is discarded.
+	 * Write the provided data to the file represented by the provided path. If the file exists the old
+	 * content is discarded.
+	 *
 	 * @param path path to the file to write to
 	 * @param input the data to write
 	 * @throws IOException in case of failure in underlying layer
@@ -207,10 +207,11 @@ public class FilesFacade {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
 		Files.write(Paths.get(path), bytes);
 	}
-	
+
 	/**
-	 * Write the provided data to the file represented by the provided path.
-	 * If the file exists the old content is discarded.
+	 * Write the provided data to the file represented by the provided path. If the file exists the old
+	 * content is discarded.
+	 *
 	 * @param path path to the file to write to
 	 * @param input the data to write
 	 * @throws IOException in case of failure in underlying layer
@@ -220,12 +221,14 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Write text to the file represented by the provided path using UTF-8 charset.
-	 * If the file exists the old content is discarded.
+	 * Write text to the file represented by the provided path using UTF-8 charset. If the file exists
+	 * the old content is discarded.
+	 *
 	 * @param path path to the file to write to
 	 * @param text the data to write
 	 * @throws IOException in case of failure in underlying layer
-	 */	public static final void writeText(String path, String text) throws IOException {
+	 */
+	public static final void writeText(String path, String text) throws IOException {
 		Files.write(Paths.get(path), text.getBytes(StandardCharsets.UTF_8));
 	}
 
@@ -305,7 +308,7 @@ public class FilesFacade {
 	 */
 	public static final void setPermissions(String path, String permissions) throws IOException {
 		Set<PosixFilePermission> perms = PosixFilePermissions.fromString(permissions);
-	    Files.setPosixFilePermissions(Paths.get(path), perms);
+		Files.setPosixFilePermissions(Paths.get(path), perms);
 	}
 
 	/**
@@ -398,6 +401,7 @@ public class FilesFacade {
 
 	/**
 	 * Delete directory. Set foce to true in order to delete non empty directory
+	 *
 	 * @param path path to the directory
 	 * @param forced should non-empty directories be deleted
 	 * @throws IOException in case of failure in underlying layer
@@ -406,44 +410,54 @@ public class FilesFacade {
 		if (forced) {
 			EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
 			Files.walkFileTree(Paths.get(path), opts, Integer.MAX_VALUE, new FileVisitor<Path>() {
-	
+
 				@Override
 				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-	
-//					if (Files.exists(dir)) {
+
+					// if (Files.exists(dir)) {
 					if (dir.toFile().exists()) {
-						if (logger.isTraceEnabled()) {logger.trace(String.format("Deleting directory: %s", dir));}
+						if (logger.isTraceEnabled()) {
+							logger.trace(String.format("Deleting directory: %s", dir));
+						}
 						try {
 							Files.delete(dir);
 						} catch (java.nio.file.NoSuchFileException e) {
-							if (logger.isTraceEnabled()) {logger.trace(String.format("Directory already has been deleted: %s", dir));}
+							if (logger.isTraceEnabled()) {
+								logger.trace(String.format("Directory already has been deleted: %s", dir));
+							}
 						}
 					}
 					return FileVisitResult.CONTINUE;
 				}
-	
+
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 					return FileVisitResult.CONTINUE;
 				}
-	
+
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-//					if (Files.exists(file)) {
+					// if (Files.exists(file)) {
 					if (file.toFile().exists()) {
-						if (logger.isTraceEnabled()) {logger.trace(String.format("Deleting file: %s", file));}
+						if (logger.isTraceEnabled()) {
+							logger.trace(String.format("Deleting file: %s", file));
+						}
 						try {
 							Files.delete(file);
 						} catch (java.nio.file.NoSuchFileException e) {
-							if (logger.isTraceEnabled()) {logger.trace(String.format("File already has been deleted: %s", file));}
+							if (logger.isTraceEnabled()) {
+								logger.trace(String.format("File already has been deleted: %s", file));
+							}
 						}
 					}
 					return FileVisitResult.CONTINUE;
 				}
-	
+
 				@Override
 				public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-					if (logger.isErrorEnabled()) {logger.error(String.format("Error in file: %s", file), exc);}
+					if (logger.isErrorEnabled()) {
+						logger.error(String.format("Error in file: %s", file), exc);
+					}
 					return FileVisitResult.CONTINUE;
 				}
 			});
@@ -488,7 +502,7 @@ public class FilesFacade {
 	}
 
 	/**
-	 * Open output stream  to the file represented by the given path.
+	 * Open output stream to the file represented by the given path.
 	 *
 	 * @param path path to file
 	 * @return the created output stream
@@ -497,7 +511,7 @@ public class FilesFacade {
 	public static final OutputStream createOutputStream(String path) throws IOException {
 		return Files.newOutputStream(Paths.get(path));
 	}
-	
+
 	/**
 	 * Traverse the directory structure.
 	 *
@@ -511,9 +525,9 @@ public class FilesFacade {
 		Map<Path, FolderObject> map = new HashMap<>();
 		EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
 		Files.walkFileTree(sourcePath, opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
-			
+
 			FolderObject currentFolder = null;
-			
+
 			@Override
 			public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
 				if (!map.containsKey(dir)) {
@@ -536,10 +550,10 @@ public class FilesFacade {
 				return FileVisitResult.CONTINUE;
 			}
 		});
-		
+
 		return GsonHelper.toJson(root.iterator().next());
 	}
-	
+
 	/**
 	 * List the directory structure.
 	 *
@@ -555,7 +569,7 @@ public class FilesFacade {
 		}
 		return GsonHelper.toJson(files);
 	}
-	
+
 	/**
 	 * Find all the files matching the pattern.
 	 *
@@ -565,7 +579,7 @@ public class FilesFacade {
 	 * @throws IOException in case of an error
 	 */
 	public static String find(String path, String pattern) throws IOException {
-			return GsonHelper.toJson(FileSystemUtils.find(path, pattern));
+		return GsonHelper.toJson(FileSystemUtils.find(path, pattern));
 	}
 
 }

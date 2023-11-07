@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.utils;
 
@@ -54,25 +53,25 @@ public class GitFileUtils implements InitializingBean {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GitFileUtils.class);
-	
+
 	/** The Constant DIRIGIBLE_GIT_ROOT_FOLDER. */
 	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
-	
+
 	/** The Constant DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER. */
-	private static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$ 
+	private static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$
 
 	/** The Constant SLASH. */
 	public static final String SLASH = "/"; //$NON-NLS-1$
-	
+
 	/** The Constant DOT_GIT. */
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
-	
+
 	/** The Constant PATTERN_USERS_WORKSPACE. */
 	public static final String PATTERN_USERS_WORKSPACE = IRepositoryStructure.PATH_USERS + "/%s/%s/"; // /users/john/workspace1
 
 	/** The Constant REPOSITORY_GIT_FOLDER. */
 	private static final String REPOSITORY_GIT_FOLDER = "dirigible" + File.separator + "repository" + File.separator + DOT_GIT;
-	
+
 	/** The Constant DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER. */
 	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = "target" + File.separator + REPOSITORY_GIT_FOLDER; //$NON-NLS-1$
 
@@ -87,10 +86,10 @@ public class GitFileUtils implements InitializingBean {
 
 	/** The repository. */
 	private IRepository repository;
-	
+
 	/** The database facade. */
 	private static GitFileUtils INSTANCE;
-	
+
 	/**
 	 * Instantiates a new git file utils.
 	 *
@@ -99,7 +98,7 @@ public class GitFileUtils implements InitializingBean {
 	private GitFileUtils(IRepository repository) {
 		this.repository = repository;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -107,18 +106,18 @@ public class GitFileUtils implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the database facade
 	 */
 	public static GitFileUtils get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/**
 	 * Gets the repository.
 	 *
@@ -127,7 +126,7 @@ public class GitFileUtils implements InitializingBean {
 	public IRepository getRepository() {
 		return repository;
 	}
-	
+
 	static {
 		if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER))) {
 			GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER);
@@ -141,14 +140,13 @@ public class GitFileUtils implements InitializingBean {
 	/**
 	 * Checks if is valid repository URI.
 	 *
-	 * @param repositoryURI
-	 *            the repository URI
+	 * @param repositoryURI the repository URI
 	 * @return true, if is valid repository URI
 	 */
 	public static boolean isValidRepositoryURI(String repositoryURI) {
 		return (repositoryURI.endsWith(DOT_GIT)) && (repositoryURI.length() > MINIMUM_URL_LENGTH);
 	}
-	
+
 	/**
 	 * Create the directory for git.
 	 *
@@ -195,20 +193,14 @@ public class GitFileUtils implements InitializingBean {
 	/**
 	 * Import project.
 	 *
-	 * @param gitRepository
-	 *            the git directory
-	 * @param basePath
-	 *            the base path
-	 * @param user
-	 *            the user
-	 * @param workspace
-	 *            the workspace
+	 * @param gitRepository the git directory
+	 * @param basePath the base path
+	 * @param user the user
+	 * @param workspace the workspace
 	 * @return the list
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public static List<String> importProject(File gitRepository, String basePath, String user, String workspace)
-			throws IOException {
+	public static List<String> importProject(File gitRepository, String basePath, String user, String workspace) throws IOException {
 		List<File> projects = FileSystemUtils.getGitRepositoryProjects(gitRepository);
 		List<String> importedProjects = new ArrayList<String>();
 		if (projects.size() == 0) {
@@ -228,12 +220,9 @@ public class GitFileUtils implements InitializingBean {
 	/**
 	 * Import project from git repository to workspace.
 	 *
-	 * @param gitRepositoryFile
-	 *            the git repository file
-	 * @param path
-	 *            the path
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param gitRepositoryFile the git repository file
+	 * @param path the path
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void importProjectFromGitRepositoryToWorkspace(File gitRepositoryFile, String path) throws IOException {
 		// Skip already linked paths
@@ -245,15 +234,13 @@ public class GitFileUtils implements InitializingBean {
 	/**
 	 * Delete repository project.
 	 *
-	 * @param project
-	 *            the project
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param project the project
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void deleteRepositoryProject(Project project) throws IOException {
 		project.delete();
 	}
-	
+
 	/**
 	 * Returns the local absolute path of a Repository path.
 	 *
@@ -271,12 +258,9 @@ public class GitFileUtils implements InitializingBean {
 	/**
 	 * Copy project to directory.
 	 *
-	 * @param source
-	 *            the source
-	 * @param tempGitDirectory
-	 *            the temp git directory
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param source the source
+	 * @param tempGitDirectory the temp git directory
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void copyProjectToDirectory(Folder source, File tempGitDirectory) throws IOException {
 		copyProjectToDirectory(source, tempGitDirectory, false);
@@ -285,14 +269,10 @@ public class GitFileUtils implements InitializingBean {
 	/**
 	 * Copy project to directory.
 	 *
-	 * @param source
-	 *            the source
-	 * @param tempGitDirectory
-	 *            the temp git directory
-	 * @param shareInRootFolder
-	 *            the whether to share project in the repository root folder
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param source the source
+	 * @param tempGitDirectory the temp git directory
+	 * @param shareInRootFolder the whether to share project in the repository root folder
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void copyProjectToDirectory(Folder source, File tempGitDirectory, boolean shareInRootFolder) throws IOException {
 		if (!source.exists()) {
@@ -340,16 +320,14 @@ public class GitFileUtils implements InitializingBean {
 	/**
 	 * Gets the valid project folders.
 	 *
-	 * @param gitRepository
-	 *            the git directory
+	 * @param gitRepository the git directory
 	 * @return the valid project folders
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static String[] getValidProjectFolders(File gitRepository) throws IOException {
 		List<File> projects = FileSystemUtils.getGitRepositoryProjects(gitRepository);
 		List<String> projectsNames = projects.stream().map(e -> e.getName()).collect(Collectors.toList());
-		return projectsNames.toArray(new String[]{});
+		return projectsNames.toArray(new String[] {});
 	}
 
 	/**
@@ -368,9 +346,13 @@ public class GitFileUtils implements InitializingBean {
 				gitConnector.getBranch();
 				return true;
 			}
-			if (logger.isErrorEnabled()) {logger.error("Not a file system based repository used with git");}
+			if (logger.isErrorEnabled()) {
+				logger.error("Not a file system based repository used with git");
+			}
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			return false;
 		}
 		return false;
@@ -429,14 +411,15 @@ public class GitFileUtils implements InitializingBean {
 	 * @return the directory
 	 */
 	public static File getGitDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
-		//File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName + IRepository.SEPARATOR + repositoryName);
+		// File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user,
+		// workspace, repositoryName + IRepository.SEPARATOR + repositoryName);
 		File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName);
 		if (gitDirectoryByRepositoryName == null) {
 			return getGitDeepDirectoryByRepositoryName(UserFacade.getName(), workspace, repositoryName);
 		}
 		return gitDirectoryByRepositoryName;
 	}
-	
+
 	/**
 	 * Get the directory for git for deep projects.
 	 *
@@ -451,6 +434,7 @@ public class GitFileUtils implements InitializingBean {
 
 	/**
 	 * Get the projects in that git repository.
+	 *
 	 * @param workspace the workspace
 	 * @param repositoryName the repository
 	 * @return the projects
@@ -461,6 +445,7 @@ public class GitFileUtils implements InitializingBean {
 
 	/**
 	 * Get the projects in that git repository.
+	 *
 	 * @param workspace the workspace
 	 * @param repositoryName the repository
 	 * @return the projects

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.domain;
 
@@ -31,15 +30,15 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Table(name = "DIRIGIBLE_ODATA_CONTAINER")
 public class ODataContainer extends Artefact {
-	
+
 	/** The Constant ARTEFACT_TYPE. */
-    public static final String ARTEFACT_TYPE = "odatacontainer";
-	
+	public static final String ARTEFACT_TYPE = "odatacontainer";
+
 	/** The id. */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ODATAC_ID", nullable = false)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ODATAC_ID", nullable = false)
+	private Long id;
 
 	/** The content. */
 	@Column(name = "ODATAC_CONTENT", columnDefinition = "BLOB", nullable = true)
@@ -55,12 +54,11 @@ public class ODataContainer extends Artefact {
 	 * @param dependencies the dependencies
 	 * @param content the content
 	 */
-	public ODataContainer(String location, String name, String description, Set<String> dependencies,
-			byte[] content) {
+	public ODataContainer(String location, String name, String description, Set<String> dependencies, byte[] content) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 		this.content = content;
 	}
-	
+
 	/**
 	 * Instantiates a new o data container.
 	 */
@@ -76,7 +74,7 @@ public class ODataContainer extends Artefact {
 	public Long getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Sets the id.
 	 *
@@ -98,8 +96,7 @@ public class ODataContainer extends Artefact {
 	/**
 	 * Sets the content.
 	 *
-	 * @param content
-	 *            the new content
+	 * @param content the new content
 	 */
 	public void setContent(byte[] content) {
 		this.content = content;
@@ -112,10 +109,9 @@ public class ODataContainer extends Artefact {
 	 */
 	@Override
 	public String toString() {
-		return "ODataContainer [id=" + id + ", content=" + Arrays.toString(content) + ", location=" + location
-				+ ", name=" + name + ", type=" + type + ", description=" + description + ", key=" + key
-				+ ", dependencies=" + dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt
-				+ ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
+		return "ODataContainer [id=" + id + ", content=" + Arrays.toString(content) + ", location=" + location + ", name=" + name
+				+ ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy="
+				+ createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
 
 }

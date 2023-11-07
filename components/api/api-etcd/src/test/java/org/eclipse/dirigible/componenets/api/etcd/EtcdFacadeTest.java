@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.componenets.api.etcd;
 
@@ -47,84 +46,82 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EtcdFacadeTest {
 
-    /**
-     * The Constant etcd.
-     */
-    @RegisterExtension
-    public static final EtcdClusterExtension cluster = EtcdClusterExtension.builder()
-            .withNodes(1)
-            .build();
+	/**
+	 * The Constant etcd.
+	 */
+	@RegisterExtension
+	public static final EtcdClusterExtension cluster = EtcdClusterExtension.builder().withNodes(1).build();
 
-    /**
-     * Sets the up.
-     */
-    @Before
-    public void setUp() {
-        cluster.restart();
-        Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", cluster.clientEndpoints().get(0).toString());
-    }
+	/**
+	 * Sets the up.
+	 */
+	@Before
+	public void setUp() {
+		cluster.restart();
+		Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", cluster.clientEndpoints().get(0).toString());
+	}
 
-    /**
-     * Gets the client.
-     *
-     * @return the client
-     * @throws ExecutionException   the execution exception
-     * @throws InterruptedException the interrupted exception
-     */
-    @Test
-    public void getClient() throws ExecutionException, InterruptedException {
-        KV etcdClient = EtcdFacade.getClient();
-        assertNotNull(etcdClient);
+	/**
+	 * Gets the client.
+	 *
+	 * @return the client
+	 * @throws ExecutionException the execution exception
+	 * @throws InterruptedException the interrupted exception
+	 */
+	@Test
+	public void getClient() throws ExecutionException, InterruptedException {
+		KV etcdClient = EtcdFacade.getClient();
+		assertNotNull(etcdClient);
 
-        ByteSequence key = ByteSequence.from("foo", Charsets.UTF_8);
-        ByteSequence value = ByteSequence.from("bar", Charsets.UTF_8);
+		ByteSequence key = ByteSequence.from("foo", Charsets.UTF_8);
+		ByteSequence value = ByteSequence.from("bar", Charsets.UTF_8);
 
-        etcdClient.put(key, value);
-        Thread.sleep(500);
+		etcdClient.put(key, value);
+		Thread.sleep(500);
 
-        GetResponse getPutResponse = etcdClient.get(key).get();
-        assertEquals(getPutResponse.getKvs().get(0).getValue().toString(Charsets.UTF_8), value.toString(Charsets.UTF_8));
+		GetResponse getPutResponse = etcdClient.get(key).get();
+		assertEquals(getPutResponse.getKvs().get(0).getValue().toString(Charsets.UTF_8), value.toString(Charsets.UTF_8));
 
-        etcdClient.delete(key);
-        Thread.sleep(500);
+		etcdClient.delete(key);
+		Thread.sleep(500);
 
-        GetResponse getDelResponse = etcdClient.get(key).get();
-        assertTrue(getDelResponse.getKvs().isEmpty());
-    }
+		GetResponse getDelResponse = etcdClient.get(key).get();
+		assertTrue(getDelResponse.getKvs().isEmpty());
+	}
 
-    /**
-     * String to byte sequence.
-     */
-    @Test
-    public void stringToByteSequence() {
-        String s = "foo";
-        ByteSequence bs = EtcdFacade.stringToByteSequence(s);
+	/**
+	 * String to byte sequence.
+	 */
+	@Test
+	public void stringToByteSequence() {
+		String s = "foo";
+		ByteSequence bs = EtcdFacade.stringToByteSequence(s);
 
-        assertNotNull(bs);
-        assertEquals(bs.toString(Charsets.UTF_8), s);
-    }
+		assertNotNull(bs);
+		assertEquals(bs.toString(Charsets.UTF_8), s);
+	}
 
-    /**
-     * Byte array to byte sequence.
-     */
-    @Test
-    public void byteArrayToByteSequence() {
-        byte[] arr = {100, 100, 100};
-        ByteSequence bs = EtcdFacade.byteArrayToByteSequence(arr);
+	/**
+	 * Byte array to byte sequence.
+	 */
+	@Test
+	public void byteArrayToByteSequence() {
+		byte[] arr = {100, 100, 100};
+		ByteSequence bs = EtcdFacade.byteArrayToByteSequence(arr);
 
-        assertNotNull(bs);
-        assertTrue(Arrays.equals(bs.getBytes(), arr));
-    }
+		assertNotNull(bs);
+		assertTrue(Arrays.equals(bs.getBytes(), arr));
+	}
 
-    /**
-     * Byte sequence to string.
-     */
-    @Test
-    public void byteSequenceToString() {
-        ByteSequence bs = ByteSequence.from("foo", Charsets.UTF_8);
-        String s = EtcdFacade.byteSequenceToString(bs);
+	/**
+	 * Byte sequence to string.
+	 */
+	@Test
+	public void byteSequenceToString() {
+		ByteSequence bs = ByteSequence.from("foo", Charsets.UTF_8);
+		String s = EtcdFacade.byteSequenceToString(bs);
 
-        assertNotNull(s);
-        assertEquals(bs.toString(Charsets.UTF_8), s);
-    }
+		assertNotNull(s);
+		assertEquals(bs.toString(Charsets.UTF_8), s);
+	}
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.sequence;
 
@@ -30,10 +29,8 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
 	/**
 	 * Instantiates a new drop sequence builder.
 	 *
-	 * @param dialect
-	 *            the dialect
-	 * @param sequence
-	 *            the sequence
+	 * @param dialect the dialect
+	 * @param sequence the sequence
 	 */
 	public DropSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect);
@@ -47,6 +44,7 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -62,7 +60,9 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
 
 		String generated = sql.toString();
 
-		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("generated: " + generated);
+		}
 
 		return generated;
 	}
@@ -70,8 +70,7 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
 	/**
 	 * Generate sequence.
 	 *
-	 * @param sql
-	 *            the sql
+	 * @param sql the sql
 	 */
 	protected void generateSequence(StringBuilder sql) {
 		String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();

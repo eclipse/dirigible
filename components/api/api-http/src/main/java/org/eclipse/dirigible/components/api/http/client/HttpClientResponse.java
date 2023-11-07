@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.http.client;
 
@@ -52,8 +51,7 @@ public class HttpClientResponse {
 	/**
 	 * Sets the status code.
 	 *
-	 * @param statusCode
-	 *            the new status code
+	 * @param statusCode the new status code
 	 */
 	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
@@ -71,8 +69,7 @@ public class HttpClientResponse {
 	/**
 	 * Sets the status message.
 	 *
-	 * @param statusMessage
-	 *            the new status message
+	 * @param statusMessage the new status message
 	 */
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
@@ -93,8 +90,7 @@ public class HttpClientResponse {
 	/**
 	 * Sets the data.
 	 *
-	 * @param data
-	 *            the new data
+	 * @param data the new data
 	 */
 	public void setData(byte[] data) {
 		this.data = data;
@@ -112,8 +108,7 @@ public class HttpClientResponse {
 	/**
 	 * Sets the text.
 	 *
-	 * @param text
-	 *            the new text
+	 * @param text the new text
 	 */
 	public void setText(String text) {
 		this.text = text;
@@ -131,8 +126,7 @@ public class HttpClientResponse {
 	/**
 	 * Sets the protocol.
 	 *
-	 * @param protocol
-	 *            the new protocol
+	 * @param protocol the new protocol
 	 */
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
@@ -150,8 +144,7 @@ public class HttpClientResponse {
 	/**
 	 * Sets the headers.
 	 *
-	 * @param headers
-	 *            the new headers
+	 * @param headers the new headers
 	 */
 	public void setHeaders(List<HttpClientHeader> headers) {
 		this.headers = headers;
@@ -169,8 +162,7 @@ public class HttpClientResponse {
 	/**
 	 * Sets the binary.
 	 *
-	 * @param binary
-	 *            the new binary
+	 * @param binary the new binary
 	 */
 	public void setBinary(boolean binary) {
 		this.binary = binary;

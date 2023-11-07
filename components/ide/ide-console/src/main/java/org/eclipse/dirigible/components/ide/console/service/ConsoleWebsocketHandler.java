@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.console.service;
 
@@ -34,7 +33,7 @@ public class ConsoleWebsocketHandler extends TextWebSocketHandler {
 	/** The open sessions. */
 	private static Map<String, WebSocketSession> OPEN_SESSIONS = new ConcurrentHashMap<String, WebSocketSession>();
 
-	
+
 	/**
 	 * After connection established.
 	 *
@@ -44,9 +43,11 @@ public class ConsoleWebsocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		OPEN_SESSIONS.put(session.getId(), session);
-		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:console] Session %s openned.", session.getId()));}
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("[ws:console] Session %s openned.", session.getId()));
+		}
 	}
-	
+
 	/**
 	 * Handle text message.
 	 *
@@ -56,9 +57,11 @@ public class ConsoleWebsocketHandler extends TextWebSocketHandler {
 	 */
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:console] Session %s received message: %s.", session.getId(), message));}
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("[ws:console] Session %s received message: %s.", session.getId(), message));
+		}
 	}
-	
+
 	/**
 	 * Handle transport error.
 	 *
@@ -68,10 +71,14 @@ public class ConsoleWebsocketHandler extends TextWebSocketHandler {
 	 */
 	@Override
 	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-		if (logger.isErrorEnabled()) {logger.error(String.format("[ws:console] Session %s error %s", session.getId(), exception.getMessage()));}
-		if (logger.isErrorEnabled()) {logger.error("[ws:console] " + exception.getMessage(), exception);}
+		if (logger.isErrorEnabled()) {
+			logger.error(String.format("[ws:console] Session %s error %s", session.getId(), exception.getMessage()));
+		}
+		if (logger.isErrorEnabled()) {
+			logger.error("[ws:console] " + exception.getMessage(), exception);
+		}
 	}
-	
+
 	/**
 	 * After connection closed.
 	 *
@@ -81,10 +88,12 @@ public class ConsoleWebsocketHandler extends TextWebSocketHandler {
 	 */
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:console] Session %s closed because of %s", session.getId(), status.getReason()));}
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("[ws:console] Session %s closed because of %s", session.getId(), status.getReason()));
+		}
 		OPEN_SESSIONS.remove(session.getId());
 	}
-	
+
 	/**
 	 * Distribute message to all the listeners.
 	 *

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.format;
 
@@ -35,7 +34,7 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 
 	/** The limited. */
 	private boolean limited = true;
-	
+
 	/** The stringify. */
 	private boolean stringify = true;
 
@@ -51,13 +50,12 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 	/**
 	 * Sets the limited.
 	 *
-	 * @param limited
-	 *            the new limited
+	 * @param limited the new limited
 	 */
 	public void setLimited(boolean limited) {
 		this.limited = limited;
 	}
-	
+
 	/**
 	 * Checks if is stringified.
 	 *
@@ -70,16 +68,15 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 	/**
 	 * Sets the stringify.
 	 *
-	 * @param stringify
-	 *            the new stringify
+	 * @param stringify the new stringify
 	 */
 	public void setStringified(boolean stringify) {
 		this.stringify = stringify;
 	}
-	
+
 	/** The object mapper. */
 	private ObjectMapper objectMapper = new ObjectMapper();
-	
+
 	/**
 	 * Write.
 	 *
@@ -91,33 +88,29 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 	public void write(ResultSet resultSet, OutputStream output) throws Exception {
 
 		JsonGenerator jsonGenerator = objectMapper.getFactory().createGenerator(output);
-		
+
 		jsonGenerator.writeStartArray();
-		
+
 		int count = 0;
 		while (resultSet.next()) {
 			ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-			
+
 			jsonGenerator.writeStartObject();
-			
+
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 				String name = resultSetMetaData.getColumnName(i);
 				Object value = resultSet.getObject(name);
 				if (value == null && stringify) {
 					value = "[NULL]";
 				}
-				if (value != null
-					&& (
-						"org.bson.Document".equals(value.getClass().getCanonicalName())
+				if (value != null && ("org.bson.Document".equals(value.getClass().getCanonicalName())
 						|| "org.bson.types.ObjectId".equals(value.getClass().getCanonicalName())
-						|| "java.util.ArrayList".equals(value.getClass().getCanonicalName())
-					)) {
+						|| "java.util.ArrayList".equals(value.getClass().getCanonicalName()))) {
 					if (stringify) {
 						value = value.toString();
-					} 
+					}
 				}
-				if (value != null && !ClassUtils.isPrimitiveOrWrapper(value.getClass())
-						&& value.getClass() != String.class
+				if (value != null && !ClassUtils.isPrimitiveOrWrapper(value.getClass()) && value.getClass() != String.class
 						&& !java.util.Date.class.isAssignableFrom(value.getClass())) {
 					if (stringify) {
 						value = "[BINARY]";
@@ -125,11 +118,11 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 				}
 
 				jsonGenerator.writeFieldName(name);
-				
+
 				if (value instanceof String) {
 					jsonGenerator.writeString((String) value);
 				} else if (value instanceof Character) {
-					jsonGenerator.writeString(new String(new char[] { (char) value }));
+					jsonGenerator.writeString(new String(new char[] {(char) value}));
 				} else if (value instanceof Float) {
 					jsonGenerator.writeNumber((Float) value);
 				} else if (value instanceof Double) {
@@ -152,14 +145,14 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 					jsonGenerator.writeString(value == null ? null : value.toString());
 				}
 			}
-			
+
 			jsonGenerator.writeEndObject();
 
 			if (this.isLimited() && (++count > getLimit())) {
 				break;
 			}
 		}
-		
+
 		jsonGenerator.writeEndArray();
 		jsonGenerator.flush();
 	}

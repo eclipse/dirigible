@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.utils;
 
@@ -23,9 +22,9 @@ public class Xml2JsonFacade {
 	/**
 	 * Converts JSON to XML.
 	 *
-	 * @param json            the JSON contents
+	 * @param json the JSON contents
 	 * @return the JSON as XML
-	 * @throws Exception             in case of parsing failure
+	 * @throws Exception in case of parsing failure
 	 */
 	public static final String fromJson(String json) throws Exception {
 		return Xml2Json.toXml(json);
@@ -34,9 +33,9 @@ public class Xml2JsonFacade {
 	/**
 	 * Converts XML to JSON.
 	 *
-	 * @param xml            the XML contents
+	 * @param xml the XML contents
 	 * @return the XML as JSON
-	 * @throws Exception             in case of parsing failure
+	 * @throws Exception in case of parsing failure
 	 */
 	public static final String toJson(String xml) throws Exception {
 		return Xml2Json.toJson(xml);

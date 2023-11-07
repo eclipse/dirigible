@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.service;
 
@@ -31,19 +30,19 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PublisherService {
-	
+
 	public static final String DIRIGIBLE_PUBLISH_DISABLED = "DIRIGIBLE_PUBLISH_DISABLED";
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PublisherService.class);
-	
+
 	/** The publisher handlers. */
 	private final List<PublisherHandler> publisherHandlers;
 
 
 	/** The repository. */
 	private final IRepository repository;
-	
+
 	/**
 	 * Instantiates a new publisher service.
 	 *
@@ -51,14 +50,11 @@ public class PublisherService {
 	 * @param publisherHandlers the publisher handlers
 	 */
 	@Autowired
-	public PublisherService(
-			IRepository repository,
-			List<PublisherHandler> publisherHandlers
-	) {
+	public PublisherService(IRepository repository, List<PublisherHandler> publisherHandlers) {
 		this.repository = repository;
 		this.publisherHandlers = publisherHandlers;
 	}
-	
+
 	/**
 	 * Gets the repository.
 	 *
@@ -79,7 +75,7 @@ public class PublisherService {
 		String user = UserFacade.getName();
 		publish(user, workspace, project, path);
 	}
-		
+
 	/**
 	 * Publish.
 	 *
@@ -96,7 +92,7 @@ public class PublisherService {
 		if ("*".equals(project)) {
 			project = "";
 		}
-		
+
 		String sourceLocation = new RepositoryPath(workspacePath.toString(), project, path).toString();
 		ICollection collection = getRepository().getCollection(sourceLocation);
 		if (collection.exists()) {
@@ -123,7 +119,7 @@ public class PublisherService {
 		String targetLocation = new RepositoryPath(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path).toString();
 		unpublishResource(targetLocation);
 	}
-	
+
 	/**
 	 * Publish resource.
 	 *
@@ -140,7 +136,7 @@ public class PublisherService {
 				logger.error(e.getMessage(), e);
 			}
 		}
-		
+
 		ICollection sourceCollection = getRepository().getCollection(sourceLocation);
 		if (sourceCollection.exists()) {
 			// publish collection
@@ -158,7 +154,7 @@ public class PublisherService {
 			}
 			logger.info("Published resource: {} -> {}", sourceResource.getPath(), targetResource.getPath());
 		}
-		
+
 		for (PublisherHandler next : publisherHandlers) {
 			try {
 				next.afterPublish(sourceLocation, targetLocation, afterPublishMetadata);
@@ -168,14 +164,14 @@ public class PublisherService {
 			}
 		}
 	}
-	
+
 	/**
 	 * Publish resource.
 	 *
 	 * @param targetLocation the targetLocation
 	 */
 	private void unpublishResource(String targetLocation) {
-		
+
 		for (PublisherHandler next : publisherHandlers) {
 			try {
 				next.beforeUnpublish(targetLocation);
@@ -184,7 +180,7 @@ public class PublisherService {
 				logger.error(e.getMessage(), e);
 			}
 		}
-		
+
 		ICollection targetCollection = getRepository().getCollection(targetLocation);
 		if (targetCollection.exists()) {
 			// unpublish collection
@@ -198,7 +194,7 @@ public class PublisherService {
 			}
 			logger.info("Unpublished resource: {}", targetCollection.getPath());
 		}
-		
+
 		for (PublisherHandler next : publisherHandlers) {
 			try {
 				next.afterUnpublish(targetLocation);
@@ -208,7 +204,7 @@ public class PublisherService {
 			}
 		}
 	}
-	
+
 	/**
 	 * Generate workspace path.
 	 *
@@ -219,8 +215,10 @@ public class PublisherService {
 	 * @return the string builder
 	 */
 	private StringBuilder generateWorkspacePath(String user, String workspace, String project, String path) {
-		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR).append(user)
-				.append(IRepositoryStructure.SEPARATOR).append(workspace);
+		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS)	.append(IRepositoryStructure.SEPARATOR)
+																						.append(user)
+																						.append(IRepositoryStructure.SEPARATOR)
+																						.append(workspace);
 		if (project != null) {
 			relativePath.append(IRepositoryStructure.SEPARATOR).append(project);
 		}

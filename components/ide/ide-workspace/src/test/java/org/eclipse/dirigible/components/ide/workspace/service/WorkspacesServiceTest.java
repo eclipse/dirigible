@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.service;
 
@@ -35,7 +34,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class WorkspacesServiceTest {
 
@@ -87,7 +86,7 @@ public class WorkspacesServiceTest {
 		Workspace workspace2 = workspaceService.createWorkspace("TestWorkspace2");
 		List<Workspace> workspaces = workspaceService.getWorkspaces();
 		assertNotNull(workspaces);
-		//assertEquals(2, workspaces.size());
+		// assertEquals(2, workspaces.size());
 		Workspace worskapce3 = workspaces.get(0);
 		assertNotNull(worskapce3.getInternal());
 		if (worskapce3.getName().equals("TestWorkspace1")) {
@@ -115,7 +114,7 @@ public class WorkspacesServiceTest {
 		assertNotNull(workspace2.getInternal());
 		assertEquals(false, workspace2.exists());
 	}
-	
+
 	/**
 	 * The Class TestConfiguration.
 	 */

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.api;
 
@@ -29,10 +28,8 @@ public class RepositorySearchException extends RepositoryException {
 	/**
 	 * Instantiates a new repository search exception.
 	 *
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
+	 * @param message the message
+	 * @param cause the cause
 	 */
 	public RepositorySearchException(String message, Throwable cause) {
 		super(message, cause);
@@ -41,8 +38,7 @@ public class RepositorySearchException extends RepositoryException {
 	/**
 	 * Instantiates a new repository search exception.
 	 *
-	 * @param message
-	 *            the message
+	 * @param message the message
 	 */
 	public RepositorySearchException(String message) {
 		super(message);
@@ -51,8 +47,7 @@ public class RepositorySearchException extends RepositoryException {
 	/**
 	 * Instantiates a new repository search exception.
 	 *
-	 * @param cause
-	 *            the cause
+	 * @param cause the cause
 	 */
 	public RepositorySearchException(Throwable cause) {
 		super(cause);

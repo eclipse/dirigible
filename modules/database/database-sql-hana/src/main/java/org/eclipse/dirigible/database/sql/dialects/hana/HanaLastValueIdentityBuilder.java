@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
@@ -30,10 +29,8 @@ public class HanaLastValueIdentityBuilder extends LastValueIdentityBuilder {
 	/**
 	 * Instantiates a new HANA last value identity builder.
 	 *
-	 * @param dialect
-	 *            the dialect
-	 * @param args
-	 *            the args
+	 * @param dialect the dialect
+	 * @param args the args
 	 */
 	public HanaLastValueIdentityBuilder(ISqlDialect dialect, String... args) {
 		super(dialect);
@@ -50,6 +47,7 @@ public class HanaLastValueIdentityBuilder extends LastValueIdentityBuilder {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
 	 */
 	@Override

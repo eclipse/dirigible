@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.export.service;
 
@@ -44,57 +43,57 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 @ContextConfiguration
 @WebAppConfiguration
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 @Transactional
-public class DataExportServiceTest{
+public class DataExportServiceTest {
 
-    /** The datasource repository. */
-    @Autowired
-    private DataSourceRepository datasourceRepository;
+	/** The datasource repository. */
+	@Autowired
+	private DataSourceRepository datasourceRepository;
 
-    /** The data export service. */
-    @Autowired
-    private DataExportService dataExportService;
+	/** The data export service. */
+	@Autowired
+	private DataExportService dataExportService;
 
-    /** The workspace service. */
-    @Autowired
-    private WorkspaceService workspaceService;
+	/** The workspace service. */
+	@Autowired
+	private WorkspaceService workspaceService;
 
-    /** The wac. */
-    @Autowired
-    protected WebApplicationContext wac;
+	/** The wac. */
+	@Autowired
+	protected WebApplicationContext wac;
 
-    /** The spring security filter chain. */
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
+	/** The spring security filter chain. */
+	@Autowired
+	private FilterChainProxy springSecurityFilterChain;
 
-    /**
-     * Setup.
-     */
-    @BeforeEach
-    public void setup() {
-        DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
-        datasourceRepository.save(datasource);
-    }
+	/**
+	 * Setup.
+	 */
+	@BeforeEach
+	public void setup() {
+		DataSource datasource = new DataSource("/test/TestDB.datasource", "TestDB", "", "org.h2.Driver", "jdbc:h2:~/test", "sa", "");
+		datasourceRepository.save(datasource);
+	}
 
-    /**
-     * Export metadata as project test.
-     *
-     * @throws SQLException the SQL exception
-     */
-    @Test
-    public void exportMetadataAsProjectTest() throws SQLException {
-        String filePath = dataExportService.exportMetadataAsProject("TestDB", "INFORMATION_SCHEMA");
-        Workspace workspace = workspaceService.getWorkspace("INFORMATION_SCHEMA");
-        Project project = workspace.getProject("INFORMATION_SCHEMA");
-        File file = project.getFiles().get(0);
-        assertEquals(file.getWorkspacePath(), filePath);
-    }
+	/**
+	 * Export metadata as project test.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
+	@Test
+	public void exportMetadataAsProjectTest() throws SQLException {
+		String filePath = dataExportService.exportMetadataAsProject("TestDB", "INFORMATION_SCHEMA");
+		Workspace workspace = workspaceService.getWorkspace("INFORMATION_SCHEMA");
+		Project project = workspace.getProject("INFORMATION_SCHEMA");
+		File file = project.getFiles().get(0);
+		assertEquals(file.getWorkspacePath(), filePath);
+	}
 
-    /**
-     * The Class TestConfiguration.
-     */
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
+	/**
+	 * The Class TestConfiguration.
+	 */
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 }

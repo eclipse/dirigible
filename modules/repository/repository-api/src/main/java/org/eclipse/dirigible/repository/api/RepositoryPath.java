@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.api;
 
@@ -30,8 +29,7 @@ public class RepositoryPath {
 	/**
 	 * Instantiates a new repository path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 */
 	public RepositoryPath(String path) {
 		this.path = path.replace('\\', '/');
@@ -45,8 +43,7 @@ public class RepositoryPath {
 	/**
 	 * Instantiates a new repository path.
 	 *
-	 * @param repositoryPath
-	 *            the repository path
+	 * @param repositoryPath the repository path
 	 */
 	public RepositoryPath(RepositoryPath repositoryPath) {
 		this(repositoryPath.segments);
@@ -55,8 +52,7 @@ public class RepositoryPath {
 	/**
 	 * Instantiates a new repository path.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 */
 	public RepositoryPath(String... input) {
 		List<String> allSegments = new ArrayList<String>();
@@ -99,8 +95,7 @@ public class RepositoryPath {
 	/**
 	 * Add new segment after the last position.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the repository path
 	 */
 	public RepositoryPath append(String name) {
@@ -120,6 +115,7 @@ public class RepositoryPath {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -130,9 +126,9 @@ public class RepositoryPath {
 		final StringBuilder builder = new StringBuilder();
 		for (String segment : segments) {
 			if (!segment.equals(IRepository.SEPARATOR)) {
-                if(segment.indexOf(':')==-1 ) { // hack for windows paths
-                     builder.append(IRepository.SEPARATOR);
-                }
+				if (segment.indexOf(':') == -1) { // hack for windows paths
+					builder.append(IRepository.SEPARATOR);
+				}
 			}
 			builder.append(segment);
 		}
@@ -165,6 +161,7 @@ public class RepositoryPath {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -189,6 +186,7 @@ public class RepositoryPath {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -208,8 +206,7 @@ public class RepositoryPath {
 	/**
 	 * Construct path to.
 	 *
-	 * @param number
-	 *            the number
+	 * @param number the number
 	 * @return the string
 	 */
 	public String constructPathTo(int number) {
@@ -230,8 +227,7 @@ public class RepositoryPath {
 	/**
 	 * Construct path from.
 	 *
-	 * @param number
-	 *            the number
+	 * @param number the number
 	 * @return the string
 	 */
 	public String constructPathFrom(int number) {
@@ -252,10 +248,8 @@ public class RepositoryPath {
 	/**
 	 * Normalize path.
 	 *
-	 * @param path
-	 *            the path
-	 * @param name
-	 *            the name
+	 * @param path the path
+	 * @param name the name
 	 * @return the string
 	 */
 	public static String normalizePath(String path, String name) {
@@ -273,16 +267,16 @@ public class RepositoryPath {
 	/**
 	 * Normalize name.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the string
 	 */
 	public static String normalizeName(String name) {
 		return name.replaceAll("[^A-Za-z0-9_]", "_");
 	}
-	
+
 	/**
 	 * Set the segment of the given index position to the given value, starting with zero.
+	 *
 	 * @param index the index
 	 * @param value the value
 	 */

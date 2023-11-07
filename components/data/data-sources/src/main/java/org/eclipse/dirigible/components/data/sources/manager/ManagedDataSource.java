@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.sources.manager;
 
@@ -25,7 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
- * The WrappedDataSource of the standard JDBC {@link DataSource} object with added some additional capabilities..
+ * The WrappedDataSource of the standard JDBC {@link DataSource} object with added some additional
+ * capabilities..
  */
 public class ManagedDataSource implements DataSource {
 
@@ -42,8 +42,8 @@ public class ManagedDataSource implements DataSource {
 	private final DataSource originalDataSource;
 
 	/**
-	 * Wrapper of the default datasource provided by the underlying platform
-	 * It has some fault tolerance features, which are not available by default in the popular JDBC drivers.
+	 * Wrapper of the default datasource provided by the underlying platform It has some fault tolerance
+	 * features, which are not available by default in the popular JDBC drivers.
 	 *
 	 * @param originalDataSource the original data source
 	 */
@@ -59,6 +59,7 @@ public class ManagedDataSource implements DataSource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see javax.sql.DataSource#getConnection()
 	 */
 	@Override
@@ -76,6 +77,7 @@ public class ManagedDataSource implements DataSource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see javax.sql.DataSource#getConnection(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -94,10 +96,14 @@ public class ManagedDataSource implements DataSource {
 			} else {
 				userName = UserFacade.getName();
 			}
-			if (logger.isDebugEnabled()) {logger.debug("Setting APPLICATIONUSER:{} for connection: {}", userName, connection);}
+			if (logger.isDebugEnabled()) {
+				logger.debug("Setting APPLICATIONUSER:{} for connection: {}", userName, connection);
+			}
 			connection.setClientInfo("APPLICATIONUSER", userName);
 
-			if (logger.isDebugEnabled()) {logger.debug("Setting XS_APPLICATIONUSER:{} for connection: {}", userName, connection);}
+			if (logger.isDebugEnabled()) {
+				logger.debug("Setting XS_APPLICATIONUSER:{} for connection: {}", userName, connection);
+			}
 			connection.setClientInfo("XS_APPLICATIONUSER", userName);
 		}
 
@@ -112,6 +118,7 @@ public class ManagedDataSource implements DataSource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see javax.sql.CommonDataSource#getLogWriter()
 	 */
 	@Override
@@ -127,6 +134,7 @@ public class ManagedDataSource implements DataSource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see javax.sql.CommonDataSource#getLoginTimeout()
 	 */
 	@Override
@@ -143,6 +151,7 @@ public class ManagedDataSource implements DataSource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.sql.Wrapper#isWrapperFor(java.lang.Class)
 	 */
 	@Override
@@ -158,6 +167,7 @@ public class ManagedDataSource implements DataSource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see javax.sql.CommonDataSource#setLogWriter(java.io.PrintWriter)
 	 */
 	@Override
@@ -173,6 +183,7 @@ public class ManagedDataSource implements DataSource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see javax.sql.CommonDataSource#setLoginTimeout(int)
 	 */
 	@Override
@@ -190,6 +201,7 @@ public class ManagedDataSource implements DataSource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.sql.Wrapper#unwrap(java.lang.Class)
 	 */
 	@Override
@@ -205,6 +217,7 @@ public class ManagedDataSource implements DataSource {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see javax.sql.CommonDataSource#getParentLogger()
 	 */
 	@Override

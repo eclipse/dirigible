@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.core;
 
@@ -35,63 +34,51 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class CoreSuiteTest {
-	
+
 	@Autowired
 	private JavascriptService javascriptService;
-	
-	@Autowired
-    private MockMvc mockMvc;
 
-    @Autowired
-    protected WebApplicationContext wac;
+	@Autowired
+	private MockMvc mockMvc;
+
+	@Autowired
+	protected WebApplicationContext wac;
 
 	@Test
 	public void executeConfigurationGetTest() throws Exception {
 		javascriptService.handleRequest("core-tests", "configurations-get-test.js", null, null, false);
 	}
-	
+
 	@Test
 	public void executeContextGetTest() throws Exception {
-		mockMvc.perform(get("/services/js/core-tests/context-get-test.js"))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(get("/services/js/core-tests/context-get-test.js")).andDo(print()).andExpect(status().is2xxSuccessful());
 	}
-	
+
 	@Test
 	public void executeEnvGetTest() throws Exception {
-		mockMvc.perform(get("/services/js/core-tests/env-get-test.js"))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(get("/services/js/core-tests/env-get-test.js")).andDo(print()).andExpect(status().is2xxSuccessful());
 	}
-	
+
 	@Test
 	public void executeEnvListTest() throws Exception {
-		mockMvc.perform(get("/services/js/core-tests/env-list-test.js"))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(get("/services/js/core-tests/env-list-test.js")).andDo(print()).andExpect(status().is2xxSuccessful());
 	}
-	
+
 	@Test
 	public void executeGlobalsGetTest() throws Exception {
-		mockMvc.perform(get("/services/js/core-tests/globals-get-test.js"))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(get("/services/js/core-tests/globals-get-test.js")).andDo(print()).andExpect(status().is2xxSuccessful());
 	}
-	
+
 	@Test
 	public void executeGlobalsListTest() throws Exception {
-		mockMvc.perform(get("/services/js/core-tests/globals-list-test.js"))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(get("/services/js/core-tests/globals-list-test.js")).andDo(print()).andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	public void executeDestinationsGetTest() throws Exception {
-		mockMvc.perform(get("/services/js/core-tests/destinations-get-test.js"))
-				.andDo(print())
-				.andExpect(status().is2xxSuccessful());
+		mockMvc.perform(get("/services/js/core-tests/destinations-get-test.js")).andDo(print()).andExpect(status().is2xxSuccessful());
 	}
 
 	@SpringBootApplication

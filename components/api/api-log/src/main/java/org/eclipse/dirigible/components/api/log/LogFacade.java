@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.log;
 
@@ -37,13 +36,13 @@ public class LogFacade {
 
 	/** The Constant APP_LOGGER_NAME_PREFX. */
 	private static final String APP_LOGGER_NAME_PREFX = "app";
-	
+
 	/** The Constant APP_LOGGER_NAME_SEPARATOR. */
 	private static final String APP_LOGGER_NAME_SEPARATOR = ".";
 
 	/** The Constant om. */
 	private static final ObjectMapper om = new ObjectMapper();
-	
+
 	/** The Constant objectArrayType. */
 	private static final ArrayType objectArrayType = TypeFactory.defaultInstance().constructArrayType(Object.class);
 
@@ -55,8 +54,9 @@ public class LogFacade {
 	 */
 	public static final Logger getLogger(final String loggerName) {
 		/*
-		 * logger names are implicitly prefixed with 'app.' to derive from the applications root logger configuration
-		 * for severity and appenders. Null arguments for logger name will be treated as reference to the 'app' logger
+		 * logger names are implicitly prefixed with 'app.' to derive from the applications root logger
+		 * configuration for severity and appenders. Null arguments for logger name will be treated as
+		 * reference to the 'app' logger
 		 */
 		String appLoggerName = loggerName;
 		if (appLoggerName == null) {
@@ -81,7 +81,9 @@ public class LogFacade {
 		final org.slf4j.Logger logger = getLogger(loggerName);
 
 		if (!(logger instanceof ch.qos.logback.classic.Logger)) {
-			if (LOGGER.isErrorEnabled()) {LOGGER.error("Logger with name {} is not of type " + ch.qos.logback.classic.Logger.class.getName(), loggerName);}
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error("Logger with name {} is not of type " + ch.qos.logback.classic.Logger.class.getName(), loggerName);
+			}
 			return;
 		}
 
@@ -99,7 +101,8 @@ public class LogFacade {
 	 * @param errorJson the error json
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public static final void log(String loggerName, String level, String message, String logArguments, String errorJson) throws IOException {
+	public static final void log(String loggerName, String level, String message, String logArguments, String errorJson)
+			throws IOException {
 
 		final Logger logger = getLogger(loggerName);
 
@@ -111,14 +114,16 @@ public class LogFacade {
 					args = null;
 				}
 			} catch (IOException e) {
-				if (LOGGER.isErrorEnabled()) {LOGGER.error("Cannot parse log arguments[" + logArguments + "] for logger[" + loggerName + "]", e);}
+				if (LOGGER.isErrorEnabled()) {
+					LOGGER.error("Cannot parse log arguments[" + logArguments + "] for logger[" + loggerName + "]", e);
+				}
 			}
 		}
 		// https://www.slf4j.org/faq.html#paramException
 		if (errorJson != null) {
 			Exception ex = toException(errorJson);
 			if (args == null) {
-				args = new Object[] { ex };
+				args = new Object[] {ex};
 			} else {
 				args = Arrays.copyOf(args, args.length + 1);
 				args[args.length - 1] = ex;
@@ -142,11 +147,11 @@ public class LogFacade {
 	 * The Class ErrorObject.
 	 */
 	static class ErrorObject {
-		
+
 		/** The error message. */
 		@JsonProperty("message")
 		public String message;
-		
+
 		/** The error stack. */
 		@JsonProperty("stack")
 		public StackTraceEl[] stack;
@@ -156,19 +161,19 @@ public class LogFacade {
 	 * The Class StackTraceEl.
 	 */
 	static class StackTraceEl {
-		
+
 		/** The file name. */
 		@JsonProperty("fileName")
 		public String fileName;
-		
+
 		/** The line number. */
 		@JsonProperty("lineNumber")
 		public int lineNumber;
-		
+
 		/** The declaring class. */
 		@JsonProperty("declaringClass")
 		public String declaringClass;
-		
+
 		/** The method name. */
 		@JsonProperty("methodName")
 		public String methodName;
@@ -207,7 +212,7 @@ public class LogFacade {
 				}
 				ex.setStackTrace(stackTraceElementArray);
 			} else {
-				ex.setStackTrace(new StackTraceElement[] { new StackTraceElement("", "", null, 1) });
+				ex.setStackTrace(new StackTraceElement[] {new StackTraceElement("", "", null, 1)});
 			}
 
 		} else {

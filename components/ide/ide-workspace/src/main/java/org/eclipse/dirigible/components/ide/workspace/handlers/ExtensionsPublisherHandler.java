@@ -1,16 +1,15 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 /*
- * 
+ *
  */
 package org.eclipse.dirigible.components.ide.workspace.handlers;
 
@@ -31,28 +30,28 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ExtensionsPublisherHandler implements PublisherHandler {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsPublisherHandler.class);
-	
+
 	/** The Constant EXTENSION_POINT_IDE_WORKSPACE_BEFORE_PUBLISH. */
 	private static final String EXTENSION_POINT_IDE_WORKSPACE_BEFORE_PUBLISH = "ide-workspace-before-publish";
-	
+
 	/** The Constant EXTENSION_POINT_IDE_WORKSPACE_AFTER_PUBLISH. */
 	private static final String EXTENSION_POINT_IDE_WORKSPACE_AFTER_PUBLISH = "ide-workspace-after-publish";
-	
+
 	/** The Constant EXTENSION_POINT_IDE_WORKSPACE_BEFORE_UNPUBLISH. */
 	private static final String EXTENSION_POINT_IDE_WORKSPACE_BEFORE_UNPUBLISH = "ide-workspace-before-unpublish";
-	
+
 	/** The Constant EXTENSION_POINT_IDE_WORKSPACE_AFTER_UNPUBLISH. */
 	private static final String EXTENSION_POINT_IDE_WORKSPACE_AFTER_UNPUBLISH = "ide-workspace-after-unpublish";
-	
+
 	/** The Constant EXTENSION_PARAMETER_PATH. */
 	private static final String EXTENSION_PARAMETER_PATH = "path";
-	
+
 	/** The javascript service. */
-    @Autowired
-    private JavascriptService javascriptService;
+	@Autowired
+	private JavascriptService javascriptService;
 
 	/**
 	 * Before publish.
@@ -95,7 +94,7 @@ public class ExtensionsPublisherHandler implements PublisherHandler {
 	public void afterUnpublish(String location) {
 		triggerExtensions(location, EXTENSION_POINT_IDE_WORKSPACE_AFTER_UNPUBLISH, "After Unpublish");
 	}
-	
+
 	/**
 	 * Trigger extensions.
 	 *
@@ -105,23 +104,31 @@ public class ExtensionsPublisherHandler implements PublisherHandler {
 	 */
 	private void triggerExtensions(String location, String extensionPoint, String state) {
 		try {
-            String[] modules = ExtensionsFacade.getExtensions(extensionPoint);
-            for (String module : modules) {
-            	try {
-            		if (logger.isTraceEnabled()) {logger.trace("Workspace {} Extension: {} triggered...", state, module);}
-    				Map<Object, Object> internal = new HashMap<>();
-    				internal.put(EXTENSION_PARAMETER_PATH, location);
-    				internal.put("handler", module);
-    		    	RepositoryPath path = new RepositoryPath(module);
-    				javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, internal, false);
-    				if (logger.isTraceEnabled()) {logger.trace("Workspace {} Extension: {} finshed.", state, module);}
-    			} catch (Exception e) {
-    				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-    			}
-            }
-        } catch (Exception e) {
-        	if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
-        }
+			String[] modules = ExtensionsFacade.getExtensions(extensionPoint);
+			for (String module : modules) {
+				try {
+					if (logger.isTraceEnabled()) {
+						logger.trace("Workspace {} Extension: {} triggered...", state, module);
+					}
+					Map<Object, Object> internal = new HashMap<>();
+					internal.put(EXTENSION_PARAMETER_PATH, location);
+					internal.put("handler", module);
+					RepositoryPath path = new RepositoryPath(module);
+					javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, internal, false);
+					if (logger.isTraceEnabled()) {
+						logger.trace("Workspace {} Extension: {} finshed.", state, module);
+					}
+				} catch (Exception e) {
+					if (logger.isErrorEnabled()) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+			}
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
+		}
 	}
 
 }

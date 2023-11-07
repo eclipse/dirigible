@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.service;
 
@@ -30,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class TableService implements ArtefactService<Table> {
-	
+
 	/** The table repository. */
-	@Autowired 
+	@Autowired
 	private TableRepository tableRepository;
 
 	/**
@@ -45,7 +44,7 @@ public class TableService implements ArtefactService<Table> {
 	public List<Table> getAll() {
 		return tableRepository.findAll();
 	}
-	
+
 	/**
 	 * Find all.
 	 *
@@ -57,7 +56,7 @@ public class TableService implements ArtefactService<Table> {
 	public Page<Table> getPages(Pageable pageable) {
 		return tableRepository.findAll(pageable);
 	}
-	
+
 	/**
 	 * Find by id.
 	 *
@@ -74,7 +73,7 @@ public class TableService implements ArtefactService<Table> {
 			throw new IllegalArgumentException("Table with id does not exist: " + id);
 		}
 	}
-	
+
 	/**
 	 * Find by name.
 	 *
@@ -94,42 +93,42 @@ public class TableService implements ArtefactService<Table> {
 			throw new IllegalArgumentException("Table with name does not exist: " + name);
 		}
 	}
-	
+
 	/**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Table> findByLocation(String location) {
-    	Table filter = new Table();
-        filter.setLocation(location);
-        Example<Table> example = Example.of(filter);
-        List<Table> list = tableRepository.findAll(example);
-        return list;
-    }
-	
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Table> findByLocation(String location) {
+		Table filter = new Table();
+		filter.setLocation(location);
+		Example<Table> example = Example.of(filter);
+		List<Table> list = tableRepository.findAll(example);
+		return list;
+	}
+
 	/**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the table
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Table findByKey(String key) {
-    	Table filter = new Table();
-        filter.setKey(key);
-        Example<Table> example = Example.of(filter);
-        Optional<Table> table = tableRepository.findOne(example);
-        if (table.isPresent()) {
-            return table.get();
-        }
-        return null;
-    }
-	
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the table
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Table findByKey(String key) {
+		Table filter = new Table();
+		filter.setKey(key);
+		Example<Table> example = Example.of(filter);
+		Optional<Table> table = tableRepository.findOne(example);
+		if (table.isPresent()) {
+			return table.get();
+		}
+		return null;
+	}
+
 	/**
 	 * Save.
 	 *
@@ -140,7 +139,7 @@ public class TableService implements ArtefactService<Table> {
 	public Table save(Table table) {
 		return tableRepository.saveAndFlush(table);
 	}
-	
+
 	/**
 	 * Delete.
 	 *

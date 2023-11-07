@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.platform;
 
@@ -21,13 +20,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LifecycleFacade implements InitializingBean {
-	
+
 	/** The instance. */
 	private static LifecycleFacade INSTANCE;
 
 	/** The publisherService. */
 	private PublisherService publisherService;
-	
+
 	/**
 	 * Instantiates a new lifecycle facade.
 	 *
@@ -37,7 +36,7 @@ public class LifecycleFacade implements InitializingBean {
 	private LifecycleFacade(PublisherService publisherService) {
 		this.publisherService = publisherService;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -45,18 +44,18 @@ public class LifecycleFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the database facade
 	 */
 	public static LifecycleFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/**
 	 * Gets the publisher service.
 	 *
@@ -84,7 +83,7 @@ public class LifecycleFacade implements InitializingBean {
 		}
 		return isSuccessfulPublishRequest;
 	}
-	
+
 	/**
 	 * Unpublish.
 	 *

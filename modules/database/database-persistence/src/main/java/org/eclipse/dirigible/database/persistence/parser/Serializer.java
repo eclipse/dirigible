@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.parser;
 
@@ -29,7 +28,7 @@ public class Serializer {
 	/**
 	 * Serializes a table model.
 	 *
-	 * @param tableModel            the model
+	 * @param tableModel the model
 	 * @return the serialized model
 	 */
 	public static String serializeTableModel(PersistenceTableModel tableModel) {
@@ -43,7 +42,7 @@ public class Serializer {
 	/**
 	 * Serializes a POJO instance.
 	 *
-	 * @param pojo            the POJO instance
+	 * @param pojo the POJO instance
 	 * @return the serialized POJO instance
 	 */
 	public static String serializePojo(Object pojo) {

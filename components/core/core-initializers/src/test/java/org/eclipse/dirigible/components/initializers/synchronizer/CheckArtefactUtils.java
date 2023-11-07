@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.initializers.synchronizer;
 
@@ -23,7 +22,7 @@ import java.sql.Statement;
  * The Class CheckArtefactUtils.
  */
 public class CheckArtefactUtils {
-	
+
 	/**
 	 * Checks if is artefact created.
 	 *
@@ -46,7 +45,7 @@ public class CheckArtefactUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks if is artefact not created.
 	 *
@@ -62,7 +61,7 @@ public class CheckArtefactUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks if is artefact recovered.
 	 *
@@ -85,7 +84,7 @@ public class CheckArtefactUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks if is artefact updated.
 	 *
@@ -108,7 +107,7 @@ public class CheckArtefactUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks if is artefact for deletion created.
 	 *
@@ -131,7 +130,7 @@ public class CheckArtefactUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks if is artefact deleted.
 	 *

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.listeners.service;
 
@@ -31,120 +30,120 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ListenerService implements ArtefactService<Listener> {
 
-    /** The listener repository. */
-    @Autowired
-    private ListenerRepository listenerRepository;
+	/** The listener repository. */
+	@Autowired
+	private ListenerRepository listenerRepository;
 
-    /**
-     * Gets the all.
-     *
-     * @return the all
-     */
-    @Override
-    public List<Listener> getAll() {
-        return listenerRepository.findAll();
-    }
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
+	@Override
+	public List<Listener> getAll() {
+		return listenerRepository.findAll();
+	}
 
-    /**
-     * Find all.
-     *
-     * @param pageable the pageable
-     * @return the page
-     */
-    @Override
-    public Page<Listener> getPages(Pageable pageable) {
-        return listenerRepository.findAll(pageable);
-    }
+	/**
+	 * Find all.
+	 *
+	 * @param pageable the pageable
+	 * @return the page
+	 */
+	@Override
+	public Page<Listener> getPages(Pageable pageable) {
+		return listenerRepository.findAll(pageable);
+	}
 
-    /**
-     * Find by id.
-     *
-     * @param id the id
-     * @return the listener
-     */
-    @Override
-    public Listener findById(Long id) {
-        Optional<Listener> listener = listenerRepository.findById(id);
-        if (listener.isPresent()) {
-            return listener.get();
-        } else {
-            throw new IllegalArgumentException("Listener with id does not exist: " + id);
-        }
-    }
+	/**
+	 * Find by id.
+	 *
+	 * @param id the id
+	 * @return the listener
+	 */
+	@Override
+	public Listener findById(Long id) {
+		Optional<Listener> listener = listenerRepository.findById(id);
+		if (listener.isPresent()) {
+			return listener.get();
+		} else {
+			throw new IllegalArgumentException("Listener with id does not exist: " + id);
+		}
+	}
 
-    /**
-     * Find by name.
-     *
-     * @param name the name
-     * @return the listener
-     */
-    @Override
-    public Listener findByName(String name) {
-        Listener filter = new Listener();
-        filter.setName(name);
-        Example<Listener> example = Example.of(filter);
-        Optional<Listener> listener = listenerRepository.findOne(example);
-        if (listener.isPresent()) {
-            return listener.get();
-        } else {
-            throw new IllegalArgumentException("Listener with name does not exist: " + name);
-        }
-    }
-    
-    /**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Listener> findByLocation(String location) {
-    	Listener filter = new Listener();
-        filter.setLocation(location);
-        Example<Listener> example = Example.of(filter);
-        List<Listener> list = listenerRepository.findAll(example);
-        return list;
-    }
-    
-    /**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the listener
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Listener findByKey(String key) {
-    	Listener filter = new Listener();
-        filter.setKey(key);
-        filter.setKind(null);
-        Example<Listener> example = Example.of(filter);
-        Optional<Listener> listener = listenerRepository.findOne(example);
-        if (listener.isPresent()) {
-            return listener.get();
-        }
-        return null;
-    }
+	/**
+	 * Find by name.
+	 *
+	 * @param name the name
+	 * @return the listener
+	 */
+	@Override
+	public Listener findByName(String name) {
+		Listener filter = new Listener();
+		filter.setName(name);
+		Example<Listener> example = Example.of(filter);
+		Optional<Listener> listener = listenerRepository.findOne(example);
+		if (listener.isPresent()) {
+			return listener.get();
+		} else {
+			throw new IllegalArgumentException("Listener with name does not exist: " + name);
+		}
+	}
 
-    /**
-     * Save.
-     *
-     * @param listener the listener
-     * @return the listener
-     */
-    @Override
-    public Listener save(Listener listener) {
-        return listenerRepository.saveAndFlush(listener);
-    }
+	/**
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Listener> findByLocation(String location) {
+		Listener filter = new Listener();
+		filter.setLocation(location);
+		Example<Listener> example = Example.of(filter);
+		List<Listener> list = listenerRepository.findAll(example);
+		return list;
+	}
 
-    /**
-     * Delete.
-     *
-     * @param listener the listener
-     */
-    @Override
-    public void delete(Listener listener) {
-        listenerRepository.delete(listener);
-    }
+	/**
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the listener
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Listener findByKey(String key) {
+		Listener filter = new Listener();
+		filter.setKey(key);
+		filter.setKind(null);
+		Example<Listener> example = Example.of(filter);
+		Optional<Listener> listener = listenerRepository.findOne(example);
+		if (listener.isPresent()) {
+			return listener.get();
+		}
+		return null;
+	}
+
+	/**
+	 * Save.
+	 *
+	 * @param listener the listener
+	 * @return the listener
+	 */
+	@Override
+	public Listener save(Listener listener) {
+		return listenerRepository.saveAndFlush(listener);
+	}
+
+	/**
+	 * Delete.
+	 *
+	 * @param listener the listener
+	 */
+	@Override
+	public void delete(Listener listener) {
+		listenerRepository.delete(listener);
+	}
 }

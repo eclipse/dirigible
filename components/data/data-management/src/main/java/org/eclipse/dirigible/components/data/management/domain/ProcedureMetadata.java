@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.domain;
 
@@ -35,31 +34,24 @@ public class ProcedureMetadata {
 
 	/** The columns. */
 	private List<ParameterColumnMetadata> columns;
-	
+
 	/** The kind. */
 	private String kind = "procedure";
 
 	/**
 	 * Instantiates a new procedure metadata.
 	 *
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
-	 * @param remarks
-	 *            the remarks
-	 * @param connection
-	 *            the connection
-	 * @param catalogName
-	 *            the catalog name
-	 * @param schemaName
-	 *            the schema name
-	 * @param deep
-	 *            whether to populate also the columns
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @param name the name
+	 * @param type the type
+	 * @param remarks the remarks
+	 * @param connection the connection
+	 * @param catalogName the catalog name
+	 * @param schemaName the schema name
+	 * @param deep whether to populate also the columns
+	 * @throws SQLException the SQL exception
 	 */
-	public ProcedureMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName, boolean deep) throws SQLException {
+	public ProcedureMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName,
+			boolean deep) throws SQLException {
 		super();
 		this.name = name;
 		this.type = type;
@@ -68,12 +60,14 @@ public class ProcedureMetadata {
 		this.columns = new ArrayList<ParameterColumnMetadata>();
 
 		if (deep) {
-			DatabaseMetadataHelper.iterateProcedureDefinition(connection, catalogName, schemaName, name, new ProcedureColumnsIteratorCallback() {
-				@Override
-				public void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable, String remarks) {
-					columns.add(new ParameterColumnMetadata(name, kind, type, precision, length, scale, radix, nullable, remarks));
-				}
-			});
+			DatabaseMetadataHelper.iterateProcedureDefinition(connection, catalogName, schemaName, name,
+					new ProcedureColumnsIteratorCallback() {
+						@Override
+						public void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix,
+								boolean nullable, String remarks) {
+							columns.add(new ParameterColumnMetadata(name, kind, type, precision, length, scale, radix, nullable, remarks));
+						}
+					});
 		}
 	}
 
@@ -89,8 +83,7 @@ public class ProcedureMetadata {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name
-	 *            the new name
+	 * @param name the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -108,8 +101,7 @@ public class ProcedureMetadata {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type
-	 *            the new type
+	 * @param type the new type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -127,8 +119,7 @@ public class ProcedureMetadata {
 	/**
 	 * Sets the remarks.
 	 *
-	 * @param remarks
-	 *            the new remarks
+	 * @param remarks the new remarks
 	 */
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
@@ -151,7 +142,7 @@ public class ProcedureMetadata {
 	public void setColumns(List<ParameterColumnMetadata> columns) {
 		this.columns = columns;
 	}
-	
+
 	/**
 	 * Get the metadata kind.
 	 *
@@ -160,7 +151,7 @@ public class ProcedureMetadata {
 	public String getKind() {
 		return kind;
 	}
-	
+
 	/**
 	 * Set the metadata kind.
 	 *

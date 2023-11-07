@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.service;
 
@@ -30,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ViewService implements ArtefactService<View> {
-	
+
 	/** The view repository. */
-	@Autowired 
+	@Autowired
 	private ViewRepository viewRepository;
 
 	/**
@@ -45,7 +44,7 @@ public class ViewService implements ArtefactService<View> {
 	public List<View> getAll() {
 		return viewRepository.findAll();
 	}
-	
+
 	/**
 	 * Find all.
 	 *
@@ -57,7 +56,7 @@ public class ViewService implements ArtefactService<View> {
 	public Page<View> getPages(Pageable pageable) {
 		return viewRepository.findAll(pageable);
 	}
-	
+
 	/**
 	 * Find by id.
 	 *
@@ -74,7 +73,7 @@ public class ViewService implements ArtefactService<View> {
 			throw new IllegalArgumentException("View with id does not exist: " + id);
 		}
 	}
-	
+
 	/**
 	 * Find by name.
 	 *
@@ -94,42 +93,42 @@ public class ViewService implements ArtefactService<View> {
 			throw new IllegalArgumentException("View with name does not exist: " + name);
 		}
 	}
-	
+
 	/**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<View> findByLocation(String location) {
-    	View filter = new View();
-        filter.setLocation(location);
-        Example<View> example = Example.of(filter);
-        List<View> list = viewRepository.findAll(example);
-        return list;
-    }
-	
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<View> findByLocation(String location) {
+		View filter = new View();
+		filter.setLocation(location);
+		Example<View> example = Example.of(filter);
+		List<View> list = viewRepository.findAll(example);
+		return list;
+	}
+
 	/**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the view
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public View findByKey(String key) {
-    	View filter = new View();
-        filter.setKey(key);
-        Example<View> example = Example.of(filter);
-        Optional<View> view = viewRepository.findOne(example);
-        if (view.isPresent()) {
-            return view.get();
-        }
-        return null;
-    }
-	
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the view
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public View findByKey(String key) {
+		View filter = new View();
+		filter.setKey(key);
+		Example<View> example = Example.of(filter);
+		Optional<View> view = viewRepository.findOne(example);
+		if (view.isPresent()) {
+			return view.get();
+		}
+		return null;
+	}
+
 	/**
 	 * Save.
 	 *
@@ -140,7 +139,7 @@ public class ViewService implements ArtefactService<View> {
 	public View save(View view) {
 		return viewRepository.saveAndFlush(view);
 	}
-	
+
 	/**
 	 * Delete.
 	 *

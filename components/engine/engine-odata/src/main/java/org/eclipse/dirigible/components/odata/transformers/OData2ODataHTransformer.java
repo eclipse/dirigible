@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.transformers;
 
@@ -24,34 +23,34 @@ import org.eclipse.dirigible.components.odata.domain.ODataHandler;
  */
 public class OData2ODataHTransformer {
 
-    /**
-     * Transform.
-     *
-     * @param model the model
-     * @return the list
-     * @throws SQLException the SQL exception
-     */
-    public List<ODataHandler> transform(OData model) throws SQLException {
+	/**
+	 * Transform.
+	 *
+	 * @param model the model
+	 * @return the list
+	 * @throws SQLException the SQL exception
+	 */
+	public List<ODataHandler> transform(OData model) throws SQLException {
 
-        List<ODataHandler> result = new ArrayList<>();
+		List<ODataHandler> result = new ArrayList<>();
 
-        for (ODataEntity entity : model.getEntities()) {
-            String namespace = model.getNamespace();
-            String name = entity.getName();
+		for (ODataEntity entity : model.getEntities()) {
+			String namespace = model.getNamespace();
+			String name = entity.getName();
 
-            entity.getHandlers().forEach(handler -> {
-                ODataMetadataUtil.validateHandlerDefinitionMethod(handler.getMethod(), entity.getName());
-                ODataMetadataUtil.validateHandlerDefinitionTypes(handler.getType(), entity.getName());
+			entity.getHandlers().forEach(handler -> {
+				ODataMetadataUtil.validateHandlerDefinitionMethod(handler.getMethod(), entity.getName());
+				ODataMetadataUtil.validateHandlerDefinitionTypes(handler.getType(), entity.getName());
 
-                ODataHandler handlerModel = new ODataHandler();
-                handlerModel.setNamespace(namespace);
-                handlerModel.setName(name + "Type");
-                handlerModel.setMethod(handler.getMethod());
-                handlerModel.setKind(handler.getType());
-                handlerModel.setHandler(handler.getHandler());
-                result.add(handlerModel);
-            });
-        }
-        return result;
-    }
+				ODataHandler handlerModel = new ODataHandler();
+				handlerModel.setNamespace(namespace);
+				handlerModel.setName(name + "Type");
+				handlerModel.setMethod(handler.getMethod());
+				handlerModel.setKind(handler.getType());
+				handlerModel.setHandler(handler.getHandler());
+				result.add(handlerModel);
+			});
+		}
+		return result;
+	}
 }

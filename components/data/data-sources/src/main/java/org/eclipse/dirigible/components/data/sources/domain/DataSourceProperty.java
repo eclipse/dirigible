@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.sources.domain;
 
@@ -39,23 +38,23 @@ public class DataSourceProperty {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "DSP_ID", nullable = false)
 	private Long id;
-	
+
 	/** The name. */
 	@Column(name = "DSP_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String name;
-	
+
 	/** The default value. */
 	@Column(name = "DSP_VALUE", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	private String value;
-		
+
 	/** The table. */
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "DS_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private DataSource datasource;
+	@JoinColumn(name = "DS_ID", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private DataSource datasource;
 
 	/**
 	 * Instantiates a new data source property.
@@ -70,7 +69,7 @@ public class DataSourceProperty {
 		this.value = value;
 		this.datasource = datasource;
 	}
-	
+
 	/**
 	 * Instantiates a new data source property.
 	 */

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.security;
 
@@ -39,22 +38,22 @@ public class UserFacade {
 
 	/** The Constant DIRIGIBLE_ANONYMOUS_IDENTIFIER. */
 	private static final String DIRIGIBLE_ANONYMOUS_IDENTIFIER = "dirigible-anonymous-identifier";
-	
+
 	/** The Constant DIRIGIBLE_ANONYMOUS_USER. */
 	private static final String DIRIGIBLE_ANONYMOUS_USER = "dirigible-anonymous-user";
-	
+
 	/** The Constant DIRIGIBLE_JWT_USER. */
 	private static final String DIRIGIBLE_JWT_USER = "dirigible-jwt-user";
-	
+
 	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Session Facade without a valid Session (HTTP Request/Response)";
-	
+
 	/** The Constant INVOCATION_COUNT. */
 	private static final String INVOCATION_COUNT = "invocation.count";
-	
+
 	/** The Constant LANGUAGE_HEADER. */
 	private static final String LANGUAGE_HEADER = "accept-language";
-	
+
 	/** The Constant ANY_LANGUAGE. */
 	private static final String ANY_LANGUAGE = "*";
 
@@ -63,7 +62,7 @@ public class UserFacade {
 
 	/** The Constant GUEST. */
 	private static final String GUEST = "guest";
-	
+
 	/** The Constant AUTH. */
 	private static final String AUTH = "authorization";
 
@@ -89,8 +88,7 @@ public class UserFacade {
 	/**
 	 * Checks if the user is in role.
 	 *
-	 * @param role
-	 *            the role
+	 * @param role the role
 	 * @return true, if the user is in role
 	 */
 	public static final boolean isInRole(String role) {
@@ -100,7 +98,9 @@ public class UserFacade {
 		try {
 			return HttpRequestFacade.isUserInRole(role);
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage());
+			}
 		}
 
 		return false;
@@ -109,21 +109,27 @@ public class UserFacade {
 	/**
 	 * Sets the user name.
 	 *
-	 * @param userName
-	 *            the user name
-	 * @throws ContextException
-	 *             in case of not initialized ThreadContext
+	 * @param userName the user name
+	 * @throws ContextException in case of not initialized ThreadContext
 	 */
 	public static final void setName(String userName) throws ContextException {
 		if (Configuration.isAnonymousModeEnabled()) {
 			setContextProperty(DIRIGIBLE_ANONYMOUS_IDENTIFIER, userName);
-			if (logger.isDebugEnabled()) {logger.debug(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));}
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+			}
 		} else if (Configuration.isAnonymousUserEnabled()) {
 			setContextProperty(DIRIGIBLE_ANONYMOUS_USER, userName);
-			if (logger.isDebugEnabled()) {logger.debug(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));}
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+			}
 		} else if (Configuration.isJwtModeEnabled()) {
 			setContextProperty(DIRIGIBLE_JWT_USER, userName);
-			if (logger.isDebugEnabled()) {logger.debug(format("User name has been set programmatically {0} to the session as the JWT mode is enabled", userName));}
+			if (logger.isDebugEnabled()) {
+				logger.debug(format("User name has been set programmatically {0} to the session as the JWT mode is enabled", userName));
+			}
 		} else {
 			throw new SecurityException("Setting the user name programmatically is supported only when the anonymous mode is enabled");
 		}
@@ -144,7 +150,9 @@ public class UserFacade {
 		try {
 			userName = request.getRemoteUser();
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage());
+			}
 		}
 		if (userName != null) {
 			return userName;
@@ -167,7 +175,9 @@ public class UserFacade {
 		try {
 			userName = session.getUserPrincipal().getName();
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage());
+			}
 		}
 		if (userName != null) {
 			return userName;
@@ -184,7 +194,9 @@ public class UserFacade {
 		if (HttpSessionFacade.isValid()) {
 			return HttpSessionFacade.getMaxInactiveInterval();
 		} else {
-			if (logger.isErrorEnabled()) {logger.error(NO_VALID_REQUEST);}
+			if (logger.isErrorEnabled()) {
+				logger.error(NO_VALID_REQUEST);
+			}
 		}
 		return 0;
 	}
@@ -198,23 +210,27 @@ public class UserFacade {
 		if (HttpRequestFacade.isValid()) {
 			return HttpRequestFacade.getAuthType();
 		} else {
-			if (logger.isErrorEnabled()) {logger.error(NO_VALID_REQUEST);}
+			if (logger.isErrorEnabled()) {
+				logger.error(NO_VALID_REQUEST);
+			}
 		}
 		return null;
 	}
 
 	/**
-	 * The Authorization header returns the type + token.
-	 * Substring from the empty space to only get the token.
+	 * The Authorization header returns the type + token. Substring from the empty space to only get the
+	 * token.
 	 *
 	 * @return the security token
 	 */
 	public static String getSecurityToken() {
 		if (HttpRequestFacade.isValid()) {
 			String token = HttpRequestFacade.getHeader(AUTH);
-			return token != null && !"".equals(token)? token.substring(token.indexOf(" ")) : "";
+			return token != null && !"".equals(token) ? token.substring(token.indexOf(" ")) : "";
 		} else {
-			if (logger.isErrorEnabled()) {logger.error(NO_VALID_REQUEST);}
+			if (logger.isErrorEnabled()) {
+				logger.error(NO_VALID_REQUEST);
+			}
 		}
 		return "";
 	}
@@ -228,28 +244,31 @@ public class UserFacade {
 		if (HttpSessionFacade.isValid()) {
 			return HttpSessionFacade.getAttribute(INVOCATION_COUNT);
 		} else {
-			if (logger.isErrorEnabled()) {logger.error(NO_VALID_REQUEST);}
+			if (logger.isErrorEnabled()) {
+				logger.error(NO_VALID_REQUEST);
+			}
 		}
 		return null;
 	}
 
 	/**
-	 * The accept-language attribute returns multiple values.
-	 * Eg. en-GB,en-US;q=0.9,en;q=0.8
-	 * Substring until the semicolon to get the IETF (BCP 47) format.
+	 * The accept-language attribute returns multiple values. Eg. en-GB,en-US;q=0.9,en;q=0.8 Substring
+	 * until the semicolon to get the IETF (BCP 47) format.
 	 *
 	 * @return the language
 	 */
 	public static String getLanguage() {
 		if (HttpRequestFacade.isValid()) {
 			String language = HttpRequestFacade.getHeader(LANGUAGE_HEADER);
-			if(language == null || language.isEmpty()){
+			if (language == null || language.isEmpty()) {
 				language = ANY_LANGUAGE;
 			}
 			List<Locale.LanguageRange> ranges = Locale.LanguageRange.parse(language);
-			return  ranges == null || ranges.isEmpty() ? "" : ranges.get(0).getRange();
+			return ranges == null || ranges.isEmpty() ? "" : ranges.get(0).getRange();
 		} else {
-			if (logger.isErrorEnabled()) {logger.error(NO_VALID_REQUEST);}
+			if (logger.isErrorEnabled()) {
+				logger.error(NO_VALID_REQUEST);
+			}
 		}
 		return null;
 	}
@@ -301,7 +320,9 @@ public class UserFacade {
 				return HttpRequestFacade.getRemoteUser();
 			}
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage());
+			}
 		}
 		return null;
 	}
@@ -317,7 +338,9 @@ public class UserFacade {
 			try {
 				userName = getContextProperty(DIRIGIBLE_ANONYMOUS_IDENTIFIER);
 			} catch (ContextException e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage());
+				}
 			}
 		} else if (Configuration.isAnonymousUserEnabled()) {
 			try {
@@ -326,13 +349,17 @@ public class UserFacade {
 					userName = setAnonymousUser();
 				}
 			} catch (ContextException e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage());
+				}
 			}
 		} else if (Configuration.isJwtModeEnabled()) {
 			try {
 				userName = getContextProperty(DIRIGIBLE_JWT_USER);
 			} catch (ContextException e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage());}
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage());
+				}
 			}
 		}
 		return userName;
@@ -351,7 +378,9 @@ public class UserFacade {
 			try {
 				setName(userName);
 			} catch (ContextException e) {
-				if (logger.isInfoEnabled()) {logger.info("Error while setting userName from DIRIGIBLE_ANONYMOUS_USER_PROPERTY_NAME.", e);}
+				if (logger.isInfoEnabled()) {
+					logger.info("Error while setting userName from DIRIGIBLE_ANONYMOUS_USER_PROPERTY_NAME.", e);
+				}
 			}
 		}
 		return userName;

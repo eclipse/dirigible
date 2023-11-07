@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.mongodb;
 
@@ -40,12 +39,11 @@ import org.eclipse.dirigible.mongodb.jdbc.util.ExportImportUtil;
  * The MongoDB SQL Dialect.
  */
 public class MongoDBSqlDialect extends
-		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, 
-		NextValueSequenceBuilder, LastValueIdentityBuilder> {
+		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, NextValueSequenceBuilder, LastValueIdentityBuilder> {
 
 	/** The Constant FUNCTIONS. */
 	public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {})));
-	
+
 	/**
 	 * Checks if is synonym supported.
 	 *
@@ -53,13 +51,14 @@ public class MongoDBSqlDialect extends
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSynonymSupported()
 	 */
 	@Override
 	public boolean isSynonymSupported() {
 		return false;
 	}
-	
+
 	/**
 	 * Gets the functions names.
 	 *
@@ -67,14 +66,15 @@ public class MongoDBSqlDialect extends
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
 	 */
 	@Override
 	public Set<String> getFunctionsNames() {
 		return FUNCTIONS;
 	}
-    
-    /**
+
+	/**
 	 * Exists schema.
 	 *
 	 * @param connection the connection
@@ -86,7 +86,7 @@ public class MongoDBSqlDialect extends
 	public boolean existsSchema(Connection connection, String schema) throws SQLException {
 		return false;
 	}
-	
+
 	/**
 	 * Count.
 	 *
@@ -105,7 +105,7 @@ public class MongoDBSqlDialect extends
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * All.
 	 *
@@ -145,7 +145,7 @@ public class MongoDBSqlDialect extends
 		String sql = "{ 'find': '" + normalizeTableNameOnly(table) + "'}";
 		return sql;
 	}
-	
+
 	/**
 	 * Gets the database type.
 	 *
@@ -156,7 +156,7 @@ public class MongoDBSqlDialect extends
 	public String getDatabaseType(Connection connection) {
 		return DatabaseType.NOSQL.getName();
 	}
-	
+
 	/**
 	 * Export data.
 	 *
@@ -169,7 +169,7 @@ public class MongoDBSqlDialect extends
 	public void exportData(Connection connection, String table, OutputStream output) throws Exception {
 		ExportImportUtil.exportCollection(connection.unwrap(MongoDBConnection.class), table, output);
 	}
-	
+
 	/**
 	 * Import data.
 	 *

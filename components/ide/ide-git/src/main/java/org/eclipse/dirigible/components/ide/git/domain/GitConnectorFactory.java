@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.git.domain;
 
@@ -38,11 +37,9 @@ public class GitConnectorFactory {
 	/**
 	 * Gets org.eclipse.jgit.lib.Repository object for existing Git Repository.
 	 *
-	 * @param repositoryDirectory
-	 *            the path to an existing Git Repository
+	 * @param repositoryDirectory the path to an existing Git Repository
 	 * @return a newly created {@link IGitConnector} object
-	 * @throws GitConnectorException
-	 *             Git Connector Exception
+	 * @throws GitConnectorException Git Connector Exception
 	 */
 	public static IGitConnector getConnector(String repositoryDirectory) throws GitConnectorException {
 		try {
@@ -60,26 +57,18 @@ public class GitConnectorFactory {
 	/**
 	 * Clones secured git remote repository to the file system.
 	 *
-	 * @param repositoryDirectory
-	 *            where the remote repository will be cloned
-	 * @param repositoryUri
-	 *            repository's URI example: https://qwerty.com/xyz/abc.git
-	 * @param username
-	 *            the username used for authentication
-	 * @param password
-	 *            the password used for authentication
-	 * @param branch
-	 *            the branch where sources will be cloned from
+	 * @param repositoryDirectory where the remote repository will be cloned
+	 * @param repositoryUri repository's URI example: https://qwerty.com/xyz/abc.git
+	 * @param username the username used for authentication
+	 * @param password the password used for authentication
+	 * @param branch the branch where sources will be cloned from
 	 * @return a newly created {@link IGitConnector} object
-	 * @throws InvalidRemoteException
-	 *             Invalid Remote Exception
-	 * @throws TransportException
-	 *             Transport Exception
-	 * @throws GitAPIException
-	 *             Git API Exception
+	 * @throws InvalidRemoteException Invalid Remote Exception
+	 * @throws TransportException Transport Exception
+	 * @throws GitAPIException Git API Exception
 	 */
-	public static IGitConnector cloneRepository(String repositoryDirectory, String repositoryUri, String username, String password, String branch)
-			throws InvalidRemoteException, TransportException, GitAPIException {
+	public static IGitConnector cloneRepository(String repositoryDirectory, String repositoryUri, String username, String password,
+			String branch) throws InvalidRemoteException, TransportException, GitAPIException {
 		try {
 			branch = branchOrNull(branch);
 

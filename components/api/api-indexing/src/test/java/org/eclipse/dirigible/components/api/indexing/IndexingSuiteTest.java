@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.indexing;
 
@@ -29,22 +28,22 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration
 @WebAppConfiguration
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class IndexingSuiteTest {
-	
+
 	@Autowired
 	private JavascriptService javascriptService;
-	
-    @Autowired
-    protected WebApplicationContext context;
-    
+
+	@Autowired
+	protected WebApplicationContext context;
+
 	@Test
 	public void executeClientTest() throws Exception {
 		javascriptService.handleRequest("indexing-tests", "searcher-between.js", null, null, false);
 		javascriptService.handleRequest("indexing-tests", "searcher-search.js", null, null, false);
 		javascriptService.handleRequest("indexing-tests", "writer-add.js", null, null, false);
 	}
-	
+
 	@SpringBootApplication
 	static class TestConfiguration {
 	}

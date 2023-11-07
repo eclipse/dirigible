@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.http;
 
@@ -30,7 +29,7 @@ public class HttpSessionFacade {
 
 	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Session Facade without a valid Session (HTTP Request/Response)";
-	
+
 	/** The Constant INVOCATION_COUNT. */
 	private static final String INVOCATION_COUNT = "invocation.count";
 
@@ -50,13 +49,15 @@ public class HttpSessionFacade {
 			HttpServletRequest request = (HttpServletRequest) ThreadContextFacade.get(HttpServletRequest.class.getCanonicalName());
 			if (request != null) {
 				HttpSession httpSession = request.getSession(true);
-				Integer count = (Integer)httpSession.getAttribute(INVOCATION_COUNT);
+				Integer count = (Integer) httpSession.getAttribute(INVOCATION_COUNT);
 				count = count == null ? 1 : ++count;
 				httpSession.setAttribute(INVOCATION_COUNT, count);
 				return httpSession;
 			}
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 		return null;
 	}
@@ -74,7 +75,7 @@ public class HttpSessionFacade {
 	/**
 	 * Returns the object bound to the specified name.
 	 *
-	 * @param arg0            the name
+	 * @param arg0 the name
 	 * @return the attribute
 	 */
 	public static final String getAttribute(String arg0) {
@@ -97,7 +98,7 @@ public class HttpSessionFacade {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the attribute names.
 	 *
@@ -105,7 +106,7 @@ public class HttpSessionFacade {
 	 */
 	public static final String getAttributeNamesJson() {
 		HttpSession session = getSession();
-		if (session != null) { 
+		if (session != null) {
 			String[] array = Collections.list(session.getAttributeNames()).toArray(new String[] {});
 			return GsonHelper.toJson(array);
 		}
@@ -190,10 +191,8 @@ public class HttpSessionFacade {
 	/**
 	 * Sets the attribute.
 	 *
-	 * @param arg0
-	 *            the name
-	 * @param arg1
-	 *            the value
+	 * @param arg0 the name
+	 * @param arg1 the value
 	 */
 	public static final void setAttribute(String arg0, String arg1) {
 		HttpSession session = getSession();
@@ -205,8 +204,7 @@ public class HttpSessionFacade {
 	/**
 	 * Removes the attribute.
 	 *
-	 * @param arg0
-	 *            the name of the attribute
+	 * @param arg0 the name of the attribute
 	 */
 	public static final void removeAttribute(String arg0) {
 		HttpSession session = getSession();
@@ -218,8 +216,7 @@ public class HttpSessionFacade {
 	/**
 	 * Sets the max inactive interval.
 	 *
-	 * @param arg0
-	 *            the new max inactive interval
+	 * @param arg0 the new max inactive interval
 	 */
 	public static final void setMaxInactiveInterval(int arg0) {
 		HttpSession session = getSession();
@@ -231,8 +228,7 @@ public class HttpSessionFacade {
 	/**
 	 * Sets the max inactive interval.
 	 *
-	 * @param arg0
-	 *            the new max inactive interval
+	 * @param arg0 the new max inactive interval
 	 */
 	public static final void setMaxInactiveInterval(Double arg0) {
 		setMaxInactiveInterval(arg0.intValue());

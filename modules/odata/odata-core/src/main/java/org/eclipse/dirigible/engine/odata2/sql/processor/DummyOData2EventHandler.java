@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
@@ -40,8 +39,8 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	 * @return the o data response
 	 */
 	@Override
-	public ODataResponse beforeCreateEntity(PostUriInfo uriInfo, String requestContentType,
-			String contentType, ODataEntry entry, Map<Object, Object> context) {
+	public ODataResponse beforeCreateEntity(PostUriInfo uriInfo, String requestContentType, String contentType, ODataEntry entry,
+			Map<Object, Object> context) {
 		return null;
 	}
 
@@ -56,8 +55,8 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	 * @return the o data response
 	 */
 	@Override
-	public ODataResponse afterCreateEntity(PostUriInfo uriInfo, String requestContentType,
-			String contentType, ODataEntry entry, Map<Object, Object> context) {
+	public ODataResponse afterCreateEntity(PostUriInfo uriInfo, String requestContentType, String contentType, ODataEntry entry,
+			Map<Object, Object> context) {
 		return null;
 	}
 
@@ -70,8 +69,7 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	 * @return true, if is using on create entity
 	 */
 	@Override
-	public boolean isUsingOnCreateEntity(PostUriInfo uriInfo, String requestContentType,
-										 String contentType) {
+	public boolean isUsingOnCreateEntity(PostUriInfo uriInfo, String requestContentType, String contentType) {
 		return false;
 	}
 
@@ -99,8 +97,8 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	 * @return the o data response
 	 */
 	@Override
-	public ODataResponse onCreateEntity(PostUriInfo uriInfo, InputStream content, String requestContentType,
-			String contentType, Map<Object, Object> context) {
+	public ODataResponse onCreateEntity(PostUriInfo uriInfo, InputStream content, String requestContentType, String contentType,
+			Map<Object, Object> context) {
 		return null;
 	}
 
@@ -113,8 +111,7 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean forbidCreateEntity(PostUriInfo uriInfo, String requestContentType,
-			String contentType) {
+	public boolean forbidCreateEntity(PostUriInfo uriInfo, String requestContentType, String contentType) {
 		return false;
 	}
 
@@ -130,8 +127,8 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	 * @return the o data response
 	 */
 	@Override
-	public ODataResponse beforeUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
-			boolean merge, String contentType, ODataEntry entry, Map<Object, Object> context) {
+	public ODataResponse beforeUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType, boolean merge, String contentType,
+			ODataEntry entry, Map<Object, Object> context) {
 		return null;
 	}
 
@@ -147,8 +144,8 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	 * @return the o data response
 	 */
 	@Override
-	public ODataResponse afterUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
-			boolean merge, String contentType, ODataEntry entry, Map<Object, Object> context) {
+	public ODataResponse afterUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType, boolean merge, String contentType,
+			ODataEntry entry, Map<Object, Object> context) {
 		return null;
 	}
 
@@ -162,8 +159,7 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	 * @return true, if is using on update entity
 	 */
 	@Override
-	public boolean isUsingOnUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
-										 boolean merge, String contentType) {
+	public boolean isUsingOnUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType, boolean merge, String contentType) {
 		return false;
 	}
 
@@ -179,8 +175,8 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	 * @return the o data response
 	 */
 	@Override
-	public ODataResponse onUpdateEntity(PutMergePatchUriInfo uriInfo, InputStream content, String requestContentType,
-			boolean merge, String contentType, Map<Object, Object> context) {
+	public ODataResponse onUpdateEntity(PutMergePatchUriInfo uriInfo, InputStream content, String requestContentType, boolean merge,
+			String contentType, Map<Object, Object> context) {
 		return null;
 	}
 
@@ -194,8 +190,7 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	 * @return true, if successful
 	 */
 	@Override
-	public boolean forbidUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
-			boolean merge, String contentType) {
+	public boolean forbidUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType, boolean merge, String contentType) {
 		return false;
 	}
 

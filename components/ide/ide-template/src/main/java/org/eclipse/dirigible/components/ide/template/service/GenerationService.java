@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.template.service;
 
@@ -49,58 +48,58 @@ import com.google.gson.Gson;
  */
 @Component
 public class GenerationService {
-	
+
 	/** The Constant TEMPLATE_WRAPPER. */
 	private static final String TEMPLATE_WRAPPER = "template-wrapper.js";
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GenerationService.class);
-	
+
 	/** The Constant ACTION_COPY. */
 	public static final String ACTION_COPY = "copy";
-	
+
 	/** The Constant ACTION_GENERATE. */
 	public static final String ACTION_GENERATE = "generate";
-	
+
 	/** The Constant GENERATION_ENGINE_DEFAULT. */
 	public static final String GENERATION_ENGINE_DEFAULT = "mustache";
-	
+
 	/** The workspace service. */
 	@Autowired
 	private WorkspaceService workspaceService;
-	
+
 	/** The publish service. */
 	@Autowired
 	private PublisherService publisherService;
-	
+
 	/** The template engines manager. */
-    @Autowired
-    private TemplateEnginesManager templateEnginesManager;
-	
-    /**
-     * Gets the workspace service.
-     *
-     * @return the workspace service
-     */
-    public WorkspaceService getWorkspaceService() {
+	@Autowired
+	private TemplateEnginesManager templateEnginesManager;
+
+	/**
+	 * Gets the workspace service.
+	 *
+	 * @return the workspace service
+	 */
+	public WorkspaceService getWorkspaceService() {
 		return workspaceService;
 	}
-    
-    /**
-     * Gets the publisher service.
-     *
-     * @return the publisher service
-     */
-    public PublisherService getPublisherService() {
+
+	/**
+	 * Gets the publisher service.
+	 *
+	 * @return the publisher service
+	 */
+	public PublisherService getPublisherService() {
 		return publisherService;
 	}
-    
-    /**
-     * Gets the template engines manager.
-     *
-     * @return the template engines manager
-     */
-    public TemplateEnginesManager getTemplateEnginesManager() {
+
+	/**
+	 * Gets the template engines manager.
+	 *
+	 * @return the template engines manager
+	 */
+	public TemplateEnginesManager getTemplateEnginesManager() {
 		return templateEnginesManager;
 	}
 
@@ -114,7 +113,8 @@ public class GenerationService {
 	 * @return the list
 	 * @throws IOException Signals that an I/O exception has occurred
 	 */
-	public List<File> generateFile(String workspace, String project, String path, GenerationTemplateParameters parameters) throws IOException {
+	public List<File> generateFile(String workspace, String project, String path, GenerationTemplateParameters parameters)
+			throws IOException {
 		Workspace workspaceObject = getWorkspaceService().getWorkspace(workspace);
 		Project projectObject = workspaceObject.getProject(project);
 		List<File> generatedFiles = new ArrayList<File>();
@@ -122,35 +122,42 @@ public class GenerationService {
 			parameters.getParameters();
 		}
 		addStandardParameters(workspace, project, path, parameters.getParameters());
-		
+
 		String wrapper = generateWrapper(parameters);
 		projectObject.createFile(TEMPLATE_WRAPPER, wrapper.getBytes());
 		getPublisherService().publish(workspace, project, "");
-//		Object metadata = ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, wrapper, null);
-		Object metadata = getWorkspaceService().getJavascriptService()
-				.handleRequest(projectObject.getName(), TEMPLATE_WRAPPER, null, null, false);
+		// Object metadata =
+		// ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT,
+		// wrapper, null);
+		Object metadata =
+				getWorkspaceService().getJavascriptService().handleRequest(projectObject.getName(), TEMPLATE_WRAPPER, null, null, false);
 		if (metadata != null) {
 			GenerationTemplateMetadata metadataObject = GsonHelper.fromJson(metadata.toString(), GenerationTemplateMetadata.class);
-			
+
 			for (GenerationTemplateMetadataSource source : metadataObject.getSources()) {
-				String sourcePath = new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(source.getLocation()).build();
+				String sourcePath =
+						new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(source.getLocation()).build();
 				IResource sourceResource = projectObject.getRepository().getResource(sourcePath);
 				if (sourceResource.exists()) {
 					byte[] input = sourceResource.getContent();
-					if (logger.isTraceEnabled()) {logger.trace("Generating using template from the Registry: " + sourcePath);}
+					if (logger.isTraceEnabled()) {
+						logger.trace("Generating using template from the Registry: " + sourcePath);
+					}
 					generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
 				} else {
 					InputStream in = GenerationService.class.getResourceAsStream("/META-INF/dirigible" + source.getLocation());
 					try {
 						if (in != null) {
 							byte[] input = IOUtils.toByteArray(in);
-							if (logger.isTraceEnabled()) {logger.trace("Generating using built-in template: " + source.getLocation());}
+							if (logger.isTraceEnabled()) {
+								logger.trace("Generating using built-in template: " + source.getLocation());
+							}
 							generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
 						} else {
-							throw new IOException(
-									format("Invalid source location of [{0}] in template definition file: [{1}] or the resource does not exist",
-											source.getLocation(), parameters.getTemplate()));
-						} 
+							throw new IOException(format(
+									"Invalid source location of [{0}] in template definition file: [{1}] or the resource does not exist",
+									source.getLocation(), parameters.getTemplate()));
+						}
 					} finally {
 						if (in != null) {
 							in.close();
@@ -159,9 +166,9 @@ public class GenerationService {
 				}
 			}
 			return generatedFiles;
-			
+
 		}
-		
+
 		throw new IOException(format("Invalid template definition file: [{0}]", parameters.getTemplate()));
 	}
 
@@ -175,15 +182,16 @@ public class GenerationService {
 	 * @param input the input
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void generateWithTemplateIterable(GenerationTemplateParameters parameters, Project projectObject,
-			List<File> generatedFiles, GenerationTemplateMetadataSource source, byte[] input)
-			throws IOException {
+	private void generateWithTemplateIterable(GenerationTemplateParameters parameters, Project projectObject, List<File> generatedFiles,
+			GenerationTemplateMetadataSource source, byte[] input) throws IOException {
 		if (source.getCollection() != null) {
 			List<Map<String, Object>> elements = (List<Map<String, Object>>) parameters.getParameters().get(source.getCollection());
 			if (elements == null) {
-				throw new IOException(format("Invalid template definition file: [{0}]. Multiplicity element is set, but no actual parameter provided.", parameters.getTemplate()));
+				throw new IOException(
+						format("Invalid template definition file: [{0}]. Multiplicity element is set, but no actual parameter provided.",
+								parameters.getTemplate()));
 			}
-			//addStandardParameters(workspace, project, path, elements);
+			// addStandardParameters(workspace, project, path, elements);
 			for (Map<String, Object> elementParameters : elements) {
 				generateWithTemplate(elementParameters, projectObject, generatedFiles, source, input);
 			}
@@ -202,16 +210,16 @@ public class GenerationService {
 	 * @param input the input
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void generateWithTemplate(Map<String, Object> parameters, Project projectObject,
-			List<File> generatedFiles, GenerationTemplateMetadataSource source, byte[] input) throws IOException {
+	private void generateWithTemplate(Map<String, Object> parameters, Project projectObject, List<File> generatedFiles,
+			GenerationTemplateMetadataSource source, byte[] input) throws IOException {
 		byte[] output = null;
 		String action = source.getAction();
 		parameters.put(GenerationParameters.PARAMETER_ENGINE, source.getEngine());
 		parameters.put(GenerationParameters.PARAMETER_HANDLER, source.getHandler());
 		if (action != null) {
 			if (ACTION_GENERATE.equals(action)) {
-				String sm = null;//MUSTACHE_DEFAULT_START_SYMBOL;
-				String em = null;//MUSTACHE_DEFAULT_END_SYMBOL;
+				String sm = null;// MUSTACHE_DEFAULT_START_SYMBOL;
+				String em = null;// MUSTACHE_DEFAULT_END_SYMBOL;
 				if (source.getStart() != null && source.getEnd() != null) {
 					sm = source.getStart();
 					em = source.getEnd();
@@ -229,8 +237,8 @@ public class GenerationService {
 		} else {
 			output = input;
 		}
-		
-		String generatedFileName; 
+
+		String generatedFileName;
 		String rename = source.getRename();
 		if (rename != null) {
 			generatedFileName = generateName(parameters, source.getLocation() + "-name", rename);
@@ -251,11 +259,11 @@ public class GenerationService {
 	 * @return the string
 	 */
 	private String generateWrapper(GenerationTemplateParameters parameters) {
-		String wrapper = new StringBuilder()
-			.append("var template = require('")
-			.append(parameters.getTemplate())
-			.append("');JSON.stringify(template.getTemplate(")
-			.append(new Gson().toJson(parameters.getParameters()) + "));").toString();
+		String wrapper = new StringBuilder().append("var template = require('")
+											.append(parameters.getTemplate())
+											.append("');JSON.stringify(template.getTemplate(")
+											.append(new Gson().toJson(parameters.getParameters()) + "));")
+											.toString();
 		return wrapper;
 	}
 
@@ -267,14 +275,13 @@ public class GenerationService {
 	 * @param path the path
 	 * @param parameters the parameters
 	 */
-	private void addStandardParameters(String workspace, String project, String path,
-			Map<String, Object> parameters) {
+	private void addStandardParameters(String workspace, String project, String path, Map<String, Object> parameters) {
 		RepositoryPath filePath = new RepositoryPath().append(path);
 		RepositoryPath packagePath = new RepositoryPath().append(path).getParentPath();
 		String fileName = filePath.getLastSegment();
 		String fileNameExt = FilenameUtils.getExtension(fileName);
 		String fileNameBase = FilenameUtils.getBaseName(fileName);
-		
+
 		parameters.put(GenerationParameters.PARAMETER_WORKSPACE_NAME, workspace);
 		parameters.put(GenerationParameters.PARAMETER_PROJECT_NAME, project);
 		parameters.put(GenerationParameters.PARAMETER_FILE_NAME, fileName);
@@ -296,8 +303,8 @@ public class GenerationService {
 	 * @return the byte[]
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public byte[] generateContent(Map<String, Object> parameters, String location,
-			byte[] input, String sm, String em, String engine) throws IOException {
+	public byte[] generateContent(Map<String, Object> parameters, String location, byte[] input, String sm, String em, String engine)
+			throws IOException {
 		List<TemplateEngine> generationEngines = templateEnginesManager.getTemplateEngines();
 		for (TemplateEngine next : generationEngines) {
 			if (next.getName().equals(engine)) {
@@ -306,7 +313,7 @@ public class GenerationService {
 		}
 		throw new GenerationException("Generation Engine not available: " + engine);
 	}
-	
+
 	/**
 	 * Generate name.
 	 *

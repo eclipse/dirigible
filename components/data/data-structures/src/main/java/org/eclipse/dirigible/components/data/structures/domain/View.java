@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
@@ -35,39 +34,39 @@ import com.google.gson.annotations.Expose;
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_DATA_VIEWS")
 public class View extends Artefact {
-	
+
 	/** The Constant ARTEFACT_TYPE. */
 	public static final String ARTEFACT_TYPE = "view";
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "VIEW_ID", nullable = false)
 	private Long id;
-	
+
 	/** The kind. */
 	@Column(name = "VIEW_KIND", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	protected String kind;
-	
+
 	/** The schema name. */
 	@Column(name = "VIEW_SCHEMA", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	protected String schema;
-	
+
 	/** The name. */
 	@Column(name = "VIEW_QUERY", columnDefinition = "CLOB", nullable = false)
 	@Expose
 	protected String query;
-	
+
 	/** The schema reference. */
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "SCHEMA_ID", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Schema schemaReference;
-	
-	
+	@JoinColumn(name = "SCHEMA_ID", nullable = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Schema schemaReference;
+
+
 	/**
 	 * Instantiates a new view.
 	 *
@@ -85,7 +84,7 @@ public class View extends Artefact {
 		this.schema = schema;
 		this.query = query;
 	}
-	
+
 	/**
 	 * Instantiates a new view.
 	 *
@@ -94,7 +93,7 @@ public class View extends Artefact {
 	public View(String viewName) {
 		this(viewName, viewName, null, null, "VIEW", "", "");
 	}
-	
+
 	/**
 	 * Instantiates a new table.
 	 */
@@ -119,7 +118,7 @@ public class View extends Artefact {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gets the kind.
 	 *
@@ -173,7 +172,7 @@ public class View extends Artefact {
 	public void setQuery(String query) {
 		this.query = query;
 	}
-	
+
 	/**
 	 * Gets the schema reference.
 	 *
@@ -182,7 +181,7 @@ public class View extends Artefact {
 	public Schema getSchemaReference() {
 		return schemaReference;
 	}
-	
+
 	/**
 	 * Sets the schema reference.
 	 *
@@ -199,10 +198,9 @@ public class View extends Artefact {
 	 */
 	@Override
 	public String toString() {
-		return "View [id=" + id + ", schemaName=" + schema
-				+ ", query=" + query + ", location=" + location + ", name=" + name + ", type=" + type + ", description="
-				+ description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy=" + createdBy
+		return "View [id=" + id + ", schemaName=" + schema + ", query=" + query + ", location=" + location + ", name=" + name + ", type="
+				+ type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy=" + createdBy
 				+ ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
-	
+
 }

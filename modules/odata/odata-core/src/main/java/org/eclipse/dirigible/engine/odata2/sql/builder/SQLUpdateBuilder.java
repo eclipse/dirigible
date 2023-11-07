@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
@@ -37,13 +36,13 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 	private final Map<String, Object> uriKeyProperties;
 
 	/** The target. */
-	private  EdmEntityType target;
-	
+	private EdmEntityType target;
+
 	/** The update entry. */
-	private  ODataEntry updateEntry;
-	
+	private ODataEntry updateEntry;
+
 	/** The table name. */
-	private  String tableName;
+	private String tableName;
 
 	/** The non key column names. */
 	private final List<String> nonKeyColumnNames = new ArrayList<>();
@@ -92,7 +91,7 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 	@Override
 	public SQLStatement build(SQLContext context) {
 		return new SQLStatement() {
-		//TODO make immutable
+			// TODO make immutable
 			@Override
 			public String sql() throws ODataException {
 				initializeQuery();
@@ -103,11 +102,12 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 				builder.append(buildColumnList()).append(" WHERE ");
 
 				SQLWhereClause where = new SQLWhereClause(buildWhereClauseForKeys());
-				where.and(getWhereClause()); //the interceptor added where clause
+				where.and(getWhereClause()); // the interceptor added where clause
 
 				builder.append(where.getWhereClause());
 				return SQLUtils.assertParametersCount(normalizeSQLExpression(builder.toString()), getStatementParams());
 			}
+
 			@Override
 			public List<SQLStatementParam> getStatementParams() {
 				return SQLUpdateBuilder.this.getStatementParams();
@@ -159,7 +159,7 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 		grantTableAliasForStructuralTypeInQuery(target);
 		Map<String, Object> entryValues = updateEntry.getProperties();
 
-		for (EdmProperty property : EdmUtils.getProperties(target)) { //we iterate first the own properties of the type
+		for (EdmProperty property : EdmUtils.getProperties(target)) { // we iterate first the own properties of the type
 			if (entryValues.containsKey(property.getName()) && !isKeyProperty(target, property)) {
 				String columnName = getSQLTableColumnNoAlias(target, property);
 				nonKeyColumnNames.add(columnName);
@@ -182,10 +182,10 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 				}
 			}
 		}
-		//Add the key values in the end. The syntax is update table set (col=val) where key1=val1,key2=val2
-		for (String key : target.getKeyPropertyNames()){ //the order matters
+		// Add the key values in the end. The syntax is update table set (col=val) where key1=val1,key2=val2
+		for (String key : target.getKeyPropertyNames()) { // the order matters
 			Object value = uriKeyProperties.get(key);
-			if (!isValidKeyValue(value)){
+			if (!isValidKeyValue(value)) {
 				throw new OData2Exception("Invalid key value for property " + key, HttpStatusCodes.BAD_REQUEST);
 			}
 			EdmProperty property = (EdmProperty) target.getProperty(key);
@@ -240,11 +240,11 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 	 */
 	protected String buildWhereClauseForKeys() throws EdmException {
 		List<String> keyConditions = new ArrayList<>();
-		for (String key : target.getKeyPropertyNames()){
+		for (String key : target.getKeyPropertyNames()) {
 			EdmProperty keyProperty = (EdmProperty) target.getProperty(key);
 			String keyColumnName = getSQLTableColumnNoAlias(target, keyProperty);
 			keyConditions.add(String.format("%s=?", keyColumnName));
 		}
-		return join(keyConditions, " AND "); //this plays a role when we are dealing with composite IDs
+		return join(keyConditions, " AND "); // this plays a role when we are dealing with composite IDs
 	}
 }

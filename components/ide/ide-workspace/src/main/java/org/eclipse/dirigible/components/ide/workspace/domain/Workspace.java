@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.domain;
 
@@ -25,15 +24,14 @@ import org.slf4j.LoggerFactory;
  * The Workspace's Workspace.
  */
 public class Workspace extends Folder {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(Workspace.class);
 
 	/**
 	 * Instantiates a new workspace.
 	 *
-	 * @param workspaceCollection
-	 *            the workspace collection
+	 * @param workspaceCollection the workspace collection
 	 */
 	public Workspace(ICollection workspaceCollection) {
 		super(workspaceCollection);
@@ -83,12 +81,13 @@ public class Workspace extends Folder {
 	public void deleteProject(String name) {
 		ICollection projectCollection = this.getCollection(name);
 		java.io.File gitFolder = WorkspaceGitHelper.getGitFolderForProject(projectCollection.getRepository(), projectCollection.getPath());
-		if (gitFolder != null
-				&& gitFolder.exists()) {
+		if (gitFolder != null && gitFolder.exists()) {
 			try {
 				org.apache.commons.io.FileUtils.deleteDirectory(gitFolder.getParentFile());
 			} catch (Exception e) {
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage(), e);
+				}
 			}
 		}
 		this.removeCollection(name);
@@ -177,7 +176,7 @@ public class Workspace extends Folder {
 	 */
 	public void linkProject(String sourceProject, String targetPath) throws IOException {
 		this.getRepository().linkPath(this.getPath() + IRepository.SEPARATOR + sourceProject, targetPath);
-		
+
 	}
 
 }

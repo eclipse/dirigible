@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
@@ -20,53 +19,55 @@ import org.slf4j.LoggerFactory;
  * The Class HanaDropSequenceBuilder.
  */
 public class HanaDropSequenceBuilder extends DropSequenceBuilder {
-    
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(HanaDropSequenceBuilder.class);
 
-    /**
-     * Instantiates a new drop sequence builder.
-     *
-     * @param dialect  the dialect
-     * @param sequence the sequence
-     */
-    public HanaDropSequenceBuilder(ISqlDialect dialect, String sequence) {
-        super(dialect, sequence);
-    }
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(HanaDropSequenceBuilder.class);
 
-    /**
-     * Generate.
-     *
-     * @return the string
-     */
-    @Override
-    public String generate() {
+	/**
+	 * Instantiates a new drop sequence builder.
+	 *
+	 * @param dialect the dialect
+	 * @param sequence the sequence
+	 */
+	public HanaDropSequenceBuilder(ISqlDialect dialect, String sequence) {
+		super(dialect, sequence);
+	}
 
-        StringBuilder sql = new StringBuilder();
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
+	@Override
+	public String generate() {
 
-        // DROP
-        generateDrop(sql);
+		StringBuilder sql = new StringBuilder();
 
-        // SEQUENCE
-        generateSequence(sql);
+		// DROP
+		generateDrop(sql);
 
-        //RESTRICT
-        generateRestrict(sql);
+		// SEQUENCE
+		generateSequence(sql);
 
-        String generated = sql.toString();
+		// RESTRICT
+		generateRestrict(sql);
 
-        if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+		String generated = sql.toString();
 
-        return generated;
-    }
+		if (logger.isTraceEnabled()) {
+			logger.trace("generated: " + generated);
+		}
 
-    /**
-     * Generate restrict.
-     *
-     * @param sql the sql
-     */
-    protected void generateRestrict(StringBuilder sql) {
-        String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
-        sql.append(SPACE).append(KEYWORD_DATABASE_DROP_RESTRICT);
-    }
+		return generated;
+	}
+
+	/**
+	 * Generate restrict.
+	 *
+	 * @param sql the sql
+	 */
+	protected void generateRestrict(StringBuilder sql) {
+		String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
+		sql.append(SPACE).append(KEYWORD_DATABASE_DROP_RESTRICT);
+	}
 }

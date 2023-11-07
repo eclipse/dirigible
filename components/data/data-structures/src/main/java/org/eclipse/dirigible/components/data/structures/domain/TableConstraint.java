@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
@@ -35,34 +34,34 @@ import com.google.gson.annotations.Expose;
  */
 @MappedSuperclass
 public abstract class TableConstraint {
-	
+
 	/** The name. */
 	@Column(name = "CONSTRAINT_NAME", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Nullable
 	@Expose
 	protected String name;
-	
+
 	/** The modifiers. */
 	@Column(name = "CONSTRAINT_MODIFIERS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Nullable
 	@Convert(converter = ArrayOfStringsToCsvConverter.class)
 	@Expose
 	protected String[] modifiers;
-	
+
 	/** The columns. */
 	@Column(name = "CONSTRAINT_COLUMNS", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	@Nullable
 	@Convert(converter = ArrayOfStringsToCsvConverter.class)
 	@Expose
 	protected String[] columns;
-	
+
 	/** The constraints. */
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "CONSTRAINTS_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    protected TableConstraints constraints;
-	
+	@JoinColumn(name = "CONSTRAINTS_ID", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	protected TableConstraints constraints;
+
 	/**
 	 * Instantiates a new table constraint.
 	 *
@@ -165,8 +164,8 @@ public abstract class TableConstraint {
 	 */
 	@Override
 	public String toString() {
-		return "TableConstraint [name=" + name + ", modifiers=" + Arrays.toString(modifiers) + ", columns="
-				+ Arrays.toString(columns) + ", constraints=" + constraints + "]";
+		return "TableConstraint [name=" + name + ", modifiers=" + Arrays.toString(modifiers) + ", columns=" + Arrays.toString(columns)
+				+ ", constraints=" + constraints + "]";
 	}
 
 }

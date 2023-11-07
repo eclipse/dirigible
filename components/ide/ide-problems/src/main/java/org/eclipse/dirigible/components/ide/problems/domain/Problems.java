@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.problems.domain;
 
@@ -18,85 +17,84 @@ import java.util.List;
  */
 public class Problems {
 
-    /** The result. */
-    private List<Problem> result;
-    
-    /** The selected rows. */
-    private int selectedRows;
-    
-    /** The total rows. */
-    private int totalRows;
+	/** The result. */
+	private List<Problem> result;
 
-    /**
-     * Instantiates a new response model.
-     */
-    public Problems() {
-    }
+	/** The selected rows. */
+	private int selectedRows;
 
-    /**
-     * Instantiates a new response model.
-     *
-     * @param result the result
-     * @param selectedRows the selected rows
-     * @param totalRows the total rows
-     */
-    public Problems(List<Problem> result, int selectedRows, int totalRows) {
-        this.result = result;
-        this.selectedRows = selectedRows;
-        this.totalRows = totalRows;
-    }
+	/** The total rows. */
+	private int totalRows;
 
-    /**
-     * Gets the result.
-     *
-     * @return the result
-     */
-    public List<Problem> getResult() {
-        return result;
-    }
+	/**
+	 * Instantiates a new response model.
+	 */
+	public Problems() {}
 
-    /**
-     * Sets the result.
-     *
-     * @param result the new result
-     */
-    public void setResult(List<Problem> result) {
-        this.result = result;
-    }
+	/**
+	 * Instantiates a new response model.
+	 *
+	 * @param result the result
+	 * @param selectedRows the selected rows
+	 * @param totalRows the total rows
+	 */
+	public Problems(List<Problem> result, int selectedRows, int totalRows) {
+		this.result = result;
+		this.selectedRows = selectedRows;
+		this.totalRows = totalRows;
+	}
 
-    /**
-     * Gets the selected rows.
-     *
-     * @return the selected rows
-     */
-    public int getSelectedRows() {
-        return selectedRows;
-    }
+	/**
+	 * Gets the result.
+	 *
+	 * @return the result
+	 */
+	public List<Problem> getResult() {
+		return result;
+	}
 
-    /**
-     * Sets the selected rows.
-     *
-     * @param selectedRows the new selected rows
-     */
-    public void setSelectedRows(int selectedRows) {
-        this.selectedRows = selectedRows;
-    }
+	/**
+	 * Sets the result.
+	 *
+	 * @param result the new result
+	 */
+	public void setResult(List<Problem> result) {
+		this.result = result;
+	}
 
-    /**
-     * Gets the total rows.
-     *
-     * @return the total rows
-     */
-    public int getTotalRows() {
-        return totalRows;
-    }
+	/**
+	 * Gets the selected rows.
+	 *
+	 * @return the selected rows
+	 */
+	public int getSelectedRows() {
+		return selectedRows;
+	}
 
-    /**
-     * Sets the total rows.
-     *
-     * @param totalRows the new total rows
-     */
-    public void setTotalRows(int totalRows) {
-        this.totalRows = totalRows;
-    }
+	/**
+	 * Sets the selected rows.
+	 *
+	 * @param selectedRows the new selected rows
+	 */
+	public void setSelectedRows(int selectedRows) {
+		this.selectedRows = selectedRows;
+	}
+
+	/**
+	 * Gets the total rows.
+	 *
+	 * @return the total rows
+	 */
+	public int getTotalRows() {
+		return totalRows;
+	}
+
+	/**
+	 * Sets the total rows.
+	 *
+	 * @param totalRows the new total rows
+	 */
+	public void setTotalRows(int totalRows) {
+		this.totalRows = totalRows;
+	}
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.domain;
 
@@ -33,18 +32,18 @@ public class ColumnMetadata {
 
 	/** The kind. */
 	private String kind = "column";
-	
+
 	/** The scale. */
 	private int scale;
 
 	/**
 	 * Instantiates a new column metadata.
 	 *
-	 * @param name            the name
-	 * @param type            the type
-	 * @param size            the size
-	 * @param nullable            the nullable
-	 * @param key            the key
+	 * @param name the name
+	 * @param type the type
+	 * @param size the size
+	 * @param nullable the nullable
+	 * @param key the key
 	 * @param scale the scale
 	 */
 	public ColumnMetadata(String name, String type, int size, boolean nullable, boolean key, int scale) {
@@ -69,8 +68,7 @@ public class ColumnMetadata {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name
-	 *            the new name
+	 * @param name the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -88,8 +86,7 @@ public class ColumnMetadata {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type
-	 *            the new type
+	 * @param type the new type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -107,8 +104,7 @@ public class ColumnMetadata {
 	/**
 	 * Sets the size.
 	 *
-	 * @param size
-	 *            the new size
+	 * @param size the new size
 	 */
 	public void setSize(int size) {
 		this.size = size;
@@ -126,8 +122,7 @@ public class ColumnMetadata {
 	/**
 	 * Sets the nullable.
 	 *
-	 * @param nullable
-	 *            the new nullable
+	 * @param nullable the new nullable
 	 */
 	public void setNullable(boolean nullable) {
 		this.nullable = nullable;
@@ -145,8 +140,7 @@ public class ColumnMetadata {
 	/**
 	 * Sets the key.
 	 *
-	 * @param key
-	 *            the new key
+	 * @param key the new key
 	 */
 	public void setKey(boolean key) {
 		this.key = key;
@@ -164,8 +158,7 @@ public class ColumnMetadata {
 	/**
 	 * Sets the kind.
 	 *
-	 * @param kind
-	 *            the new kind
+	 * @param kind the new kind
 	 */
 	public void setKind(String kind) {
 		this.kind = kind;
@@ -188,7 +181,7 @@ public class ColumnMetadata {
 	public void setScale(int scale) {
 		this.scale = scale;
 	}
-	
-	
+
+
 
 }

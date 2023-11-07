@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.parser;
 
@@ -49,16 +48,15 @@ public class PersistenceAnnotationsParser {
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceAnnotationsParser.class);
 
 	/** The Constant MODELS_CACHE. */
-	private static final Map<Class, PersistenceTableModel> MODELS_CACHE = Collections.synchronizedMap(new HashMap<Class, PersistenceTableModel>());
+	private static final Map<Class, PersistenceTableModel> MODELS_CACHE =
+			Collections.synchronizedMap(new HashMap<Class, PersistenceTableModel>());
 
 	/**
 	 * Parses the pojo.
 	 *
-	 * @param pojo
-	 *            the pojo
+	 * @param pojo the pojo
 	 * @return the persistence table model
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public PersistenceTableModel parsePojo(Object pojo) throws PersistenceException {
 		Class<? extends Object> clazz = pojo.getClass();
@@ -69,11 +67,9 @@ public class PersistenceAnnotationsParser {
 	/**
 	 * Parses the pojo.
 	 *
-	 * @param clazz
-	 *            the clazz
+	 * @param clazz the clazz
 	 * @return the persistence table model
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public PersistenceTableModel parsePojo(Class<? extends Object> clazz) throws PersistenceException {
 		PersistenceTableModel persistenceTableModel = parseTable(clazz);
@@ -83,8 +79,7 @@ public class PersistenceAnnotationsParser {
 	/**
 	 * Parses the table.
 	 *
-	 * @param clazz
-	 *            the clazz
+	 * @param clazz the clazz
 	 * @return the persistence table model
 	 */
 	private PersistenceTableModel parseTable(Class<? extends Object> clazz) {
@@ -103,7 +98,8 @@ public class PersistenceAnnotationsParser {
 		persistenceTableModel = new PersistenceTableModel();
 		persistenceTableModel.setClassName(clazz.getCanonicalName());
 		if (table.schema() == null) {
-			throw new PersistenceException(format("Table Name is mandatory, but it is not present in Class [{0}]", clazz.getCanonicalName()));
+			throw new PersistenceException(
+					format("Table Name is mandatory, but it is not present in Class [{0}]", clazz.getCanonicalName()));
 		}
 		persistenceTableModel.setTableName(table.name());
 		if (table.schema() != null) {
@@ -120,8 +116,7 @@ public class PersistenceAnnotationsParser {
 	/**
 	 * Gets the table annotation.
 	 *
-	 * @param clazz
-	 *            the clazz
+	 * @param clazz the clazz
 	 * @return the table annotation
 	 */
 	private Annotation getTableAnnotation(Class<? extends Object> clazz) {
@@ -135,25 +130,25 @@ public class PersistenceAnnotationsParser {
 	/**
 	 * Parses the columns.
 	 *
-	 * @param clazz
-	 *            the clazz
-	 * @param persistenceModel
-	 *            the persistence model
+	 * @param clazz the clazz
+	 * @param persistenceModel the persistence model
 	 */
 	private void parseColumns(Class<? extends Object> clazz, PersistenceTableModel persistenceModel) {
 		Field[] fields = collectFields(clazz);
 		for (Field field : fields) {
 			// use annotation @Transient always to show it is not a persistent column
-//			boolean isTransient = Modifier.isTransient(field.getModifiers());
-//			if (isTransient) {
-//				continue;
-//			}
+			// boolean isTransient = Modifier.isTransient(field.getModifiers());
+			// if (isTransient) {
+			// continue;
+			// }
 			// @Column
 			Annotation annotationColumn = field.getAnnotation(Column.class);
 			if (annotationColumn == null) {
 				Annotation annotationTransient = field.getAnnotation(Transient.class);
 				if (annotationTransient == null) {
-					if (logger.isWarnEnabled()) {logger.warn(format("No Column nor Transient annotation found in Class {0} and Field {1}", clazz, field.getName()));}
+					if (logger.isWarnEnabled()) {
+						logger.warn(format("No Column nor Transient annotation found in Class {0} and Field {1}", clazz, field.getName()));
+					}
 				}
 				continue;
 			}
@@ -186,16 +181,19 @@ public class PersistenceAnnotationsParser {
 				if ((generatedValue.strategy() == null) || GenerationType.AUTO.equals(generatedValue.strategy())) {
 					generated = GenerationType.TABLE.name();
 				} else {
-					if (!GenerationType.SEQUENCE.equals(generatedValue.strategy()) && !GenerationType.TABLE.equals(generatedValue.strategy())
+					if (!GenerationType.SEQUENCE.equals(generatedValue.strategy())
+							&& !GenerationType.TABLE.equals(generatedValue.strategy())
 							&& !GenerationType.IDENTITY.equals(generatedValue.strategy())) {
-						throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", generatedValue.strategy().name()));
+						throw new IllegalArgumentException(
+								format("Generation Type: [{0}] not supported.", generatedValue.strategy().name()));
 					}
 					if (GenerationType.IDENTITY.equals(generatedValue.strategy())) {
-						if (DataTypeUtils.isBigint(type) || DataTypeUtils.isVarchar(type) || DataTypeUtils.isNvarchar(type) || DataTypeUtils.isChar(type)
-								|| DataTypeUtils.isInteger(type) || DataTypeUtils.isDecimal(type)) {
+						if (DataTypeUtils.isBigint(type) || DataTypeUtils.isVarchar(type) || DataTypeUtils.isNvarchar(type)
+								|| DataTypeUtils.isChar(type) || DataTypeUtils.isInteger(type) || DataTypeUtils.isDecimal(type)) {
 							identity = true;
 						} else {
-							throw new IllegalArgumentException("Identity columns must of type CHAR, VARCHAR, NVARCHAR, INTEGER, BIGINT or DECIMAL");
+							throw new IllegalArgumentException(
+									"Identity columns must of type CHAR, VARCHAR, NVARCHAR, INTEGER, BIGINT or DECIMAL");
 						}
 					}
 					generated = generatedValue.strategy().name();
@@ -217,8 +215,8 @@ public class PersistenceAnnotationsParser {
 				}
 			}
 
-			PersistenceTableColumnModel persistenceTableColumnModel = new PersistenceTableColumnModel(field.getName(), column.name(), type, length,
-					column.nullable(), primaryKey, column.scale(), generated, unique, identity, enumerated);
+			PersistenceTableColumnModel persistenceTableColumnModel = new PersistenceTableColumnModel(field.getName(), column.name(), type,
+					length, column.nullable(), primaryKey, column.scale(), generated, unique, identity, enumerated);
 			persistenceModel.getColumns().add(persistenceTableColumnModel);
 		}
 
@@ -227,8 +225,7 @@ public class PersistenceAnnotationsParser {
 	/**
 	 * Collect fields.
 	 *
-	 * @param clazz
-	 *            the clazz
+	 * @param clazz the clazz
 	 * @return the field[]
 	 */
 	public static Field[] collectFields(Class<? extends Object> clazz) {
@@ -243,10 +240,8 @@ public class PersistenceAnnotationsParser {
 	/**
 	 * Collect fields from superclass.
 	 *
-	 * @param clazz
-	 *            the clazz
-	 * @param fields
-	 *            the fields
+	 * @param clazz the clazz
+	 * @param fields the fields
 	 */
 	private static void collectFieldsFromSuperclass(Class<?> clazz, List<Field> fields) {
 		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));

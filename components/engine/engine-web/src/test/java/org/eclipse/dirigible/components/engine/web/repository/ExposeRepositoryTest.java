@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.web.repository;
 
@@ -37,52 +36,57 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class ExposeRepositoryTest {
-	
+
 	/** The table repository. */
 	@Autowired
 	private ExposeRepository exposeRepository;
-	
+
 	/** The entity manager. */
 	@Autowired
 	EntityManager entityManager;
-	
+
 	/** The definition repository. */
 	@MockBean
 	DefinitionRepository definitionRepository;
-	
+
 	/**
 	 * Setup.
 	 *
 	 * @throws Exception the exception
 	 */
 	@BeforeEach
-    public void setup() throws Exception {
-		
+	public void setup() throws Exception {
+
 		cleanup();
 
-    	// create test Expose
-		exposeRepository.save(createExpose(exposeRepository, "/a/b/c/p1/project.json", "p1", "description", new String[]{"ui", "samples"}));
-		exposeRepository.save(createExpose(exposeRepository, "/a/b/c/p2/project.json", "p2", "description", new String[]{"ui", "samples"}));
-		exposeRepository.save(createExpose(exposeRepository, "/a/b/c/p3/project.json", "p3", "description", new String[]{"ui", "samples"}));
-		exposeRepository.save(createExpose(exposeRepository, "/a/b/c/p4/project.json", "p4", "description", new String[]{"ui", "samples"}));
-		exposeRepository.save(createExpose(exposeRepository, "/a/b/c/p5/project.json", "p5", "description", new String[]{"ui", "samples"}));
-    }
-	
+		// create test Expose
+		exposeRepository.save(
+				createExpose(exposeRepository, "/a/b/c/p1/project.json", "p1", "description", new String[] {"ui", "samples"}));
+		exposeRepository.save(
+				createExpose(exposeRepository, "/a/b/c/p2/project.json", "p2", "description", new String[] {"ui", "samples"}));
+		exposeRepository.save(
+				createExpose(exposeRepository, "/a/b/c/p3/project.json", "p3", "description", new String[] {"ui", "samples"}));
+		exposeRepository.save(
+				createExpose(exposeRepository, "/a/b/c/p4/project.json", "p4", "description", new String[] {"ui", "samples"}));
+		exposeRepository.save(
+				createExpose(exposeRepository, "/a/b/c/p5/project.json", "p5", "description", new String[] {"ui", "samples"}));
+	}
+
 	/**
 	 * Cleanup.
 	 *
 	 * @throws Exception the exception
 	 */
 	@AfterEach
-    public void cleanup() throws Exception {
+	public void cleanup() throws Exception {
 		// delete test Tables
 		exposeRepository.deleteAll();
-    }
-	
+	}
+
 
 	/**
 	 * Gets the one.
@@ -90,33 +94,33 @@ public class ExposeRepositoryTest {
 	 * @return the one
 	 */
 	@Test
-    public void getOne() {
+	public void getOne() {
 		Long id = exposeRepository.findAll().get(0).getId();
 		Optional<Expose> optional = exposeRepository.findById(id);
 		Expose expose = optional.isPresent() ? optional.get() : null;
-        assertNotNull(expose);
-        assertNotNull(expose.getLocation());
-        assertNotNull(expose.getCreatedBy());
-        assertEquals("SYSTEM", expose.getCreatedBy());
-        assertNotNull(expose.getCreatedAt());
-        assertNotNull(expose.getExposes());
-        assertNotNull(expose.getExposes()[0]);
-        assertEquals("ui", expose.getExposes()[0]);
-    }
-	
+		assertNotNull(expose);
+		assertNotNull(expose.getLocation());
+		assertNotNull(expose.getCreatedBy());
+		assertEquals("SYSTEM", expose.getCreatedBy());
+		assertNotNull(expose.getCreatedAt());
+		assertNotNull(expose.getExposes());
+		assertNotNull(expose.getExposes()[0]);
+		assertEquals("ui", expose.getExposes()[0]);
+	}
+
 	/**
 	 * Gets the reference using entity manager.
 	 *
 	 * @return the reference using entity manager
 	 */
 	@Test
-    public void getReferenceUsingEntityManager() {
+	public void getReferenceUsingEntityManager() {
 		Long id = exposeRepository.findAll().get(0).getId();
 		Expose expose = entityManager.getReference(Expose.class, id);
-        assertNotNull(expose);
-        assertNotNull(expose.getLocation());
-    }
-	
+		assertNotNull(expose);
+		assertNotNull(expose.getLocation());
+	}
+
 	/**
 	 * Creates the table.
 	 *
@@ -127,16 +131,17 @@ public class ExposeRepositoryTest {
 	 * @param exposes the exposes
 	 * @return the expose
 	 */
-	public static Expose createExpose(ExposeRepository exposeRepository, String location, String name, String description, String[] exposes) {
+	public static Expose createExpose(ExposeRepository exposeRepository, String location, String name, String description,
+			String[] exposes) {
 		Expose expose = new Expose(location, name, description, exposes);
 		return expose;
 	}
-	
+
 	/**
 	 * The Class TestConfiguration.
 	 */
 	@SpringBootApplication
 	static class TestConfiguration {
 	}
-	
+
 }

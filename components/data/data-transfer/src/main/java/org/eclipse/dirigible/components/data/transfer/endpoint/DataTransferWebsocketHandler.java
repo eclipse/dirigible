@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.transfer.endpoint;
 
@@ -59,7 +58,7 @@ public class DataTransferWebsocketHandler extends TextWebSocketHandler {
 	public DataTransferWebsocketHandler(DataTransferService dataTransferService) {
 		this.dataTransferService = dataTransferService;
 	}
-	
+
 	/**
 	 * Gets the data transfer service.
 	 *
@@ -68,12 +67,14 @@ public class DataTransferWebsocketHandler extends TextWebSocketHandler {
 	public DataTransferService getDataTransferService() {
 		return dataTransferService;
 	}
-	
+
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:transfer] Session %s openned.", session.getId()));}
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("[ws:transfer] Session %s openned.", session.getId()));
+		}
 	}
-	
+
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		if (logger.isDebugEnabled()) {
@@ -94,8 +95,8 @@ public class DataTransferWebsocketHandler extends TextWebSocketHandler {
 				PipedInputStream pis = new PipedInputStream(pos, 1024);
 				BufferedReader reader = new BufferedReader(new InputStreamReader(pis));
 				Writer writer = new BufferedWriter(new OutputStreamWriter(pos));
-				final DataTransferCallbackHandler handler = new WriterDataTransferCallbackHandler(writer,
-						session.getId() + new Date().getTime());
+				final DataTransferCallbackHandler handler =
+						new WriterDataTransferCallbackHandler(writer, session.getId() + new Date().getTime());
 				HANDLERS.put(session.getId(), handler);
 				new Thread(new Runnable() {
 					public void run() {
@@ -146,13 +147,19 @@ public class DataTransferWebsocketHandler extends TextWebSocketHandler {
 
 	@Override
 	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-		if (logger.isErrorEnabled()) {logger.error(String.format("[ws:ws:transfer] Session %s error %s", session.getId(), exception.getMessage()));}
-		if (logger.isErrorEnabled()) {logger.error("[ws:ws:transfer] " + exception.getMessage(), exception);}
+		if (logger.isErrorEnabled()) {
+			logger.error(String.format("[ws:ws:transfer] Session %s error %s", session.getId(), exception.getMessage()));
+		}
+		if (logger.isErrorEnabled()) {
+			logger.error("[ws:ws:transfer] " + exception.getMessage(), exception);
+		}
 	}
-	
+
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		if (logger.isDebugEnabled()) {logger.debug(String.format("[ws:ws:transfer] Session %s closed because of %s", session.getId(), status.getReason()));}
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("[ws:ws:transfer] Session %s closed because of %s", session.getId(), status.getReason()));
+		}
 	}
 
 }

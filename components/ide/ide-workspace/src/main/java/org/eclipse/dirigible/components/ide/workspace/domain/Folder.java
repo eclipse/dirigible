@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.domain;
 
@@ -30,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * The Workspace's Folder.
  */
 public class Folder implements ICollection {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(Folder.class);
 
@@ -40,8 +39,7 @@ public class Folder implements ICollection {
 	/**
 	 * Instantiates a new folder.
 	 *
-	 * @param collection
-	 *            the collection
+	 * @param collection the collection
 	 */
 	public Folder(ICollection collection) {
 		this.internal = collection;
@@ -483,12 +481,11 @@ public class Folder implements ICollection {
 	/**
 	 * Construct path.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the string
 	 */
 	protected String constructPath(String path) {
-		return new RepositoryPath(new String[] { this.getPath(), path }).build();
+		return new RepositoryPath(new String[] {this.getPath(), path}).build();
 	}
 
 	/**
@@ -516,7 +513,7 @@ public class Folder implements ICollection {
 		}
 		return files;
 	}
-	
+
 	/**
 	 * Find.
 	 *
@@ -527,7 +524,7 @@ public class Folder implements ICollection {
 		List<File> files = new ArrayList<File>();
 		try {
 			List<String> entities = this.getRepository().find(this.getPath(), pattern);
-			
+
 			for (String entity : entities) {
 				IResource resource = this.getRepository().getResource(entity);
 				if (resource.getPath().startsWith(this.getPath())) {

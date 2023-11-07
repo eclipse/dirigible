@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
@@ -23,8 +22,7 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	/**
 	 * Instantiates a new HANA create branching builder.
 	 *
-	 * @param dialect
-	 *            the dialect
+	 * @param dialect the dialect
 	 */
 	protected HanaCreateBranchingBuilder(ISqlDialect dialect) {
 		super(dialect);
@@ -38,6 +36,7 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
 	 */
 	@Override
@@ -54,16 +53,11 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 */
 	@Override
 	public HanaCreateTableBuilder table(String table, String tableType) {
-		if(tableType.equalsIgnoreCase(KEYWORD_COLUMN)
-				|| tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)
-				|| tableType.equalsIgnoreCase(KEYWORD_ROW)
-				|| tableType.equalsIgnoreCase(KEYWORD_ROWSTORE)
-				|| tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY)
-				|| tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY_COLUMN)
-		){
+		if (tableType.equalsIgnoreCase(KEYWORD_COLUMN) || tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)
+				|| tableType.equalsIgnoreCase(KEYWORD_ROW) || tableType.equalsIgnoreCase(KEYWORD_ROWSTORE)
+				|| tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY) || tableType.equalsIgnoreCase(KEYWORD_GLOBAL_TEMPORARY_COLUMN)) {
 			return new HanaCreateTableBuilder(this.getDialect(), table, tableType);
-		}
-		else {
+		} else {
 			throw new IllegalStateException(String.format("Unsupported table type is defined for table %s", table));
 		}
 	}
@@ -76,7 +70,9 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 */
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#temporaryTable(java.lang.String)
+	 *
+	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#temporaryTable(java.lang.
+	 * String)
 	 */
 	public HanaCreateTemporaryTableBuilder temporaryTable(String table) {
 		return new HanaCreateTemporaryTableBuilder(this.getDialect(), table);
@@ -86,8 +82,7 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	/**
 	 * Column table.
 	 *
-	 * @param table
-	 *            the table
+	 * @param table the table
 	 * @return the creates the table builder
 	 */
 	public HanaCreateTableBuilder columnTable(String table) {
@@ -97,8 +92,7 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	/**
 	 * Row table.
 	 *
-	 * @param table
-	 *            the table
+	 * @param table the table
 	 * @return the creates the table builder
 	 */
 	public HanaCreateTableBuilder rowTable(String table) {
@@ -111,7 +105,7 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 * @param tableType the table type
 	 * @return the hana create table type builder
 	 */
-	public HanaCreateTableTypeBuilder tableType(String tableType){
+	public HanaCreateTableTypeBuilder tableType(String tableType) {
 		return new HanaCreateTableTypeBuilder(this.getDialect(), tableType);
 	}
 

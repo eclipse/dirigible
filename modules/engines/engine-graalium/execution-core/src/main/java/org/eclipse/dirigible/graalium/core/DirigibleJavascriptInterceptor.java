@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core;
 
@@ -22,7 +21,7 @@ import org.graalvm.polyglot.Value;
  * The Class DirigibleJavascriptInterceptor.
  */
 public class DirigibleJavascriptInterceptor implements GraalJSInterceptor {
-	
+
 	/** The code runner. */
 	private DirigibleJavascriptCodeRunner codeRunner;
 
@@ -34,7 +33,7 @@ public class DirigibleJavascriptInterceptor implements GraalJSInterceptor {
 	public DirigibleJavascriptCodeRunner getCodeRunner() {
 		return codeRunner;
 	}
-	
+
 	/**
 	 * Instantiates a new dirigible javascript interceptor.
 	 *
@@ -54,9 +53,9 @@ public class DirigibleJavascriptInterceptor implements GraalJSInterceptor {
 	 */
 	@Override
 	public void onBeforeRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context) {
-		
+
 	}
-	
+
 	/**
 	 * On after run.
 	 *
@@ -68,7 +67,7 @@ public class DirigibleJavascriptInterceptor implements GraalJSInterceptor {
 	 */
 	@Override
 	public void onAfterRun(String sourceFilePath, Path absoluteSourcePath, Source source, Context context, Value value) {
-		
+
 	}
 
 }

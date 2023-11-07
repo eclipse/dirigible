@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql;
 
@@ -82,7 +81,7 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @return the creates the
 	 */
 	public CREATE create();
-	
+
 	/**
 	 * Alters the.
 	 *
@@ -106,7 +105,7 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @throws SQLException the SQL exception
 	 */
 	public boolean existsTable(Connection connection, String table) throws SQLException;
-	
+
 	/**
 	 * Check existence of an artifacts.
 	 *
@@ -121,15 +120,15 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	/**
 	 * Check existence of an artifacts.
 	 *
-	 * @param connection            the current connection
-	 * @param schema 	           the schema name
-	 * @param name            the artifact name
-	 * @param type            the artifact type
+	 * @param connection the current connection
+	 * @param schema the schema name
+	 * @param name the artifact name
+	 * @param type the artifact type
 	 * @return true if the table exists and false otherwise
-	 * @throws SQLException             the SQL exception
+	 * @throws SQLException the SQL exception
 	 */
 	public boolean exists(Connection connection, String schema, String name, int type) throws SQLException;
-	
+
 	/**
 	 * Check existence of a schema.
 	 *
@@ -150,12 +149,12 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 
 	/**
 	 * Lastval.
-	 * 
+	 *
 	 * @param args the arguments
 	 * @return the last
 	 */
 	public LAST lastval(String... args);
-	
+
 	/**
 	 * Database type.
 	 *

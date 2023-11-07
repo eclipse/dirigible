@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence;
 
@@ -23,11 +22,9 @@ public class PersistenceFactory {
 	/**
 	 * Creates a new Persistence object.
 	 *
-	 * @param pojo
-	 *            the pojo
+	 * @param pojo the pojo
 	 * @return the persistence table model
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public static PersistenceTableModel createModel(Object pojo) throws PersistenceException {
 		PersistenceAnnotationsParser parser = new PersistenceAnnotationsParser();
@@ -38,11 +35,9 @@ public class PersistenceFactory {
 	/**
 	 * Creates a new Persistence object.
 	 *
-	 * @param clazz
-	 *            the clazz
+	 * @param clazz the clazz
 	 * @return the persistence table model
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public static PersistenceTableModel createModel(Class<? extends Object> clazz) throws PersistenceException {
 		PersistenceAnnotationsParser parser = new PersistenceAnnotationsParser();
@@ -53,11 +48,9 @@ public class PersistenceFactory {
 	/**
 	 * Creates a new Persistence object.
 	 *
-	 * @param json
-	 *            the json
+	 * @param json the json
 	 * @return the persistence table model
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public static PersistenceTableModel createModel(String json) throws PersistenceException {
 		PersistenceJsonParser<?> parser = new PersistenceJsonParser<>();

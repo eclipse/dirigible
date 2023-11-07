@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
@@ -32,15 +31,15 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 
 	/** The target. */
 	private EdmEntityType target;
-	
+
 	/** The column names. */
 	private final List<String> columnNames = new ArrayList<>();
-	
+
 	/** The entry. */
-	private  ODataEntry entry;
-	
+	private ODataEntry entry;
+
 	/** The table name. */
-	private  String tableName;
+	private String tableName;
 
 	/**
 	 * Instantiates a new SQL insert builder.
@@ -63,15 +62,15 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 
 			@Override
 			public String sql() throws ODataException {
-					//TODO make immutable
-					initializeQuery();
-					StringBuilder builder = new StringBuilder();
-					builder.append("INSERT ");
-					builder.append(" INTO ");
-					builder.append(buildInto(context));
-					builder.append(" VALUES ");
-					builder.append(buildValues(context));
-					return SQLUtils.normalizeSQLExpression(builder.toString());
+				// TODO make immutable
+				initializeQuery();
+				StringBuilder builder = new StringBuilder();
+				builder.append("INSERT ");
+				builder.append(" INTO ");
+				builder.append(buildInto(context));
+				builder.append(" VALUES ");
+				builder.append(buildValues(context));
+				return SQLUtils.normalizeSQLExpression(builder.toString());
 			}
 
 			@Override
@@ -104,7 +103,7 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 	 *
 	 * @return the target
 	 */
-	public EdmEntityType getTarget(){
+	public EdmEntityType getTarget() {
 		return target;
 	}
 
@@ -155,7 +154,7 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 		grantTableAliasForStructuralTypeInQuery(target);
 		Map<String, Object> entryValues = entry.getProperties();
 
-		for (EdmProperty property : EdmUtils.getProperties(target)) { //we iterate first the own properties of the type
+		for (EdmProperty property : EdmUtils.getProperties(target)) { // we iterate first the own properties of the type
 			if (entryValues.containsKey(property.getName())) {
 				String columnName = getSQLTableColumnNoAlias(target, property);
 				columnNames.add(columnName);
@@ -174,7 +173,7 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 						this.addStatementParam(inlineEntry, inlineEntityKey, value);
 					}
 				} else {
-					//TODO if the entry does not have ids, create the entry.
+					// TODO if the entry does not have ids, create the entry.
 					throw new ODataException("Deep insert not implemented yet. Please create a request if you need it");
 				}
 			}

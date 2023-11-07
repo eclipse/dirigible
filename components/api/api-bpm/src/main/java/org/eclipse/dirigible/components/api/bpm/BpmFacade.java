@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.bpm;
 
@@ -21,12 +20,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class BpmFacade implements InitializingBean {
-	
+
 	/** The bpm facade. */
 	private static BpmFacade INSTANCE;
-	
+
 	private final BpmProviderFlowable bpmProviderFlowable;
-	
+
 	/**
 	 * Instantiates a new database facade.
 	 *
@@ -37,7 +36,7 @@ public class BpmFacade implements InitializingBean {
 	private BpmFacade(BpmProviderFlowable bpmProviderFlowable) {
 		this.bpmProviderFlowable = bpmProviderFlowable;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -45,22 +44,22 @@ public class BpmFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the database facade
 	 */
 	public static BpmFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	public BpmProviderFlowable getBpmProviderFlowable() {
 		return bpmProviderFlowable;
 	}
-	
+
 	/**
 	 * BPM Engine.
 	 *
@@ -69,7 +68,7 @@ public class BpmFacade implements InitializingBean {
 	public static final Object getEngine() {
 		return BpmFacade.get().getBpmProviderFlowable();
 	}
-	
+
 	/**
 	 * Deploy a BPMN process available in the registry or in the class-path.
 	 *
@@ -79,7 +78,7 @@ public class BpmFacade implements InitializingBean {
 	public static String deployProcess(String location) {
 		return BpmFacade.get().getBpmProviderFlowable().deployProcess(location);
 	}
-	
+
 	/**
 	 * Undeploy a BPMN process and all its dependencies.
 	 *
@@ -88,7 +87,7 @@ public class BpmFacade implements InitializingBean {
 	public static void undeployProcess(String deploymentId) {
 		BpmFacade.get().getBpmProviderFlowable().undeployProcess(deploymentId);
 	}
-	
+
 	/**
 	 * Starts a BPMN process by its key and initial parameters.
 	 *
@@ -99,7 +98,7 @@ public class BpmFacade implements InitializingBean {
 	public static String startProcess(String key, String parameters) {
 		return BpmFacade.get().getBpmProviderFlowable().startProcess(key, parameters);
 	}
-	
+
 	/**
 	 * Delete a BPMN process by its id.
 	 *
@@ -109,7 +108,7 @@ public class BpmFacade implements InitializingBean {
 	public static void deleteProcess(String id, String reason) {
 		BpmFacade.get().getBpmProviderFlowable().deleteProcess(id, reason);
 	}
-	
+
 	/**
 	 * Get a variable in the process execution context.
 	 *
@@ -120,7 +119,7 @@ public class BpmFacade implements InitializingBean {
 	public static Object getVariable(String processInstanceId, String variableName) {
 		return BpmFacade.get().getBpmProviderFlowable().getVariable(processInstanceId, variableName);
 	}
-	
+
 	/**
 	 * Set a variable in the process execution context.
 	 *
@@ -131,7 +130,7 @@ public class BpmFacade implements InitializingBean {
 	public static void setVariable(String processInstanceId, String variableName, Object value) {
 		BpmFacade.get().getBpmProviderFlowable().setVariable(processInstanceId, variableName, value);
 	}
-	
+
 	/**
 	 * Remove a variable from the process execution context.
 	 *
@@ -141,7 +140,7 @@ public class BpmFacade implements InitializingBean {
 	public static void removeVariable(String processInstanceId, String variableName) {
 		BpmFacade.get().getBpmProviderFlowable().removeVariable(processInstanceId, variableName);
 	}
-	
+
 	/**
 	 * Get all the tasks.
 	 *
@@ -150,7 +149,7 @@ public class BpmFacade implements InitializingBean {
 	public static String getTasks() {
 		return BpmFacade.get().getBpmProviderFlowable().getTasks();
 	}
-	
+
 	/**
 	 * Get all the task's variables.
 	 *
@@ -160,7 +159,7 @@ public class BpmFacade implements InitializingBean {
 	public static String getTaskVariables(String taskId) {
 		return BpmFacade.get().getBpmProviderFlowable().getTaskVariables(taskId);
 	}
-	
+
 	/**
 	 * Set the task's variables.
 	 *
@@ -170,7 +169,7 @@ public class BpmFacade implements InitializingBean {
 	public static void getTaskVariables(String taskId, String variables) {
 		BpmFacade.get().getBpmProviderFlowable().setTaskVariables(taskId, variables);
 	}
-	
+
 	/**
 	 * Complete the task with variables.
 	 *

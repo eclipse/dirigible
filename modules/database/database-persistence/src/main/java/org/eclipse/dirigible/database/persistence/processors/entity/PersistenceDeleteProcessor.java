@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.processors.entity;
 
@@ -28,8 +27,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Persistence Delete Processor.
  *
- * @param <T>
- *            the generic type
+ * @param <T> the generic type
  */
 public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor {
 
@@ -39,8 +37,7 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 	/**
 	 * Instantiates a new persistence delete processor.
 	 *
-	 * @param entityManagerInterceptor
-	 *            the entity manager interceptor
+	 * @param entityManagerInterceptor the entity manager interceptor
 	 */
 	public PersistenceDeleteProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
@@ -55,8 +52,10 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 	 */
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.
-	 * Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 *
+	 * @see
+	 * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
+	 * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
@@ -66,55 +65,57 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 	/**
 	 * Generate script delete.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
+	 * @param connection the connection
+	 * @param tableModel the table model
 	 * @return the string
 	 */
 	protected String generateScriptDelete(Connection connection, PersistenceTableModel tableModel) {
-		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).delete().from(tableModel.getTableName())
-				.where(getPrimaryKey(tableModel) + new StringBuilder().append(ISqlKeywords.SPACE).append(ISqlKeywords.EQUALS)
-						.append(ISqlKeywords.SPACE).append(ISqlKeywords.QUESTION).toString());
+		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
+												.delete()
+												.from(tableModel.getTableName())
+												.where(getPrimaryKey(tableModel) + new StringBuilder()	.append(ISqlKeywords.SPACE)
+																										.append(ISqlKeywords.EQUALS)
+																										.append(ISqlKeywords.SPACE)
+																										.append(ISqlKeywords.QUESTION)
+																										.toString());
 		String sql = deleteBuilder.toString();
-		if (logger.isTraceEnabled()) {logger.trace(sql);}
+		if (logger.isTraceEnabled()) {
+			logger.trace(sql);
+		}
 		return sql;
 	}
 
 	/**
 	 * Generate script delete all.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
+	 * @param connection the connection
+	 * @param tableModel the table model
 	 * @return the string
 	 */
 	protected String generateScriptDeleteAll(Connection connection, PersistenceTableModel tableModel) {
 		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).delete().from(tableModel.getTableName());
 		String sql = deleteBuilder.toString();
-		if (logger.isTraceEnabled()) {logger.trace(sql);}
+		if (logger.isTraceEnabled()) {
+			logger.trace(sql);
+		}
 		return sql;
 	}
 
 	/**
 	 * Delete.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @param clazz
-	 *            the clazz
-	 * @param id
-	 *            the id
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param clazz the clazz
+	 * @param id the id
 	 * @return the int
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public int delete(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("delete -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName() + ", id: " + id);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("delete -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+					+ ", class: " + clazz.getCanonicalName() + ", id: " + id);
+		}
 		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -123,8 +124,12 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 			setValue(preparedStatement, 1, id);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(sql);}
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(sql);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);
@@ -134,19 +139,17 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 	/**
 	 * Delete all.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @param clazz
-	 *            the clazz
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param clazz the clazz
 	 * @return the int
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public int deleteAll(Connection connection, PersistenceTableModel tableModel, Class<T> clazz) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("deleteAll -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName());}
+		if (logger.isTraceEnabled()) {
+			logger.trace("deleteAll -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+					+ ", class: " + clazz.getCanonicalName());
+		}
 		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -154,8 +157,12 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 			preparedStatement = openPreparedStatement(connection, sql);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(sql);}
-			if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+			if (logger.isErrorEnabled()) {
+				logger.error(sql);
+			}
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getMessage(), e);
+			}
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

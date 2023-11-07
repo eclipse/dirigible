@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.websockets.service;
 
@@ -24,13 +23,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WebsocketProcessor {
-	
+
 	/** The websocket service. */
 	private final WebsocketService websocketService;
-	
+
 	/** The javascript service. */
 	private final JavascriptService javascriptService;
-	
+
 	/**
 	 * Instantiates a new websocket handler.
 	 *
@@ -42,7 +41,7 @@ public class WebsocketProcessor {
 		this.websocketService = websocketService;
 		this.javascriptService = javascriptService;
 	}
-	
+
 	/**
 	 * Gets the websocket service.
 	 *
@@ -51,7 +50,7 @@ public class WebsocketProcessor {
 	public WebsocketService getWebsocketService() {
 		return websocketService;
 	}
-	
+
 	/**
 	 * Gets the javascript service.
 	 *
@@ -60,7 +59,7 @@ public class WebsocketProcessor {
 	public JavascriptService getJavascriptService() {
 		return javascriptService;
 	}
-	
+
 	/**
 	 * Process the event.
 	 *
@@ -72,14 +71,14 @@ public class WebsocketProcessor {
 	public Object processEvent(String endpoint, String wrapper, Map<Object, Object> context) throws Exception {
 		Websocket websocket = websocketService.findByEndpoint(endpoint);
 		String module = websocket.getHandler();
-//		String engine = websocket.getEngine();
+		// String engine = websocket.getEngine();
 		try {
-//			if (engine == null) {
-//				engine = "javascript";
-//			}
+			// if (engine == null) {
+			// engine = "javascript";
+			// }
 			context.put("handler", module);
 			RepositoryPath path = new RepositoryPath(wrapper);
-	    	return getJavascriptService().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+			return getJavascriptService().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
 		} catch (Exception e) {
 			throw new Exception(e);
 		}

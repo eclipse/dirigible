@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
@@ -32,228 +31,250 @@ import java.util.stream.Collectors;
  */
 public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extends AbstractTableBuilder<TABLE_BUILDER> {
 
-    /** The Constant logger. */
-    private static final Logger logger = LoggerFactory.getLogger(CreateTableBuilder.class);
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(CreateTableBuilder.class);
 
-    /** The primary key. */
-    protected CreateTablePrimaryKeyBuilder primaryKey;
+	/** The primary key. */
+	protected CreateTablePrimaryKeyBuilder primaryKey;
 
-    /** The foreign keys. */
-    protected final List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<>();
+	/** The foreign keys. */
+	protected final List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<>();
 
-    /** The unique indices. */
-    protected final List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
+	/** The unique indices. */
+	protected final List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
 
-    /** The checks. */
-    protected final List<CreateTableCheckBuilder> checks = new ArrayList<>();
-    
-    /** The indices. */
-    protected final List<CreateTableIndexBuilder> indices = new ArrayList<>();
-    
-    /** The Constant DELIMITER. */
+	/** The checks. */
+	protected final List<CreateTableCheckBuilder> checks = new ArrayList<>();
+
+	/** The indices. */
+	protected final List<CreateTableIndexBuilder> indices = new ArrayList<>();
+
+	/** The Constant DELIMITER. */
 	public static final String STATEMENT_DELIMITER = "; ";
 
-    /**
-     * Instantiates a new creates the table builder.
-     *
-     * @param dialect the dialect
-     * @param table   the table
-     */
-    public CreateTableBuilder(ISqlDialect dialect, String table) {
-        super(dialect, table);
-    }
+	/**
+	 * Instantiates a new creates the table builder.
+	 *
+	 * @param dialect the dialect
+	 * @param table the table
+	 */
+	public CreateTableBuilder(ISqlDialect dialect, String table) {
+		super(dialect, table);
+	}
 
-    /**
-     * Primary key.
-     *
-     * @param name    the name
-     * @param columns the columns
-     * @return the creates the table builder
-     */
-    public TABLE_BUILDER primaryKey(String name, String[] columns) {
-    	if (logger.isTraceEnabled()) {logger.trace("primaryKey: " + name + ", columns" + Arrays.toString(columns));}
-        if (this.primaryKey != null) {
-            throw new SqlException("Setting of primary key must be called only once");
-        }
-        this.primaryKey = new CreateTablePrimaryKeyBuilder(this.getDialect(), name);
-        for (String column : columns) {
-            this.primaryKey.column(column);
-        }
-        return (TABLE_BUILDER) this;
-    }
+	/**
+	 * Primary key.
+	 *
+	 * @param name the name
+	 * @param columns the columns
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER primaryKey(String name, String[] columns) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("primaryKey: " + name + ", columns" + Arrays.toString(columns));
+		}
+		if (this.primaryKey != null) {
+			throw new SqlException("Setting of primary key must be called only once");
+		}
+		this.primaryKey = new CreateTablePrimaryKeyBuilder(this.getDialect(), name);
+		for (String column : columns) {
+			this.primaryKey.column(column);
+		}
+		return (TABLE_BUILDER) this;
+	}
 
-    /**
-     * Primary key.
-     *
-     * @param name    the name
-     * @param columns the columns
-     * @return the creates the table builder
-     */
-    public TABLE_BUILDER primaryKey(String name, String columns) {
-    	if (logger.isTraceEnabled()) {logger.trace("primaryKey: " + name + ", columns" + columns);}
-        String[] array = splitValues(columns);
-        return primaryKey(name, array);
-    }
+	/**
+	 * Primary key.
+	 *
+	 * @param name the name
+	 * @param columns the columns
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER primaryKey(String name, String columns) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("primaryKey: " + name + ", columns" + columns);
+		}
+		String[] array = splitValues(columns);
+		return primaryKey(name, array);
+	}
 
-    /**
-     * Primary key.
-     *
-     * @param columns the columns
-     * @return the creates the table builder
-     */
-    public TABLE_BUILDER primaryKey(String[] columns) {
-    	if (logger.isTraceEnabled()) {logger.trace("primaryKey: <unnamed>, columns" + Arrays.toString(columns));}
-        return primaryKey(null, columns);
-    }
+	/**
+	 * Primary key.
+	 *
+	 * @param columns the columns
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER primaryKey(String[] columns) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("primaryKey: <unnamed>, columns" + Arrays.toString(columns));
+		}
+		return primaryKey(null, columns);
+	}
 
-    /**
-     * Primary key.
-     *
-     * @param columns the columns
-     * @return the creates the table builder
-     */
-    public TABLE_BUILDER primaryKey(String columns) {
-    	if (logger.isTraceEnabled()) {logger.trace("primaryKey: <unnamed>, columns" + columns);}
-        return primaryKey(null, splitValues(columns));
-    }
+	/**
+	 * Primary key.
+	 *
+	 * @param columns the columns
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER primaryKey(String columns) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("primaryKey: <unnamed>, columns" + columns);
+		}
+		return primaryKey(null, splitValues(columns));
+	}
 
-    /**
-     * Foreign key.
-     *
-     * @param name              the name
-     * @param columns           the columns
-     * @param referencedTable   the referenced table
-     * @param referencedColumns the referenced columns
-     * @return the creates the table builder
-     */
-    public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
-        return foreignKey(name, columns, referencedTable, null, referencedColumns);
-    }
+	/**
+	 * Foreign key.
+	 *
+	 * @param name the name
+	 * @param columns the columns
+	 * @param referencedTable the referenced table
+	 * @param referencedColumns the referenced columns
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
+		return foreignKey(name, columns, referencedTable, null, referencedColumns);
+	}
 
-    /**
-     * Foreign key.
-     *
-     * @param name the name
-     * @param columns the columns
-     * @param referencedTable the referenced table
-     * @param referencedTableSchema the referenced table schema
-     * @param referencedColumns the referenced columns
-     * @return the table builder
-     */
-    public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String referencedTableSchema, String[] referencedColumns) {
-    	if (logger.isTraceEnabled()) {logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
-                + ", referencedTableSchema: " + referencedTableSchema + ", referencedColumns: " + Arrays.toString(referencedColumns));}
-        CreateTableForeignKeyBuilder foreignKey = new CreateTableForeignKeyBuilder(this.getDialect(), name);
-        for (String column : columns) {
-            foreignKey.column(column);
-        }
-        foreignKey.referencedTable(referencedTable);
-        for (String column : referencedColumns) {
-            foreignKey.referencedColumn(column);
-        }
-        foreignKey.referencedTableSchema(referencedTableSchema);
-        this.foreignKeys.add(foreignKey);
-        return (TABLE_BUILDER) this;
-    }
+	/**
+	 * Foreign key.
+	 *
+	 * @param name the name
+	 * @param columns the columns
+	 * @param referencedTable the referenced table
+	 * @param referencedTableSchema the referenced table schema
+	 * @param referencedColumns the referenced columns
+	 * @return the table builder
+	 */
+	public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String referencedTableSchema,
+			String[] referencedColumns) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
+					+ ", referencedTableSchema: " + referencedTableSchema + ", referencedColumns: " + Arrays.toString(referencedColumns));
+		}
+		CreateTableForeignKeyBuilder foreignKey = new CreateTableForeignKeyBuilder(this.getDialect(), name);
+		for (String column : columns) {
+			foreignKey.column(column);
+		}
+		foreignKey.referencedTable(referencedTable);
+		for (String column : referencedColumns) {
+			foreignKey.referencedColumn(column);
+		}
+		foreignKey.referencedTableSchema(referencedTableSchema);
+		this.foreignKeys.add(foreignKey);
+		return (TABLE_BUILDER) this;
+	}
 
 
-    /**
-     * Foreign key.
-     *
-     * @param name              the name
-     * @param columns           the columns
-     * @param referencedTable   the referenced table
-     * @param referencedTableSchema the referenced table schema
-     * @param referencedColumns the referenced columns
-     * @return the creates the table builder
-     */
-    public TABLE_BUILDER foreignKey(String name, String columns, String referencedTable, String referencedTableSchema, String referencedColumns) {
-    	if (logger.isTraceEnabled()) {logger.trace("foreignKey: " + name + ", columns" + columns + ", referencedTable: " + referencedTable + ", referencedColumns: "
-                + referencedColumns);}
-        return foreignKey(name, splitValues(columns), referencedTable, referencedTableSchema, splitValues(referencedColumns));
-    }
+	/**
+	 * Foreign key.
+	 *
+	 * @param name the name
+	 * @param columns the columns
+	 * @param referencedTable the referenced table
+	 * @param referencedTableSchema the referenced table schema
+	 * @param referencedColumns the referenced columns
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER foreignKey(String name, String columns, String referencedTable, String referencedTableSchema,
+			String referencedColumns) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("foreignKey: " + name + ", columns" + columns + ", referencedTable: " + referencedTable + ", referencedColumns: "
+					+ referencedColumns);
+		}
+		return foreignKey(name, splitValues(columns), referencedTable, referencedTableSchema, splitValues(referencedColumns));
+	}
 
-    /**
-     * Unique.
-     *
-     * @param name    the name
-     * @param columns the columns
-     * @return the creates the table builder
-     */
-    @Override
-    public TABLE_BUILDER unique(String name, String[] columns) {
-    	if (logger.isTraceEnabled()) {logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));}
-        CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
-        for (String column : columns) {
-            uniqueIndex.column(column);
-        }
-        this.uniqueIndices.add(uniqueIndex);
-        return (TABLE_BUILDER) this;
-    }
+	/**
+	 * Unique.
+	 *
+	 * @param name the name
+	 * @param columns the columns
+	 * @return the creates the table builder
+	 */
+	@Override
+	public TABLE_BUILDER unique(String name, String[] columns) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));
+		}
+		CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
+		for (String column : columns) {
+			uniqueIndex.column(column);
+		}
+		this.uniqueIndices.add(uniqueIndex);
+		return (TABLE_BUILDER) this;
+	}
 
-    /**
-     * Unique.
-     *
-     * @param name    the name
-     * @param columns the columns
-     * @return the creates the table builder
-     */
-    public TABLE_BUILDER unique(String name, String columns) {
-    	if (logger.isTraceEnabled()) {logger.trace("unique: " + name + ", columns" + columns);}
-        return unique(name, splitValues(columns));
-    }
+	/**
+	 * Unique.
+	 *
+	 * @param name the name
+	 * @param columns the columns
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER unique(String name, String columns) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("unique: " + name + ", columns" + columns);
+		}
+		return unique(name, splitValues(columns));
+	}
 
-    /**
-     * Unique.
-     *
-     * @param name    the name
-     * @param columns the columns
-     * @param type the type
-     * @param order the order
-     * @return the creates the table builder
-     */
-    @Override
-    public TABLE_BUILDER unique(String name, String[] columns, String type, String order){
-        return unique(name, columns);
-    }
+	/**
+	 * Unique.
+	 *
+	 * @param name the name
+	 * @param columns the columns
+	 * @param type the type
+	 * @param order the order
+	 * @return the creates the table builder
+	 */
+	@Override
+	public TABLE_BUILDER unique(String name, String[] columns, String type, String order) {
+		return unique(name, columns);
+	}
 
-    /**
-     * Check.
-     *
-     * @param name       the name
-     * @param expression the expression
-     * @return the creates the table builder
-     */
-    public TABLE_BUILDER check(String name, String expression) {
-    	if (logger.isTraceEnabled()) {logger.trace("check: " + name + ", expression" + expression);}
-        CreateTableCheckBuilder check = new CreateTableCheckBuilder(this.getDialect(), name);
-        check.expression(expression);
-        this.checks.add(check);
-        return (TABLE_BUILDER) this;
-    }
+	/**
+	 * Check.
+	 *
+	 * @param name the name
+	 * @param expression the expression
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER check(String name, String expression) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("check: " + name + ", expression" + expression);
+		}
+		CreateTableCheckBuilder check = new CreateTableCheckBuilder(this.getDialect(), name);
+		check.expression(expression);
+		this.checks.add(check);
+		return (TABLE_BUILDER) this;
+	}
 
-    /**
-     * Index.
-     *
-     * @param name    the name
-     * @param isUnique    the isUnique
-     * @param order the order
-     * @param type the type
-     * @param columns the index columns
-     * @return the creates the table builder
-     */
-    public TABLE_BUILDER index(String name, Boolean isUnique, String order, String type, Set<String> columns) {
-    	if (logger.isTraceEnabled()) {logger.trace("index: " + name + ", isUnique" + isUnique + ", type" + type + ", columns" + columns);}
-    	CreateTableIndexBuilder index = new CreateTableIndexBuilder(getDialect(), name);
-    	index.setIndexType(type);
-    	index.setUnique(isUnique);
-        index.setOrder(order);
-    	index.setColumns(columns);
-    	this.indices.add(index);
-        return (TABLE_BUILDER) this;
-    }
+	/**
+	 * Index.
+	 *
+	 * @param name the name
+	 * @param isUnique the isUnique
+	 * @param order the order
+	 * @param type the type
+	 * @param columns the index columns
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER index(String name, Boolean isUnique, String order, String type, Set<String> columns) {
+		if (logger.isTraceEnabled()) {
+			logger.trace("index: " + name + ", isUnique" + isUnique + ", type" + type + ", columns" + columns);
+		}
+		CreateTableIndexBuilder index = new CreateTableIndexBuilder(getDialect(), name);
+		index.setIndexType(type);
+		index.setUnique(isUnique);
+		index.setOrder(order);
+		index.setColumns(columns);
+		this.indices.add(index);
+		return (TABLE_BUILDER) this;
+	}
 
-    /**
+	/**
 	 * Generate.
 	 *
 	 * @return the string
@@ -263,22 +284,25 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 		TableStatements table = buildTable();
 
 		String generated = table.getCreateTableStatement();
-		if(!table.getCreateIndicesStatements().isEmpty()) {
+		if (!table.getCreateIndicesStatements().isEmpty()) {
 			String uniqueIndices = table.getCreateIndicesStatements().stream().collect(Collectors.joining(STATEMENT_DELIMITER));
 			generated = String.join(STATEMENT_DELIMITER, generated, uniqueIndices);
 		}
 
-		if (logger.isTraceEnabled()) {logger.trace("generated: " + generated);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("generated: " + generated);
+		}
 
 		return generated;
 	}
 
 	/**
 	 * Build {@link TableStatements} object containing the SQL statements.
+	 *
 	 * @return {@link TableStatements}
 	 */
-	public TableStatements buildTable(){
-		
+	public TableStatements buildTable() {
+
 		StringBuilder sql = new StringBuilder();
 
 		// CREATE
@@ -313,69 +337,91 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 		return new TableStatements(createTableStatement, createIndicesStatements);
 	}
 
-    /**
-     * Generate primary key.
-     *
-     * @param sql the sql
-     */
-    protected void generatePrimaryKey(StringBuilder sql) {
-        List<String[]> allPrimaryKeys = this.getColumns().stream().filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument()))).collect(Collectors.toList());
-        boolean isCompositeKey = allPrimaryKeys.size() > 1;
+	/**
+	 * Generate primary key.
+	 *
+	 * @param sql the sql
+	 */
+	protected void generatePrimaryKey(StringBuilder sql) {
+		List<String[]> allPrimaryKeys = this.getColumns()
+											.stream()
+											.filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
+											.collect(Collectors.toList());
+		boolean isCompositeKey = allPrimaryKeys.size() > 1;
 
-        if ((this.primaryKey != null) && allPrimaryKeys.size() == 0 && !this.primaryKey.getColumns().isEmpty()) {
-            sql.append(COMMA).append(SPACE);
-            if (this.primaryKey.getName() != null) {
-                String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName()) : this.primaryKey.getName();
-                sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(primaryKeyName).append(SPACE);
-            }
-            sql.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
-                    .append(traverseNames(this.primaryKey.getColumns())).append(CLOSE);
-        } else {
-            if (isCompositeKey) {
-                sql.append(COMMA).append(SPACE);
-                ArrayList<String> keys = new ArrayList<>();
-                allPrimaryKeys.forEach(el -> keys.add(el[0]));
-                sql.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(OPEN).append(String.join(" , ", keys)).append(CLOSE).append(SPACE);
-            }
-        }
-    }
+		if ((this.primaryKey != null) && allPrimaryKeys.size() == 0 && !this.primaryKey.getColumns().isEmpty()) {
+			sql.append(COMMA).append(SPACE);
+			if (this.primaryKey.getName() != null) {
+				String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName()) : this.primaryKey.getName();
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(primaryKeyName).append(SPACE);
+			}
+			sql	.append(KEYWORD_PRIMARY)
+				.append(SPACE)
+				.append(KEYWORD_KEY)
+				.append(SPACE)
+				.append(OPEN)
+				.append(traverseNames(this.primaryKey.getColumns()))
+				.append(CLOSE);
+		} else {
+			if (isCompositeKey) {
+				sql.append(COMMA).append(SPACE);
+				ArrayList<String> keys = new ArrayList<>();
+				allPrimaryKeys.forEach(el -> keys.add(el[0]));
+				sql	.append(KEYWORD_PRIMARY)
+					.append(SPACE)
+					.append(KEYWORD_KEY)
+					.append(OPEN)
+					.append(String.join(" , ", keys))
+					.append(CLOSE)
+					.append(SPACE);
+			}
+		}
+	}
 
-    /**
-     * Generate foreign keys.
-     *
-     * @param sql the sql
-     */
-    protected void generateForeignKeys(StringBuilder sql) {
-        for (CreateTableForeignKeyBuilder foreignKey : this.foreignKeys) {
-            generateForeignKey(sql, foreignKey);
-        }
-    }
+	/**
+	 * Generate foreign keys.
+	 *
+	 * @param sql the sql
+	 */
+	protected void generateForeignKeys(StringBuilder sql) {
+		for (CreateTableForeignKeyBuilder foreignKey : this.foreignKeys) {
+			generateForeignKey(sql, foreignKey);
+		}
+	}
 
-    /**
-     * Generate foreign key.
-     *
-     * @param sql        the sql
-     * @param foreignKey the foreign key
-     */
-    protected void generateForeignKey(StringBuilder sql, CreateTableForeignKeyBuilder foreignKey) {
-        if (foreignKey != null) {
-            sql.append(COMMA).append(SPACE);
-            if (foreignKey.getName() != null) {
-                String foreignKeyName = (isCaseSensitive()) ? encapsulate(foreignKey.getName()) : foreignKey.getName();
-                sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKeyName).append(SPACE);
-            }
-            String referencedTableName = (isCaseSensitive()) ? encapsulate(foreignKey.getReferencedTable(), true) : foreignKey.getReferencedTable();
-            sql.append(KEYWORD_FOREIGN).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
-                    .append(traverseNames(foreignKey.getColumns())).append(CLOSE).append(SPACE).append(KEYWORD_REFERENCES).append(SPACE);
-            if (foreignKey.getReferencedTableSchema() != null) {
-                sql.append(foreignKey.getReferencedTableSchema()).append(".");
-            }
-            sql.append(referencedTableName).append(OPEN).append(traverseNames(foreignKey.getReferencedColumns()))
-                    .append(CLOSE);
-        }
-    }
+	/**
+	 * Generate foreign key.
+	 *
+	 * @param sql the sql
+	 * @param foreignKey the foreign key
+	 */
+	protected void generateForeignKey(StringBuilder sql, CreateTableForeignKeyBuilder foreignKey) {
+		if (foreignKey != null) {
+			sql.append(COMMA).append(SPACE);
+			if (foreignKey.getName() != null) {
+				String foreignKeyName = (isCaseSensitive()) ? encapsulate(foreignKey.getName()) : foreignKey.getName();
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKeyName).append(SPACE);
+			}
+			String referencedTableName =
+					(isCaseSensitive()) ? encapsulate(foreignKey.getReferencedTable(), true) : foreignKey.getReferencedTable();
+			sql	.append(KEYWORD_FOREIGN)
+				.append(SPACE)
+				.append(KEYWORD_KEY)
+				.append(SPACE)
+				.append(OPEN)
+				.append(traverseNames(foreignKey.getColumns()))
+				.append(CLOSE)
+				.append(SPACE)
+				.append(KEYWORD_REFERENCES)
+				.append(SPACE);
+			if (foreignKey.getReferencedTableSchema() != null) {
+				sql.append(foreignKey.getReferencedTableSchema()).append(".");
+			}
+			sql.append(referencedTableName).append(OPEN).append(traverseNames(foreignKey.getReferencedColumns())).append(CLOSE);
+		}
+	}
 
-    /**
+	/**
 	 * Generate create statements for indices.
 	 *
 	 * @return Collection of create index statements
@@ -398,14 +444,14 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 	 */
 	protected String generateUniqueIndex(CreateTableUniqueIndexBuilder uniqueIndex) {
 		StringBuilder sql = new StringBuilder();
-		if(uniqueIndex != null){
+		if (uniqueIndex != null) {
 			sql.append(KEYWORD_CREATE).append(SPACE);
 			sql.append(KEYWORD_UNIQUE).append(SPACE);
-			if(uniqueIndex.getIndexType() != null) {
+			if (uniqueIndex.getIndexType() != null) {
 				sql.append(uniqueIndex.getIndexType()).append(SPACE);
 			}
 			sql.append(KEYWORD_INDEX).append(SPACE);
-			if(uniqueIndex.getName() != null) {
+			if (uniqueIndex.getName() != null) {
 				sql.append(uniqueIndex.getName()).append(SPACE);
 			}
 			sql.append(KEYWORD_ON).append(SPACE).append(this.getTable());
@@ -419,35 +465,35 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 		return sql.toString();
 	}
 
-    /**
-     * Generate checks.
-     *
-     * @param sql the sql
-     */
-    protected void generateChecks(StringBuilder sql) {
-        for (CreateTableCheckBuilder index : this.checks) {
-            generateCheck(sql, index);
-        }
-    }
-    
-    /**
-     * Generate check.
-     *
-     * @param sql   the sql
-     * @param check the check
-     */
-    protected void generateCheck(StringBuilder sql, CreateTableCheckBuilder check) {
-        if (check != null) {
-            sql.append(COMMA).append(SPACE);
-            if (check.getName() != null) {
-                String checkName = (isCaseSensitive()) ? encapsulate(check.getName()) : check.getName();
-                sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(checkName).append(SPACE);
-            }
-            sql.append(KEYWORD_CHECK).append(SPACE).append(OPEN).append(check.getExpression()).append(CLOSE);
-        }
-    }
-    
-    /**
+	/**
+	 * Generate checks.
+	 *
+	 * @param sql the sql
+	 */
+	protected void generateChecks(StringBuilder sql) {
+		for (CreateTableCheckBuilder index : this.checks) {
+			generateCheck(sql, index);
+		}
+	}
+
+	/**
+	 * Generate check.
+	 *
+	 * @param sql the sql
+	 * @param check the check
+	 */
+	protected void generateCheck(StringBuilder sql, CreateTableCheckBuilder check) {
+		if (check != null) {
+			sql.append(COMMA).append(SPACE);
+			if (check.getName() != null) {
+				String checkName = (isCaseSensitive()) ? encapsulate(check.getName()) : check.getName();
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(checkName).append(SPACE);
+			}
+			sql.append(KEYWORD_CHECK).append(SPACE).append(OPEN).append(check.getExpression()).append(CLOSE);
+		}
+	}
+
+	/**
 	 * Generate create statements for indices.
 	 *
 	 * @return Collection of create index statements
@@ -471,10 +517,16 @@ public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extend
 		StringBuilder sql = new StringBuilder();
 		if (index != null && !index.isUnique()) {
 			sql.append(KEYWORD_CREATE).append(SPACE);
-			if(index.getIndexType() != null) {
+			if (index.getIndexType() != null) {
 				sql.append(index.getIndexType()).append(SPACE);
 			}
-			sql.append(KEYWORD_INDEX).append(SPACE).append(index.getName()).append(SPACE).append(KEYWORD_ON).append(SPACE).append(this.getTable());
+			sql	.append(KEYWORD_INDEX)
+				.append(SPACE)
+				.append(index.getName())
+				.append(SPACE)
+				.append(KEYWORD_ON)
+				.append(SPACE)
+				.append(this.getTable());
 			sql.append(SPACE).append(OPEN).append(traverseNames(index.getColumns())).append(CLOSE);
 			if (index.getOrder() != null) {
 				sql.append(SPACE).append(index.getOrder());

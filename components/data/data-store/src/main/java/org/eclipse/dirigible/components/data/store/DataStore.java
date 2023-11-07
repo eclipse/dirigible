@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.store;
 
@@ -42,14 +41,14 @@ public class DataStore {
 
 	/** The session factory. */
 	private SessionFactory sessionFactory;
-	
+
 	/** The datasources manager. */
 	private DataSourcesManager datasourcesManager;
-	
+
 	/** The data source. */
 	private DataSource dataSource;
-	
-	
+
+
 	/** The mappings. */
 	private Map<String, String> mappings = new HashMap<String, String>();
 
@@ -62,7 +61,7 @@ public class DataStore {
 	public DataStore(DataSourcesManager datasourcesManager) {
 		this.datasourcesManager = datasourcesManager;
 	}
-	
+
 	/**
 	 * Gets the datasources manager.
 	 *
@@ -71,7 +70,7 @@ public class DataStore {
 	public DataSourcesManager getDatasourcesManager() {
 		return datasourcesManager;
 	}
-	
+
 	/**
 	 * Gets the data source.
 	 *
@@ -80,7 +79,7 @@ public class DataStore {
 	public DataSource getDataSource() {
 		return dataSource;
 	}
-	
+
 	/**
 	 * Sets the data source.
 	 *
@@ -89,7 +88,7 @@ public class DataStore {
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-	
+
 	/**
 	 * Adds the mapping.
 	 *
@@ -99,7 +98,7 @@ public class DataStore {
 	public void addMapping(String name, String content) {
 		mappings.put(name, content);
 	}
-	
+
 	/**
 	 * Removes the mapping.
 	 *
@@ -108,7 +107,7 @@ public class DataStore {
 	public void removeMapping(String name) {
 		mappings.remove(name);
 	}
-	
+
 	/**
 	 * Initialize.
 	 */
@@ -116,20 +115,20 @@ public class DataStore {
 		if (this.dataSource == null) {
 			this.dataSource = datasourcesManager.getDefaultDataSource();
 		}
-		
-		Configuration configuration = new Configuration()
-				.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
-				.setProperty("hibernate.show_sql", "true")
-				.setProperty("hibernate.hbm2ddl.auto", "update")
-				.setProperty("hibernate.current_session_context_class", "org.hibernate.context.internal.ThreadLocalSessionContext");
-		
+
+		Configuration configuration = new Configuration()	.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
+															.setProperty("hibernate.show_sql", "true")
+															.setProperty("hibernate.hbm2ddl.auto", "update")
+															.setProperty("hibernate.current_session_context_class",
+																	"org.hibernate.context.internal.ThreadLocalSessionContext");
+
 		mappings.entrySet().forEach(e -> configuration.addInputStream(IOUtils.toInputStream(e.getValue(), StandardCharsets.UTF_8)));
-		
-        StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
-        serviceRegistryBuilder.applySetting(Environment.DATASOURCE, getDataSource());
-        serviceRegistryBuilder.applySettings(configuration.getProperties());
-        StandardServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
-        sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
+		StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
+		serviceRegistryBuilder.applySetting(Environment.DATASOURCE, getDataSource());
+		serviceRegistryBuilder.applySettings(configuration.getProperties());
+		StandardServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
+		sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 	}
 
 	/**
@@ -157,7 +156,7 @@ public class DataStore {
 			transaction.commit();
 		}
 	}
-	
+
 	/**
 	 * Save.
 	 *
@@ -182,7 +181,7 @@ public class DataStore {
 			transaction.commit();
 		}
 	}
-	
+
 	/**
 	 * Delete.
 	 *
@@ -208,7 +207,7 @@ public class DataStore {
 			transaction.commit();
 		}
 	}
-	
+
 	/**
 	 * Gets the.
 	 *
@@ -219,7 +218,7 @@ public class DataStore {
 	public Map get(String type, Serializable id) {
 		return get(type, id, getDataSource());
 	}
-	
+
 	/**
 	 * Gets the.
 	 *
@@ -233,7 +232,7 @@ public class DataStore {
 			return (Map) session.get(type, id);
 		}
 	}
-	
+
 	/**
 	 * Contains.
 	 *
@@ -244,7 +243,7 @@ public class DataStore {
 	public boolean contains(String type, String json) {
 		return contains(type, json, getDataSource());
 	}
-	
+
 	/**
 	 * Contains.
 	 *
@@ -259,7 +258,7 @@ public class DataStore {
 			return session.contains(type, object);
 		}
 	}
-	
+
 	/**
 	 * List.
 	 *
@@ -269,7 +268,7 @@ public class DataStore {
 	public List<Map> list(String type) {
 		return list(type, getDataSource());
 	}
-	
+
 	/**
 	 * List.
 	 *
@@ -282,7 +281,7 @@ public class DataStore {
 			return session.createCriteria(type).list();
 		}
 	}
-	
+
 	/**
 	 * Criteria.
 	 *
@@ -294,7 +293,7 @@ public class DataStore {
 	public List<Map> criteria(String type, Map<String, String> restrictions, Map<String, String> aliases) {
 		return criteria(type, restrictions, aliases, getDataSource());
 	}
-	
+
 	/**
 	 * Criteria.
 	 *
@@ -311,12 +310,12 @@ public class DataStore {
 				aliases.entrySet().forEach(e -> criteria.createAlias(e.getKey(), e.getValue()));
 			}
 			if (restrictions != null) {
-				restrictions.entrySet().forEach(e -> criteria.add(Restrictions.like( e.getKey(), e.getValue())));
+				restrictions.entrySet().forEach(e -> criteria.add(Restrictions.like(e.getKey(), e.getValue())));
 			}
 			return criteria.list();
 		}
 	}
-	
+
 	/**
 	 * Query.
 	 *
@@ -326,7 +325,7 @@ public class DataStore {
 	public List<Map> query(String query) {
 		return query(query, getDataSource());
 	}
-	
+
 	/**
 	 * Query.
 	 *
@@ -339,19 +338,19 @@ public class DataStore {
 			return session.createNativeQuery(query).list();
 		}
 	}
-	
-	
-//	/**
-//	 * List.
-//	 *
-//	 * @param type the type
-//	 * @return the string
-//	 */
-//	public String list(String type) {
-//		try (Session session = sessionFactory.openSession()) {
-//			List list = session.createSQLQuery("SELECT * FROM " + type).list();
-//			return JsonHelper.toJson(list);
-//		}
-//	}
+
+
+	// /**
+	// * List.
+	// *
+	// * @param type the type
+	// * @return the string
+	// */
+	// public String list(String type) {
+	// try (Session session = sessionFactory.openSession()) {
+	// List list = session.createSQLQuery("SELECT * FROM " + type).list();
+	// return JsonHelper.toJson(list);
+	// }
+	// }
 
 }

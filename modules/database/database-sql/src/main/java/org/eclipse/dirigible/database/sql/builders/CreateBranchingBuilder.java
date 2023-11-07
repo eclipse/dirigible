@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders;
 
@@ -26,118 +25,119 @@ import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
  */
 public class CreateBranchingBuilder extends AbstractSqlBuilder {
 
-    /**
-     * Instantiates a new creates the branching builder.
-     *
-     * @param dialect the dialect
-     */
-    public CreateBranchingBuilder(ISqlDialect dialect) {
-        super(dialect);
-    }
+	/**
+	 * Instantiates a new creates the branching builder.
+	 *
+	 * @param dialect the dialect
+	 */
+	public CreateBranchingBuilder(ISqlDialect dialect) {
+		super(dialect);
+	}
 
-    /**
-     * Table branch.
-     *
-     * @param table the table
-     * @return the creates the table builder
-     */
-    public CreateTableBuilder table(String table) {
-        return new CreateTableBuilder(getDialect(), table);
-    }
+	/**
+	 * Table branch.
+	 *
+	 * @param table the table
+	 * @return the creates the table builder
+	 */
+	public CreateTableBuilder table(String table) {
+		return new CreateTableBuilder(getDialect(), table);
+	}
 
-    /**
-     * Table.
-     *
-     * @param table the table
-     * @param tableType the table type
-     * @return the creates the table builder
-     */
-    public CreateTableBuilder table(String table, String tableType) {
-        return new CreateTableBuilder(getDialect(), table);
-    }
+	/**
+	 * Table.
+	 *
+	 * @param table the table
+	 * @param tableType the table type
+	 * @return the creates the table builder
+	 */
+	public CreateTableBuilder table(String table, String tableType) {
+		return new CreateTableBuilder(getDialect(), table);
+	}
 
-    /**
-     * Temporary table branch.
-     *
-     * @param table the table
-     * @return the creates the table builder
-     */
-    public CreateTemporaryTableBuilder temporaryTable(String table) {
-        return new CreateTemporaryTableBuilder(getDialect(), table);
-    }
+	/**
+	 * Temporary table branch.
+	 *
+	 * @param table the table
+	 * @return the creates the table builder
+	 */
+	public CreateTemporaryTableBuilder temporaryTable(String table) {
+		return new CreateTemporaryTableBuilder(getDialect(), table);
+	}
 
-    /**
-     * View branch.
-     *
-     * @param view the view
-     * @return the creates the view builder
-     */
-    public CreateViewBuilder view(String view) {
-        return new CreateViewBuilder(getDialect(), view);
-    }
+	/**
+	 * View branch.
+	 *
+	 * @param view the view
+	 * @return the creates the view builder
+	 */
+	public CreateViewBuilder view(String view) {
+		return new CreateViewBuilder(getDialect(), view);
+	}
 
-    /**
-     * Sequence branch.
-     *
-     * @param sequence the sequence
-     * @return the creates the sequence builder
-     */
-    public CreateSequenceBuilder sequence(String sequence) {
-        return new CreateSequenceBuilder(getDialect(), sequence);
-    }
+	/**
+	 * Sequence branch.
+	 *
+	 * @param sequence the sequence
+	 * @return the creates the sequence builder
+	 */
+	public CreateSequenceBuilder sequence(String sequence) {
+		return new CreateSequenceBuilder(getDialect(), sequence);
+	}
 
-    /**
-     * Synonym branch.
-     *
-     * @param synonym the synonym
-     * @return the creates the synonym builder
-     */
-    public CreateSynonymBuilder synonym(String synonym) {
-        return new CreateSynonymBuilder(getDialect(), synonym);
-    }
+	/**
+	 * Synonym branch.
+	 *
+	 * @param synonym the synonym
+	 * @return the creates the synonym builder
+	 */
+	public CreateSynonymBuilder synonym(String synonym) {
+		return new CreateSynonymBuilder(getDialect(), synonym);
+	}
 
-    /**
-     * Public synonym branch.
-     *
-     * @param synonym the synonym
-     * @return the creates the synonym builder
-     */
-    public CreateSynonymBuilder publicSynonym(String synonym) {
-        return synonym(synonym);
-    }
+	/**
+	 * Public synonym branch.
+	 *
+	 * @param synonym the synonym
+	 * @return the creates the synonym builder
+	 */
+	public CreateSynonymBuilder publicSynonym(String synonym) {
+		return synonym(synonym);
+	}
 
-    /**
-     * Schema branch.
-     *
-     * @param schema the schema
-     * @return the creates the schema builder
-     */
-    public CreateSchemaBuilder schema(String schema) {
-        return new CreateSchemaBuilder(getDialect(), schema);
-    }
+	/**
+	 * Schema branch.
+	 *
+	 * @param schema the schema
+	 * @return the creates the schema builder
+	 */
+	public CreateSchemaBuilder schema(String schema) {
+		return new CreateSchemaBuilder(getDialect(), schema);
+	}
 
-    /**
-     * Table Type branch.
-     *
-     * @param tableType the tableType
-     * @return the creates the table type builder
-     */
-    public CreateTableTypeBuilder tableType(String tableType) {
-        return new CreateTableTypeBuilder(getDialect(), tableType);
-    }
+	/**
+	 * Table Type branch.
+	 *
+	 * @param tableType the tableType
+	 * @return the creates the table type builder
+	 */
+	public CreateTableTypeBuilder tableType(String tableType) {
+		return new CreateTableTypeBuilder(getDialect(), tableType);
+	}
 
-    /**
-     * Generate.
-     *
-     * @return the string
-     */
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
-    @Override
-    public String generate() {
-        throw new SqlException("Invalid method invocation of generate() for Create Branching Builder");
-    }
+	/**
+	 * Generate.
+	 *
+	 * @return the string
+	 */
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+	 */
+	@Override
+	public String generate() {
+		throw new SqlException("Invalid method invocation of generate() for Create Branching Builder");
+	}
 
 }

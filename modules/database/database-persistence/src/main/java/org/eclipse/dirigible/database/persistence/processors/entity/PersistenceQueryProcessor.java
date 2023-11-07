@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.processors.entity;
 
@@ -32,8 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Persistence Query Processor.
  *
- * @param <T>
- *            the generic type
+ * @param <T> the generic type
  */
 public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 
@@ -43,8 +41,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	/**
 	 * Instantiates a new persistence query processor.
 	 *
-	 * @param entityManagerInterceptor
-	 *            the entity manager interceptor
+	 * @param entityManagerInterceptor the entity manager interceptor
 	 */
 	public PersistenceQueryProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
@@ -59,8 +56,10 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 */
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.
-	 * Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 *
+	 * @see
+	 * org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript
+	 * (java.sql. Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
@@ -70,84 +69,89 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	/**
 	 * Generate script find.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
+	 * @param connection the connection
+	 * @param tableModel the table model
 	 * @return the string
 	 */
 	protected String generateScriptFind(Connection connection, PersistenceTableModel tableModel) {
 		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey()) {
-				selectBuilder.where(new StringBuilder().append(columnModel.getName()).append(ISqlKeywords.SPACE).append(ISqlKeywords.EQUALS)
-						.append(ISqlKeywords.SPACE).append(ISqlKeywords.QUESTION).toString());
+				selectBuilder.where(new StringBuilder()	.append(columnModel.getName())
+														.append(ISqlKeywords.SPACE)
+														.append(ISqlKeywords.EQUALS)
+														.append(ISqlKeywords.SPACE)
+														.append(ISqlKeywords.QUESTION)
+														.toString());
 				break;
 			}
 		}
 		String sql = selectBuilder.toString();
-		if (logger.isTraceEnabled()) {logger.trace(sql);}
+		if (logger.isTraceEnabled()) {
+			logger.trace(sql);
+		}
 		return sql;
 	}
 
 	/**
 	 * Generate script lock.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
+	 * @param connection the connection
+	 * @param tableModel the table model
 	 * @return the string
 	 */
 	protected String generateScriptLock(Connection connection, PersistenceTableModel tableModel) {
 		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey()) {
-				selectBuilder.where(new StringBuilder().append(columnModel.getName()).append(ISqlKeywords.SPACE).append(ISqlKeywords.EQUALS)
-						.append(ISqlKeywords.SPACE).append(ISqlKeywords.QUESTION).toString());
+				selectBuilder.where(new StringBuilder()	.append(columnModel.getName())
+														.append(ISqlKeywords.SPACE)
+														.append(ISqlKeywords.EQUALS)
+														.append(ISqlKeywords.SPACE)
+														.append(ISqlKeywords.QUESTION)
+														.toString());
 				break;
 			}
 		}
 		selectBuilder.forUpdate();
 		String sql = selectBuilder.build();
-		if (logger.isTraceEnabled()) {logger.trace(sql);}
+		if (logger.isTraceEnabled()) {
+			logger.trace(sql);
+		}
 		return sql;
 	}
 
 	/**
 	 * Generate script find all.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
+	 * @param connection the connection
+	 * @param tableModel the table model
 	 * @return the string
 	 */
 	protected String generateScriptFindAll(Connection connection, PersistenceTableModel tableModel) {
 		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
 		String sql = selectBuilder.toString();
-		if (logger.isTraceEnabled()) {logger.trace(sql);}
+		if (logger.isTraceEnabled()) {
+			logger.trace(sql);
+		}
 		return sql;
 	}
 
 	/**
 	 * Find.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @param clazz
-	 *            the clazz
-	 * @param id
-	 *            the id
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param clazz the clazz
+	 * @param id the id
 	 * @return the t
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public T find(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("find -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName() + ", id: " + id);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("find -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+					+ ", class: " + clazz.getCanonicalName() + ", id: " + id);
+		}
 		String sql = generateScriptFind(connection, tableModel);
 		return get(connection, tableModel, clazz, id, sql);
 	}
@@ -155,21 +159,18 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	/**
 	 * Lock.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @param clazz
-	 *            the clazz
-	 * @param id
-	 *            the id
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param clazz the clazz
+	 * @param id the id
 	 * @return the t
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public T lock(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("lock -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName() + ", id: " + id);}
+		if (logger.isTraceEnabled()) {
+			logger.trace("lock -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+					+ ", class: " + clazz.getCanonicalName() + ", id: " + id);
+		}
 		String sql = generateScriptLock(connection, tableModel);
 		return get(connection, tableModel, clazz, id, sql);
 	}
@@ -177,23 +178,20 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	/**
 	 * Gets the.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @param clazz
-	 *            the clazz
-	 * @param id
-	 *            the id
-	 * @param sql
-	 *            the sql
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param clazz the clazz
+	 * @param id the id
+	 * @param sql the sql
 	 * @return the t
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
-	protected T get(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id, String sql) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("get -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName() + ", id: " + id + ", sql: " + sql);}
+	protected T get(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id, String sql)
+			throws PersistenceException {
+		if (logger.isTraceEnabled()) {
+			logger.trace("get -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+					+ ", class: " + clazz.getCanonicalName() + ", id: " + id + ", sql: " + sql);
+		}
 		T result = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -226,19 +224,17 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	/**
 	 * Find all.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @param clazz
-	 *            the clazz
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param clazz the clazz
 	 * @return the list
-	 * @throws PersistenceException
-	 *             the persistence exception
+	 * @throws PersistenceException the persistence exception
 	 */
 	public List<T> findAll(Connection connection, PersistenceTableModel tableModel, Class<T> clazz) throws PersistenceException {
-		if (logger.isTraceEnabled()) {logger.trace("findAll -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName());}
+		if (logger.isTraceEnabled()) {
+			logger.trace("findAll -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+					+ ", class: " + clazz.getCanonicalName());
+		}
 		List<T> result = new ArrayList<T>();
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -271,21 +267,18 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	/**
 	 * Query.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @param clazz
-	 *            the clazz
-	 * @param sql
-	 *            the sql
-	 * @param values
-	 *            the values
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param clazz the clazz
+	 * @param sql the sql
+	 * @param values the values
 	 * @return the list
 	 */
 	public List<T> query(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, String sql, List<Object> values) {
-		if (logger.isTraceEnabled()) {logger.trace("query -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
-				+ clazz.getCanonicalName() + ", sql: " + sql + ", values: " + Serializer.serializeListOfObjects(values));}
+		if (logger.isTraceEnabled()) {
+			logger.trace("query -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+					+ ", class: " + clazz.getCanonicalName() + ", sql: " + sql + ", values: " + Serializer.serializeListOfObjects(values));
+		}
 		List<T> result = new ArrayList<T>();
 		PreparedStatement preparedStatement = null;
 		try {

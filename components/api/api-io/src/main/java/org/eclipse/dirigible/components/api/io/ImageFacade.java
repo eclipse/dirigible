@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.io;
 
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ImageFacade {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FilesFacade.class);
 
@@ -41,17 +40,17 @@ public class ImageFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final InputStream resize(InputStream original, String type, int width, int height) throws IOException {
-        BufferedImage bufferedImage = javax.imageio.ImageIO.read(original);
-        Image scaledImage = bufferedImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
-       
-        int bufferedImageType = bufferedImage.getType();
-        BufferedImage buffer = new BufferedImage(width, height, bufferedImageType);
-        buffer.getGraphics().drawImage(scaledImage, 0, 0, null);
-       
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
-        javax.imageio.ImageIO.write(buffer, type, temp);
-                       
-        temp.flush();
+		BufferedImage bufferedImage = javax.imageio.ImageIO.read(original);
+		Image scaledImage = bufferedImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+
+		int bufferedImageType = bufferedImage.getType();
+		BufferedImage buffer = new BufferedImage(width, height, bufferedImageType);
+		buffer.getGraphics().drawImage(scaledImage, 0, 0, null);
+
+		ByteArrayOutputStream temp = new ByteArrayOutputStream();
+		javax.imageio.ImageIO.write(buffer, type, temp);
+
+		temp.flush();
 		return temp.toInputStream();
 	}
 

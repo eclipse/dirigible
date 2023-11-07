@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.master.zip;
 
@@ -46,10 +45,8 @@ public class ZipRepository extends FileSystemRepository {
 	/**
 	 * Instantiates a new zip repository.
 	 *
-	 * @param zip
-	 *            the zip
-	 * @throws LocalRepositoryException
-	 *             the local repository exception
+	 * @param zip the zip
+	 * @throws LocalRepositoryException the local repository exception
 	 */
 	public ZipRepository(String zip) throws LocalRepositoryException {
 
@@ -73,12 +70,9 @@ public class ZipRepository extends FileSystemRepository {
 	/**
 	 * Unpack zip.
 	 *
-	 * @param zip
-	 *            the zip
-	 * @param folder
-	 *            the folder
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param zip the zip
+	 * @param folder the folder
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void unpackZip(InputStream zip, String folder) throws IOException {
 		ZipInputStream zipInputStream = new ZipInputStream(zip);
@@ -111,12 +105,9 @@ public class ZipRepository extends FileSystemRepository {
 	/**
 	 * Instantiates a new zip repository.
 	 *
-	 * @param rootFolder
-	 *            the root folder
-	 * @param absolute
-	 *            the absolute
-	 * @throws LocalRepositoryException
-	 *             the local repository exception
+	 * @param rootFolder the root folder
+	 * @param absolute the absolute
+	 * @throws LocalRepositoryException the local repository exception
 	 */
 	// disable usage
 	protected ZipRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
@@ -126,8 +117,7 @@ public class ZipRepository extends FileSystemRepository {
 	/**
 	 * Instantiates a new zip repository.
 	 *
-	 * @throws LocalRepositoryException
-	 *             the local repository exception
+	 * @throws LocalRepositoryException the local repository exception
 	 */
 	// disable usage
 	protected ZipRepository() throws LocalRepositoryException {
@@ -141,6 +131,7 @@ public class ZipRepository extends FileSystemRepository {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#getRepositoryRootFolder()
 	 */
 	@Override
@@ -155,6 +146,7 @@ public class ZipRepository extends FileSystemRepository {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
 	 */
 	@Override
@@ -172,7 +164,7 @@ public class ZipRepository extends FileSystemRepository {
 	public boolean isLinkingPathsSupported() {
 		return false;
 	}
-	
+
 	/**
 	 * Link path.
 	 *
@@ -184,7 +176,7 @@ public class ZipRepository extends FileSystemRepository {
 	public void linkPath(String repositoryPath, String filePath) throws IOException {
 		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
 	}
-	
+
 	/**
 	 * Gets the last modified.
 	 *
@@ -194,5 +186,5 @@ public class ZipRepository extends FileSystemRepository {
 	public long getLastModified() {
 		return 0;
 	}
-	
+
 }

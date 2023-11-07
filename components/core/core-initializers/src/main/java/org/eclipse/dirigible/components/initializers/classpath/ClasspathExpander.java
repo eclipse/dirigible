@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.initializers.classpath;
 
@@ -37,111 +36,112 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClasspathExpander {
 
-    /**
-     * The Constant logger.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(ClasspathExpander.class);
+	/**
+	 * The Constant logger.
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(ClasspathExpander.class);
 
-    /** The repository. */
-    private final IRepository repository;
+	/** The repository. */
+	private final IRepository repository;
 
-    /**
-     * Instantiates a new classpath expander.
-     *
-     * @param repository the repository
-     */
-    @Autowired
-    public ClasspathExpander(IRepository repository) {
-        this.repository = repository;
-    }
+	/**
+	 * Instantiates a new classpath expander.
+	 *
+	 * @param repository the repository
+	 */
+	@Autowired
+	public ClasspathExpander(IRepository repository) {
+		this.repository = repository;
+	}
 
-    /**
-     * Expand content.
-     */
-    public void expandContent() {
-        expandContent("dirigible");
-        expandContent("resources" + File.separator + "webjars");
-    }
+	/**
+	 * Expand content.
+	 */
+	public void expandContent() {
+		expandContent("dirigible");
+		expandContent("resources" + File.separator + "webjars");
+	}
 
-    /**
-     * Expand content.
-     *
-     * @param root the root
-     */
-    private void expandContent(String root) {
-        try {
-            Enumeration<URL> urls = ClasspathExpander.class.getClassLoader().getResources("META-INF");
+	/**
+	 * Expand content.
+	 *
+	 * @param root the root
+	 */
+	private void expandContent(String root) {
+		try {
+			Enumeration<URL> urls = ClasspathExpander.class.getClassLoader().getResources("META-INF");
 
-            while (urls.hasMoreElements()) {
-                URL url = urls.nextElement();
-                try {
-                    URLConnection urlConnection = url.openConnection();
-                    if (urlConnection instanceof JarURLConnection) {
-                        handleJarURLConnection(root, urlConnection);
-                    } else {
-                        Path dirPath = Path.of(url.toURI()).resolve(root);
-                        handleLocalDirectory(dirPath);
-                    }
-                } catch (URISyntaxException | IOException e) {
-                    logDirectoryExpandingError(url.toString(), e);
-                }
-            }
+			while (urls.hasMoreElements()) {
+				URL url = urls.nextElement();
+				try {
+					URLConnection urlConnection = url.openConnection();
+					if (urlConnection instanceof JarURLConnection) {
+						handleJarURLConnection(root, urlConnection);
+					} else {
+						Path dirPath = Path.of(url.toURI()).resolve(root);
+						handleLocalDirectory(dirPath);
+					}
+				} catch (URISyntaxException | IOException e) {
+					logDirectoryExpandingError(url.toString(), e);
+				}
+			}
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    /**
-     * Handle jar URL connection.
-     *
-     * @param root the root
-     * @param urlConnection the url connection
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    private void handleJarURLConnection(String root, URLConnection urlConnection) throws IOException {
-        String jarRoot = "META-INF/" + root;
-        JarURLConnection jarUrlConnection = (JarURLConnection) urlConnection;
-        try (JarFile jar = jarUrlConnection.getJarFile()) {
-            Enumeration<JarEntry> entries = jar.entries();
-            while (entries.hasMoreElements()) {
-                JarEntry entry = entries.nextElement();
-                if (entry.getName().startsWith(jarRoot)) {
-                    if (!entry.isDirectory()) {
-                        byte[] content = IOUtils.toByteArray(jar.getInputStream(entry));
-                        String registryPath = entry.getName().substring(jarRoot.length());
-                        repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepository.SEPARATOR + registryPath, content);
-                    }
-                }
-            }
-        }
-    }
+	/**
+	 * Handle jar URL connection.
+	 *
+	 * @param root the root
+	 * @param urlConnection the url connection
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	private void handleJarURLConnection(String root, URLConnection urlConnection) throws IOException {
+		String jarRoot = "META-INF/" + root;
+		JarURLConnection jarUrlConnection = (JarURLConnection) urlConnection;
+		try (JarFile jar = jarUrlConnection.getJarFile()) {
+			Enumeration<JarEntry> entries = jar.entries();
+			while (entries.hasMoreElements()) {
+				JarEntry entry = entries.nextElement();
+				if (entry.getName().startsWith(jarRoot)) {
+					if (!entry.isDirectory()) {
+						byte[] content = IOUtils.toByteArray(jar.getInputStream(entry));
+						String registryPath = entry.getName().substring(jarRoot.length());
+						repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepository.SEPARATOR + registryPath,
+								content);
+					}
+				}
+			}
+		}
+	}
 
-    /**
-     * Handle local directory.
-     *
-     * @param dirPath the dir path
-     */
-    private void handleLocalDirectory(Path dirPath) {
-        try {
-            File maybeDir = dirPath.toFile();
-            if (!maybeDir.exists() || maybeDir.isFile()) {
-                return;
-            }
-            String registryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
-            FileUtils.copyDirectory(maybeDir, new File(registryPath));
-        } catch (IOException e) {
-            logDirectoryExpandingError(dirPath.toString(), e);
-        }
-    }
+	/**
+	 * Handle local directory.
+	 *
+	 * @param dirPath the dir path
+	 */
+	private void handleLocalDirectory(Path dirPath) {
+		try {
+			File maybeDir = dirPath.toFile();
+			if (!maybeDir.exists() || maybeDir.isFile()) {
+				return;
+			}
+			String registryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+			FileUtils.copyDirectory(maybeDir, new File(registryPath));
+		} catch (IOException e) {
+			logDirectoryExpandingError(dirPath.toString(), e);
+		}
+	}
 
-    /**
-     * Log directory expanding error.
-     *
-     * @param dirPath the dir path
-     * @param e the e
-     */
-    private void logDirectoryExpandingError(String dirPath, Exception e) {
-        logger.error("Could not collect dir '" + dirPath + "'", e);
-    }
+	/**
+	 * Log directory expanding error.
+	 *
+	 * @param dirPath the dir path
+	 * @param e the e
+	 */
+	private void logDirectoryExpandingError(String dirPath, Exception e) {
+		logger.error("Could not collect dir '" + dirPath + "'", e);
+	}
 }

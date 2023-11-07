@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.service;
 
@@ -37,84 +36,80 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class AccessServiceTest {
 
-    @Autowired
-    private AccessRepository accessRepository;
+	@Autowired
+	private AccessRepository accessRepository;
 
-    @Autowired
-    private AccessService accessService;
+	@Autowired
+	private AccessService accessService;
 
-    @BeforeEach
-    public void setup() {
-    	
-    	cleanup();
-    	
-        // Create test security accesses
-        accessRepository.save(createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" +
-                "/b/c/test1.txt", "GET", "test_role_1"));
-        accessRepository.save(createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" +
-                "/b/c/test2.txt", "GET", "test_role_2"));
-        accessRepository.save(createSecurityAccess("/a/b/c/test3.access", "test3", "description", "HTTP", "/a" +
-                "/b/c/test3.txt", "GET", "test_role_3"));
-        accessRepository.save(createSecurityAccess("/a/b/c/test4.access", "test4", "description", "HTTP", "/a" +
-                "/b/c/test4.txt", "GET", "test_role_4"));
-        accessRepository.save(createSecurityAccess("/a/b/c/test5.access", "test5", "description", "HTTP", "/a" +
-                "/b/c/test5.txt", "GET", "test_role_5"));
-    }
+	@BeforeEach
+	public void setup() {
 
-    @AfterEach
-    public void cleanup() {
-        // Delete test security accesses
-        accessRepository.deleteAll();
-    }
+		cleanup();
 
-    @Test
-    void testGetAll() {
-        List<Access> securityAccessList = accessService.getAll();
-        assertEquals(5, securityAccessList.size());
-    }
+		// Create test security accesses
+		accessRepository.save(
+				createSecurityAccess("/a/b/c/test1.access", "test1", "description", "HTTP", "/a" + "/b/c/test1.txt", "GET", "test_role_1"));
+		accessRepository.save(
+				createSecurityAccess("/a/b/c/test2.access", "test2", "description", "HTTP", "/a" + "/b/c/test2.txt", "GET", "test_role_2"));
+		accessRepository.save(
+				createSecurityAccess("/a/b/c/test3.access", "test3", "description", "HTTP", "/a" + "/b/c/test3.txt", "GET", "test_role_3"));
+		accessRepository.save(
+				createSecurityAccess("/a/b/c/test4.access", "test4", "description", "HTTP", "/a" + "/b/c/test4.txt", "GET", "test_role_4"));
+		accessRepository.save(
+				createSecurityAccess("/a/b/c/test5.access", "test5", "description", "HTTP", "/a" + "/b/c/test5.txt", "GET", "test_role_5"));
+	}
 
-    @Test
-    void testFindAll() {
-        Page<Access> securityAccessPage = accessService.getPages(Pageable.ofSize(1));
-        assertEquals(5, securityAccessPage.getTotalElements());
-    }
+	@AfterEach
+	public void cleanup() {
+		// Delete test security accesses
+		accessRepository.deleteAll();
+	}
 
-    @Test
-    void testFindById() {
-        Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
-                "/c/test.txt", "GET", "test_role");
-        accessService.save(securityAccess);
-        Access securityAccessServiceById = accessService.findById(securityAccess.getId());
-        assertEquals("test", securityAccessServiceById.getName());
-    }
+	@Test
+	void testGetAll() {
+		List<Access> securityAccessList = accessService.getAll();
+		assertEquals(5, securityAccessList.size());
+	}
 
-    @Test
-    void testFindByName() {
-        Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
-                "/c/test.txt", "GET", "test_role");
-        accessService.save(securityAccess);
-        Access securityAccessServiceByName = accessService.findByName("test");
-        assertEquals(securityAccess.getId(), securityAccessServiceByName.getId());
-    }
+	@Test
+	void testFindAll() {
+		Page<Access> securityAccessPage = accessService.getPages(Pageable.ofSize(1));
+		assertEquals(5, securityAccessPage.getTotalElements());
+	}
 
-    @Test
-    void testSave() {
-        Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" +
-                "/c/test.txt", "GET", "test_role");
-        accessService.save(securityAccess);
-        assertNotNull(accessService.findByName("test"));
-    }
+	@Test
+	void testFindById() {
+		Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" + "/c/test.txt", "GET", "test_role");
+		accessService.save(securityAccess);
+		Access securityAccessServiceById = accessService.findById(securityAccess.getId());
+		assertEquals("test", securityAccessServiceById.getName());
+	}
 
-    @Test
-    void testDelete() {
-        try {
-            Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP",
-                    "/a/b/c/test.txt", "GET", "test_role");
-            accessService.save(securityAccess);
-            accessService.delete(securityAccess);
-            accessService.findByName("test");
-        } catch (Exception e) {
-            assertEquals("Access with name does not exist: test", e.getMessage());
-        }
-    }
+	@Test
+	void testFindByName() {
+		Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" + "/c/test.txt", "GET", "test_role");
+		accessService.save(securityAccess);
+		Access securityAccessServiceByName = accessService.findByName("test");
+		assertEquals(securityAccess.getId(), securityAccessServiceByName.getId());
+	}
+
+	@Test
+	void testSave() {
+		Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b" + "/c/test.txt", "GET", "test_role");
+		accessService.save(securityAccess);
+		assertNotNull(accessService.findByName("test"));
+	}
+
+	@Test
+	void testDelete() {
+		try {
+			Access securityAccess = new Access("/a/b/c/test.access", "test", "description", "HTTP", "/a/b/c/test.txt", "GET", "test_role");
+			accessService.save(securityAccess);
+			accessService.delete(securityAccess);
+			accessService.findByName("test");
+		} catch (Exception e) {
+			assertEquals("Access with name does not exist: test", e.getMessage());
+		}
+	}
 }

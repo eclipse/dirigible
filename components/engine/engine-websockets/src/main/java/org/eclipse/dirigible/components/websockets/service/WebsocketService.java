@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.websockets.service;
 
@@ -31,142 +30,142 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class WebsocketService implements ArtefactService<Websocket> {
 
-    /** The websocket repository. */
-    @Autowired
-    private WebsocketRepository websocketRepository;
+	/** The websocket repository. */
+	@Autowired
+	private WebsocketRepository websocketRepository;
 
-    /**
-     * Gets the all.
-     *
-     * @return the all
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Websocket> getAll() {
-        return websocketRepository.findAll();
-    }
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Websocket> getAll() {
+		return websocketRepository.findAll();
+	}
 
-    /**
-     * Find all.
-     *
-     * @param pageable the pageable
-     * @return the page
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<Websocket> getPages(Pageable pageable) {
-        return websocketRepository.findAll(pageable);
-    }
+	/**
+	 * Find all.
+	 *
+	 * @param pageable the pageable
+	 * @return the page
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Page<Websocket> getPages(Pageable pageable) {
+		return websocketRepository.findAll(pageable);
+	}
 
-    /**
-     * Find by id.
-     *
-     * @param id the id
-     * @return the websocket
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Websocket findById(Long id) {
-        Optional<Websocket> extension = websocketRepository.findById(id);
-        if (extension.isPresent()) {
-            return extension.get();
-        } else {
-            throw new IllegalArgumentException("Websocket with id does not exist: " + id);
-        }
-    }
+	/**
+	 * Find by id.
+	 *
+	 * @param id the id
+	 * @return the websocket
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Websocket findById(Long id) {
+		Optional<Websocket> extension = websocketRepository.findById(id);
+		if (extension.isPresent()) {
+			return extension.get();
+		} else {
+			throw new IllegalArgumentException("Websocket with id does not exist: " + id);
+		}
+	}
 
-    /**
-     * Find by name.
-     *
-     * @param name the name
-     * @return the websocket
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Websocket findByName(String name) {
-        Websocket filter = new Websocket();
-        filter.setName(name);
-        Example<Websocket> example = Example.of(filter);
-        Optional<Websocket> extension = websocketRepository.findOne(example);
-        if (extension.isPresent()) {
-            return extension.get();
-        } else {
-            throw new IllegalArgumentException("Websocket with name does not exist: " + name);
-        }
-    }
-    
-    /**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Websocket> findByLocation(String location) {
-    	Websocket filter = new Websocket();
-        filter.setLocation(location);
-        Example<Websocket> example = Example.of(filter);
-        List<Websocket> list = websocketRepository.findAll(example);
-        return list;
-    }
-    
-    /**
-     * Find by endpoint.
-     *
-     * @param endpoint the endpoint
-     * @return the websocket
-     */
-    @Transactional(readOnly = true)
-    public Websocket findByEndpoint(String endpoint) {
-        Websocket filter = new Websocket();
-        filter.setEndpoint(endpoint);
-        Example<Websocket> example = Example.of(filter);
-        Optional<Websocket> extension = websocketRepository.findOne(example);
-        if (extension.isPresent()) {
-            return extension.get();
-        } else {
-            throw new IllegalArgumentException("Websocket for endpoint does not exist: " + endpoint);
-        }
-    }
-    
-    /**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the websocket
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Websocket findByKey(String key) {
-    	Websocket filter = new Websocket();
-        filter.setKey(key);
-        Example<Websocket> example = Example.of(filter);
-        Optional<Websocket> websocket = websocketRepository.findOne(example);
-        if (websocket.isPresent()) {
-            return websocket.get();
-        }
-        return null;
-    }
+	/**
+	 * Find by name.
+	 *
+	 * @param name the name
+	 * @return the websocket
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Websocket findByName(String name) {
+		Websocket filter = new Websocket();
+		filter.setName(name);
+		Example<Websocket> example = Example.of(filter);
+		Optional<Websocket> extension = websocketRepository.findOne(example);
+		if (extension.isPresent()) {
+			return extension.get();
+		} else {
+			throw new IllegalArgumentException("Websocket with name does not exist: " + name);
+		}
+	}
 
-    /**
-     * Save.
-     *
-     * @param extension the extension
-     * @return the websocket
-     */
-    @Override
-    public Websocket save(Websocket extension) {
-        return websocketRepository.saveAndFlush(extension);
-    }
+	/**
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Websocket> findByLocation(String location) {
+		Websocket filter = new Websocket();
+		filter.setLocation(location);
+		Example<Websocket> example = Example.of(filter);
+		List<Websocket> list = websocketRepository.findAll(example);
+		return list;
+	}
 
-    /**
-     * Delete.
-     *
-     * @param extension the extension
-     */
-    @Override
-    public void delete(Websocket extension) {
-        websocketRepository.delete(extension);
-    }
+	/**
+	 * Find by endpoint.
+	 *
+	 * @param endpoint the endpoint
+	 * @return the websocket
+	 */
+	@Transactional(readOnly = true)
+	public Websocket findByEndpoint(String endpoint) {
+		Websocket filter = new Websocket();
+		filter.setEndpoint(endpoint);
+		Example<Websocket> example = Example.of(filter);
+		Optional<Websocket> extension = websocketRepository.findOne(example);
+		if (extension.isPresent()) {
+			return extension.get();
+		} else {
+			throw new IllegalArgumentException("Websocket for endpoint does not exist: " + endpoint);
+		}
+	}
+
+	/**
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the websocket
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Websocket findByKey(String key) {
+		Websocket filter = new Websocket();
+		filter.setKey(key);
+		Example<Websocket> example = Example.of(filter);
+		Optional<Websocket> websocket = websocketRepository.findOne(example);
+		if (websocket.isPresent()) {
+			return websocket.get();
+		}
+		return null;
+	}
+
+	/**
+	 * Save.
+	 *
+	 * @param extension the extension
+	 * @return the websocket
+	 */
+	@Override
+	public Websocket save(Websocket extension) {
+		return websocketRepository.saveAndFlush(extension);
+	}
+
+	/**
+	 * Delete.
+	 *
+	 * @param extension the extension
+	 */
+	@Override
+	public void delete(Websocket extension) {
+		websocketRepository.delete(extension);
+	}
 }

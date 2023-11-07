@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.model;
 
@@ -52,31 +51,20 @@ public class PersistenceTableColumnModel {
 	/**
 	 * The constructor from the fields.
 	 *
-	 * @param field
-	 *            the field
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
-	 * @param length
-	 *            the length
-	 * @param nullable
-	 *            whether null values are allowed
-	 * @param primaryKey
-	 *            whether it is a primary key
-	 * @param scale
-	 *            the scale for floating point values
-	 * @param generated
-	 *            whether it is a generated value
-	 * @param unique
-	 *            whether it is unique
-	 * @param identity
-	 *            whether it is identity
-	 * @param enumerated
-	 *            whether it is enumerated
+	 * @param field the field
+	 * @param name the name
+	 * @param type the type
+	 * @param length the length
+	 * @param nullable whether null values are allowed
+	 * @param primaryKey whether it is a primary key
+	 * @param scale the scale for floating point values
+	 * @param generated whether it is a generated value
+	 * @param unique whether it is unique
+	 * @param identity whether it is identity
+	 * @param enumerated whether it is enumerated
 	 */
-	public PersistenceTableColumnModel(String field, String name, String type, int length, boolean nullable, boolean primaryKey,
-			int scale, String generated, boolean unique, boolean identity, String enumerated) {
+	public PersistenceTableColumnModel(String field, String name, String type, int length, boolean nullable, boolean primaryKey, int scale,
+			String generated, boolean unique, boolean identity, String enumerated) {
 		this.field = field;
 		this.name = name;
 		this.type = type;
@@ -93,14 +81,13 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Empty constructor.
 	 */
-	public PersistenceTableColumnModel() {
-	}
+	public PersistenceTableColumnModel() {}
 
 	/**
 	 * The constructor from the fields.
 	 *
-	 * @param name            the name
-	 * @param type            the type
+	 * @param name the name
+	 * @param type the type
 	 * @param nullable the nullable
 	 * @param primaryKey the primary key
 	 * @param length the length
@@ -127,8 +114,7 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the field.
 	 *
-	 * @param field
-	 *            the field
+	 * @param field the field
 	 */
 	public void setField(String field) {
 		this.field = field;
@@ -146,8 +132,7 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the name.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -165,8 +150,7 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the type.
 	 *
-	 * @param type
-	 *            the type
+	 * @param type the type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -184,8 +168,7 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the length.
 	 *
-	 * @param length
-	 *            the length
+	 * @param length the length
 	 */
 	public void setLength(int length) {
 		this.length = length;
@@ -203,8 +186,7 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the nullable.
 	 *
-	 * @param nullable
-	 *            whether null values are allowed
+	 * @param nullable whether null values are allowed
 	 */
 	public void setNullable(boolean nullable) {
 		this.nullable = nullable;
@@ -222,8 +204,7 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the primary key.
 	 *
-	 * @param primaryKey
-	 *            whether it is a primary key
+	 * @param primaryKey whether it is a primary key
 	 */
 	public void setPrimaryKey(boolean primaryKey) {
 		this.primaryKey = primaryKey;
@@ -241,8 +222,7 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the scale.
 	 *
-	 * @param scale
-	 *            the scale
+	 * @param scale the scale
 	 */
 	public void setScale(int scale) {
 		this.scale = scale;
@@ -260,8 +240,7 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the generated.
 	 *
-	 * @param generated
-	 *            whether it is generated
+	 * @param generated whether it is generated
 	 */
 	public void setGenerated(String generated) {
 		this.generated = generated;
@@ -279,8 +258,7 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the unique.
 	 *
-	 * @param unique
-	 *            whether it is unique
+	 * @param unique whether it is unique
 	 */
 	public void setUnique(boolean unique) {
 		this.unique = unique;
@@ -298,15 +276,15 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the identity.
 	 *
-	 * @param identity
-	 *            whether it is identity
+	 * @param identity whether it is identity
 	 */
 	public void setIdentity(boolean identity) {
 		this.identity = identity;
 	}
 
 	/**
-	 * Returns the name of the enumerated type in case the column is of type enumerated or null otherwise.
+	 * Returns the name of the enumerated type in case the column is of type enumerated or null
+	 * otherwise.
 	 *
 	 * @return enumerated type name
 	 */
@@ -317,8 +295,7 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the enumerated type name.
 	 *
-	 * @param enumerated
-	 *            the new enumerated
+	 * @param enumerated the new enumerated
 	 */
 	public void setEnumerated(String enumerated) {
 		this.enumerated = enumerated;

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.repository.service;
 
@@ -37,13 +36,13 @@ import com.google.common.net.UrlEscapers;
  */
 @Service
 public class RepositoryService {
-	
+
 	/** The Constant REPOSITORY_SERVICE_PREFIX. */
 	private static final String REPOSITORY_SERVICE_PREFIX = "core/repository";
-	
+
 	/** The repository. */
 	private IRepository repository;
-	
+
 	/**
 	 * Instantiates a new repository service.
 	 *
@@ -53,7 +52,7 @@ public class RepositoryService {
 	public RepositoryService(IRepository repository) {
 		this.repository = repository;
 	}
-	
+
 	/**
 	 * Gets the repository.
 	 *
@@ -62,12 +61,11 @@ public class RepositoryService {
 	protected IRepository getRepository() {
 		return repository;
 	}
-	
+
 	/**
 	 * Gets the resource.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the resource
 	 */
 	public IResource getResource(String path) {
@@ -77,8 +75,8 @@ public class RepositoryService {
 	/**
 	 * Creates the resource.
 	 *
-	 * @param path            the path
-	 * @param content            the content
+	 * @param path the path
+	 * @param content the content
 	 * @return the i resource
 	 */
 	public IResource createResource(String path, byte[] content) {
@@ -88,10 +86,8 @@ public class RepositoryService {
 	/**
 	 * Update resource.
 	 *
-	 * @param path
-	 *            the path
-	 * @param content
-	 *            the content
+	 * @param path the path
+	 * @param content the content
 	 * @return the i resource
 	 */
 	public IResource updateResource(String path, byte[] content) {
@@ -103,8 +99,7 @@ public class RepositoryService {
 	/**
 	 * Deletes a resource.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 */
 	public void deleteResource(String path) {
 		getRepository().removeResource(path);
@@ -113,8 +108,7 @@ public class RepositoryService {
 	/**
 	 * Gets the collection.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the collection
 	 */
 	public ICollection getCollection(String path) {
@@ -124,8 +118,7 @@ public class RepositoryService {
 	/**
 	 * Render repository.
 	 *
-	 * @param collection
-	 *            the collection
+	 * @param collection the collection
 	 * @return the repository
 	 */
 	public Repository renderRepository(ICollection collection) {
@@ -135,8 +128,7 @@ public class RepositoryService {
 	/**
 	 * Creates a new collection.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the collection
 	 */
 	public ICollection createCollection(String path) {
@@ -146,8 +138,7 @@ public class RepositoryService {
 	/**
 	 * Deletes a collection.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 */
 	public void deleteCollection(String path) {
 		getRepository().removeCollection(path);
@@ -156,11 +147,9 @@ public class RepositoryService {
 	/**
 	 * Gets the uri.
 	 *
-	 * @param path
-	 *            the path
+	 * @param path the path
 	 * @return the uri
-	 * @throws URISyntaxException
-	 *             the URI syntax exception
+	 * @throws URISyntaxException the URI syntax exception
 	 */
 	public URI getURI(String path) throws URISyntaxException {
 		StringBuilder relativePath = new StringBuilder(REPOSITORY_SERVICE_PREFIX).append(IRepositoryStructure.SEPARATOR);
@@ -196,11 +185,11 @@ public class RepositoryService {
 		}
 		return "[]";
 	}
-	
+
 	/**
 	 * Escape URL fragments.
 	 *
-	 * @param input            the input string
+	 * @param input the input string
 	 * @return escaped input
 	 */
 	public static final String escape(String input) {

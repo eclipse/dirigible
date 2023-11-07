@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.extensions.service;
 
@@ -30,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ExtensionService implements ArtefactService<Extension> {
-	
+
 	/** The extension repository. */
-	@Autowired 
+	@Autowired
 	private ExtensionRepository extensionRepository;
 
 	/**
@@ -45,7 +44,7 @@ public class ExtensionService implements ArtefactService<Extension> {
 	public List<Extension> getAll() {
 		return extensionRepository.findAll();
 	}
-	
+
 	/**
 	 * Find all.
 	 *
@@ -57,7 +56,7 @@ public class ExtensionService implements ArtefactService<Extension> {
 	public Page<Extension> getPages(Pageable pageable) {
 		return extensionRepository.findAll(pageable);
 	}
-	
+
 	/**
 	 * Find by id.
 	 *
@@ -74,7 +73,7 @@ public class ExtensionService implements ArtefactService<Extension> {
 			throw new IllegalArgumentException("Extension with id does not exist: " + id);
 		}
 	}
-	
+
 	/**
 	 * Find by name.
 	 *
@@ -94,48 +93,48 @@ public class ExtensionService implements ArtefactService<Extension> {
 			throw new IllegalArgumentException("Extension with name does not exist: " + name);
 		}
 	}
-	
+
 	/**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Extension> findByLocation(String location) {
-    	Extension filter = new Extension();
-        filter.setLocation(location);
-        Example<Extension> example = Example.of(filter);
-        List<Extension> list = extensionRepository.findAll(example);
-        return list;
-    }
-	
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Extension> findByLocation(String location) {
+		Extension filter = new Extension();
+		filter.setLocation(location);
+		Example<Extension> example = Example.of(filter);
+		List<Extension> list = extensionRepository.findAll(example);
+		return list;
+	}
+
 	/**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the extension point
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Extension findByKey(String key) {
-    	Extension filter = new Extension();
-        filter.setKey(key);
-        Example<Extension> example = Example.of(filter);
-        Optional<Extension> extension = extensionRepository.findOne(example);
-        if (extension.isPresent()) {
-            return extension.get();
-        }
-        return null;
-    }
-    
-    /**
-     * Find by extension point.
-     *
-     * @param extensionPoint the extension point
-     * @return the extension
-     */
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the extension point
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Extension findByKey(String key) {
+		Extension filter = new Extension();
+		filter.setKey(key);
+		Example<Extension> example = Example.of(filter);
+		Optional<Extension> extension = extensionRepository.findOne(example);
+		if (extension.isPresent()) {
+			return extension.get();
+		}
+		return null;
+	}
+
+	/**
+	 * Find by extension point.
+	 *
+	 * @param extensionPoint the extension point
+	 * @return the extension
+	 */
 	@Transactional(readOnly = true)
 	public List<Extension> findByExtensionPoint(String extensionPoint) {
 		Extension filter = new Extension();
@@ -143,7 +142,7 @@ public class ExtensionService implements ArtefactService<Extension> {
 		Example<Extension> example = Example.of(filter);
 		return extensionRepository.findAll(example);
 	}
-	
+
 	/**
 	 * Save.
 	 *
@@ -154,7 +153,7 @@ public class ExtensionService implements ArtefactService<Extension> {
 	public Extension save(Extension extension) {
 		return extensionRepository.saveAndFlush(extension);
 	}
-	
+
 	/**
 	 * Delete.
 	 *

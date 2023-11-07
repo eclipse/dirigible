@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.utils;
 
@@ -35,24 +34,24 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components.*" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components.*"})
 public class UtilsSuiteTest {
-	
+
 	@Autowired
 	private JavascriptService javascriptService;
-	
-	@Autowired
-    private MockMvc mockMvc;
 
-    @Autowired
-    protected WebApplicationContext wac;
+	@Autowired
+	private MockMvc mockMvc;
+
+	@Autowired
+	protected WebApplicationContext wac;
 
 	@Test
 	public void executeBase64Test() throws Exception {
 		javascriptService.handleRequest("utils-tests", "base64-decode.js", null, null, false);
 		javascriptService.handleRequest("utils-tests", "base64-encode.js", null, null, false);
 	}
-	
+
 	@Test
 	public void executeDigestTest() throws Exception {
 		javascriptService.handleRequest("utils-tests", "digest-md5.js", null, null, false);
@@ -63,7 +62,7 @@ public class UtilsSuiteTest {
 		javascriptService.handleRequest("utils-tests", "digest-sha384.js", null, null, false);
 		javascriptService.handleRequest("utils-tests", "digest-sha512.js", null, null, false);
 	}
-	
+
 	@Test
 	public void executeEscapeTest() throws Exception {
 		javascriptService.handleRequest("utils-tests", "escape-csv.js", null, null, false);
@@ -81,18 +80,18 @@ public class UtilsSuiteTest {
 		javascriptService.handleRequest("utils-tests", "unescape-json.js", null, null, false);
 		javascriptService.handleRequest("utils-tests", "unescape-xml.js", null, null, false);
 	}
-	
+
 	@Test
 	public void executeHexTest() throws Exception {
 		javascriptService.handleRequest("utils-tests", "hex-decode.js", null, null, false);
 		javascriptService.handleRequest("utils-tests", "hex-encode.js", null, null, false);
 	}
-	
+
 	@Test
 	public void executeQRCodeTest() throws Exception {
 		javascriptService.handleRequest("utils-tests", "qrcode-generate.js", null, null, false);
 	}
-	
+
 	@Test
 	public void executeURLTest() throws Exception {
 		javascriptService.handleRequest("utils-tests", "url-decode.js", null, null, false);

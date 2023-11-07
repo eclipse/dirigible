@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.domain;
 
@@ -46,24 +45,17 @@ public class TableMetadata {
 	/**
 	 * Instantiates a new table metadata.
 	 *
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
-	 * @param remarks
-	 *            the remarks
-	 * @param connection
-	 *            the connection
-	 * @param catalogName
-	 *            the catalog name
-	 * @param schemaName
-	 *            the schema name
-	 * @param deep
-	 *            whether to populate also the columns
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @param name the name
+	 * @param type the type
+	 * @param remarks the remarks
+	 * @param connection the connection
+	 * @param catalogName the catalog name
+	 * @param schemaName the schema name
+	 * @param deep whether to populate also the columns
+	 * @throws SQLException the SQL exception
 	 */
-	public TableMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName, boolean deep) throws SQLException {
+	public TableMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName,
+			boolean deep) throws SQLException {
 		super();
 		this.name = name;
 		this.type = type;
@@ -75,7 +67,8 @@ public class TableMetadata {
 		if (deep) {
 			DatabaseMetadataHelper.iterateTableDefinition(connection, catalogName, schemaName, name, new ColumnsIteratorCallback() {
 				@Override
-				public void onColumn(String columnName, String columnType, String columnSize, boolean isNullable, boolean isKey, int scale) {
+				public void onColumn(String columnName, String columnType, String columnSize, boolean isNullable, boolean isKey,
+						int scale) {
 					columns.add(new ColumnMetadata(columnName, columnType, columnSize != null ? Integer.parseInt(columnSize) : 0,
 							isNullable, isKey, scale));
 				}
@@ -83,8 +76,8 @@ public class TableMetadata {
 				@Override
 				public void onIndex(String indexName, String indexType, String columnName, boolean isNonUnique, String indexQualifier,
 						String ordinalPosition, String sortOrder, String cardinality, String pagesIndex, String filterCondition) {
-					indices.add(new IndexMetadata(indexName, indexType, columnName, isNonUnique, indexQualifier, ordinalPosition,
-							sortOrder, cardinality != null ? Integer.parseInt(cardinality) : 0, pagesIndex != null ? Integer.parseInt(pagesIndex) : 0,
+					indices.add(new IndexMetadata(indexName, indexType, columnName, isNonUnique, indexQualifier, ordinalPosition, sortOrder,
+							cardinality != null ? Integer.parseInt(cardinality) : 0, pagesIndex != null ? Integer.parseInt(pagesIndex) : 0,
 							filterCondition));
 				}
 			});
@@ -103,8 +96,7 @@ public class TableMetadata {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name
-	 *            the new name
+	 * @param name the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -122,8 +114,7 @@ public class TableMetadata {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type
-	 *            the new type
+	 * @param type the new type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -141,8 +132,7 @@ public class TableMetadata {
 	/**
 	 * Sets the remarks.
 	 *
-	 * @param remarks
-	 *            the new remarks
+	 * @param remarks the new remarks
 	 */
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
@@ -178,8 +168,7 @@ public class TableMetadata {
 	/**
 	 * Sets the kind.
 	 *
-	 * @param kind
-	 *            the new kind
+	 * @param kind the new kind
 	 */
 	public void setKind(String kind) {
 		this.kind = kind;

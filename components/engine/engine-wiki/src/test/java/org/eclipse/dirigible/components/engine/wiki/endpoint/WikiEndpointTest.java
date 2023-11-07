@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.wiki.endpoint;
 
@@ -45,47 +44,49 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = { "org.eclipse.dirigible.components" })
+@ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 @Transactional
 public class WikiEndpointTest {
-	
+
 	/** The mock mvc. */
 	@Autowired
-    private MockMvc mockMvc;
+	private MockMvc mockMvc;
 
-    /** The wac. */
-    @Autowired
-    protected WebApplicationContext wac;
+	/** The wac. */
+	@Autowired
+	protected WebApplicationContext wac;
 
-    /** The spring security filter chain. */
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
-	
+	/** The spring security filter chain. */
+	@Autowired
+	private FilterChainProxy springSecurityFilterChain;
+
 	/** The synchronization processor. */
 	@Autowired
 	private SynchronizationProcessor synchronizationProcessor;
-	
+
 	/**
 	 * Load the artefact.
 	 *
 	 * @throws Exception the exception
 	 */
 	@Test
-    public void process() throws Exception {
+	public void process() throws Exception {
 		String registyrFolder = synchronizationProcessor.getRegistryFolder();
 		Paths.get(registyrFolder, "demo").toFile().mkdirs();
 		Files.writeString(Paths.get(registyrFolder, "demo", "hello.md"), "Hello\n===", StandardOpenOption.CREATE);
 		try {
 			synchronizationProcessor.processSynchronizers();
-			mockMvc.perform(get("/services/wiki/demo/hello.md")).andDo(print())
-					.andExpect(content().string(containsString("<h1>Hello</h1>"))).andExpect(status().is2xxSuccessful());
+			mockMvc	.perform(get("/services/wiki/demo/hello.md"))
+					.andDo(print())
+					.andExpect(content().string(containsString("<h1>Hello</h1>")))
+					.andExpect(status().is2xxSuccessful());
 		} finally {
 			FileUtils.deleteDirectory(Paths.get(registyrFolder, "demo").toFile());
 			synchronizationProcessor.processSynchronizers();
 		}
-    }
-		
+	}
+
 	/**
 	 * The Class TestConfiguration.
 	 */

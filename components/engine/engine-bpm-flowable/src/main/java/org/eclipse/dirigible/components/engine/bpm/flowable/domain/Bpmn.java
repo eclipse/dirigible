@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.domain;
 
@@ -29,16 +28,16 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Table(name = "DIRIGIBLE_BPMN")
 public class Bpmn extends Artefact {
-	
+
 	/** The Constant ARTEFACT_TYPE. */
 	public static final String ARTEFACT_TYPE = "bpmn";
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "BPMN_ID", nullable = false)
 	private Long id;
-	
+
 	/** The deployment id. */
 	@Column(name = "BPMN_DEPLOYMENT_ID", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
@@ -48,43 +47,43 @@ public class Bpmn extends Artefact {
 	@Column(name = "BPMN_PROCESS_DEFINITION_ID", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	private String processDefinitionId;
-	
+
 	/** The process definition key. */
 	@Column(name = "BPMN_PROCESS_DEFINITION_KEY", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	private String processDefinitionKey;
-	
+
 	/** The process definition name. */
 	@Column(name = "BPMN_PROCESS_DEFINITION_NAME", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	private String processDefinitionName;
-	
+
 	/** The process definition version. */
 	@Column(name = "BPMN_PROCESS_DEFINITION_VERSION", columnDefinition = "INT", nullable = true)
 	@Expose
 	private Integer processDefinitionVersion;
-	
+
 	/** The process definition tenant id. */
 	@Column(name = "BPMN_PROCESS_DEFINITION_TENANT_ID", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	private String processDefinitionTenantId;
-	
+
 	/** The process definition category. */
 	@Column(name = "BPMN_PROCESS_DEFINITION_CATEGORY", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	private String processDefinitionCategory;
-	
+
 	/** The process definition description. */
 	@Column(name = "BPMN_PROCESS_DEFINITION_DESCRIPTION", columnDefinition = "CLOB", nullable = true)
 	@Expose
 	private String processDefinitionDescription;
-	
+
 	/** The content. */
 	@Column(name = "BPMN_CONTENT", columnDefinition = "CLOB", nullable = true)
 	@Expose
 	private byte[] content;
-	
-	
+
+
 
 	/**
 	 * Gets the id.
@@ -103,7 +102,7 @@ public class Bpmn extends Artefact {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gets the deployment id.
 	 *
@@ -273,10 +272,9 @@ public class Bpmn extends Artefact {
 	 */
 	@Override
 	public String toString() {
-		return "Bpmn [id=" + id + ", location=" + location + ", name=" + name + ", type=" + type + ", description="
-				+ description + ", key=" + key + ", dependencies=" + dependencies + ", lifecycle=" + lifecycle
-				+ ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt="
-				+ updatedAt + "]";
+		return "Bpmn [id=" + id + ", location=" + location + ", name=" + name + ", type=" + type + ", description=" + description + ", key="
+				+ key + ", dependencies=" + dependencies + ", lifecycle=" + lifecycle + ", createdBy=" + createdBy + ", createdAt="
+				+ createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
 
 }

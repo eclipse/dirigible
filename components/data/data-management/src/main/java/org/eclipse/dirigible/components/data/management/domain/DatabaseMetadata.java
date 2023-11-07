@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.domain;
 
@@ -25,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * The Database Metadata transport object.
  */
 public class DatabaseMetadata {
-	
+
 	/** The Constant NOT_SUPPORTED. */
 	private static final String NOT_SUPPORTED = "Not supported: ";
 
@@ -442,11 +441,9 @@ public class DatabaseMetadata {
 
 	/**
 	 * Instantiates a new database metadata.
-	 * 
-	 * @param connection
-	 *            the connection
-	 * @throws SQLException
-	 *             the SQL exception
+	 *
+	 * @param connection the connection
+	 * @throws SQLException the SQL exception
 	 */
 	public DatabaseMetadata(Connection connection) throws SQLException {
 		this(connection, null, null, null);
@@ -455,16 +452,11 @@ public class DatabaseMetadata {
 	/**
 	 * Instantiates a new database metadata.
 	 *
-	 * @param connection
-	 *            the connection
-	 * @param catalogName
-	 *            the catalog name
-	 * @param schemaNameFilter
-	 *            the schema name filter
-	 * @param nameFilter
-	 *            the name filter
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @param connection the connection
+	 * @param catalogName the catalog name
+	 * @param schemaNameFilter the schema name filter
+	 * @param nameFilter the name filter
+	 * @throws SQLException the SQL exception
 	 */
 	public DatabaseMetadata(Connection connection, String catalogName, Filter<String> schemaNameFilter, Filter<String> nameFilter)
 			throws SQLException {
@@ -473,672 +465,941 @@ public class DatabaseMetadata {
 		try {
 			this.allProceduresAreCallable = databaseMetaData.allProceduresAreCallable();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.allProceduresAreCallable()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.allProceduresAreCallable()");
+			}
 		}
 		try {
 			this.allTablesAreSelectable = databaseMetaData.allTablesAreSelectable();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.allTablesAreSelectable()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.allTablesAreSelectable()");
+			}
 		}
 		try {
 			this.url = databaseMetaData.getURL();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getURL()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getURL()");
+			}
 		}
 		try {
 			this.userName = databaseMetaData.getUserName();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getUserName()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getUserName()");
+			}
 		}
 		try {
 			this.isReadOnly = databaseMetaData.isReadOnly();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.isReadOnly()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.isReadOnly()");
+			}
 		}
 		try {
 			this.nullsAreSortedHigh = databaseMetaData.nullsAreSortedHigh();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedHigh()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedHigh()");
+			}
 		}
 		try {
 			this.nullsAreSortedLow = databaseMetaData.nullsAreSortedLow();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedLow()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedLow()");
+			}
 		}
 		try {
 			this.nullsAreSortedAtStart = databaseMetaData.nullsAreSortedAtStart();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedAtStart()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedAtStart()");
+			}
 		}
 		try {
 			this.nullsAreSortedAtEnd = databaseMetaData.nullsAreSortedAtEnd();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedAtEnd()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedAtEnd()");
+			}
 		}
 		try {
 			this.databaseProductName = databaseMetaData.getDatabaseProductName();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseProductName()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseProductName()");
+			}
 		}
 		try {
 			this.databaseProductVersion = databaseMetaData.getDatabaseProductVersion();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseProductVersion()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseProductVersion()");
+			}
 		}
 		try {
 			this.driverName = databaseMetaData.getDriverName();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverName()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverName()");
+			}
 		}
 		try {
 			this.driverVersion = databaseMetaData.getDriverVersion();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverVersion()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverVersion()");
+			}
 		}
 		try {
 			this.driverMajorVersion = databaseMetaData.getDriverMajorVersion();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverMajorVersion()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverMajorVersion()");
+			}
 		}
 		try {
 			this.driverMinorVersion = databaseMetaData.getDriverMinorVersion();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverMinorVersion()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverMinorVersion()");
+			}
 		}
 		try {
 			this.usesLocalFiles = databaseMetaData.usesLocalFiles();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.usesLocalFiles()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.usesLocalFiles()");
+			}
 		}
 		try {
 			this.usesLocalFilePerTable = databaseMetaData.usesLocalFilePerTable();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.usesLocalFilePerTable()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.usesLocalFilePerTable()");
+			}
 		}
 		try {
 			this.supportsMixedCaseIdentifiers = databaseMetaData.supportsMixedCaseIdentifiers();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMixedCaseIdentifiers()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMixedCaseIdentifiers()");
+			}
 		}
 		try {
 			this.storesUpperCaseIdentifiers = databaseMetaData.storesUpperCaseIdentifiers();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesUpperCaseIdentifiers()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesUpperCaseIdentifiers()");
+			}
 		}
 		try {
 			this.storesLowerCaseIdentifiers = databaseMetaData.storesLowerCaseIdentifiers();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesLowerCaseIdentifiers()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesLowerCaseIdentifiers()");
+			}
 		}
 		try {
 			this.storesMixedCaseIdentifiers = databaseMetaData.storesMixedCaseIdentifiers();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesMixedCaseIdentifiers()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesMixedCaseIdentifiers()");
+			}
 		}
 		try {
 			this.supportsMixedCaseQuotedIdentifiers = databaseMetaData.supportsMixedCaseQuotedIdentifiers();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMixedCaseQuotedIdentifiers()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMixedCaseQuotedIdentifiers()");
+			}
 		}
 		try {
 			this.storesUpperCaseQuotedIdentifiers = databaseMetaData.storesUpperCaseQuotedIdentifiers();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesUpperCaseQuotedIdentifiers()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesUpperCaseQuotedIdentifiers()");
+			}
 		}
 		try {
 			this.storesLowerCaseQuotedIdentifiers = databaseMetaData.storesLowerCaseQuotedIdentifiers();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesLowerCaseQuotedIdentifiers()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesLowerCaseQuotedIdentifiers()");
+			}
 		}
 		try {
 			this.storesMixedCaseQuotedIdentifiers = databaseMetaData.storesMixedCaseQuotedIdentifiers();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesMixedCaseQuotedIdentifiers()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesMixedCaseQuotedIdentifiers()");
+			}
 		}
 		try {
 			this.identifierQuoteString = databaseMetaData.getIdentifierQuoteString();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getIdentifierQuoteString()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getIdentifierQuoteString()");
+			}
 		}
 		try {
 			this.sqlKeywords = databaseMetaData.getSQLKeywords();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSQLKeywords()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSQLKeywords()");
+			}
 		}
 		try {
 			this.numericFunctions = databaseMetaData.getNumericFunctions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getNumericFunctions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getNumericFunctions()");
+			}
 		}
 		try {
 			this.stringFunctions = databaseMetaData.getStringFunctions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getStringFunctions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getStringFunctions()");
+			}
 		}
 		try {
 			this.systemFunctions = databaseMetaData.getSystemFunctions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSystemFunctions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSystemFunctions()");
+			}
 		}
 		try {
 			this.timeDateFunctions = databaseMetaData.getTimeDateFunctions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getTimeDateFunctions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getTimeDateFunctions()");
+			}
 		}
 		try {
 			this.searchStringEscape = databaseMetaData.getSearchStringEscape();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSearchStringEscape()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSearchStringEscape()");
+			}
 		}
 		try {
 			this.extraNameCharacters = databaseMetaData.getExtraNameCharacters();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getExtraNameCharacters()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getExtraNameCharacters()");
+			}
 		}
 		try {
 			this.supportsAlterTableWithAddColumn = databaseMetaData.supportsAlterTableWithAddColumn();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsAlterTableWithAddColumn()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsAlterTableWithAddColumn()");
+			}
 		}
 		try {
 			this.supportsAlterTableWithDropColumn = databaseMetaData.supportsAlterTableWithDropColumn();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsAlterTableWithDropColumn()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsAlterTableWithDropColumn()");
+			}
 		}
 		try {
 			this.supportsColumnAliasing = databaseMetaData.supportsColumnAliasing();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsColumnAliasing()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsColumnAliasing()");
+			}
 		}
 		try {
 			this.nullPlusNonNullIsNull = databaseMetaData.nullPlusNonNullIsNull();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullPlusNonNullIsNull()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullPlusNonNullIsNull()");
+			}
 		}
 		try {
 			this.supportsConvert = databaseMetaData.supportsConvert();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsConvert()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsConvert()");
+			}
 		}
 		try {
 			this.supportsTableCorrelationNames = databaseMetaData.supportsTableCorrelationNames();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsTableCorrelationNames()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsTableCorrelationNames()");
+			}
 		}
 		try {
 			this.supportsDifferentTableCorrelationNames = databaseMetaData.supportsDifferentTableCorrelationNames();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsDifferentTableCorrelationNames()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsDifferentTableCorrelationNames()");
+			}
 		}
 		try {
 			this.supportsExpressionsInOrderBy = databaseMetaData.supportsExpressionsInOrderBy();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsExpressionsInOrderBy()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsExpressionsInOrderBy()");
+			}
 		}
 		try {
 			this.supportsOrderByUnrelated = databaseMetaData.supportsOrderByUnrelated();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOrderByUnrelated()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOrderByUnrelated()");
+			}
 		}
 		try {
 			this.supportsGroupBy = databaseMetaData.supportsGroupBy();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGroupBy()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGroupBy()");
+			}
 		}
 		try {
 			this.supportsGroupByUnrelated = databaseMetaData.supportsGroupByUnrelated();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGroupByUnrelated()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGroupByUnrelated()");
+			}
 		}
 		try {
 			this.supportsGroupByBeyondSelect = databaseMetaData.supportsGroupByBeyondSelect();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGroupByBeyondSelect()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGroupByBeyondSelect()");
+			}
 		}
 		try {
 			this.supportsLikeEscapeClause = databaseMetaData.supportsLikeEscapeClause();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsLikeEscapeClause()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsLikeEscapeClause()");
+			}
 		}
 		try {
 			this.supportsMultipleResultSets = databaseMetaData.supportsMultipleResultSets();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMultipleResultSets()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMultipleResultSets()");
+			}
 		}
 		try {
 			this.supportsMultipleTransactions = databaseMetaData.supportsMultipleTransactions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMultipleTransactions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMultipleTransactions()");
+			}
 		}
 		try {
 			this.supportsNonNullableColumns = databaseMetaData.supportsNonNullableColumns();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsNonNullableColumns()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsNonNullableColumns()");
+			}
 		}
 		try {
 			this.supportsMinimumSQLGrammar = databaseMetaData.supportsMinimumSQLGrammar();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMinimumSQLGrammar()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMinimumSQLGrammar()");
+			}
 		}
 		try {
 			this.supportsCoreSQLGrammar = databaseMetaData.supportsCoreSQLGrammar();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCoreSQLGrammar()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCoreSQLGrammar()");
+			}
 		}
 		try {
 			this.supportsExtendedSQLGrammar = databaseMetaData.supportsExtendedSQLGrammar();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsExtendedSQLGrammar()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsExtendedSQLGrammar()");
+			}
 		}
 		try {
 			this.supportsANSI92EntryLevelSQL = databaseMetaData.supportsANSI92EntryLevelSQL();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsANSI92EntryLevelSQL()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsANSI92EntryLevelSQL()");
+			}
 		}
 		try {
 			this.supportsANSI92IntermediateSQL = databaseMetaData.supportsANSI92IntermediateSQL();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsANSI92IntermediateSQL()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsANSI92IntermediateSQL()");
+			}
 		}
 		try {
 			this.supportsANSI92FullSQL = databaseMetaData.supportsANSI92FullSQL();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsANSI92FullSQL()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsANSI92FullSQL()");
+			}
 		}
 		try {
 			this.supportsIntegrityEnhancementFacility = databaseMetaData.supportsIntegrityEnhancementFacility();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsIntegrityEnhancementFacility()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsIntegrityEnhancementFacility()");
+			}
 		}
 		try {
 			this.supportsOuterJoins = databaseMetaData.supportsOuterJoins();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOuterJoins()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOuterJoins()");
+			}
 		}
 		try {
 			this.supportsFullOuterJoins = databaseMetaData.supportsFullOuterJoins();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsFullOuterJoins()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsFullOuterJoins()");
+			}
 		}
 		try {
 			this.supportsLimitedOuterJoins = databaseMetaData.supportsLimitedOuterJoins();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsLimitedOuterJoins()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsLimitedOuterJoins()");
+			}
 		}
 		try {
 			this.schemaTerm = databaseMetaData.getSchemaTerm();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSchemaTerm()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSchemaTerm()");
+			}
 		}
 		try {
 			this.procedureTerm = databaseMetaData.getProcedureTerm();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getProcedureTerm()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getProcedureTerm()");
+			}
 		}
 		try {
 			this.catalogTerm = databaseMetaData.getCatalogTerm();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getCatalogTerm()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getCatalogTerm()");
+			}
 		}
 		try {
 			this.isCatalogAtStart = databaseMetaData.isCatalogAtStart();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.isCatalogAtStart()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.isCatalogAtStart()");
+			}
 		}
 		try {
 			this.catalogSeparator = databaseMetaData.getCatalogSeparator();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getCatalogSeparator()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getCatalogSeparator()");
+			}
 		}
 		try {
 			this.supportsSchemasInDataManipulation = databaseMetaData.supportsSchemasInDataManipulation();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInDataManipulation()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInDataManipulation()");
+			}
 		}
 		try {
 			this.supportsSchemasInProcedureCalls = databaseMetaData.supportsSchemasInProcedureCalls();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInProcedureCalls()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInProcedureCalls()");
+			}
 		}
 		try {
 			this.supportsSchemasInTableDefinitions = databaseMetaData.supportsSchemasInTableDefinitions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInTableDefinitions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInTableDefinitions()");
+			}
 		}
 		try {
 			this.supportsSchemasInIndexDefinitions = databaseMetaData.supportsSchemasInIndexDefinitions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInIndexDefinitions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInIndexDefinitions()");
+			}
 		}
 		try {
 			this.supportsSchemasInPrivilegeDefinitions = databaseMetaData.supportsSchemasInPrivilegeDefinitions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInPrivilegeDefinitions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInPrivilegeDefinitions()");
+			}
 		}
 		try {
 			this.supportsCatalogsInDataManipulation = databaseMetaData.supportsCatalogsInDataManipulation();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInDataManipulation()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInDataManipulation()");
+			}
 		}
 		try {
 			this.supportsCatalogsInProcedureCalls = databaseMetaData.supportsCatalogsInProcedureCalls();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInProcedureCalls()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInProcedureCalls()");
+			}
 		}
 		try {
 			this.supportsCatalogsInTableDefinitions = databaseMetaData.supportsCatalogsInTableDefinitions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInTableDefinitions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInTableDefinitions()");
+			}
 		}
 		try {
 			this.supportsCatalogsInIndexDefinitions = databaseMetaData.supportsCatalogsInIndexDefinitions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInIndexDefinitions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInIndexDefinitions()");
+			}
 		}
 		try {
 			this.supportsCatalogsInPrivilegeDefinitions = databaseMetaData.supportsCatalogsInPrivilegeDefinitions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInPrivilegeDefinitions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInPrivilegeDefinitions()");
+			}
 		}
 		try {
 			this.supportsPositionedDelete = databaseMetaData.supportsPositionedDelete();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsPositionedDelete()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsPositionedDelete()");
+			}
 		}
 		try {
 			this.supportsPositionedUpdate = databaseMetaData.supportsPositionedUpdate();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsPositionedUpdate()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsPositionedUpdate()");
+			}
 		}
 		try {
 			this.supportsSelectForUpdate = databaseMetaData.supportsSelectForUpdate();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSelectForUpdate()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSelectForUpdate()");
+			}
 		}
 		try {
 			this.supportsStoredProcedures = databaseMetaData.supportsStoredProcedures();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsStoredProcedures()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsStoredProcedures()");
+			}
 		}
 		try {
 			this.supportsSubqueriesInComparisons = databaseMetaData.supportsSubqueriesInComparisons();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInComparisons()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInComparisons()");
+			}
 		}
 		try {
 			this.supportsSubqueriesInExists = databaseMetaData.supportsSubqueriesInExists();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInExists()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInExists()");
+			}
 		}
 		try {
 			this.supportsSubqueriesInIns = databaseMetaData.supportsSubqueriesInIns();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInIns()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInIns()");
+			}
 		}
 		try {
 			this.supportsSubqueriesInQuantifieds = databaseMetaData.supportsSubqueriesInQuantifieds();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInQuantifieds()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInQuantifieds()");
+			}
 		}
 		try {
 			this.supportsCorrelatedSubqueries = databaseMetaData.supportsCorrelatedSubqueries();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCorrelatedSubqueries()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCorrelatedSubqueries()");
+			}
 		}
 		try {
 			this.supportsUnion = databaseMetaData.supportsUnion();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsUnion()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsUnion()");
+			}
 		}
 		try {
 			this.supportsUnionAll = databaseMetaData.supportsUnionAll();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsUnionAll()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsUnionAll()");
+			}
 		}
 		try {
 			this.supportsOpenCursorsAcrossCommit = databaseMetaData.supportsOpenCursorsAcrossCommit();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenCursorsAcrossCommit()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenCursorsAcrossCommit()");
+			}
 		}
 		try {
 			this.supportsOpenCursorsAcrossRollback = databaseMetaData.supportsOpenCursorsAcrossRollback();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenCursorsAcrossRollback()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenCursorsAcrossRollback()");
+			}
 		}
 		try {
 			this.supportsOpenStatementsAcrossCommit = databaseMetaData.supportsOpenStatementsAcrossCommit();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenStatementsAcrossCommit()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenStatementsAcrossCommit()");
+			}
 		}
 		try {
 			this.supportsOpenStatementsAcrossRollback = databaseMetaData.supportsOpenStatementsAcrossRollback();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenStatementsAcrossRollback()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenStatementsAcrossRollback()");
+			}
 		}
 		try {
 			this.maxBinaryLiteralLength = databaseMetaData.getMaxBinaryLiteralLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxBinaryLiteralLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxBinaryLiteralLength()");
+			}
 		}
 		try {
 			this.maxCharLiteralLength = databaseMetaData.getMaxCharLiteralLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxCharLiteralLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxCharLiteralLength()");
+			}
 		}
 		try {
 			this.maxColumnNameLength = databaseMetaData.getMaxColumnNameLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnNameLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnNameLength()");
+			}
 		}
 		try {
 			this.maxColumnsInGroupBy = databaseMetaData.getMaxColumnsInGroupBy();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInGroupBy()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInGroupBy()");
+			}
 		}
 		try {
 			this.maxColumnsInIndex = databaseMetaData.getMaxColumnsInIndex();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInIndex()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInIndex()");
+			}
 		}
 		try {
 			this.maxColumnsInOrderBy = databaseMetaData.getMaxColumnsInOrderBy();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInOrderBy()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInOrderBy()");
+			}
 		}
 		try {
 			this.maxColumnsInSelect = databaseMetaData.getMaxColumnsInSelect();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInSelect()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInSelect()");
+			}
 		}
 		try {
 			this.maxColumnsInTable = databaseMetaData.getMaxColumnsInTable();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInTable()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInTable()");
+			}
 		}
 		try {
 			this.maxConnections = databaseMetaData.getMaxConnections();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxConnections()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxConnections()");
+			}
 		}
 		try {
 			this.maxCursorNameLength = databaseMetaData.getMaxCursorNameLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxCursorNameLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxCursorNameLength()");
+			}
 		}
 		try {
 			this.maxIndexLength = databaseMetaData.getMaxIndexLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxIndexLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxIndexLength()");
+			}
 		}
 		try {
 			this.maxSchemaNameLength = databaseMetaData.getMaxSchemaNameLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxSchemaNameLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxSchemaNameLength()");
+			}
 		}
 		try {
 			this.maxProcedureNameLength = databaseMetaData.getMaxProcedureNameLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxProcedureNameLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxProcedureNameLength()");
+			}
 		}
 		try {
 			this.maxCatalogNameLength = databaseMetaData.getMaxCatalogNameLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxCatalogNameLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxCatalogNameLength()");
+			}
 		}
 		try {
 			this.maxRowSize = databaseMetaData.getMaxRowSize();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxRowSize()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxRowSize()");
+			}
 		}
 		try {
 			this.maxRowSizeIncludeBlobs = databaseMetaData.doesMaxRowSizeIncludeBlobs();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.doesMaxRowSizeIncludeBlobs()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.doesMaxRowSizeIncludeBlobs()");
+			}
 		}
 		try {
 			this.maxStatementLength = databaseMetaData.getMaxStatementLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxStatementLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxStatementLength()");
+			}
 		}
 		try {
 			this.maxStatements = databaseMetaData.getMaxStatements();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxStatements()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxStatements()");
+			}
 		}
 		try {
 			this.maxTableNameLength = databaseMetaData.getMaxTableNameLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxTableNameLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxTableNameLength()");
+			}
 		}
 		try {
 			this.maxTablesInSelect = databaseMetaData.getMaxTablesInSelect();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxTablesInSelect()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxTablesInSelect()");
+			}
 		}
 		try {
 			this.maxUserNameLength = databaseMetaData.getMaxUserNameLength();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxUserNameLength()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxUserNameLength()");
+			}
 		}
 		try {
 			this.defaultTransactionIsolation = databaseMetaData.getDefaultTransactionIsolation();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDefaultTransactionIsolation()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDefaultTransactionIsolation()");
+			}
 		}
 		try {
 			this.supportsTransactions = databaseMetaData.supportsTransactions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsTransactions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsTransactions()");
+			}
 		}
 		try {
-			this.supportsDataDefinitionAndDataManipulationTransactions = databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions();
+			this.supportsDataDefinitionAndDataManipulationTransactions =
+					databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsDataDefinitionAndDataManipulationTransactions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsDataDefinitionAndDataManipulationTransactions()");
+			}
 		}
 		try {
 			this.supportsDataManipulationTransactionsOnly = databaseMetaData.supportsDataManipulationTransactionsOnly();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsDataManipulationTransactionsOnly()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsDataManipulationTransactionsOnly()");
+			}
 		}
 		try {
 			this.dataDefinitionCausesTransactionCommit = databaseMetaData.dataDefinitionCausesTransactionCommit();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.dataDefinitionCausesTransactionCommit()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.dataDefinitionCausesTransactionCommit()");
+			}
 		}
 		try {
 			this.dataDefinitionIgnoredInTransactions = databaseMetaData.dataDefinitionIgnoredInTransactions();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.dataDefinitionIgnoredInTransactions()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.dataDefinitionIgnoredInTransactions()");
+			}
 		}
 		try {
 			this.supportsBatchUpdates = databaseMetaData.supportsBatchUpdates();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsBatchUpdates()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsBatchUpdates()");
+			}
 		}
 		try {
 			this.supportsSavepoints = databaseMetaData.supportsSavepoints();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSavepoints()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSavepoints()");
+			}
 		}
 		try {
 			this.supportsNamedParameters = databaseMetaData.supportsNamedParameters();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsNamedParameters()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsNamedParameters()");
+			}
 		}
 		try {
 			this.supportsMultipleOpenResults = databaseMetaData.supportsMultipleOpenResults();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMultipleOpenResults()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMultipleOpenResults()");
+			}
 		}
 		try {
 			this.supportsGetGeneratedKeys = databaseMetaData.supportsGetGeneratedKeys();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGetGeneratedKeys()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGetGeneratedKeys()");
+			}
 		}
 		try {
 			this.resultSetHoldability = databaseMetaData.getResultSetHoldability();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getResultSetHoldability()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getResultSetHoldability()");
+			}
 		}
 		try {
 			this.databaseMajorVersion = databaseMetaData.getDatabaseMajorVersion();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseMajorVersion()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseMajorVersion()");
+			}
 		}
 		try {
 			this.databaseMinorVersion = databaseMetaData.getDatabaseMinorVersion();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseMinorVersion()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseMinorVersion()");
+			}
 		}
 		try {
 			this.jdbcMajorVersion = databaseMetaData.getJDBCMajorVersion();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getJDBCMajorVersion()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getJDBCMajorVersion()");
+			}
 		}
 		try {
 			this.jdbcMinorVersion = databaseMetaData.getJDBCMinorVersion();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getJDBCMinorVersion()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getJDBCMinorVersion()");
+			}
 		}
 		try {
 			this.sqlStateType = databaseMetaData.getSQLStateType();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSQLStateType()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSQLStateType()");
+			}
 		}
 		try {
 			this.locatorsUpdateCopy = databaseMetaData.locatorsUpdateCopy();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.locatorsUpdateCopy()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.locatorsUpdateCopy()");
+			}
 		}
 		try {
 			this.supportsStatementPooling = databaseMetaData.supportsStatementPooling();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsStatementPooling()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsStatementPooling()");
+			}
 		}
 		try {
 			this.supportsStoredFunctionsUsingCallSyntax = databaseMetaData.supportsStoredFunctionsUsingCallSyntax();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsStoredFunctionsUsingCallSyntax()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsStoredFunctionsUsingCallSyntax()");
+			}
 		}
 		try {
 			this.autoCommitFailureClosesAllResultSets = databaseMetaData.autoCommitFailureClosesAllResultSets();
 		} catch (Exception e1) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.autoCommitFailureClosesAllResultSets()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.autoCommitFailureClosesAllResultSets()");
+			}
 		}
 		try {
 			this.generatedKeyAlwaysReturned = databaseMetaData.generatedKeyAlwaysReturned();
 		} catch (Throwable e) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.generatedKeyAlwaysReturned()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.generatedKeyAlwaysReturned()");
+			}
 		}
 		try {
 			this.maxLogicalLobSize = databaseMetaData.getMaxLogicalLobSize();
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxLogicalLobSize()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxLogicalLobSize()");
+			}
 		}
 		try {
 			this.supportsRefCursors = databaseMetaData.supportsRefCursors();
 		} catch (Exception e) {
-			if (logger.isErrorEnabled()) {logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsRefCursors()");}
+			if (logger.isErrorEnabled()) {
+				logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsRefCursors()");
+			}
 		}
 
 		this.schemas = DatabaseMetadataHelper.listSchemas(connection, catalogName, schemaNameFilter, nameFilter);
@@ -1156,8 +1417,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the all procedures are callable.
 	 *
-	 * @param allProceduresAreCallable
-	 *            the new all procedures are callable
+	 * @param allProceduresAreCallable the new all procedures are callable
 	 */
 	public void setAllProceduresAreCallable(boolean allProceduresAreCallable) {
 		this.allProceduresAreCallable = allProceduresAreCallable;
@@ -1175,8 +1435,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the all tables are selectable.
 	 *
-	 * @param allTablesAreSelectable
-	 *            the new all tables are selectable
+	 * @param allTablesAreSelectable the new all tables are selectable
 	 */
 	public void setAllTablesAreSelectable(boolean allTablesAreSelectable) {
 		this.allTablesAreSelectable = allTablesAreSelectable;
@@ -1194,8 +1453,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the URL.
 	 *
-	 * @param url
-	 *            the new URL
+	 * @param url the new URL
 	 */
 	public void setURL(String url) {
 		this.url = url;
@@ -1213,8 +1471,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the user name.
 	 *
-	 * @param userName
-	 *            the new gets the user name
+	 * @param userName the new gets the user name
 	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
@@ -1232,8 +1489,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the read only.
 	 *
-	 * @param isReadOnly
-	 *            the new read only
+	 * @param isReadOnly the new read only
 	 */
 	public void setReadOnly(boolean isReadOnly) {
 		this.isReadOnly = isReadOnly;
@@ -1251,8 +1507,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the nulls are sorted high.
 	 *
-	 * @param nullsAreSortedHigh
-	 *            the new nulls are sorted high
+	 * @param nullsAreSortedHigh the new nulls are sorted high
 	 */
 	public void setNullsAreSortedHigh(boolean nullsAreSortedHigh) {
 		this.nullsAreSortedHigh = nullsAreSortedHigh;
@@ -1270,8 +1525,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the nulls are sorted low.
 	 *
-	 * @param nullsAreSortedLow
-	 *            the new nulls are sorted low
+	 * @param nullsAreSortedLow the new nulls are sorted low
 	 */
 	public void setNullsAreSortedLow(boolean nullsAreSortedLow) {
 		this.nullsAreSortedLow = nullsAreSortedLow;
@@ -1289,8 +1543,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the nulls are sorted at start.
 	 *
-	 * @param nullsAreSortedAtStart
-	 *            the new nulls are sorted at start
+	 * @param nullsAreSortedAtStart the new nulls are sorted at start
 	 */
 	public void setNullsAreSortedAtStart(boolean nullsAreSortedAtStart) {
 		this.nullsAreSortedAtStart = nullsAreSortedAtStart;
@@ -1308,8 +1561,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the nulls are sorted at end.
 	 *
-	 * @param nullsAreSortedAtEnd
-	 *            the new nulls are sorted at end
+	 * @param nullsAreSortedAtEnd the new nulls are sorted at end
 	 */
 	public void setNullsAreSortedAtEnd(boolean nullsAreSortedAtEnd) {
 		this.nullsAreSortedAtEnd = nullsAreSortedAtEnd;
@@ -1327,8 +1579,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the database product name.
 	 *
-	 * @param databaseProductName
-	 *            the new database product name
+	 * @param databaseProductName the new database product name
 	 */
 	public void setDatabaseProductName(String databaseProductName) {
 		this.databaseProductName = databaseProductName;
@@ -1346,8 +1597,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the database product version.
 	 *
-	 * @param databaseProductVersion
-	 *            the new database product version
+	 * @param databaseProductVersion the new database product version
 	 */
 	public void setDatabaseProductVersion(String databaseProductVersion) {
 		this.databaseProductVersion = databaseProductVersion;
@@ -1365,8 +1615,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the driver name.
 	 *
-	 * @param driverName
-	 *            the new driver name
+	 * @param driverName the new driver name
 	 */
 	public void setDriverName(String driverName) {
 		this.driverName = driverName;
@@ -1384,8 +1633,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the driver version.
 	 *
-	 * @param driverVersion
-	 *            the new driver version
+	 * @param driverVersion the new driver version
 	 */
 	public void setDriverVersion(String driverVersion) {
 		this.driverVersion = driverVersion;
@@ -1403,8 +1651,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the driver major version.
 	 *
-	 * @param driverMajorVersion
-	 *            the new driver major version
+	 * @param driverMajorVersion the new driver major version
 	 */
 	public void setDriverMajorVersion(int driverMajorVersion) {
 		this.driverMajorVersion = driverMajorVersion;
@@ -1422,8 +1669,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the driver minor version.
 	 *
-	 * @param driverMinorVersion
-	 *            the new driver minor version
+	 * @param driverMinorVersion the new driver minor version
 	 */
 	public void setDriverMinorVersion(int driverMinorVersion) {
 		this.driverMinorVersion = driverMinorVersion;
@@ -1441,8 +1687,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the uses local files.
 	 *
-	 * @param usesLocalFiles
-	 *            the new uses local files
+	 * @param usesLocalFiles the new uses local files
 	 */
 	public void setUsesLocalFiles(boolean usesLocalFiles) {
 		this.usesLocalFiles = usesLocalFiles;
@@ -1460,8 +1705,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the uses local file per table.
 	 *
-	 * @param usesLocalFilePerTable
-	 *            the new uses local file per table
+	 * @param usesLocalFilePerTable the new uses local file per table
 	 */
 	public void setUsesLocalFilePerTable(boolean usesLocalFilePerTable) {
 		this.usesLocalFilePerTable = usesLocalFilePerTable;
@@ -1479,8 +1723,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports mixed case identifiers.
 	 *
-	 * @param supportsMixedCaseIdentifiers
-	 *            the new supports mixed case identifiers
+	 * @param supportsMixedCaseIdentifiers the new supports mixed case identifiers
 	 */
 	public void setSupportsMixedCaseIdentifiers(boolean supportsMixedCaseIdentifiers) {
 		this.supportsMixedCaseIdentifiers = supportsMixedCaseIdentifiers;
@@ -1498,8 +1741,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores upper case identifiers.
 	 *
-	 * @param storesUpperCaseIdentifiers
-	 *            the new stores upper case identifiers
+	 * @param storesUpperCaseIdentifiers the new stores upper case identifiers
 	 */
 	public void setStoresUpperCaseIdentifiers(boolean storesUpperCaseIdentifiers) {
 		this.storesUpperCaseIdentifiers = storesUpperCaseIdentifiers;
@@ -1517,8 +1759,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores lower case identifiers.
 	 *
-	 * @param storesLowerCaseIdentifiers
-	 *            the new stores lower case identifiers
+	 * @param storesLowerCaseIdentifiers the new stores lower case identifiers
 	 */
 	public void setStoresLowerCaseIdentifiers(boolean storesLowerCaseIdentifiers) {
 		this.storesLowerCaseIdentifiers = storesLowerCaseIdentifiers;
@@ -1536,8 +1777,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores mixed case identifiers.
 	 *
-	 * @param storesMixedCaseIdentifiers
-	 *            the new stores mixed case identifiers
+	 * @param storesMixedCaseIdentifiers the new stores mixed case identifiers
 	 */
 	public void setStoresMixedCaseIdentifiers(boolean storesMixedCaseIdentifiers) {
 		this.storesMixedCaseIdentifiers = storesMixedCaseIdentifiers;
@@ -1555,8 +1795,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports mixed case quoted identifiers.
 	 *
-	 * @param supportsMixedCaseQuotedIdentifiers
-	 *            the new supports mixed case quoted identifiers
+	 * @param supportsMixedCaseQuotedIdentifiers the new supports mixed case quoted identifiers
 	 */
 	public void setSupportsMixedCaseQuotedIdentifiers(boolean supportsMixedCaseQuotedIdentifiers) {
 		this.supportsMixedCaseQuotedIdentifiers = supportsMixedCaseQuotedIdentifiers;
@@ -1574,8 +1813,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores upper case quoted identifiers.
 	 *
-	 * @param storesUpperCaseQuotedIdentifiers
-	 *            the new stores upper case quoted identifiers
+	 * @param storesUpperCaseQuotedIdentifiers the new stores upper case quoted identifiers
 	 */
 	public void setStoresUpperCaseQuotedIdentifiers(boolean storesUpperCaseQuotedIdentifiers) {
 		this.storesUpperCaseQuotedIdentifiers = storesUpperCaseQuotedIdentifiers;
@@ -1593,8 +1831,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores lower case quoted identifiers.
 	 *
-	 * @param storesLowerCaseQuotedIdentifiers
-	 *            the new stores lower case quoted identifiers
+	 * @param storesLowerCaseQuotedIdentifiers the new stores lower case quoted identifiers
 	 */
 	public void setStoresLowerCaseQuotedIdentifiers(boolean storesLowerCaseQuotedIdentifiers) {
 		this.storesLowerCaseQuotedIdentifiers = storesLowerCaseQuotedIdentifiers;
@@ -1612,8 +1849,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores mixed case quoted identifiers.
 	 *
-	 * @param storesMixedCaseQuotedIdentifiers
-	 *            the new stores mixed case quoted identifiers
+	 * @param storesMixedCaseQuotedIdentifiers the new stores mixed case quoted identifiers
 	 */
 	public void setStoresMixedCaseQuotedIdentifiers(boolean storesMixedCaseQuotedIdentifiers) {
 		this.storesMixedCaseQuotedIdentifiers = storesMixedCaseQuotedIdentifiers;
@@ -1631,8 +1867,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the identifier quote string.
 	 *
-	 * @param identifierQuoteString
-	 *            the new identifier quote string
+	 * @param identifierQuoteString the new identifier quote string
 	 */
 	public void setIdentifierQuoteString(String identifierQuoteString) {
 		this.identifierQuoteString = identifierQuoteString;
@@ -1650,8 +1885,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the sql keywords.
 	 *
-	 * @param sqlKeywords
-	 *            the new sql keywords
+	 * @param sqlKeywords the new sql keywords
 	 */
 	public void setSqlKeywords(String sqlKeywords) {
 		this.sqlKeywords = sqlKeywords;
@@ -1669,8 +1903,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the numeric functions.
 	 *
-	 * @param numericFunctions
-	 *            the new numeric functions
+	 * @param numericFunctions the new numeric functions
 	 */
 	public void setNumericFunctions(String numericFunctions) {
 		this.numericFunctions = numericFunctions;
@@ -1688,8 +1921,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the string functions.
 	 *
-	 * @param stringFunctions
-	 *            the new string functions
+	 * @param stringFunctions the new string functions
 	 */
 	public void setStringFunctions(String stringFunctions) {
 		this.stringFunctions = stringFunctions;
@@ -1707,8 +1939,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the system functions.
 	 *
-	 * @param systemFunctions
-	 *            the new system functions
+	 * @param systemFunctions the new system functions
 	 */
 	public void setSystemFunctions(String systemFunctions) {
 		this.systemFunctions = systemFunctions;
@@ -1726,8 +1957,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the time date functions.
 	 *
-	 * @param timeDateFunctions
-	 *            the new time date functions
+	 * @param timeDateFunctions the new time date functions
 	 */
 	public void setTimeDateFunctions(String timeDateFunctions) {
 		this.timeDateFunctions = timeDateFunctions;
@@ -1745,8 +1975,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the search string escape.
 	 *
-	 * @param searchStringEscape
-	 *            the new search string escape
+	 * @param searchStringEscape the new search string escape
 	 */
 	public void setSearchStringEscape(String searchStringEscape) {
 		this.searchStringEscape = searchStringEscape;
@@ -1764,8 +1993,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the extra name characters.
 	 *
-	 * @param extraNameCharacters
-	 *            the new extra name characters
+	 * @param extraNameCharacters the new extra name characters
 	 */
 	public void setExtraNameCharacters(String extraNameCharacters) {
 		this.extraNameCharacters = extraNameCharacters;
@@ -1783,8 +2011,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports alter table with add column.
 	 *
-	 * @param supportsAlterTableWithAddColumn
-	 *            the new supports alter table with add column
+	 * @param supportsAlterTableWithAddColumn the new supports alter table with add column
 	 */
 	public void setSupportsAlterTableWithAddColumn(boolean supportsAlterTableWithAddColumn) {
 		this.supportsAlterTableWithAddColumn = supportsAlterTableWithAddColumn;
@@ -1802,8 +2029,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports alter table with drop column.
 	 *
-	 * @param supportsAlterTableWithDropColumn
-	 *            the new supports alter table with drop column
+	 * @param supportsAlterTableWithDropColumn the new supports alter table with drop column
 	 */
 	public void setSupportsAlterTableWithDropColumn(boolean supportsAlterTableWithDropColumn) {
 		this.supportsAlterTableWithDropColumn = supportsAlterTableWithDropColumn;
@@ -1821,8 +2047,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports column aliasing.
 	 *
-	 * @param supportsColumnAliasing
-	 *            the new supports column aliasing
+	 * @param supportsColumnAliasing the new supports column aliasing
 	 */
 	public void setSupportsColumnAliasing(boolean supportsColumnAliasing) {
 		this.supportsColumnAliasing = supportsColumnAliasing;
@@ -1840,8 +2065,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the null plus non null is null.
 	 *
-	 * @param nullPlusNonNullIsNull
-	 *            the new null plus non null is null
+	 * @param nullPlusNonNullIsNull the new null plus non null is null
 	 */
 	public void setNullPlusNonNullIsNull(boolean nullPlusNonNullIsNull) {
 		this.nullPlusNonNullIsNull = nullPlusNonNullIsNull;
@@ -1859,8 +2083,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports convert.
 	 *
-	 * @param supportsConvert
-	 *            the new supports convert
+	 * @param supportsConvert the new supports convert
 	 */
 	public void setSupportsConvert(boolean supportsConvert) {
 		this.supportsConvert = supportsConvert;
@@ -1878,8 +2101,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports table correlation names.
 	 *
-	 * @param supportsTableCorrelationNames
-	 *            the new supports table correlation names
+	 * @param supportsTableCorrelationNames the new supports table correlation names
 	 */
 	public void setSupportsTableCorrelationNames(boolean supportsTableCorrelationNames) {
 		this.supportsTableCorrelationNames = supportsTableCorrelationNames;
@@ -1897,8 +2119,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports different table correlation names.
 	 *
-	 * @param supportsDifferentTableCorrelationNames
-	 *            the new supports different table correlation names
+	 * @param supportsDifferentTableCorrelationNames the new supports different table correlation names
 	 */
 	public void setSupportsDifferentTableCorrelationNames(boolean supportsDifferentTableCorrelationNames) {
 		this.supportsDifferentTableCorrelationNames = supportsDifferentTableCorrelationNames;
@@ -1916,8 +2137,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports expressions in order by.
 	 *
-	 * @param supportsExpressionsInOrderBy
-	 *            the new supports expressions in order by
+	 * @param supportsExpressionsInOrderBy the new supports expressions in order by
 	 */
 	public void setSupportsExpressionsInOrderBy(boolean supportsExpressionsInOrderBy) {
 		this.supportsExpressionsInOrderBy = supportsExpressionsInOrderBy;
@@ -1935,8 +2155,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports order by unrelated.
 	 *
-	 * @param supportsOrderByUnrelated
-	 *            the new supports order by unrelated
+	 * @param supportsOrderByUnrelated the new supports order by unrelated
 	 */
 	public void setSupportsOrderByUnrelated(boolean supportsOrderByUnrelated) {
 		this.supportsOrderByUnrelated = supportsOrderByUnrelated;
@@ -1954,8 +2173,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports group by.
 	 *
-	 * @param supportsGroupBy
-	 *            the new supports group by
+	 * @param supportsGroupBy the new supports group by
 	 */
 	public void setSupportsGroupBy(boolean supportsGroupBy) {
 		this.supportsGroupBy = supportsGroupBy;
@@ -1973,8 +2191,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports group by unrelated.
 	 *
-	 * @param supportsGroupByUnrelated
-	 *            the new supports group by unrelated
+	 * @param supportsGroupByUnrelated the new supports group by unrelated
 	 */
 	public void setSupportsGroupByUnrelated(boolean supportsGroupByUnrelated) {
 		this.supportsGroupByUnrelated = supportsGroupByUnrelated;
@@ -1992,8 +2209,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports group by beyond select.
 	 *
-	 * @param supportsGroupByBeyondSelect
-	 *            the new supports group by beyond select
+	 * @param supportsGroupByBeyondSelect the new supports group by beyond select
 	 */
 	public void setSupportsGroupByBeyondSelect(boolean supportsGroupByBeyondSelect) {
 		this.supportsGroupByBeyondSelect = supportsGroupByBeyondSelect;
@@ -2011,8 +2227,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports like escape clause.
 	 *
-	 * @param supportsLikeEscapeClause
-	 *            the new supports like escape clause
+	 * @param supportsLikeEscapeClause the new supports like escape clause
 	 */
 	public void setSupportsLikeEscapeClause(boolean supportsLikeEscapeClause) {
 		this.supportsLikeEscapeClause = supportsLikeEscapeClause;
@@ -2030,8 +2245,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports multiple result sets.
 	 *
-	 * @param supportsMultipleResultSets
-	 *            the new supports multiple result sets
+	 * @param supportsMultipleResultSets the new supports multiple result sets
 	 */
 	public void setSupportsMultipleResultSets(boolean supportsMultipleResultSets) {
 		this.supportsMultipleResultSets = supportsMultipleResultSets;
@@ -2049,8 +2263,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports multiple transactions.
 	 *
-	 * @param supportsMultipleTransactions
-	 *            the new supports multiple transactions
+	 * @param supportsMultipleTransactions the new supports multiple transactions
 	 */
 	public void setSupportsMultipleTransactions(boolean supportsMultipleTransactions) {
 		this.supportsMultipleTransactions = supportsMultipleTransactions;
@@ -2068,8 +2281,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports non nullable columns.
 	 *
-	 * @param supportsNonNullableColumns
-	 *            the new supports non nullable columns
+	 * @param supportsNonNullableColumns the new supports non nullable columns
 	 */
 	public void setSupportsNonNullableColumns(boolean supportsNonNullableColumns) {
 		this.supportsNonNullableColumns = supportsNonNullableColumns;
@@ -2087,8 +2299,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports minimum SQL grammar.
 	 *
-	 * @param supportsMinimumSQLGrammar
-	 *            the new supports minimum SQL grammar
+	 * @param supportsMinimumSQLGrammar the new supports minimum SQL grammar
 	 */
 	public void setSupportsMinimumSQLGrammar(boolean supportsMinimumSQLGrammar) {
 		this.supportsMinimumSQLGrammar = supportsMinimumSQLGrammar;
@@ -2106,8 +2317,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports core SQL grammar.
 	 *
-	 * @param supportsCoreSQLGrammar
-	 *            the new supports core SQL grammar
+	 * @param supportsCoreSQLGrammar the new supports core SQL grammar
 	 */
 	public void setSupportsCoreSQLGrammar(boolean supportsCoreSQLGrammar) {
 		this.supportsCoreSQLGrammar = supportsCoreSQLGrammar;
@@ -2125,8 +2335,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports extended SQL grammar.
 	 *
-	 * @param supportsExtendedSQLGrammar
-	 *            the new supports extended SQL grammar
+	 * @param supportsExtendedSQLGrammar the new supports extended SQL grammar
 	 */
 	public void setSupportsExtendedSQLGrammar(boolean supportsExtendedSQLGrammar) {
 		this.supportsExtendedSQLGrammar = supportsExtendedSQLGrammar;
@@ -2144,8 +2353,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports ANSI 92 entry level SQL.
 	 *
-	 * @param supportsANSI92EntryLevelSQL
-	 *            the new supports ANSI 92 entry level SQL
+	 * @param supportsANSI92EntryLevelSQL the new supports ANSI 92 entry level SQL
 	 */
 	public void setSupportsANSI92EntryLevelSQL(boolean supportsANSI92EntryLevelSQL) {
 		this.supportsANSI92EntryLevelSQL = supportsANSI92EntryLevelSQL;
@@ -2163,8 +2371,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports ANSI 92 intermediate SQL.
 	 *
-	 * @param supportsANSI92IntermediateSQL
-	 *            the new supports ANSI 92 intermediate SQL
+	 * @param supportsANSI92IntermediateSQL the new supports ANSI 92 intermediate SQL
 	 */
 	public void setSupportsANSI92IntermediateSQL(boolean supportsANSI92IntermediateSQL) {
 		this.supportsANSI92IntermediateSQL = supportsANSI92IntermediateSQL;
@@ -2182,8 +2389,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports ANSI 92 full SQL.
 	 *
-	 * @param supportsANSI92FullSQL
-	 *            the new supports ANSI 92 full SQL
+	 * @param supportsANSI92FullSQL the new supports ANSI 92 full SQL
 	 */
 	public void setSupportsANSI92FullSQL(boolean supportsANSI92FullSQL) {
 		this.supportsANSI92FullSQL = supportsANSI92FullSQL;
@@ -2201,8 +2407,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports integrity enhancement facility.
 	 *
-	 * @param supportsIntegrityEnhancementFacility
-	 *            the new supports integrity enhancement facility
+	 * @param supportsIntegrityEnhancementFacility the new supports integrity enhancement facility
 	 */
 	public void setSupportsIntegrityEnhancementFacility(boolean supportsIntegrityEnhancementFacility) {
 		this.supportsIntegrityEnhancementFacility = supportsIntegrityEnhancementFacility;
@@ -2220,8 +2425,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports outer joins.
 	 *
-	 * @param supportsOuterJoins
-	 *            the new supports outer joins
+	 * @param supportsOuterJoins the new supports outer joins
 	 */
 	public void setSupportsOuterJoins(boolean supportsOuterJoins) {
 		this.supportsOuterJoins = supportsOuterJoins;
@@ -2239,8 +2443,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports full outer joins.
 	 *
-	 * @param supportsFullOuterJoins
-	 *            the new supports full outer joins
+	 * @param supportsFullOuterJoins the new supports full outer joins
 	 */
 	public void setSupportsFullOuterJoins(boolean supportsFullOuterJoins) {
 		this.supportsFullOuterJoins = supportsFullOuterJoins;
@@ -2258,8 +2461,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports limited outer joins.
 	 *
-	 * @param supportsLimitedOuterJoins
-	 *            the new supports limited outer joins
+	 * @param supportsLimitedOuterJoins the new supports limited outer joins
 	 */
 	public void setSupportsLimitedOuterJoins(boolean supportsLimitedOuterJoins) {
 		this.supportsLimitedOuterJoins = supportsLimitedOuterJoins;
@@ -2277,8 +2479,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the schema term.
 	 *
-	 * @param schemaTerm
-	 *            the new schema term
+	 * @param schemaTerm the new schema term
 	 */
 	public void setSchemaTerm(String schemaTerm) {
 		this.schemaTerm = schemaTerm;
@@ -2296,8 +2497,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the procedure term.
 	 *
-	 * @param procedureTerm
-	 *            the new procedure term
+	 * @param procedureTerm the new procedure term
 	 */
 	public void setProcedureTerm(String procedureTerm) {
 		this.procedureTerm = procedureTerm;
@@ -2315,8 +2515,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the catalog term.
 	 *
-	 * @param catalogTerm
-	 *            the new catalog term
+	 * @param catalogTerm the new catalog term
 	 */
 	public void setCatalogTerm(String catalogTerm) {
 		this.catalogTerm = catalogTerm;
@@ -2334,8 +2533,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the catalog at start.
 	 *
-	 * @param isCatalogAtStart
-	 *            the new catalog at start
+	 * @param isCatalogAtStart the new catalog at start
 	 */
 	public void setCatalogAtStart(boolean isCatalogAtStart) {
 		this.isCatalogAtStart = isCatalogAtStart;
@@ -2353,8 +2551,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the catalog separator.
 	 *
-	 * @param catalogSeparator
-	 *            the new catalog separator
+	 * @param catalogSeparator the new catalog separator
 	 */
 	public void setCatalogSeparator(String catalogSeparator) {
 		this.catalogSeparator = catalogSeparator;
@@ -2372,8 +2569,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports schemas in data manipulation.
 	 *
-	 * @param supportsSchemasInDataManipulation
-	 *            the new supports schemas in data manipulation
+	 * @param supportsSchemasInDataManipulation the new supports schemas in data manipulation
 	 */
 	public void setSupportsSchemasInDataManipulation(boolean supportsSchemasInDataManipulation) {
 		this.supportsSchemasInDataManipulation = supportsSchemasInDataManipulation;
@@ -2391,8 +2587,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports schemas in procedure calls.
 	 *
-	 * @param supportsSchemasInProcedureCalls
-	 *            the new supports schemas in procedure calls
+	 * @param supportsSchemasInProcedureCalls the new supports schemas in procedure calls
 	 */
 	public void setSupportsSchemasInProcedureCalls(boolean supportsSchemasInProcedureCalls) {
 		this.supportsSchemasInProcedureCalls = supportsSchemasInProcedureCalls;
@@ -2410,8 +2605,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports schemas in table definitions.
 	 *
-	 * @param supportsSchemasInTableDefinitions
-	 *            the new supports schemas in table definitions
+	 * @param supportsSchemasInTableDefinitions the new supports schemas in table definitions
 	 */
 	public void setSupportsSchemasInTableDefinitions(boolean supportsSchemasInTableDefinitions) {
 		this.supportsSchemasInTableDefinitions = supportsSchemasInTableDefinitions;
@@ -2429,8 +2623,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports schemas in index definitions.
 	 *
-	 * @param supportsSchemasInIndexDefinitions
-	 *            the new supports schemas in index definitions
+	 * @param supportsSchemasInIndexDefinitions the new supports schemas in index definitions
 	 */
 	public void setSupportsSchemasInIndexDefinitions(boolean supportsSchemasInIndexDefinitions) {
 		this.supportsSchemasInIndexDefinitions = supportsSchemasInIndexDefinitions;
@@ -2448,8 +2641,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports schemas in privilege definitions.
 	 *
-	 * @param supportsSchemasInPrivilegeDefinitions
-	 *            the new supports schemas in privilege definitions
+	 * @param supportsSchemasInPrivilegeDefinitions the new supports schemas in privilege definitions
 	 */
 	public void setSupportsSchemasInPrivilegeDefinitions(boolean supportsSchemasInPrivilegeDefinitions) {
 		this.supportsSchemasInPrivilegeDefinitions = supportsSchemasInPrivilegeDefinitions;
@@ -2467,8 +2659,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports catalogs in data manipulation.
 	 *
-	 * @param supportsCatalogsInDataManipulation
-	 *            the new supports catalogs in data manipulation
+	 * @param supportsCatalogsInDataManipulation the new supports catalogs in data manipulation
 	 */
 	public void setSupportsCatalogsInDataManipulation(boolean supportsCatalogsInDataManipulation) {
 		this.supportsCatalogsInDataManipulation = supportsCatalogsInDataManipulation;
@@ -2486,8 +2677,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports catalogs in procedure calls.
 	 *
-	 * @param supportsCatalogsInProcedureCalls
-	 *            the new supports catalogs in procedure calls
+	 * @param supportsCatalogsInProcedureCalls the new supports catalogs in procedure calls
 	 */
 	public void setSupportsCatalogsInProcedureCalls(boolean supportsCatalogsInProcedureCalls) {
 		this.supportsCatalogsInProcedureCalls = supportsCatalogsInProcedureCalls;
@@ -2505,8 +2695,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports catalogs in table definitions.
 	 *
-	 * @param supportsCatalogsInTableDefinitions
-	 *            the new supports catalogs in table definitions
+	 * @param supportsCatalogsInTableDefinitions the new supports catalogs in table definitions
 	 */
 	public void setSupportsCatalogsInTableDefinitions(boolean supportsCatalogsInTableDefinitions) {
 		this.supportsCatalogsInTableDefinitions = supportsCatalogsInTableDefinitions;
@@ -2524,8 +2713,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports catalogs in index definitions.
 	 *
-	 * @param supportsCatalogsInIndexDefinitions
-	 *            the new supports catalogs in index definitions
+	 * @param supportsCatalogsInIndexDefinitions the new supports catalogs in index definitions
 	 */
 	public void setSupportsCatalogsInIndexDefinitions(boolean supportsCatalogsInIndexDefinitions) {
 		this.supportsCatalogsInIndexDefinitions = supportsCatalogsInIndexDefinitions;
@@ -2543,8 +2731,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports catalogs in privilege definitions.
 	 *
-	 * @param supportsCatalogsInPrivilegeDefinitions
-	 *            the new supports catalogs in privilege definitions
+	 * @param supportsCatalogsInPrivilegeDefinitions the new supports catalogs in privilege definitions
 	 */
 	public void setSupportsCatalogsInPrivilegeDefinitions(boolean supportsCatalogsInPrivilegeDefinitions) {
 		this.supportsCatalogsInPrivilegeDefinitions = supportsCatalogsInPrivilegeDefinitions;
@@ -2562,8 +2749,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports positioned delete.
 	 *
-	 * @param supportsPositionedDelete
-	 *            the new supports positioned delete
+	 * @param supportsPositionedDelete the new supports positioned delete
 	 */
 	public void setSupportsPositionedDelete(boolean supportsPositionedDelete) {
 		this.supportsPositionedDelete = supportsPositionedDelete;
@@ -2581,8 +2767,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports positioned update.
 	 *
-	 * @param supportsPositionedUpdate
-	 *            the new supports positioned update
+	 * @param supportsPositionedUpdate the new supports positioned update
 	 */
 	public void setSupportsPositionedUpdate(boolean supportsPositionedUpdate) {
 		this.supportsPositionedUpdate = supportsPositionedUpdate;
@@ -2600,8 +2785,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports select for update.
 	 *
-	 * @param supportsSelectForUpdate
-	 *            the new supports select for update
+	 * @param supportsSelectForUpdate the new supports select for update
 	 */
 	public void setSupportsSelectForUpdate(boolean supportsSelectForUpdate) {
 		this.supportsSelectForUpdate = supportsSelectForUpdate;
@@ -2619,8 +2803,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports stored procedures.
 	 *
-	 * @param supportsStoredProcedures
-	 *            the new supports stored procedures
+	 * @param supportsStoredProcedures the new supports stored procedures
 	 */
 	public void setSupportsStoredProcedures(boolean supportsStoredProcedures) {
 		this.supportsStoredProcedures = supportsStoredProcedures;
@@ -2638,8 +2821,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports subqueries in comparisons.
 	 *
-	 * @param supportsSubqueriesInComparisons
-	 *            the new supports subqueries in comparisons
+	 * @param supportsSubqueriesInComparisons the new supports subqueries in comparisons
 	 */
 	public void setSupportsSubqueriesInComparisons(boolean supportsSubqueriesInComparisons) {
 		this.supportsSubqueriesInComparisons = supportsSubqueriesInComparisons;
@@ -2657,8 +2839,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports subqueries in exists.
 	 *
-	 * @param supportsSubqueriesInExists
-	 *            the new supports subqueries in exists
+	 * @param supportsSubqueriesInExists the new supports subqueries in exists
 	 */
 	public void setSupportsSubqueriesInExists(boolean supportsSubqueriesInExists) {
 		this.supportsSubqueriesInExists = supportsSubqueriesInExists;
@@ -2676,8 +2857,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports subqueries in ins.
 	 *
-	 * @param supportsSubqueriesInIns
-	 *            the new supports subqueries in ins
+	 * @param supportsSubqueriesInIns the new supports subqueries in ins
 	 */
 	public void setSupportsSubqueriesInIns(boolean supportsSubqueriesInIns) {
 		this.supportsSubqueriesInIns = supportsSubqueriesInIns;
@@ -2695,8 +2875,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports subqueries in quantifieds.
 	 *
-	 * @param supportsSubqueriesInQuantifieds
-	 *            the new supports subqueries in quantifieds
+	 * @param supportsSubqueriesInQuantifieds the new supports subqueries in quantifieds
 	 */
 	public void setSupportsSubqueriesInQuantifieds(boolean supportsSubqueriesInQuantifieds) {
 		this.supportsSubqueriesInQuantifieds = supportsSubqueriesInQuantifieds;
@@ -2714,8 +2893,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports correlated subqueries.
 	 *
-	 * @param supportsCorrelatedSubqueries
-	 *            the new supports correlated subqueries
+	 * @param supportsCorrelatedSubqueries the new supports correlated subqueries
 	 */
 	public void setSupportsCorrelatedSubqueries(boolean supportsCorrelatedSubqueries) {
 		this.supportsCorrelatedSubqueries = supportsCorrelatedSubqueries;
@@ -2733,8 +2911,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports union.
 	 *
-	 * @param supportsUnion
-	 *            the new supports union
+	 * @param supportsUnion the new supports union
 	 */
 	public void setSupportsUnion(boolean supportsUnion) {
 		this.supportsUnion = supportsUnion;
@@ -2752,8 +2929,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports union all.
 	 *
-	 * @param supportsUnionAll
-	 *            the new supports union all
+	 * @param supportsUnionAll the new supports union all
 	 */
 	public void setSupportsUnionAll(boolean supportsUnionAll) {
 		this.supportsUnionAll = supportsUnionAll;
@@ -2771,8 +2947,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports open cursors across commit.
 	 *
-	 * @param supportsOpenCursorsAcrossCommit
-	 *            the new supports open cursors across commit
+	 * @param supportsOpenCursorsAcrossCommit the new supports open cursors across commit
 	 */
 	public void setSupportsOpenCursorsAcrossCommit(boolean supportsOpenCursorsAcrossCommit) {
 		this.supportsOpenCursorsAcrossCommit = supportsOpenCursorsAcrossCommit;
@@ -2790,8 +2965,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports open cursors across rollback.
 	 *
-	 * @param supportsOpenCursorsAcrossRollback
-	 *            the new supports open cursors across rollback
+	 * @param supportsOpenCursorsAcrossRollback the new supports open cursors across rollback
 	 */
 	public void setSupportsOpenCursorsAcrossRollback(boolean supportsOpenCursorsAcrossRollback) {
 		this.supportsOpenCursorsAcrossRollback = supportsOpenCursorsAcrossRollback;
@@ -2809,8 +2983,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports open statements across commit.
 	 *
-	 * @param supportsOpenStatementsAcrossCommit
-	 *            the new supports open statements across commit
+	 * @param supportsOpenStatementsAcrossCommit the new supports open statements across commit
 	 */
 	public void setSupportsOpenStatementsAcrossCommit(boolean supportsOpenStatementsAcrossCommit) {
 		this.supportsOpenStatementsAcrossCommit = supportsOpenStatementsAcrossCommit;
@@ -2828,8 +3001,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports open statements across rollback.
 	 *
-	 * @param supportsOpenStatementsAcrossRollback
-	 *            the new supports open statements across rollback
+	 * @param supportsOpenStatementsAcrossRollback the new supports open statements across rollback
 	 */
 	public void setSupportsOpenStatementsAcrossRollback(boolean supportsOpenStatementsAcrossRollback) {
 		this.supportsOpenStatementsAcrossRollback = supportsOpenStatementsAcrossRollback;
@@ -2847,8 +3019,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max binary literal length.
 	 *
-	 * @param maxBinaryLiteralLength
-	 *            the new max binary literal length
+	 * @param maxBinaryLiteralLength the new max binary literal length
 	 */
 	public void setMaxBinaryLiteralLength(int maxBinaryLiteralLength) {
 		this.maxBinaryLiteralLength = maxBinaryLiteralLength;
@@ -2866,8 +3037,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max char literal length.
 	 *
-	 * @param maxCharLiteralLength
-	 *            the new max char literal length
+	 * @param maxCharLiteralLength the new max char literal length
 	 */
 	public void setMaxCharLiteralLength(int maxCharLiteralLength) {
 		this.maxCharLiteralLength = maxCharLiteralLength;
@@ -2885,8 +3055,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max column name length.
 	 *
-	 * @param maxColumnNameLength
-	 *            the new max column name length
+	 * @param maxColumnNameLength the new max column name length
 	 */
 	public void setMaxColumnNameLength(int maxColumnNameLength) {
 		this.maxColumnNameLength = maxColumnNameLength;
@@ -2904,8 +3073,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max columns in group by.
 	 *
-	 * @param maxColumnsInGroupBy
-	 *            the new max columns in group by
+	 * @param maxColumnsInGroupBy the new max columns in group by
 	 */
 	public void setMaxColumnsInGroupBy(int maxColumnsInGroupBy) {
 		this.maxColumnsInGroupBy = maxColumnsInGroupBy;
@@ -2923,8 +3091,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max columns in index.
 	 *
-	 * @param maxColumnsInIndex
-	 *            the new max columns in index
+	 * @param maxColumnsInIndex the new max columns in index
 	 */
 	public void setMaxColumnsInIndex(int maxColumnsInIndex) {
 		this.maxColumnsInIndex = maxColumnsInIndex;
@@ -2942,8 +3109,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max columns in order by.
 	 *
-	 * @param maxColumnsInOrderBy
-	 *            the new max columns in order by
+	 * @param maxColumnsInOrderBy the new max columns in order by
 	 */
 	public void setMaxColumnsInOrderBy(int maxColumnsInOrderBy) {
 		this.maxColumnsInOrderBy = maxColumnsInOrderBy;
@@ -2961,8 +3127,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max columns in select.
 	 *
-	 * @param maxColumnsInSelect
-	 *            the new max columns in select
+	 * @param maxColumnsInSelect the new max columns in select
 	 */
 	public void setMaxColumnsInSelect(int maxColumnsInSelect) {
 		this.maxColumnsInSelect = maxColumnsInSelect;
@@ -2980,8 +3145,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max columns in table.
 	 *
-	 * @param maxColumnsInTable
-	 *            the new max columns in table
+	 * @param maxColumnsInTable the new max columns in table
 	 */
 	public void setMaxColumnsInTable(int maxColumnsInTable) {
 		this.maxColumnsInTable = maxColumnsInTable;
@@ -2999,8 +3163,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max connections.
 	 *
-	 * @param maxConnections
-	 *            the new max connections
+	 * @param maxConnections the new max connections
 	 */
 	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
@@ -3018,8 +3181,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max cursor name length.
 	 *
-	 * @param maxCursorNameLength
-	 *            the new max cursor name length
+	 * @param maxCursorNameLength the new max cursor name length
 	 */
 	public void setMaxCursorNameLength(int maxCursorNameLength) {
 		this.maxCursorNameLength = maxCursorNameLength;
@@ -3037,8 +3199,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max index length.
 	 *
-	 * @param maxIndexLength
-	 *            the new max index length
+	 * @param maxIndexLength the new max index length
 	 */
 	public void setMaxIndexLength(int maxIndexLength) {
 		this.maxIndexLength = maxIndexLength;
@@ -3056,8 +3217,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max schema name length.
 	 *
-	 * @param maxSchemaNameLength
-	 *            the new max schema name length
+	 * @param maxSchemaNameLength the new max schema name length
 	 */
 	public void setMaxSchemaNameLength(int maxSchemaNameLength) {
 		this.maxSchemaNameLength = maxSchemaNameLength;
@@ -3075,8 +3235,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max procedure name length.
 	 *
-	 * @param maxProcedureNameLength
-	 *            the new max procedure name length
+	 * @param maxProcedureNameLength the new max procedure name length
 	 */
 	public void setMaxProcedureNameLength(int maxProcedureNameLength) {
 		this.maxProcedureNameLength = maxProcedureNameLength;
@@ -3094,8 +3253,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max catalog name length.
 	 *
-	 * @param maxCatalogNameLength
-	 *            the new max catalog name length
+	 * @param maxCatalogNameLength the new max catalog name length
 	 */
 	public void setMaxCatalogNameLength(int maxCatalogNameLength) {
 		this.maxCatalogNameLength = maxCatalogNameLength;
@@ -3113,8 +3271,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max row size.
 	 *
-	 * @param maxRowSize
-	 *            the new max row size
+	 * @param maxRowSize the new max row size
 	 */
 	public void setMaxRowSize(int maxRowSize) {
 		this.maxRowSize = maxRowSize;
@@ -3132,8 +3289,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max row size include blobs.
 	 *
-	 * @param maxRowSizeIncludeBlobs
-	 *            the new max row size include blobs
+	 * @param maxRowSizeIncludeBlobs the new max row size include blobs
 	 */
 	public void setMaxRowSizeIncludeBlobs(boolean maxRowSizeIncludeBlobs) {
 		this.maxRowSizeIncludeBlobs = maxRowSizeIncludeBlobs;
@@ -3151,8 +3307,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max statement length.
 	 *
-	 * @param maxStatementLength
-	 *            the new max statement length
+	 * @param maxStatementLength the new max statement length
 	 */
 	public void setMaxStatementLength(int maxStatementLength) {
 		this.maxStatementLength = maxStatementLength;
@@ -3170,8 +3325,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max statements.
 	 *
-	 * @param maxStatements
-	 *            the new max statements
+	 * @param maxStatements the new max statements
 	 */
 	public void setMaxStatements(int maxStatements) {
 		this.maxStatements = maxStatements;
@@ -3189,8 +3343,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max table name length.
 	 *
-	 * @param maxTableNameLength
-	 *            the new max table name length
+	 * @param maxTableNameLength the new max table name length
 	 */
 	public void setMaxTableNameLength(int maxTableNameLength) {
 		this.maxTableNameLength = maxTableNameLength;
@@ -3208,8 +3361,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max tables in select.
 	 *
-	 * @param maxTablesInSelect
-	 *            the new max tables in select
+	 * @param maxTablesInSelect the new max tables in select
 	 */
 	public void setMaxTablesInSelect(int maxTablesInSelect) {
 		this.maxTablesInSelect = maxTablesInSelect;
@@ -3227,8 +3379,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max user name length.
 	 *
-	 * @param maxUserNameLength
-	 *            the new max user name length
+	 * @param maxUserNameLength the new max user name length
 	 */
 	public void setMaxUserNameLength(int maxUserNameLength) {
 		this.maxUserNameLength = maxUserNameLength;
@@ -3246,8 +3397,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the default transaction isolation.
 	 *
-	 * @param defaultTransactionIsolation
-	 *            the new default transaction isolation
+	 * @param defaultTransactionIsolation the new default transaction isolation
 	 */
 	public void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
 		this.defaultTransactionIsolation = defaultTransactionIsolation;
@@ -3265,8 +3415,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports transactions.
 	 *
-	 * @param supportsTransactions
-	 *            the new supports transactions
+	 * @param supportsTransactions the new supports transactions
 	 */
 	public void setSupportsTransactions(boolean supportsTransactions) {
 		this.supportsTransactions = supportsTransactions;
@@ -3284,8 +3433,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports data definition and data manipulation transactions.
 	 *
-	 * @param supportsDataDefinitionAndDataManipulationTransactions
-	 *            the new supports data definition and data manipulation transactions
+	 * @param supportsDataDefinitionAndDataManipulationTransactions the new supports data definition and
+	 *        data manipulation transactions
 	 */
 	public void setSupportsDataDefinitionAndDataManipulationTransactions(boolean supportsDataDefinitionAndDataManipulationTransactions) {
 		this.supportsDataDefinitionAndDataManipulationTransactions = supportsDataDefinitionAndDataManipulationTransactions;
@@ -3303,8 +3452,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports data manipulation transactions only.
 	 *
-	 * @param supportsDataManipulationTransactionsOnly
-	 *            the new supports data manipulation transactions only
+	 * @param supportsDataManipulationTransactionsOnly the new supports data manipulation transactions
+	 *        only
 	 */
 	public void setSupportsDataManipulationTransactionsOnly(boolean supportsDataManipulationTransactionsOnly) {
 		this.supportsDataManipulationTransactionsOnly = supportsDataManipulationTransactionsOnly;
@@ -3322,8 +3471,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the data definition causes transaction commit.
 	 *
-	 * @param dataDefinitionCausesTransactionCommit
-	 *            the new data definition causes transaction commit
+	 * @param dataDefinitionCausesTransactionCommit the new data definition causes transaction commit
 	 */
 	public void setDataDefinitionCausesTransactionCommit(boolean dataDefinitionCausesTransactionCommit) {
 		this.dataDefinitionCausesTransactionCommit = dataDefinitionCausesTransactionCommit;
@@ -3341,8 +3489,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the data definition ignored in transactions.
 	 *
-	 * @param dataDefinitionIgnoredInTransactions
-	 *            the new data definition ignored in transactions
+	 * @param dataDefinitionIgnoredInTransactions the new data definition ignored in transactions
 	 */
 	public void setDataDefinitionIgnoredInTransactions(boolean dataDefinitionIgnoredInTransactions) {
 		this.dataDefinitionIgnoredInTransactions = dataDefinitionIgnoredInTransactions;
@@ -3360,8 +3507,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports batch updates.
 	 *
-	 * @param supportsBatchUpdates
-	 *            the new supports batch updates
+	 * @param supportsBatchUpdates the new supports batch updates
 	 */
 	public void setSupportsBatchUpdates(boolean supportsBatchUpdates) {
 		this.supportsBatchUpdates = supportsBatchUpdates;
@@ -3379,8 +3525,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports savepoints.
 	 *
-	 * @param supportsSavepoints
-	 *            the new supports savepoints
+	 * @param supportsSavepoints the new supports savepoints
 	 */
 	public void setSupportsSavepoints(boolean supportsSavepoints) {
 		this.supportsSavepoints = supportsSavepoints;
@@ -3398,8 +3543,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports named parameters.
 	 *
-	 * @param supportsNamedParameters
-	 *            the new supports named parameters
+	 * @param supportsNamedParameters the new supports named parameters
 	 */
 	public void setSupportsNamedParameters(boolean supportsNamedParameters) {
 		this.supportsNamedParameters = supportsNamedParameters;
@@ -3417,8 +3561,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports multiple open results.
 	 *
-	 * @param supportsMultipleOpenResults
-	 *            the new supports multiple open results
+	 * @param supportsMultipleOpenResults the new supports multiple open results
 	 */
 	public void setSupportsMultipleOpenResults(boolean supportsMultipleOpenResults) {
 		this.supportsMultipleOpenResults = supportsMultipleOpenResults;
@@ -3436,8 +3579,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports get generated keys.
 	 *
-	 * @param supportsGetGeneratedKeys
-	 *            the new supports get generated keys
+	 * @param supportsGetGeneratedKeys the new supports get generated keys
 	 */
 	public void setSupportsGetGeneratedKeys(boolean supportsGetGeneratedKeys) {
 		this.supportsGetGeneratedKeys = supportsGetGeneratedKeys;
@@ -3455,8 +3597,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the result set holdability.
 	 *
-	 * @param resultSetHoldability
-	 *            the new result set holdability
+	 * @param resultSetHoldability the new result set holdability
 	 */
 	public void setGetResultSetHoldability(int resultSetHoldability) {
 		this.resultSetHoldability = resultSetHoldability;
@@ -3474,8 +3615,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the database major version.
 	 *
-	 * @param databaseMajorVersion
-	 *            the new database major version
+	 * @param databaseMajorVersion the new database major version
 	 */
 	public void setGetDatabaseMajorVersion(int databaseMajorVersion) {
 		this.databaseMajorVersion = databaseMajorVersion;
@@ -3493,8 +3633,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the database minor version.
 	 *
-	 * @param databaseMinorVersion
-	 *            the new database minor version
+	 * @param databaseMinorVersion the new database minor version
 	 */
 	public void setGetDatabaseMinorVersion(int databaseMinorVersion) {
 		this.databaseMinorVersion = databaseMinorVersion;
@@ -3512,8 +3651,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the JDBC major version.
 	 *
-	 * @param jdbcMajorVersion
-	 *            the new JDBC major version
+	 * @param jdbcMajorVersion the new JDBC major version
 	 */
 	public void setJDBCMajorVersion(int jdbcMajorVersion) {
 		this.jdbcMajorVersion = jdbcMajorVersion;
@@ -3531,8 +3669,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the JDBC minor version.
 	 *
-	 * @param jdbcMinorVersion
-	 *            the new JDBC minor version
+	 * @param jdbcMinorVersion the new JDBC minor version
 	 */
 	public void setJDBCMinorVersion(int jdbcMinorVersion) {
 		this.jdbcMinorVersion = jdbcMinorVersion;
@@ -3550,8 +3687,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the SQL state type.
 	 *
-	 * @param sqlStateType
-	 *            the new SQL state type
+	 * @param sqlStateType the new SQL state type
 	 */
 	public void setSQLStateType(int sqlStateType) {
 		this.sqlStateType = sqlStateType;
@@ -3569,8 +3705,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the locators update copy.
 	 *
-	 * @param locatorsUpdateCopy
-	 *            the new locators update copy
+	 * @param locatorsUpdateCopy the new locators update copy
 	 */
 	public void setLocatorsUpdateCopy(boolean locatorsUpdateCopy) {
 		this.locatorsUpdateCopy = locatorsUpdateCopy;
@@ -3588,8 +3723,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports statement pooling.
 	 *
-	 * @param supportsStatementPooling
-	 *            the new supports statement pooling
+	 * @param supportsStatementPooling the new supports statement pooling
 	 */
 	public void setSupportsStatementPooling(boolean supportsStatementPooling) {
 		this.supportsStatementPooling = supportsStatementPooling;
@@ -3607,8 +3741,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports stored functions using call syntax.
 	 *
-	 * @param supportsStoredFunctionsUsingCallSyntax
-	 *            the new supports stored functions using call syntax
+	 * @param supportsStoredFunctionsUsingCallSyntax the new supports stored functions using call syntax
 	 */
 	public void setSupportsStoredFunctionsUsingCallSyntax(boolean supportsStoredFunctionsUsingCallSyntax) {
 		this.supportsStoredFunctionsUsingCallSyntax = supportsStoredFunctionsUsingCallSyntax;
@@ -3626,8 +3759,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the auto commit failure closes all result sets.
 	 *
-	 * @param autoCommitFailureClosesAllResultSets
-	 *            the new auto commit failure closes all result sets
+	 * @param autoCommitFailureClosesAllResultSets the new auto commit failure closes all result sets
 	 */
 	public void setAutoCommitFailureClosesAllResultSets(boolean autoCommitFailureClosesAllResultSets) {
 		this.autoCommitFailureClosesAllResultSets = autoCommitFailureClosesAllResultSets;
@@ -3645,8 +3777,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the generated key always returned.
 	 *
-	 * @param generatedKeyAlwaysReturned
-	 *            the new generated key always returned
+	 * @param generatedKeyAlwaysReturned the new generated key always returned
 	 */
 	public void setGeneratedKeyAlwaysReturned(boolean generatedKeyAlwaysReturned) {
 		this.generatedKeyAlwaysReturned = generatedKeyAlwaysReturned;
@@ -3664,8 +3795,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max logical lob size.
 	 *
-	 * @param maxLogicalLobSize
-	 *            the new max logical lob size
+	 * @param maxLogicalLobSize the new max logical lob size
 	 */
 	public void setMaxLogicalLobSize(long maxLogicalLobSize) {
 		this.maxLogicalLobSize = maxLogicalLobSize;
@@ -3683,8 +3813,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports ref cursors.
 	 *
-	 * @param supportsRefCursors
-	 *            the new supports ref cursors
+	 * @param supportsRefCursors the new supports ref cursors
 	 */
 	public void setSupportsRefCursors(boolean supportsRefCursors) {
 		this.supportsRefCursors = supportsRefCursors;
@@ -3708,12 +3837,15 @@ public class DatabaseMetadata {
 	// return databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern);
 	// }
 	//
-	// public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern,
+	// public ResultSet getProcedureColumns(String catalog, String schemaPattern, String
+	// procedureNamePattern,
 	// String columnNamePattern) throws SQLException {
-	// return databaseMetaData.getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern);
+	// return databaseMetaData.getProcedureColumns(catalog, schemaPattern, procedureNamePattern,
+	// columnNamePattern);
 	// }
 	//
-	// public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types)
+	// public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern,
+	// String[] types)
 	// throws SQLException {
 	// return databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types);
 	// }
@@ -3736,40 +3868,48 @@ public class DatabaseMetadata {
 	// return databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
 	// }
 	//
-	// public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern)
+	// public ResultSet getColumnPrivileges(String catalog, String schema, String table, String
+	// columnNamePattern)
 	// throws SQLException {
 	// return databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern);
 	// }
 	//
-	// public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern)
+	// public ResultSet getTablePrivileges(String catalog, String schemaPattern, String
+	// tableNamePattern)
 	// throws SQLException {
 	// return databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern);
 	// }
 	//
-	// public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable)
+	// public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope,
+	// boolean nullable)
 	// throws SQLException {
 	// return databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable);
 	// }
 	//
-	// public ResultSet getVersionColumns(String catalog, String schema, String table) throws SQLException {
+	// public ResultSet getVersionColumns(String catalog, String schema, String table) throws
+	// SQLException {
 	// return databaseMetaData.getVersionColumns(catalog, schema, table);
 	// }
 	//
-	// public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
+	// public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException
+	// {
 	// return databaseMetaData.getPrimaryKeys(catalog, schema, table);
 	// }
 	//
-	// public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
+	// public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException
+	// {
 	// return databaseMetaData.getImportedKeys(catalog, schema, table);
 	// }
 	//
-	// public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException {
+	// public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException
+	// {
 	// return databaseMetaData.getExportedKeys(catalog, schema, table);
 	// }
 	//
 	// public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable,
 	// String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
-	// return databaseMetaData.getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog,
+	// return databaseMetaData.getCrossReference(parentCatalog, parentSchema, parentTable,
+	// foreignCatalog,
 	// foreignSchema, foreignTable);
 	// }
 	//
@@ -3777,7 +3917,8 @@ public class DatabaseMetadata {
 	// return databaseMetaData.getTypeInfo();
 	// }
 	//
-	// public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate)
+	// public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique,
+	// boolean approximate)
 	// throws SQLException {
 	// return databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate);
 	// }
@@ -3826,7 +3967,8 @@ public class DatabaseMetadata {
 	// return databaseMetaData.insertsAreDetected(type);
 	// }
 	//
-	// public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types)
+	// public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[]
+	// types)
 	// throws SQLException {
 	// return databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types);
 	// }
@@ -3835,19 +3977,22 @@ public class DatabaseMetadata {
 	// return databaseMetaData.getConnection();
 	// }
 	//
-	// public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) throws SQLException
+	// public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
+	// throws SQLException
 	// {
 	// return databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern);
 	// }
 	//
-	// public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws
+	// public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
+	// throws
 	// SQLException {
 	// return databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern);
 	// }
 	//
 	// public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern,
 	// String attributeNamePattern) throws SQLException {
-	// return databaseMetaData.getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern);
+	// return databaseMetaData.getAttributes(catalog, schemaPattern, typeNamePattern,
+	// attributeNamePattern);
 	// }
 	//
 	// public boolean supportsResultSetHoldability(int holdability) throws SQLException {
@@ -3871,14 +4016,17 @@ public class DatabaseMetadata {
 	// return databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern);
 	// }
 	//
-	// public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern,
+	// public ResultSet getFunctionColumns(String catalog, String schemaPattern, String
+	// functionNamePattern,
 	// String columnNamePattern) throws SQLException {
-	// return databaseMetaData.getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern);
+	// return databaseMetaData.getFunctionColumns(catalog, schemaPattern, functionNamePattern,
+	// columnNamePattern);
 	// }
 	//
 	// public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern,
 	// String columnNamePattern) throws SQLException {
-	// return databaseMetaData.getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+	// return databaseMetaData.getPseudoColumns(catalog, schemaPattern, tableNamePattern,
+	// columnNamePattern);
 	// }
 
 	/**
@@ -3893,8 +4041,7 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the kind.
 	 *
-	 * @param kind
-	 *            the new kind
+	 * @param kind the new kind
 	 */
 	public void setKind(String kind) {
 		this.kind = kind;

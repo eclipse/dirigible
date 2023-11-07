@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.utils;
 
@@ -23,8 +22,7 @@ public class EscapeFacade {
 	/**
 	 * Escape CSV.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the escaped input
 	 */
 	public static final String escapeCsv(String input) {
@@ -34,8 +32,7 @@ public class EscapeFacade {
 	/**
 	 * Escape JavaScript.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the escaped input
 	 */
 	public static final String escapeJavascript(String input) {
@@ -45,8 +42,7 @@ public class EscapeFacade {
 	/**
 	 * Escape HTML 3.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the escaped input
 	 */
 	public static final String escapeHtml3(String input) {
@@ -56,8 +52,7 @@ public class EscapeFacade {
 	/**
 	 * Escape HTML 4.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the escaped input
 	 */
 	public static final String escapeHtml4(String input) {
@@ -67,8 +62,7 @@ public class EscapeFacade {
 	/**
 	 * Escape Java.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the escaped input
 	 */
 	public static final String escapeJava(String input) {
@@ -78,8 +72,7 @@ public class EscapeFacade {
 	/**
 	 * Escape JSON.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the escaped input
 	 */
 	public static final String escapeJson(String input) {
@@ -89,8 +82,7 @@ public class EscapeFacade {
 	/**
 	 * Escape XML.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the escaped input
 	 */
 	public static final String escapeXml(String input) {
@@ -100,8 +92,7 @@ public class EscapeFacade {
 	/**
 	 * Unescape CSV.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the unescaped input
 	 */
 	public static final String unescapeCsv(String input) {
@@ -111,8 +102,7 @@ public class EscapeFacade {
 	/**
 	 * Unescape JavaScript.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the unescaped input
 	 */
 	public static final String unescapeJavascript(String input) {
@@ -122,8 +112,7 @@ public class EscapeFacade {
 	/**
 	 * Unescape HTML 3.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the unescaped input
 	 */
 	public static final String unescapeHtml3(String input) {
@@ -133,8 +122,7 @@ public class EscapeFacade {
 	/**
 	 * Unescape HTML 4.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the unescaped input
 	 */
 	public static final String unescapeHtml4(String input) {
@@ -144,8 +132,7 @@ public class EscapeFacade {
 	/**
 	 * Unescape Java.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the unescaped input
 	 */
 	public static final String unescapeJava(String input) {
@@ -155,8 +142,7 @@ public class EscapeFacade {
 	/**
 	 * Unescape JSON.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the unescaped input
 	 */
 	public static final String unescapeJson(String input) {
@@ -166,8 +152,7 @@ public class EscapeFacade {
 	/**
 	 * Unescape XML.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the unescaped input
 	 */
 	public static final String unescapeXml(String input) {

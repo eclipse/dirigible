@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.api;
 
@@ -21,25 +20,27 @@ import com.google.gson.annotations.Expose;
  */
 public class ODataAssociation {
 
-    /** The name. */
+	/** The name. */
 	@Expose
-    private String name;
+	private String name;
 
-    /** The from. */
+	/** The from. */
 	@Expose
-    private ODataAssociationEnd from;
+	private ODataAssociationEnd from;
 
-    /** The to. */
+	/** The to. */
 	@Expose
-    private ODataAssociationEnd to;
+	private ODataAssociationEnd to;
 
-    /**
-     * <p>Define list of additional annotations for EntitySet element.</p>
-     * For example:
-     * <code> &lt;AssociationSet Name="someName" Association="someName" sap:creatable="true" sap:updatable="true" sap:deletable="true"&gt; </code>
-     */
+	/**
+	 * <p>
+	 * Define list of additional annotations for EntitySet element.
+	 * </p>
+	 * For example:
+	 * <code> &lt;AssociationSet Name="someName" Association="someName" sap:creatable="true" sap:updatable="true" sap:deletable="true"&gt; </code>
+	 */
 	@Expose
-    private Map<String, String> annotationsAssociationSet = new HashMap<>();
+	private Map<String, String> annotationsAssociationSet = new HashMap<>();
 
 	/**
 	 * Gets the name.
@@ -123,5 +124,5 @@ public class ODataAssociation {
 		return "ODataAssociation [name=" + name + ", from=" + from + ", to=" + to + ", annotationsAssociationSet="
 				+ annotationsAssociationSet + "]";
 	}
-    
+
 }

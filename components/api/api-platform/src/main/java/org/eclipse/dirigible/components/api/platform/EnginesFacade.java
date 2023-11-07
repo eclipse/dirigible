@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.platform;
 
@@ -24,16 +23,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EnginesFacade implements InitializingBean {
-	
+
 	/** The instance. */
 	private static EnginesFacade INSTANCE;
-	
+
 	/** The engines. */
 	private static String[] ENGINES = new String[] {"javascript"};
 
 	/** The publisherService. */
 	private JavascriptService javascriptService;
-	
+
 	/**
 	 * Instantiates a new engines facade.
 	 *
@@ -43,7 +42,7 @@ public class EnginesFacade implements InitializingBean {
 	private EnginesFacade(JavascriptService javascriptService) {
 		this.javascriptService = javascriptService;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -51,18 +50,18 @@ public class EnginesFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the database facade
 	 */
 	public static EnginesFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/**
 	 * Gets the javascript service.
 	 *
@@ -71,8 +70,8 @@ public class EnginesFacade implements InitializingBean {
 	public JavascriptService getJavascriptService() {
 		return javascriptService;
 	}
-	
-	
+
+
 	/**
 	 * Execute.
 	 *
@@ -85,14 +84,17 @@ public class EnginesFacade implements InitializingBean {
 	 * @return the object
 	 * @throws Exception the exception
 	 */
-	public static Object execute(String type, String projectName, String projectFilePath, String projectFilePathParam, Map<Object, Object> parameters, boolean debug) throws Exception {
+	public static Object execute(String type, String projectName, String projectFilePath, String projectFilePathParam,
+			Map<Object, Object> parameters, boolean debug) throws Exception {
 		if ("javascript".equals(type)) {
-			return EnginesFacade.get().getJavascriptService().handleRequest(projectName, projectFilePath, projectFilePathParam, parameters, debug);
+			return EnginesFacade.get()
+								.getJavascriptService()
+								.handleRequest(projectName, projectFilePath, projectFilePathParam, parameters, debug);
 		} else {
 			throw new Exception("Engine does not exist: " + type);
 		}
 	}
-	
+
 	/**
 	 * Gets the engine types.
 	 *

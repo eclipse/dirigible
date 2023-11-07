@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.json;
 
@@ -27,7 +26,7 @@ public class FolderDescriptor {
 
 	/** The type. */
 	private String type = "folder";
-	
+
 	/** The status. */
 	private String status;
 
@@ -49,8 +48,7 @@ public class FolderDescriptor {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name
-	 *            the new name
+	 * @param name the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -68,13 +66,12 @@ public class FolderDescriptor {
 	/**
 	 * Sets the path.
 	 *
-	 * @param path
-	 *            the new path
+	 * @param path the new path
 	 */
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
 	/**
 	 * Gets the status.
 	 *
@@ -87,8 +84,7 @@ public class FolderDescriptor {
 	/**
 	 * Sets the status.
 	 *
-	 * @param status
-	 *            the new status
+	 * @param status the new status
 	 */
 	public void setStatus(String status) {
 		this.status = status;
@@ -102,7 +98,7 @@ public class FolderDescriptor {
 	public List<FolderDescriptor> getFolders() {
 		return folders;
 	}
-	
+
 	/**
 	 * Get the type.
 	 *
@@ -115,8 +111,7 @@ public class FolderDescriptor {
 	/**
 	 * Sets the.
 	 *
-	 * @param folders
-	 *            the folders
+	 * @param folders the folders
 	 */
 	public void set(List<FolderDescriptor> folders) {
 		this.folders = folders;
@@ -134,8 +129,7 @@ public class FolderDescriptor {
 	/**
 	 * Sets the files.
 	 *
-	 * @param files
-	 *            the new files
+	 * @param files the new files
 	 */
 	public void setFiles(List<FileDescriptor> files) {
 		this.files = files;

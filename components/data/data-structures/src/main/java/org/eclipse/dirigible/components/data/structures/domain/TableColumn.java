@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
@@ -39,53 +38,53 @@ public class TableColumn {
 	@Column(name = "COLUMN_ID", nullable = false)
 	@Expose
 	private Long id;
-	
+
 	/** The name. */
 	@Column(name = "COLUMN_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String name;
-	
+
 	/** The type. */
 	@Column(name = "COLUMN_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	@Expose
 	private String type;
-	
+
 	/** The length. */
 	@Column(name = "COLUMN_LENGTH", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	private String length;
-	
+
 	/** The nullable. */
 	@Column(name = "COLUMN_NULLABLE", columnDefinition = "BOOLEAN", nullable = true)
 	@Expose
 	private boolean nullable;
-	
+
 	/** The primary key. */
 	@Column(name = "COLUMN_PRIMARY_KEY", columnDefinition = "BOOLEAN", nullable = true)
 	@Expose
 	private boolean primaryKey;
-	
+
 	/** The default value. */
 	@Column(name = "COLUMN_DEFAULT_VALUE", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	private String defaultValue;
-	
+
 	/** The scale. */
 	@Column(name = "COLUMN_SCALE", columnDefinition = "VARCHAR", nullable = true, length = 255)
 	@Expose
 	private String scale;
-	
+
 	/** The unique. */
 	@Column(name = "COLUMN_UNIQUE", columnDefinition = "BOOLEAN", nullable = true)
 	@Expose
 	private boolean unique;
-	
+
 	/** The table. */
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "TABLE_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Table table;
+	@JoinColumn(name = "TABLE_ID", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Table table;
 
 	/**
 	 * Instantiates a new table column.
@@ -100,8 +99,8 @@ public class TableColumn {
 	 * @param unique the unique
 	 * @param table the table
 	 */
-	public TableColumn(String name, String type, String length, boolean nullable, boolean primaryKey,
-			String defaultValue, String scale, boolean unique, Table table) {
+	public TableColumn(String name, String type, String length, boolean nullable, boolean primaryKey, String defaultValue, String scale,
+			boolean unique, Table table) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -114,7 +113,7 @@ public class TableColumn {
 		this.table = table;
 		this.table.getColumns().add(this);
 	}
-	
+
 	/**
 	 * Instantiates a new table column.
 	 *
@@ -126,7 +125,7 @@ public class TableColumn {
 	public TableColumn(String name, String type, String length, Table table) {
 		this(name, type, length, true, false, null, "0", false, table);
 	}
-	
+
 	/**
 	 * Instantiates a new table column.
 	 *
@@ -140,7 +139,7 @@ public class TableColumn {
 	public TableColumn(String name, String type, String length, boolean nullable, boolean primaryKey, Table table) {
 		this(name, type, length, nullable, primaryKey, null, "0", false, table);
 	}
-	
+
 	/**
 	 * Instantiates a new table column.
 	 */
@@ -335,11 +334,11 @@ public class TableColumn {
 	 */
 	@Override
 	public String toString() {
-		return "TableColumn [id=" + id + ", name=" + name + ", type=" + type + ", length=" + length + ", nullable="
-				+ nullable + ", primaryKey=" + primaryKey + ", defaultValue=" + defaultValue + ", scale=" + scale
-				+ ", unique=" + unique  + ", table=" + table.getName() + "]";
+		return "TableColumn [id=" + id + ", name=" + name + ", type=" + type + ", length=" + length + ", nullable=" + nullable
+				+ ", primaryKey=" + primaryKey + ", defaultValue=" + defaultValue + ", scale=" + scale + ", unique=" + unique + ", table="
+				+ table.getName() + "]";
 	}
-	
-	
+
+
 
 }

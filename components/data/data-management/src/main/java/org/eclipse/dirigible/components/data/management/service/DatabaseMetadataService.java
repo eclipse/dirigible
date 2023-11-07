@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.service;
 
@@ -31,13 +30,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DatabaseMetadataService {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseMetadataService.class);
-	
+
 	/** The data sources manager. */
 	private final DataSourcesManager datasourceManager;
-	
+
 	/** The data sources service. */
 	private final DataSourceService datasourceService;
 
@@ -52,7 +51,7 @@ public class DatabaseMetadataService {
 		this.datasourceManager = datasourceManager;
 		this.datasourceService = datasourceService;
 	}
-	
+
 	/**
 	 * Gets the data sources.
 	 *
@@ -61,7 +60,7 @@ public class DatabaseMetadataService {
 	public Set<String> getDataSourcesNames() {
 		return datasourceService.getAll().stream().map(DataSource::getName).collect(Collectors.toSet());
 	}
-	
+
 	/**
 	 * Gets the structures.
 	 *
@@ -74,7 +73,7 @@ public class DatabaseMetadataService {
 		String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
 		return metadata;
 	}
-	
+
 	/**
 	 * Exists the structures.
 	 *
@@ -86,7 +85,7 @@ public class DatabaseMetadataService {
 		javax.sql.DataSource dataSource = datasourceManager.getDataSource(datasource);
 		return dataSource != null;
 	}
-	
+
 	/**
 	 * Gets the schema metadata.
 	 *
@@ -100,7 +99,7 @@ public class DatabaseMetadataService {
 		String metadata = DatabaseMetadataHelper.getSchemaMetadataAsJson(dataSource, schema);
 		return metadata;
 	}
-	
+
 	/**
 	 * Describe the requested artifact in JSON.
 	 *
@@ -122,12 +121,19 @@ public class DatabaseMetadataService {
 			try {
 				type = DatabaseStructureTypes.valueOf(kind);
 			} catch (Exception e) {
-				if (logger.isWarnEnabled()) {logger.warn("Kind is unknown", e);}
+				if (logger.isWarnEnabled()) {
+					logger.warn("Kind is unknown", e);
+				}
 			}
 			switch (type) {
-				case PROCEDURE: metadata = DatabaseMetadataHelper.getProcedureMetadataAsJson(dataSource, schema, artifact); break;
-				case FUNCTION: metadata = DatabaseMetadataHelper.getFunctionMetadataAsJson(dataSource, schema, artifact); break;
-				default: metadata = DatabaseMetadataHelper.getTableMetadataAsJson(dataSource, schema, artifact); // TABLE, VIEW
+				case PROCEDURE:
+					metadata = DatabaseMetadataHelper.getProcedureMetadataAsJson(dataSource, schema, artifact);
+					break;
+				case FUNCTION:
+					metadata = DatabaseMetadataHelper.getFunctionMetadataAsJson(dataSource, schema, artifact);
+					break;
+				default:
+					metadata = DatabaseMetadataHelper.getTableMetadataAsJson(dataSource, schema, artifact); // TABLE, VIEW
 			}
 		}
 		return metadata;

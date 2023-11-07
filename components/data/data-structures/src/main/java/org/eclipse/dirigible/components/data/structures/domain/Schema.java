@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.domain;
 
@@ -36,22 +35,22 @@ import com.google.gson.annotations.Expose;
 @Entity
 @javax.persistence.Table(name = "DIRIGIBLE_DATA_SCHEMAS")
 public class Schema extends Artefact {
-	
+
 	/** The Constant ARTEFACT_TYPE. */
 	public static final String ARTEFACT_TYPE = "schema";
-	
+
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "SCHEMA_ID", nullable = false)
 	private Long id;
-	
+
 	/** The tables. */
 	@OneToMany(mappedBy = "schemaReference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@Expose
 	private List<Table> tables = new ArrayList<Table>();
-	
+
 	/** The views. */
 	@OneToMany(mappedBy = "schemaReference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -69,7 +68,7 @@ public class Schema extends Artefact {
 	public Schema(String location, String name, String description, Set<String> dependencies) {
 		super(location, name, ARTEFACT_TYPE, description, dependencies);
 	}
-	
+
 	/**
 	 * Instantiates a new schema.
 	 */
@@ -130,7 +129,7 @@ public class Schema extends Artefact {
 	public void setViews(List<View> views) {
 		this.views = views;
 	}
-	
+
 	/**
 	 * Find table.
 	 *
@@ -145,7 +144,7 @@ public class Schema extends Artefact {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Find view.
 	 *
@@ -168,10 +167,9 @@ public class Schema extends Artefact {
 	 */
 	@Override
 	public String toString() {
-		return "Schema [id=" + id + ", tables=" + tables + ", views=" + views + ", location=" + location + ", name="
-				+ name + ", type=" + type + ", description=" + description + ", key=" + key + ", dependencies="
-				+ dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy
-				+ ", updatedAt=" + updatedAt + "]";
+		return "Schema [id=" + id + ", tables=" + tables + ", views=" + views + ", location=" + location + ", name=" + name + ", type="
+				+ type + ", description=" + description + ", key=" + key + ", dependencies=" + dependencies + ", createdBy=" + createdBy
+				+ ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
 	}
-	
+
 }

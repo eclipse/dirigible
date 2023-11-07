@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.utils;
 
@@ -24,8 +23,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the MD5 digest and returns the value as a 16 element byte[].
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the MD5 digest
 	 */
 	public static final byte[] md5(byte[] input) {
@@ -35,8 +33,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the MD5 digest and returns the value as a 16 element byte[].
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the MD5 digest
 	 */
 	public static final byte[] md5(String input) {
@@ -47,8 +44,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the MD5 digest and returns the value as a 32 character hex string.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the MD5 digest
 	 */
 	public static final String md5Hex(byte[] input) {
@@ -58,8 +54,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the MD5 digest and returns the value as a 32 character hex string.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the MD5 digest
 	 */
 	public static final String md5Hex(String input) {
@@ -70,8 +65,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the SHA-1 digest and returns the value as a byte[].
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the SHA-1 digest
 	 */
 	public static final byte[] sha1(byte[] input) {
@@ -81,8 +75,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the SHA-1 digest and returns the value as a byte[].
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the SHA-1 digest
 	 */
 	public static final byte[] sha1(String input) {
@@ -93,8 +86,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the SHA-256 digest and returns the value as a byte[].
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the SHA-256 digest
 	 */
 	public static final byte[] sha256(byte[] input) {
@@ -104,8 +96,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the SHA-256 digest and returns the value as a byte[].
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the SHA-256 digest
 	 */
 	public static final byte[] sha256(String input) {
@@ -116,8 +107,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the SHA-384 digest and returns the value as a byte[].
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the SHA-384 digest
 	 */
 	public static final byte[] sha384(byte[] input) {
@@ -127,8 +117,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the SHA-384 digest and returns the value as a byte[].
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the SHA-384 digest
 	 */
 	public static final byte[] sha384(String input) {
@@ -139,8 +128,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the SHA-512 digest and returns the value as a byte[].
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the SHA-512 digest
 	 */
 	public static final byte[] sha512(byte[] input) {
@@ -150,8 +138,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the SHA-512 digest and returns the value as a byte[].
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the SHA-512 digest
 	 */
 	public static final byte[] sha512(String input) {
@@ -162,8 +149,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the SHA-1 digest and returns the value as a hex string.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the SHA-1 digest
 	 */
 	public static final String sha1Hex(byte[] input) {
@@ -173,8 +159,7 @@ public class DigestFacade {
 	/**
 	 * Calculates the SHA-1 digest and returns the value as a hex string.
 	 *
-	 * @param input
-	 *            the input
+	 * @param input the input
 	 * @return the SHA-1 digest
 	 */
 	public static final String sha1Hex(String input) {

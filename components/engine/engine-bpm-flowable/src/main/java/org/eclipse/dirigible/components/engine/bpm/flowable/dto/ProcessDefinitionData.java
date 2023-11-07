@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.dto;
 
@@ -15,31 +14,31 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.dto;
  * The Class ProcessDefinitionData.
  */
 public class ProcessDefinitionData {
-	
+
 	/** The category. */
 	private String category;
-	
+
 	/** The deployment id. */
 	private String deploymentId;
-	
+
 	/** The diagram. */
 	private String diagram;
-	
+
 	/** The id. */
 	private String id;
-	
+
 	/** The key. */
 	private String key;
-	
+
 	/** The name. */
 	private String name;
-	
+
 	/** The resource name. */
 	private String resourceName;
-	
+
 	/** The tennant id. */
 	private String tennantId;
-	
+
 	/** The version. */
 	private int version;
 
@@ -204,7 +203,7 @@ public class ProcessDefinitionData {
 	public void setVersion(int version) {
 		this.version = version;
 	}
-	
-	
-	
+
+
+
 }

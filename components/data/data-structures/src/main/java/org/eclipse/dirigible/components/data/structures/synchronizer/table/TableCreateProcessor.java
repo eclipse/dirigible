@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.synchronizer.table;
 
@@ -39,7 +38,7 @@ public class TableCreateProcessor {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TableCreateProcessor.class);
-	
+
 	/**
 	 * Execute the corresponding statement.
 	 *
@@ -60,12 +59,15 @@ public class TableCreateProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, Table tableModel, boolean skipForeignKeys) throws SQLException {
-		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+		boolean caseSensitive =
+				Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String tableName = tableModel.getName();
 		if (caseSensitive) {
 			tableName = "\"" + tableName + "\"";
 		}
-		if (logger.isInfoEnabled()) {logger.info("Processing Create Table: " + tableName);}
+		if (logger.isInfoEnabled()) {
+			logger.info("Processing Create Table: " + tableName);
+		}
 		CreateTableBuilder createTableBuilder = SqlFactory.getNative(connection).create().table(tableName);
 		List<TableColumn> columns = tableModel.getColumns();
 		List<TableIndex> indexes = tableModel.getIndexes();
@@ -83,7 +85,8 @@ public class TableCreateProcessor {
 			String scale = columnModel.getScale();
 			String args = "";
 			if (length != null) {
-				if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR) || type.equals(DataType.NVARCHAR) || type.equals(DataType.CHARACTER_VARYING)) {
+				if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR) || type.equals(DataType.NVARCHAR)
+						|| type.equals(DataType.CHARACTER_VARYING)) {
 					args = ISqlKeywords.OPEN + length + ISqlKeywords.CLOSE;
 				}
 				if (scale != null) {
@@ -94,7 +97,8 @@ public class TableCreateProcessor {
 			}
 			if (defaultValue != null) {
 				if ("".equals(defaultValue)) {
-					if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR) || type.equals(DataType.NVARCHAR) || type.equals(DataType.CHARACTER_VARYING)) {
+					if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR) || type.equals(DataType.NVARCHAR)
+							|| type.equals(DataType.CHARACTER_VARYING)) {
 						args += " DEFAULT '" + defaultValue + "' ";
 					}
 				} else {
@@ -114,7 +118,7 @@ public class TableCreateProcessor {
 						primaryKeyColumns[i++] = column;
 					}
 				}
-				
+
 				createTableBuilder.primaryKey(primaryKeyColumns);
 			}
 			if (!skipForeignKeys) {
@@ -146,7 +150,7 @@ public class TableCreateProcessor {
 								foreignKeyReferencedColumns[i++] = column;
 							}
 						}
-						
+
 						createTableBuilder.foreignKey(foreignKeyName, foreignKeyColumns, foreignKeyReferencedTable,
 								foreignKeyReferencedColumns);
 					}
@@ -180,8 +184,8 @@ public class TableCreateProcessor {
 				}
 			}
 		}
-		if(indexes != null){
-			for(TableIndex indexModel : indexes) {
+		if (indexes != null) {
+			for (TableIndex indexModel : indexes) {
 				String name = indexModel.getName();
 				String type = indexModel.getType();
 				Boolean isUnique = indexModel.isUnique();
@@ -192,15 +196,21 @@ public class TableCreateProcessor {
 		}
 
 		final String sql = createTableBuilder.build();
-		if (logger.isInfoEnabled()) {logger.info(sql);}
+		if (logger.isInfoEnabled()) {
+			logger.info(sql);
+		}
 		String[] parts = sql.split(CreateTableBuilder.STATEMENT_DELIMITER);
 		for (String part : parts) {
 			PreparedStatement statement = connection.prepareStatement(part);
 			try {
 				statement.executeUpdate();
 			} catch (SQLException e) {
-				if (logger.isErrorEnabled()) {logger.error(sql);}
-				if (logger.isErrorEnabled()) {logger.error(e.getMessage(), e);}
+				if (logger.isErrorEnabled()) {
+					logger.error(sql);
+				}
+				if (logger.isErrorEnabled()) {
+					logger.error(e.getMessage(), e);
+				}
 				throw new SQLException(e.getMessage(), e);
 			} finally {
 				if (statement != null) {

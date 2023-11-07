@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.mongodb.jdbc;
 
@@ -26,11 +25,11 @@ import org.slf4j.LoggerFactory;
  * The Class MongoDBDataSource.
  */
 public class MongoDBDataSource implements DataSource {
-	
+
 	/** The Constant LOG. */
 	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(MongoDBDataSource.class);
-	
-	 static {
+
+	static {
 		try {
 			Class.forName(Driver.class.getCanonicalName());
 		} catch (ClassNotFoundException e) {
@@ -38,27 +37,27 @@ public class MongoDBDataSource implements DataSource {
 			throw new RuntimeException(e);
 		}
 	}
-	 
+
 	/** The url. */
 	private String url;
-	
+
 	/** The user name. */
 	private String userName;
-	
+
 	/** The password. */
 	private String password;
-	
+
 	/** The logger. */
 	private PrintWriter logger;
-	
+
 	/** The login timeout. */
 	private int loginTimeout;
-	
+
 	/**
 	 * Instantiates a new mongo DB data source.
 	 */
-	public MongoDBDataSource(){}
-	
+	public MongoDBDataSource() {}
+
 	/**
 	 * Instantiates a new mongo DB data source.
 	 *
@@ -66,12 +65,12 @@ public class MongoDBDataSource implements DataSource {
 	 * @param userName the user name
 	 * @param password the password
 	 */
-	public MongoDBDataSource(String url, String userName, String password){
+	public MongoDBDataSource(String url, String userName, String password) {
 		this.url = url;
 		this.userName = userName;
 		this.password = password;
 	}
-	
+
 	/**
 	 * Gets the url.
 	 *
@@ -193,9 +192,9 @@ public class MongoDBDataSource implements DataSource {
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		if (isWrapperFor(iface)) {
-	        return (T) this;
-	    }
-	    throw new SQLException("No wrapper for " + iface);
+			return (T) this;
+		}
+		throw new SQLException("No wrapper for " + iface);
 	}
 
 	/**
@@ -207,7 +206,7 @@ public class MongoDBDataSource implements DataSource {
 	 */
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		 return iface != null && iface.isAssignableFrom(getClass());
+		return iface != null && iface.isAssignableFrom(getClass());
 	}
 
 	/**

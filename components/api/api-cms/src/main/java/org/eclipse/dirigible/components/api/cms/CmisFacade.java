@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.cms;
 
@@ -61,13 +60,13 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 
 	/** The application context. */
 	private static ApplicationContext applicationContext;
-	
+
 	/** The security access verifier. */
-    private AccessVerifier securityAccessVerifier;
-    
+	private AccessVerifier securityAccessVerifier;
+
 	/** The cms provider. */
 	private CmsProvider cmsProvider;
-	
+
 	/** The instance. */
 	private static CmisFacade INSTANCE;
 
@@ -82,7 +81,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 		this.cmsProvider = cmsProvider;
 		this.securityAccessVerifier = securityAccessVerifier;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -90,17 +89,17 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the cmis facade
 	 */
 	public static CmisFacade get() {
-        return INSTANCE;
-    }
+		return INSTANCE;
+	}
 
 	/**
 	 * Gets the cms provider.
@@ -110,7 +109,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 	protected CmsProvider getCmsProvider() {
 		return cmsProvider;
 	}
-	
+
 	/**
 	 * Gets the security access verifier.
 	 *
@@ -119,7 +118,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 	public AccessVerifier getSecurityAccessVerifier() {
 		return securityAccessVerifier;
 	}
-	
+
 	/**
 	 * Sets the application context.
 	 *
@@ -141,8 +140,8 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 	}
 
 	/**
-	 * Mapping utility between the CMIS standard and Javascript string
-	 * representation of the versioning state.
+	 * Mapping utility between the CMIS standard and Javascript string representation of the versioning
+	 * state.
 	 *
 	 * @param state the Javascript state
 	 * @return the CMIS state
@@ -172,7 +171,7 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 	/**
 	 * Checks if the user can access the given path with the given method.
 	 *
-	 * @param path   the path
+	 * @param path the path
 	 * @param method the method
 	 * @return true, if the user is in role
 	 */
@@ -184,11 +183,11 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 		if (!Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_ROLES_ENABLED, Boolean.TRUE.toString()))) {
 			return true;
 		}
-		
+
 		if (!HttpRequestFacade.isValid()) {
 			return true;
 		}
-		
+
 		try {
 			String user = HttpRequestFacade.getRemoteUser();
 			Set<Access> readDefinitions = getAccessDefinitions(path, CMIS_METHOD_READ);
@@ -245,13 +244,12 @@ public class CmisFacade implements ApplicationContextAware, InitializingBean {
 	/**
 	 * Gets the access definitions.
 	 *
-	 * @param path   the path
+	 * @param path the path
 	 * @param method the method
 	 * @return the access definitions
 	 * @throws ServletException the servlet exception
 	 */
-	public static Set<Access> getAccessDefinitions(String path, String method)
-			throws ServletException {
+	public static Set<Access> getAccessDefinitions(String path, String method) throws ServletException {
 		Set<Access> accessDefinitions = new HashSet<Access>();
 		int indexOf = 0;
 		do {

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.odata.api;
 
@@ -23,62 +22,69 @@ import com.google.gson.annotations.Expose;
  */
 public class ODataEntity {
 
-    /** The name. */
+	/** The name. */
 	@Expose
-    private String name;
+	private String name;
 
-    /** The alias. */
+	/** The alias. */
 	@Expose
-    private String alias;
+	private String alias;
 
-    /** The table. */
+	/** The table. */
 	@Expose
-    private String table;
+	private String table;
 
 	/** The key generated. */
 	@Expose
 	private String keyGenerated;
 
-    /** The properties. */
+	/** The properties. */
 	@Expose
-    private List<ODataProperty> properties = new ArrayList<>();
+	private List<ODataProperty> properties = new ArrayList<>();
 
 	/** The parameters. */
 	@Expose
 	private List<ODataParameter> parameters = new ArrayList<>();
 
-    /** The navigations. */
+	/** The navigations. */
 	@Expose
-    private List<ODataNavigation> navigations = new ArrayList<>();
+	private List<ODataNavigation> navigations = new ArrayList<>();
 
-    /** The handlers. */
+	/** The handlers. */
 	@Expose
-    private List<ODataHandler> handlers = new ArrayList<>();
-
-    /** For VIEW type the keys need to be specified explicitly, because on DB side there will be no keys definitions. */
-	@Expose
-    private List<String> keys = new ArrayList<>();
-
-    /**
-     * <p>Define list of additional annotations for EntitySet element.</p>
-     * For example:
-     * <code> &lt;EntitySet Name="SomeName" EntityType="someType" sap:creatable="true" sap:updatable-path="Updatable"&gt; </code>
-     */
-	@Expose
-    private Map<String, String> annotationsEntitySet = new HashMap<>();
-
-    /**
-     * <p>Define list of additional annotations for EntityType element.</p>
-     * For example:
-     * <code> &lt;EntityType Name="SomeTypeName" sap:semantics="aggregate""&gt; </code>
-     */
-	@Expose
-    private Map<String, String> annotationsEntityType = new HashMap<>();
+	private List<ODataHandler> handlers = new ArrayList<>();
 
 	/**
-	 * <p>Define list of aggregation types for the columns.</p>
+	 * For VIEW type the keys need to be specified explicitly, because on DB side there will be no keys
+	 * definitions.
+	 */
+	@Expose
+	private List<String> keys = new ArrayList<>();
+
+	/**
+	 * <p>
+	 * Define list of additional annotations for EntitySet element.
+	 * </p>
 	 * For example:
-	 * <code> &lt;SUM="NUMBER"&gt; </code>
+	 * <code> &lt;EntitySet Name="SomeName" EntityType="someType" sap:creatable="true" sap:updatable-path="Updatable"&gt; </code>
+	 */
+	@Expose
+	private Map<String, String> annotationsEntitySet = new HashMap<>();
+
+	/**
+	 * <p>
+	 * Define list of additional annotations for EntityType element.
+	 * </p>
+	 * For example: <code> &lt;EntityType Name="SomeTypeName" sap:semantics="aggregate""&gt; </code>
+	 */
+	@Expose
+	private Map<String, String> annotationsEntityType = new HashMap<>();
+
+	/**
+	 * <p>
+	 * Define list of aggregation types for the columns.
+	 * </p>
+	 * For example: <code> &lt;SUM="NUMBER"&gt; </code>
 	 */
 	@Expose
 	private Map<String, String> aggregationsTypeAndColumn = new HashMap<>();
@@ -306,11 +312,10 @@ public class ODataEntity {
 	 */
 	@Override
 	public String toString() {
-		return "ODataEntity [name=" + name + ", alias=" + alias + ", table=" + table + ", keyGenerated=" + keyGenerated
-				+ ", properties=" + properties + ", parameters=" + parameters + ", navigations=" + navigations
-				+ ", handlers=" + handlers + ", keys=" + keys + ", annotationsEntitySet=" + annotationsEntitySet
-				+ ", annotationsEntityType=" + annotationsEntityType + ", aggregationsTypeAndColumn="
-				+ aggregationsTypeAndColumn + "]";
+		return "ODataEntity [name=" + name + ", alias=" + alias + ", table=" + table + ", keyGenerated=" + keyGenerated + ", properties="
+				+ properties + ", parameters=" + parameters + ", navigations=" + navigations + ", handlers=" + handlers + ", keys=" + keys
+				+ ", annotationsEntitySet=" + annotationsEntitySet + ", annotationsEntityType=" + annotationsEntityType
+				+ ", aggregationsTypeAndColumn=" + aggregationsTypeAndColumn + "]";
 	}
 
 }

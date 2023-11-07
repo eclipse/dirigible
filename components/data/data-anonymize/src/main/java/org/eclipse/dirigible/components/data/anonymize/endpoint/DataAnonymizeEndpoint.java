@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.anonymize.endpoint;
 
@@ -44,22 +43,22 @@ public class DataAnonymizeEndpoint {
 
 	/** The data anonymize service. */
 	private DataAnonymizeService dataAnonymizeService;
-	
+
 	/** The database metadata service. */
 	private DatabaseMetadataService databaseMetadataService;
 
 	/**
 	 * Instantiates a new data anonymize endpoint.
 	 *
-	 * @param dataAnonymizeService     the database anonymize service
-	 * @param databaseMetadataService   the database metadata service
+	 * @param dataAnonymizeService the database anonymize service
+	 * @param databaseMetadataService the database metadata service
 	 */
 	@Autowired
 	public DataAnonymizeEndpoint(DataAnonymizeService dataAnonymizeService, DatabaseMetadataService databaseMetadataService) {
 		this.dataAnonymizeService = dataAnonymizeService;
 		this.databaseMetadataService = databaseMetadataService;
 	}
-	
+
 	/**
 	 * Gets the data export anonymize service.
 	 *
@@ -68,7 +67,7 @@ public class DataAnonymizeEndpoint {
 	public DataAnonymizeService getDataAnonymizeService() {
 		return dataAnonymizeService;
 	}
-	
+
 	/**
 	 * Gets the database metadata service.
 	 *
@@ -78,7 +77,7 @@ public class DataAnonymizeEndpoint {
 		return databaseMetadataService;
 	}
 
-	
+
 	/**
 	 * Execute artifact export.
 	 *
@@ -93,12 +92,10 @@ public class DataAnonymizeEndpoint {
 			String error = format("Datasource {0} does not exist.", content.getDatasource());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, error);
 		}
-		
-		dataAnonymizeService.anonymizeColumn(
-						content.getDatasource(), content.getSchema(), 
-						content.getTable(), content.getColumn(), 
-						content.getPrimaryKey(), content.getType());
-		
+
+		dataAnonymizeService.anonymizeColumn(content.getDatasource(), content.getSchema(), content.getTable(), content.getColumn(),
+				content.getPrimaryKey(), content.getType());
+
 		return ResponseEntity.ok().build();
 	}
 

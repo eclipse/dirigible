@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.camel.invoke;
 
@@ -27,29 +26,29 @@ import java.util.Map;
 
 @Component
 public class Invoker {
-    private final JavascriptService javascriptService;
+	private final JavascriptService javascriptService;
 
-    private final CamelProcessor processor;
+	private final CamelProcessor processor;
 
-    @Autowired
-    public Invoker(JavascriptService javascriptService, CamelProcessor processor) {
-        this.javascriptService = javascriptService;
-        this.processor = processor;
-    }
+	@Autowired
+	public Invoker(JavascriptService javascriptService, CamelProcessor processor) {
+		this.javascriptService = javascriptService;
+		this.processor = processor;
+	}
 
-    public void invoke(Message camelMessage) {
-        String resourcePath = (String)camelMessage.getExchange().getProperty("resource");
-        RepositoryPath path = new RepositoryPath(resourcePath);
+	public void invoke(Message camelMessage) {
+		String resourcePath = (String) camelMessage.getExchange().getProperty("resource");
+		RepositoryPath path = new RepositoryPath(resourcePath);
 
-        String messageBody = camelMessage.getBody(String.class);
+		String messageBody = camelMessage.getBody(String.class);
 
-        Map<Object, Object> context = new HashMap<>();
-        context.put("camelMessage", messageBody);
+		Map<Object, Object> context = new HashMap<>();
+		context.put("camelMessage", messageBody);
 
-        javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-    }
+		javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+	}
 
-    public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
-        return processor.invokeRoute(routeId, payload, headers);
-    }
+	public Object invokeRoute(String routeId, Object payload, Map<String, Object> headers) {
+		return processor.invokeRoute(routeId, payload, headers);
+	}
 }

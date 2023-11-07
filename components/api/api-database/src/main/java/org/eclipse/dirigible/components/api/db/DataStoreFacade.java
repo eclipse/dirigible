@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.db;
 
@@ -28,16 +27,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DataStoreFacade implements InitializingBean {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataStoreFacade.class);
-	
+
 	/** The data sore facade. */
 	private static DataStoreFacade INSTANCE;
-	
+
 	/** The data store. */
 	private DataStore dataStore;
-	
+
 	/**
 	 * Instantiates a new data store facade.
 	 *
@@ -47,7 +46,7 @@ public class DataStoreFacade implements InitializingBean {
 	public DataStoreFacade(DataStore dataStore) {
 		this.dataStore = dataStore;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -55,18 +54,18 @@ public class DataStoreFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the data store facade
 	 */
 	public static DataStoreFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	/**
 	 * Gets the data store.
 	 *
@@ -75,7 +74,7 @@ public class DataStoreFacade implements InitializingBean {
 	public DataStore getDataStore() {
 		return dataStore;
 	}
-	
+
 	/**
 	 * Save.
 	 *
@@ -85,7 +84,7 @@ public class DataStoreFacade implements InitializingBean {
 	public static void save(String name, String json) {
 		DataStoreFacade.get().getDataStore().save(name, json);
 	}
-	
+
 	/**
 	 * List.
 	 *
@@ -96,7 +95,7 @@ public class DataStoreFacade implements InitializingBean {
 		List list = DataStoreFacade.get().getDataStore().list(name);
 		return JsonHelper.toJson(list);
 	}
-	
+
 	/**
 	 * Gets the.
 	 *
@@ -108,7 +107,7 @@ public class DataStoreFacade implements InitializingBean {
 		Map object = DataStoreFacade.get().getDataStore().get(name, id);
 		return JsonHelper.toJson(object);
 	}
-	
+
 	/**
 	 * Delete.
 	 *

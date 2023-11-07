@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.http;
 
@@ -36,7 +35,7 @@ public class HttpRequestFacade {
 
 	/** The Constant ATTRIBUTE_REST_RESOURCE_PATH. */
 	public static final String ATTRIBUTE_REST_RESOURCE_PATH = "dirigible-rest-resource-path";
-	
+
 	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Request Facade without a valid Request";
 
@@ -62,7 +61,8 @@ public class HttpRequestFacade {
 	}
 
 	/**
-	 * Returns the name of the HTTP method with which this request in the current thread context was made.
+	 * Returns the name of the HTTP method with which this request in the current thread context was
+	 * made.
 	 *
 	 * @return the HTTP method of the request
 	 * @see HttpServletRequest#getMethod()
@@ -90,7 +90,8 @@ public class HttpRequestFacade {
 	}
 
 	/**
-	 * Returns any extra path information associated with the URL the client sent when it made this request.
+	 * Returns any extra path information associated with the URL the client sent when it made this
+	 * request.
 	 *
 	 * @return the path info
 	 * @see HttpServletRequest#getPathInfo()
@@ -104,9 +105,8 @@ public class HttpRequestFacade {
 	}
 
 	/**
-	 * Returns any extra path information after the servlet name but before the query string, and translates it to a
-	 * real
-	 * path.
+	 * Returns any extra path information after the servlet name but before the query string, and
+	 * translates it to a real path.
 	 *
 	 * @return the path translated
 	 * @see HttpServletRequest#getPathTranslated()
@@ -120,11 +120,10 @@ public class HttpRequestFacade {
 	}
 
 	/**
-	 * Returns the value of the specified request header as a String. If the request did not include a header of the
-	 * specified name, this method returns null
+	 * Returns the value of the specified request header as a String. If the request did not include a
+	 * header of the specified name, this method returns null
 	 *
-	 * @param name
-	 *            the header name
+	 * @param name the header name
 	 * @return the header value
 	 * @see HttpServletRequest#getHeader(String)
 	 */
@@ -139,8 +138,7 @@ public class HttpRequestFacade {
 	/**
 	 * Checks if is user in role.
 	 *
-	 * @param role
-	 *            the role
+	 * @param role the role
 	 * @return true, if is user in role
 	 * @see HttpServletRequest#isUserInRole(String)
 	 */
@@ -151,7 +149,7 @@ public class HttpRequestFacade {
 	/**
 	 * Returns the attribute as string.
 	 *
-	 * @param name            the name
+	 * @param name the name
 	 * @return the attribute
 	 * @see HttpServletRequest#getAttribute(String)
 	 */
@@ -233,8 +231,7 @@ public class HttpRequestFacade {
 	/**
 	 * Returns the headers.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the headers
 	 */
 	public static final String getHeaders(String name) {
@@ -263,8 +260,7 @@ public class HttpRequestFacade {
 	 * Returns the bytes.
 	 *
 	 * @return the bytes
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static final String getBytes() throws IOException {
 		HttpServletRequest request = getRequest();
@@ -278,8 +274,7 @@ public class HttpRequestFacade {
 	 * Returns the text.
 	 *
 	 * @return the text
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static final String getText() throws IOException {
 		HttpServletRequest request = getRequest();
@@ -290,13 +285,12 @@ public class HttpRequestFacade {
 		String charset = (request.getCharacterEncoding() != null) ? request.getCharacterEncoding() : StandardCharsets.UTF_8.name();
 		return new String(bytes, charset);
 	}
-	
+
 	/**
 	 * Returns the input stream.
 	 *
 	 * @return the input stream
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static final ServletInputStream getInputStream() throws IOException {
 		HttpServletRequest request = getRequest();
@@ -309,8 +303,7 @@ public class HttpRequestFacade {
 	/**
 	 * Returns the parameter.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the parameter
 	 */
 	public static final String getParameter(String name) {
@@ -379,8 +372,7 @@ public class HttpRequestFacade {
 	/**
 	 * Returns the parameter values.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the parameter values
 	 */
 	public static final String getParameterValues(String name) {
@@ -498,10 +490,8 @@ public class HttpRequestFacade {
 	/**
 	 * Sets the attribute.
 	 *
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
+	 * @param name the name
+	 * @param value the value
 	 */
 	public static final void setAttribute(String name, String value) {
 		HttpServletRequest request = getRequest();
@@ -514,8 +504,7 @@ public class HttpRequestFacade {
 	/**
 	 * Removes the attribute.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 */
 	public static final void removeAttribute(String name) {
 		HttpServletRequest request = getRequest();

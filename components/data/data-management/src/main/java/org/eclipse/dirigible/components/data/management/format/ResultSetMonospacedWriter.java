@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.format;
 
@@ -55,8 +54,7 @@ public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 	/**
 	 * Sets the limited.
 	 *
-	 * @param limited
-	 *            the new limited
+	 * @param limited the new limited
 	 */
 	public void setLimited(boolean limited) {
 		this.limited = limited;
@@ -76,7 +74,7 @@ public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 
 		List<ColumnDescriptor> columnHeaderDescriptors = new ArrayList<ColumnDescriptor>();
 		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-		
+
 		try {
 			if (columnHeaderDescriptors.size() > 0) {
 				String headers = (String) this.headerFormat.write(columnHeaderDescriptors);
@@ -140,13 +138,10 @@ public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 	/**
 	 * Gets the colum index by name.
 	 *
-	 * @param columnName
-	 *            the column name
-	 * @param metadata
-	 *            the metadata
+	 * @param columnName the column name
+	 * @param metadata the metadata
 	 * @return the column index by name
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @throws SQLException the SQL exception
 	 */
 	int getColumnIndexByName(String columnName, ResultSetMetaData metadata) throws SQLException {
 		for (int i = 1; i < (metadata.getColumnCount() + 1); i++) {
@@ -160,11 +155,9 @@ public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 	/**
 	 * Gets the header.
 	 *
-	 * @param resultSetMetaData
-	 *            the result set meta data
+	 * @param resultSetMetaData the result set meta data
 	 * @return the header
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @throws SQLException the SQL exception
 	 */
 	List<String> getHeader(ResultSetMetaData resultSetMetaData) throws SQLException {
 
@@ -191,8 +184,7 @@ public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 	/**
 	 * Sets the header format.
 	 *
-	 * @param headerFormat
-	 *            the new header format
+	 * @param headerFormat the new header format
 	 */
 	public void setHeaderFormat(HeaderFormatter headerFormat) {
 		this.headerFormat = headerFormat;

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.api.indexing;
 
@@ -31,18 +30,18 @@ public class IndexingFacade implements InitializingBean {
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(IndexingFacade.class);
-	
+
 	/** The indexing facade. */
 	private static IndexingFacade INSTANCE;
 
 	/** The Constant indexingService. */
 	private final IndexingService indexingService;
-	
+
 	@Autowired
 	private IndexingFacade(IndexingService indexingService) {
 		this.indexingService = indexingService;
 	}
-	
+
 	/**
 	 * After properties set.
 	 *
@@ -50,18 +49,18 @@ public class IndexingFacade implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
-	
+
 	/**
 	 * Gets the instance.
 	 *
 	 * @return the database facade
 	 */
 	public static IndexingFacade get() {
-        return INSTANCE;
-    }
-	
+		return INSTANCE;
+	}
+
 	public IndexingService getIndexingService() {
 		return indexingService;
 	}
@@ -76,9 +75,12 @@ public class IndexingFacade implements InitializingBean {
 	 * @param parameters the parameters
 	 * @throws IOException the indexing exception
 	 */
-	public static final void add(String index, String location, String contents, String lastModified, String parameters) throws IOException {
+	public static final void add(String index, String location, String contents, String lastModified, String parameters)
+			throws IOException {
 		Map map = GsonHelper.fromJson(parameters, Map.class);
-		IndexingFacade.get().getIndexingService().add(index, location, contents.getBytes(StandardCharsets.UTF_8), Long.parseLong(lastModified), map);
+		IndexingFacade	.get()
+						.getIndexingService()
+						.add(index, location, contents.getBytes(StandardCharsets.UTF_8), Long.parseLong(lastModified), map);
 	}
 
 	/**

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.endpoint;
 
@@ -45,45 +44,43 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 class RoleEndpointTest {
 
-    @Autowired
-    private RoleRepository roleRepository;
+	@Autowired
+	private RoleRepository roleRepository;
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @Autowired
-    protected WebApplicationContext wac;
+	@Autowired
+	protected WebApplicationContext wac;
 
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
+	@Autowired
+	private FilterChainProxy springSecurityFilterChain;
 
-    @BeforeEach
-    public void setup() {
-    	
-    	cleanup();
-    	
-        // Create test security roles
-        roleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
-        roleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
-        roleRepository.save(createSecurityRole("/a/b/c/test3.role", "test3", "description"));
-        roleRepository.save(createSecurityRole("/a/b/c/test4.role", "test4", "description"));
-        roleRepository.save(createSecurityRole("/a/b/c/test5.role", "test5", "description"));
-    }
+	@BeforeEach
+	public void setup() {
 
-    @AfterEach
-    public void cleanup() {
-        // Delete test security roles
-        roleRepository.deleteAll();
-    }
+		cleanup();
 
-    @Test
-    public void testGetSecurityRoles() throws Exception {
-        mockMvc.perform(get("/services/security/roles"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
+		// Create test security roles
+		roleRepository.save(createSecurityRole("/a/b/c/test1.role", "test1", "description"));
+		roleRepository.save(createSecurityRole("/a/b/c/test2.role", "test2", "description"));
+		roleRepository.save(createSecurityRole("/a/b/c/test3.role", "test3", "description"));
+		roleRepository.save(createSecurityRole("/a/b/c/test4.role", "test4", "description"));
+		roleRepository.save(createSecurityRole("/a/b/c/test5.role", "test5", "description"));
+	}
 
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
+	@AfterEach
+	public void cleanup() {
+		// Delete test security roles
+		roleRepository.deleteAll();
+	}
+
+	@Test
+	public void testGetSecurityRoles() throws Exception {
+		mockMvc.perform(get("/services/security/roles")).andDo(print()).andExpect(status().isOk());
+	}
+
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 }

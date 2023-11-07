@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.master.jar;
 
@@ -31,8 +30,8 @@ public class JarRepository extends ZipRepository {
 	/**
 	 * Instantiates a new jar repository.
 	 *
-	 * @param zip            the zip
-	 * @throws LocalRepositoryException             the local repository exception
+	 * @param zip the zip
+	 * @throws LocalRepositoryException the local repository exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public JarRepository(String zip) throws LocalRepositoryException, IOException {
@@ -56,9 +55,8 @@ public class JarRepository extends ZipRepository {
 					throw new LocalRepositoryException(e);
 				}
 			} else {
-				throw new LocalRepositoryException(
-						String.format("Zip file containing Repository content does not exist at path: %s", zip));
-			} 
+				throw new LocalRepositoryException(String.format("Zip file containing Repository content does not exist at path: %s", zip));
+			}
 		} finally {
 			if (in != null) {
 				in.close();
@@ -69,12 +67,9 @@ public class JarRepository extends ZipRepository {
 	/**
 	 * Instantiates a new jar repository.
 	 *
-	 * @param rootFolder
-	 *            the root folder
-	 * @param absolute
-	 *            the absolute
-	 * @throws LocalRepositoryException
-	 *             the local repository exception
+	 * @param rootFolder the root folder
+	 * @param absolute the absolute
+	 * @throws LocalRepositoryException the local repository exception
 	 */
 	// disable usage
 	protected JarRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
@@ -84,8 +79,7 @@ public class JarRepository extends ZipRepository {
 	/**
 	 * Instantiates a new jar repository.
 	 *
-	 * @throws LocalRepositoryException
-	 *             the local repository exception
+	 * @throws LocalRepositoryException the local repository exception
 	 */
 	// disable usage
 	protected JarRepository() throws LocalRepositoryException {
@@ -99,6 +93,7 @@ public class JarRepository extends ZipRepository {
 	 */
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dirigible.repository.master.zip.ZipRepository#getRepositoryRootFolder()
 	 */
 	@Override

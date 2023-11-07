@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.view;
 
@@ -30,13 +29,14 @@ public class CreateViewTest extends CreateTableTest {
 	@Test
 	public void createViewAsSelect() {
 		createTableGeneric();
-		String sql = SqlFactory.getDefault()
-				.create().view("CUSTOMERS_VIEW")
-				.column("ID")
-				.column("FIRST_NAME")
-				.column("LAST_NAME")
-				.asSelect(SqlFactory.getDefault().select().column("*").from("CUSTOMERS").build())
-				.build();
+		String sql = SqlFactory	.getDefault()
+								.create()
+								.view("CUSTOMERS_VIEW")
+								.column("ID")
+								.column("FIRST_NAME")
+								.column("LAST_NAME")
+								.asSelect(SqlFactory.getDefault().select().column("*").from("CUSTOMERS").build())
+								.build();
 
 		assertNotNull(sql);
 		assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
@@ -49,17 +49,18 @@ public class CreateViewTest extends CreateTableTest {
 	public void createViewAsSelectCaseSensitive() {
 		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
 		try {
-			String sql = SqlFactory.getDefault()
-					.create().view("CUSTOMERS_VIEW")
-					.column("ID")
-					.column("FIRST_NAME")
-					.column("LAST_NAME")
-					.asSelect(SqlFactory.getDefault().select().column("*").from("CUSTOMERS").build())
-					.build();
-			
+			String sql = SqlFactory	.getDefault()
+									.create()
+									.view("CUSTOMERS_VIEW")
+									.column("ID")
+									.column("FIRST_NAME")
+									.column("LAST_NAME")
+									.asSelect(SqlFactory.getDefault().select().column("*").from("CUSTOMERS").build())
+									.build();
+
 			assertNotNull(sql);
 			assertEquals("CREATE VIEW \"CUSTOMERS_VIEW\" ( \"ID\" , \"FIRST_NAME\" , \"LAST_NAME\" ) AS SELECT * FROM \"CUSTOMERS\"", sql);
-			
+
 		} finally {
 			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
 		}
@@ -71,17 +72,22 @@ public class CreateViewTest extends CreateTableTest {
 	@Test
 	public void createViewWithJoinAndAlias() {
 		createTableGeneric();
-		String sql = SqlFactory.getDefault()
-				.create().view("CUSTOMERS_VIEW")
-				.column("ID")
-				.column("FIRST_NAME")
-				.column("LAST_NAME")
-				.asSelect(SqlFactory.getDefault().select().column("*").from("CUSTOMERS", "CUST")
-						.innerJoin("EMPLOYEE", "CUST.ID = EMP.ID", "EMP").build())
-				.build();
+		String sql = SqlFactory	.getDefault()
+								.create()
+								.view("CUSTOMERS_VIEW")
+								.column("ID")
+								.column("FIRST_NAME")
+								.column("LAST_NAME")
+								.asSelect(SqlFactory.getDefault()
+													.select()
+													.column("*")
+													.from("CUSTOMERS", "CUST")
+													.innerJoin("EMPLOYEE", "CUST.ID = EMP.ID", "EMP")
+													.build())
+								.build();
 
 		assertNotNull(sql);
-		assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS " +
-				"AS CUST INNER JOIN EMPLOYEE AS EMP ON CUST.ID = EMP.ID", sql);
+		assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS "
+				+ "AS CUST INNER JOIN EMPLOYEE AS EMP ON CUST.ID = EMP.ID", sql);
 	}
 }

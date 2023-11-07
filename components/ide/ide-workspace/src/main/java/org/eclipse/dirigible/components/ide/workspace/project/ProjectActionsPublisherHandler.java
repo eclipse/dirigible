@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.project;
 
@@ -29,17 +28,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ProjectActionsPublisherHandler implements PublisherHandler {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ProjectActionsPublisherHandler.class);
-	
+
 	/** The actions service. */
 	@Autowired
-    private ActionsService actionsService;
-	
+	private ActionsService actionsService;
+
 	/** The workspace service. */
-    @Autowired
-    private WorkspaceService workspaceService;
+	@Autowired
+	private WorkspaceService workspaceService;
 
 	/**
 	 * Before publish.
@@ -81,7 +80,8 @@ public class ProjectActionsPublisherHandler implements PublisherHandler {
 					try {
 						actionsService.executeAction(workspace, project, action.getName());
 					} catch (Exception e) {
-						logger.error("Failed in executing the action: {} of project: {} under workspace: {} with: {}", action, project, workspace, e);
+						logger.error("Failed in executing the action: {} of project: {} under workspace: {} with: {}", action, project,
+								workspace, e);
 					}
 				}
 			}
@@ -89,7 +89,7 @@ public class ProjectActionsPublisherHandler implements PublisherHandler {
 			logger.error(e.getMessage());
 		}
 	}
-	
-	
+
+
 
 }

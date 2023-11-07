@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.structures.service;
 
@@ -30,11 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class SchemaService implements ArtefactService<Schema> {
-	
+
 	/** The Schema repository. */
-	@Autowired 
+	@Autowired
 	private SchemaRepository schemaRepository;
-	
+
 	/**
 	 * Gets the all.
 	 *
@@ -58,7 +57,7 @@ public class SchemaService implements ArtefactService<Schema> {
 	public Page<Schema> getPages(Pageable pageable) {
 		return schemaRepository.findAll(pageable);
 	}
-	
+
 	/**
 	 * Find by id.
 	 *
@@ -75,7 +74,7 @@ public class SchemaService implements ArtefactService<Schema> {
 			throw new IllegalArgumentException("Schema with id does not exist: " + id);
 		}
 	}
-	
+
 	/**
 	 * Find by name.
 	 *
@@ -95,42 +94,42 @@ public class SchemaService implements ArtefactService<Schema> {
 			throw new IllegalArgumentException("Schema with name does not exist: " + name);
 		}
 	}
-	
+
 	/**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Schema> findByLocation(String location) {
-    	Schema filter = new Schema();
-        filter.setLocation(location);
-        Example<Schema> example = Example.of(filter);
-        List<Schema> list = schemaRepository.findAll(example);
-        return list;
-    }
-	
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Schema> findByLocation(String location) {
+		Schema filter = new Schema();
+		filter.setLocation(location);
+		Example<Schema> example = Example.of(filter);
+		List<Schema> list = schemaRepository.findAll(example);
+		return list;
+	}
+
 	/**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the schema
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Schema findByKey(String key) {
-    	Schema filter = new Schema();
-        filter.setKey(key);
-        Example<Schema> example = Example.of(filter);
-        Optional<Schema> schema = schemaRepository.findOne(example);
-        if (schema.isPresent()) {
-            return schema.get();
-        }
-        return null;
-    }
-	
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the schema
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Schema findByKey(String key) {
+		Schema filter = new Schema();
+		filter.setKey(key);
+		Example<Schema> example = Example.of(filter);
+		Optional<Schema> schema = schemaRepository.findOne(example);
+		if (schema.isPresent()) {
+			return schema.get();
+		}
+		return null;
+	}
+
 	/**
 	 * Save.
 	 *
@@ -141,7 +140,7 @@ public class SchemaService implements ArtefactService<Schema> {
 	public Schema save(Schema schema) {
 		return schemaRepository.saveAndFlush(schema);
 	}
-	
+
 	/**
 	 * Delete.
 	 *

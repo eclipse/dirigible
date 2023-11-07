@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.security.endpoint;
 
@@ -32,24 +31,24 @@ import java.util.List;
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_SECURED + "security")
 public class RoleEndpoint extends BaseEndpoint {
 
-    /**
-     * The Constant logger.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(RoleEndpoint.class);
+	/**
+	 * The Constant logger.
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(RoleEndpoint.class);
 
-    /**
-     * The security role service.
-     */
-    @Autowired
-    private RoleService roleService;
+	/**
+	 * The security role service.
+	 */
+	@Autowired
+	private RoleService roleService;
 
-    /**
-     * Gets the all.
-     *
-     * @return the all
-     */
-    @GetMapping("/roles")
-    public ResponseEntity<List<Role>> getAll() {
-        return ResponseEntity.ok(roleService.getAll());
-    }
+	/**
+	 * Gets the all.
+	 *
+	 * @return the all
+	 */
+	@GetMapping("/roles")
+	public ResponseEntity<List<Role>> getAll() {
+		return ResponseEntity.ok(roleService.getAll());
+	}
 }

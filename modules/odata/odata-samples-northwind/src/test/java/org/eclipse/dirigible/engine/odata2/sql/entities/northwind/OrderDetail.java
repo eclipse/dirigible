@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
@@ -27,44 +26,44 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 @EdmEntitySet(name = "Order_Details", container = "NorthwindEntities")
 public class OrderDetail {
 
-    /** The order id. */
-    @EdmKey
-    @EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
-    private Integer orderId;
+	/** The order id. */
+	@EdmKey
+	@EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
+	private Integer orderId;
 
-    /** The product id. */
-    @EdmKey
-    @EdmProperty(name = "ProductID", facets = @EdmFacets(nullable = false))
-    private Integer productId;
+	/** The product id. */
+	@EdmKey
+	@EdmProperty(name = "ProductID", facets = @EdmFacets(nullable = false))
+	private Integer productId;
 
-    /** The unit price. */
-    @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(nullable = false, precision = 19, scale = 4))
-    private Double unitPrice;
+	/** The unit price. */
+	@EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(nullable = false, precision = 19, scale = 4))
+	private Double unitPrice;
 
-    /** The quantity. */
-    @EdmProperty(facets = @EdmFacets(nullable = false))
-    private Short quantity;
+	/** The quantity. */
+	@EdmProperty(facets = @EdmFacets(nullable = false))
+	private Short quantity;
 
-    /** The discount. */
-    @EdmProperty(type = EdmType.SINGLE, facets = @EdmFacets(nullable = false))
-    private Integer discount;
+	/** The discount. */
+	@EdmProperty(type = EdmType.SINGLE, facets = @EdmFacets(nullable = false))
+	private Integer discount;
 
-    /** The order. */
-    @EdmNavigationProperty( //
+	/** The order. */
+	@EdmNavigationProperty( //
 			toMultiplicity = Multiplicity.ONE, //
 			toType = Order.class, //
 			toRole = "Orders", //
 			association = "FK_Order_Details_Orders" //
 	)
-    private Order order;
+	private Order order;
 
-    /** The product. */
-    @EdmNavigationProperty( //
+	/** The product. */
+	@EdmNavigationProperty( //
 			toMultiplicity = Multiplicity.ONE, //
 			toType = Product.class, //
 			toRole = "Products", //
 			association = "FK_Order_Details_Products" //
 	)
-    private Product product;
-    
+	private Product product;
+
 }

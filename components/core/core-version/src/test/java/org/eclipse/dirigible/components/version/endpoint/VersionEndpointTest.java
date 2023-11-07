@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.version.endpoint;
 
@@ -41,26 +40,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class VersionEndpointTest {
 
 	@Autowired
-    private MockMvc mockMvc;
+	private MockMvc mockMvc;
 
-    @Autowired
-    protected WebApplicationContext wac;
+	@Autowired
+	protected WebApplicationContext wac;
 
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
+	@Autowired
+	private FilterChainProxy springSecurityFilterChain;
 
-    @Test
-    public void testGetVersion() throws Exception {
-        //TODO: Update expected value when engines added.
-        mockMvc.perform(get("/services/core/version"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("{\"productName\":\"dirigible\",\"productVersion\":\"0.0" +
-                        ".1\",\"productCommitId\":\"test\",\"productRepository\":\"https://github" +
-                        ".com/eclipse/dirigible\",\"productType\":\"all\",\"instanceName\":\"server-spring-boot\"," +
-                        "\"repositoryProvider\":\"local\",\"databaseProvider\":\"local\",\"engines\":[]}")));
-    }
+	@Test
+	public void testGetVersion() throws Exception {
+		// TODO: Update expected value when engines added.
+		mockMvc	.perform(get("/services/core/version"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("{\"productName\":\"dirigible\",\"productVersion\":\"0.0"
+						+ ".1\",\"productCommitId\":\"test\",\"productRepository\":\"https://github"
+						+ ".com/eclipse/dirigible\",\"productType\":\"all\",\"instanceName\":\"server-spring-boot\","
+						+ "\"repositoryProvider\":\"local\",\"databaseProvider\":\"local\",\"engines\":[]}")));
+	}
 
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 }

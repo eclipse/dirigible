@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.websockets.synchronizer;
 
@@ -34,30 +33,32 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {"org.eclipse.dirigible.components"})
 @EntityScan("org.eclipse.dirigible.components")
 public class WebsocketsSynchronizerTest {
-    @Autowired
-    private WebsocketsSynchronizer websocketsSynchronizer;
+	@Autowired
+	private WebsocketsSynchronizer websocketsSynchronizer;
 
 
-    @Test
-    public void isAcceptedPath() {
-        assertTrue(websocketsSynchronizer.isAccepted(Path.of("/a/b/c/e1.websocket"), null));
-    }
+	@Test
+	public void isAcceptedPath() {
+		assertTrue(websocketsSynchronizer.isAccepted(Path.of("/a/b/c/e1.websocket"), null));
+	}
 
-    @Test
-    public void isAcceptedArtefact() {
-        assertTrue(websocketsSynchronizer.isAccepted(new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1").getType()));
-    }
+	@Test
+	public void isAcceptedArtefact() {
+		assertTrue(websocketsSynchronizer.isAccepted(
+				new Websocket("/a/b/c/w1.websocket", "name1", "description", "endpoint1", "handler1", "engine1").getType()));
+	}
 
-    @Test
-    public void load() throws ParseException {
-        String content = "{\"location\":\"/control/control.websocket\",\"handler\":\"control/handler.js\",\"endpoint\":\"mywebsocket\",\"description\":\"Control Websocket\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:24:12+0000\"}";
-        List<Websocket> list = websocketsSynchronizer.parse("/test/test.websocket", content.getBytes());
-        assertNotNull(list);
-        assertEquals("/test/test.websocket", list.get(0).getLocation());
-    }
+	@Test
+	public void load() throws ParseException {
+		String content =
+				"{\"location\":\"/control/control.websocket\",\"handler\":\"control/handler.js\",\"endpoint\":\"mywebsocket\",\"description\":\"Control Websocket\",\"createdBy\":\"system\",\"createdAt\":\"2017-07-06T2:24:12+0000\"}";
+		List<Websocket> list = websocketsSynchronizer.parse("/test/test.websocket", content.getBytes());
+		assertNotNull(list);
+		assertEquals("/test/test.websocket", list.get(0).getLocation());
+	}
 
-    @SpringBootApplication
-    static class TestConfiguration {
-    }
+	@SpringBootApplication
+	static class TestConfiguration {
+	}
 
 }

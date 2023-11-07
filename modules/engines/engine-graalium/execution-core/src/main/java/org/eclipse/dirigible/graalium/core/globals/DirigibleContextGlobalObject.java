@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.globals;
 
@@ -21,35 +20,35 @@ import java.util.Map;
  */
 public class DirigibleContextGlobalObject implements GlobalObject {
 
-    /** The dirigible context value. */
-    private final Map<Object, Object> dirigibleContextValue;
+	/** The dirigible context value. */
+	private final Map<Object, Object> dirigibleContextValue;
 
-    /**
-     * Instantiates a new dirigible context global object.
-     *
-     * @param dirigibleContextValue the dirigible context value
-     */
-    public DirigibleContextGlobalObject(Map<Object, Object> dirigibleContextValue) {
-        this.dirigibleContextValue = dirigibleContextValue != null ? dirigibleContextValue : new HashMap<>();
-    }
+	/**
+	 * Instantiates a new dirigible context global object.
+	 *
+	 * @param dirigibleContextValue the dirigible context value
+	 */
+	public DirigibleContextGlobalObject(Map<Object, Object> dirigibleContextValue) {
+		this.dirigibleContextValue = dirigibleContextValue != null ? dirigibleContextValue : new HashMap<>();
+	}
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    @Override
-    public String getName() {
-        return "__context";
-    }
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	@Override
+	public String getName() {
+		return "__context";
+	}
 
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    @Override
-    public Object getValue() {
-        return dirigibleContextValue;
-    }
+	/**
+	 * Gets the value.
+	 *
+	 * @return the value
+	 */
+	@Override
+	public Object getValue() {
+		return dirigibleContextValue;
+	}
 }

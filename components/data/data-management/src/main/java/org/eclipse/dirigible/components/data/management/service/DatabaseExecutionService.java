@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.data.management.service;
 
@@ -41,16 +40,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DatabaseExecutionService {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseExecutionService.class);
-	
+
 	/** The Constant CREATE_PROCEDURE. */
 	private static final String CREATE_PROCEDURE = "CREATE PROCEDURE";
 
 	/** The Constant SCRIPT_DELIMITER. */
 	private static final String SCRIPT_DELIMITER = ";";
-	
+
 	/** The Constant PROCEDURE_DELIMITER. */
 	private static final String PROCEDURE_DELIMITER = "--";
 
@@ -70,7 +69,7 @@ public class DatabaseExecutionService {
 	 * @param datasourceService the datasource service
 	 */
 	@Autowired
-	public DatabaseExecutionService(DataSourcesManager datasourceManager,DataSourceService datasourceService) {
+	public DatabaseExecutionService(DataSourcesManager datasourceManager, DataSourceService datasourceService) {
 		this.datasourceManager = datasourceManager;
 		this.datasourceService = datasourceService;
 	}
@@ -160,7 +159,8 @@ public class DatabaseExecutionService {
 	 * @param limited the limited
 	 * @param output the output
 	 */
-	public void executeStatement(javax.sql.DataSource dataSource, String sql, boolean isQuery, boolean isJson, boolean isCsv, boolean limited, OutputStream output) {
+	public void executeStatement(javax.sql.DataSource dataSource, String sql, boolean isQuery, boolean isJson, boolean isCsv,
+			boolean limited, OutputStream output) {
 
 		if ((sql == null) || (sql.length() == 0)) {
 			return;
@@ -178,8 +178,7 @@ public class DatabaseExecutionService {
 			try (Connection connection = dataSource.getConnection()) {
 				DatabaseQueryHelper.executeSingleStatement(connection, line, isQuery, new RequestExecutionCallback() {
 					@Override
-					public void updateDone(int recordsCount) {
-					}
+					public void updateDone(int recordsCount) {}
 
 					@Override
 					public void queryDone(ResultSet rs) {
@@ -192,19 +191,25 @@ public class DatabaseExecutionService {
 								DatabaseResultSetHelper.print(rs, limited, output);
 							}
 						} catch (Exception e) {
-							if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
+							if (logger.isWarnEnabled()) {
+								logger.warn(e.getMessage(), e);
+							}
 							errors.add(e.getMessage());
 						}
 					}
 
 					@Override
 					public void error(Throwable t) {
-						if (logger.isWarnEnabled()) {logger.warn(t.getMessage(), t);}
+						if (logger.isWarnEnabled()) {
+							logger.warn(t.getMessage(), t);
+						}
 						errors.add(t.getMessage());
 					}
 				});
 			} catch (SQLException e) {
-				if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
+				if (logger.isWarnEnabled()) {
+					logger.warn(e.getMessage(), e);
+				}
 				errors.add(e.getMessage());
 			}
 		}
@@ -243,8 +248,7 @@ public class DatabaseExecutionService {
 				DatabaseQueryHelper.executeSingleProcedure(connection, line, new RequestExecutionCallback() {
 
 					@Override
-					public void updateDone(int recordsCount) {
-					}
+					public void updateDone(int recordsCount) {}
 
 					@Override
 					public void queryDone(ResultSet rs) {
@@ -257,19 +261,25 @@ public class DatabaseExecutionService {
 								DatabaseResultSetHelper.print(rs, LIMITED, output);
 							}
 						} catch (Exception e) {
-							if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
+							if (logger.isWarnEnabled()) {
+								logger.warn(e.getMessage(), e);
+							}
 							errors.add(e.getMessage());
 						}
 					}
 
 					@Override
 					public void error(Throwable t) {
-						if (logger.isWarnEnabled()) {logger.warn(t.getMessage(), t);}
+						if (logger.isWarnEnabled()) {
+							logger.warn(t.getMessage(), t);
+						}
 						errors.add(t.getMessage());
 					}
 				});
 			} catch (SQLException e) {
-				if (logger.isWarnEnabled()) {logger.warn(e.getMessage(), e);}
+				if (logger.isWarnEnabled()) {
+					logger.warn(e.getMessage(), e);
+				}
 				errors.add(e.getMessage());
 			}
 		}
@@ -278,7 +288,7 @@ public class DatabaseExecutionService {
 			throw new RuntimeException(DatabaseErrorHelper.print(String.join("\n", errors)));
 		}
 	}
-	
+
 	/**
 	 * Gets the delimiter.
 	 *

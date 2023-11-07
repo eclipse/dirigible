@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.graalium.core.javascript.modules.java;
 
@@ -26,66 +25,66 @@ import java.util.regex.Pattern;
  */
 public class JavaModuleResolver implements ModuleResolver {
 
-    /** The Constant JAVA_MODULE_PATTERN. */
-    private static final Pattern JAVA_MODULE_PATTERN = Pattern.compile("(@java)(\\/)(.+[^\"])");
+	/** The Constant JAVA_MODULE_PATTERN. */
+	private static final Pattern JAVA_MODULE_PATTERN = Pattern.compile("(@java)(\\/)(.+[^\"])");
 
-    /** The cache directory path. */
-    private final Path cacheDirectoryPath;
-    
-    /** The java package proxy generator. */
-    private final JavaPackageProxyGenerator javaPackageProxyGenerator;
+	/** The cache directory path. */
+	private final Path cacheDirectoryPath;
 
-    /**
-     * Instantiates a new java module resolver.
-     *
-     * @param cacheDirectoryPath the cache directory path
-     */
-    public JavaModuleResolver(Path cacheDirectoryPath) {
-        javaPackageProxyGenerator = new JavaPackageProxyGenerator();
-        cacheDirectoryPath.toFile().mkdirs();
-        this.cacheDirectoryPath = cacheDirectoryPath;
-    }
+	/** The java package proxy generator. */
+	private final JavaPackageProxyGenerator javaPackageProxyGenerator;
 
-    /**
-     * Checks if is resolvable.
-     *
-     * @param moduleToResolve the module to resolve
-     * @return true, if is resolvable
-     */
-    @Override
-    public boolean isResolvable(String moduleToResolve) {
-        return moduleToResolve.contains("@java");
-    }
+	/**
+	 * Instantiates a new java module resolver.
+	 *
+	 * @param cacheDirectoryPath the cache directory path
+	 */
+	public JavaModuleResolver(Path cacheDirectoryPath) {
+		javaPackageProxyGenerator = new JavaPackageProxyGenerator();
+		cacheDirectoryPath.toFile().mkdirs();
+		this.cacheDirectoryPath = cacheDirectoryPath;
+	}
 
-    /**
-     * Resolve.
-     *
-     * @param moduleToResolve the module to resolve
-     * @return the path
-     */
-    @Override
-    public Path resolve(String moduleToResolve) {
-        Matcher modulePathMatcher = JAVA_MODULE_PATTERN.matcher(moduleToResolve);
-        if (!modulePathMatcher.matches()) {
-            throw new RuntimeException("Found invalid Java module path!");
-        }
+	/**
+	 * Checks if is resolvable.
+	 *
+	 * @param moduleToResolve the module to resolve
+	 * @return true, if is resolvable
+	 */
+	@Override
+	public boolean isResolvable(String moduleToResolve) {
+		return moduleToResolve.contains("@java");
+	}
 
-        String javaPackageName = modulePathMatcher.group(3);
+	/**
+	 * Resolve.
+	 *
+	 * @param moduleToResolve the module to resolve
+	 * @return the path
+	 */
+	@Override
+	public Path resolve(String moduleToResolve) {
+		Matcher modulePathMatcher = JAVA_MODULE_PATTERN.matcher(moduleToResolve);
+		if (!modulePathMatcher.matches()) {
+			throw new RuntimeException("Found invalid Java module path!");
+		}
 
-        Path javaPackageProxyGeneratedPath = cacheDirectoryPath.resolve(javaPackageName + ".mjs");
-        File javaPackageProxyGeneratedFile = javaPackageProxyGeneratedPath.toFile();
+		String javaPackageName = modulePathMatcher.group(3);
 
-        if (javaPackageProxyGeneratedFile.exists()) {
-            return javaPackageProxyGeneratedPath;
-        }
+		Path javaPackageProxyGeneratedPath = cacheDirectoryPath.resolve(javaPackageName + ".mjs");
+		File javaPackageProxyGeneratedFile = javaPackageProxyGeneratedPath.toFile();
 
-        String coreModuleContent = javaPackageProxyGenerator.generate(javaPackageName);
-        try {
-            Files.writeString(javaPackageProxyGeneratedPath, coreModuleContent, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+		if (javaPackageProxyGeneratedFile.exists()) {
+			return javaPackageProxyGeneratedPath;
+		}
 
-        return javaPackageProxyGeneratedPath;
-    }
+		String coreModuleContent = javaPackageProxyGenerator.generate(javaPackageName);
+		try {
+			Files.writeString(javaPackageProxyGeneratedPath, coreModuleContent, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		return javaPackageProxyGeneratedPath;
+	}
 }

@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.engine.web.service;
 
@@ -30,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ExposeService implements ArtefactService<Expose> {
-	
+
 	/** The extension repository. */
-	@Autowired 
+	@Autowired
 	private ExposeRepository exposeRepository;
 
 	/**
@@ -45,7 +44,7 @@ public class ExposeService implements ArtefactService<Expose> {
 	public List<Expose> getAll() {
 		return exposeRepository.findAll();
 	}
-	
+
 	/**
 	 * Find all.
 	 *
@@ -57,7 +56,7 @@ public class ExposeService implements ArtefactService<Expose> {
 	public Page<Expose> getPages(Pageable pageable) {
 		return exposeRepository.findAll(pageable);
 	}
-	
+
 	/**
 	 * Find by id.
 	 *
@@ -74,7 +73,7 @@ public class ExposeService implements ArtefactService<Expose> {
 			throw new IllegalArgumentException("Extension with id does not exist: " + id);
 		}
 	}
-	
+
 	/**
 	 * Find by name.
 	 *
@@ -94,42 +93,42 @@ public class ExposeService implements ArtefactService<Expose> {
 			throw new IllegalArgumentException("Extension with name does not exist: " + name);
 		}
 	}
-	
+
 	/**
-     * Find by location.
-     *
-     * @param location the location
-     * @return the list
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Expose> findByLocation(String location) {
-    	Expose filter = new Expose();
-        filter.setLocation(location);
-        Example<Expose> example = Example.of(filter);
-        List<Expose> list = exposeRepository.findAll(example);
-        return list;
-    }
-	
+	 * Find by location.
+	 *
+	 * @param location the location
+	 * @return the list
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Expose> findByLocation(String location) {
+		Expose filter = new Expose();
+		filter.setLocation(location);
+		Example<Expose> example = Example.of(filter);
+		List<Expose> list = exposeRepository.findAll(example);
+		return list;
+	}
+
 	/**
-     * Find by key.
-     *
-     * @param key the key
-     * @return the expose
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Expose findByKey(String key) {
-    	Expose filter = new Expose();
-        filter.setKey(key);
-        Example<Expose> example = Example.of(filter);
-        Optional<Expose> expose = exposeRepository.findOne(example);
-        if (expose.isPresent()) {
-            return expose.get();
-        }
-        return null;
-    }
-	
+	 * Find by key.
+	 *
+	 * @param key the key
+	 * @return the expose
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Expose findByKey(String key) {
+		Expose filter = new Expose();
+		filter.setKey(key);
+		Example<Expose> example = Example.of(filter);
+		Optional<Expose> expose = exposeRepository.findOne(example);
+		if (expose.isPresent()) {
+			return expose.get();
+		}
+		return null;
+	}
+
 	/**
 	 * Save.
 	 *
@@ -140,7 +139,7 @@ public class ExposeService implements ArtefactService<Expose> {
 	public Expose save(Expose expose) {
 		return exposeRepository.saveAndFlush(expose);
 	}
-	
+
 	/**
 	 * Delete.
 	 *

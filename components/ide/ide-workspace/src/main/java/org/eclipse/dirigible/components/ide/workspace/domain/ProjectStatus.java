@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible
+ * contributors SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.components.ide.workspace.domain;
 
@@ -20,40 +19,40 @@ import org.slf4j.LoggerFactory;
  * The Class ProjectStatus.
  */
 public class ProjectStatus {
-	
+
 	/** The Constant DIRIGIBLE_FOLDER. */
 	private static final String DIRIGIBLE_FOLDER = "/dirigible/";
 
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ProjectStatus.class);
-	
+
 	/** The project. */
 	private String project;
-	
+
 	/** The git. */
 	private String git;
-	
+
 	/** The added. */
 	private Set<String> added;
-	
+
 	/** The changed. */
 	private Set<String> changed;
-	
+
 	/** The removed. */
 	private Set<String> removed;
-	
+
 	/** The missing. */
 	private Set<String> missing;
-	
+
 	/** The modified. */
 	private Set<String> modified;
-	
+
 	/** The conflicting. */
 	private Set<String> conflicting;
-	
+
 	/** The untracked. */
 	private Set<String> untracked;
-	
+
 	/** The untracked folders. */
 	private Set<String> untrackedFolders;
 
@@ -76,16 +75,16 @@ public class ProjectStatus {
 		super();
 		this.project = project;
 		this.git = git;
-		this.added = added; //remapFilesIfNeeded(added, project);
-		this.changed = changed; //remapFilesIfNeeded(changed, project);
-		this.removed = removed; //remapFilesIfNeeded(removed, project);
-		this.missing = missing; //remapFilesIfNeeded(missing, project);
-		this.modified = modified; //remapFilesIfNeeded(modified, project);
-		this.conflicting = conflicting; //remapFilesIfNeeded(conflicting, project);
-		this.untracked = untracked; //remapFilesIfNeeded(untracked, project);
-		this.untrackedFolders = untrackedFolders; //remapFilesIfNeeded(untrackedFolders, project);
+		this.added = added; // remapFilesIfNeeded(added, project);
+		this.changed = changed; // remapFilesIfNeeded(changed, project);
+		this.removed = removed; // remapFilesIfNeeded(removed, project);
+		this.missing = missing; // remapFilesIfNeeded(missing, project);
+		this.modified = modified; // remapFilesIfNeeded(modified, project);
+		this.conflicting = conflicting; // remapFilesIfNeeded(conflicting, project);
+		this.untracked = untracked; // remapFilesIfNeeded(untracked, project);
+		this.untrackedFolders = untrackedFolders; // remapFilesIfNeeded(untrackedFolders, project);
 	}
-	
+
 	/**
 	 * Gets the project.
 	 *
@@ -94,7 +93,7 @@ public class ProjectStatus {
 	public String getProject() {
 		return project;
 	}
-	
+
 	/**
 	 * Gets the git.
 	 *
@@ -166,7 +165,7 @@ public class ProjectStatus {
 	public Set<String> getUntracked() {
 		return untracked;
 	}
-	
+
 	/**
 	 * Gets the untracked folders.
 	 *
